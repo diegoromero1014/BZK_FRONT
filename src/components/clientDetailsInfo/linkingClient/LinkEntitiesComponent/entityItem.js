@@ -24,6 +24,7 @@ class EntityItem extends Component {
         this._updateValue = this._updateValue.bind(this);
         this._deleteLinkEntity = this._deleteLinkEntity.bind(this);
         this._onChange = this._onChange.bind(this);
+        this.firstChange = false;
     }
 
     _updateValue(prop, value, text) {
@@ -70,12 +71,15 @@ class EntityItem extends Component {
             }
         });
 
-        if (! exists || linkEntitiesClient.size <= 1) {
+        if (! exists || ! this.firstChange) {
+            if (! this.firstChange) {
+                this.firstChange = true;
+            }
             this._updateValue('entity', val, text);
         } else {
-            swtShowMessage("error", "Error!",'El cliente ya tiene seleccionada esta linea de negocio');
+            swtShowMessage("warning", "Error!",'El cliente ya tiene seleccionada esta linea de negocio');
             this.setState({entity: ""})   
-        }   
+        }           
     }
 
     render() {

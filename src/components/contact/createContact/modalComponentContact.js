@@ -114,7 +114,7 @@ class ModalComponentContact extends Component {
     }
 
     _genero(val) {
-        const { fields: { tipoTratamiendo, tipoGenero }, selectsReducer } = this.props;
+        const { fields: { tipoGenero }, selectsReducer } = this.props;
         var femenino = ['Señora', 'Señorita', 'Doctora'];
         var masculino = ['Señor', 'Doctor', 'Padre'];
         var genero;
@@ -144,7 +144,7 @@ class ModalComponentContact extends Component {
     }
 
     _onChangeProvince(val) {
-        const { fields: { pais, departamento, ciudad } } = this.props;
+        const { fields: { departamento, ciudad } } = this.props;
         departamento.onChange(val);
         const { consultListWithParameterUbication } = this.props;
         consultListWithParameterUbication(FILTER_CITY, departamento.value);
@@ -163,7 +163,8 @@ class ModalComponentContact extends Component {
     }
 
     _onClickLimpiar() {
-        const { clearSearchContact } = this.props;
+        const { clearSearchContact, fields: { numeroDocumento } } = this.props;
+        numeroDocumento.onChange('');
         clearSearchContact();
         this.props.resetForm();
         this.setState({ disabled: '', noExiste: 'hidden', botonBus: 'block' });
@@ -177,7 +178,7 @@ class ModalComponentContact extends Component {
     _searchContact(e) {
         e.preventDefault();
         const {
-            fields: { tipoDocumento, numeroDocumento, ciudad },
+            fields: { tipoDocumento, numeroDocumento },
         } = this.props;
 
         const { searchContact, clearSearchContact } = this.props;
@@ -204,25 +205,26 @@ class ModalComponentContact extends Component {
                     this.setState({ disabled: 'disabled' });
                     this.setState({ noExiste: 'visible' });
                     this.setState({ botonBus: 'none' });
-                    ciudad.onChange(JSON.parse(_.get(data, 'payload.data.contactDetail')).city);
                 }
+                this.forceUpdate();
             }, (reason) => {
                 this.setState({ showEr: true });
             });
         } else {
             this.setState({ showCam: true });
         }
+        
     }
 
     _handleCreateContact() {
-        const { createContactNew, contactsByClientFindServer, createContactReducer, changeStateSaveData } = this.props;
+        const { createContactNew, contactsByClientFindServer, changeStateSaveData } = this.props;
         const {
             fields: {
                 id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial,
                 tipoActitud, tipoContacto, numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido,
                 fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo, tipoEntidad,
                 tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
-            }, handleSubmit, error
+            },
         } = this.props;
 
         var messageBody = {
@@ -287,15 +289,15 @@ class ModalComponentContact extends Component {
     }
 
     render() {
-        const { modalStatus, selectsReducer, createContactReducer, groupsFavoriteContacts } = this.props;
+        const { selectsReducer, groupsFavoriteContacts } = this.props;
         const {
-            initialValues, fields: {
-                id, tipoDocumento, numeroDocumento, tipoTratamiendo, tipoGenero, tipoCargo,
-                tipoDependencia, tipoEstiloSocial, tipoActitud, tipoPais, tipoContacto,
-                primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento, direccion, barrio,
-                codigoPostal, telefono, extension, celular, correo, tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte,
-                pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
-            }, handleSubmit, error, reducerGlobal
+            fields: {
+                tipoDocumento, numeroDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia,
+                tipoEstiloSocial, tipoActitud, tipoContacto, primerNombre, segundoNombre, primerApellido,
+                segundoApellido, fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo,
+                tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures,
+                listaFavoritos
+            }, handleSubmit, reducerGlobal
         } = this.props;
 
         return (
@@ -308,7 +310,7 @@ class ModalComponentContact extends Component {
                         <span style={{ paddingLeft: '20px' }}>Información básica</span>
                     </dt>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                        <Row>
+                        <Row >
                             <Col xs>
                                 <dl style={{ width: '100%' }}>
                                     <dt><span>Tipo de documento (<span style={{ color: 'red' }}>*</span>)</span></dt>
@@ -330,6 +332,7 @@ class ModalComponentContact extends Component {
                                         max="30"
                                         disabled={this.state.disabled}
                                         {...numeroDocumento}
+                                        onKeyPress={this._searchContact}
                                     /></dd>
                                 </dl>
                             </Col>
@@ -365,7 +368,7 @@ class ModalComponentContact extends Component {
                             <Col xs>
                                 <dl style={{ width: '100%' }}>
                                     <dt><span>Género (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                    <dd><ComboBox name="tipoDocumento" labelInput="Seleccione"
+                                    <dd><ComboBox name="tipoGenero" labelInput="Seleccione"
                                         disabled={this.state.disabledDep}
                                         {...tipoGenero}
                                         valueProp={'id'}
@@ -384,7 +387,6 @@ class ModalComponentContact extends Component {
                                             type="text"
                                             max="60"
                                             {...primerNombre}
-                                            shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'primerNombre')}
                                         /></dd>
                                 </dl>
                             </Col>
@@ -525,7 +527,7 @@ class ModalComponentContact extends Component {
                                         onBlur={departamento.onBlur}
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        data={selectsReducer.get('dataTypeProvince')}
+                                        data={selectsReducer.get('dataTypeProvince') || []}
                                         shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'departamento')}
                                     /></dd>
                                 </dl>
@@ -540,7 +542,7 @@ class ModalComponentContact extends Component {
                                         {...ciudad}
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        data={selectsReducer.get('dataTypeCity')}
+                                        data={selectsReducer.get('dataTypeCity') || []}
                                         shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'ciudad')}
                                     /></dd>
                                 </dl>

@@ -2,9 +2,9 @@ import _ from "lodash";
 
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
-    patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures, patternOfEmail,
-    patternOfHistory, patternOfClientName, patternOfDescription, patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient,
-    regexNumbers
+    patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
+    patternOfStructureEmail, patternOfEmail, patternOfHistory, patternOfClientName, patternOfDescription,
+    patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers
 } from './patternsToValidateField';
 
 import {
@@ -47,7 +47,7 @@ export const processRules = (formFields, fieldsWithRules, props) => {
     return errors;
 }
 
-export const checkRequired = value => (_.isNull(value) || _.isEmpty(value)) ? MESSAGE_REQUIRED_VALUE : null;
+export const checkRequired = value => (_.isNull(value) || _.toString(value).length < 1) ? MESSAGE_REQUIRED_VALUE : null;
 export const checkRequiredWithGlobalCondition = value => globalCondition ? checkRequired(value) : null;
 
 export const checkOnlyAlphabetical = (value) => {
@@ -155,7 +155,8 @@ export const checkOnlyNumbers = value => {
 
 export const checkEmail = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfEmail.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) &&
+        (!patternOfStructureEmail.test(value) || eval(patternOfEmail).test(value))) {
         message = MESSAGE_WARNING_INVALID_EMAIL;
     }
 

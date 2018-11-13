@@ -113,7 +113,7 @@ class FormCreateProspect extends Component {
             }
             valuReduxForm.onChange(val);
         } else { //Valido si el valor es negativo o positivo
-            var value = numeral(valuReduxForm.value).format('0');
+            var value = numeral(val).format('0');
             if (value >= 0) {
                 pattern = /(-?\d+)(\d{3})/;
                 while (pattern.test(val)) {
@@ -664,7 +664,7 @@ class FormCreateProspect extends Component {
                                 type="text"
                                 max="15"
                                 {...operatingIncome}
-                                onBlur={val => this._handleBlurValueNumber(2, operatingIncome, val)}
+                                onBlur={val => this._handleBlurValueNumber(1, operatingIncome, val)}
                             />
                         </div>
                     </Col>
@@ -677,7 +677,7 @@ class FormCreateProspect extends Component {
                                 type="text"
                                 max="15"
                                 {...nonOperatingIncome}
-                                onBlur={val => this._handleBlurValueNumber(2, nonOperatingIncome, val)}
+                                onBlur={val => this._handleBlurValueNumber(1, nonOperatingIncome, val)}
                             />
                         </div>
                     </Col>

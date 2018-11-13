@@ -464,6 +464,7 @@ export function validateFields(values, validations, errors) {
                         if (!values[field]) {
                             errors[field] = constants.OPTION_REQUIRED;
                         }
+                        break;
                     case 'required':
                         if (!values[field]) {
                             errors[field] = constants.VALUE_REQUIERED;

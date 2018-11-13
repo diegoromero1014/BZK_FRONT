@@ -24,7 +24,7 @@ class MultipleSelectComponent extends Component {
     }
 
     componentDidMount() {
-        const { onChange, onBlur, name, defaultValue, maxSelections } = this.props;
+        const { onChange, onBlur, name, maxSelections } = this.props;
         const selector = $(`.ui.selection.dropdown.${name}`);
         const self = this;
         if (maxSelections !== null && maxSelections !== undefined && maxSelections !== '') {

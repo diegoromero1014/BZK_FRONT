@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import $ from 'jquery';
 import _ from 'lodash';
 
-let inputFocus = false;
-
 class inputComponent extends Component {
 
     constructor(props) {
@@ -13,6 +11,8 @@ class inputComponent extends Component {
             value: '',
             focus: false
         };
+
+        this.inputFocus = false;
 
         this._onChange = this._onChange.bind(this);
         this._onBlur = this._onBlur.bind(this);
@@ -29,7 +29,7 @@ class inputComponent extends Component {
     _onBlur(e, event) {
         const { onChange, onBlur } = this.props;
         let trimmed = this.state.value.trim();
-        inputFocus = false;
+        this.inputFocus = false;
 
         onChange(trimmed);
         onBlur(trimmed);
@@ -37,7 +37,7 @@ class inputComponent extends Component {
 
     _onFocus(e) {
         const { onFocus } = this.props;
-        inputFocus = true;
+        this.inputFocus = true;
 
         if (onFocus) {
             onFocus(e);
@@ -45,12 +45,18 @@ class inputComponent extends Component {
     }
 
     _onKey(e) {
-        const { onChange, onBlur, onKey } = this.props;
+        const { onChange, onBlur, onKey, onKeyPress } = this.props;
 
         if ((e.keyCode === 13 || e.which === 13)) {
             let trimmed = this.state.value.trim();
             onChange(trimmed);
             onBlur(trimmed);
+
+            if (!_.isUndefined(onKeyPress)) {
+                setTimeout(function () {
+                    onKeyPress(e);
+                }, 500);
+            }
         }
 
         if (onKey) {
@@ -64,13 +70,13 @@ class inputComponent extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.value != this.state.value && !inputFocus) {
+        if (nextProps.value != this.state.value && !this.inputFocus) {
             this.setState({ value: nextProps.value });
         }
     }
 
     render() {
-        const { 
+        const {
             nameInput, type, style, placeholder, disabled, touched, error, name, min, max, shouldHandleUpdate
         } = this.props;
 
