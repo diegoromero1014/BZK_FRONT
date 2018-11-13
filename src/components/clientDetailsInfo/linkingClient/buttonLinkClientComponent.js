@@ -33,7 +33,7 @@ import {
     } from './../../../validationsFields/patternsToValidateField';
     
     import {
-    MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT, MESSAGE_WARNING_MAX_LENGTH,MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT
+    MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT, MESSAGE_WARNING_MAX_LENGTH,MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_REQUIRED_VALUE
     } from './../../../validationsFields/validationsMessages'; 
 
 let helpLinksMessage = "";
@@ -117,7 +117,11 @@ class ButtonLinkClientComponent extends Component {
                         messageWhiteList  =  MESSAGE_WARNING_MAX_LENGTH(MAX_LENGTH_LINK_CLIENT_TRACER_CODE);
                         updateErrorsLinkEntities(true, messageWhiteList);
                         isValidLinkEntities = false;
-                    } 
+                    } else if(!_.isNull(linkEntity.traderCode) && _.isEmpty(linkEntity.traderCode)){
+                        messageWhiteList  =  MESSAGE_REQUIRED_VALUE;
+                        updateErrorsLinkEntities(true, messageWhiteList);
+                        isValidLinkEntities = false;
+                    }
                     
                     return {
                         id: linkEntity.idEntity,
@@ -143,11 +147,12 @@ class ButtonLinkClientComponent extends Component {
             messageWhiteList  =  MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
             isValidLinkEntities = false;
         } 
+  
 
         if (linkEntitiesClient.size == 0) {
             swtShowMessage('error', 'Vinculación', 'Señor usuario, debe ingresar por lo menos una entidad a vincular.');
         } else if (!isValidLinkEntities) {
-            swtShowMessage('error', 'Vinculación', messageWhiteList);
+            swtShowMessage('error', 'Vinculación', inValidMessageLinkEntities );
         } else {
             const jsonLinkEntityClient = {
                 "idClient": infoClient.id,
