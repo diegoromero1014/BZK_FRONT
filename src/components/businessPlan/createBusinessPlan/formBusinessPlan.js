@@ -1,30 +1,36 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
-import { redirectUrl } from '../../globalComponents/actions';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import Input from '../../../ui/input/inputComponent';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import Textarea from '../../../ui/textarea/textareaComponent';
-import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import { consultDataSelect, consultList, getMasterDataFields } from '../../selectsComponent/actions';
-import NeedBusiness from '../need/needBusiness';
-import AreaBusiness from '../area/areaBusiness';
-import { TITLE_OPPORTUNITY_BUSINESS, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA, MESSAGE_ERROR, DATE_FORMAT, VALUE_XSS_INVALID } from '../../../constantsGlobal';
-import { LAST_BUSINESS_REVIEW } from '../../../constantsParameters';
-import SweetAlertFocus from '../../sweetalertFocus';
-import { OBJECTIVE_BUSINESS } from '../constants';
-import { consultParameterServer, formValidateKeyEnter, htmlToText, validateResponse, xssValidation, onSessionExpire } from '../../../actionsGlobal';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { changeStateSaveData } from '../../dashboard/actions';
-import { createBusiness, validateRangeDates } from '../actions';
+import { Row, Col } from 'react-flexbox-grid';
 import moment from 'moment';
 import _ from 'lodash';
 import $ from 'jquery';
 import numeral from 'numeral';
+
+import ComboBox from '../../../ui/comboBox/comboBoxComponent';
+import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
+import NeedBusiness from '../need/needBusiness';
+import AreaBusiness from '../area/areaBusiness';
+import SweetAlertFocus from '../../sweetalertFocus';
 import Tooltip from "../../toolTip/toolTipComponent";
 import RichText from "../../richText/richTextComponent";
+
+import { redirectUrl } from '../../globalComponents/actions';
+import { getMasterDataFields } from '../../selectsComponent/actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import { changeStateSaveData } from '../../dashboard/actions';
+import { createBusiness, validateRangeDates } from '../actions';
+import {
+    consultParameterServer, formValidateKeyEnter, htmlToText, validateResponse,
+    xssValidation, onSessionExpire
+} from '../../../actionsGlobal';
+
+import { LAST_BUSINESS_REVIEW } from '../../../constantsParameters';
+import { OBJECTIVE_BUSINESS } from '../constants';
+import {
+    TITLE_OPPORTUNITY_BUSINESS, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA,
+    MESSAGE_ERROR, DATE_FORMAT, VALUE_XSS_INVALID
+} from '../../../constantsGlobal';
 
 
 const fields = ["initialValidityDate", "finalValidityDate", "dateBusiness", "objectiveBusiness", "opportunities"];
@@ -91,7 +97,7 @@ class FormBusinessPlan extends Component {
             });
         }
 
-        if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value)  || !moment(finalValidityDate.value, 'DD/MM/YYYY').isValid()) {
+        if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value) || !moment(finalValidityDate.value, 'DD/MM/YYYY').isValid()) {
             errorInForm = true;
             this.setState({
                 finalDateError: "Debe seleccionar una fecha"
@@ -106,12 +112,14 @@ class FormBusinessPlan extends Component {
                     dateBusinessError: "Debe seleccionar una fecha"
                 });
             }
+
             if (this.state.objectiveBusiness === null || this.state.objectiveBusiness === undefined || this.state.objectiveBusiness === "") {
                 errorInForm = true;
                 this.setState({
                     objectiveBusinessError: "Debe seleccionar una opción"
                 });
             }
+
             if (_.isEmpty(htmlToText(this.state.opportunities)) || this.state.opportunities === null || this.state.opportunities === undefined || this.state.opportunities === "") {
                 errorInForm = true;
                 this.setState({
@@ -132,7 +140,7 @@ class FormBusinessPlan extends Component {
                 opportunitiesError: VALUE_XSS_INVALID
             });
         }
-      
+
         if (!errorInForm) {
             var needsbB = [];
             _.map(needs.toArray(),
@@ -153,6 +161,7 @@ class FormBusinessPlan extends Component {
                     needsbB.push(data);
                 }
             );
+
             var areasB = [];
             _.map(areas.toArray(),
                 function (area) {
@@ -169,6 +178,7 @@ class FormBusinessPlan extends Component {
                     areasB.push(data);
                 }
             );
+
             var businessJson = {
                 "id": null,
                 "client": window.sessionStorage.getItem('idClientSelected'),
@@ -180,6 +190,7 @@ class FormBusinessPlan extends Component {
                 "clientNeedFulfillmentPlan": needsbB,
                 "relatedInternalParties": areasB
             }
+
             //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
             this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
         }
@@ -199,7 +210,7 @@ class FormBusinessPlan extends Component {
     }
 
     _changeObjective(value) {
-        
+
         this.setState({
             objectiveBusiness: value,
             objectiveBusinessError: null
@@ -509,6 +520,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, reducerGlobal, nee
         navBar
     };
 }
+
 export default reduxForm({
     form: 'formBusinessPlanCreate',
     fields,

@@ -3,22 +3,26 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { Menu, Segment } from 'semantic-ui-react';
+
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import { TAB_STORY, TAB_CUSTOMER_DELIVERY } from './constants';
 import StructuredDelivery from './structuredDelivery/componentStructuredDelivery';
+import ComponentCustomerDelivery from './customerDelivery/componentCustomerDelivery';
+import SecurityMessageComponent from './../globalComponents/securityMessageComponent';
+
 import { updateTabSeletedCS, aproveRejectDeliveryClient } from './actions';
-import { VALUES_APROVE, OPTION_REQUIRED, MESSAGE_SAVE_DATA, REVIEWED_DATE_FORMAT, ENTREGA_ESTRUCTURADA } from '../../constantsGlobal';
 import { validateResponse } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import ComponentCustomerDelivery from './customerDelivery/componentCustomerDelivery';
 import { consultInfoClient } from '../clientInformation/actions';
 import { redirectUrl } from '../globalComponents/actions';
 import { changeStateSaveData } from '../dashboard/actions';
+
+import { TAB_STORY, TAB_CUSTOMER_DELIVERY } from './constants';
+import { VALUES_APROVE, OPTION_REQUIRED, MESSAGE_SAVE_DATA, REVIEWED_DATE_FORMAT, ENTREGA_ESTRUCTURADA } from '../../constantsGlobal';
+
 import _ from 'lodash';
 import moment from 'moment';
 
 class ComponentCustomerStory extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -107,7 +111,7 @@ class ComponentCustomerStory extends Component {
                                         data={VALUES_APROVE}
                                         value={this.state.valueAprove}
                                         error={this.state.errorAprove}
-                                        onChange={(val) => this._changeValueComboAprove(val)}                                        
+                                        onChange={(val) => this._changeValueComboAprove(val)}
                                         touched={true}
                                     />
                                 </dt>
@@ -123,8 +127,8 @@ class ComponentCustomerStory extends Component {
                         }
                     </Row>
                 }
-                <div className="tab-pane quickZoomIn animated"
-                    style={{ width: "100%", marginBottom: "70px" }}>
+                <div className="tab-pane quickZoomIn animated" style={{ width: "100%", marginBottom: "70px" }}>
+                    <SecurityMessageComponent />
                     <Menu pointing secondary>
                         <Menu.Item name="Historial" active={tabActive === TAB_STORY} onClick={this._handleItemClick.bind(this, TAB_STORY)} />
                         {_.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), ENTREGA_ESTRUCTURADA), false) &&

@@ -4,7 +4,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../globalComponents/actions';
 import { reduxForm } from 'redux-form';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import { REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS } from '../../constantsGlobal';
+import { REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS, TAB_INFO } from '../../constantsGlobal';
 import { stringValidate, validateIsNullOrUndefined, validateResponse, onSessionExpire } from '../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import { getClientsEconomicGroup, updateEconomicGroupClient } from './actions';
@@ -13,6 +13,8 @@ import { clientsFindServer } from '../clients/actions';
 import ComboBoxFilter from '../../ui/comboBoxFilter/comboBoxFilter';
 import { showLoading } from '../loading/actions';
 import { consultInfoClient } from '../clientInformation/actions';
+
+import { updateTabSeleted } from '../clientDetailsInfo/actions';
 
 import _ from 'lodash';
 import $ from 'jquery';
@@ -34,7 +36,7 @@ class ModalComponentEconomicGroup extends Component {
   }
 
   _handleClickClientItem(e) {
-    const { clientEconomicGroupReducer, consultInfoClient, showLoading, swtShowMessage, isOpen } = this.props;
+    const { clientEconomicGroupReducer, consultInfoClient, showLoading, swtShowMessage, isOpen, updateTabSeleted, tabReducer } = this.props;
     
     const idMainClient = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "idMainClient", "");
     const accessMainClient = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "accessMainClient", "");
@@ -50,13 +52,18 @@ class ModalComponentEconomicGroup extends Component {
         onSessionExpire();
       }
       showLoading(false, '');
+      updateTabSeleted(TAB_INFO);
+      var tabActive = tabReducer.get('tabSelected');
+      updateTabSeleted(tabActive);
       //isOpen cierra el modal
       isOpen();
     }).catch((reason) => {
-      console.log(reason);
       showLoading(false, '');
       swtShowMessage("error", "Señor usuario, ha ocurrido un error en el servidor.");
     });
+
+    
+
 
   } else {
     swtShowMessage("error", "Acceso denegado", "Señor usuario, usted no pertenece a la célula del cliente seleccionado, por tal motivo no puede ver su información.");
@@ -270,14 +277,16 @@ function mapDispatchToProps(dispatch) {
     clientsFindServer,
     swtShowMessage,
     consultInfoClient,
-    showLoading
+    showLoading,
+    updateTabSeleted
   }, dispatch);
 }
 
-function mapStateToProps({ clientEconomicGroupReducer, clientInformacion }, ownerProps) {
+function mapStateToProps({ clientEconomicGroupReducer, clientInformacion, tabReducer }, ownerProps) {
   return {
     clientEconomicGroupReducer,
-    clientInformacion
+    clientInformacion,
+    tabReducer
   };
 }
 

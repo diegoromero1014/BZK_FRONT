@@ -1,9 +1,10 @@
 import Immutable from 'immutable';
+import _ from 'lodash';
+
 import {
     GET_CONTACT_DETAILS, CLEAR_EDIT_CONTACT, SET_ARRAY_DELETE_CLIENT_CONTACT,
-    DELETE_RELATOINSHIP_LOCAL, DELETE_RELATOINSHIP_SERVER
+    DELETE_RELATOINSHIP_SERVER
 } from '../constants';
-import _ from 'lodash';
 
 const initialContactDetail = Immutable.Map({
     contactDetailList: {},
@@ -18,8 +19,7 @@ export default (state = initialContactDetail, action) => {
             const contactDetail = JSON.parse(response.contactDetail);
             const listClientcontacts = _.isNull(contactDetail) || _.isNull(contactDetail.listClientcontacts) ? [] : contactDetail.listClientcontacts;
             return state.withMutations(map => {
-                map
-                    .set('contactDetailList', contactDetail)
+                map.set('contactDetailList', contactDetail)
                     .set('listClientcontacts', _.isUndefined(listClientcontacts) ? [] : listClientcontacts)
                     .set('listDeleteClientContact', [])
             });
@@ -29,11 +29,8 @@ export default (state = initialContactDetail, action) => {
             return state.set('listDeleteClientContact', action.payload);
         case DELETE_RELATOINSHIP_SERVER:
             return state.withMutations(map => {
-                map
-                    .set('listDeleteClientContact', []);
+                map.set('listDeleteClientContact', []);
             });
-        case DELETE_RELATOINSHIP_SERVER:
-            return state;
         default:
             return state;
     }

@@ -3,17 +3,30 @@ import { Row, Grid, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import _ from 'lodash';
+
 import SweetAlert from '../../../../sweetalertFocus';
-import { NUMBER_RECORDS } from '../constants';
-import { shareholdersByClientFindServer, clearShareholderCreate, clearShareholderOrder } from '../actions';
-import { getDetailShareHolder, toggleModalShareholder } from './actions';
 import ComboBox from '../../../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../../../ui/input/inputComponent';
 import Textarea from '../../../../../ui/textarea/textareaComponent';
+import AuditFiles from '../../../../globalComponents/auditFiles';
+import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
+
+import { shareholdersByClientFindServer, clearShareholderCreate, clearShareholderOrder } from '../actions';
+import { getDetailShareHolder, toggleModalShareholder } from './actions';
 import { consultDataSelect, consultListWithParameterUbication, getMasterDataFields } from '../../../../selectsComponent/actions';
 import { createShareholder } from '../createShareholder/actions';
-import { CONTACT_ID_TYPE, CLIENT_TYPE, CLIENT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER }
-  from '../../../../selectsComponent/constants';
+import { changeStateSaveData } from '../../../../dashboard/actions';
+import { formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation } from '../../../../../actionsGlobal';
+import { redirectUrl } from '../../../../globalComponents/actions';
+import { showLoading } from '../../../../loading/actions';
+import { swtShowMessage } from '../../../../sweetAlertMessages/actions';
+
+import { NUMBER_RECORDS } from '../constants';
+import {
+  CONTACT_ID_TYPE, CLIENT_TYPE, CLIENT_ID_TYPE, FILTER_COUNTRY,
+  FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND,
+  SHAREHOLDER_ID_TYPE, GENDER } from '../../../../selectsComponent/constants';
 import {
   NATURAL_PERSON, JURIDICAL_PERSON, MESSAGE_SAVE_DATA, EDITAR,
   MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
@@ -22,14 +35,6 @@ import {
   REGEX_SIMPLE_XSS_MESAGE,
   REGEX_SIMPLE_XSS_STRING
 } from '../../../../../constantsGlobal';
-import { changeStateSaveData } from '../../../../dashboard/actions';
-import { formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation } from '../../../../../actionsGlobal';
-import _ from 'lodash';
-import { redirectUrl } from '../../../../globalComponents/actions';
-import { showLoading } from '../../../../loading/actions';
-import { swtShowMessage } from '../../../../sweetAlertMessages/actions';
-import AuditFiles from '../../../../globalComponents/auditFiles';
-import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
 
 const fields = ["id", "address", "cityId", "clientId", "comment", "countryId", "firstLastName", "firstName",
   "fiscalCountryId", "genderId", "middleName", "provinceId", "secondLastName", "shareHolderIdNumber",
@@ -298,12 +303,11 @@ class ComponentShareHolderDetail extends Component {
     }
     return (
       <form onSubmit={handleSubmit(this._submitEditShareHolderDetail)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
-        <SecurityMessageComponent/>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
           <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información básica accionista</span></dt>
           <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
             <Row>
-            <Col xs={12} md={4} lg={4}>
+              <Col xs={12} md={4} lg={4}>
                 <dt>
                   <span>Tipo de persona</span>
                 </dt>
@@ -330,7 +334,7 @@ class ComponentShareHolderDetail extends Component {
                     {shareHolderIdNumber.value}
                   </p>
                 </dt>
-              </Col>              
+              </Col>
             </Row>
             <Row>
               <Col xs={12} md={4} lg={4}>

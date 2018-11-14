@@ -2,36 +2,38 @@ import React, { Component, PropTypes } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import moment from 'moment';
+import _ from 'lodash';
+import numeral from 'numeral';
+
 import Textarea from '../../ui/textarea/textareaComponent';
 import SweetAlert from '../sweetalertFocus';
-import { createProspect } from './actions';
-import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
 import { redirectUrl } from '../globalComponents/actions';
 import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
-import moment from 'moment';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import _ from 'lodash';
-import numeral from 'numeral';
+
+import { createProspect } from './actions';
 import { changeStateSaveData } from '../dashboard/actions';
-import { MENU_CLOSED } from '../navBar/constants';
-import {
-    MESSAGE_SAVE_DATA, MODULE_PROSPECT, OPTION_REQUIRED, VALUE_REQUIERED,
-    VALUE_XSS_INVALID
-} from '../../constantsGlobal';
+import { getMasterDataFields } from '../selectsComponent/actions';
 import {
     consultDataSelect,
     consultList,
     consultListWithParameter,
     consultListWithParameterUbication
 } from '../selectsComponent/actions';
+
+import * as constants from '../selectsComponent/constants';
 import { SEGMENTS, SUBSEGMENTS, OCCUPATION } from '../selectsComponent/constants';
-import { getMasterDataFields } from '../selectsComponent/actions';
+import {
+    MESSAGE_SAVE_DATA, OPTION_REQUIRED, VALUE_REQUIERED,
+    VALUE_XSS_INVALID
+} from '../../constantsGlobal';
 import { CONSTRUCT_PYME } from '../clientEdit/constants';
-import { xssValidation } from '../../actionsGlobal';
 import * as constantsPropect from './constants';
 
+import { fields, validations as validate } from './fieldsAndRules';
 
 const valuesYesNo = [
     { 'id': true, 'value': "Si" },
@@ -45,125 +47,7 @@ let typeConfirm = "create";
 //Controla si el campo Segmento esta seleccionado constructor pyme.
 let isSegmentPymeConstruct = false;
 
-const fields = ["razonSocial", "firstName", "middleName", "lastName", "middleLastName", "occupation", "descriptionCompany", "reportVirtual", "extractsVirtual", "marcGeren", "necesitaLME", "idCIIU",
-    "idSubCIIU", "address", "country", "province", "city", "telephone", "district", "annualSales", "assets", "centroDecision", "idCelula",
-    "liabilities", "operatingIncome", "nonOperatingIncome", "expenses", "dateSalesAnnuals", "segment", "subSegment"];
-
 let isNature = false;
-
-const validate = (values, props) => {
-    const errors = {}
-    if (!values.razonSocial && !isNature) {
-        errors.razonSocial = VALUE_REQUIERED;
-    }
-    else if (xssValidation(values.razonSocial)) {
-        errors.razonSocial = VALUE_XSS_INVALID;
-    }
-    else {
-        errors.razonSocial = null;
-    }
-
-    /**
-     * validaciones persona natural
-     */
-    if (!values.firstName && isNature) {
-        errors.firstName = VALUE_REQUIERED;
-    }
-    else if (xssValidation(values.firstName)) {
-        errors.firstName = VALUE_XSS_INVALID;
-    }
-    else {
-        errors.firstName = null;
-    }
-
-    if (xssValidation(values.middleName)) {
-        errors.middleName = VALUE_XSS_INVALID;
-    }
-    else {
-        errors.middleName = null;
-    }
-
-    if (xssValidation(values.middleLastName)) {
-        errors.middleLastName = VALUE_XSS_INVALID;
-    }
-    else {
-        errors.middleLastName = null;
-    }
-
-    if (!values.lastName && isNature) {
-        errors.lastName = VALUE_REQUIERED;
-    }
-    else if (xssValidation(values.lastName)) {
-        errors.lastName = VALUE_XSS_INVALID;
-    }
-    else {
-        errors.lastName = null;
-    }
-    /**
-     * fin
-     */
-
-    if (!values.idCelula) {
-        errors.idCelula = VALUE_REQUIERED;
-    } else {
-        errors.idCelula = null;
-    }
-    if (!values.segment) {
-        errors.segment = OPTION_REQUIRED;
-    } else {
-        const value = _.get(_.find(props.selectsReducer.get(constants.SEGMENTS), ['id', parseInt(values.segment)]), 'value');
-        if (_.isEqual(CONSTRUCT_PYME, value)) {
-            if (!values.subSegment) {
-                errors.subSegment = OPTION_REQUIRED;
-            } else {
-                errors.subSegment = null;
-            }
-        }
-        errors.segment = null;
-    }
-
-    if (xssValidation(values.descriptionCompany)) {
-        errors.descriptionCompany = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.address)) {
-        errors.address = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.district)) {
-        errors.district = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.telephone)) {
-        errors.telephone = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.anualSales)) {
-        errors.anualSales = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.assets)) {
-        errors.assets = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.liabilities)) {
-        errors.liabilities = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.operatingIncome)) {
-        errors.operatingIncome = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.nonOperatingIncome)) {
-        errors.nonOperatingIncome = VALUE_XSS_INVALID;
-    }
-
-    if (xssValidation(values.expenses)) {
-        errors.expenses = VALUE_XSS_INVALID;
-    }
-
-    return errors;
-};
 
 class FormCreateProspect extends Component {
     constructor(props) {
@@ -229,7 +113,7 @@ class FormCreateProspect extends Component {
             }
             valuReduxForm.onChange(val);
         } else { //Valido si el valor es negativo o positivo
-            var value = numeral(valuReduxForm.value).format('0');
+            var value = numeral(val).format('0');
             if (value >= 0) {
                 pattern = /(-?\d+)(\d{3})/;
                 while (pattern.test(val)) {
@@ -248,20 +132,19 @@ class FormCreateProspect extends Component {
             const {
                 fields: {
                     razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
-                address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
-                nonOperatingIncome, expenses, dateSalesAnnuals, idCelula, segment, subSegment, firstName, middleName, lastName, middleLastName, occupation
+                    address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
+                    nonOperatingIncome, expenses, dateSalesAnnuals, idCelula, segment, subSegment, firstName, middleName, lastName, middleLastName, occupation
                 }, idTupeDocument, numberDocument, changeStateSaveData, clientType
             } = this.props;
 
-
-
             var jsonCreateProspect = {
                 "clientIdNumber": numberDocument,
-                "clientName": !isNature ? razonSocial.value : (firstName.value + " " + middleName.value + " " + lastName.value + " " + middleLastName.value),
+                "clientName": razonSocial.value,
                 "clientStatus": "",
                 "riskRating": null,
                 "isProspect": true,
                 "ciiu": idCIIU.value,
+                "idCiiu": idCIIU.value,
                 "celulaId": idCelula.value,
                 "commercialRelationshipType": "",
                 "countryOfOrigin": "",
@@ -314,11 +197,8 @@ class FormCreateProspect extends Component {
                 "description": descriptionCompany.value,
                 "clientIdType": idTupeDocument,
                 "clientType": clientType.id,
-                "firstName": firstName.value,
-                "middleName": middleName.value,
-                "lastName": lastName.value,
-                "middleLastName": middleLastName.value,
-                "occupation": isNature ? occupation.value : null
+                "occupation": isNature ? occupation.value : null,
+                "saveMethod": "prospecto"
             };
             const { createProspect } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -329,7 +209,7 @@ class FormCreateProspect extends Component {
                     if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
                         redirectUrl("/login");
                     } else {
-                        if (_.get(data, 'payload.data.responseCreateProspect', false)) {
+                        if (_.get(data, 'payload.data.status') === 200) {
                             this.setState({ showEx: true });
                         } else {
                             this.setState({ showEr: true });
@@ -369,6 +249,7 @@ class FormCreateProspect extends Component {
 
     _onChangeCIIU(val) {
         const { fields: { idCIIU, idSubCIIU } } = this.props;
+
         idCIIU.onChange(val);
         const { consultListWithParameter } = this.props;
         consultListWithParameter(constants.SUB_CIIU, val);
@@ -404,8 +285,8 @@ class FormCreateProspect extends Component {
         const {
             fields: {
                 razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
-            address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
-            nonOperatingIncome, expenses, dateSalesAnnuals, idCelula, segment, subSegment, firstName, middleName, lastName, middleLastName, occupation
+                address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
+                nonOperatingIncome, expenses, dateSalesAnnuals, idCelula, segment, subSegment, firstName, middleName, lastName, middleLastName, occupation
             },
             error, handleSubmit, selectsReducer, navBar, clientType
         } = this.props;
@@ -416,9 +297,6 @@ class FormCreateProspect extends Component {
 
         return (
             <form onSubmit={handleSubmit(this._submitFormCreateProspect)}>
-
-
-
                 <Row style={{
                     height: "100%",
                     marginTop: "3px",
@@ -426,79 +304,20 @@ class FormCreateProspect extends Component {
                     marginBottom: "100px",
                     backgroundColor: "#F0F0F0"
                 }}>
-
-                    {!isNature &&
                         <Col xs={12} md={8} lg={8} style={{ marginTop: "20px", paddingRight: "35px" }}>
                             <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                                 <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
                                 <Input
                                     name="razonSocial"
                                     type="text"
-                                    max="150"
+                                    max="50"
                                     placeholder="Ingrese la razón social del prospecto"
                                     {...razonSocial}
                                 />
                             </div>
                         </Col>
-                    }
-
-                    {isNature &&
-
-                        <Col xs={12} md={6} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Primer nombre (</span><span style={{ color: "red" }}>*</span>)</dt>
-                                <Input
-                                    name="firstName"
-                                    type="text"
-                                    max="150"
-                                    placeholder="Ingrese el primer nombre del prospecto"
-                                    {...firstName}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {isNature &&
-                        <Col xs={12} md={6} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Segundo nombre </span></dt>
-                                <Input
-                                    name="middleName"
-                                    type="text"
-                                    max="150"
-                                    placeholder="Ingrese el segundo nombre del prospecto"
-                                    {...middleName}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {isNature &&
-                        <Col xs={12} md={6} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingRight: "10px" }}>
-                                <dt><span>Primer apellido  (</span><span style={{ color: "red" }}>*</span>)</dt>
-                                <Input
-                                    name="lastName"
-                                    type="text"
-                                    max="150"
-                                    placeholder="Ingrese el primer apellido del prospecto"
-                                    {...lastName}
-                                />
-                            </div>
-                        </Col>
-                    }
-                    {isNature &&
-                        <Col xs={12} md={6} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Segundo apellido</span></dt>
-                                <Input
-                                    name="middleLastName"
-                                    type="text"
-                                    max="150"
-                                    placeholder="Ingrese el segundo apellido del prospecto"
-                                    {...middleLastName}
-                                />
-                            </div>
-                        </Col>
-                    }
+                
+                
                     {isNature &&
 
                         <Col xs={12} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
@@ -517,19 +336,19 @@ class FormCreateProspect extends Component {
                         </Col>
                     }
 
-
-
-                    <Col xs={10} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "45px" }}>
-                        <dt><span>Célula (</span><span style={{ color: "red" }}>*</span>)</dt>
-                        <ComboBox
-                            name="Célula"
-                            labelInput="Célula"
-                            valueProp={'id'}
-                            textProp={'description'}
-                            parentId="dashboardComponentScroll"
-                            data={selectsReducer.get('teamValueObjects')}
-                            {...idCelula}
-                        />
+                    <Col xs={10} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
+                            <dt><span>Célula (</span><span style={{ color: "red" }}>*</span>)</dt>
+                            <ComboBox
+                                name="Célula"
+                                labelInput="Célula"
+                                valueProp={'id'}
+                                textProp={'description'}
+                                parentId="dashboardComponentScroll"
+                                data={selectsReducer.get('teamValueObjects')}
+                                {...idCelula}
+                            />
+                        </div>
                     </Col>
 
                     <Col xs={12} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
@@ -616,6 +435,14 @@ class FormCreateProspect extends Component {
                             />
                         </div>
                     </Col>
+                    <Col xs={12} md={6} lg={6}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
+                            <dt style={{ paddingBottom: "10px" }}><span>Descripción Ciiu</span></dt>
+                            <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
+                                {idCIIU.value && _.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)])[0].description}
+                            </span>
+                        </div>
+                    </Col>
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
                             <dt style={{ paddingBottom: "10px" }}><span>Sector</span></dt>
@@ -668,7 +495,7 @@ class FormCreateProspect extends Component {
                             <Input
                                 name="address"
                                 type="text"
-                                max="250"
+                                max="60"
                                 placeholder="Ingrese la dirección del prospecto"
                                 {...address}
                             />
@@ -726,7 +553,7 @@ class FormCreateProspect extends Component {
                                 <Input
                                     name="district"
                                     type="text"
-                                    max="120"
+                                    max="40"
                                     placeholder="Ingrese el barrio del prospecto"
                                     {...district}
                                 />
@@ -789,88 +616,82 @@ class FormCreateProspect extends Component {
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>Ventas anuales</span></dt>
-                            <input
+                            <Input
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese las ventas anuales"
                                 type="text"
                                 min={0}
-                                maxLength="16"
+                                max="15"
                                 {...annualSales}
-                                value={annualSales.value}
-                                onBlur={val => this._handleBlurValueNumber(1, annualSales, annualSales.value)}
+                                onBlur={val => this._handleBlurValueNumber(1, annualSales, val)}
                             />
                         </div>
                     </Col>
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>Activos</span></dt>
-                            <input
+                            <Input
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese los activos"
                                 type="text"
                                 min={0}
-                                maxLength="16"
+                                max="15"
                                 {...assets}
-                                value={assets.value}
-                                onBlur={val => this._handleBlurValueNumber(1, assets, assets.value)}
+                                onBlur={val => this._handleBlurValueNumber(1, assets, val)}
                             />
                         </div>
                     </Col>
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>Pasivos</span></dt>
-                            <input
+                            <Input
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese los pasivos"
                                 type="text"
                                 min={0}
-                                maxLength="16"
+                                max="15"
                                 {...liabilities}
-                                value={liabilities.value}
-                                onBlur={val => this._handleBlurValueNumber(1, liabilities, liabilities.value)}
+                                onBlur={val => this._handleBlurValueNumber(1, liabilities, val)}
                             />
                         </div>
                     </Col>
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "35px" }}>
                             <dt><span>Ingresos operacionales</span></dt>
-                            <input
+                            <Input
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese los ingresos operacionales"
                                 type="text"
-                                maxLength="16"
+                                max="15"
                                 {...operatingIncome}
-                                value={operatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(2, operatingIncome, operatingIncome.value)}
+                                onBlur={val => this._handleBlurValueNumber(1, operatingIncome, val)}
                             />
                         </div>
                     </Col>
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px" }}>
                             <dt><span>Ingresos no operacionales</span></dt>
-                            <input
+                            <Input
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese los ingresos no operacionales"
                                 type="text"
-                                maxLength="16"
+                                max="15"
                                 {...nonOperatingIncome}
-                                value={nonOperatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(2, nonOperatingIncome, nonOperatingIncome.value)}
+                                onBlur={val => this._handleBlurValueNumber(1, nonOperatingIncome, val)}
                             />
                         </div>
                     </Col>
                     <Col xs={12} md={3} lg={3}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px", paddingTop: "15px" }}>
                             <dt><span>Egresos</span></dt>
-                            <input
+                            <Input
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese los egresos"
-                                min={0}
-                                maxLength="16"
+                                name="expenses"
                                 type="text"
+                                max="15"
                                 {...expenses}
-                                value={expenses.value}
-                                onBlur={val => this._handleBlurValueNumber(1, expenses, expenses.value)}
+                                onBlur={val => this._handleBlurValueNumber(1, expenses, val)}
                             />
                         </div>
                     </Col>
@@ -976,12 +797,6 @@ export default reduxForm({
     fields,
     validate,
     onSubmitFail: errors => {
-
-        if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
-            thisForm.setState({ showEr: true });
-        } else {
-            thisForm.setState({ showEr: true });
-        }
-
+        thisForm.setState({ showEr: true });
     }
 }, mapStateToProps, mapDispatchToProps)(FormCreateProspect);

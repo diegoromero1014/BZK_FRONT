@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { nonValidateEnter } from '../../actionsGlobal';
-import { REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT } from '../../constantsGlobal';
 import $ from 'jquery';
 import _ from 'lodash';
+
+import { nonValidateEnter } from '../../actionsGlobal';
 
 class TextareaComponent extends Component {
     constructor(props) {
@@ -31,6 +31,7 @@ class TextareaComponent extends Component {
         } else {
             nonValidateEnter(false);
         }
+
         if (tecla === 13 && validateEnter) {
             e.preventDefault();
         }
@@ -43,13 +44,11 @@ class TextareaComponent extends Component {
             touched: true,
             focus: false
         });
+
         let trimmed = this.state.value.trim(); 
 
         onChange(trimmed);
-
         nonValidateEnter(true);
-
-
     }
 
     _onFocus(e, event) {
@@ -63,27 +62,24 @@ class TextareaComponent extends Component {
         this.setState({
             value: e.target.value
         });
-        
     }
 
     componentWillMount() {
         const {value} = this.props;
-
         this.setState({value: value});
     }
 
     componentWillReceiveProps(nextProps) {
-
         if(nextProps.value != this.state.value && ! this.state.focus) {
             this.setState({value: nextProps.value});
         }
-
     }
 
 
     render() {
-        const { nameInput, value, style, type, placeholder, max, touched, error, name, onChange,
-            min, defaultValue, rows, onKey, disabled } = this.props;
+        const { nameInput, value, style, type, placeholder, max, touched, error,
+            name, onChange, min, defaultValue, rows, onKey, disabled
+        } = this.props;
 
         return (
             <div className={disabled}>

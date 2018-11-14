@@ -1,12 +1,13 @@
-import React, { Component, PropTypes } from 'react';
-import GridComponent from '../grid/component';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { DELETE_PARTICIPANT_VIEW, KEY_PARTICIPANT_BANCO } from './constants';
-import { deleteParticipant } from './actions';
-import SweetAlert from '../sweetalertFocus';
 import _ from 'lodash';
 
+import SweetAlert from '../sweetalertFocus';
+
+import { deleteParticipant } from './actions';
+
+import { DELETE_PARTICIPANT_VIEW, KEY_PARTICIPANT_BANCO } from './constants';
 
 class ListParticipantesBancolombia extends Component {
 
@@ -16,11 +17,10 @@ class ListParticipantesBancolombia extends Component {
       showConfirmDeleteParticiBanc: false,
       idParticipantSelect: null
     };
+
     this._mapValuesData = this._mapValuesData.bind(this);
     this._clickButtonDelete = this._clickButtonDelete.bind(this);
   }
-
-
 
   _confirmDeleteParticipant(idData) {
     this.setState({
@@ -34,10 +34,12 @@ class ListParticipantesBancolombia extends Component {
     var indexDelete = participants.findIndex(item => {
       return item.idParticipante === this.state.idParticipantSelect;
     });
+
     this.setState({
       showConfirmDeleteParticiBanc: false,
       idParticipantSelect: null
     });
+
     deleteParticipant(indexDelete, KEY_PARTICIPANT_BANCO);
   }
 
@@ -78,6 +80,7 @@ function orderListParticipantBank(participants, disabled) {
   participants = participants.sort((valueA, valueB) => {
     return valueA.fecha > valueB.fecha;
   })
+  
   if (participants.size > 0) {
     var data = _.chain(participants.toArray()).map(participant => {
       const { tipoParticipante, idParticipante, nombreParticipante, cargo, empresa, estiloSocial,

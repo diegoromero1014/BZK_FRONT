@@ -1,34 +1,31 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
+import _ from 'lodash';
+
 import SweetAlert from '../../../../sweetalertFocus';
 import ComboBox from '../../../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../../../ui/input/inputComponent';
 import Textarea from '../../../../../ui/textarea/textareaComponent';
+import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
+
 import { redirectUrl } from '../../../../globalComponents/actions';
-import {
-  PERSONA_NATURAL, PERSONA_JURIDICA, MESSAGE_SAVE_DATA,
-  REGEX_SIMPLE_XSS,
-  VALUE_XSS_INVALID,
-  REGEX_SIMPLE_XSS_MESAGE,
-  REGEX_SIMPLE_XSS_STRING
-} from '../../../../../constantsGlobal';
 import { toggleModalShareholder, clearSearchShareholder, searchShareholder, createShareholder } from './actions';
 import { shareholdersByClientFindServer, clearShareholderOrder, clearShareholderCreate } from '../actions';
 import { consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess } from '../../../../selectsComponent/actions';
+import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../../../actionsGlobal';
+import { changeStateSaveData } from '../../../../dashboard/actions';
+
+import { NUMBER_RECORDS, NATURE_PERSON } from '../constants';
+import {
+  MESSAGE_SAVE_DATA,
+  REGEX_SIMPLE_XSS_MESAGE
+} from '../../../../../constantsGlobal';
 import {
   CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE,
   SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER, CLIENT_ID_TYPE, CLIENT_TYPE
 } from '../../../../selectsComponent/constants';
-import { NUMBER_RECORDS, NATURE_PERSON } from '../constants';
-import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../../../actionsGlobal';
-import * as constants from './constants';
-import { changeStateSaveData } from '../../../../dashboard/actions';
-import numeral from 'numeral';
-import _ from 'lodash';
-import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
 
 const fields = ["tipoDocumento", "numeroDocumento", "tipoPersona",
   "tipoAccionista", "paisResidencia", "primerNombre", "segundoNombre",
@@ -42,7 +39,7 @@ var message = "Señor usuario, debe seleccionar el tipo de documento e ingresar 
 
 var valueTypeShareholder;
 
-const validate = (values) => {  
+const validate = (values) => {
 
   if (!values.tipoDocumento) {
     errors.tipoDocumento = "Debe seleccionar una opción";
@@ -64,10 +61,12 @@ const validate = (values) => {
     errors.numeroDocumento = "Debe ingresar un valor";
   } else if (xssValidation(values.numeroDocumento)) {
     errors.numeroDocumento = VALUE_XSS_INVALID;
-  } else if (values.numeroDocumento.trim()) {
+  } else if (values.numeroDocumento.trim().length == 0) {
     errors.numeroDocumento = "Debe ingresar un valor"
+  } else {
     errors.numeroDocumento = null;
   }
+
   if (!values.primerNombre && valueTypeShareholder === NATURE_PERSON) {
     errors.primerNombre = "Debe ingresar un valor";
   } else if (xssValidation(values.primerNombre)) {
@@ -83,6 +82,7 @@ const validate = (values) => {
   } else {
     errors.primerApellido = null;
   }
+
   if (!values.razonSocial && valueTypeShareholder != NATURE_PERSON) {
     errors.razonSocial = "Debe ingresar un valor";
   } else if (xssValidation(values.razonSocial)) {
@@ -90,6 +90,7 @@ const validate = (values) => {
   } else {
     errors.razonSocial = null;
   }
+
   if (!values.porcentajePart) {
     errors.porcentajePart = "Debe ingresar un valor";
   } else if (xssValidation(values.porcentajePart)) {
@@ -107,21 +108,25 @@ const validate = (values) => {
   } else {
     errors.segundoNombre = null;
   }
+
   if (xssValidation(values.segundoApellido)) {
     errors.segundoApellido = VALUE_XSS_INVALID;
   } else {
     errors.segundoApellido = null;
   }
+
   if (xssValidation(values.direccion)) {
     errors.direccion = VALUE_XSS_INVALID;
   } else {
     errors.direccion = null;
   }
+
   if (xssValidation(values.numeroIdTributaria)) {
     errors.numeroIdTributaria = VALUE_XSS_INVALID;
   } else {
     errors.numeroIdTributaria = null;
   }
+
   if (xssValidation(values.observaciones)) {
     errors.observaciones = VALUE_XSS_INVALID;
   } else {
@@ -206,10 +211,10 @@ class ModalComponentShareholder extends Component {
   _searchShareholder() {
     const { fields: { tipoDocumento, numeroDocumento },
 
-    searchShareholder, clearSearchShareholder } = this.props;
+      searchShareholder, clearSearchShareholder } = this.props;
     let numeroDocumentoTrimmed = numeroDocumento.value.trim();
-     numeroDocumento.onChange(numeroDocumentoTrimmed);
-    
+    numeroDocumento.onChange(numeroDocumentoTrimmed);
+
     if (tipoDocumento.value && numeroDocumentoTrimmed) {
 
       if (xssValidation(numeroDocumentoTrimmed)) {
@@ -295,22 +300,20 @@ class ModalComponentShareholder extends Component {
       let clientType = clientTypes.find(type => type.id == valor);
       let idTypeMaster = "";
       if (clientType != undefined) {
-        if(clientType.key == NATURE_PERSON ) {
+        if (clientType.key == NATURE_PERSON) {
           idTypeMaster = CONTACT_ID_TYPE;
         } else {
           idTypeMaster = CLIENT_ID_TYPE;
         }
         valueTypeShareholder = clientType.value;
-            
-      
-                          
-      this.setState({
-        idTypeMaster: selectsReducer.get(idTypeMaster),
-        valueTypeShareholder: clientType.key,
-        idTypeMasterSelector: idTypeMaster,
-        personType: _.filter(selectsReducer.get(CLIENT_TYPE), ['id', parseInt(valor)]).pop()
-      });
-    }
+
+        this.setState({
+          idTypeMaster: selectsReducer.get(idTypeMaster),
+          valueTypeShareholder: clientType.key,
+          idTypeMasterSelector: idTypeMaster,
+          personType: _.filter(selectsReducer.get(CLIENT_TYPE), ['id', parseInt(valor)]).pop()
+        });
+      }
     } else {
       this.setState({
         idTypeMaster: [],
@@ -325,8 +328,8 @@ class ModalComponentShareholder extends Component {
     const { fields: { tipoDocumento, numeroDocumento, tipoPersona, tipoAccionista,
       paisResidencia, primerNombre, segundoNombre, primerApellido, segundoApellido,
       genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
-      numeroIdTributaria, observaciones }, shareholdersByClientFindServer, createShareholder, changeStateSaveData } = this.props;      
-      
+      numeroIdTributaria, observaciones }, shareholdersByClientFindServer, createShareholder, changeStateSaveData } = this.props;
+
     var messageBody = {
       "clientId": window.sessionStorage.getItem('idClientSelected'),
       "shareHolderIdType": tipoDocumento.value.trim(),
@@ -395,10 +398,10 @@ class ModalComponentShareholder extends Component {
       paisResidencia, primerNombre, segundoNombre, primerApellido, segundoApellido,
       genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
       numeroIdTributaria, observaciones },
-      selectsReducer, createShareholder, handleSubmit, error, reducerGlobal } = this.props;      
+      selectsReducer, createShareholder, handleSubmit, error, reducerGlobal } = this.props;
     return (
       <form onSubmit={handleSubmit(this._handleCreateShareholder)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
-        <SecurityMessageComponent/>
+        <SecurityMessageComponent />
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
           <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información básica accionista</span></dt>
           <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
@@ -449,7 +452,7 @@ class ModalComponentShareholder extends Component {
                 </dl>
               </Col>
             </Row>
-            <Row style={{ visibility: this.state.noExiste }}>              
+            <Row style={{ visibility: this.state.noExiste }}>
               <Col xs={12} md={4} lg={4}>
                 <dt><span>Tipo de accionista (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <ComboBox name="tipoAccionista"

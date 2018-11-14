@@ -1,17 +1,65 @@
 import React, { Component } from "react";
 import SweetAlert from "../sweetalertFocus";
 import { bindActionCreators } from "redux";
+import { Col, Row } from "react-flexbox-grid";
+import { reduxForm } from "redux-form";
+import numeral from "numeral";
+import _ from "lodash";
+import $ from "jquery";
+import moment from "moment";
+
+import ComboBox from "../../ui/comboBox/comboBoxComponent";
+import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
+import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
+import Input from "../../ui/input/inputComponent";
+import Textarea from "../../ui/textarea/textareaComponent";
+import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
+import momentLocalizer from "react-widgets/lib/localizers/moment";
+import NotesClient from "./notes/notesClient";
+import ProductsClient from "./products/productList";
+import BottonContactAdmin from "../clientDetailsInfo/bottonContactAdmin";
+import BottonShareholderAdmin from "../clientDetailsInfo/bottonShareholderAdmin";
+import ModalErrorsUpdateClient from "./modalErrorsUpdateClient";
+import ClientTypology from "../contextClient/ClientTypology";
+import ContextEconomicActivity from "../contextClient/contextEconomicActivity";
+import ComponentListLineBusiness from "../contextClient/listLineOfBusiness/componentListLineBusiness";
+import ComponentListDistributionChannel from "../contextClient/listDistributionChannel/componentListDistributionChannel";
+import InventorPolicy from "../contextClient/inventoryPolicy";
+import ControlLinkedPayments from "../contextClient/controlLinkedPayments";
+import ComponentListMainClients from "../contextClient/listMainClients/componentListMainClients";
+import ComponentListMainSupplier from "../contextClient/listMainSupplier/componentListMainSupplier";
+import ComponentListMainCompetitor from "../contextClient/listMainCompetitor/componentListMainCompetitor";
+import ComponentListIntOperations from "../contextClient/listInternationalOperations/componentListIntOperations";
+import ComponentInfoClient from './components/InfoClient';
+import ComponentInfoClientPN from './components/InfoClientPN';
+import { validationRules as rulesInfoClient } from './components/InfoClient.js';
+import { validationRules as rulesInfoClientPN } from './components/InfoClientPN.js';
+import ActividadEconomicaPN from './components/ActividadEconomicaPN';
+import ActividadEconomica from './components/ActividadEconomica';
+import { validationRules as rulesActividadEconomica } from './components/ActividadEconomica';
+import { validationRules as rulesActividadEconomicaPN } from './components/ActividadEconomicaPN';
+import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
+
+import { clearProducts, setProducts } from "./products/actions";
+import { clearNotes, deleteNote, setNotes } from "./notes/actions";
+import { createProspect } from "../propspect/actions";
+import { changeStateSaveData } from "../dashboard/actions";
+import { swtShowMessage } from "../sweetAlertMessages/actions";
+import { showLoading } from "../loading/actions";
+import { saveCreditStudy } from "../clients/creditStudy/actions";
+import { validateResponse, stringValidate, xssValidation, onSessionExpire, validateFields } from "../../actionsGlobal";
 import { updateTitleNavBar } from "../navBar/actions";
 import {
     seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
     validateContactShareholder
 } from "../clientDetailsInfo/actions";
-import { Col, Row } from "react-flexbox-grid";
 import { goBack, redirectUrl } from "../globalComponents/actions";
 import {
     clearValuesAdressess, consultDataSelect, consultList, consultListWithParameter,
     consultListWithParameterUbication, economicGroupsByKeyword, getMasterDataFields
 } from "../selectsComponent/actions";
+
+import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
 import * as constants from "../selectsComponent/constants";
 import {
     GOVERNMENT, FINANCIAL_INSTITUTIONS, CONSTRUCT_PYME, KEY_DESMONTE,
@@ -25,60 +73,10 @@ import {
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT,
     INFO_ESTUDIO_CREDITO
 } from '../../constantsGlobal';
-
-import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
-import ComboBox from "../../ui/comboBox/comboBoxComponent";
-import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
-import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
-import Input from "../../ui/input/inputComponent";
-import Textarea from "../../ui/textarea/textareaComponent";
-import { reduxForm } from "redux-form";
-import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
-import moment from "moment";
-import momentLocalizer from "react-widgets/lib/localizers/moment";
-import NotesClient from "./notes/notesClient";
-import ProductsClient from "./products/productList";
-import { clearProducts, setProducts } from "./products/actions";
-import { clearNotes, deleteNote, setNotes } from "./notes/actions";
-import { createProspect } from "../propspect/actions";
-import { changeStateSaveData } from "../dashboard/actions";
-import BottonContactAdmin from "../clientDetailsInfo/bottonContactAdmin";
-import BottonShareholderAdmin from "../clientDetailsInfo/bottonShareholderAdmin";
-import ModalErrorsUpdateClient from "./modalErrorsUpdateClient";
-import { swtShowMessage } from "../sweetAlertMessages/actions";
-import numeral from "numeral";
-import _ from "lodash";
-import $ from "jquery";
-import { showLoading } from "../loading/actions";
 import {
     DISTRIBUTION_CHANNEL, INT_OPERATIONS, LINE_OF_BUSINESS, MAIN_CLIENTS,
     MAIN_COMPETITOR, MAIN_SUPPLIER
 } from "../contextClient/constants";
-import ClientTypology from "../contextClient/ClientTypology";
-import ContextEconomicActivity from "../contextClient/contextEconomicActivity";
-import ComponentListLineBusiness from "../contextClient/listLineOfBusiness/componentListLineBusiness";
-import ComponentListDistributionChannel from "../contextClient/listDistributionChannel/componentListDistributionChannel";
-import InventorPolicy from "../contextClient/inventoryPolicy";
-import ControlLinkedPayments from "../contextClient/controlLinkedPayments";
-import ComponentListMainClients from "../contextClient/listMainClients/componentListMainClients";
-import ComponentListMainSupplier from "../contextClient/listMainSupplier/componentListMainSupplier";
-import ComponentListMainCompetitor from "../contextClient/listMainCompetitor/componentListMainCompetitor";
-import ComponentListIntOperations from "../contextClient/listInternationalOperations/componentListIntOperations";
-import { saveCreditStudy } from "../clients/creditStudy/actions";
-import { validateResponse, stringValidate, xssValidation, onSessionExpire, validateFields } from "../../actionsGlobal";
-
-import ComponentInfoClient from './components/InfoClient';
-import ComponentInfoClientPN from './components/InfoClientPN';
-import {validationRules as rulesInfoClient} from './components/InfoClient.js';
-import {validationRules as rulesInfoClientPN} from './components/InfoClientPN.js';
-
-import ActividadEconomicaPN from './components/ActividadEconomicaPN';
-import ActividadEconomica from './components/ActividadEconomica';
-import {validationRules as rulesActividadEconomica} from './components/ActividadEconomica';
-import {validationRules as rulesActividadEconomicaPN} from './components/ActividadEconomicaPN';
-import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
-
-
 
 
 let idButton;
@@ -156,15 +154,11 @@ const UPDATE_STYLE = {
 
 const requiredField = <span>(<span style={{ color: "red" }}>*</span>)</span>;
 
-
-
 const drawRequiredField = (condition) => {
     if (condition) {
         return requiredField;
     }
 }
-
-
 
 const validate = (values, props) => {
     const { reducerGlobal, tabReducer } = props;
@@ -173,13 +167,12 @@ const validate = (values, props) => {
     const errors = {}
     let errorScrollTop = false;
 
-
     if (props.isPersonaNatural) {
-        validateFields(values,rulesInfoClientPN(props),errors);    
-        validateFields(values,rulesActividadEconomicaPN(props),errors);
+        validateFields(values, rulesInfoClientPN(props), errors);
+        validateFields(values, rulesActividadEconomicaPN(props), errors);
     } else {
-        validateFields(values,rulesInfoClient(props),errors);
-        validateFields(values,rulesActividadEconomica(props),errors);
+        validateFields(values, rulesInfoClient(props), errors);
+        validateFields(values, rulesActividadEconomica(props), errors);
     }
 
     if (!values.addressClient && idButton !== BUTTON_EDIT) {
@@ -363,14 +356,9 @@ const validate = (values, props) => {
             errors.otherOriginResource = null;
         }
     }
+
     if (otherOperationsForeignEnable !== 'disabled') {
-
-
-
         if ((values.otherOperationsForeign === null || values.otherOperationsForeign === undefined || values.otherOperationsForeign === '') && idButton !== BUTTON_EDIT) {
-
-
-
             errors.otherOperationsForeign = OPTION_REQUIRED;
             errorScrollTop = true;
         } else if (xssValidation(values.otherOperationsForeign)) {
@@ -379,8 +367,6 @@ const validate = (values, props) => {
         } else {
             errors.otherOperationsForeign = null;
         }
-    } else {
-
     }
 
     //Valido que el cliente tenga ciudad de origen de los recursos
@@ -404,7 +390,6 @@ const validate = (values, props) => {
 
     //Valido los campos que son necesarios para actualizar un cliente
     if (idButton === BUTTON_UPDATE) {
-       
         //Valido si el cliente tiene ingresos no operaciones
         if ((values.nonOperatingIncome === null || values.nonOperatingIncome === undefined || values.nonOperatingIncome === '') && idButton !== BUTTON_EDIT) {
             errors.nonOperatingIncome = OPTION_REQUIRED;
@@ -512,8 +497,6 @@ const validate = (values, props) => {
         errors.segment = null;
     }
 
-
-
     if (xssValidation(values.description)) {
         errors.description = VALUE_XSS_INVALID;
         errorScrollTop = true;
@@ -542,19 +525,10 @@ const validate = (values, props) => {
         errors.inventoryPolicy = null;
     }
 
-    //ComponentListLineBusiness
-    //ComponentListDistributionChannel
-    //ComponentListMainClients
-    //ComponentListMainSupplier
-    //ComponentListMainCompetitor
-    //ComponentListIntOperations
-
     if (errorScrollTop && clickButttonSave) {
-        //console.log("error faltan datos");
         clickButttonSave = false;
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
-
 
     return errors;
 };
@@ -613,7 +587,7 @@ class clientEdit extends Component {
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
-        
+
         this._onChangeOperationsForeigns = this._onChangeOperationsForeigns.bind(this);
         this._onChangeOriginGoods = this._onChangeOriginGoods.bind(this);
         this._onChangeOriginResource = this._onChangeOriginResource.bind(this);
@@ -1022,7 +996,7 @@ class clientEdit extends Component {
         }
     }
 
-    
+
     _onChangeOperationsForeigns(val) {
         const { fields: { otherOperationsForeign }, selectsReducer, clientInformacion } = this.props;
         var dataOperationsForeigns = selectsReducer.get(constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY);
@@ -1155,12 +1129,12 @@ class clientEdit extends Component {
         const {
             fields: {
                 idTypeClient, idNumber, razonSocial, description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, addressClient,
-            country, city, province, neighborhood, district, telephone, reportVirtual, extractsVirtual, annualSales,
-            dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods,
-            originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
-            detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
-            originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology,
-            firstName, middleName, lastName, middleLastName, occupation
+                country, city, province, neighborhood, district, telephone, reportVirtual, extractsVirtual, annualSales,
+                dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods,
+                originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
+                detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
+                originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology,
+                firstName, middleName, lastName, middleLastName, occupation
             },
             error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer
         } = this.props;
@@ -1170,144 +1144,143 @@ class clientEdit extends Component {
         });
         const infoClient = clientInformacion.get('responseClientInfo');
 
-            let razonSocialPN = "";
+        let razonSocialPN = "";
 
-            if (isPersonaNatural) {
-                razonSocialPN = firstName.value + (middleName.value ? " " + middleName.value : "") + " " + lastName.value + (middleLastName.value ? " " + middleLastName.value : "" );
-            }
+        if (isPersonaNatural) {
+            razonSocialPN = firstName.value + (middleName.value ? " " + middleName.value : "") + " " + lastName.value + (middleLastName.value ? " " + middleLastName.value : "");
+        }
 
-            const jsonCreateProspect = {
-                "id": infoClient.id,
-                "clientIdType": idTypeClient.value,
-                "clientIdNumber": idNumber.value,
-                "clientName": isPersonaNatural ? razonSocialPN : razonSocial.value,
-                "clientStatus": infoClient.clientStatus,
-                "riskRating": infoClient.riskRating,
-                "isProspect": infoClient.isProspect,
-                "ciiu": idCIIU.value,
-                "commercialRelationshipType": infoClient.commercialRelationshipType,
-                "countryOfOrigin": infoClient.countryOfOrigin,
-                "isDecisionCenter": centroDecision.value,
-                "economicGroup": groupEconomic.value,
-                "internalRating": infoClient.internalRating,
-                "isic": infoClient.isic,
-                "ratingHistory": infoClient.ratingHistory,
-                "registrationKey": infoClient.registrationKey,
-                "riskGroup": infoClient.riskGroup,
-                "segment": segment.value,
-                "subCiiu": idSubCIIU.value,
-                "subSegment": subSegment.value,
-                "countryOfFirstLevelManagement": infoClient.countryOfFirstLevelManagement,
-                "countryOfMainMarket": infoClient.countryOfMainMarket,
-                "relationshipStatus": infoClient.relationshipStatus,
-                "typeOfClient": infoClient.typeOfClient,
-                "status": infoClient.status,
-                "isCreditNeeded": necesitaLME.value,
-                "annualSales": (annualSales.value === undefined || annualSales.value === null || annualSales.value === '') ? null : numeral(annualSales.value).format('0'),
-                "salesUpadateDate": dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x') : null,
-                "assets": (assets.value === undefined || assets.value === null || assets.value === '') ? null : numeral(assets.value).format('0'),
-                "liabilities": (liabilities.value === undefined || liabilities.value === null || liabilities.value === '') ? null : numeral(liabilities.value).format('0'),
-                "operatingIncome": (operatingIncome.value === undefined || operatingIncome.value === null || operatingIncome.value === '') ? null : numeral(operatingIncome.value).format('0'),
-                "nonOperatingIncome": (nonOperatingIncome.value === undefined || nonOperatingIncome.value === null || nonOperatingIncome.value === '') ? null : numeral(nonOperatingIncome.value).format('0'),
-                "expenses": (expenses.value === undefined || expenses.value === null || expenses.value === '') ? null : numeral(expenses.value).format('0'),
-                "localMarket": infoClient.localMarket,
-                "marketLeader": infoClient.marketLeader,
-                "territory": infoClient.territory,
-                "actualizationDate": infoClient.actualizationDate,
-                "justificationForNoRM": marcGeren.value !== null && this.state.showJustifyNoGeren === false ? justifyNoGeren.value : '',
-                "justificationForLostClient": justifyExClient.value,
-                "justificationForCreditNeed": necesitaLME.value !== null && necesitaLME.value.toString() === 'false' ? justifyNoLME.value : '',
-                "isVirtualStatement": extractsVirtual.value,
-                "lineOfBusiness": infoClient.lineOfBusiness,
-                "isManagedByRm": marcGeren.value,
-                "addresses": [
-                    {
-                        "typeOfAddress": 41,
-                        "address": addressClient.value,
-                        "country": country.value,
-                        "province": province.value,
-                        "city": city.value,
-                        "neighborhood": neighborhood.value,
-                        "isPrincipalAddress": reportVirtual.value,
-                        "phoneNumber": telephone.value,
-                        "postalCode": infoClient.addresses[0] === null ? "" : infoClient.addresses.postalCoode,
-                    }],
-                "notes": notesArray,
-                "description": description.value,
-                "celulaId": infoClient.celulaId,
-                "nitPrincipal": ((!_.isNull(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null),
-                "foreignProducts": productsArray,
-                "originGoods": JSON.parse('[' + ((originGoods.value) ? originGoods.value : "") + ']'),
-                "originResources": JSON.parse('[' + ((originResource.value) ? originResource.value : "") + ']'),
-                "taxNature": taxNature.value,
-                "detailNonOperatinIncome": detailNonOperatingIncome.value,
-                "otherOriginGoods": otherOriginGoods.value,
-                "otherOriginResource": otherOriginResource.value,
-                "countryOriginId": countryOrigin.value,
-                "originCityResource": originCityResource.value,
-                "operationsForeignCurrency": operationsForeignCurrency.value ? (operationsForeignCurrency.value === 'false' ? 0 : 1) : '',
-                "otherOperationsForeign": otherOperationsForeign.value,
-                "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
-                "idCustomerTypology": customerTypology.value,
+        const jsonCreateProspect = {
+            "id": infoClient.id,
+            "clientIdType": idTypeClient.value,
+            "clientIdNumber": idNumber.value,
+            "clientName": isPersonaNatural ? razonSocialPN : razonSocial.value,
+            "clientStatus": infoClient.clientStatus,
+            "riskRating": infoClient.riskRating,
+            "isProspect": infoClient.isProspect,
+            "ciiu": idCIIU.value,
+            "idCiiu": idCIIU.value,
+            "commercialRelationshipType": infoClient.commercialRelationshipType,
+            "countryOfOrigin": infoClient.countryOfOrigin,
+            "isDecisionCenter": centroDecision.value,
+            "economicGroup": groupEconomic.value,
+            "internalRating": infoClient.internalRating,
+            "isic": infoClient.isic,
+            "ratingHistory": infoClient.ratingHistory,
+            "registrationKey": infoClient.registrationKey,
+            "riskGroup": infoClient.riskGroup,
+            "segment": segment.value,
+            "subCiiu": idSubCIIU.value,
+            "subSegment": subSegment.value,
+            "countryOfFirstLevelManagement": infoClient.countryOfFirstLevelManagement,
+            "countryOfMainMarket": infoClient.countryOfMainMarket,
+            "relationshipStatus": infoClient.relationshipStatus,
+            "typeOfClient": infoClient.typeOfClient,
+            "status": infoClient.status,
+            "isCreditNeeded": necesitaLME.value,
+            "annualSales": (annualSales.value === undefined || annualSales.value === null || annualSales.value === '') ? null : numeral(annualSales.value).format('0'),
+            "salesUpadateDate": dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x') : null,
+            "assets": (assets.value === undefined || assets.value === null || assets.value === '') ? null : numeral(assets.value).format('0'),
+            "liabilities": (liabilities.value === undefined || liabilities.value === null || liabilities.value === '') ? null : numeral(liabilities.value).format('0'),
+            "operatingIncome": (operatingIncome.value === undefined || operatingIncome.value === null || operatingIncome.value === '') ? null : numeral(operatingIncome.value).format('0'),
+            "nonOperatingIncome": (nonOperatingIncome.value === undefined || nonOperatingIncome.value === null || nonOperatingIncome.value === '') ? null : numeral(nonOperatingIncome.value).format('0'),
+            "expenses": (expenses.value === undefined || expenses.value === null || expenses.value === '') ? null : numeral(expenses.value).format('0'),
+            "localMarket": infoClient.localMarket,
+            "marketLeader": infoClient.marketLeader,
+            "territory": infoClient.territory,
+            "actualizationDate": infoClient.actualizationDate,
+            "justificationForNoRM": marcGeren.value !== null && this.state.showJustifyNoGeren === false ? justifyNoGeren.value : '',
+            "justificationForLostClient": justifyExClient.value,
+            "justificationForCreditNeed": necesitaLME.value !== null && necesitaLME.value.toString() === 'false' ? justifyNoLME.value : '',
+            "isVirtualStatement": extractsVirtual.value,
+            "lineOfBusiness": infoClient.lineOfBusiness,
+            "isManagedByRm": marcGeren.value,
+            "addresses": [
+                {
+                    "typeOfAddress": 41,
+                    "address": addressClient.value,
+                    "country": country.value,
+                    "province": province.value,
+                    "city": city.value,
+                    "neighborhood": neighborhood.value,
+                    "isPrincipalAddress": reportVirtual.value,
+                    "phoneNumber": telephone.value,
+                    "postalCode": infoClient.addresses[0] === null ? "" : infoClient.addresses.postalCoode,
+                }],
+            "notes": notesArray,
+            "description": description.value,
+            "celulaId": infoClient.celulaId,
+            "nitPrincipal": ((!_.isNull(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null),
+            "foreignProducts": productsArray,
+            "originGoods": JSON.parse('[' + ((originGoods.value) ? originGoods.value : "") + ']'),
+            "originResources": JSON.parse('[' + ((originResource.value) ? originResource.value : "") + ']'),
+            "taxNature": taxNature.value,
+            "detailNonOperatinIncome": detailNonOperatingIncome.value,
+            "otherOriginGoods": otherOriginGoods.value,
+            "otherOriginResource": otherOriginResource.value,
+            "countryOriginId": countryOrigin.value,
+            "originCityResource": originCityResource.value,
+            "operationsForeignCurrency": operationsForeignCurrency.value ? (operationsForeignCurrency.value === 'false' ? 0 : 1) : '',
+            "otherOperationsForeign": otherOperationsForeign.value,
+            "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
+            "idCustomerTypology": customerTypology.value,
 
-                "firstName": firstName.value,
-                "middleName": middleName.value,
-                "lastName": lastName.value,
-                "middleLastName": middleLastName.value,
-                "occupation": occupation.value,
-                "clientType" : infoClient.clientType,
+            "firstName": firstName.value,
+            "middleName": middleName.value,
+            "lastName": lastName.value,
+            "middleLastName": middleLastName.value,
+            "occupation": occupation.value,
+            "clientType": infoClient.clientType,
+        };
 
-
-            };
-
-            const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
-            changeStateSaveData(true, MESSAGE_SAVE_DATA);
-            createProspect(jsonCreateProspect).then((data) => {
-                if (_.get(data, 'payload.data.status', 500) === 200) {
-                    saveCreditStudy(this._createJsonSaveContextClient()).then((response) => {
-                        if (validateResponse(response)) {
-                            if (_.get(data, 'payload.data.responseCreateProspect', false)) {
-                                if (typeSave === BUTTON_EDIT) {
-                                    changeStateSaveData(false, "");
-                                    messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
-                                    this.setState({ showEx: true });
-                                } else {
-                                    updateClient(UPDATE).then((data) => {
-                                        if (!_.get(data, 'payload.data.validateLogin')) {
-                                            changeStateSaveData(false, "");
-                                            onSessionExpire();
-                                        } else {
-                                            changeStateSaveData(false, "");
-                                            messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
-                                            this.setState({ showEx: true });
-                                        }
-                                    });
-                                }
-                            } else {
+        const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
+        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+        createProspect(jsonCreateProspect).then((data) => {
+            if (_.get(data, 'payload.data.status', 500) === 200) {
+                saveCreditStudy(this._createJsonSaveContextClient()).then((response) => {
+                    if (validateResponse(response)) {
+                        if (_.get(data, 'payload.data.status') === 200) {
+                            if (typeSave === BUTTON_EDIT) {
                                 changeStateSaveData(false, "");
-                                this.setState({ showErrorClientExists: true });
+                                messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
+                                this.setState({ showEx: true });
+                            } else {
+                                updateClient(UPDATE).then((data) => {
+                                    if (!_.get(data, 'payload.data.validateLogin')) {
+                                        changeStateSaveData(false, "");
+                                        onSessionExpire();
+                                    } else {
+                                        changeStateSaveData(false, "");
+                                        messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
+                                        this.setState({ showEx: true });
+                                    }
+                                });
                             }
                         } else {
                             changeStateSaveData(false, "");
-                            this.setState({ showEr: true });
+                            this.setState({ showErrorClientExists: true });
                         }
-                    });
-                } else {
-                    changeStateSaveData(false, "");
-                    this.setState({ showEr: true });
-                }
-            }, (reason) => {
+                    } else {
+                        changeStateSaveData(false, "");
+                        this.setState({ showEr: true });
+                    }
+                });
+            } else {
                 changeStateSaveData(false, "");
                 this.setState({ showEr: true });
-            });
-        
+            }
+        }, (reason) => {
+            changeStateSaveData(false, "");
+            this.setState({ showEr: true });
+        });
+
     }
 
     _createJsonSaveContextClient() {
         const {
             fields: {
                 contextClientField, inventoryPolicy, customerTypology,
-            controlLinkedPayments
+                controlLinkedPayments
             }, clientInformacion
         } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
@@ -1399,7 +1372,6 @@ class clientEdit extends Component {
 
     //Edita el cliente después de haber validado los campos, solo acá se validan las notas
     _submitEditClient() {
-
         const { fields: { justifyNoGeren, marcGeren, necesitaLME, justifyNoLME }, notes, setNotes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage } = this.props;
         notesArray = [];
         const dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
@@ -1534,7 +1506,7 @@ class clientEdit extends Component {
             clientInformacion, clearValuesAdressess, sendErrorsUpdate, setNotes, clearNotes,
             clearProducts, setProducts, tabReducer, updateErrorsNotes, showLoading
         } = this.props;
-        
+
         updateErrorsNotes(false);
         clearValuesAdressess();
         clearNotes();
@@ -1575,7 +1547,7 @@ class clientEdit extends Component {
                         var dataOriginResource = JSON.parse('["' + _.join(infoClient.originResources, '","') + '"]');
                         var dataOperationsForeign = JSON.parse('["' + _.join(infoClient.operationsForeigns, '","') + '"]');
 
-                       
+
                         originGoods.onChange(dataOriginGoods);
                         originResource.onChange(dataOriginResource);
                         operationsForeigns.onChange(dataOperationsForeign);
@@ -1603,22 +1575,20 @@ class clientEdit extends Component {
         </div>
     }
 
-    
-
     render() {
         const {
             fields: {
                 razonSocial, idTypeClient, idNumber, description, idCIIU, idSubCIIU, addressClient, country, city, province, neighborhood,
-            district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
-            liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
-            centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
-            detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
-            otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
-            participationLB, experience, distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC,
-            termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
-            relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera,
-            participationIntOpe, contributionDC, contributionLB, descriptionCoverageIntOpe, idCountryIntOpe,
-            participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments, firstName, middleName, lastName, middleLastName, occupation
+                district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
+                liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
+                centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
+                detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
+                otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
+                participationLB, experience, distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC,
+                termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
+                relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera,
+                participationIntOpe, contributionDC, contributionLB, descriptionCoverageIntOpe, idCountryIntOpe,
+                participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments, firstName, middleName, lastName, middleLastName, occupation
             }, handleSubmit,
             tabReducer, selectsReducer, clientInformacion, validateContactShareholder, reducerGlobal, isPersonaNatural
         } = this.props;
@@ -1644,7 +1614,7 @@ class clientEdit extends Component {
 
         return (
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{ backgroundColor: "#FFFFFF" }}>
-            <SecurityMessageComponent/>
+                <SecurityMessageComponent />
                 <div>
                     <p style={{ paddingTop: '10px' }}></p>
                     <Row xs={12} md={12} lg={12} style={idButton === BUTTON_EDIT ? EDIT_STYLE : UPDATE_STYLE}>
@@ -1667,15 +1637,15 @@ class clientEdit extends Component {
                             }
                             {idButton === BUTTON_UPDATE ?
                                 <div>
-                                    { ! isPersonaNatural && 
+                                    {!isPersonaNatural &&
                                         <BottonContactAdmin errorContact={errorContact} message={messageContact}
-                                        functionToExecute={validateContactShareholder} />
+                                            functionToExecute={validateContactShareholder} />
                                     }
-                                    { ! isPersonaNatural &&
+                                    {!isPersonaNatural &&
                                         <BottonShareholderAdmin errorShareholder={errorShareholder}
-                                        message={messageShareholder}
-                                        functionToExecute={validateContactShareholder} />
-                                    }    
+                                            message={messageShareholder}
+                                            functionToExecute={validateContactShareholder} />
+                                    }
                                 </div>
                                 :
                                 <div></div>
@@ -1683,30 +1653,28 @@ class clientEdit extends Component {
                         </Col>
                     </Row>
                 </div>
-
+                {
+                    isPersonaNatural
+                        ?
+                        <ComponentInfoClientPN firstName={firstName} middleName={middleName} lastName={lastName} middleLastName={middleLastName} idTypeClient={idTypeClient} idNumber={idNumber}
+                            segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
+                            idButton={idButton} isMethodEditClient={isMethodEditClient}
+                        />
+                        :
+                        <ComponentInfoClient razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber}
+                            segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
+                            idButton={idButton} isMethodEditClient={isMethodEditClient}
+                        />
+                }
 
                 {
-                    isPersonaNatural 
-                    ?
-                        <ComponentInfoClientPN firstName={firstName} middleName={middleName} lastName={lastName} middleLastName={middleLastName} idTypeClient={idTypeClient} idNumber={idNumber} 
-                        segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
-                        idButton={idButton} isMethodEditClient={isMethodEditClient}
-                        />
-                    :
-                        <ComponentInfoClient razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} 
-                        segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
-                        idButton={idButton} isMethodEditClient={isMethodEditClient}
-                        />
+                    isPersonaNatural
+
+                        ? <ActividadEconomicaPN idSubCIIU={idSubCIIU} idCIIU={idCIIU} occupation={occupation} isMethodEditClient={isMethodEditClient} />
+                        : <ActividadEconomica idSubCIIU={idSubCIIU} idCIIU={idCIIU} taxNature={taxNature} isMethodEditClient={isMethodEditClient} />
+
                 }
 
-                { 
-                    isPersonaNatural 
-                    
-                    ? <ActividadEconomicaPN idSubCIIU={idSubCIIU} idCIIU={idCIIU} occupation={occupation} isMethodEditClient={isMethodEditClient}/>
-                    : <ActividadEconomica idSubCIIU={idSubCIIU} idCIIU={idCIIU} taxNature={taxNature} isMethodEditClient={isMethodEditClient}/>
-                     
-                }
-                   
                 <Row>
 
                     {allowRiskGroupEdit &&
@@ -1725,8 +1693,6 @@ class clientEdit extends Component {
                             fnShowForm={this.showFormOut} />
                     }
                 </Row>
-
-
 
                 {allowRiskGroupEdit &&
                     <InventorPolicy inventoryPolicy={inventoryPolicy} />
@@ -2610,7 +2576,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
             idTypeClient: infoClient.clientIdType,
             idNumber: infoClient.clientIdNumber,
             description: infoClient.description,
-            idCIIU: infoClient.ciiu,
+            idCIIU: infoClient.idCiiu,
             idSubCIIU: infoClient.subCiiu,
             addressClient: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].address : '',
             country: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].country : '',
@@ -2653,13 +2619,13 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
             contextClientField: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.context,
             inventoryPolicy: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.inventoryPolicy,
             controlLinkedPayments: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.controlLinkedPayments,
-        
+
             occupation: infoClient.occupation,
             firstName: infoClient.firstName,
             middleName: infoClient.middleName,
             lastName: infoClient.lastName,
             middleLastName: infoClient.middleLastName
-        
+
         }
     };
 }

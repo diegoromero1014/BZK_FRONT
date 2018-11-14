@@ -1,9 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import $ from 'jquery';
 import _ from 'lodash';
-import { REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT } from '../../constantsGlobal';
-
-let inputFocus = false;
 
 class inputComponent extends Component {
 
@@ -15,6 +12,8 @@ class inputComponent extends Component {
             focus: false
         };
 
+        this.inputFocus = false;
+
         this._onChange = this._onChange.bind(this);
         this._onBlur = this._onBlur.bind(this);
         this._onKey = this._onKey.bind(this);
@@ -22,21 +21,16 @@ class inputComponent extends Component {
     }
 
     _onChange(e, event) {
-        const { onChange, error, touched } = this.props;
-
         this.setState({
             value: e.target.value
         });
-
     }
 
     _onBlur(e, event) {
-
         const { onChange, onBlur } = this.props;
 
         let trimmed = this.state.value.trim();
-
-        inputFocus = false;
+        this.inputFocus = false;
 
         onChange(trimmed);
         onBlur(trimmed);
@@ -44,54 +38,54 @@ class inputComponent extends Component {
 
     _onFocus(e) {
         const { onFocus } = this.props;
-        inputFocus = true;
+        this.inputFocus = true;
 
         if (onFocus) {
             onFocus(e);
         }
     }
 
-
-
     _onKey(e) {
-
-        const { onChange, onBlur, onKey } = this.props;
+        const { onChange, onBlur, onKey, onKeyPress } = this.props;
 
         if ((e.keyCode === 13 || e.which === 13)) {
             let trimmed = this.state.value.trim();
             onChange(trimmed);
             onBlur(trimmed);
+
+            if (!_.isUndefined(onKeyPress)) {
+                this.inputFocus = false;
+                setTimeout(function () {
+                    onKeyPress(e);
+                }, 500);
+            }
         }
 
         if (onKey) {
             onKey(e);
         }
-
     }
-
-
 
     componentWillMount() {
         const { value } = this.props;
-
         this.setState({ value: value });
     }
 
-    componentWillReceiveProps(nextProps) {
-
-        if (nextProps.value != this.state.value && !inputFocus) {
+    componentWillReceiveProps(nextProps) {        
+        if (nextProps.value != this.state.value && !this.inputFocus) {
             this.setState({ value: nextProps.value });
         }
-
     }
 
-
     render() {
-        const { nameInput, type, style, placeholder, disabled, onKey, touched, error, name, onBlur, onChange, min, max, defaultValue, value, onFocus, shouldHandleUpdate } = this.props;
+        const {
+            nameInput, type, style, placeholder, disabled, touched, error, name, min, max, shouldHandleUpdate
+        } = this.props;
 
         if (touched && error && shouldHandleUpdate) {
             $(`.ui.input.${name} [type=text]`).focus();
         }
+
         return (
             <div className={disabled}>
                 <div className={`styleWidthComponents ui input ${name}`}>

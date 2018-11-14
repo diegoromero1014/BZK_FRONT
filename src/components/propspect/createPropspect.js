@@ -1,55 +1,32 @@
 import React, { Component } from 'react';
-import SweetAlert from '../sweetalertFocus';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
-import { validateProspectExists, clearState, clearAllState } from './actions';
-import { redirectUrl } from '../globalComponents/actions';
-import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
+
+import SweetAlert from '../sweetalertFocus';
 import FormCreateProspect from './formCreateProspect';
-import { consultDataSelect, consultList, getMasterDataFields } from '../selectsComponent/actions';
-import { SESSION_EXPIRED, VALUE_XSS_INVALID } from '../../constantsGlobal';
-import * as constants from '../selectsComponent/constants';
-import * as constantsPropect from './constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
-import { xssValidation, onSessionExpire } from '../../actionsGlobal';
+import SecurityMessageComponent from './../globalComponents/securityMessageComponent';
+
+import { validateProspectExists, clearState, clearAllState } from './actions';
+import { redirectUrl } from '../globalComponents/actions';
+import { consultDataSelect, consultList, getMasterDataFields } from '../selectsComponent/actions';
+import { onSessionExpire } from '../../actionsGlobal';
+
+import { SESSION_EXPIRED } from '../../constantsGlobal';
+import * as constants from '../selectsComponent/constants';
+import * as constantsPropect from './constants';
+
+import { fields, validations as validate } from './fieldsAndRulesCreatePropspect';
+
 import _ from 'lodash';
 
 var prospectInApplication = true;
-var nameTipeDocument = "";
 
 var typeMessage = "warning";
 var titleMessage = "Prospecto/cliente existente";
 var message = "El prospecto/cliente ya se encuentra registrado en la aplicación.";
-
-const validate = values => {
-  const errors = {}
-  if (!values.idType) {
-    errors.idType = "Debe seleccionar un valor";
-  }
-  else {
-    errors.idType = null;
-  }
-
-  if (!values.clientType) {
-    errors.clientType = "Debe seleccionar un valor";
-  }
-  else {
-    errors.clientType = null;
-  }
-
-  if (!values.idNumber) {
-    errors.idNumber = "Debe ingresar un valor";
-  }
-  else if (xssValidation(values.idNumber)) {
-    errors.idNumber = VALUE_XSS_INVALID;
-  }
-  else {
-    errors.idNumber = null;
-  }
-  return errors
-};
 
 class CreatePropspect extends Component {
   constructor(props) {
@@ -75,7 +52,7 @@ class CreatePropspect extends Component {
     }
     const { consultDataSelect, consultList, getMasterDataFields } = this.props;
 
-    getMasterDataFields([constants.CLIENT_ID_TYPE, constants.CONTACT_ID_TYPE , constants.CLIENT_TYPE]).then((data) => {
+    getMasterDataFields([constants.CLIENT_ID_TYPE, constants.CONTACT_ID_TYPE, constants.CLIENT_TYPE]).then((data) => {
       if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
         onSessionExpire();
       }
@@ -134,7 +111,7 @@ class CreatePropspect extends Component {
       let clientType = clientTypes.find(type => type.id == valor);
       let idTypeMaster = clientType.key == constantsPropect.NATURE_PERSON ?
         constants.CONTACT_ID_TYPE : constants.CLIENT_ID_TYPE;
-        
+
 
       this.setState({
         idTypeMaster: selectsReducer.get(idTypeMaster),
@@ -160,7 +137,6 @@ class CreatePropspect extends Component {
     const { propspectReducer } = this.props;
     const { selectsReducer } = this.props;
     const status = propspectReducer.get('status');
-    const validateLogin = propspectReducer.get('validateLogin');
     const prospectExist = propspectReducer.get('prospectExist');
     if (status !== "OK") {
       prospectInApplication = prospectExist;
@@ -169,6 +145,7 @@ class CreatePropspect extends Component {
     }
     return (
       <div style={{ marginTop: "10px" }}>
+        <SecurityMessageComponent />
         <span style={{ marginLeft: "20px" }} >Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
         {prospectInApplication &&
           <form onSubmit={handleSubmit(this._clickButtonCreateProps)}>
@@ -201,7 +178,7 @@ class CreatePropspect extends Component {
                 <Input
                   name="documento"
                   type="text"
-                  max="20"
+                  max="30"
                   placeholder="Ingrese el número de documento del prospecto"
                   {...idNumber}
                 />
@@ -276,15 +253,9 @@ function mapStateToProps({ propspectReducer, selectsReducer }, ownerProps) {
 
 export default reduxForm({
   form: 'submitValidation',
-  fields: ["idType", "idNumber", "clientType"],
+  fields: fields,
   validate,
   onSubmitFail: errors => {
-
-    if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
-      thisForm.setState({ showEr: true });
-    } else {
-      thisForm.setState({ showEr: true });
-    }
-
+    thisForm.setState({ showEr: true });
   }
 }, mapStateToProps, mapDispatchToProps)(CreatePropspect);

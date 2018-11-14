@@ -1,25 +1,28 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { consultInfoClient } from './actions';
+import { Row, Grid, Col } from 'react-flexbox-grid';
+import $ from 'jquery';
+import _ from 'lodash';
+
 import RaitingInternal from './ratingInternal';
 import TabClientInfo from './tabClientInfo';
-import { updateTitleNavBar, viewAlertClient } from '../navBar/actions';
-import { Row, Grid, Col } from 'react-flexbox-grid';
-import { redirectUrl } from '../globalComponents/actions';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonRiskGroup from '../clientRiskGroup/buttonClientRiskGroup';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
 import ButtonClientVisorComponent from '../clientVisor/buttonClientVisorComponent';
-import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
-import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
+
+import { consultInfoClient } from './actions';
+import { updateTitleNavBar, viewAlertClient } from '../navBar/actions';
+import { redirectUrl } from '../globalComponents/actions';
 import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
 import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
 import { updateTabSeletedCS } from '../customerStory/actions';
+
+import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
+import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
 import { TAB_STORY } from '../customerStory/constants';
-import $ from 'jquery';
-import _ from 'lodash';
 
 class ComponentClientInformation extends Component {
     constructor(props) {
@@ -188,11 +191,7 @@ class ComponentClientInformation extends Component {
                             </div>
                         </Col>
                         <Col xs={1} md={1} lg={1}>
-                            <table style={infoClient.economicGroup !== null ? {
-                                height: '100%',
-                                width: '50%',
-                                float: 'right'
-                            } : { height: '100%', width: '50%', float: 'right' }}>
+                            <table style={{ height: '100%', width: '50%', float: 'right' }}>
                                 <tbody>
                                     <tr>
                                         <td style={{ marginTop: "0px", backgroundColor: ORANGE_COLOR, borderRadius: "0px" }}>

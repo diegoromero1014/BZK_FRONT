@@ -10,8 +10,8 @@ import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { validateResponse } from '../../actionsGlobal';
 import { changeEconomicGroup, consultInfoClient } from '../clientInformation/actions';
 import { showLoading } from '../loading/actions';
-
-
+import { TAB_INFO } from '../../constantsGlobal';
+import { updateTabSeleted } from '../clientDetailsInfo/actions';
 
 class clientsEconomicGroup extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class clientsEconomicGroup extends Component {
   }
 
   _handleClickClientItem(e) {
-    const { dataIsAccess, dataId, consultInfoClient, showLoading, swtShowMessage, closeModal } = this.props;
+    const { dataIsAccess, dataId, consultInfoClient, showLoading, swtShowMessage, closeModal, updateTabSeleted, tabReducer } = this.props;
 
     if (dataIsAccess) {
 
@@ -38,6 +38,9 @@ class clientsEconomicGroup extends Component {
         onSessionExpire();
       }
       showLoading(false, '');
+      updateTabSeleted(TAB_INFO);
+      var tabActive = tabReducer.get('tabSelected');
+      updateTabSeleted(tabActive);
       closeModal();
     }).catch(() => {
       showLoading(false, '');
@@ -54,13 +57,18 @@ class clientsEconomicGroup extends Component {
   _removeClientOfEconomicGroup() {
     this.setState({ showConfirmDelete: false });
     const { deleteRelationEconomicGroup, getClientsEconomicGroup, clientInformacion, dataId, swtShowMessage,
-      changeStateSaveData, changeEconomicGroup } = this.props;
+      changeStateSaveData, changeEconomicGroup, consultInfoClient } = this.props;
     deleteRelationEconomicGroup(dataId).then((data) => {
       if (validateResponse(data)) {
         const infoClient = clientInformacion.get('responseClientInfo');
+        let economicGroup;
         if (_.isEqual(infoClient.id, dataId)) {
           infoClient.economicGroup = _.get(data, 'payload.data.data');
-          changeEconomicGroup(_.get(data, 'payload.data.data'));
+          economicGroup = _.get(data, 'payload.data.data');
+          changeEconomicGroup(economicGroup);
+
+          window.sessionStorage.setItem('idClientSelected', dataId);
+          consultInfoClient(dataId);
         }
         swtShowMessage('success', 'Cliente eliminado', 'Señor usuario, el cliente fue eliminado correctamente del grupo económico');
         getClientsEconomicGroup(infoClient.economicGroup);
@@ -116,14 +124,16 @@ function mapDispatchToProps(dispatch) {
     changeEconomicGroup,
     swtShowMessage,
     consultInfoClient,
-    showLoading
+    showLoading,
+    updateTabSeleted,
   }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, clientEconomicGroupReducer }, ownerProps) {
+function mapStateToProps({ clientInformacion, clientEconomicGroupReducer, tabReducer }, ownerProps) {
   return {
     clientInformacion,
-    clientEconomicGroupReducer
+    clientEconomicGroupReducer,
+    tabReducer
   };
 }
 

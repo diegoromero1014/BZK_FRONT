@@ -4,9 +4,7 @@ import $ from "jquery";
 import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
 import numeral from "numeral";
-
-import {goBack, redirectUrl} from "../globalComponents/actions";
-import {Col, Row} from "react-flexbox-grid";
+import { Col, Row } from "react-flexbox-grid";
 
 import * as constants from "../selectsComponent/constants";
 
@@ -16,35 +14,47 @@ import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import Input from "../../ui/input/inputComponent";
 import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import ModalErrorsUpdateClient from "../clientEdit/modalErrorsUpdateClient";
-
-import SweetAlert from "../sweetalertFocus";
-
 import NotesClient from "../clientEdit/notes/notesClient";
+import SweetAlert from "../sweetalertFocus";
+import Errores from './components/Errores';
+import InfoCliente from './components/InfoCliente';
+import InfoClientePN from './components/InfoClientePN';
+import ActividadEconomica from './components/ActividadEconomica';
+import { validationRules as rulesActividadEconomica } from './components/ActividadEconomica';
+import ActividadEconomicaPN from './components/ActividadEconomicaPN';
+import { validationRules as rulesActividadEconomicaPN } from './components/ActividadEconomicaPN';
+import Ubicacion from './components/Ubicacion';
+import { validationsRules as rulesUbicacion } from './components/Ubicacion';
+import InfoFinanciera from './components/InfoFinanciera';
+import { validate as validateInfoFinanciera } from './components/InfoFinanciera';
+import InfoFinancieraPN from './components/InfoFinancieraPN';
+import { validate as validateInfoFinancieraPN } from './components/InfoFinancieraPN';
+import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
 
+
+import { goBack, redirectUrl } from "../globalComponents/actions";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { changeStateSaveData } from "../dashboard/actions";
 import { createProspect } from "../propspect/actions";
 import { updateTitleNavBar } from "../navBar/actions";
-
 import { clearNotes, deleteNote, setNotes } from "../clientEdit/notes/actions";
+import { showLoading } from "../loading/actions";
 import {
     clearValuesAdressess, consultDataSelect, consultList, consultListWithParameter,
     consultListWithParameterUbication, economicGroupsByKeyword, getMasterDataFields
 } from "../selectsComponent/actions";
 import {
+    seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
+    validateContactShareholder
+} from "../clientDetailsInfo/actions";
+
+import { xssValidation, validateFields } from '../../actionsGlobal';
+import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
+import {
     ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA,
     ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, VALUE_REQUIERED, VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../constantsGlobal';
-
-import { xssValidation, validateFields } from '../../actionsGlobal';
-
-import {
-    seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
-    validateContactShareholder
-} from "../clientDetailsInfo/actions";
-import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
-
 import {
     GOVERNMENT, FINANCIAL_INSTITUTIONS, CONSTRUCT_PYME, KEY_DESMONTE,
     KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME,
@@ -52,31 +62,9 @@ import {
     KEY_OPTION_OTHER_ORIGIN_RESOURCE, MAXIMUM_OPERATIONS_FOREIGNS, TITLE_DESCRIPTION
 } from "../clientEdit/constants";
 
-import { showLoading } from "../loading/actions";
-
-
-import Errores from './components/Errores';
-import InfoCliente from './components/InfoCliente';
-import InfoClientePN from './components/InfoClientePN';
-import ActividadEconomica from './components/ActividadEconomica';
-import {validationRules as rulesActividadEconomica} from './components/ActividadEconomica';
-
-import ActividadEconomicaPN from './components/ActividadEconomicaPN';
-import {validationRules as rulesActividadEconomicaPN} from './components/ActividadEconomicaPN';
-
-import Ubicacion from './components/Ubicacion';
-import {validationsRules as rulesUbicacion} from './components/Ubicacion';
-
-import InfoFinanciera from './components/InfoFinanciera';
-import { validate as validateInfoFinanciera } from './components/InfoFinanciera';
-
-import InfoFinancieraPN from './components/InfoFinancieraPN';
-import { validate as validateInfoFinancieraPN } from './components/InfoFinancieraPN';
-import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
-
 const fields = [
-    'economicGroupName', 'nitPrincipal', 'groupEconomic', 'marcGeren', 'justifyNoGeren', 
-    'centroDecision', 'necesitaLME', 'justifyNoLME', 'justifyExClient', 'taxNature', 'idCIIU', 'idSubCIIU', 
+    'economicGroupName', 'nitPrincipal', 'groupEconomic', 'marcGeren', 'justifyNoGeren',
+    'centroDecision', 'necesitaLME', 'justifyNoLME', 'justifyExClient', 'taxNature', 'idCIIU', 'idSubCIIU',
     'annualSales', 'assets', 'liabilities', 'operatingIncome', 'expenses', 'nonOperatingIncome', 'detailNonOperatingIncome',
     'dateSalesAnnuals', 'addressClient', 'country', 'province', 'city', 'telephone', 'razonSocial', 'idTypeClient', 'idNumber', 'occupation',
     'firstName', 'middleName', 'lastName', 'middleLastName'
@@ -96,7 +84,6 @@ const EDIT_STYLE = {
     height: '60px'
 };
 
-
 var initValueJustifyNonGeren = false;
 var initValueJustifyNonLME = false;
 var notesArray = [];
@@ -104,8 +91,6 @@ var notesArray = [];
 let errorShareholder;
 let errorContact;
 let messageAlertSuccess;
-
-
 
 //Guarda el anterior valor de la justificación no gerenciamiento para saber cuándo cambia de desmonte a otro
 let oldJustifyGeren = '';
@@ -127,22 +112,19 @@ let isExclient = false;
 let validateMarcManagement = true;
 //Establece si el ciente a editar es persona natural para controlar las validaciones
 
-
-
 const validate = (values, props) => {
-
     let errors = {}
     let errorScrollTop = false;
 
     let isExclient = props.isExclient;
-    
-    validateFields(values,rulesUbicacion(props),errors);
+
+    validateFields(values, rulesUbicacion(props), errors);
     if (props.isPersonaNatural) {
-        validateFields(values,rulesActividadEconomicaPN(props),errors);
-        validateInfoFinancieraPN(values,props,errors);
+        validateFields(values, rulesActividadEconomicaPN(props), errors);
+        validateInfoFinancieraPN(values, props, errors);
     } else {
-        validateInfoFinanciera(values,props,errors);
-        validateFields(values,rulesActividadEconomica(props),errors);
+        validateInfoFinanciera(values, props, errors);
+        validateFields(values, rulesActividadEconomica(props), errors);
     }
 
     if ((!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) && !props.isExclient) {
@@ -159,50 +141,43 @@ const validate = (values, props) => {
         errors.marcGeren = null;
     }
 
-    if (validateMarcManagement === false && !values.justifyNoGeren  && !isExclient) {
+    if (validateMarcManagement === false && !values.justifyNoGeren && !isExclient) {
         errors.justifyNoGeren = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.justifyNoGeren = null;
     }
 
-    if ((values.centroDecision === null || values.centroDecision === undefined || values.centroDecision === '')  && !isExclient) {
+    if ((values.centroDecision === null || values.centroDecision === undefined || values.centroDecision === '') && !isExclient) {
         errors.centroDecision = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.centroDecision = null;
     }
 
-    if ((values.necesitaLME === null || values.necesitaLME === undefined || values.necesitaLME === '')  && !isExclient) {
+    if ((values.necesitaLME === null || values.necesitaLME === undefined || values.necesitaLME === '') && !isExclient) {
         errors.necesitaLME = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.necesitaLME = null;
     }
 
-    if (values.necesitaLME === 'false' && !values.justifyNoLME  && !isExclient) {
+    if (values.necesitaLME === 'false' && !values.justifyNoLME && !isExclient) {
         errors.justifyNoLME = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
         errors.justifyNoLME = null;
     }
 
-
     if (!values.justifyExClient && isExclient) {
         errors.justifyExClient = OPTION_REQUIRED;
         errorScrollTop = true;
-    }else {
+    } else {
         errors.justifyExClient = null;
     }
 
-
-
     return errors;
-
 }
-
-
-
 
 //Componente genérico para cargar los selects de justificación
 function SelectsJustificacion(props) {
@@ -222,7 +197,7 @@ function SelectsJustificacion(props) {
                     touched={true}
                     parentId="dashboardComponentScroll"
                     onChange={props.onChange}
-                    showEmptyObject={props.showEmptyObject ? true: false}
+                    showEmptyObject={props.showEmptyObject ? true : false}
                 />
             </dt>
         </Col>;
@@ -232,7 +207,6 @@ function SelectsJustificacion(props) {
 }
 
 class clientCertify extends React.Component {
-
     constructor(props) {
         super(props)
 
@@ -254,12 +228,9 @@ class clientCertify extends React.Component {
         this._handleGroupEconomicFind = this._handleGroupEconomicFind.bind(this);
         this._onConfirmExit = this._onConfirmExit.bind(this);
         this._closeError = this._closeError.bind(this);
-        
-
     }
 
     componentWillUnmount() {
-      
         const { sendErrorsUpdate, updateErrorsNotes } = this.props;
         sendErrorsUpdate([]);
         isProspect = false;
@@ -273,26 +244,21 @@ class clientCertify extends React.Component {
         initValueJustifyNonLME = false;
 
         updateErrorsNotes(false);
-
     }
 
     componentWillMount() {
-
         infoJustificationForNoRM = true;
         infoJustificationNeedLME = true;
         infoMarcaGeren = true;
 
-        const { fields: { nitPrincipal, economicGroupName  },   clientInformacion, getMasterDataFields, updateErrorsNotes, clearNotes, setNotes, consultList, updateTitleNavBar, consultListWithParameterUbication  } = this.props; 
+        const { fields: { nitPrincipal, economicGroupName }, clientInformacion, getMasterDataFields, updateErrorsNotes, clearNotes, setNotes, consultList, updateTitleNavBar, consultListWithParameterUbication } = this.props;
 
-        
         updateErrorsNotes(false);
         clearValuesAdressess();
         clearNotes();
         updateTitleNavBar("Certificar cliente");
 
         var infoClient = clientInformacion.get('responseClientInfo');
-
-       
 
         isExclient = infoClient.relationshipStatusName === "Excliente";
 
@@ -304,27 +270,23 @@ class clientCertify extends React.Component {
             redirectUrl("/login");
         } else {
             if (_.isEmpty(infoClient)) {
-                
                 redirectUrl("/dashboard/clientInformation");
-
-            }else {
-
+            } else {
                 showLoading(true, MESSAGE_LOAD_DATA);
+                getMasterDataFields([constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.JUSTIFICATION_LOST_CLIENT,
+                constants.JUSTIFICATION_CREDIT_NEED, constants.CLIENT_TAX_NATURA, constants.CLIENT_ID_TYPE, constants.FILTER_COUNTRY,
+                constants.MANAGEMENT_BRAND, constants.MANAGEMENT_BRAND_KEY, constants.OCCUPATION])
+                    .then((data) => {
+                        if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
+                            consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
+                            consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
+                        }
 
-                getMasterDataFields([constants.JUSTIFICATION_NO_RM,constants.TYPE_NOTES, constants.JUSTIFICATION_LOST_CLIENT, 
-                    constants.JUSTIFICATION_CREDIT_NEED, constants.CLIENT_TAX_NATURA, constants.CLIENT_ID_TYPE, constants.FILTER_COUNTRY,
-                    constants.MANAGEMENT_BRAND, constants.MANAGEMENT_BRAND_KEY, constants.OCCUPATION])
-                .then((data) => {
-                    if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
-                        consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
-                        consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
-                    }
-
-                    showLoading(false, '');
-                }, (reason) => {
-                    showLoading(false, '');
-                    this.setState({ showEx: true });
-                })
+                        showLoading(false, '');
+                    }, (reason) => {
+                        showLoading(false, '');
+                        this.setState({ showEx: true });
+                    })
 
                 consultList(constants.CIIU);
                 if (infoClient.economicGroup !== null && infoClient.economicGroup !== '' && infoClient.economicGroup !== undefined && infoClient.economicGroup !== "null") {
@@ -338,15 +300,12 @@ class clientCertify extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-
         let { errors } = nextProps;
-
         const errorsArray = _.toArray(errors);
 
         this.setState({
             sumErrorsForm: errorsArray.length
         });
-    
     }
 
     _closeError() {
@@ -364,24 +323,21 @@ class clientCertify extends React.Component {
     }
 
     _closeSuccess() {
-
         this.setState({ showExitAlert: false, showEx: false, showEr: false });
-        
         goBack();
     }
 
     _saveClient() {
-
         const {
-            fields: { 
-                nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren, 
-                justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient,   taxNature, idCIIU, idSubCIIU,  
-                annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,     
-                addressClient, country, province, city, telephone, groupEconomic, occupation   
+            fields: {
+                nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren,
+                justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient, taxNature, idCIIU, idSubCIIU,
+                annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,
+                addressClient, country, province, city, telephone, groupEconomic, occupation
             },
             error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData
         } = this.props;
-        
+
         const infoClient = clientInformacion.get('responseClientInfo');
       
             
@@ -395,6 +351,7 @@ class clientCertify extends React.Component {
                 "riskRating": infoClient.riskRating,
                 "isProspect": infoClient.isProspect,
                 "ciiu": idCIIU.value,
+                "idCiiu": idCIIU.value,
                 "commercialRelationshipType": infoClient.commercialRelationshipType,
                 "countryOfOrigin": infoClient.countryOfOrigin,
                 "isDecisionCenter": centroDecision.value,
@@ -479,16 +436,13 @@ class clientCertify extends React.Component {
                     changeStateSaveData(false, "");
                     this.setState({ showEr: true });
                 }
-            }, (reason) => {
-                changeStateSaveData(false, "");
-                this.setState({ showEr: true });
-            });
-        
-
+        }, (reason) => {
+            changeStateSaveData(false, "");
+            this.setState({ showEr: true });
+        });
     }
 
     _submitCertifyClient() {
-
         const { fields: { justifyNoGeren, marcGeren, necesitaLME, justifyNoLME }, notes, setNotes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage } = this.props;
         notesArray = [];
         const dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
@@ -509,6 +463,7 @@ class clientCertify extends React.Component {
             };
             notesArray.push(noteItem);
         });
+
         const dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
         const idJustify = _.get(_.filter(dataJustifyNoGeren, ['key', KEY_DESMONTE]), '[0].id');
         const dataJustifyNoNeedLME = selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED);
@@ -516,7 +471,6 @@ class clientCertify extends React.Component {
         const addNoteNoGeren = (this.state.showJustifyNoGeren === false && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren);
         const addNoteNoNeedLME = (necesitaLME.value === 'false' && idJustifyNoNeedLME === parseInt(justifyNoLME.value) && !existNoteExceptionNoNeedLME);
         if (addNoteNoGeren && addNoteNoNeedLME) {
-
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
                 typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
@@ -544,23 +498,17 @@ class clientCertify extends React.Component {
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
         } else {
-
-            if(!tabReducer.get('errorNotesEditClient')){
-                
+            if (!tabReducer.get('errorNotesEditClient')) {
                 this._saveClient()
-            }else{
-                
+            } else {
+
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
             }
-
-           
         }
     }
 
     _closeWindow() {
-
         this.setState({ showExitAlert: true });
-
     }
 
     _onConfirmExit() {
@@ -568,14 +516,13 @@ class clientCertify extends React.Component {
         goBack();
     }
 
-    
-
     _onChangeGroupEconomic(e) {
         const { fields: { economicGroupName, nitPrincipal, groupEconomic }, economicGroupsByKeyword } = this.props;
         if (_.isNil(e.target.value) || _.isEqual(e.target.value, "")) {
             nitPrincipal.onChange("");
             groupEconomic.onChange('');
         }
+
         if (e.keyCode === 13 || e.which === 13) {
             e.preventDefault();
             economicGroupsByKeyword(economicGroupName.value);
@@ -595,31 +542,31 @@ class clientCertify extends React.Component {
             if (economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined) {
                 $('.ui.search.participantBanc').toggleClass('loading');
                 economicGroupsByKeyword(economicGroupName.value).then((data) => {
-                        let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
-                        let economicGroup2 = _.forEach(economicGroup1, function (data1) {
-                            data1.title = data1.group;
-                            data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
+                    let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
+                    let economicGroup2 = _.forEach(economicGroup1, function (data1) {
+                        data1.title = data1.group;
+                        data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
+                    });
+                    $('.ui.search.participantBanc')
+                        .search({
+                            cache: false,
+                            source: economicGroup1,
+                            searchFields: [
+                                'title',
+                                'description',
+                                'id',
+                                'relationshipManagerId'
+                            ],
+                            onSelect: function (event) {
+                                economicGroupName.onChange(event.group);
+                                groupEconomic.onChange(event.id);
+                                nitPrincipal.onChange(event.nitPrincipal);
+                                return 'default';
+                            }
                         });
-                        $('.ui.search.participantBanc')
-                            .search({
-                                cache: false,
-                                source: economicGroup1,
-                                searchFields: [
-                                    'title',
-                                    'description',
-                                    'id',
-                                    'relationshipManagerId'
-                                ],
-                                onSelect: function (event) {
-                                    economicGroupName.onChange(event.group);
-                                    groupEconomic.onChange(event.id);
-                                    nitPrincipal.onChange(event.nitPrincipal);
-                                    return 'default';
-                                }
-                            });
-                        $('.ui.search.participantBanc').toggleClass('loading');
-                        $('.prompt').focus();
-                    }
+                    $('.ui.search.participantBanc').toggleClass('loading');
+                    $('.prompt').focus();
+                }
                 );
             }
         }
@@ -633,15 +580,15 @@ class clientCertify extends React.Component {
 
         let optionSelected = null;
 
-        if(typeof optionMarcMagnament == 'undefined' || typeof optionMarcMagnament == null) {
+        if (typeof optionMarcMagnament == 'undefined' || typeof optionMarcMagnament == null) {
             var infoClient = clientInformacion.get('responseClientInfo');
             // Crear el objeto optionSelected
-            optionSelected = {key: infoClient.isManagedByRmKey};
+            optionSelected = { key: infoClient.isManagedByRmKey };
         } else {
-            for (let i=0; i<optionMarcMagnament.length; i++) {
+            for (let i = 0; i < optionMarcMagnament.length; i++) {
                 let option = optionMarcMagnament[i];
-                
-                if(val == option.id) {
+
+                if (val == option.id) {
                     optionSelected = option;
                     break;
                 }
@@ -649,15 +596,15 @@ class clientCertify extends React.Component {
         }
 
         // Si el key es Gerenciamiento a Demanda.
-        if(optionSelected == null) {
+        if (optionSelected == null) {
             validateMarcManagement = true;
-            this.setState({showJustifyNoGeren: true});
-        }else if(optionSelected.key === 'Gerenciamiento a Demanda') {
+            this.setState({ showJustifyNoGeren: true });
+        } else if (optionSelected.key === 'Gerenciamiento a Demanda') {
             validateMarcManagement = false;
-            this.setState({showJustifyNoGeren : false });
+            this.setState({ showJustifyNoGeren: false });
         } else {
             validateMarcManagement = true;
-            this.setState({showJustifyNoGeren : true });
+            this.setState({ showJustifyNoGeren: true });
         }
 
         if (!infoMarcaGeren && validateMarcManagement === true) {
@@ -690,7 +637,6 @@ class clientCertify extends React.Component {
             initValueJustifyNonGeren = true;
         }
     }
-
 
     _onChangeJustifyNoGeren(val) {
         const { selectsReducer, clientInformacion, notes, updateErrorsNotes, setNotes, deleteNote } = this.props;
@@ -744,7 +690,6 @@ class clientCertify extends React.Component {
             oldJustifyGeren = KEY_DESMONTE;
         }
     }
-
 
     _onChangeValueNeedLME(val) {
         const {
@@ -829,257 +774,256 @@ class clientCertify extends React.Component {
         }
     }
 
-    render(){
-
-        const { fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren, 
-            justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient,   taxNature, idCIIU, idSubCIIU,  
-            annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,     
+    render() {
+        const { fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren,
+            justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient, taxNature, idCIIU, idSubCIIU,
+            annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,
             addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber, occupation,
-            firstName, middleName, lastName, middleLastName   }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer, isPersonaNatural } = this.props;
-        
+            firstName, middleName, lastName, middleLastName }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer, isPersonaNatural } = this.props;
+
         var infoClient = clientInformacion.get('responseClientInfo');
-        
+
         const allowChangeEconomicGroup = !infoClient.allowChangeEconomicGroup ? 'disabled' : '';
 
         return (
 
             <form onSubmit={handleSubmit(this._submitCertifyClient)} style={{ backgroundColor: "#FFFFFF" }}>
-            <SecurityMessageComponent/>
+                <SecurityMessageComponent />
                 <Errores sumErrorsForm={this.state.sumErrorsForm} />
 
                 {
-                    isPersonaNatural ? 
-                        <InfoClientePN razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} firstName={firstName} middleName={middleName} lastName={lastName} middleLastName={middleLastName}/> 
-                    : 
+                    isPersonaNatural ?
+                        <InfoClientePN razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} firstName={firstName} middleName={middleName} lastName={lastName} middleLastName={middleLastName} />
+                        :
                         <InfoCliente razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} />
                 }
 
-            <div>
-                {
-                    isPersonaNatural ?
-                        <ActividadEconomicaPN clientInformacion={clientInformacion} idCIIU={idCIIU} idSubCIIU={idSubCIIU} isExclient={isExclient} occupation={occupation} />
-                    :
-                        <ActividadEconomica clientInformacion={clientInformacion} idCIIU={idCIIU} idSubCIIU={idSubCIIU} isExclient={isExclient} />
-                }
-                
-                <Ubicacion isExclient={isExclient} addressClient={addressClient} city={city} country={country} province={province} telephone={telephone} />                
+                <div>
+                    {
+                        isPersonaNatural ?
+                            <ActividadEconomicaPN clientInformacion={clientInformacion} idCIIU={idCIIU} idSubCIIU={idSubCIIU} isExclient={isExclient} occupation={occupation} />
+                            :
+                            <ActividadEconomica clientInformacion={clientInformacion} idCIIU={idCIIU} idSubCIIU={idSubCIIU} isExclient={isExclient} />
+                    }
 
-                {/* Inicio Informacion financiera  */}
+                    <Ubicacion isExclient={isExclient} addressClient={addressClient} city={city} country={country} province={province} telephone={telephone} />
 
-                {
-                    isPersonaNatural ?
-                        <InfoFinancieraPN isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />
-                    :
-                        <InfoFinanciera isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />    
-                }
+                    {/* Inicio Informacion financiera  */}
 
-                
-
-                {/*  Fin Informacion financiera   */}
+                    {
+                        isPersonaNatural ?
+                            <InfoFinancieraPN isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />
+                            :
+                            <InfoFinanciera isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />
+                    }
 
 
-                { /* Inicio Datos de conocimiento comercial */   }
-                <Row style={{ padding: "20px 10px 10px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                            <div className="tab-content-row"
-                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            <i className="book icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Datos de conocimiento comercial</span>
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt>
-                            <span>Grupo económico/relación </span>{!isExclient && <span style={{ color: "red" }}>*</span> }
-                            
-                        </dt>
-                        <dt>
-                            <div className="ui search participantBanc fluid">
-                                <ComboBoxFilter className="prompt" id="inputEconomicGroup"
-                                    style={{ borderRadius: "3px" }}
-                                                autoComplete="off"
-                                                disabled={allowChangeEconomicGroup}
-                                                type="text"
-                                                {...economicGroupName}
-                                                value={economicGroupName.value}
-                                                onChange={this._onChangeGroupEconomic}
-                                                placeholder="Ingrese un criterio de búsqueda..."
-                                                onKeyPress={this.updateKeyValueUsersBanco}
-                                                touched={true}
-                                />
+
+                    {/*  Fin Informacion financiera   */}
+
+
+                    { /* Inicio Datos de conocimiento comercial */}
+                    <Row style={{ padding: "20px 10px 10px 20px" }}>
+                        <Col xs={12} md={12} lg={12}>
+                            <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                                <div className="tab-content-row"
+                                    style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                                <i className="book icon" style={{ fontSize: "25px" }} />
+                                <span className="title-middle"> Datos de conocimiento comercial</span>
                             </div>
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt>
-                            <span>NIT principal </span>
-                            
-                        </dt>
-                        <dt style={{ marginTop: '8px' }}>
-                            <span style={{ fontWeight: 'normal' }}>{nitPrincipal.value}</span>
-                        </dt>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    <Col xs={12} md={4} lg={4} style={{ paddingRight: "10px" }}>
-                        <dt>
-                            <span>Marca gerenciamiento </span> {!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <ComboBox
-                                name="marcGeren"
-                                labelInput="Seleccione marca..."
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.MANAGEMENT_BRAND) || []}
-                                {...marcGeren}
-                                onChange={val => this._onChangeMarcGeren(val)}
-                                touched={true}
-                                showEmptyObject={true}
-                            />
-                        </dt>
-                    </Col>
-                    <SelectsJustificacion
-                        visible={this.state.showJustifyNoGeren}
-                        title="Justificación no gerenciamiento"
-                        labelInput="Seleccione..."
-                        value={justifyNoGeren.value}
-                        onBlur={justifyNoGeren.onBlur}
-                        valueProp={"id"}
-                        textProp={"value"}
-                        parentId="dashboardComponentScroll"
-                        justify={justifyNoGeren}
-                        obligatory={true}
-                        data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
-                        onChange={val => this._onChangeJustifyNoGeren(val)}
-                        touched={true}
-                        isRequired={!isExclient}
-                        showEmptyObject={true}
-                    />
-                    <Col xs={12} md={4} lg={4}>
-                        <dt>
-                            <span>Centro de decisión </span> {!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <ComboBox
-                                name="centroDecision"
-                                labelInput="Seleccione..."
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={valuesYesNo}
-                                {...centroDecision}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt>
-                            <span>¿Necesita LME? </span> {!isExclient && <span style={{ color: "red" }}>*</span> }
-                        </dt>
-                        <dt>
-                            <ComboBox
-                                labelInput="Seleccione..."
-                                {...necesitaLME}
-                                value={necesitaLME.value}
-                                onBlur={necesitaLME.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={valuesYesNo}
-                                touched={true}
-                                onChange={val => this._onChangeValueNeedLME(val)}
-                            />
-                        </dt>
-                    </Col>
-                    <SelectsJustificacion
-                        visible={necesitaLME.value}
-                        title="Justificación no necesita LME"
-                        labelInput="Seleccione..."
-                        value={justifyNoLME.value}
-                        onBlur={justifyNoLME.onBlur}
-                        valueProp={"id"}
-                        textProp={"value"}
-                        justify={justifyNoLME}
-                        obligatory={true}
-                        data={selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED) || []}
-                        onChange={val => this._onChangeValueJustifyNoNeedLME(val)}
-                        touched={true}
-                        isRequired={!isExclient}
-                        showEmptyObject={true}
-                    />
-                    <SelectsJustificacion
-                        visible={isExclient ? 'false' : 'true' }
-                        title="Justificación excliente"
-                        labelInput="Seleccione..."
-                        value={justifyExClient.value}
-                        onBlur={justifyExClient.onBlur}
-                        valueProp={"id"}
-                        textProp={"value"}
-                        justify={justifyExClient}
-                        obligatory={false}
-                        data={selectsReducer.get(constants.JUSTIFICATION_LOST_CLIENT) || []}
-                        onChange={justifyExClient.onChange}
-                        touched={true}
-                        isRequired={isExclient}
-                        showEmptyObject={true}
-                    />
-                </Row>
-                <Row style={{ padding: "0px 10px 10px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                            <div className="tab-content-row"
-                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            <i className="file outline icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Notas</span>
-                        </div>
-                    </Col>
-                </Row>
-                
-                <div  >
-                    <NotesClient />
-                </div>
+                        </Col>
+                    </Row>
+                    <Row style={{ padding: "0px 10px 20px 20px" }}>
+                        <Col xs={12} md={4} lg={4}>
+                            <dt>
+                                <span>Grupo económico/relación </span>{!isExclient && <span style={{ color: "red" }}>*</span>}
 
-                <div style={{height: "100px" }}>
-                </div>
-                
-                <div className="" style={{
-                    marginTop: "50px",
-                    position: "fixed",
-                    border: "1px solid #C2C2C2",
-                    bottom: "0px",
-                    width: "100%",
-                    marginBottom: "0px",
-                    backgroundColor: "#F8F8F8",
-                    height: "50px",
-                    background: "rgba(255,255,255,0.75)"
-                }}>
-                    <div style={{ width: "400px", height: "100%", position: "fixed", right: "0px" }}>
-                        
+                            </dt>
+                            <dt>
+                                <div className="ui search participantBanc fluid">
+                                    <ComboBoxFilter className="prompt" id="inputEconomicGroup"
+                                        style={{ borderRadius: "3px" }}
+                                        autoComplete="off"
+                                        disabled={allowChangeEconomicGroup}
+                                        type="text"
+                                        {...economicGroupName}
+                                        value={economicGroupName.value}
+                                        onChange={this._onChangeGroupEconomic}
+                                        placeholder="Ingrese un criterio de búsqueda..."
+                                        onKeyPress={this.updateKeyValueUsersBanco}
+                                        touched={true}
+                                    />
+                                </div>
+                            </dt>
+                        </Col>
+                        <Col xs={12} md={4} lg={4}>
+                            <dt>
+                                <span>NIT principal </span>
+
+                            </dt>
+                            <dt style={{ marginTop: '8px' }}>
+                                <span style={{ fontWeight: 'normal' }}>{nitPrincipal.value}</span>
+                            </dt>
+                        </Col>
+                    </Row>
+                    <Row style={{ padding: "0px 10px 20px 20px" }}>
+                        <Col xs={12} md={4} lg={4} style={{ paddingRight: "10px" }}>
+                            <dt>
+                                <span>Marca gerenciamiento </span> {!isExclient && <span style={{ color: "red" }}>*</span>}
+                            </dt>
+                            <dt>
+                                <ComboBox
+                                    name="marcGeren"
+                                    labelInput="Seleccione marca..."
+                                    valueProp={'id'}
+                                    textProp={'value'}
+                                    parentId="dashboardComponentScroll"
+                                    data={selectsReducer.get(constants.MANAGEMENT_BRAND) || []}
+                                    {...marcGeren}
+                                    onChange={val => this._onChangeMarcGeren(val)}
+                                    touched={true}
+                                    showEmptyObject={true}
+                                />
+                            </dt>
+                        </Col>
+                        <SelectsJustificacion
+                            visible={this.state.showJustifyNoGeren}
+                            title="Justificación no gerenciamiento"
+                            labelInput="Seleccione..."
+                            value={justifyNoGeren.value}
+                            onBlur={justifyNoGeren.onBlur}
+                            valueProp={"id"}
+                            textProp={"value"}
+                            parentId="dashboardComponentScroll"
+                            justify={justifyNoGeren}
+                            obligatory={true}
+                            data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
+                            onChange={val => this._onChangeJustifyNoGeren(val)}
+                            touched={true}
+                            isRequired={!isExclient}
+                            showEmptyObject={true}
+                        />
+                        <Col xs={12} md={4} lg={4}>
+                            <dt>
+                                <span>Centro de decisión </span> {!isExclient && <span style={{ color: "red" }}>*</span>}
+                            </dt>
+                            <dt>
+                                <ComboBox
+                                    name="centroDecision"
+                                    labelInput="Seleccione..."
+                                    valueProp={'id'}
+                                    textProp={'value'}
+                                    parentId="dashboardComponentScroll"
+                                    data={valuesYesNo}
+                                    {...centroDecision}
+                                    touched={true}
+                                />
+                            </dt>
+                        </Col>
+                    </Row>
+                    <Row style={{ padding: "0px 10px 20px 20px" }}>
+                        <Col xs={12} md={4} lg={4}>
+                            <dt>
+                                <span>¿Necesita LME? </span> {!isExclient && <span style={{ color: "red" }}>*</span>}
+                            </dt>
+                            <dt>
+                                <ComboBox
+                                    labelInput="Seleccione..."
+                                    {...necesitaLME}
+                                    value={necesitaLME.value}
+                                    onBlur={necesitaLME.onBlur}
+                                    valueProp={'id'}
+                                    textProp={'value'}
+                                    parentId="dashboardComponentScroll"
+                                    data={valuesYesNo}
+                                    touched={true}
+                                    onChange={val => this._onChangeValueNeedLME(val)}
+                                />
+                            </dt>
+                        </Col>
+                        <SelectsJustificacion
+                            visible={necesitaLME.value}
+                            title="Justificación no necesita LME"
+                            labelInput="Seleccione..."
+                            value={justifyNoLME.value}
+                            onBlur={justifyNoLME.onBlur}
+                            valueProp={"id"}
+                            textProp={"value"}
+                            justify={justifyNoLME}
+                            obligatory={true}
+                            data={selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED) || []}
+                            onChange={val => this._onChangeValueJustifyNoNeedLME(val)}
+                            touched={true}
+                            isRequired={!isExclient}
+                            showEmptyObject={true}
+                        />
+                        <SelectsJustificacion
+                            visible={isExclient ? 'false' : 'true'}
+                            title="Justificación excliente"
+                            labelInput="Seleccione..."
+                            value={justifyExClient.value}
+                            onBlur={justifyExClient.onBlur}
+                            valueProp={"id"}
+                            textProp={"value"}
+                            justify={justifyExClient}
+                            obligatory={false}
+                            data={selectsReducer.get(constants.JUSTIFICATION_LOST_CLIENT) || []}
+                            onChange={justifyExClient.onChange}
+                            touched={true}
+                            isRequired={isExclient}
+                            showEmptyObject={true}
+                        />
+                    </Row>
+                    <Row style={{ padding: "0px 10px 10px 20px" }}>
+                        <Col xs={12} md={12} lg={12}>
+                            <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                                <div className="tab-content-row"
+                                    style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                                <i className="file outline icon" style={{ fontSize: "25px" }} />
+                                <span className="title-middle"> Notas</span>
+                            </div>
+                        </Col>
+                    </Row>
+
+                    <div  >
+                        <NotesClient />
+                    </div>
+
+                    <div style={{ height: "100px" }}>
+                    </div>
+
+                    <div className="" style={{
+                        marginTop: "50px",
+                        position: "fixed",
+                        border: "1px solid #C2C2C2",
+                        bottom: "0px",
+                        width: "100%",
+                        marginBottom: "0px",
+                        backgroundColor: "#F8F8F8",
+                        height: "50px",
+                        background: "rgba(255,255,255,0.75)"
+                    }}>
+                        <div style={{ width: "400px", height: "100%", position: "fixed", right: "0px" }}>
+
                             <button className="btn"
                                 style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
-                                    onClick={this.clickButtonScrollTop} type="submit">
+                                onClick={this.clickButtonScrollTop} type="submit">
                                 <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
                             </button>
-                        
-                        <button className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
-                            float: "right",
-                            margin: "8px 0px 0px 250px",
-                            position: "fixed",
-                            backgroundColor: "#C1C1C1"
-                        }} type="button">
-                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
-                        </button>
+
+                            <button className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
+                                float: "right",
+                                margin: "8px 0px 0px 250px",
+                                position: "fixed",
+                                backgroundColor: "#C1C1C1"
+                            }} type="button">
+                                <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <ModalErrorsUpdateClient modalIsOpen={tabReducer.get('modalErrorsIsOpen')} />
+                <ModalErrorsUpdateClient modalIsOpen={tabReducer.get('modalErrorsIsOpen')} />
                 <SweetAlert
                     type="warning"
                     show={this.state.showExitAlert}
@@ -1091,7 +1035,7 @@ class clientCertify extends React.Component {
                     showCancelButton={true}
                     onCancel={() => this.setState({ showExitAlert: false })}
                     onConfirm={() => this._onConfirmExit()} />
-                
+
                 <SweetAlert
                     type="success"
                     show={this.state.showEx}
@@ -1135,12 +1079,12 @@ function fomatInitialStateNumber(val) {
     return val;
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes }, ownProps ) {
+function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes }, ownProps) {
     const infoClient = clientInformacion.get('responseClientInfo');
     const { contextClient } = infoClient;
 
     isExclient = infoClient.relationshipStatusName === "Excliente";
-    
+
     const isPersonaNatural = infoClient.clientTypeKey === 'Persona natural';
 
     return {
@@ -1160,7 +1104,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
             justifyNoGeren: infoClient.justificationForNoRM,
             justifyExClient: infoClient.justificationForLostClient,
             justifyNoLME: infoClient.justificationForCreditNeed,
-            idCIIU: infoClient.ciiu,
+            idCIIU: infoClient.idCiiu,
             idSubCIIU: infoClient.subCiiu,
             groupEconomic: infoClient.economicGroup,
             annualSales: infoClient.annualSales === 0 ? '0' : fomatInitialStateNumber(infoClient.annualSales),
@@ -1177,7 +1121,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
             neighborhood: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].neighborhood : '',
             city: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].city : '',
             telephone: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].phoneNumber : '',
-          
+
             occupation: infoClient.occupation,
             firstName: infoClient.firstName,
             middleName: infoClient.middleName,
@@ -1188,7 +1132,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
 }
 
 function mapDispatchToProps(dispatch) {
-      return bindActionCreators ({
+    return bindActionCreators({
         economicGroupsByKeyword,
         getMasterDataFields,
         setNotes,
@@ -1203,12 +1147,11 @@ function mapDispatchToProps(dispatch) {
         createProspect,
         sendErrorsUpdate,
         updateTitleNavBar
-      }, dispatch)
+    }, dispatch)
 }
-
 
 export default reduxForm({
     form: 'clientCertify',
-    fields, 
+    fields,
     validate
 }, mapStateToProps, mapDispatchToProps)(clientCertify)

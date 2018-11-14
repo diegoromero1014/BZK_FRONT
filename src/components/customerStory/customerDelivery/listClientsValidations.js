@@ -29,13 +29,13 @@ class ListClientsValidations extends Component {
                     <i className="red remove icon" title="El cliente no se encuentra actualizado" style={{ cursor: "pointer" }} />
                 }
             </td>
-            { allowAccessContextClient && <td className="collapsing" style={{ textAlign: 'center' }}>
+            {allowAccessContextClient && <td className="collapsing" style={{ textAlign: 'center' }}>
                 <ButtonOpenMainClients mainClientsComplete={deliveryClient.mainClientsComplete} idClient={deliveryClient.idClient} />
-            </td> }
-            { allowAccessContextClient && 
-            <td className="collapsing" style={{ textAlign: 'center' }}>
-                <ButtonOpenMainSuppliers mainSuppliersComplete={deliveryClient.mainSuppliersComplete} idClient={deliveryClient.idClient} />
-            </td>
+            </td>}
+            {allowAccessContextClient &&
+                <td className="collapsing" style={{ textAlign: 'center' }}>
+                    <ButtonOpenMainSuppliers mainSuppliersComplete={deliveryClient.mainSuppliersComplete} idClient={deliveryClient.idClient} />
+                </td>
             }
         </tr>
     }
@@ -43,7 +43,7 @@ class ListClientsValidations extends Component {
     render() {
         const { customerStory, allowAccessContextClient } = this.props;
         return (
-            <div className="tab-content break-word" style={{ borderRadius: '3px', overflow: 'initial', position: 'initial', zIndex:"9" }}>
+            <div className="tab-content break-word" style={{ borderRadius: '3px', overflow: 'initial', position: 'initial', zIndex: "9" }}>
                 {customerStory.get('listClientsDelivery').length > 0 ?
                     <div style={{ marginTop: '20px' }}>
                         <Col xs={12} md={12} lg={12}>
@@ -55,8 +55,8 @@ class ListClientsValidations extends Component {
                                         <th>Célula</th>
                                         <th>Historial</th>
                                         <th>Actualización</th>
-                                        {allowAccessContextClient && <th style={{textAlign: 'center'}}>Principales clientes</th>  }
-                                        {allowAccessContextClient && <th style={{textAlign: 'center'}}>Principales proveedores</th>  }
+                                        {allowAccessContextClient && <th style={{ textAlign: 'center' }}>Principales clientes</th>}
+                                        {allowAccessContextClient && <th style={{ textAlign: 'center' }}>Principales proveedores</th>}
                                     </tr>
                                 </thead>
                                 <tbody>

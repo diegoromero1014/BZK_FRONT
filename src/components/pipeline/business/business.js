@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Col } from 'react-flexbox-grid';
+
 import { clearBusiness } from './ducks';
 import ListBusiness from './listBusiness';
+
 import { ORIGIN_PIPELIN_BUSINESS } from '../constants';
 
 class BusinessBusiness extends Component {

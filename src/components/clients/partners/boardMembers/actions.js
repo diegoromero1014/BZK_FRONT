@@ -1,9 +1,10 @@
+import axios from 'axios';
+
 import { APP_URL } from '../../../../constantsGlobal';
 import {
-  CHANGE_PAGE, CLEAR_BOARD_MEMBERS, GET_BOARD_MEMBERS, LOWER_LIMIT, SAVE,
+  CHANGE_PAGE, GET_BOARD_MEMBERS, LOWER_LIMIT, SAVE,
   CLEAR_FILTERS, CHANGE_KEYWORD
 } from './constants';
-import axios from 'axios';
 
 export function getBoardMembers(idClient, pageNum, maxRows, searchTerm) {
   const json = {

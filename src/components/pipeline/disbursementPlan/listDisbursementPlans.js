@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
-import Modal from 'react-modal';
+import { Row, Col } from 'react-flexbox-grid';
 import _ from "lodash";
+import moment from 'moment';
+
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import Input from '../../../ui/input/inputComponent';
-import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, MESSAGE_ERROR } from '../../../constantsGlobal';
+import ToolTip from '../../toolTip/toolTipComponent';
+import SweetAlert from '../../sweetalertFocus';
+
 import { stringValidate, handleFocusValueNumber, handleBlurValueNumber } from '../../../actionsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { updateDisbursementPlans } from '../actions';
-import ToolTip from '../../toolTip/toolTipComponent';
-import SweetAlert from '../../sweetalertFocus';
+
+import { ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, MESSAGE_ERROR } from '../../../constantsGlobal';
 import { ORIGIN_PIPELIN_BUSINESS } from '../constants';
-import moment from 'moment';
 
 class ListDisbursementPlans extends Component {
 
@@ -84,6 +86,7 @@ class ListDisbursementPlans extends Component {
                 return true;
             }
         });
+
         handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, _.sum([pendingDisbursementAmountNum, disbursementAmountItem]).toFixed(2), true, 2);
         updateDisbursementPlans(newListPart, origin);
         this.setState({

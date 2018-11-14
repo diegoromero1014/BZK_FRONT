@@ -1,5 +1,6 @@
-import { APP_URL } from '../../constantsGlobal';
 import axios from 'axios';
+
+import { APP_URL } from '../../constantsGlobal';
 import * as constants from './constants';
 
 export function pipelineByClientFindServer(clientId, pageNum, maxRows, columnOrder, order, statusDocumentId, pipelineStatus) {
@@ -116,6 +117,7 @@ export function createEditPipeline(jsonPipeline) {
     },
     "messageBody": jsonPipeline
   }
+
   var request = axios.post(APP_URL + "/savePipeline", json);
   return {
     type: constants.CREATE_EDIT_PIPELINE,

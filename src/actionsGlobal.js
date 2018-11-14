@@ -1,9 +1,10 @@
-import * as constants from './constantsGlobal';
 import axios from 'axios';
 import moment from 'moment';
 import numeral from 'numeral';
 import _ from 'lodash';
+
 import { redirectUrl } from './components/globalComponents/actions';
+import * as constants from './constantsGlobal';
 
 export function consultParameterServer(tagConsult) {
     const json = {
@@ -28,6 +29,13 @@ export function consultParameterServer(tagConsult) {
     return {
         type: constants.CONSULT_PARAMETER_NAME,
         payload: request
+    }
+}
+
+export function setSecurityMessage(message) {
+    return {
+        type: constants.MESSAGE_SECURITY_FORM,
+        message: message
     }
 }
 
@@ -199,8 +207,7 @@ export function getStrDateByDateFormat(date, format) {
 }
 
 export function stringToDate(dateString) {
-
-    if(!dateString) return new Date();
+    if (!dateString) return new Date();
 
     let arrFullDate = dateString.trim().split(" ");
     let arrDate = arrFullDate[0].split("-");
@@ -216,8 +223,7 @@ export function stringToDate(dateString) {
     );
 }
 export function stringToDateEnd(dateString) {
-
-    if(!dateString) return new Date();
+    if (!dateString) return new Date();
 
     let arrFullDate = dateString.trim().split(" ");
     let arrDate = arrFullDate[0].split("-");
@@ -313,7 +319,7 @@ export function formatCurrency(value, format) {
  */
 export function validateResponse(response) {
     if (!_.get(response, 'payload.data.validateLogin') || _.get(response, 'payload.data.validateLogin') === 'false') {
-        window.localStorage.setItem('sessionTokenFront','');
+        window.localStorage.setItem('sessionTokenFront', '');
         redirectUrl("/login");
     } else {
         if ((_.get(response, 'payload.data.status') === constants.REQUEST_ERROR) || (_.get(response, 'payload.data.status') === constants.REQUEST_ERROR_XSS)) {
@@ -365,69 +371,69 @@ export function clearPrevisitPermissions() {
 
 export function getUserBlockingReport(idEntity, reportType) {
     const json = {
-      "messageHeader": {
-        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-        "timestamp": new Date().getTime(),
-        "service": "",
-        "status": "0",
-        "language": "es",
-        "displayErrorMessage": "",
-        "technicalErrorMessage": "",
-        "applicationVersion": "",
-        "debug": true,
-        "isSuccessful": true
-      },
-    
-      "messageBody": {
-        "client_id": window.sessionStorage.getItem('idClientSelected'),
-        "username": window.localStorage.getItem('userNameFront'),
-        "report_id": idEntity,
-        "report_type": reportType
-      }
-        
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+
+        "messageBody": {
+            "client_id": window.sessionStorage.getItem('idClientSelected'),
+            "username": window.localStorage.getItem('userNameFront'),
+            "report_id": idEntity,
+            "report_type": reportType
+        }
+
     }
-  
-    let request = axios.post(constants.APP_URL+'/getUserBlockingReport', json);
-    
-    return{
+
+    let request = axios.post(constants.APP_URL + '/getUserBlockingReport', json);
+
+    return {
         type: constants.BLOCK_REPORT_CONSTANT,
         payload: request
     };
-  } 
+}
 
-  export function stopBlockToReport (idEntity, reportType) {
-
+export function stopBlockToReport(idEntity, reportType) {
     const json = {
-      "messageHeader": {
-        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-        "timestamp": new Date().getTime(),
-        "service": "",
-        "status": "0",
-        "language": "es",
-        "displayErrorMessage": "",
-        "technicalErrorMessage": "",
-        "applicationVersion": "",
-        "debug": true,
-        "isSuccessful": true
-      },
-    
-      "messageBody": {
-        "client_id": window.sessionStorage.getItem('idClientSelected'),
-        "username": window.localStorage.getItem('userNameFront'),
-        "report_id": idEntity,
-        "report_type": reportType
-      }
-        
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+
+        "messageBody": {
+            "client_id": window.sessionStorage.getItem('idClientSelected'),
+            "username": window.localStorage.getItem('userNameFront'),
+            "report_id": idEntity,
+            "report_type": reportType
+        }
+
     }
-  
-    let request = axios.post(constants.APP_URL+'/deleteBlockedReport', json);
-  
+
+    let request = axios.post(constants.APP_URL + '/deleteBlockedReport', json);
+
     return {
-      type: constants.STOP_BLOCK_REPORT,
-      payload: request
+        type: constants.STOP_BLOCK_REPORT,
+        payload: request
     };
-  
-  }
+
+}
+
 export function xssValidation(value, isFullValidation) {
     let hasXss = false;
 
@@ -445,33 +451,33 @@ export function xssValidation(value, isFullValidation) {
 }
 
 export function onSessionExpire() {
-    window.localStorage.setItem('sessionTokenFront','');
+    window.localStorage.setItem('sessionTokenFront', '');
     redirectUrl("/login");
 }
 
-export function validateFields(values,validations, errors) {
-
+export function validateFields(values, validations, errors) {
     validations.forEach(row => {
         row.fields.forEach(field => {
-            if (! errors[field]) {
+            if (!errors[field]) {
                 switch (row.validation) {
                     case 'option-required':
-                        if (! values[field] ) {
+                        if (!values[field]) {
                             errors[field] = constants.OPTION_REQUIRED;
                         }
+                        break;
                     case 'required':
-                        if (! values[field] ) {
+                        if (!values[field]) {
                             errors[field] = constants.VALUE_REQUIERED;
                         }
                         break;
                     case 'xss':
-                        if (xssValidation(values[field]) ) {
+                        if (xssValidation(values[field])) {
                             errors[field] = constants.VALUE_XSS_INVALID;
                         }
                         break;
 
                 }
-            }   
+            }
         });
     })
 }

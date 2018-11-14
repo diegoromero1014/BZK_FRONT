@@ -1,35 +1,32 @@
 import React, { Component } from "react";
 import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
-import { redirectUrl } from "../../globalComponents/actions";
 import { Col, Row } from "react-flexbox-grid";
+import moment from "moment";
+import _ from "lodash";
+import $ from "jquery";
+import numeral from "numeral";
+
 import Input from "../../../ui/input/inputComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
-import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
+import SweetAlert from "../../sweetalertFocus";
+import HeaderPipeline from "../headerPipeline";
+import { addBusiness, clearBusiness, editBusiness } from "../business/ducks";
+import Business from "../business/business";
+import RichText from '../../richText/richTextComponent';
+import ToolTip from '../../toolTip/toolTipComponent';
+import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
+
+import { redirectUrl } from "../../globalComponents/actions";
+import { showLoading } from '../../loading/actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import { changeStateSaveData } from "../../dashboard/actions";
+import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import {
-    getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication, consultDataSelect
+    getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication,
+    consultDataSelect
 } from "../../selectsComponent/actions";
-import {
-    BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
-    MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS,
-    PIPELINE_STATUS, PROBABILITY, PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET,
-    FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, PRODUCTS_MASK
-} from "../../selectsComponent/constants";
-import {
-    DATE_FORMAT, DATE_START_AFTER, EDITAR, MESSAGE_SAVE_DATA,
-    ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, REVIEWED_DATE_FORMAT, SAVE_DRAFT, SAVE_PUBLISHED,
-    VALUE_REQUIERED, ALLOWS_NEGATIVE_INTEGER, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT,
-    TITLE_ERROR_SWEET_ALERT,
-    VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS_TITLE,
-    REGEX_SIMPLE_XSS_MESAGE
-} from "../../../constantsGlobal";
-import {
-    CURRENCY_COP, INTEGER,
-    LINE_OF_BUSINESS_LEASING, ORIGIN_PIPELIN_BUSINESS, POSITIVE_INTEGER, PROPUEST_OF_BUSINESS,
-    REAL, BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, PRODUCT_FAMILY_LEASING, HELP_PROBABILITY
-} from "../constants";
 import {
     createEditPipeline, getPipelineById, pdfDescarga, updateDisbursementPlans
 } from "../actions";
@@ -37,22 +34,21 @@ import {
     consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, handleFocusValueNumber,
     nonValidateEnter, validateResponse, xssValidation
 } from "../../../actionsGlobal";
-import SweetAlert from "../../sweetalertFocus";
-import moment from "moment";
-import { filterUsersBanco } from "../../participantsVisitPre/actions";
-import { changeStateSaveData } from "../../dashboard/actions";
-import { MENU_CLOSED } from "../../navBar/constants";
-import _ from "lodash";
-import $ from "jquery";
-import numeral from "numeral";
-import HeaderPipeline from "../headerPipeline";
-import { addBusiness, clearBusiness, editBusiness } from "../business/ducks";
-import Business from "../business/business";
-import RichText from '../../richText/richTextComponent';
-import { showLoading } from '../../loading/actions';
-import ToolTip from '../../toolTip/toolTipComponent';
-import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
+
+import {
+    BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
+    MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS, PROBABILITY,
+    PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, PRODUCTS_MASK
+} from "../../selectsComponent/constants";
+import {
+    EDITAR, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, REVIEWED_DATE_FORMAT, SAVE_DRAFT,
+    SAVE_PUBLISHED, VALUE_REQUIERED, ALLOWS_NEGATIVE_INTEGER, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT,
+    TITLE_ERROR_SWEET_ALERT, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE
+} from "../../../constantsGlobal";
+import {
+    ORIGIN_PIPELIN_BUSINESS, BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, PRODUCT_FAMILY_LEASING,
+    HELP_PROBABILITY
+} from "../constants";
 
 const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
     "businessCategory", "currency", "indexing", "need", "observations", "product",
@@ -76,6 +72,7 @@ const validate = values => {
     } else {
         errors.businessStatus = null;
     }
+
     if (!values.value) {
         errors.value = VALUE_REQUIERED;
     } else if (xssValidation(values.value)) {
@@ -83,11 +80,13 @@ const validate = values => {
     } else {
         errors.value = null;
     }
+
     if (!values.currency) {
         errors.currency = OPTION_REQUIRED;
     } else {
         errors.currency = null;
     }
+
     if (!values.need) {
         errors.need = OPTION_REQUIRED;
     } else {
@@ -129,8 +128,7 @@ const validate = values => {
         errors.nameUsuario = VALUE_XSS_INVALID;
     } else if (!values.idUsuario) {
         errors.nameUsuario = "Seleccione un empleado"
-    }
-    else {
+    } else {
         errors.nameUsuario = null;
     }
 
@@ -160,7 +158,6 @@ const validate = values => {
 };
 
 export default function createFormPipeline(name, origin, pipelineBusiness, functionCloseModal, disabled) {
-
     var nameMellowingPeriod = _.uniqueId('mellowingPeriod_');
     var nameProductFamily = _.uniqueId('productFamily_');
     let nameProduct = _.uniqueId('product_');
@@ -182,7 +179,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
     let contollerErrorChangeType = false;
 
     class FormEditPipeline extends Component {
-
         constructor(props) {
             super(props);
             thisForm = this;
@@ -211,6 +207,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             } else {
                 nameDisbursementPlansInReducer = "disbursementPlans";
             }
+
             this._submitEditPipeline = this._submitEditPipeline.bind(this);
             this._closeMessageEditPipeline = this._closeMessageEditPipeline.bind(this);
             this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
@@ -231,9 +228,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         showFormDisbursementPlan(isOpen) {
-            const { pipelineReducer } = this.props;
-            const listDisbursementPlans = pipelineReducer.get(nameDisbursementPlansInReducer);
-            const detailPipeline = pipelineReducer.get('detailPipeline');
             this.setState({
                 showFormAddDisbursementPlan: isOpen,
                 disbursementPlanRequired: false
@@ -244,6 +238,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this.setState({
                 showMessageEditPipeline: false
             });
+
             if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                 if (typeMessage === "success") {
                     redirectUrl("/dashboard/clientInformation");
@@ -267,6 +262,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             if (idCurrencyAux == null) {
                 idCurrencyAux = parseInt(currencyValue);
             }
+
             if (this.state.isEditable && currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && parseInt(currencyValue) !== parseInt(idCurrencyAux) && !contollerErrorChangeType) {
                 contollerErrorChangeType = true;
                 if (idCurrencyAux !== null && value.value !== '') {
@@ -289,6 +285,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     showConfirmChangeCurrency: false
                 });
             }
+
             var lugarSelector = $('.valueMillions');
             var input = lugarSelector.find("input");
             input.focus();
@@ -301,6 +298,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     output += val.toString().charAt(i)
                 }
             }
+
             valuReduxForm.onChange(output);
         }
 
@@ -319,6 +317,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this.setState({
                 showConfirmChangeCurrency: false
             });
+
             contollerErrorChangeType = false;
             const { fields: { currency } } = this.props;
             if (idCurrencyAux !== null) {
@@ -355,6 +354,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     )
                 }).length > 0
             });
+
             consultListWithParameterUbication(PRODUCTS, currencyValue);
             if (!_.isEqual(pipelineReducer.get('detailPipeline').productFamily, productFamily.value)) {
                 product.onChange('');
@@ -365,11 +365,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this.setState({
                 showConfirmChangeCurrency: false
             });
+
             contollerErrorChangeType = false;
             const { fields: { value, currency } } = this.props;
             if (idCurrencyAux !== null) {
                 value.onChange('');
             }
+
             idCurrencyAux = parseInt(currency.value);
         }
 
@@ -496,7 +498,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         updateKeyValueUsersBanco(e) {
             const { fields: { nameUsuario, idUsuario }, filterUsersBanco, swtShowMessage } = this.props;
             var self = this;
-           // idUsuario.onChange('');
+            // idUsuario.onChange('');
             if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
                 e.consultclick ? "" : e.preventDefault();
                 if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
@@ -695,11 +697,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 let fechaModDateMoment = moment(updatedTimestamp.value, "x").locale('es');
                 fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
             }
+            
             let fechaCreateString = '';
             if (createdTimestamp.value !== null) {
                 let fechaCreateDateMoment = moment(createdTimestamp.value, "x").locale('es');
                 fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
             }
+
             return (
                 <div>
                     {origin !== ORIGIN_PIPELIN_BUSINESS && <HeaderPipeline />}
