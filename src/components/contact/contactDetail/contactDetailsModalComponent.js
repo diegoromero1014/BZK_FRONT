@@ -91,7 +91,7 @@ class ContactDetailsModalComponent extends Component {
         showLoading(true, MESSAGE_LOAD_DATA);
         
         const that = this;
-        const { fields: { contactFunctions, contactHobbies, contactSports, contactLineOfBusiness } } = this.props;
+        const { fields: { contactFunctions, contactHobbies, contactSports, contactLineOfBusiness, contactCity } } = this.props;
         const idClient = callFromModuleContact ? null : window.sessionStorage.getItem('idClientSelected');
         const masterData = [
             CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY,
@@ -100,27 +100,34 @@ class ContactDetailsModalComponent extends Component {
         ];
 
         getMasterDataFields(masterData).then(function (data) {
-                getContactDetails(contactId, idClient)
-                    .then(function (data) {
-                        showLoading(false, "");
-                        const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
-                        if (contact.country !== undefined && contact.country !== null) {
-                            that._uploadProvincesByCountryId(contact.country);
-                        }
+            getContactDetails(contactId, idClient)
+                .then(function (data) {
+                    showLoading(false, "");
+                    const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
+                    
+                    if (contact.country !== undefined && contact.country !== null) {
+                        that._uploadProvincesByCountryId(contact.country);
+                    }
 
-                        if (contact.province !== undefined && contact.province !== null) {
-                            that._uploadCitiesByProvinceId(contact.province);
-                        }
+                    if (contact.province !== undefined && contact.province !== null) {
+                        that._uploadCitiesByProvinceId(contact.province);
+                    }
 
-                        if (!callFromModuleContact) {
-                            contactLineOfBusiness.onChange(JSON.parse('["' + _.join(contact.lineOfBusiness, '","') + '"]'));
-                            contactFunctions.onChange(JSON.parse('["' + _.join(contact.function, '","') + '"]'));
-                        }
+                    if (!callFromModuleContact) {
+                        contactLineOfBusiness.onChange(JSON.parse('["' + _.join(contact.lineOfBusiness, '","') + '"]'));
+                        contactFunctions.onChange(JSON.parse('["' + _.join(contact.function, '","') + '"]'));
+                    }
 
-                        contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
-                        contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
-                    });
-            });
+                    contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
+                    contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
+                    
+                    // Se vuelve a setear la ciudad para evitar que el cambio en el departamento deje vacio el campo ciudad
+                    setTimeout(() => {
+                        contactCity.onChange(contact.city);
+                    }, 1000);
+                    
+                });
+        });
     }
 
     _downloadFileSocialStyle() {

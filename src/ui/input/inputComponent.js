@@ -28,6 +28,7 @@ class inputComponent extends Component {
 
     _onBlur(e, event) {
         const { onChange, onBlur } = this.props;
+
         let trimmed = this.state.value.trim();
         this.inputFocus = false;
 
@@ -53,6 +54,7 @@ class inputComponent extends Component {
             onBlur(trimmed);
 
             if (!_.isUndefined(onKeyPress)) {
+                this.inputFocus = false;
                 setTimeout(function () {
                     onKeyPress(e);
                 }, 500);
@@ -69,7 +71,7 @@ class inputComponent extends Component {
         this.setState({ value: value });
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps) {        
         if (nextProps.value != this.state.value && !this.inputFocus) {
             this.setState({ value: nextProps.value });
         }

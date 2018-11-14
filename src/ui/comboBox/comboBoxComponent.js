@@ -16,6 +16,10 @@ class comboBoxComponent extends Component {
         this._changeValue = this._changeValue.bind(this);
         this._setPristine = this._setPristine.bind(this);
         this.existValueToMap = this.existValueToMap.bind(this);
+
+        this.pastValue = null;
+        this.pastData = null;
+
     }
 
     _setUsed(used) {
@@ -33,11 +37,13 @@ class comboBoxComponent extends Component {
         const selector = $(`.ui.selection.dropdown.${name}`);
         let valueField = value;
 
-        if(data && data.length > 0 && !this.existValueToMap(value, data) ){
+        if (data && data.length > 0 && !this.existValueToMap(value, data)) {
+            this.pastValue = value;
+            this.pastData = data;
             valueField = null;
         }
 
-        selector.dropdown('set selected',  valueField);
+        selector.dropdown('set selected', valueField);
         selector.dropdown('set value', valueField);
         this._setUsed(true);
     }
@@ -70,7 +76,10 @@ class comboBoxComponent extends Component {
         if (setPristineAgain) {
             this._setPristine(labelInput, name);
         } else {
-            if (valueIsNotEmpty) {
+
+            if (this.pastValue && this.pastData != data) {
+                this._changeValue(this.pastValue, name, data);
+            } else if (valueIsNotEmpty) {
                 this._changeValue(value, name, data);
             } else {
                 if (isEmptyAndUsed) {
@@ -122,7 +131,7 @@ class comboBoxComponent extends Component {
             nameInput, labelInput, data, touched, invalid, error, name, disabled, deployUp, scrollTo, parentId,
             searchClient, shouldHandleUpdate, defaultValue, textProp, valueProp, showEmptyObject
         } = this.props;
-        
+
         if (touched && invalid && shouldHandleUpdate) {
             scrollTo(parentId);
         }
