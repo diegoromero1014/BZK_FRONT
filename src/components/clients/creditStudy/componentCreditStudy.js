@@ -50,12 +50,7 @@ import {
     SUCCESS_MESSAGE_FOR_SHAREHOLDER, SUCCESS_MESSAGE_FOR_BOARD_MEMBERS
 } from './constants';
 
-const fields = ["customerTypology", "contextClientField", "inventoryPolicy", "participationLB", "participationDC", "participationMC",
-    "contextLineBusiness", "experience", "distributionChannel", "nameMainClient", "tbermMainClient", "relevantInformationMainClient",
-    "nameMainCompetitor", "participationMComp", "obsevationsCompetitor", "termMainClient", "typeOperationIntOpera", "participationIntOpe",
-    "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe", "nameMainSupplier",
-    "participationMS", "termMainSupplier", "relevantInformationMainSupplier", "notApplyCreditContact", "contributionDC",
-    "contributionLB", "controlLinkedPayments"];
+import { validations as validate, fields } from './fieldsAndRules';
 
 var errorMessageForShareholders = SUCCESS_MESSAGE_FOR_SHAREHOLDER;
 var errorMessageForBoardMembers = SUCCESS_MESSAGE_FOR_BOARD_MEMBERS;
@@ -76,28 +71,6 @@ const containerButtons = {
 };
 
 const paddingButtons = { paddingRight: '7px', paddingLeft: '7px' };
-
-const validate = (values, props) => {
-    const errors = {}
-    let errorScrollTop = false;
-
-    if (xssValidation(values.contextClientField)) {
-        errors.contextClientField = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.contextClientField = null;
-    }
-
-    if (xssValidation(values.inventoryPolicy)) {
-        errors.inventoryPolicy = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.inventoryPolicy = null;
-    }
-
-    return errors;
-
-}
 
 export class ComponentStudyCredit extends Component {
     constructor(props) {
