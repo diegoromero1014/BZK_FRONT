@@ -1,24 +1,31 @@
 import React, { Component } from 'react';
 import ListParticipantesOtros from './listParticipantesOtros';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import Input from '../../ui/input/inputComponent';
-import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import Textarea from '../../ui/textarea/textareaComponent';
-import { addParticipant, clearParticipants } from './actions';
-import { KEY_PARTICIPANT_OTHER } from './constants';
-import SweetAlertFocus from '../sweetalertFocus';
+import { Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import _ from 'lodash';
-import {
-  VALUE_REQUIERED, VALUE_XSS_INVALID,
-  REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
-} from "../../constantsGlobal";
-import { xssValidation} from "../../actionsGlobal";
+
+import Input from '../../ui/input/inputComponent';
+import SweetAlertFocus from '../sweetalertFocus';
+
+import { addParticipant, clearParticipants } from './actions';
+import { xssValidation } from "../../actionsGlobal";
+
+import { KEY_PARTICIPANT_OTHER } from './constants';
+import { REGEX_SIMPLE_XSS_MESAGE } from "../../constantsGlobal";
 
 
 const validate = values => {
   const errors = {}
+
+  // TODO: DEPURACIÓN
+  if(!values.nombrePersona){
+    errors.nombrePersona = "EN OTROS"
+  } else {
+    errors.nombrePersona = null;
+  }
+
+
   return errors
 };
 
@@ -32,14 +39,13 @@ class ParticipantesOtros extends Component {
       showInvalidCharacter: false,
     }
     this._addParticipantOther = this._addParticipantOther.bind(this);
-    this._submitValores = this._submitValores.bind(this);
   }
 
   _addParticipantOther() {
-    const { fields: { nombrePersona, cargoPersona, empresaPersona }, participants, addParticipant } = this.props;
+    const { fields: { nombrePersona, cargoPersona, empresaPersona }, addParticipant } = this.props;
 
     if (nombrePersona.value !== "" && nombrePersona.value !== null && nombrePersona.value !== undefined) {
-      if (xssValidation(nombrePersona.value) || xssValidation(cargoPersona.value)|| xssValidation(empresaPersona.value)) {
+      if (xssValidation(nombrePersona.value) || xssValidation(cargoPersona.value) || xssValidation(empresaPersona.value)) {
         this.setState({
           showInvalidCharacter: true
         });
@@ -76,14 +82,8 @@ class ParticipantesOtros extends Component {
     this.props.resetForm();
   }
 
-  _submitValores() {
-
-  }
-
   render() {
-    const { fields: {
-      nombrePersona, cargoPersona, empresaPersona
-    }, error, handleSubmit, participants, contactsByClient, addParticipant, disabled } = this.props;
+    const { fields: { nombrePersona, cargoPersona, empresaPersona }, participants, disabled } = this.props;
     var numColumnList = 6;
     var data = _.chain(participants.toArray()).map(participant => {
       return participant;

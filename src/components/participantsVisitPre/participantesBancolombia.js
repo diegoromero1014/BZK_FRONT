@@ -1,24 +1,21 @@
 import React, { Component } from 'react';
 import ListParticipantesBancolombia from './listParticipantesBancolombia';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import Input from '../../ui/input/inputComponent';
-import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
-import Textarea from '../../ui/textarea/textareaComponent';
-import { addParticipant, clearParticipants, filterUsersBanco } from './actions';
+import { Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
-import { contactsByClientFindServer } from '../contact/actions';
-import { NUMBER_CONTACTS, KEY_PARTICIPANT_BANCO } from './constants';
-import {
-  APP_URL,
-  VALUE_XSS_INVALID,
-  REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
-} from '../../constantsGlobal';
-import { validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from '../../actionsGlobal';
 import _ from 'lodash';
 import $ from 'jquery';
+
+import Input from '../../ui/input/inputComponent';
+import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
+
+import { addParticipant, clearParticipants, filterUsersBanco } from './actions';
+import { contactsByClientFindServer } from '../contact/actions';
+import { validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
+
+import { NUMBER_CONTACTS, KEY_PARTICIPANT_BANCO } from './constants';
+import { REGEX_SIMPLE_XSS_MESAGE } from '../../constantsGlobal';
 
 var self;
 const validate = values => {
@@ -176,9 +173,8 @@ class ParticipantesBancolombia extends Component {
   }
 
   render() {
-    const { fields: {
-      idUsuario, nameUsuario, cargoUsuario, empresaUsuario
-    }, error, handleSubmit, participants, contactsByClient, addParticipant, disabled } = this.props;
+    const { fields: { nameUsuario, cargoUsuario, empresaUsuario }, participants, disabled } = this.props;
+    
     var numColumnList = 6;
     var data = _.chain(participants.toArray()).map(participant => {
       return participant;

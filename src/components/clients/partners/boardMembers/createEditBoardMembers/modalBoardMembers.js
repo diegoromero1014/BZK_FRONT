@@ -532,7 +532,6 @@ function mapStateToProps({ selectsReducer, reducerGlobal, boardMembersReducer },
     }
 }
 
-
 export default reduxForm({
     form: 'submitCreateBoardMembers',
     fields,
