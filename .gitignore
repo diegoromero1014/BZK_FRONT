@@ -12,3 +12,5 @@ dist/
 .gitignore
 .vscode/
 package-lock.json
+.nyc_output/
+/coverage
