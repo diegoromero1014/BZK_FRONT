@@ -43,7 +43,6 @@ export const processRules = (formFields, fieldsWithRules, props) => {
             });
         }
     });
-
     return errors;
 }
 
@@ -237,6 +236,29 @@ export const checkNumbers = value => {
         message = MESSAGE_WARNING_ONLY_NUMBERS;
     }
 
-    return message;
+    return message;  
 
 }
+
+export const checkValueClientInformacion = reducer => (value, fields, props) => {
+    if (!props) {
+        return null;
+    }
+    const applied = props.clientInformacion.get(reducer);
+    let message = null;
+    if (! applied) {
+        message = checkRequired(value);
+    }
+    return message;
+}
+
+export const checkNumberInRange = (min, max) => value => {
+    let message = null;
+    console.log('checkNumberInRange', value);
+    console.log('checkNumber', value >= min && value <= max);
+    console.log('checkNumberInRange', !_.isNil(value) && value >= min && value <= max);
+    if (!_.isNil(value) && value >= min && value <= max) {
+        message = 'El campo debe estar entre '+ min + ' y '+max;
+    }
+    return message;
+} 

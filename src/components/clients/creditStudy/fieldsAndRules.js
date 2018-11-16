@@ -1,17 +1,22 @@
 import _ from "lodash";
 
 import {
-    checkRequired, processRules, checkClientDescription
+    checkRequired, processRules, checkClientDescription, checkMaxLength,
+    checkValueClientInformacion, checkNumberInRange
 } from '../../../validationsFields/rulesField';
+
+import {
+    noAppliedControlLinkedPayments, noAppliedLineOfBusiness
+} from '../../../constantsReducer';
 
 const fieldsWithRules = {
     contextClientField: { rules: [checkRequired, checkClientDescription] },
     customerTypology: { rules: [] },
     inventoryPolicy: { rules: [checkClientDescription] },
-    participationLB: { rules: [] },
+    participationLB: { rules: [checkValueClientInformacion(noAppliedLineOfBusiness), checkNumberInRange(0,100)] },
     participationDC: { rules: [] },
     participationMC: { rules: [] },
-    contextLineBusiness: { rules: [] },
+    contextLineBusiness: { rules: [checkValueClientInformacion(noAppliedLineOfBusiness), checkClientDescription, checkMaxLength(50)] },
     experience: { rules: [] },
     distributionChannel: { rules: [] },
     nameMainClient: { rules: [] },
@@ -34,11 +39,11 @@ const fieldsWithRules = {
     notApplyCreditContact: { rules: [] },
     contributionDC: { rules: [] },
     contributionLB: { rules: [] },
-    controlLinkedPayments: { rules: [checkRequired, checkClientDescription] },
+    controlLinkedPayments: { rules: [checkValueClientInformacion(noAppliedControlLinkedPayments), checkClientDescription] },
 }
 
 export const fields = _.keys(fieldsWithRules);
 
-export const validations = (formFields) => {
-    return processRules(formFields, fieldsWithRules)
+export const validations = (formFields, props) => {
+    return processRules(formFields, fieldsWithRules, props)
 };
