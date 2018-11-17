@@ -157,7 +157,7 @@ class ButtonLinkClientComponent extends Component {
             const jsonLinkEntityClient = {
                 "idClient": infoClient.id,
                 "idLinkRequest": infoClient.linkingRequestId,
-                "observationTrader": observationTrader.value,
+                "observationTrader": infoClient.linkingRequestId == null ? observationTrader.value : '',
                 "linkEntity": newListEntities.toArray(),
                 "levelBlackList": level,
                 "messageBlackList": message
