@@ -12,7 +12,7 @@ import {
     MESSAGE_WARNING_MAX_LENGTH, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_WARNING_HISTORY, MESSAGE_WARNING_NUMBER_DOCUMENT,
     MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS,
     MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT,
-    MESSAGE_WARNING_CLIENT_NAME
+    MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_RANGE
 } from './validationsMessages';
 
 import {
@@ -254,11 +254,15 @@ export const checkValueClientInformacion = reducer => (value, fields, props) => 
 
 export const checkNumberInRange = (min, max) => value => {
     let message = null;
-    console.log('checkNumberInRange', value);
-    console.log('checkNumber', value >= min && value <= max);
-    console.log('checkNumberInRange', !_.isNil(value) && value >= min && value <= max);
-    if (!_.isNil(value) && value >= min && value <= max) {
-        message = 'El campo debe estar entre '+ min + ' y '+max;
+
+    if (_.isNil(value)) {
+        return message;
+    }
+
+    let number = parseInt(value.replace(",",""));
+
+    if (number < min || number > max) {
+        message = MESSAGE_WARNING_RANGE(min, max);
     }
     return message;
-} 
+}

@@ -18,14 +18,14 @@ import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 
 
-class ComponentListLineBusiness extends Component {
+export class ComponentListLineBusiness extends Component {
     constructor(props) {
         super(props);
         this.state = {
             showConfirmDelete: false,
             entityDelete: null,
             entitySeleted: null,
-            errorForm: false,
+            errorForm: true,
             shouldUpdate: false
         }
         this.validateInfo = this.validateInfo.bind(this);
@@ -34,30 +34,21 @@ class ComponentListLineBusiness extends Component {
         this._viewInformationLineBusiness = this._viewInformationLineBusiness.bind(this);
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteLineOfBusiness = this._deleteLineOfBusiness.bind(this);
-        this.fieldValidation = this.fieldValidation.bind(this);
+        this.hasErrors = this.hasErrors.bind(this);
     }
 
-    fieldValidation(fields) {
-        const { swtShowMessage } = this.props;
-
-        let message_error = "";
-        for (var _field_i in fields) {
-            var _field = fields[_field_i];
-
-            if (_field.required && (_.isUndefined(_field.value) || _.isNull(_field.value) || _.isEmpty(_field.value))) {
-                message_error = 'Señor usuario, para agregar una línea de negocio debe ingresar todos los valores.';
-                break;
-            } if (_field.xss && xssValidation(_field.value)) {
-                message_error = REGEX_SIMPLE_XSS_MESAGE;
+    hasErrors(fields) {
+        let hasError = false;
+        for (let error of fields) {
+            if (!_.isNil(error)) {
+                hasError = true;
                 break;
             }
         }
-
-        if (message_error) {
-            this.setState({ errorForm: true });
-            swtShowMessage('error', 'Líneas de negocios', message_error);
+        if (hasError) {
+            this.setState({'errorForm': true});
         }
-        return _.isEmpty(message_error);
+        return hasError;
     }
 
     validateInfo(e) {
@@ -66,14 +57,12 @@ class ComponentListLineBusiness extends Component {
             clientInformacion, swtShowMessage, contribution } = this.props;
         var countErrors = 0;
 
-        let validFields = this.fieldValidation([
-            { required: true, value: contextLineBusiness.value, xss: true },
-            { required: true, value: participation.value, xss: true },
-            { required: false, value: experience.value, xss: true },
-            { required: false, value: contribution.value, xss: true }
-        ])
+        let validFields = this.hasErrors([
+            contextLineBusiness.error, participation.error,
+            experience.error, contribution.error
+        ]);
 
-        if (validFields) {
+        if (!validFields) {
             var listParticipation = clientInformacion.get('listParticipation');
             if (_.isNull(this.state.entitySeleted)) {
                 const newValue = {
@@ -240,11 +229,11 @@ class ComponentListLineBusiness extends Component {
                                         name="experience"
                                         type="text"
                                         min={0}
-                                        max="3"
+                                        max="4"
                                         placeholder="Experiencia"
                                         {...experience}
-                                        error={xssValidation(experience.value) ? VALUE_XSS_INVALID : null}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, experience, val)}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>
@@ -329,16 +318,14 @@ ComponentListLineBusiness.PropTypes = {
     showFormLinebusiness: PropTypes.bool.isRequired
 }
 
-
-
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         changeValueListClient,
         swtShowMessage
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion }, ownerProps) {
+export function mapStateToProps({ clientInformacion }, ownerProps) {
     return {
         clientInformacion
     };

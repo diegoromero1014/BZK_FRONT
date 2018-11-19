@@ -8,7 +8,7 @@ import moment from 'moment';
 import SweetAlert from '../../sweetalertFocus';
 import ClientTypology from '../../contextClient/ClientTypology';
 import ContextEconomicActivity from '../../contextClient/contextEconomicActivity';
-import ComponentListLineBusiness from '../../contextClient/listLineOfBusiness/componentListLineBusiness';
+import ComponentListLineBusiness from '../../contextClient/listLineOfBusiness/whiteListLineBusiness';
 import ComponentListDistributionChannel from '../../contextClient/listDistributionChannel/componentListDistributionChannel';
 import InventorPolicy from '../../contextClient/inventoryPolicy';
 import ControlLinkedPayments from '../../contextClient/controlLinkedPayments';
@@ -337,7 +337,7 @@ export class ComponentStudyCredit extends Component {
 
     _validateInformationToSave() {
         const { fields: { contextClientField, customerTypology, controlLinkedPayments, inventoryPolicy }, clientInformacion,
-            swtShowMessage, studyCreditReducer } = this.props;
+            swtShowMessage, studyCreditReducer, errors } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { contextClient } = infoClient;
         var allowSave = true;
@@ -345,7 +345,6 @@ export class ComponentStudyCredit extends Component {
 
         var shouldDisplayMessage = false;
         var contentErrorMessage = "";
-
 
         infoValidate = studyCreditReducer.get('validateInfoCreditStudy');
         if (!infoValidate.numberOfValidShareholders) {
@@ -866,9 +865,8 @@ export class ComponentStudyCredit extends Component {
                 <ContextEconomicActivity contextClientField={contextClientField}
                     fieldRequiered={this.state.fieldContextRequired}
                     origin={ORIGIN_CREDIT_STUDY} />
-                <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
-                    participation={participationLB} experience={experience}
-                    registrationRequired={this.state.lineofBusinessRequired} contribution={contributionLB}
+                <ComponentListLineBusiness
+                    registrationRequired={this.state.lineofBusinessRequired}
                     showFormLinebusiness={this.state.showFormAddLineOfBusiness}
                     fnShowForm={this.showFormOut} origin={ORIGIN_CREDIT_STUDY} />
                 <ComponentListDistributionChannel distributionChannel={distributionChannel} participation={participationDC}

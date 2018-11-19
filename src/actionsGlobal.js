@@ -285,7 +285,6 @@ export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allows
         }
     } else { //Valido si el valor es negativo o positivo
         var value = numeral(val).format('0');
-        console.log(value);
         if (value >= 0) {
             pattern = /(-?\d+)(\d{3})/;
             while (pattern.test(val)) {

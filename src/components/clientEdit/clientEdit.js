@@ -22,7 +22,7 @@ import BottonShareholderAdmin from "../clientDetailsInfo/bottonShareholderAdmin"
 import ModalErrorsUpdateClient from "./modalErrorsUpdateClient";
 import ClientTypology from "../contextClient/ClientTypology";
 import ContextEconomicActivity from "../contextClient/contextEconomicActivity";
-import ComponentListLineBusiness from "../contextClient/listLineOfBusiness/componentListLineBusiness";
+import ComponentListLineBusiness from "../contextClient/listLineOfBusiness/whiteListLineBusiness";
 import ComponentListDistributionChannel from "../contextClient/listDistributionChannel/componentListDistributionChannel";
 import InventorPolicy from "../contextClient/inventoryPolicy";
 import ControlLinkedPayments from "../contextClient/controlLinkedPayments";
@@ -1681,10 +1681,9 @@ class clientEdit extends Component {
                         <ContextEconomicActivity contextClientField={contextClientField} />
                     }
                     {allowRiskGroupEdit &&
-                        <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
-                            participation={participationLB} experience={experience}
+                        <ComponentListLineBusiness 
                             showFormLinebusiness={this.state.showFormAddLineOfBusiness}
-                            fnShowForm={this.showFormOut} contribution={contributionLB} />
+                            fnShowForm={this.showFormOut} />
                     }
                     {allowRiskGroupEdit &&
                         <ComponentListDistributionChannel distributionChannel={distributionChannel}

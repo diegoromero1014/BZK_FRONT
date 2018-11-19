@@ -13,11 +13,8 @@ const fieldsWithRules = {
     contextClientField: { rules: [checkRequired, checkClientDescription] },
     customerTypology: { rules: [] },
     inventoryPolicy: { rules: [checkClientDescription] },
-    participationLB: { rules: [checkValueClientInformacion(noAppliedLineOfBusiness), checkNumberInRange(0,100)] },
     participationDC: { rules: [] },
     participationMC: { rules: [] },
-    contextLineBusiness: { rules: [checkValueClientInformacion(noAppliedLineOfBusiness), checkClientDescription, checkMaxLength(50)] },
-    experience: { rules: [] },
     distributionChannel: { rules: [] },
     nameMainClient: { rules: [] },
     tbermMainClient: { rules: [] },
@@ -38,7 +35,6 @@ const fieldsWithRules = {
     relevantInformationMainSupplier: { rules: [] },
     notApplyCreditContact: { rules: [] },
     contributionDC: { rules: [] },
-    contributionLB: { rules: [] },
     controlLinkedPayments: { rules: [checkValueClientInformacion(noAppliedControlLinkedPayments), checkClientDescription] },
 }
 
