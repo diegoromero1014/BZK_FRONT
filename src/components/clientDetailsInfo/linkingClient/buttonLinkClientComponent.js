@@ -81,9 +81,13 @@ class ButtonLinkClientComponent extends Component {
     }
 
     closeModal() {
+        const {
+            fields: { observationTrader } } = this.props;
         this.setState({ modalIsOpen: false });
         this.props.updateValuesBlackList(null, null);
         this.props.updateErrorsLinkEntities(false);
+        
+        observationTrader.onChange('');
     }
 
     _handleSaveLinkingClient() {
@@ -101,6 +105,7 @@ class ButtonLinkClientComponent extends Component {
 
         let inValidMessageLinkEntities = "Señor usuario, por favor ingrese todos los campos obligatorios.";
         const newListEntities = linkEntitiesClient.map(linkEntity => {
+
             if (listOfEntities.indexOf(linkEntity.entity) == -1 ) {
                 listOfEntities.push(linkEntity.entity);
             } else {
