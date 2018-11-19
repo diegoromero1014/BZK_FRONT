@@ -78,7 +78,7 @@ class EntityItem extends Component {
             this._updateValue('entity', val, text);
         } else {
             swtShowMessage("warning", "Error!",'El cliente ya tiene seleccionada esta linea de negocio');
-            this.setState({entity: ""})   
+            this._updateValue('entity', val, text);
         }           
     }
 
