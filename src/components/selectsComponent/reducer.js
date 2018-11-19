@@ -44,7 +44,9 @@ const initialState = Immutable.Map({
     reasonConformation: [],
     products: [],
     allProducts: [],
-    managementsOfsectorStrategy: []
+    managementsOfsectorStrategy: [],
+    dataTypeProvinceClient: [],
+    dataTypeCityClient: []
 });
 
 export default (state = initialState, action) => {
@@ -75,10 +77,17 @@ export default (state = initialState, action) => {
             return state.set('dataTypeSocialStyle', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_COUNTRY:
             return state.set('dataTypeCountry', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        
         case constants.FILTER_PROVINCE:
             return state.set('dataTypeProvince', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_CITY:
             return state.set('dataTypeCity', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        
+        case constants.FILTER_PROVINCE_CLIENT:
+            return state.set('dataTypeProvinceClient', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.FILTER_CITY_CLIENT:
+            return state.set('dataTypeCityClient', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+
         case constants.FILTER_HOBBIES:
             return state.set('dataTypeHobbies', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_SPORTS:

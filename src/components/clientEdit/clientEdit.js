@@ -1087,7 +1087,7 @@ class clientEdit extends Component {
         const { fields: { country, province, city } } = this.props;
         country.onChange(val);
         const { consultListWithParameterUbication } = this.props;
-        consultListWithParameterUbication(constants.FILTER_PROVINCE, country.value);
+        consultListWithParameterUbication(constants.FILTER_PROVINCE_CLIENT, country.value);
         if (!_.isEqual(infoClient.addresses[0].country, country.value)) {
             province.onChange('');
             city.onChange('');
@@ -1101,7 +1101,7 @@ class clientEdit extends Component {
         const { fields: { country, province, city } } = this.props;
         province.onChange(val);
         const { consultListWithParameterUbication } = this.props;
-        consultListWithParameterUbication(constants.FILTER_CITY, province.value);
+        consultListWithParameterUbication(constants.FILTER_CITY_CLIENT, province.value);
         if (!_.isEqual(infoClient.addresses[0].province, province.value)) {
             city.onChange('');
         }
@@ -1788,7 +1788,7 @@ class clientEdit extends Component {
                                 valueProp={'id'}
                                 textProp={'value'}
                                 parentId="dashboardComponentScroll"
-                                data={selectsReducer.get('dataTypeProvince') || []}
+                                data={selectsReducer.get('dataTypeProvinceClient') || []}
                                 touched={true}
                                 showEmptyObject={true}
                             />
@@ -1804,7 +1804,7 @@ class clientEdit extends Component {
                                 valueProp={'id'}
                                 textProp={'value'}
                                 parentId="dashboardComponentScroll"
-                                data={selectsReducer.get('dataTypeCity') || []}
+                                data={selectsReducer.get('dataTypeCityClient') || []}
                                 touched={true}
                                 showEmptyObject={true}
                             />
