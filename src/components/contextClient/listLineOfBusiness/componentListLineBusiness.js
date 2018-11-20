@@ -53,10 +53,9 @@ export class ComponentListLineBusiness extends Component {
 
     validateInfo(e) {
         e.preventDefault();
-        const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient,
-            clientInformacion, swtShowMessage, contribution } = this.props;
-        var countErrors = 0;
-
+        const { contextLineBusiness, participation, experience, changeValueListClient,
+            clientInformacion, contribution } = this.props;
+      
         let validFields = this.hasErrors([
             contextLineBusiness.error, participation.error,
             experience.error, contribution.error

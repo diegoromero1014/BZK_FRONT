@@ -1686,8 +1686,7 @@ class clientEdit extends Component {
                             fnShowForm={this.showFormOut} />
                     }
                     {allowRiskGroupEdit &&
-                        <ComponentListDistributionChannel distributionChannel={distributionChannel}
-                            participation={participationDC} contribution={contributionDC}
+                        <ComponentListDistributionChannel
                             showFormDistribution={this.state.showFormAddDistribution}
                             fnShowForm={this.showFormOut} />
                     }
@@ -2036,8 +2035,7 @@ class clientEdit extends Component {
                     </Col>
                 </Row>
                 {allowRiskGroupEdit &&
-                    <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
-                        term={termMainClient} relevantInformation={relevantInformationMainClient}
+                    <ComponentListMainClients
                         showFormMainClients={this.state.showFormAddMainClient}
                         fnShowForm={this.showFormOut} />
                 }
@@ -2048,8 +2046,7 @@ class clientEdit extends Component {
                         fnShowForm={this.showFormOut} />
                 }
                 {allowRiskGroupEdit &&
-                    <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
-                        observations={obsevationsCompetitor}
+                    <ComponentListMainCompetitor
                         showFormMainCompetitor={this.state.showFormAddMainCompetitor}
                         fnShowForm={this.showFormOut} />
                 }

@@ -94,6 +94,7 @@ export class ComponentStudyCredit extends Component {
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
         this.handleClickButtonPDF = this.handleClickButtonPDF.bind(this);
         this.callGeneratePDF = this.callGeneratePDF.bind(this);
+        this.hasErrors = this.hasErrors.bind(this);
 
         this._ismounted = false;
 
@@ -491,7 +492,7 @@ export class ComponentStudyCredit extends Component {
     }
 
     _submitSaveContextClient(tipoGuardado) {
-        const { getUserBlockingReport, swtShowMessage } = this.props;
+        const { } = this.props;
         showLoading(true, "Cargando...");
 
         let username = window.localStorage.getItem('userNameFront');
@@ -869,10 +870,10 @@ export class ComponentStudyCredit extends Component {
                     registrationRequired={this.state.lineofBusinessRequired}
                     showFormLinebusiness={this.state.showFormAddLineOfBusiness}
                     fnShowForm={this.showFormOut} origin={ORIGIN_CREDIT_STUDY} />
-                <ComponentListDistributionChannel distributionChannel={distributionChannel} participation={participationDC}
+                <ComponentListDistributionChannel
                     showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut}
                     registrationRequired={this.state.distributionRequired} origin={ORIGIN_CREDIT_STUDY}
-                    contribution={contributionDC} />
+                 />
                 <InventorPolicy inventoryPolicy={inventoryPolicy} showCheckValidateSection={overdueCreditStudy}
                     valueCheckSectionInventoryPolicy={this.state.valueCheckSectionInventoryPolicy}
                     functionChangeInventoryPolicy={this._handleChangeValueInventoryPolicy}
@@ -880,8 +881,8 @@ export class ComponentStudyCredit extends Component {
 
                 <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments} controlLinkedPaymentsRequired={this.state.controlLinkedPaymentsRequired} />
 
-                <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
-                    term={termMainClient} relevantInformation={relevantInformationMainClient} showCheckValidateSection={overdueCreditStudy}
+                <ComponentListMainClients
+                    showCheckValidateSection={overdueCreditStudy}
                     showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut}
                     valueCheckSectionMainClients={this.state.valueCheckSectionMainClients}
                     functionChangeCheckSectionMainClients={this._handleChangeValueMainClients}
@@ -892,8 +893,8 @@ export class ComponentStudyCredit extends Component {
                     showCheckValidateSection={overdueCreditStudy} registrationRequired={this.state.mainSupplierRequired}
                     valueCheckSectionMainSupplier={this.state.valueCheckSectionMainSupplierr}
                     functionChangeMainSupplier={this._handleChangeValueMainSupplier} origin={ORIGIN_CREDIT_STUDY} />
-                <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
-                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormAddMainCompetitor}
+                <ComponentListMainCompetitor
+                    showFormMainCompetitor={this.state.showFormAddMainCompetitor}
                     fnShowForm={this.showFormOut} showCheckValidateSection={overdueCreditStudy}
                     valueCheckSectionMainCompetitor={this.state.valueCheckSectionMainCompetitor}
                     functionChangeMainCompetitor={this._handleChangeValueMainCompetitor}

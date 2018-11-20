@@ -259,10 +259,18 @@ export const checkNumberInRange = (min, max) => value => {
         return message;
     }
 
-    let number = parseInt(value.replace(",",""));
-
+    let number = parseFloat(value.replace(",",""));
+    console.log(number);
     if (number < min || number > max) {
         message = MESSAGE_WARNING_RANGE(min, max);
+    }
+    return message;
+}
+
+export const checkFunctionIfTrue = (conditional, validation) => value => {
+    let message = null;
+    if (conditional) {
+        message = validation(value);
     }
     return message;
 }
