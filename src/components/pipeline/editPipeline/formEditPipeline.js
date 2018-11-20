@@ -198,7 +198,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 flagInitLoadAssests: false,
                 //Se utilizan para controlar el componente de planes de desembolso 
                 showFormAddDisbursementPlan: false,
-                disbursementPlanRequired: false
+                disbursementPlanRequired: false,
+                products: []
             };
 
             isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
@@ -355,7 +356,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 }).length > 0
             });
 
-            consultListWithParameterUbication(PRODUCTS, currencyValue);
+            consultListWithParameterUbication("", currencyValue).then((data) => {
+                this.setState({
+                    products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
+                });
+            });
+
             if (!_.isEqual(pipelineReducer.get('detailPipeline').productFamily, productFamily.value)) {
                 product.onChange('');
             }
@@ -826,7 +832,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             valueProp={'id'}
                                             textProp={'value'}
                                             parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(PRODUCTS) || []}
+                                            data={ this.state.products}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                             {...product}
                                             name={nameProduct}
