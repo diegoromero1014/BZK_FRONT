@@ -94,7 +94,6 @@ export class ComponentStudyCredit extends Component {
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
         this.handleClickButtonPDF = this.handleClickButtonPDF.bind(this);
         this.callGeneratePDF = this.callGeneratePDF.bind(this);
-        this.hasErrors = this.hasErrors.bind(this);
 
         this._ismounted = false;
 
