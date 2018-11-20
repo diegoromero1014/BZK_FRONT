@@ -85,3 +85,7 @@ export const MANAGEMENT_BRAND = "managementBrand";
 export const MANAGEMENT_BRAND_KEY = "managementBrandKey";
 export const OCCUPATION = "occupation";
 export const MANAGEMENTS_OF_SECTOR_STRATEGY =  "managementsOfSectorStrategy"
+//INICIO prevent overwrite data reducer editclient
+export const FILTER_PROVINCE_CLIENT = 'provinceClient';
+export const FILTER_CITY_CLIENT = 'cityClient';
+//FIN
