@@ -8,7 +8,7 @@ import moment from 'moment';
 import SweetAlert from '../../sweetalertFocus';
 import ClientTypology from '../../contextClient/ClientTypology';
 import ContextEconomicActivity from '../../contextClient/contextEconomicActivity';
-import ComponentListLineBusiness from '../../contextClient/listLineOfBusiness/componentListLineBusiness';
+import ComponentListLineBusiness from '../../contextClient/listLineOfBusiness/whiteListLineBusiness';
 import ComponentListDistributionChannel from '../../contextClient/listDistributionChannel/componentListDistributionChannel';
 import InventorPolicy from '../../contextClient/inventoryPolicy';
 import ControlLinkedPayments from '../../contextClient/controlLinkedPayments';
@@ -50,12 +50,7 @@ import {
     SUCCESS_MESSAGE_FOR_SHAREHOLDER, SUCCESS_MESSAGE_FOR_BOARD_MEMBERS
 } from './constants';
 
-const fields = ["customerTypology", "contextClientField", "inventoryPolicy", "participationLB", "participationDC", "participationMC",
-    "contextLineBusiness", "experience", "distributionChannel", "nameMainClient", "tbermMainClient", "relevantInformationMainClient",
-    "nameMainCompetitor", "participationMComp", "obsevationsCompetitor", "termMainClient", "typeOperationIntOpera", "participationIntOpe",
-    "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe", "nameMainSupplier",
-    "participationMS", "termMainSupplier", "relevantInformationMainSupplier", "notApplyCreditContact", "contributionDC",
-    "contributionLB", "controlLinkedPayments"];
+import { validations as validate, fields } from './fieldsAndRules';
 
 var errorMessageForShareholders = SUCCESS_MESSAGE_FOR_SHAREHOLDER;
 var errorMessageForBoardMembers = SUCCESS_MESSAGE_FOR_BOARD_MEMBERS;
@@ -76,28 +71,6 @@ const containerButtons = {
 };
 
 const paddingButtons = { paddingRight: '7px', paddingLeft: '7px' };
-
-const validate = (values, props) => {
-    const errors = {}
-    let errorScrollTop = false;
-
-    if (xssValidation(values.contextClientField)) {
-        errors.contextClientField = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.contextClientField = null;
-    }
-
-    if (xssValidation(values.inventoryPolicy)) {
-        errors.inventoryPolicy = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.inventoryPolicy = null;
-    }
-
-    return errors;
-
-}
 
 export class ComponentStudyCredit extends Component {
     constructor(props) {
@@ -364,7 +337,7 @@ export class ComponentStudyCredit extends Component {
 
     _validateInformationToSave() {
         const { fields: { contextClientField, customerTypology, controlLinkedPayments, inventoryPolicy }, clientInformacion,
-            swtShowMessage, studyCreditReducer } = this.props;
+            swtShowMessage, studyCreditReducer, errors } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { contextClient } = infoClient;
         var allowSave = true;
@@ -372,7 +345,6 @@ export class ComponentStudyCredit extends Component {
 
         var shouldDisplayMessage = false;
         var contentErrorMessage = "";
-
 
         infoValidate = studyCreditReducer.get('validateInfoCreditStudy');
         if (!infoValidate.numberOfValidShareholders) {
@@ -519,7 +491,7 @@ export class ComponentStudyCredit extends Component {
     }
 
     _submitSaveContextClient(tipoGuardado) {
-        const { getUserBlockingReport, swtShowMessage } = this.props;
+        const { } = this.props;
         showLoading(true, "Cargando...");
 
         let username = window.localStorage.getItem('userNameFront');
@@ -893,15 +865,14 @@ export class ComponentStudyCredit extends Component {
                 <ContextEconomicActivity contextClientField={contextClientField}
                     fieldRequiered={this.state.fieldContextRequired}
                     origin={ORIGIN_CREDIT_STUDY} />
-                <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
-                    participation={participationLB} experience={experience}
-                    registrationRequired={this.state.lineofBusinessRequired} contribution={contributionLB}
+                <ComponentListLineBusiness
+                    registrationRequired={this.state.lineofBusinessRequired}
                     showFormLinebusiness={this.state.showFormAddLineOfBusiness}
                     fnShowForm={this.showFormOut} origin={ORIGIN_CREDIT_STUDY} />
-                <ComponentListDistributionChannel distributionChannel={distributionChannel} participation={participationDC}
+                <ComponentListDistributionChannel
                     showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut}
                     registrationRequired={this.state.distributionRequired} origin={ORIGIN_CREDIT_STUDY}
-                    contribution={contributionDC} />
+                 />
                 <InventorPolicy inventoryPolicy={inventoryPolicy} showCheckValidateSection={overdueCreditStudy}
                     valueCheckSectionInventoryPolicy={this.state.valueCheckSectionInventoryPolicy}
                     functionChangeInventoryPolicy={this._handleChangeValueInventoryPolicy}
@@ -909,8 +880,8 @@ export class ComponentStudyCredit extends Component {
 
                 <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments} controlLinkedPaymentsRequired={this.state.controlLinkedPaymentsRequired} />
 
-                <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
-                    term={termMainClient} relevantInformation={relevantInformationMainClient} showCheckValidateSection={overdueCreditStudy}
+                <ComponentListMainClients
+                    showCheckValidateSection={overdueCreditStudy}
                     showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut}
                     valueCheckSectionMainClients={this.state.valueCheckSectionMainClients}
                     functionChangeCheckSectionMainClients={this._handleChangeValueMainClients}
@@ -921,8 +892,8 @@ export class ComponentStudyCredit extends Component {
                     showCheckValidateSection={overdueCreditStudy} registrationRequired={this.state.mainSupplierRequired}
                     valueCheckSectionMainSupplier={this.state.valueCheckSectionMainSupplierr}
                     functionChangeMainSupplier={this._handleChangeValueMainSupplier} origin={ORIGIN_CREDIT_STUDY} />
-                <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
-                    observations={obsevationsCompetitor} showFormMainCompetitor={this.state.showFormAddMainCompetitor}
+                <ComponentListMainCompetitor
+                    showFormMainCompetitor={this.state.showFormAddMainCompetitor}
                     fnShowForm={this.showFormOut} showCheckValidateSection={overdueCreditStudy}
                     valueCheckSectionMainCompetitor={this.state.valueCheckSectionMainCompetitor}
                     functionChangeMainCompetitor={this._handleChangeValueMainCompetitor}
@@ -986,8 +957,8 @@ export class ComponentStudyCredit extends Component {
                                 <button className="btn" type="button" style={{ backgroundColor: "#00B5AD" }} ><span >Guardar Avance</span></button>
                             </Col>
 
-                            <Col style={paddingButtons}   >
-                                <button className="btn" type="submit"  ><span>Guardar Definitivo</span></button>
+                            <Col style={paddingButtons} >
+                                <button className="btn" type="submit"><span>Guardar Definitivo</span></button>
                             </Col>
 
                             {this.state.showButtonPDF &&

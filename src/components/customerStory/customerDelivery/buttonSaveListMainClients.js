@@ -129,8 +129,8 @@ class ButtonSaveListMainClients extends Component {
                                 </button>
                             </div>
                             <SecurityMessageComponent />
-                            <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
-                                term={termMainClient} relevantInformation={relevantInformationMainClient}
+                            <ComponentListMainClients
+                                relevantInformation={relevantInformationMainClient}
                                 showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormMainClients}
                                 nameList="otherListMainCustomer" nameNoApplied="otherNoAppliedMainClients" />
                             <div className="modalBt4-footer modal-footer">

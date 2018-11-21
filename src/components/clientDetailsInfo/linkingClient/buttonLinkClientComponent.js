@@ -81,8 +81,13 @@ class ButtonLinkClientComponent extends Component {
     }
 
     closeModal() {
+        const {
+            fields: { observationTrader } } = this.props;
         this.setState({ modalIsOpen: false });
         this.props.updateValuesBlackList(null, null);
+        this.props.updateErrorsLinkEntities(false);
+        
+        observationTrader.onChange('');
     }
 
     _handleSaveLinkingClient() {
@@ -95,8 +100,20 @@ class ButtonLinkClientComponent extends Component {
         let messageWhiteList = null;
         updateErrorsLinkEntities(false);
         let isValidLinkEntities = true;
+        
+        let listOfEntities = [];
+
         let inValidMessageLinkEntities = "Señor usuario, por favor ingrese todos los campos obligatorios.";
         const newListEntities = linkEntitiesClient.map(linkEntity => {
+
+            if (listOfEntities.indexOf(linkEntity.entity) == -1 ) {
+                listOfEntities.push(linkEntity.entity);
+            } else {
+                updateErrorsLinkEntities(true, "Error: Entidad/Linea de negocio duplicada");
+                inValidMessageLinkEntities = "Señor usuario, por favor borre la(s) Entidad/Linea de negocio(s) duplicada(s)";
+                isValidLinkEntities = false;
+            }
+
             if (isEqual(linkEntity.entity, "") || isEqual(linkEntity.entity, null)) {
                 updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
                 isValidLinkEntities = false;
@@ -157,7 +174,7 @@ class ButtonLinkClientComponent extends Component {
             const jsonLinkEntityClient = {
                 "idClient": infoClient.id,
                 "idLinkRequest": infoClient.linkingRequestId,
-                "observationTrader": observationTrader.value,
+                "observationTrader": infoClient.linkingRequestId == null ? observationTrader.value : '',
                 "linkEntity": newListEntities.toArray(),
                 "levelBlackList": level,
                 "messageBlackList": message
@@ -189,12 +206,10 @@ class ButtonLinkClientComponent extends Component {
             setEntities(listLinkEntitiesClient);
         }
     }
-
     componentWillMount() {
         const { getMasterDataFields, consultParameterServer } = this.props;
         getMasterDataFields([FILTER_TYPE_LBO_ID]);
         this._getListEntities();
-
         consultParameterServer(HELP_LINK_MESSAGE).then((data) => {
             if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
                 data.payload.data.parameter !== undefined) {

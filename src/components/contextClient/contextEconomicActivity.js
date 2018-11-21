@@ -35,7 +35,7 @@ class ContextEconomicActivity extends Component {
     }
 
     render() {
-        const { contextClientField, data, isCheckbox, fieldRequiered, origin } = this.props;
+        const { contextClientField, data, isCheckbox, origin } = this.props;
         return (
             <Col xs={12} md={12} lg={12} onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <div style={{ marginTop: "15px", marginLeft: '20px', marginRight: '20px' }}>
@@ -62,7 +62,6 @@ class ContextEconomicActivity extends Component {
                                 rows={7}
                                 placeholder="Ingrese el contexto del cliente"
                                 {...contextClientField}
-                                error={!stringValidate(contextClientField.value) && fieldRequiered ? VALUE_REQUIERED : (xssValidation(contextClientField.value) ? VALUE_XSS_INVALID : '')}
                                 touched={true}
                             />
                         } />

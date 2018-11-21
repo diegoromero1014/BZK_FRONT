@@ -85,7 +85,7 @@ class ContactDetailsModalComponent extends Component {
             nonValidateEnter, getMasterDataFields, getContactDetails, contactId, callFromModuleContact, showLoading
         } = this.props;
 
-        setGlobalCondition(callFromModuleContact);
+        setGlobalCondition(!callFromModuleContact);
 
         nonValidateEnter(true);
         showLoading(true, MESSAGE_LOAD_DATA);

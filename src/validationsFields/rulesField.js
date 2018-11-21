@@ -17,7 +17,8 @@ import {
     MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS,
     MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_NAME_OTHER_PARTICIPANT,
     MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT, MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT,
-    MESSAGE_WARNING_PLACE_OF_PREVISIT
+    MESSAGE_WARNING_PLACE_OF_PREVISIT, MESSAGE_WARNING_RANGE
+
 } from './validationsMessages';
 
 import {
@@ -48,7 +49,6 @@ export const processRules = (formFields, fieldsWithRules, props) => {
             });
         }
     });
-
     return errors;
 }
 
@@ -243,6 +243,19 @@ export const checkNumbers = value => {
         message = MESSAGE_WARNING_ONLY_NUMBERS;
     }
 
+    return message;  
+
+}
+
+export const checkValueClientInformacion = reducer => (value, fields, props) => {
+    if (!props) {
+        return null;
+    }
+    const applied = props.clientInformacion.get(reducer);
+    let message = null;
+    if (! applied) {
+        message = checkRequired(value);
+    }
     return message;
 }
 
@@ -301,4 +314,24 @@ export const checkRichTextRequired = value => {
     } else {
         return MESSAGE_REQUIRED_VALUE;
     }
+}
+
+export const checkNumberInRange = (min, max) => value => {
+    let message = null;
+    if (_.isNil(value)) {
+        return message;
+    }
+    let number = parseFloat(value.replace(",",""));
+    if (number < min || number > max) {
+        message = MESSAGE_WARNING_RANGE(min, max);
+    }
+    return message;
+}
+
+export const checkFunctionIfTrue = (conditional, validation) => value => {
+    let message = null;
+    if (conditional) {
+        message = validation(value);
+    }
+    return message;
 }
