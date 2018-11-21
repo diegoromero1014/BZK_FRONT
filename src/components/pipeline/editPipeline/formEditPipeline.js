@@ -638,7 +638,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             } else {
                 showLoading(true, 'Cargando...');
 
-                consultDataSelect(PRODUCTS, PRODUCTS_MASK);
+                consultDataSelect(PRODUCTS, PRODUCTS_MASK).then((data) => {                    
+                    this.setState({
+                        products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
+                    });
+                });
 
                 getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                     PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
@@ -703,7 +707,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 let fechaModDateMoment = moment(updatedTimestamp.value, "x").locale('es');
                 fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
             }
-            
+
             let fechaCreateString = '';
             if (createdTimestamp.value !== null) {
                 let fechaCreateDateMoment = moment(createdTimestamp.value, "x").locale('es');
@@ -832,7 +836,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             valueProp={'id'}
                                             textProp={'value'}
                                             parentId="dashboardComponentScroll"
-                                            data={ this.state.products}
+                                            data={this.state.products}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                             {...product}
                                             name={nameProduct}
