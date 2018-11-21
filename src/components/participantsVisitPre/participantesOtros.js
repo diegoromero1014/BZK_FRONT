@@ -7,27 +7,11 @@ import _ from 'lodash';
 
 import Input from '../../ui/input/inputComponent';
 import SweetAlertFocus from '../sweetalertFocus';
+import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 
 import { addParticipant, clearParticipants } from './actions';
-import { xssValidation } from "../../actionsGlobal";
 
 import { KEY_PARTICIPANT_OTHER } from './constants';
-import { REGEX_SIMPLE_XSS_MESAGE } from "../../constantsGlobal";
-
-
-const validate = values => {
-  const errors = {}
-
-  // TODO: DEPURACIÓN
-  if(!values.nombrePersona){
-    errors.nombrePersona = "EN OTROS"
-  } else {
-    errors.nombrePersona = null;
-  }
-
-
-  return errors
-};
 
 var disabledButtonCreate = '';
 class ParticipantesOtros extends Component {
@@ -36,21 +20,18 @@ class ParticipantesOtros extends Component {
     super(props);
     this.state = {
       showEmptyParticipantOtro: false,
-      showInvalidCharacter: false,
     }
     this._addParticipantOther = this._addParticipantOther.bind(this);
   }
 
   _addParticipantOther() {
-    const { fields: { nombrePersona, cargoPersona, empresaPersona }, addParticipant } = this.props;
+    const { fields: { nombrePersona, cargoPersona, empresaPersona }, addParticipant, errors } = this.props;
 
     if (nombrePersona.value !== "" && nombrePersona.value !== null && nombrePersona.value !== undefined) {
-      if (xssValidation(nombrePersona.value) || xssValidation(cargoPersona.value) || xssValidation(empresaPersona.value)) {
-        this.setState({
-          showInvalidCharacter: true
-        });
+      if (!_.isEmpty(errors)) {
         return;
       }
+
       const uuid = _.uniqueId('participanOther_');
       var otherParticipant = {
         tipoParticipante: KEY_PARTICIPANT_OTHER,
@@ -65,6 +46,7 @@ class ParticipantesOtros extends Component {
         fecha: Date.now(),
         uuid,
       }
+
       addParticipant(otherParticipant);
       nombrePersona.onChange('');
       cargoPersona.onChange('');
@@ -87,17 +69,18 @@ class ParticipantesOtros extends Component {
     var numColumnList = 6;
     var data = _.chain(participants.toArray()).map(participant => {
       return participant;
-    })
-      .filter(participant => _.isEqual(participant.tipoParticipante, KEY_PARTICIPANT_OTHER))
-      .value();
+    }).filter(participant => _.isEqual(participant.tipoParticipante, KEY_PARTICIPANT_OTHER)).value();
+
     if (data.length === 10) {
       disabledButtonCreate = 'disabled';
     } else {
       disabledButtonCreate = '';
     }
+
     if (disabled === "disabled") {
       numColumnList = 12;
     }
+
     return (
       <div>
         <Row style={{ padding: "0px 10px 0px 20px" }}>
@@ -107,7 +90,7 @@ class ParticipantesOtros extends Component {
                 <dt><span>Nombre (<span style={{ color: "red" }}>*</span>)</span></dt>
                 <dt style={{ marginRight: "17px" }}>
                   <Input
-                    name="Nombre"
+                    name="nombrePersona"
                     type="text"
                     {...nombrePersona}
                     max="100"
@@ -119,7 +102,7 @@ class ParticipantesOtros extends Component {
                   <dt><span>Cargo</span></dt>
                   <dt style={{ marginRight: "17px" }}>
                     <Input
-                      name="txtCargo"
+                      name="cargoPersona"
                       type="text"
                       {...cargoPersona}
                       max="100"
@@ -130,7 +113,7 @@ class ParticipantesOtros extends Component {
                   <dt><span>Empresa</span></dt>
                   <dt style={{ marginRight: "17px" }}>
                     <Input
-                      name="txtCargo"
+                      name="empresaPersona"
                       type="text"
                       {...empresaPersona}
                       max="100"
@@ -166,13 +149,6 @@ class ParticipantesOtros extends Component {
           text="Señor usuario, para agregar un participante debe ingresar por lo menos el nombre"
           onConfirm={() => this.setState({ showEmptyParticipantOtro: false })}
         />
-        <SweetAlertFocus
-          type="error"
-          show={this.state.showInvalidCharacter}
-          title="Error participante"
-          text={REGEX_SIMPLE_XSS_MESAGE}
-          onConfirm={() => this.setState({ showInvalidCharacter: false })}
-        />
       </div>
     );
   }
@@ -193,6 +169,6 @@ function mapStateToProps({ participants }) {
 
 export default reduxForm({
   form: 'submitValidation',
-  fields: ["nombrePersona", "cargoPersona", "empresaPersona"],
+  fields: fields,
   validate
 }, mapStateToProps, mapDispatchToProps)(ParticipantesOtros);

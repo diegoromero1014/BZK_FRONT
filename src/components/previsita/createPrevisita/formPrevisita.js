@@ -7,8 +7,8 @@ import $ from 'jquery';
 import _ from 'lodash';
 import numeral from 'numeral';
 
-import Input from '../../../ui/input/inputComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
+import Input from '../../../ui/input/inputComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import ParticipantesCliente from '../../participantsVisitPre/participantesCliente';
 import ParticipantesBancolombia from '../../participantsVisitPre/participantesBancolombia';
@@ -17,24 +17,28 @@ import Challenger from '../../methodologyChallenger/component';
 import SweetAlert from '../../sweetalertFocus';
 import RichText from '../../richText/richTextComponent';
 import ToolTip from '../../toolTip/toolTipComponent';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import {
+    checkRequired, checkPlaceOfPrevisit, checkDecimalNumbers, checkRichTextRequired
+} from './../../../validationsFields/rulesField';
 
 import { redirectUrl } from '../../globalComponents/actions';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import { createPrevisit, validateDatePreVisit } from '../actions';
 import { changeStateSaveData } from '../../dashboard/actions';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import {
-    consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateResponse, xssValidation
+    consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation
 } from '../../../actionsGlobal';
 
 import { PREVISIT_TYPE } from '../../selectsComponent/constants';
-import {
-    SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS,
-    MESSAGE_SAVE_DATA, MESSAGE_ERROR, ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS_MESAGE
-} from '../../../constantsGlobal';
 import { LAST_PREVISIT_REVIEW } from '../../../constantsParameters';
 import { PROPUEST_OF_BUSINESS } from '../constants';
+import {
+    SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OTHERS_PARTICIPANTS,
+    TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA, MESSAGE_ERROR,
+    ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_MESAGE,
+} from '../../../constantsGlobal';
+
 
 var datePrevisitLastReview;
 var titleMethodologyChallenger = "Enseñanza (Oportunidades – Retos): Diligencie de manera resumida los siguientes " +
@@ -63,19 +67,9 @@ var idTypeVisitAux = null;
 var idTypeVisitAuxTwo = null;
 var contollerErrorChangeType = false;
 
-const fields = ['txtDuracion', 'contactoCliente'];
+const fields = [];
 const validate = values => {
-    // TODO: DEPURACIÓN
-    console.log(values);
-
     const errors = {};
-    if(!values.txtDuracion){
-        errors.txtDuracion = 'PROBANDO'
-        errors.contactoCliente = 'PROBANDO contacto'
-    } else {
-        errors.txtDuracion = null;
-    }
-
     return errors;
 };
 
@@ -84,6 +78,7 @@ class FormPrevisita extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            showErrorSavePreVisit: false,
             typePreVisit: "",
             typePreVisitError: null,
             datePreVisit: new Date(),
@@ -92,7 +87,6 @@ class FormPrevisita extends Component {
             durationPreVisitError: false,
             lugarPrevisit: "",
             lugarPrevisitError: false,
-            showErrorSavePreVisit: false,
             showConfirm: false,
             showConfirmChangeTypeVisit: false,
             activeItemTabBanc: '',
@@ -244,6 +238,7 @@ class FormPrevisita extends Component {
         if (typeSeleted !== null && typeSeleted !== '' && typeSeleted !== undefined) {
             valueTypePrevisit = typeSeleted[0].key;
         }
+
         this.setState({
             typePreVisit: parseInt(idTypeVisitAux),
             showConfirmChangeTypeVisit: false,
@@ -376,44 +371,64 @@ class FormPrevisita extends Component {
         const { participants, createPrevisit, changeStateSaveData, validateDatePreVisit, swtShowMessage } = this.props;
         var errorInForm = false;
         var errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
-        if (this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "") {
+
+        const messageRequiredTypePrevisit = checkRequired(this.state.typePreVisit);
+        if (!_.isNull(messageRequiredTypePrevisit)) {
             errorInForm = true;
             this.setState({
-                typePreVisitError: "Debe seleccionar una opción"
+                typePreVisitError: messageRequiredTypePrevisit
             });
-        }
-        if (this.state.datePreVisit === null || this.state.datePreVisit === undefined || this.state.datePreVisit === "") {
-            errorInForm = true;
-            this.setState({
-                datePreVisitError: "Debe seleccionar una opción"
-            });
-        }
-        if (this.state.lugarPrevisit === null || this.state.lugarPrevisit === undefined || this.state.lugarPrevisit === "") {
-            errorInForm = true;
-            this.setState({
-                lugarPrevisitError: "Debe ingresar un valor"
-            });
-        } else if (xssValidation(this.state.lugarPrevisit)) {
-            errorInForm = true;
-            this.setState({
-                lugarPrevisitError: VALUE_XSS_INVALID
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
 
-        if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
+        const messageRequiredDatePrevisit = checkRequired(this.state.datePreVisit);
+        if (!_.isNull(messageRequiredDatePrevisit)) {
             errorInForm = true;
             this.setState({
-                durationPreVisitError: "Debe ingresar un valor"
+                datePreVisitError: messageRequiredDatePrevisit
             });
+        }
+
+        const messageRequiredPlacePrevisit = checkRequired(this.state.lugarPrevisit);
+        if (!_.isNull(messageRequiredPlacePrevisit)) {
+            errorInForm = true;
+            this.setState({
+                lugarPrevisitError: messageRequiredPlacePrevisit
+            });
+        } else {
+            const messageWarningPlacePrevisit = checkPlaceOfPrevisit(this.state.lugarPrevisit);
+            if (!_.isNull(messageWarningPlacePrevisit)) {
+                errorInForm = true;
+                this.setState({
+                    lugarPrevisitError: messageWarningPlacePrevisit
+                });
+                errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+            }
+        }
+
+        const messageRequiredDuration = checkRequired(this.state.durationPreVisit);
+        if (!_.isNull(messageRequiredDuration)) {
+            errorInForm = true;
+            this.setState({
+                durationPreVisitError: messageRequiredDuration
+            });
+
+        } else {
+            const messageWarningDuration = checkDecimalNumbers(this.state.durationPreVisit);
+            if (!_.isNull(messageWarningDuration)) {
+                errorInForm = true;
+                this.setState({
+                    lugarPrevisitError: messageWarningDuration
+                });
+            }
 
         }
 
         if (typeButtonClick === SAVE_PUBLISHED) {
-            if (_.isEmpty(htmlToText(this.state.targetPrevisit)) || this.state.targetPrevisit === null || this.state.targetPrevisit === undefined || this.state.targetPrevisit === "") {
+            const messageRequiredTargetPrevisit = checkRichTextRequired(this.state.targetPrevisit);
+            if (!_.isNull(messageRequiredTargetPrevisit)) {
                 errorInForm = true;
                 this.setState({
-                    targetPrevisitError: "Debe ingresar un valor"
+                    targetPrevisitError: messageRequiredTargetPrevisit
                 });
             } else if (xssValidation(this.state.targetPrevisit, true)) {
                 errorInForm = true;
@@ -426,32 +441,38 @@ class FormPrevisita extends Component {
 
         //Validaciones de la metodología challenger y si estoy guardando como definitivo
         if (valueTypePrevisit === PROPUEST_OF_BUSINESS && typeButtonClick === SAVE_PUBLISHED) {
-
-            if (_.isEmpty(htmlToText(this.state.clientTeach)) || this.state.clientTeach === null || this.state.clientTeach === undefined || this.state.clientTeach === "") {
+            const messageRequiredClientTech = checkRichTextRequired(this.state.clientTeach);
+            if (!_.isNull(messageRequiredClientTech)) {
                 errorInForm = true;
                 this.setState({
-                    clientTeachError: "Debe ingresar un valor",
+                    clientTeachError: messageRequiredClientTech,
                     clientTeachTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.adaptMessage)) || this.state.adaptMessage === null || this.state.adaptMessage === undefined || this.state.adaptMessage === "") {
+
+            const messageRequiredOfAdaptMessage = checkRichTextRequired(this.state.adaptMessage);
+            if (!_.isNull(messageRequiredOfAdaptMessage)) {
                 errorInForm = true;
                 this.setState({
-                    adaptMessageError: "Debe ingresar un valor",
+                    adaptMessageError: messageRequiredOfAdaptMessage,
                     adaptMessageTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.controlConversation)) || this.state.controlConversation === null || this.state.controlConversation === undefined || this.state.controlConversation === "") {
+
+            const messageRequiredControlConversation = checkRichTextRequired(this.state.controlConversation);
+            if (!_.isNull(messageRequiredControlConversation)) {
                 errorInForm = true;
                 this.setState({
-                    controlConversationError: "Debe ingresar un valor",
+                    controlConversationError: messageRequiredControlConversation,
                     controlConversationTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.constructiveTension)) || this.state.constructiveTension === null || this.state.constructiveTension === undefined || this.state.constructiveTension === "") {
+
+            const messageRequiredConstructiveTension = checkRichTextRequired(this.state.constructiveTension);
+            if (!_.isNull(messageRequiredConstructiveTension)) {
                 errorInForm = true;
                 this.setState({
-                    constructiveTensionError: "Debe ingresar un valor",
+                    constructiveTensionError: messageRequiredConstructiveTension,
                     constructiveTensionTouch: true
                 });
             }
@@ -465,7 +486,6 @@ class FormPrevisita extends Component {
             });
         }
 
-
         /**
          * Validaciones texto enriquecido
          */
@@ -477,7 +497,6 @@ class FormPrevisita extends Component {
             });
             errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
-
 
         if (xssValidation(this.state.pendingPrevisit, true)) {
             errorInForm = true;
@@ -537,9 +556,11 @@ class FormPrevisita extends Component {
                     }
                 }
             );
+
             if (dataBanco.length > 0 && dataBanco[0] === undefined) {
                 dataBanco = [];
             }
+
             var dataClient = [];
             _.map(participants.toArray(),
                 function (participant) {
@@ -553,9 +574,11 @@ class FormPrevisita extends Component {
                     }
                 }
             );
+
             if (dataClient.length > 0 && dataClient[0] === undefined) {
                 dataClient = [];
             }
+
             //Valido que haya por los menos 1 usuairo por parte del banco o si
             //la previsita se está guardando como borrador
             if ((dataBanco.length > 0) || typeButtonClick === SAVE_DRAFT) {
@@ -574,9 +597,11 @@ class FormPrevisita extends Component {
                         }
                     }
                 );
+
                 if (dataOthers.length > 0 && dataOthers[0] === undefined) {
                     dataOthers = [];
                 }
+
                 var previsitJson = {
                     "id": null,
                     "client": window.sessionStorage.getItem('idClientSelected'),
@@ -595,6 +620,7 @@ class FormPrevisita extends Component {
                     "documentStatus": typeButtonClick,
                     "endTime": this.state.durationPreVisit
                 }
+
                 validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit).then((data) => {
                     if (validateResponse(data)) {
                         const response = _.get(data, 'payload.data.data', false);
@@ -638,6 +664,7 @@ class FormPrevisita extends Component {
     }
 
     componentWillMount() {
+        valueTypePrevisit = null;
         idTypeVisitAux = null;
         idTypeVisitAuxTwo = null;
         contollerErrorChangeType = false;
@@ -660,9 +687,7 @@ class FormPrevisita extends Component {
     }
 
     render() {
-        const {
-            selectsReducer, handleSubmit, reducerGlobal, fields: {txtDuracion}
-        } = this.props;
+        const { selectsReducer, handleSubmit, reducerGlobal } = this.props;
 
         return (
             <form onSubmit={handleSubmit(this._submitCreatePrevisita)}
@@ -729,16 +754,15 @@ class FormPrevisita extends Component {
                         <dt>
                             <Input
                                 name="txtDuracion"
-                                {...txtDuracion}
-                                // value={this.state.durationPreVisit}
+                                value={this.state.durationPreVisit}
                                 min={1}
                                 max="4"
-                                // touched={true}
+                                touched={true}
                                 placeholder="Duración previsita"
-                                // error={this.state.durationPreVisitError}
+                                error={this.state.durationPreVisitError}
                                 type="text"
-                                // onChange={val => this._changeDurationPreVisit(val)}
-                                // onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, val, true, 2)}
+                                onChange={val => this._changeDurationPreVisit(val)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, val, true, 2)}
                             />
                         </dt>
                     </Col>
@@ -872,7 +896,6 @@ class FormPrevisita extends Component {
                         </Row>
                     </div>
                 }
-
                 <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -920,8 +943,12 @@ class FormPrevisita extends Component {
                     background: "rgba(255,255,255,0.75)"
                 }}>
                     <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
-                        <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT}
-                            style={{ float: "right", margin: "8px 0px 0px 8px", position: "fixed", backgroundColor: "#00B5AD"}}>
+                        <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{
+                            float: "right",
+                            margin: "8px 0px 0px 8px",
+                            position: "fixed",
+                            backgroundColor: "#00B5AD"
+                        }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
                         </button>
                         <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED}

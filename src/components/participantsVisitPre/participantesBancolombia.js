@@ -35,6 +35,7 @@ class ParticipantesBancolombia extends Component {
       validateConsultParticipants: false,
       showInvalidCharacter: false,
     }
+
     this._addParticipantBanc = this._addParticipantBanc.bind(this);
     this._updateValue = this._updateValue.bind(this);
     this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
@@ -48,10 +49,12 @@ class ParticipantesBancolombia extends Component {
           return item.idParticipante === objetoUsuario.value.idUsuario;
         }
       });
+
       if (xssValidation(nameUsuario.value)) {
         swtShowMessage('error', "Error participante", REGEX_SIMPLE_XSS_MESAGE);
         return;
       }
+
       if (particip === undefined) {
         const uuid = _.uniqueId('participanBanco_');
         var clientParticipant = {
@@ -65,6 +68,7 @@ class ParticipantesBancolombia extends Component {
           fecha: Date.now(),
           uuid,
         }
+
         addParticipant(clientParticipant);
         idUsuario.onChange('');
         nameUsuario.onChange('');
@@ -72,7 +76,6 @@ class ParticipantesBancolombia extends Component {
         empresaUsuario.onChange('');
       } else {
         swtShowMessage('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
-
       }
     } else {
       swtShowMessage('error', "Error participante", "Señor usuario, para agregar un participante debe seleccionar un usuario del banco");
@@ -80,27 +83,26 @@ class ParticipantesBancolombia extends Component {
   }
 
   _updateValue(value) {
-
     const { fields: { idUsuario, nameUsuario, cargoUsuario }, contactsByClient } = this.props;
     var contactClient = contactsByClient.get('contacts');
     var userSelected;
+
     _.map(contactClient, contact => {
       if (contact.id.toString() === value) {
         userSelected = contact;
         return contact;
       }
     });
+
     if (validateValue(userSelected)) {
       idUsuario.onChange(userSelected.id);
       nameUsuario.onChange(userSelected.nameComplet);
       cargoUsuario.onChange(userSelected.contactPosition);
       empresaUsuario.onChange(userSelected.company);
     } else {
-
       if (idUsuario.value > 0) {
         idUsuario.onChange('');
       }
-
     }
   }
 
@@ -174,7 +176,7 @@ class ParticipantesBancolombia extends Component {
 
   render() {
     const { fields: { nameUsuario, cargoUsuario, empresaUsuario }, participants, disabled } = this.props;
-    
+
     var numColumnList = 6;
     var data = _.chain(participants.toArray()).map(participant => {
       return participant;

@@ -67,7 +67,7 @@ class Challenger extends Component {
             controlConversationError, onChangeControlConversation, constructiveTension, constructiveTensionTouch,
             constructiveTensionError, onChangeConstructiveTension, disabled
         } = this.props;
-        
+
         const readOnly = !_.isEmpty(disabled);
         return (
             <div className="ui styled accordion" style={{ width: "100%" }}>
