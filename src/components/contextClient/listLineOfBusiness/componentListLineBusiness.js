@@ -106,9 +106,10 @@ export class ComponentListLineBusiness extends Component {
         const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient,
             clientInformacion, contribution } = this.props;
         fnShowForm(LINE_OF_BUSINESS, true);
+        debugger;
         contextLineBusiness.onChange(entity.lineOfBusiness);
         participation.onChange(entity.participation.toString());
-        experience.onChange(validateValueExist(entity.experience) ? entity.experience.toString() : "");
+        experience.onChange(_.isNil(entity.experience) ? "" : entity.experience.toString());
         contribution.onChange(entity.contribution);
         this.setState({ entitySeleted: entity });
     }

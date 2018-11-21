@@ -21,7 +21,6 @@ import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 
 export const TYPE_OPERATION = [
-    { 'id': '', 'value': "Seleccione..." },
     { 'id': 0, 'value': "Importación" },
     { 'id': 1, 'value': "Exportación" }
 ];
@@ -175,11 +174,12 @@ export class ComponentListIntOperations extends Component {
         participation.onChange(entity.participation.toString());
         idCountry.onChange(entity.idCountry);
         customerCoverage.onChange(entity.customerCoverage);
-        descriptionCoverage.onChange(entity.descriptionCoverage.toString());
+        descriptionCoverage.onChange(_.isNil(entity.descriptionCoverage) ? null : entity.descriptionCoverage.toString());
         const listCountrys = entity.listCountryOperations;
         this.setState({ entitySeleted: entity, listCountrys });
         setTimeout(() => {
-            typeOperation.onChange(entity.typeOperation);
+            //Convertir a string en caso de que se envie la opcion 0
+            typeOperation.onChange(entity.typeOperation+'');
         }, 100);
     }
 
