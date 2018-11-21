@@ -1,18 +1,18 @@
 import _ from "lodash";
 
 import {
-    checkRequired, processRules, checkClientDescription, checkMaxLength,
-    checkValueClientInformacion, checkNumberInRange
+    checkRequired, processRules, checkClientDescription,
+    checkValueClientInformacion, checkFirstCharacter
 } from '../../../validationsFields/rulesField';
 
 import {
-    noAppliedControlLinkedPayments, noAppliedLineOfBusiness
+    noAppliedControlLinkedPayments
 } from '../../../constantsReducer';
 
 const fieldsWithRules = {
-    contextClientField: { rules: [checkRequired, checkClientDescription] },
+    contextClientField: { rules: [checkRequired, checkClientDescription, checkFirstCharacter] },
     customerTypology: { rules: [] },
-    inventoryPolicy: { rules: [checkClientDescription] },
+    inventoryPolicy: { rules: [checkClientDescription, checkFirstCharacter] },
     participationDC: { rules: [] },
     participationMC: { rules: [] },
     distributionChannel: { rules: [] },
@@ -35,7 +35,7 @@ const fieldsWithRules = {
     relevantInformationMainSupplier: { rules: [] },
     notApplyCreditContact: { rules: [] },
     contributionDC: { rules: [] },
-    controlLinkedPayments: { rules: [checkValueClientInformacion(noAppliedControlLinkedPayments), checkClientDescription] },
+    controlLinkedPayments: { rules: [checkValueClientInformacion(noAppliedControlLinkedPayments), checkClientDescription, checkFirstCharacter] },
 }
 
 export const fields = _.keys(fieldsWithRules);

@@ -4,16 +4,16 @@ import _ from "lodash";
 import { mapDispatchToProps, mapStateToProps } from './componentListLineBusiness';
 import Wrapper from './reduxFormWrapper';
 import {
-    checkRequired, processRules, checkClientDescription, checkMaxLength,
-    checkValueClientInformacion, checkNumberInRange
+    processRules, checkClientDescription, checkMaxLength,
+    checkValueClientInformacion, checkNumberInRange, checkFirstCharacter
 } from '../../../validationsFields/rulesField';
 
 import {
-    noAppliedControlLinkedPayments, noAppliedLineOfBusiness
+    noAppliedLineOfBusiness
 } from '../../../constantsReducer';
 
 const fieldsWithRules = {
-    contextLineBusiness: { rules: [checkValueClientInformacion(noAppliedLineOfBusiness), checkClientDescription, checkMaxLength(50)] },
+    contextLineBusiness: { rules: [checkValueClientInformacion(noAppliedLineOfBusiness), checkClientDescription, checkMaxLength(50), checkFirstCharacter] },
     participation: { rules: [checkValueClientInformacion(noAppliedLineOfBusiness), checkNumberInRange(0,100)] },
     experience: { rules: [checkNumberInRange(0,9999)] },
     contribution: { rules: [checkNumberInRange(0,100)] }

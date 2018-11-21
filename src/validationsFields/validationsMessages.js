@@ -17,3 +17,4 @@ export const MESSAGE_WARNING_HISTORY = "Solo se permiten valores alfanuméricos 
 export const MESSAGE_WARNING_HISTORY_EVENT = "Solo se permiten valores alfanuméricos y &, /, \\, ,, ;, :, ., #, \", °, (, ), ', -, +, ´";
 export const MESSAGE_WARNING_CLIENT_NAME = "Solo se permiten valores alfanuméricos y &/\\,;.#\"°()'-+´:";
 export const MESSAGE_WARNING_RANGE = (min, max) => "Solo se permiten valores entre " + max + " y " + min;
+export const MESSAGE_WARNING_FORBIDDEN_CHARACTER = "No se permiten textos que inicien con los siguientes caracteres: = + - @";

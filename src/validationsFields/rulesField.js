@@ -4,7 +4,8 @@ import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
     patternOfStructureEmail, patternOfEmail, patternOfHistory, patternOfClientName, patternOfDescription,
-    patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers
+    patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
+    patternOfForbiddenCharacter
 } from './patternsToValidateField';
 
 import {
@@ -12,7 +13,7 @@ import {
     MESSAGE_WARNING_MAX_LENGTH, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_WARNING_HISTORY, MESSAGE_WARNING_NUMBER_DOCUMENT,
     MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS,
     MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT,
-    MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_RANGE
+    MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_RANGE, MESSAGE_WARNING_FORBIDDEN_CHARACTER
 } from './validationsMessages';
 
 import {
@@ -264,10 +265,10 @@ export const checkNumberInRange = (min, max) => value => {
     return message;
 }
 
-export const checkFunctionIfTrue = (conditional, validation) => value => {
+export const checkFirstCharacter = value => {
     let message = null;
-    if (conditional) {
-        message = validation(value);
+    if (!_.isNil(value) && patternOfForbiddenCharacter.test(value)) {
+        message = MESSAGE_WARNING_FORBIDDEN_CHARACTER;
     }
     return message;
 }

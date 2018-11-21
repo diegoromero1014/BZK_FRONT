@@ -5,14 +5,14 @@ import {mapDispatchToProps, mapStateToProps} from './component';
 import Wrapper from './reduxFormWrapper';
 import {
     checkRequired, processRules, checkClientDescription,
-    checkNumberInRange, checkMaxLength
+    checkNumberInRange, checkMaxLength, checkFirstCharacter
 } from '../../../validationsFields/rulesField';
 
 const fieldsWithRules = {
-    nameSupplier: { rules: [checkRequired, checkClientDescription, checkMaxLength(50)] },
+    nameSupplier: { rules: [checkRequired, checkClientDescription, checkMaxLength(50), checkFirstCharacter] },
     participation: { rules: [checkRequired, checkNumberInRange(0, 100)] },
     term: { rules: [checkRequired, checkNumberInRange(0, 100)] },
-    relevantInformation: { rules: [checkClientDescription] }
+    relevantInformation: { rules: [checkClientDescription, checkFirstCharacter] }
 }
 
 const fields = _.keys(fieldsWithRules);

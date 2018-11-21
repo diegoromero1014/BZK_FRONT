@@ -4,10 +4,10 @@ import Input from '../../../ui/input/inputComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue, xssValidation } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
-    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
+    ONLY_POSITIVE_INTEGER,
 } from '../../../constantsGlobal';
 
 import Textarea from '../../../ui/textarea/textareaComponent';
