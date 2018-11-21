@@ -29,30 +29,27 @@ class Challenger extends Component {
 
     _seletedTabActive(tabSelect, e) {
         switch (tabSelect) {
-            case 1:
-                $('.title.clientTeach').toggleClass('active');
-                $('.content.clientTeach').toggleClass('active');
-                break;
             case 2:
-                $('.title.adaptMessage').toggleClass('active');
-                $('.content.adaptMessage').toggleClass('active');
-                break;
+            $('.title.adaptMessage').toggleClass('active');
+            $('.content.adaptMessage').toggleClass('active');
+            break;
             case 3:
-                $('.title.controlConversation').toggleClass('active');
-                $('.content.controlConversation').toggleClass('active');
-                break;
+            $('.title.controlConversation').toggleClass('active');
+            $('.content.controlConversation').toggleClass('active');
+            break;
             case 4:
-                $('.title.constructiveTension').toggleClass('active');
-                $('.content.constructiveTension').toggleClass('active');
-                break;
+            $('.title.constructiveTension').toggleClass('active');
+            $('.content.constructiveTension').toggleClass('active');
+            break;
             case 5:
-                $('.title.nuevoModo').toggleClass('active');
-                $('.content.nuevoModo').toggleClass('active');
-                break;
+            $('.title.nuevoModo').toggleClass('active');
+            $('.content.nuevoModo').toggleClass('active');
+            break;
             case 6:
-                $('.title.solucion').toggleClass('active');
-                $('.content.solucion').toggleClass('active');
-                break;
+            $('.title.solucion').toggleClass('active');
+            $('.content.solucion').toggleClass('active');
+            break;
+            case 1:
             default:
                 $('.title.clientTeach').toggleClass('active');
                 $('.content.clientTeach').toggleClass('active');
