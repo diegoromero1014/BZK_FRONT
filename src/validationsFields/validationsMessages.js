@@ -16,4 +16,9 @@ export const MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT = "Solo se permiten valore
 export const MESSAGE_WARNING_HISTORY = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
 export const MESSAGE_WARNING_HISTORY_EVENT = "Solo se permiten valores alfanuméricos y &, /, \\, ,, ;, :, ., #, \", °, (, ), ', -, +, ´";
 export const MESSAGE_WARNING_CLIENT_NAME = "Solo se permiten valores alfanuméricos y &/\\,;.#\"°()'-+´:";
+export const MESSAGE_WARNING_NAME_OTHER_PARTICIPANT = "Solo se permiten valores alfanuméricos y &/\\,;.#\"\"";
+export const MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT = "Solo se permiten valores alfanuméricos y &/\\,;.#\"\"";
+export const MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT = "Solo se permiten valores alfanuméricos y & /\\,;.#\"\"°()'-+´:";
+export const MESSAGE_WARNING_PLACE_OF_PREVISIT = "Solo se permiten valores alfanuméricos y & /\\,;.#\"\"";
 export const MESSAGE_WARNING_RANGE = (min, max) => "Solo se permiten valores entre " + max + " y " + min;
+

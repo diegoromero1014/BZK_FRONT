@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { nonValidateEnter } from '../../actionsGlobal';
 import ReactQuill from 'react-quill'
-import { isNull } from 'lodash'
+
+import { nonValidateEnter } from '../../actionsGlobal';
 
 class RichText extends Component {
     constructor(props) {
@@ -59,10 +59,7 @@ class RichText extends Component {
 
     render() {
         const { value, touched, error, disabled } = this.props;
-        if (!isNull(this.quillRef)) {
-            const quillSize = this.quillRef.getLength();
-            const quillText = this.quillRef.getText();
-        }
+        
         // No quitar el onChange={(value) => null }, se realiza para evitar que se llame el onChange de reduxForm
         return (
             <div onBlur={() => this.handleOnBlur()} onFocus={() => this.handeOnFocus()}>

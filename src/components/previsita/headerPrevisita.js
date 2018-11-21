@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import _ from 'lodash';
 
 import RaitingInternal from '../clientInformation/ratingInternal';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
 
 import { AEC_NO_APLIED } from '../../constantsGlobal';
-
-import _ from 'lodash';
 
 class CreatePrevisita extends Component {
 
