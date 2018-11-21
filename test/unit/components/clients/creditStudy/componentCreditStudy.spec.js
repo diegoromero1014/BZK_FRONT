@@ -10,7 +10,7 @@ import ButtonShareholderAdmin from '~/src/components/clientDetailsInfo/bottonSha
 import ButtonBoardMembersAdmin from '~/src/components/clientDetailsInfo/buttonBoardMembersAdmin';
 import ClientTypology from '~/src/components/contextClient/ClientTypology';
 import ContextEconomicActivity from '~/src/components/contextClient/contextEconomicActivity';
-import ComponentListLineBusiness from '~/src/components/contextClient/listLineOfBusiness/componentListLineBusiness';
+import ComponentListLineBusiness from '~/src/components/contextClient/listLineOfBusiness/whiteListLineBusiness';
 import ComponentListDistributionChannel from '~/src/components/contextClient/listDistributionChannel/componentListDistributionChannel';
 import InventorPolicy from '~/src/components/contextClient/inventoryPolicy';
 import ControlLinkedPayments from '~/src/components/contextClient/controlLinkedPayments';

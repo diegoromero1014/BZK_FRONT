@@ -22,7 +22,7 @@ import BottonShareholderAdmin from "../clientDetailsInfo/bottonShareholderAdmin"
 import ModalErrorsUpdateClient from "./modalErrorsUpdateClient";
 import ClientTypology from "../contextClient/ClientTypology";
 import ContextEconomicActivity from "../contextClient/contextEconomicActivity";
-import ComponentListLineBusiness from "../contextClient/listLineOfBusiness/componentListLineBusiness";
+import ComponentListLineBusiness from "../contextClient/listLineOfBusiness/whiteListLineBusiness";
 import ComponentListDistributionChannel from "../contextClient/listDistributionChannel/componentListDistributionChannel";
 import InventorPolicy from "../contextClient/inventoryPolicy";
 import ControlLinkedPayments from "../contextClient/controlLinkedPayments";
@@ -1681,14 +1681,12 @@ class clientEdit extends Component {
                         <ContextEconomicActivity contextClientField={contextClientField} />
                     }
                     {allowRiskGroupEdit &&
-                        <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
-                            participation={participationLB} experience={experience}
+                        <ComponentListLineBusiness 
                             showFormLinebusiness={this.state.showFormAddLineOfBusiness}
-                            fnShowForm={this.showFormOut} contribution={contributionLB} />
+                            fnShowForm={this.showFormOut} />
                     }
                     {allowRiskGroupEdit &&
-                        <ComponentListDistributionChannel distributionChannel={distributionChannel}
-                            participation={participationDC} contribution={contributionDC}
+                        <ComponentListDistributionChannel
                             showFormDistribution={this.state.showFormAddDistribution}
                             fnShowForm={this.showFormOut} />
                     }
@@ -2037,8 +2035,7 @@ class clientEdit extends Component {
                     </Col>
                 </Row>
                 {allowRiskGroupEdit &&
-                    <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
-                        term={termMainClient} relevantInformation={relevantInformationMainClient}
+                    <ComponentListMainClients
                         showFormMainClients={this.state.showFormAddMainClient}
                         fnShowForm={this.showFormOut} />
                 }
@@ -2049,8 +2046,7 @@ class clientEdit extends Component {
                         fnShowForm={this.showFormOut} />
                 }
                 {allowRiskGroupEdit &&
-                    <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
-                        observations={obsevationsCompetitor}
+                    <ComponentListMainCompetitor
                         showFormMainCompetitor={this.state.showFormAddMainCompetitor}
                         fnShowForm={this.showFormOut} />
                 }
