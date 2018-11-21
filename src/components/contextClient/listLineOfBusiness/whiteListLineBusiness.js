@@ -16,7 +16,7 @@ const fieldsWithRules = {
     contextLineBusiness: { rules: [checkValueClientInformacion(noAppliedLineOfBusiness), checkClientDescription, checkMaxLength(50)] },
     participation: { rules: [checkValueClientInformacion(noAppliedLineOfBusiness), checkNumberInRange(0,100)] },
     experience: { rules: [checkNumberInRange(0,9999)] },
-    contribution: { rules: [] }
+    contribution: { rules: [checkNumberInRange(0,100)] }
 }
 
 const fields = _.keys(fieldsWithRules);

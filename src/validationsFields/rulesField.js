@@ -254,13 +254,10 @@ export const checkValueClientInformacion = reducer => (value, fields, props) => 
 
 export const checkNumberInRange = (min, max) => value => {
     let message = null;
-
     if (_.isNil(value)) {
         return message;
     }
-
     let number = parseFloat(value.replace(",",""));
-    console.log(number);
     if (number < min || number > max) {
         message = MESSAGE_WARNING_RANGE(min, max);
     }

@@ -957,8 +957,8 @@ export class ComponentStudyCredit extends Component {
                                 <button className="btn" type="button" style={{ backgroundColor: "#00B5AD" }} ><span >Guardar Avance</span></button>
                             </Col>
 
-                            <Col style={paddingButtons} onClick={this._submitSaveContextClient}  >
-                                <button className="btn"><span>Guardar Definitivo</span></button>
+                            <Col style={paddingButtons} >
+                                <button className="btn" type="submit"><span>Guardar Definitivo</span></button>
                             </Col>
 
                             {this.state.showButtonPDF &&

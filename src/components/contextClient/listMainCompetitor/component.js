@@ -215,10 +215,10 @@ export class ComponentListMainCompetitor extends Component {
                                         name="participation"
                                         type="text"
                                         min={0}
-                                        max="5"
+                                        max="11"
                                         placeholder="Participación"
                                         {...participation}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 7)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
