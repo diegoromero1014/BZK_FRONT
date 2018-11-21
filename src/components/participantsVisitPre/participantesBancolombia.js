@@ -134,7 +134,7 @@ class ParticipantesBancolombia extends Component {
 
   updateKeyValueUsersBanco(e) {
     const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco, swtShowMessage } = this.props;
-    const selfThis = this;
+    
     if (e.keyCode === 13 || e.which === 13) {
       e.consultclick ? "" : e.preventDefault();
       if (nameUsuario.value !== "" && nameUsuario.value.length >= 3 && nameUsuario.value !== null && nameUsuario.value !== undefined) {

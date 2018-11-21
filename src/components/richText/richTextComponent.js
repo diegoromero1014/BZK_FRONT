@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ReactQuill from 'react-quill'
@@ -58,7 +58,7 @@ class RichText extends Component {
 
 
     render() {
-        const { value, touched, error, disabled } = this.props;
+        const { touched, error, disabled } = this.props;
         
         // No quitar el onChange={(value) => null }, se realiza para evitar que se llame el onChange de reduxForm
         return (
