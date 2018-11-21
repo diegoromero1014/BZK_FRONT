@@ -19,3 +19,8 @@ export const patternOfClientAddress = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s#();,.\-"/_´'
 export const patternOfClientNeighborhood = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s#();,.\-"/]+$/;
 export const regexNumbers = /^[0-9]+$/;
 export const patternOfForbiddenCharacter = /^[@+\-=].*$/;
+export const patternDecimalNumbers = /^[0-9.]+$/;
+export const patternOfNameOtherParticipant = /^[a-zA-Z0-9\s\-Á-Úá-úÑñÜü&/\\,;.#"]+$/;
+export const patternOfPositionOtherParticipant = /^[a-zA-Z0-9\s\-Á-Úá-úÑñÜü&/\\,;.#"]+$/;
+export const patternOfCompanyOtherParticipant = /^[a-zA-Z0-9\s\-Á-Úá-úÑñÜü&/\\,;.#"°()´'-+:]+$/;
+export const patternOfPlaceOfPrevisit = /^[a-zA-Z0-9\s\-Á-Úá-úÑñÜü&/\\,;.#"]+$/;

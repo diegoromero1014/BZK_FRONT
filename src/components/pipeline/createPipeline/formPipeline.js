@@ -204,7 +204,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         areaAssetsEnabled: false,
         //Se utilizan para controlar el componente de planes de desembolso 
         showFormAddDisbursementPlan: false,
-        disbursementPlanRequired: false
+        disbursementPlanRequired: false,
+        products: []
       };
 
       isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
@@ -362,7 +363,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         }).length > 0
       });
 
-      consultListWithParameterUbication(PRODUCTS, currencyValue);
+      consultListWithParameterUbication("", currencyValue).then((data) => {
+        this.setState({
+          products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
+        });
+      });
       product.onChange('');
     }
 
@@ -741,7 +746,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...product}
                       name={nameProduct}
                       parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(PRODUCTS) || []}
+                      data={this.state.products}
                     />
                   </div>
                 </Col>

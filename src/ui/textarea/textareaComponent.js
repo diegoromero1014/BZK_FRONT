@@ -39,20 +39,20 @@ class TextareaComponent extends Component {
 
     _onBlur(e, event) {
         const { nonValidateEnter, onChange } = this.props;
-        
+
         this.setState({
             touched: true,
             focus: false
         });
 
-        let trimmed = this.state.value.trim(); 
+        let trimmed = this.state.value ? this.state.value.trim() : '';
 
         onChange(trimmed);
         nonValidateEnter(true);
     }
 
     _onFocus(e, event) {
-        this.setState({focus: true})
+        this.setState({ focus: true })
     }
 
 
@@ -65,13 +65,13 @@ class TextareaComponent extends Component {
     }
 
     componentWillMount() {
-        const {value} = this.props;
-        this.setState({value: value});
+        const { value } = this.props;
+        this.setState({ value: value });
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.value != this.state.value && ! this.state.focus) {
-            this.setState({value: nextProps.value});
+        if (nextProps.value != this.state.value && !this.state.focus) {
+            this.setState({ value: nextProps.value });
         }
     }
 

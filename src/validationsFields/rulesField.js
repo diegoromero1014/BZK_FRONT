@@ -1,19 +1,25 @@
 import _ from "lodash";
 
+import { htmlToText } from './../actionsGlobal';
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
     patternOfStructureEmail, patternOfEmail, patternOfHistory, patternOfClientName, patternOfDescription,
     patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
-    patternOfForbiddenCharacter
+    patternOfForbiddenCharacter,
+    patternOfNameOtherParticipant, patternOfPositionOtherParticipant, patternOfCompanyOtherParticipant,
+    patternDecimalNumbers, patternOfPlaceOfPrevisit
 } from './patternsToValidateField';
 
 import {
     MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH,
     MESSAGE_WARNING_MAX_LENGTH, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_WARNING_HISTORY, MESSAGE_WARNING_NUMBER_DOCUMENT,
     MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS,
-    MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT,
-    MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_RANGE, MESSAGE_WARNING_FORBIDDEN_CHARACTER
+    MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS,
+    MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_NAME_OTHER_PARTICIPANT,
+    MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT, MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT,
+    MESSAGE_WARNING_PLACE_OF_PREVISIT, MESSAGE_WARNING_RANGE, MESSAGE_WARNING_FORBIDDEN_CHARACTER
+
 } from './validationsMessages';
 
 import {
@@ -180,6 +186,7 @@ export const checkObservationsLinkClient = value => {
 
     return message;
 }
+
 export const checkHistoryFields = value => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfHistory).test(value)) {
@@ -251,6 +258,63 @@ export const checkValueClientInformacion = reducer => (value, fields, props) => 
         message = checkRequired(value);
     }
     return message;
+}
+
+export const checkNameOtherParticipant = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfNameOtherParticipant.test(value)) {
+        message = MESSAGE_WARNING_NAME_OTHER_PARTICIPANT;
+    }
+
+    return message;
+}
+
+export const checkPositionOtherParticipant = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) &&
+        !patternOfPositionOtherParticipant.test(value)) {
+        message = MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT;
+    }
+
+    return message;
+}
+
+export const checkCompanyOtherParticipant = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) &&
+        !patternOfCompanyOtherParticipant.test(value)) {
+        message = MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT;
+    }
+
+    return message;
+}
+
+export const checkDecimalNumbers = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternDecimalNumbers.test(value)) {
+        message = MESSAGE_WARNING_ONLY_NUMBERS;
+    }
+
+    return message;
+}
+
+export const checkPlaceOfPrevisit = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfPlaceOfPrevisit.test(value)) {
+        message = MESSAGE_WARNING_PLACE_OF_PREVISIT;
+    }
+
+    return message;
+}
+
+export const checkRichTextRequired = value => {
+    if(!_.isUndefined(value)){
+        return checkRequired(htmlToText(value));
+    } else {
+        return MESSAGE_REQUIRED_VALUE;
+    }
 }
 
 export const checkNumberInRange = (min, max) => value => {
