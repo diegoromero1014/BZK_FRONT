@@ -333,10 +333,10 @@ export class ComponentListIntOperations extends Component {
                                             name="participation"
                                             type="text"
                                             min={0}
-                                            max="5"
+                                            max="11"
                                             placeholder="Participación"
                                             {...participation}
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 7)}
                                             touched={this.state.errorForm || registrationRequired}
                                         />
                                     </div>
@@ -405,10 +405,10 @@ export class ComponentListIntOperations extends Component {
                                             name="participationCountry"
                                             type="text"
                                             min={0}
-                                            max="6"
+                                            max="11"
                                             placeholder="Participación del país"
                                             {...participationCountry}
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participationCountry, val, true, 2)}
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participationCountry, val, true, 7)}
                                             touched={this.state.errorCountryForm}
                                         />
                                     </div>

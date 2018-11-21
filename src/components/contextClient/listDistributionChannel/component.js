@@ -230,10 +230,10 @@ export class ComponentListDistributionChannel extends Component {
                                         name="participation"
                                         type="text"
                                         min={0}
-                                        max="5"
+                                        max="11"
                                         placeholder="Participación"
                                         {...participation}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 7)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -247,10 +247,10 @@ export class ComponentListDistributionChannel extends Component {
                                         name="contribution"
                                         type="text"
                                         min={0}
-                                        max="3"
+                                        max="11"
                                         placeholder="Contribución"
                                         {...contribution}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, false, 0)}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, false, 7)}
                                     />
                                 </div>
                             </Col>

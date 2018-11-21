@@ -106,7 +106,6 @@ export class ComponentListLineBusiness extends Component {
         const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient,
             clientInformacion, contribution } = this.props;
         fnShowForm(LINE_OF_BUSINESS, true);
-        debugger;
         contextLineBusiness.onChange(entity.lineOfBusiness);
         participation.onChange(entity.participation.toString());
         experience.onChange(_.isNil(entity.experience) ? "" : entity.experience.toString());
@@ -212,10 +211,10 @@ export class ComponentListLineBusiness extends Component {
                                         name="participation"
                                         type="text"
                                         min={0}
-                                        max="5"
+                                        max="11"
                                         placeholder="Participación"
                                         {...participation}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 7)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -246,11 +245,10 @@ export class ComponentListLineBusiness extends Component {
                                         name="contribution"
                                         type="text"
                                         min={0}
-                                        max="3"
+                                        max="11"
                                         placeholder="Contribución"
                                         {...contribution}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, false, 0)}
-                                        error={xssValidation(contribution.value) ? VALUE_XSS_INVALID : null}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, false, 7)}
                                     />
                                 </div>
                             </Col>
