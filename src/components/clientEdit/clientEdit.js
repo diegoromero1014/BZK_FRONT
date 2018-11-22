@@ -103,12 +103,12 @@ const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCII
     "centroDecision", "necesitaLME", "groupEconomic", "nitPrincipal", "economicGroupName", "justifyNoGeren", "justifyNoLME",
     "justifyExClient", "taxNature", "detailNonOperatingIncome", "otherOriginGoods", "originGoods", "originResource",
     "otherOriginResource", "countryOrigin", "originCityResource", "operationsForeignCurrency", "otherOperationsForeign",
-    "segment", "subSegment", "customerTypology", "contextClientField", "contextLineBusiness", "participationLB", "experience",
-    "distributionChannel", "participationDC", "inventoryPolicy", "nameMainClient", "participationMC", "termMainClient",
-    "relevantInformationMainClient", "nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier",
-    "nameMainCompetitor", "participationMComp", "obsevationsCompetitor", "typeOperationIntOpera", "participationIntOpe",
-    "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe", "contributionDC",
-    "contributionLB", "controlLinkedPayments", "firstName", "middleName", "lastName", "middleLastName", "occupation"];
+    "segment", "subSegment", "customerTypology", "contextClientField", "experience",
+    "distributionChannel", "inventoryPolicy",
+    "nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier",
+    "typeOperationIntOpera", "participationIntOpe",
+    "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe",
+    "controlLinkedPayments", "firstName", "middleName", "lastName", "middleLastName", "occupation"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 let isProspect = false;
@@ -1232,7 +1232,7 @@ class clientEdit extends Component {
             "clientType": infoClient.clientType,
         };
 
-        const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy, swtShowMessage } = this.props;
+        const { createProspect, updateClient, saveCreditStudy, swtShowMessage } = this.props;
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createProspect(jsonCreateProspect).then((data) => {
             if (_.get(data, 'payload.data.status', 500) === 200) {
@@ -1596,11 +1596,10 @@ class clientEdit extends Component {
                 liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
                 centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
                 detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
-                otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
-                participationLB, experience, distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC,
-                termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
-                relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera,
-                participationIntOpe, contributionDC, contributionLB, descriptionCoverageIntOpe, idCountryIntOpe,
+                otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, distributionChannel, inventoryPolicy, 
+                nameMainSupplier, participationMS, termMainSupplier,
+                relevantInformationMainSupplier, typeOperationIntOpera,
+                participationIntOpe, descriptionCoverageIntOpe, idCountryIntOpe,
                 participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments, firstName, middleName, lastName, middleLastName, occupation
             }, handleSubmit,
             tabReducer, selectsReducer, clientInformacion, validateContactShareholder, reducerGlobal, isPersonaNatural

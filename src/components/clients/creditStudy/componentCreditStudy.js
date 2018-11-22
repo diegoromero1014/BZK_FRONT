@@ -335,7 +335,7 @@ export class ComponentStudyCredit extends Component {
 
     _validateInformationToSave() {
         const { fields: { contextClientField, customerTypology, controlLinkedPayments, inventoryPolicy }, clientInformacion,
-            swtShowMessage, studyCreditReducer, errors } = this.props;
+            swtShowMessage, studyCreditReducer } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { contextClient } = infoClient;
         var allowSave = true;
@@ -740,13 +740,12 @@ export class ComponentStudyCredit extends Component {
     }
 
     render() {
-        const { selectsReducer, fields: { customerTypology, contextClientField, participationLB, participationDC, participationMC,
-            contextLineBusiness, experience, distributionChannel, nameMainClient, termMainClient, relevantInformationMainClient,
-            inventoryPolicy, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera, participationIntOpe,
+        const { selectsReducer, fields: { customerTypology, contextClientField,
+            inventoryPolicy, typeOperationIntOpera, participationIntOpe,
             idCountryIntOpe, participationIntOpeCountry, customerCoverageIntOpe, descriptionCoverageIntOpe, nameMainSupplier,
-            participationMS, termMainSupplier, relevantInformationMainSupplier, valueCheckCreditContact, notApplyCreditContact,
-            contributionDC, contributionLB, controlLinkedPayments },
-            studyCreditReducer, handleSubmit, getContextClient, clientInformacion } = this.props;
+            participationMS, termMainSupplier, relevantInformationMainSupplier, notApplyCreditContact,
+            controlLinkedPayments },
+            studyCreditReducer, handleSubmit, clientInformacion } = this.props;
         contextClientInfo = studyCreditReducer.get('contextClient');
         infoValidate = studyCreditReducer.get('validateInfoCreditStudy');
         showCheckValidateSection = false;

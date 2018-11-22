@@ -2,7 +2,7 @@ import { reduxForm } from 'redux-form';
 import _ from "lodash";
 
 import { mapDispatchToProps, mapStateToProps } from './componentListLineBusiness';
-import Wrapper from './reduxFormWrapper';
+import Wrapper from './wrapper';
 import {
     processRules, checkClientDescription, checkMaxLength,
     checkValueClientInformacion, checkNumberInRange, checkFirstCharacter

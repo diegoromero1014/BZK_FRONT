@@ -169,7 +169,7 @@ export class ComponentListIntOperations extends Component {
 
     _viewInformationIntOperations(entity) {
         const { typeOperation, participation, idCountry, customerCoverage, descriptionCoverage,
-            fnShowForm, changeValueListClient, clientInformacion } = this.props;
+            fnShowForm } = this.props;
         fnShowForm(INT_OPERATIONS, true);
         participation.onChange(entity.participation.toString());
         idCountry.onChange(entity.idCountry);
