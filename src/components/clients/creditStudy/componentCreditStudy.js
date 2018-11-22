@@ -528,7 +528,6 @@ export class ComponentStudyCredit extends Component {
                         });
                     }
                 }, (reason) => {
-                    console.log(reason);
                     changeStateSaveData(false, "");
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                 });
