@@ -3,10 +3,10 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue, validateValueExist,xssValidation } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue, validateValueExist } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
-    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID
+    ONLY_POSITIVE_INTEGER
 } from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SweetAlert from '../../sweetalertFocus';
@@ -112,7 +112,7 @@ export class ComponentListMainSupplier extends Component {
     }
 
     _viewInformationSupplier(entity) {
-        const { nameSupplier, participation, term, relevantInformation, fnShowForm, changeValueListClient, clientInformacion } = this.props;
+        const { nameSupplier, participation, term, relevantInformation, fnShowForm } = this.props;
         fnShowForm(MAIN_SUPPLIER, true);
         nameSupplier.onChange(entity.nameSupplier);
         participation.onChange(entity.participation.toString());

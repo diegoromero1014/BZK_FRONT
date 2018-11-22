@@ -4,10 +4,10 @@ import Input from '../../../ui/input/inputComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue, xssValidation } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
-    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
+    ONLY_POSITIVE_INTEGER,
 } from '../../../constantsGlobal';
 
 import Textarea from '../../../ui/textarea/textareaComponent';
@@ -169,7 +169,7 @@ export class ComponentListIntOperations extends Component {
 
     _viewInformationIntOperations(entity) {
         const { typeOperation, participation, idCountry, customerCoverage, descriptionCoverage,
-            fnShowForm, changeValueListClient, clientInformacion } = this.props;
+            fnShowForm } = this.props;
         fnShowForm(INT_OPERATIONS, true);
         participation.onChange(entity.participation.toString());
         idCountry.onChange(entity.idCountry);

@@ -6,8 +6,7 @@ import { connect } from 'react-redux';
 import { handleBlurValueNumber, shorterStringValue, validateValueExist, xssValidation } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
-    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+    ONLY_POSITIVE_INTEGER
 } from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SweetAlert from '../../sweetalertFocus';

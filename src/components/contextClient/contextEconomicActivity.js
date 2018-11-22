@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Row, Col } from 'react-flexbox-grid';
+import { Col } from 'react-flexbox-grid';
 import { connect } from 'react-redux';
 import Textarea from '../../ui/textarea/textareaComponent';
 import _ from 'lodash';
@@ -8,7 +8,6 @@ import {
     VALUE_REQUIERED, VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../constantsGlobal';
-import { stringValidate, xssValidation } from '../../actionsGlobal';
 import { ORIGIN_CREDIT_STUDY } from '../clients/creditStudy/constants';
 import { MESSAGE_CONTEXT } from './constants';
 
@@ -35,7 +34,7 @@ class ContextEconomicActivity extends Component {
     }
 
     render() {
-        const { contextClientField, data, isCheckbox, origin } = this.props;
+        const { contextClientField, origin } = this.props;
         return (
             <Col xs={12} md={12} lg={12} onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <div style={{ marginTop: "15px", marginLeft: '20px', marginRight: '20px' }}>

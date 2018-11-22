@@ -6,10 +6,9 @@ import { connect } from 'react-redux';
 import { handleBlurValueNumber } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
-    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+    ONLY_POSITIVE_INTEGER
 } from '../../../constantsGlobal';
-import { stringValidate, xssValidation } from '../../../actionsGlobal';
+import { stringValidate } from '../../../actionsGlobal';
 import SweetAlert from '../../sweetalertFocus';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
@@ -34,31 +33,7 @@ export class ComponentListDistributionChannel extends Component {
         this._viewInformationDistribution = this._viewInformationDistribution.bind(this);
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteDistribution = this._deleteDistribution.bind(this);
-        this.fieldValidation = this.fieldValidation.bind(this);
         this.hasErrors = this.hasErrors.bind(this);
-    }
-
-    fieldValidation(fields) {
-        const { swtShowMessage } = this.props;
-
-        let message_error = "";
-        for (var _field_i in fields) {
-            var _field = fields[_field_i];
-
-            if (_field.required && (_.isUndefined(_field.value) || _.isNull(_field.value) || _.isEmpty(_field.value))) {
-                message_error = 'Señor usuario, para agregar un canal de distribución debe ingresar todos los valores.';
-                break;
-            } if (_field.xss && xssValidation(_field.value)) {
-                message_error = REGEX_SIMPLE_XSS_MESAGE;
-                break;
-            }
-        }
-
-        if (message_error) {
-            this.setState({ errorForm: true });
-            swtShowMessage('error', 'Canales de distribución', message_error);
-        }
-        return _.isEmpty(message_error);
     }
 
     hasErrors(fields) {
@@ -124,7 +99,7 @@ export class ComponentListDistributionChannel extends Component {
     }
 
     _viewInformationDistribution(entity) {
-        const { distributionChannel, participation, fnShowForm, changeValueListClient, clientInformacion,
+        const { distributionChannel, participation, fnShowForm,
             contribution } = this.props;
         fnShowForm(DISTRIBUTION_CHANNEL, true);
         distributionChannel.onChange(entity.distributionChannel);

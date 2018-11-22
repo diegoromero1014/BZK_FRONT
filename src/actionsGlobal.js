@@ -329,6 +329,10 @@ export function validateResponse(response) {
     return true;
 }
 
+export function validateWhileListResponse(response) {
+    return _.get(response, 'payload.data.status') !==  constants.REQUEST_INVALID_INPUT;
+}
+
 /**
  * Valida que una cadena sea diferente de null, vacío e indefinido, 
  * retorna verdadero si es diferente de todos los valores.

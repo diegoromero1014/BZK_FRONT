@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import _ from "lodash";
 import moment from 'moment';
 
@@ -34,14 +34,12 @@ import {
 
 import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_COMPETITOR, MAIN_SUPPLIER, INT_OPERATIONS } from '../../contextClient/constants';
 import * as constantsSelects from '../../selectsComponent/constants';
-import { ORIGIN_STUDY_CREDIT } from '../../contextClient/constants';
-import { validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport, xssValidation } from '../../../actionsGlobal';
+import { validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport, xssValidation, validateWhileListResponse } from '../../../actionsGlobal';
 import { GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../../clientEdit/constants';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_REPLACE_PDF,
-    MESSAGE_SAVE_DATA, YES, VALUE_XSS_INVALID, APP_URL,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT,
-    BLOCK_CREDIT_STUDY, BLOCK_REPORT_CONSTANT, TIME_REQUEST_BLOCK_REPORT, GENERAR_PDF_ESTUDIO_CREDITO
+    YES, APP_URL, MESSAGE_ERROR_INVALID_INPUT,
+    BLOCK_CREDIT_STUDY, TIME_REQUEST_BLOCK_REPORT, GENERAR_PDF_ESTUDIO_CREDITO
 } from '../../../constantsGlobal';
 import {
     A_WITH_OBSERVATION, ALL_WITH_COMMENTS, ORIGIN_CREDIT_STUDY,
@@ -55,7 +53,7 @@ import { validations as validate, fields } from './fieldsAndRules';
 var errorMessageForShareholders = SUCCESS_MESSAGE_FOR_SHAREHOLDER;
 var errorMessageForBoardMembers = SUCCESS_MESSAGE_FOR_BOARD_MEMBERS;
 var messageContact = 'La información de los contactos es válida, ';
-var contextClientInfo, numberOfShareholders, infoValidate, showCheckValidateSection, numberOfBoardMembers;
+var contextClientInfo, numberOfShareholders, infoValidate, numberOfBoardMembers;
 var showCheckValidateSection, overdueCreditStudy, fechaModString, errorShareholder, errorContact, errorBoardMembers;
 var infoClient, fechaModString = '', updatedBy = null, createdBy = null, createdTimestampString;
 
@@ -337,7 +335,7 @@ export class ComponentStudyCredit extends Component {
 
     _validateInformationToSave() {
         const { fields: { contextClientField, customerTypology, controlLinkedPayments, inventoryPolicy }, clientInformacion,
-            swtShowMessage, studyCreditReducer, errors } = this.props;
+            swtShowMessage, studyCreditReducer } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { contextClient } = infoClient;
         var allowSave = true;
@@ -514,9 +512,17 @@ export class ComponentStudyCredit extends Component {
                 changeStateSaveData(true, MESSAGE_LOAD_DATA);
                 saveCreditStudy(this._createJsonSaveContextClient(isAvance)).then((data) => {
                     changeStateSaveData(false, "");
+
                     if (!validateResponse(data)) {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-                    } else {
+                        return;
+                    }   
+
+                    if (!validateWhileListResponse(data)) {
+                        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_INVALID_INPUT);
+                    }
+
+                     else {
                         this.setState({
                             showSuccessMessage: true
                         });
@@ -733,13 +739,12 @@ export class ComponentStudyCredit extends Component {
     }
 
     render() {
-        const { selectsReducer, fields: { customerTypology, contextClientField, participationLB, participationDC, participationMC,
-            contextLineBusiness, experience, distributionChannel, nameMainClient, termMainClient, relevantInformationMainClient,
-            inventoryPolicy, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera, participationIntOpe,
+        const { selectsReducer, fields: { customerTypology, contextClientField,
+            inventoryPolicy, typeOperationIntOpera, participationIntOpe,
             idCountryIntOpe, participationIntOpeCountry, customerCoverageIntOpe, descriptionCoverageIntOpe, nameMainSupplier,
-            participationMS, termMainSupplier, relevantInformationMainSupplier, valueCheckCreditContact, notApplyCreditContact,
-            contributionDC, contributionLB, controlLinkedPayments },
-            studyCreditReducer, handleSubmit, getContextClient, clientInformacion } = this.props;
+            participationMS, termMainSupplier, relevantInformationMainSupplier, notApplyCreditContact,
+            controlLinkedPayments },
+            studyCreditReducer, handleSubmit, clientInformacion } = this.props;
         contextClientInfo = studyCreditReducer.get('contextClient');
         infoValidate = studyCreditReducer.get('validateInfoCreditStudy');
         showCheckValidateSection = false;

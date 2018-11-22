@@ -14,6 +14,7 @@ export const SAVE_DRAFT = 0;
 export const SAVE_PUBLISHED = 1;
 export const REQUEST_ERROR = 500;
 export const REQUEST_ERROR_XSS = 600;
+export const REQUEST_INVALID_INPUT = 422;
 export const REQUEST_SUCCESS = 200;
 export const ERROR_MESSAGE_REQUEST_TITLE = 'Error cargando información';
 export const ERROR_MESSAGE_REQUEST = 'Lo sentimos, ocurrió un error ejecutando la acción.';
@@ -168,7 +169,7 @@ export const REDIRECT_TO_LOGIN = 'ias-ayax/input/redirect-to-url';
 //Mensajes de error
 export const TITLE_ERROR_SWEET_ALERT = "Error ejecutando transacción";
 export const MESSAGE_ERROR_SWEET_ALERT = "Señor usuario ocurrió un error, por favor comuníquese  con el administrador.";
-
+export const MESSAGE_ERROR_INVALID_INPUT = "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos."
 //Mensajes advertencia
 export const MESSAGE_REPLACE_PDF = "Señor usuario, ya fue generado un PDF para este cliente, ¿Desea reemplazarlo?"
 
