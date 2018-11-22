@@ -112,7 +112,7 @@ export class ComponentListMainClients extends Component {
     }
 
     _viewInformationClient(entity) {
-        const { nameClient, participation, term, relevantInformation, fnShowForm, changeValueListClient, clientInformacion } = this.props;
+        const { nameClient, participation, term, relevantInformation, fnShowForm } = this.props;
         fnShowForm(MAIN_CLIENTS, true);
         nameClient.onChange(entity.nameClient);
         participation.onChange(entity.participation.toString());

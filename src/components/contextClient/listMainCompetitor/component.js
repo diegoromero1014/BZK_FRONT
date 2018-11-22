@@ -3,7 +3,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue, validateValueExist, xssValidation } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue, validateValueExist } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
     ONLY_POSITIVE_INTEGER
@@ -98,7 +98,7 @@ export class ComponentListMainCompetitor extends Component {
     }
 
     _viewInformationCompetitor(entity) {
-        const { nameCompetitor, participation, observations, fnShowForm, changeValueListClient, clientInformacion } = this.props;
+        const { nameCompetitor, participation, observations, fnShowForm } = this.props;
         fnShowForm(MAIN_COMPETITOR, true);
         nameCompetitor.onChange(entity.nameCompetitor);
         participation.onChange(entity.participation.toString());
