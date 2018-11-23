@@ -195,7 +195,7 @@ export class ComponentListLineBusiness extends Component {
                                     <Input
                                         name="contextLineBusiness"
                                         type="text"
-                                        max="100"
+                                        max="50"
                                         placeholder="Línea de neogcio"
                                         {...contextLineBusiness}
                                         touched={this.state.errorForm || registrationRequired}
@@ -208,7 +208,7 @@ export class ComponentListLineBusiness extends Component {
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="participation"
+                                        name="participationLB"
                                         type="text"
                                         min={0}
                                         max="11"
@@ -242,7 +242,7 @@ export class ComponentListLineBusiness extends Component {
                                 <div>
                                     <dt><span>% Contribución </span></dt>
                                     <Input
-                                        name="contribution"
+                                        name="contributionLB"
                                         type="text"
                                         min={0}
                                         max="11"

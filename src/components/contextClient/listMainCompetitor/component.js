@@ -3,7 +3,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue, validateValueExist, xssValidation } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue, validateValueExist } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
     ONLY_POSITIVE_INTEGER
@@ -98,7 +98,7 @@ export class ComponentListMainCompetitor extends Component {
     }
 
     _viewInformationCompetitor(entity) {
-        const { nameCompetitor, participation, observations, fnShowForm, changeValueListClient, clientInformacion } = this.props;
+        const { nameCompetitor, participation, observations, fnShowForm } = this.props;
         fnShowForm(MAIN_COMPETITOR, true);
         nameCompetitor.onChange(entity.nameCompetitor);
         participation.onChange(entity.participation.toString());
@@ -196,7 +196,7 @@ export class ComponentListMainCompetitor extends Component {
                                 <div>
                                     <dt><span>Nombre del competidor (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="nameCompetitor"
+                                        name="nameMainCompetitor"
                                         type="text"
                                         max="100"
                                         placeholder="Nombre del competidor"
@@ -211,7 +211,7 @@ export class ComponentListMainCompetitor extends Component {
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="participation"
+                                        name="participationMComp"
                                         type="text"
                                         min={0}
                                         max="11"
@@ -240,7 +240,7 @@ export class ComponentListMainCompetitor extends Component {
                                 <div>
                                     <dt><span>Observaciones</span></dt>
                                     <Textarea
-                                        name="observations"
+                                        name="observationsCompetitor"
                                         validateEnter={true}
                                         type="text"
                                         style={{ width: '100%' }}

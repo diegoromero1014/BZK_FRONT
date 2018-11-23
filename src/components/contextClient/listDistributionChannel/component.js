@@ -202,7 +202,7 @@ export class ComponentListDistributionChannel extends Component {
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="participation"
+                                        name="participationDC"
                                         type="text"
                                         min={0}
                                         max="11"
@@ -219,7 +219,7 @@ export class ComponentListDistributionChannel extends Component {
                                 <div>
                                     <dt><span>% Contribución</span></dt>
                                     <Input
-                                        name="contribution"
+                                        name="contributionDC"
                                         type="text"
                                         min={0}
                                         max="11"

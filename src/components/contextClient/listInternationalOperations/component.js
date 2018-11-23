@@ -315,7 +315,7 @@ export class ComponentListIntOperations extends Component {
                                     <div>
                                         <dt><span>Tipo de operación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                         <ComboBox
-                                            name="typeOperation"
+                                            name="typeOperationIntOpera"
                                             labelInput="Tipo de operación"
                                             {...typeOperation}
                                             valueProp={'id'}
@@ -330,7 +330,7 @@ export class ComponentListIntOperations extends Component {
                                     <div>
                                         <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                         <Input
-                                            name="participation"
+                                            name="participationIntOpe"
                                             type="text"
                                             min={0}
                                             max="11"
@@ -365,7 +365,7 @@ export class ComponentListIntOperations extends Component {
                                     <div>
                                         <dt><span>Descripción de la cobertura</span></dt>
                                         <Textarea
-                                            name="descriptionCoverage"
+                                            name="descriptionCoverageIntOpe"
                                             validateEnter={true}
                                             type="text"
                                             style={{ width: '100%' }}
@@ -386,7 +386,7 @@ export class ComponentListIntOperations extends Component {
                                     <div>
                                         <dt><span>País (<span style={{ color: "red" }}>*</span>)</span></dt>
                                         <ComboBox
-                                            name="idCountry"
+                                            name="idCountryIntOpe"
                                             labelInput="País"
                                             {...idCountry}
                                             value={idCountry.value}
@@ -402,7 +402,7 @@ export class ComponentListIntOperations extends Component {
                                     <div>
                                         <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                         <Input
-                                            name="participationCountry"
+                                            name="participationIntOpeCountry"
                                             type="text"
                                             min={0}
                                             max="11"
