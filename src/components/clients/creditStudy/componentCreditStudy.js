@@ -337,7 +337,6 @@ export class ComponentStudyCredit extends Component {
         const { fields: { contextClientField, customerTypology, controlLinkedPayments, inventoryPolicy }, clientInformacion,
             swtShowMessage, studyCreditReducer } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
-        const { contextClient } = infoClient;
         var allowSave = true;
         var contextClientInfo = studyCreditReducer.get('contextClient');
 
@@ -578,7 +577,7 @@ export class ComponentStudyCredit extends Component {
     }
 
     handleClickButtonPDF() {
-        const { existsPDFforTheSameDay, swtShowMessage, studyCreditReducer } = this.props;
+        const { swtShowMessage } = this.props;
 
         if (this.state.isPDFGenerated) {
             swtShowMessage(
@@ -659,7 +658,7 @@ export class ComponentStudyCredit extends Component {
     }
 
     componentWillUnmount() {
-        const { stopBlockToReport, id } = this.props;
+        const { stopBlockToReport} = this.props;
         let idClient = window.sessionStorage.getItem('idClientSelected');
         this._ismounted = false;
 
@@ -669,15 +668,15 @@ export class ComponentStudyCredit extends Component {
         // Informar al backend que el informe se puede liberar
         if (this.state.isEditable) {
             stopBlockToReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
-            }).catch((error) => {
+            }).catch(() => {
             })
         }
     }
 
     componentWillMount() {
         const { fields: { customerTypology, contextClientField, inventoryPolicy, controlLinkedPayments }, updateTitleNavBar, getContextClient, swtShowMessage, changeStateSaveData,
-            clientInformacion, selectsReducer, consultListWithParameterUbication,
-            getMasterDataFields, validateInfoCreditStudy, getUserBlockingReport, reducerGlobal, studyCreditReducer } = this.props;
+            clientInformacion, consultListWithParameterUbication,
+            getMasterDataFields, reducerGlobal } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
 
         if (_.isEmpty(infoClient)) {
@@ -701,7 +700,7 @@ export class ComponentStudyCredit extends Component {
                         });;
                     }
                 }
-            }, (reason) => {
+            }, () => {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             });
             updateTitleNavBar("Informe estudio de crédito");
@@ -721,7 +720,7 @@ export class ComponentStudyCredit extends Component {
                 const showButtonPDF = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GENERAR_PDF_ESTUDIO_CREDITO), false) && data.payload.data.data.id != null;
                 this.setState({ isPDFGenerated: data.payload.data.data.isPDFGenerated, showButtonPDF });
 
-            }, (reason) => {
+            }, () => {
                 changeStateSaveData(false, "");
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             });

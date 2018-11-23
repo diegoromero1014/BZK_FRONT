@@ -3,11 +3,10 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, validateValueExist, stringValidate, xssValidation } from '../../../actionsGlobal';
+import { handleBlurValueNumber, stringValidate } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
-    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+    ONLY_POSITIVE_INTEGER,
 } from '../../../constantsGlobal';
 
 import SweetAlert from '../../sweetalertFocus';
@@ -103,8 +102,7 @@ export class ComponentListLineBusiness extends Component {
     }
 
     _viewInformationLineBusiness(entity) {
-        const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient,
-            clientInformacion, contribution } = this.props;
+        const { contextLineBusiness, participation, experience, fnShowForm, contribution } = this.props;
         fnShowForm(LINE_OF_BUSINESS, true);
         contextLineBusiness.onChange(entity.lineOfBusiness);
         participation.onChange(entity.participation.toString());

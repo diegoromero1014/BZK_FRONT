@@ -11,7 +11,7 @@ import {
 const fieldsWithRules = {
     nameSupplier: { rules: [checkRequired, checkClientDescription, checkMaxLength(50), checkFirstCharacter] },
     participation: { rules: [checkRequired, checkNumberInRange(0, 100)] },
-    term: { rules: [checkRequired, checkNumberInRange(0, 100)] },
+    term: { rules: [checkRequired] },
     relevantInformation: { rules: [checkClientDescription, checkFirstCharacter] }
 }
 
