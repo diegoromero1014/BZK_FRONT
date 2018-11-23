@@ -7,10 +7,6 @@ import _ from 'lodash';
 import ToolTipComponent from '../toolTip/toolTipComponent';
 import { MESSAGE_CONTROL_LINKED_PAYMENTS } from './constants';
 import { changeValueListClient } from '../clientInformation/actions';
-import {
-    VALUE_REQUIERED, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
-} from '../../constantsGlobal';
 
 class ControlLinkedPayments extends Component {
 
