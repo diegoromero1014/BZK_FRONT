@@ -202,12 +202,12 @@ export class ComponentListDistributionChannel extends Component {
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="participationDC"
                                         type="text"
                                         min={0}
                                         max="11"
                                         placeholder="Participación"
                                         {...participation}
+                                        name="participationDC"
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 7)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -219,12 +219,12 @@ export class ComponentListDistributionChannel extends Component {
                                 <div>
                                     <dt><span>% Contribución</span></dt>
                                     <Input
-                                        name="contributionDC"
                                         type="text"
                                         min={0}
                                         max="11"
                                         placeholder="Contribución"
                                         {...contribution}
+                                        name="contributionDC"
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, false, 7)}
                                     />
                                 </div>
