@@ -957,7 +957,6 @@ export class ComponentStudyCredit extends Component {
                     }}>
                         <Row style={{ paddingTop: '8px' }}>
 
-
                             <Col style={paddingButtons} onClick={() => this._submitSaveContextClient("Avance")} >
                                 <button className="btn" type="button" style={{ backgroundColor: "#00B5AD" }} ><span >Guardar Avance</span></button>
                             </Col>
@@ -975,8 +974,6 @@ export class ComponentStudyCredit extends Component {
                             <Col style={paddingButtons} onClick={this._closeWindow} >
                                 <button className="btn btn-secondary modal-button-edit" type="button"><span >Cancelar</span></button>
                             </Col>
-
-
 
                         </Row>
                     </div>
@@ -1007,9 +1004,7 @@ export class ComponentStudyCredit extends Component {
                     text={"Señor usuario, en este momento el estudio de crédito esta siendo editado por " + this.state.userEditingPrevisita
                         + ". Por favor intentar mas tarde"}
                     onConfirm={this._closeShowErrorBlockedPrevisit}
-
                 />
-
             </form>
         )
     }

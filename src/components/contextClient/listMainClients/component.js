@@ -214,7 +214,7 @@ export class ComponentListMainClients extends Component {
                                 <div>
                                     <dt><span>Nombre del cliente (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="nameClient"
+                                        name="nameMainClient"
                                         type="text"
                                         max="100"
                                         placeholder="Nombre del cliente"
@@ -229,10 +229,10 @@ export class ComponentListMainClients extends Component {
                                 <div>
                                     <dt><span>Plazo (días) (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="term"
+                                        name="termMainClient"
                                         type="text"
                                         min={0}
-                                        max="3"
+                                        max="4"
                                         placeholder="Plazo"
                                         {...term}                                        
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, val)}
@@ -246,7 +246,7 @@ export class ComponentListMainClients extends Component {
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="participation"
+                                        name="participationMC"
                                         type="text"
                                         min={0}
                                         max="11"
@@ -280,7 +280,7 @@ export class ComponentListMainClients extends Component {
                                         </ToolTipComponent>
                                     </dt>
                                     <Textarea
-                                        name="relevantInformation"
+                                        name="relevantInformationMainClient"
                                         validateEnter={true}
                                         type="text"
                                         style={{ width: '100%' }}

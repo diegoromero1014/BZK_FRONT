@@ -212,7 +212,7 @@ export class ComponentListMainSupplier extends Component {
                                 <div>
                                     <dt><span>Nombre del proveedor (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="nameSupplier"
+                                        name="nameMainSupplier"
                                         type="text"
                                         max="100"
                                         placeholder="Nombre del proveedor"
@@ -227,10 +227,10 @@ export class ComponentListMainSupplier extends Component {
                                 <div>
                                     <dt><span>Plazo (días) (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="term"
+                                        name="termMainSupplier"
                                         type="text"
                                         min={0}
-                                        max="3"
+                                        max="4"
                                         placeholder="Plazo"
                                         {...term}
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, val)}
@@ -244,7 +244,7 @@ export class ComponentListMainSupplier extends Component {
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="participation"
+                                        name="participationMS"
                                         type="text"
                                         min={0}
                                         max="11"
@@ -278,7 +278,7 @@ export class ComponentListMainSupplier extends Component {
                                         </ToolTipComponent>
                                     </dt>
                                     <Textarea
-                                        name="relevantInformation"
+                                        name="relevantInformationMainSupplier"
                                         validateEnter={true}
                                         type="text"
                                         style={{ width: '100%' }}

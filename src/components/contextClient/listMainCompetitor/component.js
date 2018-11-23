@@ -196,7 +196,7 @@ export class ComponentListMainCompetitor extends Component {
                                 <div>
                                     <dt><span>Nombre del competidor (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="nameCompetitor"
+                                        name="nameMainCompetitor"
                                         type="text"
                                         max="100"
                                         placeholder="Nombre del competidor"
@@ -211,7 +211,7 @@ export class ComponentListMainCompetitor extends Component {
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="participation"
+                                        name="participationMComp"
                                         type="text"
                                         min={0}
                                         max="11"
@@ -240,7 +240,7 @@ export class ComponentListMainCompetitor extends Component {
                                 <div>
                                     <dt><span>Observaciones</span></dt>
                                     <Textarea
-                                        name="observations"
+                                        name="observationsCompetitor"
                                         validateEnter={true}
                                         type="text"
                                         style={{ width: '100%' }}
