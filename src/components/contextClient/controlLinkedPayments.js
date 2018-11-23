@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -11,7 +11,6 @@ import {
     VALUE_REQUIERED, VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../constantsGlobal';
-import { stringValidate, xssValidation } from '../../actionsGlobal';
 
 class ControlLinkedPayments extends Component {
 
@@ -31,7 +30,7 @@ class ControlLinkedPayments extends Component {
     }
 
     render() {
-        const { data, clientInformacion, controlLinkedPayments, controlLinkedPaymentsRequired, parentForm } = this.props;
+        const { clientInformacion, controlLinkedPayments, controlLinkedPaymentsRequired } = this.props;
         return (
             <Row style={{ padding: "20px 10px 10px 20px" }} onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <Col xs={12} md={12} lg={12}>
@@ -79,7 +78,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion }, ownerProps) {
+function mapStateToProps({ clientInformacion }) {
     return {
         clientInformacion
     };

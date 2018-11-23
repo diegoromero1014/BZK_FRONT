@@ -16,7 +16,7 @@ import { validateResponse } from '../../../actionsGlobal';
 import { MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import { UPDATE_CONTEXT_CLIENT } from '../constants';
 
-const fields = ["nameMainClient", "participationMC", "termMainClient", "relevantInformationMainClient"];
+const fields = [];
 
 class ButtonSaveListMainClients extends Component {
     constructor(props) {
@@ -107,7 +107,7 @@ class ButtonSaveListMainClients extends Component {
     }
 
     render() {
-        const { fields: { nameMainClient, participationMC, termMainClient, relevantInformationMainClient },
+        const {
             mainClientsComplete, idClient } = this.props;
         return (
             <form style={{ backgroundColor: "#FFFFFF" }}>
@@ -130,7 +130,6 @@ class ButtonSaveListMainClients extends Component {
                             </div>
                             <SecurityMessageComponent />
                             <ComponentListMainClients
-                                relevantInformation={relevantInformationMainClient}
                                 showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormMainClients}
                                 nameList="otherListMainCustomer" nameNoApplied="otherNoAppliedMainClients" />
                             <div className="modalBt4-footer modal-footer">
