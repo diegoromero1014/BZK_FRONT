@@ -212,11 +212,11 @@ export class ComponentListMainSupplier extends Component {
                                 <div>
                                     <dt><span>Nombre del proveedor (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="nameMainSupplier"
                                         type="text"
                                         max="100"
                                         placeholder="Nombre del proveedor"
                                         {...nameSupplier}                                        
+                                        name="nameMainSupplier"
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -227,12 +227,12 @@ export class ComponentListMainSupplier extends Component {
                                 <div>
                                     <dt><span>Plazo (días) (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="termMainSupplier"
                                         type="text"
                                         min={0}
                                         max="4"
                                         placeholder="Plazo"
                                         {...term}
+                                        name="termMainSupplier"
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, val)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -244,12 +244,12 @@ export class ComponentListMainSupplier extends Component {
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="participationMS"
                                         type="text"
                                         min={0}
                                         max="11"
                                         placeholder="Participación"
                                         {...participation}
+                                        name="participationMS"
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 7)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -278,7 +278,6 @@ export class ComponentListMainSupplier extends Component {
                                         </ToolTipComponent>
                                     </dt>
                                     <Textarea
-                                        name="relevantInformationMainSupplier"
                                         validateEnter={true}
                                         type="text"
                                         style={{ width: '100%' }}
@@ -286,6 +285,7 @@ export class ComponentListMainSupplier extends Component {
                                         rows={3}
                                         placeholder="Información relevante"
                                         {...relevantInformation}
+                                        name="relevantInformationMainSupplier"
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>

@@ -24,7 +24,7 @@ export class ComponentListLineBusiness extends Component {
             showConfirmDelete: false,
             entityDelete: null,
             entitySeleted: null,
-            errorForm: true,
+            errorForm: false,
             shouldUpdate: false
         }
         this.validateInfo = this.validateInfo.bind(this);
@@ -206,12 +206,12 @@ export class ComponentListLineBusiness extends Component {
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="participationLB"
                                         type="text"
                                         min={0}
                                         max="11"
                                         placeholder="Participación"
                                         {...participation}
+                                        name="participationLB"
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 7)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -240,13 +240,14 @@ export class ComponentListLineBusiness extends Component {
                                 <div>
                                     <dt><span>% Contribución </span></dt>
                                     <Input
-                                        name="contributionLB"
                                         type="text"
                                         min={0}
                                         max="11"
                                         placeholder="Contribución"
                                         {...contribution}
+                                        name="contributionLB"
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, false, 7)}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>

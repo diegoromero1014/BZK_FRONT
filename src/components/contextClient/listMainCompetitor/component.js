@@ -196,11 +196,11 @@ export class ComponentListMainCompetitor extends Component {
                                 <div>
                                     <dt><span>Nombre del competidor (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="nameMainCompetitor"
                                         type="text"
                                         max="100"
                                         placeholder="Nombre del competidor"
                                         {...nameCompetitor}
+                                        name="nameMainCompetitor"
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -211,12 +211,12 @@ export class ComponentListMainCompetitor extends Component {
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="participationMComp"
                                         type="text"
                                         min={0}
                                         max="11"
                                         placeholder="Participación"
                                         {...participation}
+                                        name="participationMComp"
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 7)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -240,7 +240,6 @@ export class ComponentListMainCompetitor extends Component {
                                 <div>
                                     <dt><span>Observaciones</span></dt>
                                     <Textarea
-                                        name="observationsCompetitor"
                                         validateEnter={true}
                                         type="text"
                                         style={{ width: '100%' }}
@@ -248,6 +247,7 @@ export class ComponentListMainCompetitor extends Component {
                                         rows={3}
                                         placeholder="Observaciones"
                                         {...observations}
+                                        name="observationsCompetitor"
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>

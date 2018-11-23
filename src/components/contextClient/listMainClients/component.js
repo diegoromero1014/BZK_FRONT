@@ -214,11 +214,11 @@ export class ComponentListMainClients extends Component {
                                 <div>
                                     <dt><span>Nombre del cliente (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="nameMainClient"
                                         type="text"
                                         max="100"
                                         placeholder="Nombre del cliente"
                                         {...nameClient}                                        
+                                        name="nameMainClient"
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -229,12 +229,12 @@ export class ComponentListMainClients extends Component {
                                 <div>
                                     <dt><span>Plazo (días) (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="termMainClient"
                                         type="text"
                                         min={0}
                                         max="4"
                                         placeholder="Plazo"
-                                        {...term}                                        
+                                        {...term}
+                                        name="termMainClient"
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, val)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -246,12 +246,12 @@ export class ComponentListMainClients extends Component {
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="participationMC"
                                         type="text"
                                         min={0}
                                         max="11"
                                         placeholder="Participación"
-                                        {...participation}                                        
+                                        {...participation}
+                                        name="participationMC"
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 7)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -280,14 +280,14 @@ export class ComponentListMainClients extends Component {
                                         </ToolTipComponent>
                                     </dt>
                                     <Textarea
-                                        name="relevantInformationMainClient"
                                         validateEnter={true}
                                         type="text"
                                         style={{ width: '100%' }}
                                         max="1300"
                                         rows={3}
                                         placeholder="Información relevante"
-                                        {...relevantInformation}                                        
+                                        {...relevantInformation}
+                                        name="relevantInformationMainClient"
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
