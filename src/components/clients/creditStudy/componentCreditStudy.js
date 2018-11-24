@@ -510,6 +510,7 @@ export class ComponentStudyCredit extends Component {
                 const { saveCreditStudy, swtShowMessage, changeStateSaveData } = this.props;
                 changeStateSaveData(true, MESSAGE_LOAD_DATA);
                 saveCreditStudy(this._createJsonSaveContextClient(isAvance)).then((data) => {
+        
                     changeStateSaveData(false, "");
 
                     if (!validateResponse(data)) {
@@ -519,6 +520,7 @@ export class ComponentStudyCredit extends Component {
 
                     if (!validateWhileListResponse(data)) {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_INVALID_INPUT);
+                        return;
                     }
 
                      else {
