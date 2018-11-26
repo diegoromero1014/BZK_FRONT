@@ -319,10 +319,15 @@ export const checkRichTextRequired = value => {
 
 export const checkNumberInRange = (min, max) => value => {
     let message = null;
+    let number;
     if (_.isNil(value)) {
         return message;
     }
-    let number = parseFloat(value.replace(",",""));
+    if (typeof value == 'string') {
+        number = parseFloat(value.replace(",",""));
+    } else {
+        number = parseFloat(value);
+    }
     if (number < min || number > max) {
         message = MESSAGE_WARNING_RANGE(min, max);
     }

@@ -47,7 +47,9 @@ import { changeStateSaveData } from "../dashboard/actions";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { showLoading } from "../loading/actions";
 import { saveCreditStudy } from "../clients/creditStudy/actions";
-import { validateResponse, stringValidate, xssValidation, onSessionExpire, validateFields, validateWhileListResponse } from "../../actionsGlobal";
+import {
+    validateResponse, stringValidate, xssValidation, onSessionExpire, validateFields,
+    validateWhileListResponse, replaceCommaInNumber } from "../../actionsGlobal";
 import { updateTitleNavBar } from "../navBar/actions";
 import {
     seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
@@ -1301,21 +1303,25 @@ class clientEdit extends Component {
         const listLineOfBusiness = clientInformacion.get('listParticipation');
         _.map(listLineOfBusiness, (item) => {
             item.id = item.id.toString().includes('line_') ? null : item.id;
+            item.experience = replaceCommaInNumber(item.experience); 
             return item;
         });
         const listDistribution = clientInformacion.get('listDistribution');
         _.map(listDistribution, (item) => {
             item.id = item.id.toString().includes('dist_') ? null : item.id;
+            item.term = replaceCommaInNumber(item.term);
             return item;
         });
         const listMainCustomer = clientInformacion.get('listMainCustomer');
         _.map(listMainCustomer, (item) => {
             item.id = item.id.toString().includes('mainC_') ? null : item.id;
+            item.term = replaceCommaInNumber(item.term);
             return item;
         });
         const listMainSupplier = clientInformacion.get('listMainSupplier');
         _.map(listMainSupplier, (item) => {
             item.id = item.id.toString().includes('mainS_') ? null : item.id;
+            item.term = replaceCommaInNumber(item.term);
             return item;
         });
         const listMainCompetitor = clientInformacion.get('listMainCompetitor');

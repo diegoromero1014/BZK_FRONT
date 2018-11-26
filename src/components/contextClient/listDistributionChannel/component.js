@@ -226,6 +226,7 @@ export class ComponentListDistributionChannel extends Component {
                                         {...contribution}
                                         name="contributionDC"
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, false, 7)}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>

@@ -12,7 +12,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { showLoading } from '../../loading/actions';
 import { getContextClient } from '../../clients/creditStudy/actions';
 
-import { validateResponse } from '../../../actionsGlobal';
+import { validateResponse, replaceCommaInNumber } from '../../../actionsGlobal';
 import { MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import { UPDATE_CONTEXT_CLIENT } from '../constants';
 
@@ -87,11 +87,13 @@ class ButtonSaveListMainClients extends Component {
         const listMainCustomer = clientInformacion.get('otherListMainCustomer');
         _.map(listMainCustomer, (item) => {
             item.id = item.id.toString().includes('mainC_') ? null : item.id;
+            item.term = replaceCommaInNumber(item.term);
             return item;
         });
         const listMainSupplier = clientInformacion.get('otherListMainSupplier');
         _.map(listMainSupplier, (item) => {
             item.id = item.id.toString().includes('mainS_') ? null : item.id;
+            item.term = replaceCommaInNumber(item.term);
             return item;
         });
 

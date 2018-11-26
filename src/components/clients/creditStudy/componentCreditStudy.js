@@ -34,7 +34,9 @@ import {
 
 import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_COMPETITOR, MAIN_SUPPLIER, INT_OPERATIONS } from '../../contextClient/constants';
 import * as constantsSelects from '../../selectsComponent/constants';
-import { validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport, xssValidation, validateWhileListResponse } from '../../../actionsGlobal';
+import { 
+    validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport,
+    xssValidation, validateWhileListResponse, replaceCommaInNumber } from '../../../actionsGlobal';
 import { GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../../clientEdit/constants';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_REPLACE_PDF,
@@ -246,21 +248,25 @@ export class ComponentStudyCredit extends Component {
         const listLineOfBusiness = clientInformacion.get('listParticipation');
         _.map(listLineOfBusiness, (item) => {
             item.id = item.id.toString().includes('line_') ? null : item.id;
+            item.experience = replaceCommaInNumber(item.experience); 
             return item;
         });
         const listDistribution = clientInformacion.get('listDistribution');
         _.map(listDistribution, (item) => {
             item.id = item.id.toString().includes('dist_') ? null : item.id;
+            item.term = replaceCommaInNumber(item.term);
             return item;
         });
         const listMainCustomer = clientInformacion.get('listMainCustomer');
         _.map(listMainCustomer, (item) => {
             item.id = item.id.toString().includes('mainC_') ? null : item.id;
+            item.term = replaceCommaInNumber(item.term);
             return item;
         });
         const listMainSupplier = clientInformacion.get('listMainSupplier');
         _.map(listMainSupplier, (item) => {
             item.id = item.id.toString().includes('mainS_') ? null : item.id;
+            item.term = replaceCommaInNumber(item.term);
             return item;
         });
         const listMainCompetitor = clientInformacion.get('listMainCompetitor');
@@ -510,6 +516,7 @@ export class ComponentStudyCredit extends Component {
                 const { saveCreditStudy, swtShowMessage, changeStateSaveData } = this.props;
                 changeStateSaveData(true, MESSAGE_LOAD_DATA);
                 saveCreditStudy(this._createJsonSaveContextClient(isAvance)).then((data) => {
+        
                     changeStateSaveData(false, "");
 
                     if (!validateResponse(data)) {
@@ -519,6 +526,7 @@ export class ComponentStudyCredit extends Component {
 
                     if (!validateWhileListResponse(data)) {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_INVALID_INPUT);
+                        return;
                     }
 
                      else {

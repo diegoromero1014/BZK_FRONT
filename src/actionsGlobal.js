@@ -459,6 +459,18 @@ export function onSessionExpire() {
     redirectUrl("/login");
 }
 
+export function replaceCommaInNumber(value) {
+    if (_.isNil(value)) {
+        return value;
+    }
+
+    if (typeof value == 'string') {
+        return value.replace(',','');
+    }
+
+    return value;
+}
+
 export function validateFields(values, validations, errors) {
     validations.forEach(row => {
         row.fields.forEach(field => {
