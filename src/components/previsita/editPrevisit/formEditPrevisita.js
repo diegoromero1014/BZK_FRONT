@@ -209,6 +209,7 @@ class FormEditPrevisita extends Component {
         this._canUserEditPrevisita = this._canUserEditPrevisita.bind(this);
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
         this._validateBlockOnSave = this._validateBlockOnSave.bind(this);
+        this.processValidation = this.processValidation.bind(this);
 
         this._ismounted = false;
     }
@@ -436,7 +437,7 @@ class FormEditPrevisita extends Component {
         const { selectsReducer } = this.props;
         idTypeVisitAuxTwo = idTypeVisitAux;
         const typeSeleted = _.filter(selectsReducer.get(PREVISIT_TYPE), ['id', parseInt(idTypeVisitAux)]);
-        
+
         if (typeSeleted !== null && typeSeleted !== '' && typeSeleted !== undefined) {
             valueTypePrevisit = typeSeleted[0].key;
         }
@@ -726,7 +727,6 @@ class FormEditPrevisita extends Component {
             errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
 
-
         if (!errorInForm) {
             let dataBanco = [];
             _.map(participants.toArray(),
@@ -758,6 +758,7 @@ class FormEditPrevisita extends Component {
                     }
                 }
             );
+
             if (dataClient.length > 0 && dataClient[0] === undefined) {
                 dataClient = [];
             }
@@ -811,6 +812,7 @@ class FormEditPrevisita extends Component {
                             if (!response.allowUserPreVisit) {
                                 swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha y hora para el mismo usuario.');
                             } else {
+                                const that = this;
                                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
                                 createPrevisit(previsitJson).then((data) => {
                                     changeStateSaveData(false, "");
@@ -821,6 +823,13 @@ class FormEditPrevisita extends Component {
                                             typeMessage = "success";
                                             swtShowMessage('success', "Edición previsita", "Señor usuario, la previsita se editó de forma exitosa.", { onConfirmCallback: this._closeMessageCreatePreVisit });
                                         } else {
+                                            if ((_.get(data, 'payload.data.status') === 500)) {
+                                                const validationFromServer = _.get(data, 'payload.data.data');
+                                                _.forEach(validationFromServer, function (field) {
+                                                    that.processValidation(field);
+                                                });
+                                            }
+
                                             typeMessage = "error";
                                             swtShowMessage('error', "Edición previsita", "Señor usuario, ocurrió un error editando la previsita.", { onConfirmCallback: this._closeMessageCreatePreVisit });
                                         }
@@ -841,8 +850,33 @@ class FormEditPrevisita extends Component {
             typeMessage = "error";
             swtShowMessage('error', 'Campos obligatorios', errorMessage, { onConfirmCallback: this._closeMessageCreatePreVisit });
         }
+    }
 
-
+    processValidation(field) {
+        if (field && field.fieldName) {
+            switch (field.fieldName) {
+                case 'adaptMessage':
+                    this.setState({ adaptMessageError: field.message });
+                    break;
+                case 'principalObjective':
+                    this.setState({ targetPrevisitError: field.message });
+                    break;
+                case 'observations':
+                    this.setState({ pendingPrevisitError: field.message });
+                    break;
+                case 'constructiveTension':
+                    this.setState({ constructiveTensionError: field.message });
+                    break;
+                case 'clientTeach':
+                    this.setState({ clientTeachError: field.message });
+                    break;
+                case 'controlConversation':
+                    this.setState({ controlConversationError: field.message });
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     componentWillMount() {

@@ -127,6 +127,7 @@ class FormPrevisita extends Component {
         this._closeCancelConfirmChanType = this._closeCancelConfirmChanType.bind(this);
         this._changeDurationPreVisit = this._changeDurationPreVisit.bind(this);
         this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
+        this.processValidation = this.processValidation.bind(this);
     }
 
     _closeMessageCreatePreVisit() {
@@ -630,6 +631,7 @@ class FormPrevisita extends Component {
                             if (!response.allowUserPreVisit) {
                                 swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha y hora para el mismo usuario.');
                             } else {
+                                const that = this;
                                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
                                 createPrevisit(previsitJson).then((data) => {
                                     changeStateSaveData(false, "");
@@ -639,8 +641,14 @@ class FormPrevisita extends Component {
                                         if ((_.get(data, 'payload.data.status') === 200)) {
                                             typeMessage = "success";
                                             swtShowMessage('success', "Creación previsita", "Señor usuario, la previsita se creó de forma exitosa.", { onConfirmCallback: this._closeMessageCreatePreVisit });
-
                                         } else {
+                                            if ((_.get(data, 'payload.data.status') === 500)) {
+                                                const validationFromServer = _.get(data, 'payload.data.data');
+                                                _.forEach(validationFromServer, function (field) {
+                                                    that.processValidation(field);
+                                                });
+                                            }
+
                                             typeMessage = "error";
                                             swtShowMessage('error', "Creación previsita", "Señor usuario, ocurrió un error creando la previsita.", { onConfirmCallback: this._closeMessageCreatePreVisit });
                                         }
@@ -660,6 +668,33 @@ class FormPrevisita extends Component {
         } else {
             typeMessage = "error";
             swtShowMessage('error', "Campos obligatorios", errorMessage, { onConfirmCallback: this._closeMessageCreatePreVisit });
+        }
+    }
+
+    processValidation(field) {
+        if (field && field.fieldName) {
+            switch (field.fieldName) {
+                case 'adaptMessage':
+                    this.setState({ adaptMessageError: field.message });
+                    break;
+                case 'principalObjective':
+                    this.setState({ targetPrevisitError: field.message });
+                    break;
+                case 'observations':
+                    this.setState({ pendingPrevisitError: field.message });
+                    break;
+                case 'constructiveTension':
+                    this.setState({ constructiveTensionError: field.message });
+                    break;
+                case 'clientTeach':
+                    this.setState({ clientTeachError: field.message });
+                    break;
+                case 'controlConversation':
+                    this.setState({ controlConversationError: field.message });
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
