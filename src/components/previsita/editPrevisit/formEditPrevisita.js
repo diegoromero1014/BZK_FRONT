@@ -899,7 +899,7 @@ class FormEditPrevisita extends Component {
             getMasterDataFields([PREVISIT_TYPE]);
             showLoading(true, 'Cargando...');
             detailPrevisit(id).then((result) => {
-                const { fields: { }, addListParticipant, selectsReducer } = this.props;
+                const { addListParticipant, selectsReducer } = this.props;
                 let part = result.payload.data.data;
                 let listParticipants = [];
                 datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
