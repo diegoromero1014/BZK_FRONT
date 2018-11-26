@@ -57,8 +57,6 @@ class TextareaComponent extends Component {
 
 
     _onChange(e, event) {
-        const { onChange, error, touched } = this.props;
-
         this.setState({
             value: e.target.value
         });
@@ -77,9 +75,7 @@ class TextareaComponent extends Component {
 
 
     render() {
-        const { nameInput, value, style, type, placeholder, max, touched, error,
-            name, onChange, min, defaultValue, rows, onKey, disabled
-        } = this.props;
+        const { nameInput, style, placeholder, max, touched, error, name, rows, disabled } = this.props;
 
         return (
             <div className={disabled}>
