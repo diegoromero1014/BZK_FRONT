@@ -1,12 +1,13 @@
 import _ from 'lodash';
 import {
-    processRules, checkMaxLength, checkNameOtherParticipant, checkPositionOtherParticipant, checkCompanyOtherParticipant
+    processRules, checkMaxLength, checkNameOtherParticipant, checkPositionOtherParticipant,
+    checkCompanyOtherParticipant, checkFirstCharacter
 } from './../../validationsFields/rulesField';
 
 const fieldsWithRules = {
-    nombrePersona: { rules: [checkNameOtherParticipant] },
-    cargoPersona: { rules: [checkPositionOtherParticipant, checkMaxLength(1000)] },
-    empresaPersona: { rules: [checkCompanyOtherParticipant] }
+    nombrePersona: { rules: [checkFirstCharacter, checkNameOtherParticipant] },
+    cargoPersona: { rules: [checkFirstCharacter, checkPositionOtherParticipant, checkMaxLength(1000)] },
+    empresaPersona: { rules: [checkFirstCharacter, checkCompanyOtherParticipant] }
 };
 
 export const fields = _.keys(fieldsWithRules);

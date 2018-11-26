@@ -1,48 +1,44 @@
 import React, { Component } from "react";
 import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
-import { redirectUrl } from "../../globalComponents/actions";
 import { Col, Row } from "react-flexbox-grid";
+import moment from "moment";
+import $ from "jquery";
+import _ from "lodash";
+import numeral from 'numeral';
+
 import Input from "../../../ui/input/inputComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import { PREVISIT_TYPE } from "../../selectsComponent/constants";
-import { getMasterDataFields } from "../../selectsComponent/actions";
 import ParticipantesCliente from "../../participantsVisitPre/participantesCliente";
 import ParticipantesBancolombia from "../../participantsVisitPre/participantesBancolombia";
 import ParticipantesOtros from "../../participantsVisitPre/participantesOtros";
-import {
-    EDITAR,
-    MESSAGE_SAVE_DATA,
-    SAVE_DRAFT,
-    SAVE_PUBLISHED,
-    TITLE_BANC_PARTICIPANTS,
-    TITLE_CLIENT_PARTICIPANTS,
-    TITLE_OTHERS_PARTICIPANTS,
-    MESSAGE_ERROR,
-    ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS,
-    VALUE_REQUIERED,
-    MESSAGE_ERROR_SWEET_ALERT,
-    TIME_REQUEST_BLOCK_REPORT,
-    REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
-
-} from "../../../constantsGlobal";
-import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, xssValidation } from "../../../actionsGlobal";
-import { PROPUEST_OF_BUSINESS } from "../constants";
-import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
-import { createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit, canEditPrevisita, disableBlockedReport, changeOwnerDraftPrevisit } from "../actions";
 import Challenger from "../../methodologyChallenger/component";
-import { changeStateSaveData } from "../../dashboard/actions";
-import { MENU_CLOSED } from "../../navBar/constants";
 import SweetAlert from "../../sweetalertFocus";
-import moment from "moment";
-import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
-import _ from "lodash";
 import Tooltip from "../../toolTip/toolTipComponent";
+
+import { redirectUrl } from "../../globalComponents/actions";
+import { getMasterDataFields } from "../../selectsComponent/actions";
+import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
+import { changeStateSaveData } from "../../dashboard/actions";
 import { showLoading } from "../../loading/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import numeral from 'numeral';
+import {
+    createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit, canEditPrevisita, disableBlockedReport,
+    changeOwnerDraftPrevisit
+} from "../actions";
+import {
+    consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, xssValidation
+} from "../../../actionsGlobal";
+
+import { PREVISIT_TYPE } from "../../selectsComponent/constants";
+import { PROPUEST_OF_BUSINESS } from "../constants";
+import {
+    EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS,
+    TITLE_OTHERS_PARTICIPANTS, MESSAGE_ERROR, ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID,
+    MESSAGE_ERROR_SWEET_ALERT, TIME_REQUEST_BLOCK_REPORT, REGEX_SIMPLE_XSS_MESAGE
+} from "../../../constantsGlobal";
 
 const fields = [];
 var datePrevisitLastReview;
@@ -63,8 +59,6 @@ var titleMessageTarget = "En este campo deberá registrar de manera clara cual e
 var titleMessageTypePrevisit = "En este campo se deberá indicar la razón de la visita si es: seguimiento (mantenimiento de la relación con el cliente) o propuesta comercial (cuando lleva un insight o enseñanza al cliente).\n" +
     "Si el tipo de visita es propuesta comercial, se deberá responder la sección Metodología Challenger.";
 
-let dateVisitLastReview;
-let showMessageCreatePreVisit = false;
 let typeMessage = "success";
 let titleMessage = "";
 let message = "";
@@ -88,8 +82,6 @@ const validate = values => {
 };
 
 const stylesButtons = {
-
-
     "BUTTON_CONTENT": {
         form: {
             width: "580px",
@@ -194,6 +186,7 @@ class FormEditPrevisita extends Component {
             constructiveTensionTouch: false,
             constructiveTensionError: ""
         };
+
         this._submitCreatePrevisita = this._submitCreatePrevisita.bind(this);
         this._changeTypePreVisit = this._changeTypePreVisit.bind(this);
         this._changeDatePreVisit = this._changeDatePreVisit.bind(this);
@@ -216,22 +209,17 @@ class FormEditPrevisita extends Component {
         this._canUserEditPrevisita = this._canUserEditPrevisita.bind(this);
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
         this._validateBlockOnSave = this._validateBlockOnSave.bind(this);
-
+        this.processValidation = this.processValidation.bind(this);
 
         this._ismounted = false;
     }
 
-
     componentDidMount() {
-
         this._ismounted = true;
-
     }
 
     _validateBlockOnSave() {
-
         showLoading(true, "Cargando...");
-
         const myUserName = window.localStorage.getItem('userNameFront')
 
         this._canUserEditPrevisita(myUserName).then((success) => {
@@ -245,44 +233,33 @@ class FormEditPrevisita extends Component {
 
     _closeShowErrorBlockedPrevisit() {
         this.setState({ showErrorBlockedPreVisit: false })
-
         if (this.state.shouldRedirect) {
             redirectUrl("/dashboard/clientInformation")
         }
-
     }
 
     _canUserEditPrevisita(myUserName) {
-
         const { canEditPrevisita, id, swtShowMessage } = this.props;
 
         return canEditPrevisita(id).then((success) => {
-
             let username = success.payload.data.data.username
-
             let name = success.payload.data.data.name
 
-
-            if(! this._ismounted) {
+            if (!this._ismounted) {
                 clearInterval(this.state.intervalId);
                 return;
             }
 
-            if(success.payload.data.data == null) {
+            if (success.payload.data.data == null) {
                 clearInterval(this.state.intervalId);
-
                 this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: "Error", shouldRedirect: true })
-
                 return;
             }
-
 
             if (_.isNull(username)) {
                 // Error servidor
                 swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
-
                 return Promise.reject(new Error('Error interno del servidor'))
-
             } else if (username.toUpperCase() === myUserName.toUpperCase()) {
                 // Usuario pidiendo permiso es el mismo que esta bloqueando
                 if (!this.state.isEditable) {
@@ -292,19 +269,23 @@ class FormEditPrevisita extends Component {
                         showErrorBlockedPreVisit: false,
                         showMessage: false,
                         isEditable: true,
-                        intervalId: setInterval(() => { this._canUserEditPrevisita(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
+                        intervalId: setInterval(
+                            () => { this._canUserEditPrevisita(myUserName) },
+                            TIME_REQUEST_BLOCK_REPORT
+                        )
                     })
-
-
                 }
-
             } else {
                 // El reporte esta siendo editado por otra persona
 
                 if (this.state.isEditable) {
                     // Estoy editando pero no tengo permisos
                     // Salir de edicion y detener intervalo
-                    this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true, isEditable: false })
+                    this.setState({
+                        showErrorBlockedPreVisit: true, userEditingPrevisita: name,
+                        shouldRedirect: true, isEditable: false
+                    });
+
                     clearInterval(this.state.intervalId);
                 } else {
                     // Mostar mensaje de el usuario que tiene bloqueado el informe
@@ -320,24 +301,15 @@ class FormEditPrevisita extends Component {
     }
 
     _editPreVisit() {
-
         showLoading(true, "Cargando...");
-
-        const { swtShowMessage } = this.props;
-
-        let detailPrevisitData = this.props.previsitReducer.get('detailPrevisit').data;
         const myUserName = window.localStorage.getItem('userNameFront')
 
         this._canUserEditPrevisita(myUserName).then((success) => {
-
             showLoading(false, null);
-
         }).catch((error) => {
             showLoading(false, null);
         })
-
     }
-
 
     _onClickPDF() {
         const { pdfDescarga, id } = this.props;
@@ -427,7 +399,9 @@ class FormEditPrevisita extends Component {
     }
 
     _changeTypePreVisit(value) {
-        if (value !== undefined && value !== "" && value !== null && value !== idTypeVisitAuxTwo && !contollerErrorChangeType && firstLoadInfo) {
+        if (value !== undefined && value !== "" && value !== null && value !== idTypeVisitAuxTwo &&
+            !contollerErrorChangeType && firstLoadInfo) {
+
             if (valueTypePrevisit === PROPUEST_OF_BUSINESS) {
                 contollerErrorChangeType = true;
                 idTypeVisitAux = value;
@@ -439,9 +413,15 @@ class FormEditPrevisita extends Component {
                 idTypeVisitAux = value;
                 this._closeConfirmChangeType();
             }
+
+            this.setState({
+                typePreVisitError: null
+            });
+
         } else {
             firstLoadInfo = true;
         }
+
         let lugarSelector = $('.txtLugar');
         let input = lugarSelector.find("input");
         input.focus();
@@ -457,9 +437,11 @@ class FormEditPrevisita extends Component {
         const { selectsReducer } = this.props;
         idTypeVisitAuxTwo = idTypeVisitAux;
         const typeSeleted = _.filter(selectsReducer.get(PREVISIT_TYPE), ['id', parseInt(idTypeVisitAux)]);
+
         if (typeSeleted !== null && typeSeleted !== '' && typeSeleted !== undefined) {
             valueTypePrevisit = typeSeleted[0].key;
         }
+
         this.setState({
             typePreVisit: parseInt(idTypeVisitAux),
             showConfirmChangeTypeVisit: false,
@@ -555,8 +537,6 @@ class FormEditPrevisita extends Component {
         });
     }
 
-    
-
     _clickSeletedTab(tab) {
         if (tab === 1) {
             this.setState({
@@ -596,22 +576,31 @@ class FormEditPrevisita extends Component {
     }
 
     _submitCreatePrevisita() {
+        const {
+            participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage
+        } = this.props;
 
-        const { participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage } = this.props;
         let errorInForm = false;
         var errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
-        if (this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "") {
+
+        if (this.state.typePreVisit === null || this.state.typePreVisit === undefined ||
+            this.state.typePreVisit === "") {
+
             errorInForm = true;
             this.setState({
                 typePreVisitError: "Debe seleccionar una opción"
             });
         }
-        if (this.state.datePreVisit === null || this.state.datePreVisit === undefined || this.state.datePreVisit === "") {
+
+        if (this.state.datePreVisit === null || this.state.datePreVisit === undefined ||
+            this.state.datePreVisit === "") {
+
             errorInForm = true;
             this.setState({
                 datePreVisitError: "Debe seleccionar una opción"
             });
         }
+
         if (this.state.lugarPrevisit === null || this.state.lugarPrevisit === undefined || this.state.lugarPrevisit === "") {
             errorInForm = true;
             this.setState({
@@ -624,6 +613,7 @@ class FormEditPrevisita extends Component {
             });
             errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
+
         if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
             errorInForm = true;
             this.setState({
@@ -670,7 +660,7 @@ class FormEditPrevisita extends Component {
                     constructiveTensionTouch: true
                 });
             }
-            
+
         } else {
             this.setState({
                 clientTeachError: null,
@@ -680,10 +670,10 @@ class FormEditPrevisita extends Component {
             });
         }
 
-         /**
-         * Validaciones texto enriquecido
-         */
-        
+        /**
+        * Validaciones texto enriquecido
+        */
+
         if (xssValidation(this.state.targetPrevisit, true)) {
             errorInForm = true;
             this.setState({
@@ -692,7 +682,7 @@ class FormEditPrevisita extends Component {
             errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
 
-        
+
         if (xssValidation(this.state.pendingPrevisit, true)) {
             errorInForm = true;
             this.setState({
@@ -737,7 +727,6 @@ class FormEditPrevisita extends Component {
             errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
 
-        
         if (!errorInForm) {
             let dataBanco = [];
             _.map(participants.toArray(),
@@ -769,6 +758,7 @@ class FormEditPrevisita extends Component {
                     }
                 }
             );
+
             if (dataClient.length > 0 && dataClient[0] === undefined) {
                 dataClient = [];
             }
@@ -822,6 +812,7 @@ class FormEditPrevisita extends Component {
                             if (!response.allowUserPreVisit) {
                                 swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha y hora para el mismo usuario.');
                             } else {
+                                const that = this;
                                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
                                 createPrevisit(previsitJson).then((data) => {
                                     changeStateSaveData(false, "");
@@ -830,30 +821,62 @@ class FormEditPrevisita extends Component {
                                     } else {
                                         if ((_.get(data, 'payload.data.status') === 200)) {
                                             typeMessage = "success";
-                                            swtShowMessage('success',"Edición previsita","Señor usuario, la previsita se editó de forma exitosa.", {onConfirmCallback: this._closeMessageCreatePreVisit});
+                                            swtShowMessage('success', "Edición previsita", "Señor usuario, la previsita se editó de forma exitosa.", { onConfirmCallback: this._closeMessageCreatePreVisit });
                                         } else {
+                                            if ((_.get(data, 'payload.data.status') === 500)) {
+                                                const validationFromServer = _.get(data, 'payload.data.data');
+                                                _.forEach(validationFromServer, function (field) {
+                                                    that.processValidation(field);
+                                                });
+                                            }
+
                                             typeMessage = "error";
-                                            swtShowMessage('error',"Edición previsita","Señor usuario, ocurrió un error editando la previsita.", {onConfirmCallback: this._closeMessageCreatePreVisit});                                            
+                                            swtShowMessage('error', "Edición previsita", "Señor usuario, ocurrió un error editando la previsita.", { onConfirmCallback: this._closeMessageCreatePreVisit });
                                         }
                                     }
                                 }, (reason) => {
                                     changeStateSaveData(false, "");
-                                    typeMessage = "error";  
-                                    swtShowMessage('error','Edición previsita','Señor usuario, ocurrió un error editando la previsita.',{onConfirmCallback: this._closeMessageCreatePreVisit}); 
+                                    typeMessage = "error";
+                                    swtShowMessage('error', 'Edición previsita', 'Señor usuario, ocurrió un error editando la previsita.', { onConfirmCallback: this._closeMessageCreatePreVisit });
                                 });
                             }
                         }
                     }
                 });
             } else {
-                swtShowMessage('error','Error participantes',"Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia.")
+                swtShowMessage('error', 'Error participantes', "Señor usuario, para guardar una visita como mínimo debe agregar un participante por parte del Grupo Bancolombia.")
             }
         } else {
             typeMessage = "error";
-            swtShowMessage('error','Campos obligatorios',errorMessage,{onConfirmCallback: this._closeMessageCreatePreVisit}); 
+            swtShowMessage('error', 'Campos obligatorios', errorMessage, { onConfirmCallback: this._closeMessageCreatePreVisit });
         }
+    }
 
-
+    processValidation(field) {
+        if (field && field.fieldName) {
+            switch (field.fieldName) {
+                case 'adaptMessage':
+                    this.setState({ adaptMessageError: field.message });
+                    break;
+                case 'principalObjective':
+                    this.setState({ targetPrevisitError: field.message });
+                    break;
+                case 'observations':
+                    this.setState({ pendingPrevisitError: field.message });
+                    break;
+                case 'constructiveTension':
+                    this.setState({ constructiveTensionError: field.message });
+                    break;
+                case 'clientTeach':
+                    this.setState({ clientTeachError: field.message });
+                    break;
+                case 'controlConversation':
+                    this.setState({ controlConversationError: field.message });
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     componentWillMount() {
@@ -862,20 +885,26 @@ class FormEditPrevisita extends Component {
         idTypeVisitAux = null;
         idTypeVisitAuxTwo = null;
         contollerErrorChangeType = false;
-        const { nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, addParticipant, consultParameterServer, showLoading, changeOwnerDraftPrevisit } = this.props;
+        const {
+            nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, showLoading,
+            changeOwnerDraftPrevisit
+        } = this.props;
+
         nonValidateEnter(true);
         const infoClient = clientInformacion.get('responseClientInfo');
+
         if (_.isEmpty(infoClient)) {
             redirectUrl("/dashboard/clientInformation");
         } else {
             getMasterDataFields([PREVISIT_TYPE]);
             showLoading(true, 'Cargando...');
             detailPrevisit(id).then((result) => {
-                const { fields: { participantesCliente }, addListParticipant, addParticipant, visitReducer, contactsByClient } = this.props;
+                const { fields: { }, addListParticipant, selectsReducer } = this.props;
                 let part = result.payload.data.data;
                 let listParticipants = [];
                 datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
                 valueTypePrevisit = part.keyDocumentType;
+
                 this.setState({
                     typePreVisit: part.documentType,
                     datePreVisit: new Date(moment(part.visitTime, "x")),
@@ -951,7 +980,9 @@ class FormEditPrevisita extends Component {
 
                     listParticipants.push(otherParticipant);
                 });
+
                 addListParticipant(listParticipants);
+
                 //Adicionar tareas
                 _.forIn(part.userTasks, function (value, key) {
                     const uuid = _.uniqueId('task_');
@@ -968,6 +999,17 @@ class FormEditPrevisita extends Component {
                 changeOwnerDraftPrevisit(part.documentStatus);
 
                 showLoading(false, null);
+
+                const existPrevisitType = _.filter(selectsReducer.get(PREVISIT_TYPE), function (type) {
+                    return _.toString(type.id) == _.toString(part.documentType);
+                });
+
+                if (_.isEmpty(existPrevisitType)) {
+                    this.setState({
+                        typePreVisitError: "Debe seleccionar una opción"
+                    });
+                }
+
             });
         }
     }
@@ -980,7 +1022,7 @@ class FormEditPrevisita extends Component {
 
         this._ismounted = false;
 
-        if(this.state.isEditable) {
+        if (this.state.isEditable) {
             // Informar al backend que el informe se puede liberar
             disableBlockedReport(id).then((success) => {
 
@@ -988,30 +1030,29 @@ class FormEditPrevisita extends Component {
 
             })
         }
-
-        
     }
 
     render() {
         const {
-            fields: { clientTeach, adaptMessage, controlConversation, constructiveTension},
-            clientInformacion, selectsReducer, handleSubmit, previsitReducer, reducerGlobal, navBar, viewBottons
+            fields: { }, selectsReducer, handleSubmit, previsitReducer, reducerGlobal, viewBottons
         } = this.props;
+
         const ownerDraft = previsitReducer.get('ownerDraft');
         const detailPrevisit = previsitReducer.get('detailPrevisit');
         fechaModString = '';
+
         if (detailPrevisit !== undefined && detailPrevisit !== null && detailPrevisit !== '' && !_.isEmpty(detailPrevisit)) {
             createdBy = detailPrevisit.data.createdByName;
             updatedBy = detailPrevisit.data.updatedByName;
             positionCreatedBy = detailPrevisit.data.positionCreatedBy;
             positionUpdatedBy = detailPrevisit.data.positionUpdatedBy;
+
             if (detailPrevisit.data.updatedTimestamp !== null) {
-                //TODO: Validar moment x
                 let fechaModDateMoment = moment(detailPrevisit.data.updatedTimestamp).locale('es');
                 fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
             }
+
             if (detailPrevisit.data.createdTimestamp !== null) {
-                //TODO: Validar moment x
                 let fechaCreateDateMoment = moment(detailPrevisit.data.createdTimestamp).locale('es');
                 fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
             }
@@ -1027,7 +1068,8 @@ class FormEditPrevisita extends Component {
                         <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
                     </Col>
                     <Col xs={2} sm={2} md={2} lg={2}>
-                        {_.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) && (!this.state.isEditable) &&
+                        {
+                            _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) && (!this.state.isEditable) &&
                             <button type="button" onClick={this._editPreVisit}
                                 className={'btn btn-primary modal-button-edit'}
                                 style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>Editar <i
@@ -1262,7 +1304,7 @@ class FormEditPrevisita extends Component {
                             name="pendingPrevisit"
                             value={this.state.pendingPrevisit}
                             touched={true}
-                            onChange={val => this._changePendingPrevisit(val)}                            
+                            onChange={val => this._changePendingPrevisit(val)}
                             error={this.state.pendingPrevisitError}
                             title="Ingrese pendientes, quejas y reclamos"
                             style={{ width: '100%', height: '178px' }}
@@ -1355,7 +1397,6 @@ class FormEditPrevisita extends Component {
                     </div>
                 </div>
 
-                
                 <SweetAlert
                     type={typeMessage}
                     show={this.state.showMessageCreatePreVisit}
