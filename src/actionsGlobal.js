@@ -329,6 +329,10 @@ export function validateResponse(response) {
     return true;
 }
 
+export function validateWhileListResponse(response) {
+    return _.get(response, 'payload.data.status') !==  constants.REQUEST_INVALID_INPUT;
+}
+
 /**
  * Valida que una cadena sea diferente de null, vacío e indefinido, 
  * retorna verdadero si es diferente de todos los valores.
@@ -453,6 +457,18 @@ export function xssValidation(value, isFullValidation) {
 export function onSessionExpire() {
     window.localStorage.setItem('sessionTokenFront', '');
     redirectUrl("/login");
+}
+
+export function replaceCommaInNumber(value) {
+    if (_.isNil(value)) {
+        return value;
+    }
+
+    if (typeof value == 'string') {
+        return value.replace(',','');
+    }
+
+    return value;
 }
 
 export function validateFields(values, validations, errors) {

@@ -3,11 +3,10 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, validateValueExist, stringValidate, xssValidation } from '../../../actionsGlobal';
+import { handleBlurValueNumber, stringValidate } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
-    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+    ONLY_POSITIVE_INTEGER,
 } from '../../../constantsGlobal';
 
 import SweetAlert from '../../sweetalertFocus';
@@ -25,7 +24,7 @@ export class ComponentListLineBusiness extends Component {
             showConfirmDelete: false,
             entityDelete: null,
             entitySeleted: null,
-            errorForm: true,
+            errorForm: false,
             shouldUpdate: false
         }
         this.validateInfo = this.validateInfo.bind(this);
@@ -103,8 +102,7 @@ export class ComponentListLineBusiness extends Component {
     }
 
     _viewInformationLineBusiness(entity) {
-        const { contextLineBusiness, participation, experience, fnShowForm, changeValueListClient,
-            clientInformacion, contribution } = this.props;
+        const { contextLineBusiness, participation, experience, fnShowForm, contribution } = this.props;
         fnShowForm(LINE_OF_BUSINESS, true);
         contextLineBusiness.onChange(entity.lineOfBusiness);
         participation.onChange(entity.participation.toString());
@@ -195,7 +193,7 @@ export class ComponentListLineBusiness extends Component {
                                     <Input
                                         name="contextLineBusiness"
                                         type="text"
-                                        max="100"
+                                        max="50"
                                         placeholder="Línea de neogcio"
                                         {...contextLineBusiness}
                                         touched={this.state.errorForm || registrationRequired}
@@ -208,12 +206,12 @@ export class ComponentListLineBusiness extends Component {
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="participation"
                                         type="text"
                                         min={0}
                                         max="11"
                                         placeholder="Participación"
                                         {...participation}
+                                        name="participationLB"
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 7)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -242,13 +240,14 @@ export class ComponentListLineBusiness extends Component {
                                 <div>
                                     <dt><span>% Contribución </span></dt>
                                     <Input
-                                        name="contribution"
                                         type="text"
                                         min={0}
                                         max="11"
                                         placeholder="Contribución"
                                         {...contribution}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, false, 7)}
+                                        name="contributionLB"
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, true, 7)}
+                                        touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
                             </Col>

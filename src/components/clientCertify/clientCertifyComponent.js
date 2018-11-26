@@ -423,7 +423,7 @@ class clientCertify extends React.Component {
                 "lastName" : infoClient.lastName,
                 "middleLastName" : infoClient.middleLastName               
             };
-            const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
+            const { createProspect } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             createProspect(jsonCreateProspect).then((data) => {
                 if (_.get(data, 'payload.data.status', 500) === 200) {

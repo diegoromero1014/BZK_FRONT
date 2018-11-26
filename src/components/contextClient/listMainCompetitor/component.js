@@ -3,11 +3,10 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue, validateValueExist, xssValidation } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue, validateValueExist } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
-    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+    ONLY_POSITIVE_INTEGER
 } from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SweetAlert from '../../sweetalertFocus';
@@ -99,7 +98,7 @@ export class ComponentListMainCompetitor extends Component {
     }
 
     _viewInformationCompetitor(entity) {
-        const { nameCompetitor, participation, observations, fnShowForm, changeValueListClient, clientInformacion } = this.props;
+        const { nameCompetitor, participation, observations, fnShowForm } = this.props;
         fnShowForm(MAIN_COMPETITOR, true);
         nameCompetitor.onChange(entity.nameCompetitor);
         participation.onChange(entity.participation.toString());
@@ -197,11 +196,11 @@ export class ComponentListMainCompetitor extends Component {
                                 <div>
                                     <dt><span>Nombre del competidor (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="nameCompetitor"
                                         type="text"
                                         max="100"
                                         placeholder="Nombre del competidor"
                                         {...nameCompetitor}
+                                        name="nameMainCompetitor"
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
@@ -212,12 +211,12 @@ export class ComponentListMainCompetitor extends Component {
                                 <div>
                                     <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                     <Input
-                                        name="participation"
                                         type="text"
                                         min={0}
                                         max="11"
                                         placeholder="Participación"
                                         {...participation}
+                                        name="participationMComp"
                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 7)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -241,7 +240,6 @@ export class ComponentListMainCompetitor extends Component {
                                 <div>
                                     <dt><span>Observaciones</span></dt>
                                     <Textarea
-                                        name="observations"
                                         validateEnter={true}
                                         type="text"
                                         style={{ width: '100%' }}
@@ -249,6 +247,7 @@ export class ComponentListMainCompetitor extends Component {
                                         rows={3}
                                         placeholder="Observaciones"
                                         {...observations}
+                                        name="observationsCompetitor"
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>

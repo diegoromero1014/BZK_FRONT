@@ -4,10 +4,10 @@ import Input from '../../../ui/input/inputComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue, xssValidation } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
-    ONLY_POSITIVE_INTEGER, VALUE_REQUIERED, VALUE_XSS_INVALID,
+    ONLY_POSITIVE_INTEGER,
 } from '../../../constantsGlobal';
 
 import Textarea from '../../../ui/textarea/textareaComponent';
@@ -169,7 +169,7 @@ export class ComponentListIntOperations extends Component {
 
     _viewInformationIntOperations(entity) {
         const { typeOperation, participation, idCountry, customerCoverage, descriptionCoverage,
-            fnShowForm, changeValueListClient, clientInformacion } = this.props;
+            fnShowForm } = this.props;
         fnShowForm(INT_OPERATIONS, true);
         participation.onChange(entity.participation.toString());
         idCountry.onChange(entity.idCountry);
@@ -315,9 +315,9 @@ export class ComponentListIntOperations extends Component {
                                     <div>
                                         <dt><span>Tipo de operación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                         <ComboBox
-                                            name="typeOperation"
                                             labelInput="Tipo de operación"
                                             {...typeOperation}
+                                            name="typeOperationIntOpera"
                                             valueProp={'id'}
                                             value={typeOperation.value}
                                             textProp={'value'}
@@ -330,12 +330,12 @@ export class ComponentListIntOperations extends Component {
                                     <div>
                                         <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                         <Input
-                                            name="participation"
                                             type="text"
                                             min={0}
                                             max="11"
                                             placeholder="Participación"
                                             {...participation}
+                                            name="participationIntOpe"
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 7)}
                                             touched={this.state.errorForm || registrationRequired}
                                         />
@@ -365,7 +365,6 @@ export class ComponentListIntOperations extends Component {
                                     <div>
                                         <dt><span>Descripción de la cobertura</span></dt>
                                         <Textarea
-                                            name="descriptionCoverage"
                                             validateEnter={true}
                                             type="text"
                                             style={{ width: '100%' }}
@@ -373,6 +372,7 @@ export class ComponentListIntOperations extends Component {
                                             rows={3}
                                             placeholder="Descripción de la cobertura"
                                             {...descriptionCoverage}
+                                            name="descriptionCoverageIntOpe"
                                             touched={this.state.errorForm || registrationRequired}
                                         />
                                     </div>
@@ -386,9 +386,9 @@ export class ComponentListIntOperations extends Component {
                                     <div>
                                         <dt><span>País (<span style={{ color: "red" }}>*</span>)</span></dt>
                                         <ComboBox
-                                            name="idCountry"
                                             labelInput="País"
                                             {...idCountry}
+                                            name="idCountryIntOpe"
                                             value={idCountry.value}
                                             onBlur={idCountry.onBlur}
                                             valueProp={'id'}
@@ -402,12 +402,12 @@ export class ComponentListIntOperations extends Component {
                                     <div>
                                         <dt><span>% Participación (<span style={{ color: "red" }}>*</span>)</span></dt>
                                         <Input
-                                            name="participationCountry"
                                             type="text"
                                             min={0}
                                             max="11"
                                             placeholder="Participación del país"
                                             {...participationCountry}
+                                            name="participationIntOpeCountry"
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participationCountry, val, true, 7)}
                                             touched={this.state.errorCountryForm}
                                         />

@@ -85,7 +85,6 @@ class inputComponent extends Component {
         if (touched && error && shouldHandleUpdate) {
             $(`.ui.input.${name} [type=text]`).focus();
         }
-
         return (
             <div className={disabled}>
                 <div className={`styleWidthComponents ui input ${name}`}>

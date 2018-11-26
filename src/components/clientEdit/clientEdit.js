@@ -47,7 +47,9 @@ import { changeStateSaveData } from "../dashboard/actions";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { showLoading } from "../loading/actions";
 import { saveCreditStudy } from "../clients/creditStudy/actions";
-import { validateResponse, stringValidate, xssValidation, onSessionExpire, validateFields } from "../../actionsGlobal";
+import {
+    validateResponse, stringValidate, xssValidation, onSessionExpire, validateFields,
+    validateWhileListResponse, replaceCommaInNumber } from "../../actionsGlobal";
 import { updateTitleNavBar } from "../navBar/actions";
 import {
     seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
@@ -62,16 +64,15 @@ import {
 import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
 import * as constants from "../selectsComponent/constants";
 import {
-    GOVERNMENT, FINANCIAL_INSTITUTIONS, CONSTRUCT_PYME, KEY_DESMONTE,
+    CONSTRUCT_PYME, KEY_DESMONTE,
     KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME,
     KEY_OPTION_OTHER_OPERATIONS_FOREIGNS, KEY_OPTION_OTHER_ORIGIN_GOODS,
-    KEY_OPTION_OTHER_ORIGIN_RESOURCE, MAXIMUM_OPERATIONS_FOREIGNS, TITLE_DESCRIPTION
+    KEY_OPTION_OTHER_ORIGIN_RESOURCE, MAXIMUM_OPERATIONS_FOREIGNS
 } from "./constants";
 import {
     ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA,
     ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, VALUE_REQUIERED, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT,
-    INFO_ESTUDIO_CREDITO
+    INFO_ESTUDIO_CREDITO, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_ERROR_INVALID_INPUT
 } from '../../constantsGlobal';
 import {
     DISTRIBUTION_CHANNEL, INT_OPERATIONS, LINE_OF_BUSINESS, MAIN_CLIENTS,
@@ -104,12 +105,12 @@ const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCII
     "centroDecision", "necesitaLME", "groupEconomic", "nitPrincipal", "economicGroupName", "justifyNoGeren", "justifyNoLME",
     "justifyExClient", "taxNature", "detailNonOperatingIncome", "otherOriginGoods", "originGoods", "originResource",
     "otherOriginResource", "countryOrigin", "originCityResource", "operationsForeignCurrency", "otherOperationsForeign",
-    "segment", "subSegment", "customerTypology", "contextClientField", "contextLineBusiness", "participationLB", "experience",
-    "distributionChannel", "participationDC", "inventoryPolicy", "nameMainClient", "participationMC", "termMainClient",
-    "relevantInformationMainClient", "nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier",
-    "nameMainCompetitor", "participationMComp", "obsevationsCompetitor", "typeOperationIntOpera", "participationIntOpe",
-    "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe", "contributionDC",
-    "contributionLB", "controlLinkedPayments", "firstName", "middleName", "lastName", "middleLastName", "occupation"];
+    "segment", "subSegment", "customerTypology", "contextClientField", "experience",
+    "inventoryPolicy",
+    "nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier",
+    "typeOperationIntOpera", "participationIntOpe",
+    "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe",
+    "controlLinkedPayments", "firstName", "middleName", "lastName", "middleLastName", "occupation"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 let isProspect = false;
@@ -1233,11 +1234,25 @@ class clientEdit extends Component {
             "clientType": infoClient.clientType,
         };
 
-        const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
+        const { createProspect, updateClient, saveCreditStudy, swtShowMessage } = this.props;
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createProspect(jsonCreateProspect).then((data) => {
             if (_.get(data, 'payload.data.status', 500) === 200) {
                 saveCreditStudy(this._createJsonSaveContextClient()).then((response) => {
+
+                    if (!validateResponse(response)) {
+                        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                        changeStateSaveData(false, "");
+                        return;
+                    }   
+
+                    if (!validateWhileListResponse(response)) {
+                        swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_INVALID_INPUT);
+                        changeStateSaveData(false, "");
+                        return;
+                    }
+
+
                     if (validateResponse(response)) {
                         if (_.get(data, 'payload.data.status') === 200) {
                             if (typeSave === BUTTON_EDIT) {
@@ -1288,21 +1303,25 @@ class clientEdit extends Component {
         const listLineOfBusiness = clientInformacion.get('listParticipation');
         _.map(listLineOfBusiness, (item) => {
             item.id = item.id.toString().includes('line_') ? null : item.id;
+            item.experience = replaceCommaInNumber(item.experience); 
             return item;
         });
         const listDistribution = clientInformacion.get('listDistribution');
         _.map(listDistribution, (item) => {
             item.id = item.id.toString().includes('dist_') ? null : item.id;
+            item.term = replaceCommaInNumber(item.term);
             return item;
         });
         const listMainCustomer = clientInformacion.get('listMainCustomer');
         _.map(listMainCustomer, (item) => {
             item.id = item.id.toString().includes('mainC_') ? null : item.id;
+            item.term = replaceCommaInNumber(item.term);
             return item;
         });
         const listMainSupplier = clientInformacion.get('listMainSupplier');
         _.map(listMainSupplier, (item) => {
             item.id = item.id.toString().includes('mainS_') ? null : item.id;
+            item.term = replaceCommaInNumber(item.term);
             return item;
         });
         const listMainCompetitor = clientInformacion.get('listMainCompetitor');
@@ -1583,11 +1602,10 @@ class clientEdit extends Component {
                 liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
                 centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
                 detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
-                otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, contextLineBusiness,
-                participationLB, experience, distributionChannel, participationDC, inventoryPolicy, nameMainClient, participationMC,
-                termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
-                relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera,
-                participationIntOpe, contributionDC, contributionLB, descriptionCoverageIntOpe, idCountryIntOpe,
+                otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, inventoryPolicy, 
+                nameMainSupplier, participationMS, termMainSupplier,
+                relevantInformationMainSupplier, typeOperationIntOpera,
+                participationIntOpe, descriptionCoverageIntOpe, idCountryIntOpe,
                 participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments, firstName, middleName, lastName, middleLastName, occupation
             }, handleSubmit,
             tabReducer, selectsReducer, clientInformacion, validateContactShareholder, reducerGlobal, isPersonaNatural
