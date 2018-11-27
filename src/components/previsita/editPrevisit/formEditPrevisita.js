@@ -829,7 +829,7 @@ class FormEditPrevisita extends Component {
                                                     that.processValidation(field);
                                                 });
 
-                                                swtShowMessage('error', "Creación previsita", "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.", { onConfirmCallback: this._closeMessageCreatePreVisit });
+                                                swtShowMessage('error', "Edición previsita", "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.", { onConfirmCallback: this._closeMessageCreatePreVisit });
                                             } else {
                                                 typeMessage = "error";
                                                 swtShowMessage('error', "Edición previsita", "Señor usuario, ocurrió un error editando la previsita.", { onConfirmCallback: this._closeMessageCreatePreVisit });
