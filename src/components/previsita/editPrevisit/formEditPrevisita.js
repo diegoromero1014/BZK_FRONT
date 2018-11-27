@@ -1038,7 +1038,7 @@ class FormEditPrevisita extends Component {
 
     render() {
         const {
-            fields: { }, selectsReducer, handleSubmit, previsitReducer, reducerGlobal, viewBottons
+            selectsReducer, handleSubmit, previsitReducer, reducerGlobal, viewBottons
         } = this.props;
 
         const ownerDraft = previsitReducer.get('ownerDraft');

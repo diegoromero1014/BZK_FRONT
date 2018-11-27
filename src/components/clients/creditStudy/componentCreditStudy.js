@@ -494,7 +494,7 @@ export class ComponentStudyCredit extends Component {
     }
 
     _submitSaveContextClient(tipoGuardado) {
-        const { } = this.props;
+        
         showLoading(true, "Cargando...");
 
         let username = window.localStorage.getItem('userNameFront');
