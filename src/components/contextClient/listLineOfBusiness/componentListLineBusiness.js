@@ -246,7 +246,7 @@ export class ComponentListLineBusiness extends Component {
                                         placeholder="Contribución"
                                         {...contribution}
                                         name="contributionLB"
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, true, 7)}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, contribution, val, false, 7)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
                                 </div>
