@@ -648,6 +648,7 @@ class FormPrevisita extends Component {
                                                     that.processValidation(field);
                                                 });
 
+                                                typeMessage = "error";
                                                 swtShowMessage('error', "Creación previsita", "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.", { onConfirmCallback: this._closeMessageCreatePreVisit });
                                             } else {
                                                 typeMessage = "error";
