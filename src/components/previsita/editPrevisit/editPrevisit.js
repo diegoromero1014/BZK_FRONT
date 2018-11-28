@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { redirectUrl } from '../../globalComponents/actions';
+
 import HeaderPrevisita from '../headerPrevisita';
 import FormEditPrevisita from './formEditPrevisita';
+
+import { redirectUrl } from '../../globalComponents/actions';
 
 class EditPrevisit extends Component {
 
