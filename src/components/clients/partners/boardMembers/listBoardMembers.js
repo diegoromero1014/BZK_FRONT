@@ -1,9 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Modal from 'react-modal';
 import _ from 'lodash';
-import moment from 'moment';
 
 import GridComponent from '../../../grid/component';
 
@@ -43,8 +41,10 @@ class ListBoardMembers extends Component {
    * @param {*} idClientBoardMember 
    */
   _deleteBoardMember(idClientBoardMember) {
-    const { deleteBoardMemberByClient, swtShowMessage, getBoardMembers, changeStateSaveData,
-      boardMembersReducer, clearFilters, changeKeyword } = this.props;
+    const { 
+      deleteBoardMemberByClient, swtShowMessage, getBoardMembers, changeStateSaveData, clearFilters, changeKeyword
+    } = this.props;
+
     changeStateSaveData(true, MESSAGE_LOAD_DATA);
     deleteBoardMemberByClient(idClientBoardMember).then((data) => {
       changeStateSaveData(false, "");
@@ -95,7 +95,7 @@ class ListBoardMembers extends Component {
   }
 
   _renderCellView(data = []) {
-    const { selectsReducer, reducerGlobal } = this.props;
+    const { reducerGlobal } = this.props;
     const thisSelf = this;
     return _.map(data, item => {
       const deleteNew = {
