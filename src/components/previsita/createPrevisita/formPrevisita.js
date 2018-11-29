@@ -27,7 +27,7 @@ import { getMasterDataFields } from '../../selectsComponent/actions';
 import { createPrevisit, validateDatePreVisit } from '../actions';
 import { changeStateSaveData } from '../../dashboard/actions';
 import {
-    consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation
+    consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateResponse
 } from '../../../actionsGlobal';
 
 import { PREVISIT_TYPE } from '../../selectsComponent/constants';
@@ -412,16 +412,14 @@ class FormPrevisita extends Component {
             this.setState({
                 durationPreVisitError: messageRequiredDuration
             });
-
         } else {
             const messageWarningDuration = checkDecimalNumbers(this.state.durationPreVisit);
             if (!_.isNull(messageWarningDuration)) {
                 errorInForm = true;
                 this.setState({
-                    lugarPrevisitError: messageWarningDuration
+                    durationPreVisitError: messageWarningDuration
                 });
             }
-
         }
 
         if (typeButtonClick === SAVE_PUBLISHED) {
@@ -431,12 +429,6 @@ class FormPrevisita extends Component {
                 this.setState({
                     targetPrevisitError: messageRequiredTargetPrevisit
                 });
-            } else if (xssValidation(this.state.targetPrevisit, true)) {
-                errorInForm = true;
-                this.setState({
-                    targetPrevisitError: VALUE_XSS_INVALID
-                });
-                errorMessage = REGEX_SIMPLE_XSS_MESAGE;
             }
         }
 
@@ -485,62 +477,6 @@ class FormPrevisita extends Component {
                 controlConversationError: null,
                 constructiveTensionError: null
             });
-        }
-
-        /**
-         * Validaciones texto enriquecido
-         */
-
-        if (xssValidation(this.state.targetPrevisit, true)) {
-            errorInForm = true;
-            this.setState({
-                targetPrevisitError: VALUE_XSS_INVALID
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.pendingPrevisit, true)) {
-            errorInForm = true;
-            this.setState({
-                pendingPrevisitError: VALUE_XSS_INVALID
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.clientTeach, true)) {
-            errorInForm = true;
-            this.setState({
-                clientTeachError: VALUE_XSS_INVALID,
-                clientTeachTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.adaptMessage, true)) {
-            errorInForm = true;
-            this.setState({
-                adaptMessageError: VALUE_XSS_INVALID,
-                adaptMessageTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.controlConversation, true)) {
-            errorInForm = true;
-            this.setState({
-                controlConversationError: VALUE_XSS_INVALID,
-                controlConversationTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.constructiveTension, true)) {
-            errorInForm = true;
-            this.setState({
-                constructiveTensionError: VALUE_XSS_INVALID,
-                constructiveTensionTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
 
         if (!errorInForm) {
