@@ -819,6 +819,7 @@ class FormPrevisita extends Component {
                     <Col xs={12} md={12} lg={12}>
                         <RichText
                             name="targetPrevisit"
+                            id="targetPrevisit"
                             value={this.state.targetPrevisit}
                             touched={true}
                             onChange={val => this._changeTargetPrevisit(val)}
@@ -888,6 +889,7 @@ class FormPrevisita extends Component {
                     <Col xs={12} md={12} lg={12}>
                         <RichText
                             name="pendingPrevisit"
+                            id="pendingPrevisit"
                             value={this.state.pendingPrevisit}
                             touched={true}
                             onChange={val => this._changePendingPrevisit(val)}
