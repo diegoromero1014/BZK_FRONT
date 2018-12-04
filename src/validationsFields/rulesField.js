@@ -5,7 +5,7 @@ import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
     patternOfStructureEmail, patternOfEmail, patternOfHistory, patternOfClientName, patternOfDescription,
-    patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers, regexPositiveNumbers,
+    patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
     patternOfForbiddenCharacter, patternOfOpportunityName,
     patternOfNameOtherParticipant, patternOfPositionOtherParticipant, patternOfCompanyOtherParticipant,
     patternDecimalNumbers, patternOfPlaceOfPrevisit
@@ -14,7 +14,7 @@ import {
 import {
     MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH,
     MESSAGE_WARNING_MAX_LENGTH, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_WARNING_HISTORY, MESSAGE_WARNING_NUMBER_DOCUMENT,
-    MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS, MESSAGE_WARNING_ONLY_POSITIVE_NUMBERS,
+    MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS,
     MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_OPPORTUNITY_NAME,
     MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_NAME_OTHER_PARTICIPANT,
     MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT, MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT,

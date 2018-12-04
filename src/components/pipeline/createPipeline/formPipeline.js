@@ -26,7 +26,7 @@ import {
 } from "../../selectsComponent/actions";
 import {
   consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, nonValidateEnter,
-  handleFocusValueNumber, xssValidation, replaceCommaInNumber
+  handleFocusValueNumber
 } from "../../../actionsGlobal";
 
 import {
@@ -1120,11 +1120,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     touchOnChange: true,
     onSubmitFail: errors => {
       let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
-
-      /*thisForm.setState({
-        errorValidateXss: numXssValidation > 0,
-        errorValidate: numXssValidation <= 0 
-      });*/
 
     }
   }, mapStateToProps, mapDispatchToProps)(FormPipeline);
