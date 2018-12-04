@@ -13,6 +13,7 @@ import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import RichText from '../../richText/richTextComponent';
 import ToolTip from '../../toolTip/toolTipComponent';
 import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
+import { setGlobalCondition } from './../../../validationsFields/rulesField';
 
 import { redirectUrl } from "../../globalComponents/actions";
 import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans } from "../actions";
@@ -25,7 +26,7 @@ import {
 } from "../../selectsComponent/actions";
 import {
   consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, nonValidateEnter,
-  handleFocusValueNumber, xssValidation
+  handleFocusValueNumber, xssValidation, replaceCommaInNumber
 } from "../../../actionsGlobal";
 
 import {
@@ -56,12 +57,7 @@ import moment from "moment";
 import _ from "lodash";
 import $ from "jquery";
 import numeral from "numeral";
-
-const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths",
-  "businessStatus", "businessCategory", "currency", "indexing", "need", "observations", "product",
-  "reviewedDate", "client", "documentStatus", "probability", "amountDisbursed", "estimatedDisburDate",
-  "opportunityName", "productFamily", "mellowingPeriod", "moneyDistribitionMarket",
-  "areaAssets", "areaAssetsValue", "termInMonthsValues", "pendingDisbursementAmount"];
+import { fields, validations as validate, fieldsWithRules } from './filesAndRules';
 
 let typeMessage = "success";
 let titleMessage = "";
@@ -75,99 +71,6 @@ var thisForm;
 
 var isChildren = false;
 var nameDisbursementPlansInReducer = "disbursementPlans";
-
-const validate = values => {
-  const errors = {};
-
-  if (!values.businessStatus) {
-    errors.businessStatus = OPTION_REQUIRED;
-  } else {
-    errors.businessStatus = null;
-  }
-
-  if (!values.value) {
-    errors.value = VALUE_REQUIERED;
-  } else if (xssValidation(values.value)) {
-    errors.value = VALUE_XSS_INVALID;
-  } else {
-    errors.value = null;
-  }
-
-  if (!values.currency) {
-    errors.currency = OPTION_REQUIRED;
-  } else {
-    errors.currency = null;
-  }
-
-  if (!values.need) {
-    errors.need = OPTION_REQUIRED;
-  } else {
-    errors.need = null;
-  }
-
-  if (typeButtonClick === SAVE_PUBLISHED) {
-    if (!values.businessCategory) {
-      errorBusinessCategory = OPTION_REQUIRED;
-      errors.businessCategory = OPTION_REQUIRED;
-    } else {
-      errorBusinessCategory = null;
-      errors.businessCategory = null;
-    }
-  } else {
-    errorBusinessCategory = null;
-    errors.businessCategory = null;
-  }
-
-  if (!values.opportunityName && !isChildren) {
-    errors.opportunityName = VALUE_REQUIERED;
-  } else if (xssValidation(values.opportunityName)) {
-    errors.opportunityName = VALUE_XSS_INVALID;
-  } else {
-    errors.opportunityName = null;
-  }
-
-  if (!values.productFamily) {
-    errors.productFamily = VALUE_REQUIERED;
-  } else if (xssValidation(values.productFamily)) {
-    errors.productFamily = VALUE_XSS_INVALID;
-  } else {
-    errors.productFamily = null;
-  }
-
-  if (!values.nameUsuario) {
-    errors.nameUsuario = VALUE_REQUIERED;
-  } else if (xssValidation(values.nameUsuario)) {
-    errors.nameUsuario = VALUE_XSS_INVALID;
-  } else if (!values.idUsuario) {
-    errors.nameUsuario = "Seleccione un empleado"
-  } else {
-    errors.nameUsuario = null;
-  }
-
-  if (!values.termInMonths) {
-    errors.termInMonths = VALUE_REQUIERED;
-  } else if (xssValidation(values.termInMonths)) {
-    errors.termInMonths = VALUE_XSS_INVALID;
-  } else {
-    errors.termInMonths = null;
-  }
-
-  if (!values.termInMonthsValues) {
-    errors.termInMonthsValues = VALUE_REQUIERED;
-  } else if (xssValidation(values.termInMonthsValues)) {
-    errors.termInMonthsValues = VALUE_XSS_INVALID;
-  } else {
-    errors.termInMonthsValues = null;
-  }
-
-  if (xssValidation(values.observations, true)) {
-    errors.observations = VALUE_XSS_INVALID;
-  } else {
-    errors.observations = null;
-  }
-
-  return errors;
-};
 
 export default function createFormPipeline(name, origin, functionCloseModal) {
 
@@ -209,6 +112,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       };
 
       isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
+      if (isChildren) {
+        fieldsWithRules.opportunityName.rules = [];
+      }
+
       if (origin === ORIGIN_PIPELIN_BUSINESS) {
         nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
       } else {
@@ -420,117 +327,122 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _submitCreatePipeline() {
-      if (errorBusinessCategory === null) {
-        const { fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
-          businessCategory, currency, indexing, need, observations, product,
-          probability, nameUsuario, opportunityName,
-          productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue,
-          termInMonthsValues, pendingDisbursementAmount }, createEditPipeline, swtShowMessage,
-          changeStateSaveData, pipelineBusinessReducer, pipelineReducer } = this.props;
+      const { fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
+        businessCategory, currency, indexing, need, observations, product,
+        probability, nameUsuario, opportunityName,
+        productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue,
+        termInMonthsValues, pendingDisbursementAmount }, createEditPipeline, swtShowMessage,
+        changeStateSaveData, pipelineBusinessReducer, pipelineReducer, error } = this.props;
 
-        if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
-          this.setState({
-            employeeResponsible: true
-          });
+      if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
+        this.setState({
+          employeeResponsible: true
+        });
+      } else {
+        if (this.state.showFormAddDisbursementPlan) {
+          swtShowMessage(MESSAGE_ERROR, 'Creación de pipeline', 'Señor usuario, esta creando o editando un plan de desembolso, debe terminarlo o cancelarlo para poder guardar.');
         } else {
-          if (this.state.showFormAddDisbursementPlan) {
-            swtShowMessage(MESSAGE_ERROR, 'Creación de pipeline', 'Señor usuario, esta creando o editando un plan de desembolso, debe terminarlo o cancelarlo para poder guardar.');
+          if (origin === ORIGIN_PIPELIN_BUSINESS) {
+            nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
           } else {
+            nameDisbursementPlansInReducer = "disbursementPlans";
+          }
+
+          const listDisburmentPlans = pipelineReducer.get(nameDisbursementPlansInReducer);
+          if ((productFamily.value !== "" && productFamily.value !== null && productFamily.value !== undefined) || typeButtonClick === SAVE_DRAFT) {
+            let pipelineJson = {
+              "id": null,
+              "client": window.sessionStorage.getItem('idClientSelected'),
+              "documentStatus": typeButtonClick,
+              "product": product.value,
+              "businessStatus": businessStatus.value,
+              "employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
+              "employeeResponsibleName": nameUsuario.value,
+              "currency": currency.value,
+              "indexing": indexing.value,
+              "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
+              "need": need.value,
+              "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
+              "observations": observations.value,
+              "termInMonths": termInMonths.value,
+              "termInMonthsValues": termInMonthsValues.value ? termInMonthsValues.value : "",
+              "value": value.value === undefined ? null : numeral(value.value).format('0'),
+              "pendingDisbursementAmount": pendingDisbursementAmount.value === undefined ? null : numeral(pendingDisbursementAmount.value).format('0'),
+              "probability": probability.value,
+              "businessCategory": businessCategory.value,
+              "opportunityName": opportunityName.value,
+              "productFamily": productFamily.value ? productFamily.value : "",
+              "mellowingPeriod": mellowingPeriod.value ? mellowingPeriod.value : "",
+              "moneyDistribitionMarket": moneyDistribitionMarket.value ? moneyDistribitionMarket.value : "",
+              "areaAssets": areaAssets.value ? areaAssets.value : "",
+              "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.00'),
+              "disbursementPlans": listDisburmentPlans
+            };
+
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
-              nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
+              const uuid = _.uniqueId('pipelineBusiness_');
+              pipelineJson.uuid = uuid;
+              typeMessage = "success";
+              titleMessage = "Creación negocio";
+              message = "Señor usuario, el negocio se adicionó exitosamente.";
+              this.setState({
+                showMessageCreatePipeline: true,
+                pendingUpdate: true,
+                updateValues: pipelineJson
+              });
             } else {
-              nameDisbursementPlansInReducer = "disbursementPlans";
-            }
+              pipelineJson.disbursementPlans = _.map(listDisburmentPlans, (item) => {
+                item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
+                return item;
+              });
 
-            const listDisburmentPlans = pipelineReducer.get(nameDisbursementPlansInReducer);
-            if ((productFamily.value !== "" && productFamily.value !== null && productFamily.value !== undefined) || typeButtonClick === SAVE_DRAFT) {
-              let pipelineJson = {
-                "id": null,
-                "client": window.sessionStorage.getItem('idClientSelected'),
-                "documentStatus": typeButtonClick,
-                "product": product.value,
-                "businessStatus": businessStatus.value,
-                "employeeResponsible": nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null ? idUsuario.value : null,
-                "employeeResponsibleName": nameUsuario.value,
-                "currency": currency.value,
-                "indexing": indexing.value,
-                "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
-                "need": need.value,
-                "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
-                "observations": observations.value,
-                "termInMonths": termInMonths.value,
-                "termInMonthsValues": termInMonthsValues.value ? termInMonthsValues.value : "",
-                "value": value.value === undefined ? null : numeral(value.value).format('0'),
-                "pendingDisbursementAmount": pendingDisbursementAmount.value === undefined ? null : numeral(pendingDisbursementAmount.value).format('0'),
-                "probability": probability.value,
-                "businessCategory": businessCategory.value,
-                "opportunityName": opportunityName.value,
-                "productFamily": productFamily.value ? productFamily.value : "",
-                "mellowingPeriod": mellowingPeriod.value ? mellowingPeriod.value : "",
-                "moneyDistribitionMarket": moneyDistribitionMarket.value ? moneyDistribitionMarket.value : "",
-                "areaAssets": areaAssets.value ? areaAssets.value : "",
-                "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.00'),
-                "disbursementPlans": listDisburmentPlans
-              };
-
-              if (origin === ORIGIN_PIPELIN_BUSINESS) {
-                const uuid = _.uniqueId('pipelineBusiness_');
-                pipelineJson.uuid = uuid;
-                typeMessage = "success";
-                titleMessage = "Creación negocio";
-                message = "Señor usuario, el negocio se adicionó exitosamente.";
-                this.setState({
-                  showMessageCreatePipeline: true,
-                  pendingUpdate: true,
-                  updateValues: pipelineJson
-                });
-              } else {
-                pipelineJson.disbursementPlans = _.map(listDisburmentPlans, (item) => {
-                  item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
+              pipelineJson.listPipelines = _.map(pipelineBusinessReducer.toArray(), (pipelineBusiness) => {
+                pipelineBusiness.disbursementPlans = _.map(pipelineBusiness.disbursementPlans, (item) => {
+                  item.id = item.id === null || item.id.toString().includes('disburPlan_') ? null : item.id;
                   return item;
                 });
+                return _.omit(pipelineBusiness, ['uuid']);
+              });
 
-                pipelineJson.listPipelines = _.map(pipelineBusinessReducer.toArray(), (pipelineBusiness) => {
-                  pipelineBusiness.disbursementPlans = _.map(pipelineBusiness.disbursementPlans, (item) => {
-                    item.id = item.id === null || item.id.toString().includes('disburPlan_') ? null : item.id;
-                    return item;
-                  });
-                  return _.omit(pipelineBusiness, ['uuid']);
-                });
-
-                changeStateSaveData(true, MESSAGE_SAVE_DATA);
-                createEditPipeline(pipelineJson).then((data) => {
-                  changeStateSaveData(false, "");
-                  if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                    redirectUrl("/login");
+              changeStateSaveData(true, MESSAGE_SAVE_DATA);
+              createEditPipeline(pipelineJson).then((data) => {
+                changeStateSaveData(false, "");
+                if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+                  redirectUrl("/login");
+                } else {
+                  if ((_.get(data, 'payload.data.status') === 200)) {
+                    typeMessage = "success";
+                    titleMessage = "Creación pipeline";
+                    message = "Señor usuario, el pipeline se creó exitosamente.";
+                    this.setState({ showMessageCreatePipeline: true });
                   } else {
-                    if ((_.get(data, 'payload.data.status') === 200)) {
-                      typeMessage = "success";
-                      titleMessage = "Creación pipeline";
-                      message = "Señor usuario, el pipeline se creó exitosamente.";
-                      this.setState({ showMessageCreatePipeline: true });
-                    } else {
-                      typeMessage = "error";
-                      titleMessage = "Creación pipeline";
-                      message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
-                      this.setState({ showMessageCreatePipeline: true });
-                    }
+                    typeMessage = "error";
+                    titleMessage = "Creación pipeline";
+                    message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
+                    
+                    let errorResponse = _.get(data, 'payload.data.data');
+                    errorResponse.forEach(function(element) {
+                      if(element.fieldName == "observations"){
+                        observations.error = element.message;
+                        let oValue = observations.value;
+                        observations.onChange(oValue);
+                        message = "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.";
+                      }
+                    });
+
+                    this.setState({ showMessageCreatePipeline: true });
                   }
-                }, (reason) => {
-                  changeStateSaveData(false, "");
-                  typeMessage = "error";
-                  titleMessage = "Creación pipeline";
-                  message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
-                  this.setState({ showMessageCreatePipeline: true });
-                });
-              }
+                }
+              }, (reason) => {
+                changeStateSaveData(false, "");
+                typeMessage = "error";
+                titleMessage = "Creación pipeline";
+                message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
+                this.setState({ showMessageCreatePipeline: true });
+              });
             }
           }
         }
-      } else {
-        thisForm.setState({
-          errorValidate: true
-        });
       }
     }
 
@@ -787,6 +699,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                         placeholder="Ingrese un criterio de búsqueda..."
                         onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                         onSelect={val => this._updateValue(val)}
+                        error={nameUsuario.error || idUsuario.error}
                       />
                     </div>
                     {
@@ -850,7 +763,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name={nameBusinessCategory}
                       parentId="dashboardComponentScroll"
                       data={selectsReducer.get(BUSINESS_CATEGORY) || []}
-                      error={errorBusinessCategory}
                     />
                   </div>
                 </Col>
@@ -909,7 +821,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...commission}
                       max="10"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(2, commission, val, true)}
+                      onBlur={val => handleBlurValueNumber(1, commission, val, true)}
                       onFocus={val => handleFocusValueNumber(commission, commission.value)}
                     />
                   </div>
@@ -1098,10 +1010,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
             </div>
             <div style={origin !== ORIGIN_PIPELIN_BUSINESS ? { display: "block", position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height: "50px", background: "rgba(255,255,255,0.75)" } : { display: "none" }}>
               <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
-                <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_DRAFT} style={{ float: "right", margin: "8px 0px 0px 8px", position: "fixed", backgroundColor: "#00B5AD" }}>
+                <button className="btn" type="submit" onClick={() => {setGlobalCondition(null);typeButtonClick = SAVE_DRAFT;}} style={{ float: "right", margin: "8px 0px 0px 8px", position: "fixed", backgroundColor: "#00B5AD" }}>
                   <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
                 </button>
-                <button className="btn" type="submit" onClick={() => typeButtonClick = SAVE_PUBLISHED} style={{ float: "right", margin: "8px 0px 0px 250px", position: "fixed" }}>
+                <button className="btn" type="submit" onClick={() => {setGlobalCondition(SAVE_PUBLISHED); typeButtonClick = SAVE_PUBLISHED;} } style={{ float: "right", margin: "8px 0px 0px 250px", position: "fixed" }}>
                   <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
                 </button>
                 <button className="btn" type="button" onClick={this._onCloseButton} style={{ float: "right", margin: "8px 0px 0px 450px", position: "fixed", backgroundColor: "rgb(193, 193, 193)" }}>
@@ -1205,13 +1117,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     fields,
     form: name || _.uniqueId('business_'),
     validate,
+    touchOnChange: true,
     onSubmitFail: errors => {
       let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
 
-      thisForm.setState({
+      /*thisForm.setState({
         errorValidateXss: numXssValidation > 0,
-        errorValidate: numXssValidation <= 0
-      });
+        errorValidate: numXssValidation <= 0 
+      });*/
 
     }
   }, mapStateToProps, mapDispatchToProps)(FormPipeline);
