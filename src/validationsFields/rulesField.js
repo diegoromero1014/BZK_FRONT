@@ -6,9 +6,8 @@ import {
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
     patternOfStructureEmail, patternOfEmail, patternOfHistory, patternOfClientName, patternOfDescription,
     patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
-    patternOfForbiddenCharacter, patternOfOpportunityName,
-    patternOfNameOtherParticipant, patternOfPositionOtherParticipant, patternOfCompanyOtherParticipant,
-    patternDecimalNumbers, patternOfPlaceOfPrevisit
+    patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant, 
+    patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit
 } from './patternsToValidateField';
 
 import {
@@ -58,7 +57,7 @@ export const checkRequiredWithGlobalCondition = value => globalCondition ? check
 
 export const checkOnlyAlphabetical = (value) => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfOnlyAlphabetical).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfOnlyAlphabetical.test(value)) {
         message = MESSAGE_WARNING_ONLY_ALPHABETICAL;
     }
 
@@ -98,7 +97,7 @@ export const checkMaxLength = maxLength => value => {
 
 export const checkNumberDocument = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfNumberDocument).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfNumberDocument.test(value)) {
         message = MESSAGE_WARNING_NUMBER_DOCUMENT;
     }
 
@@ -107,7 +106,7 @@ export const checkNumberDocument = value => {
 
 export const checkObservations = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfObservation).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfObservation.test(value)) {
         message = MESSAGE_WARNING_OBSERVATIONS;
     }
 
