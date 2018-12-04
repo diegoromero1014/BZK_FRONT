@@ -18,6 +18,7 @@ export const patternOfDescription = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?
 export const patternOfClientAddress = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s#();,.\-"/_´']+$/;
 export const patternOfClientNeighborhood = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s#();,.\-"/]+$/;
 export const regexNumbers = /^[0-9]+$/;
+export const patternOfOpportunityName = "/[^a-zA-Z0-9\\s()\\;,.\"!$%&/¿?\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
 export const patternOfForbiddenCharacter = /^[@+\-=].*$/;
 export const patternDecimalNumbers = /^[0-9.]+$/;
 export const patternOfNameOtherParticipant = /^[a-zA-Z0-9\sÁ-Úá-úÑñÜü&/\\,;.#"]+$/;
