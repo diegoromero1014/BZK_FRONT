@@ -8,8 +8,7 @@ import { bindActionCreators } from 'redux';
 import LoadingComponent from '../loading/loadingComponent';
 import { loadObservablesLeftTimer } from '../login/actions';
 import SweetAlert from "../sweetalertFocus";
-// import moment from 'moment';
-import moment from 'moment-timezone';
+import moment from 'moment';
 
 moment.tz.setDefault('America/Bogota');
 
