@@ -98,7 +98,6 @@ export const checkMaxLength = maxLength => value => {
 
 export const checkNumberDocument = value => {
     let message = null;
-    console.log(value, patternOfNumberDocument.test(value));
     if (!_.isUndefined(value) && !_.isNull(value) && !patternOfNumberDocument.test(value)) {
         message = MESSAGE_WARNING_NUMBER_DOCUMENT;
     }
