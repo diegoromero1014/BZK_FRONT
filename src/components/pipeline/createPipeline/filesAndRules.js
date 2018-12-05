@@ -1,16 +1,15 @@
 import _ from "lodash";
 
 import {
-    checkRequired, processRules, checkRequiredWithGlobalCondition, checkOnlyAlphabetical, 
-    checkDecimalNumbers, checkPipeLineOpportunityName, checkFirstCharacter
+    checkRequired, processRules, checkRequiredWithGlobalCondition, checkOnlyAlphabetical, checkPipeLineOpportunityName, checkFirstCharacter
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
     nameUsuario: { rules: [checkRequired, checkOnlyAlphabetical] }, 
     idUsuario: { rules: [checkRequired] }, 
     value: { rules: [checkRequired] }, 
-    commission: { rules: [checkDecimalNumbers] }, 
-    roe: { rules: [checkDecimalNumbers] }, 
+    commission: { rules: [] }, 
+    roe: { rules: [] }, 
     termInMonths: { rules: [checkRequired] }, 
     businessStatus: { rules: [checkRequired] }, 
     businessCategory: { rules: [checkRequiredWithGlobalCondition] }, 
@@ -30,8 +29,8 @@ export const fieldsWithRules = {
     mellowingPeriod: { rules: [] }, 
     moneyDistribitionMarket: { rules: [] }, 
     areaAssets: { rules: [] }, 
-    areaAssetsValue: { rules: [checkDecimalNumbers] }, 
-    termInMonthsValues: { rules: [checkRequired, checkDecimalNumbers] },
+    areaAssetsValue: { rules: [] }, 
+    termInMonthsValues: { rules: [checkRequired] },
     pendingDisbursementAmount: { rules: [] }
 }
 
