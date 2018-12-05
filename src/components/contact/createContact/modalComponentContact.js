@@ -187,7 +187,7 @@ class ModalComponentContact extends Component {
 
         if (tipoDocumento.value && numeroDocumento.value) {
 
-            if (eval(patternOfNumberDocument).test(numeroDocumento.value)) {
+            if (!patternOfNumberDocument.test(numeroDocumento.value)) {
                 return;
             }
 

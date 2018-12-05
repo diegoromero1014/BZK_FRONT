@@ -1,6 +1,6 @@
 export const patternOfOnlyAlphabetical = "/[^a-zA-Z\\sÁÉÍÓÚáéíóúÑñÜü]/g";
 export const patternOfOnlyNumbers = "/[^0-9]/g";
-export const patternOfNumberDocument = "/[^a-zA-Z0-9\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
+export const patternOfNumberDocument = /^[a-zA-Z0-9\-ÁÉÍÓÚáéíóúÑñÜü]+$/;
 export const patternOfPostalCode = "/[^a-zA-Z0-9\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
 export const patternOfAddress = "/[^a-zA-Z0-9\\s\\-ÁÉÍÓÚáéíóúÑñ#();,.\"\/_´']/g";
 export const patternOfNeighborhood = "/[^a-zA-Z0-9\\s\\-ÁÉÍÓÚáéíóúÑñÜü#();,.\"\/]/g";
