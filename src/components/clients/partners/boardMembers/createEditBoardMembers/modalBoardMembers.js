@@ -12,6 +12,7 @@ import Textarea from "../../../../../ui/textarea/textareaComponent";
 import ToolTip from "../../../../toolTip/toolTipComponent";
 import SweetAlert from '../../../../sweetalertFocus';
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
+import { checkNumberDocument, checkFirstCharacter } from './../../../../../validationsFields/rulesField';
 
 import { getClientNeeds, getMasterDataFields } from "../../../../selectsComponent/actions";
 import { changeKeyword, clearFilters, getBoardMembers, saveBoardMember, validateExistsBoardMember } from "../actions";
@@ -180,8 +181,9 @@ class ModalCreateBoardMembers extends Component {
         } = this.props;
 
         if (stringValidate(typeOfDocument.value) && stringValidate(numberDocument.value)) {
-            const patternOfNumberDocument = /[^a-zA-Z0-9\-ÁÉÍÓÚáéíóúÑñÜü]/g;
-            if (patternOfNumberDocument.test(numberDocument.value)) {
+            if (!_.isNull(checkNumberDocument(numberDocument.value)) ||
+                !_.isNull(checkFirstCharacter(numberDocument.value))) {
+
                 return;
             }
 

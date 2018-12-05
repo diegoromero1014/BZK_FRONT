@@ -6,16 +6,15 @@ import {
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
     patternOfStructureEmail, patternOfEmail, patternOfHistory, patternOfClientName, patternOfDescription,
     patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
-    patternOfForbiddenCharacter,
-    patternOfNameOtherParticipant, patternOfPositionOtherParticipant, patternOfCompanyOtherParticipant,
-    patternDecimalNumbers, patternOfPlaceOfPrevisit
+    patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant, 
+    patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit
 } from './patternsToValidateField';
 
 import {
     MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH,
     MESSAGE_WARNING_MAX_LENGTH, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_WARNING_HISTORY, MESSAGE_WARNING_NUMBER_DOCUMENT,
     MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS,
-    MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS,
+    MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_OPPORTUNITY_NAME,
     MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_NAME_OTHER_PARTICIPANT,
     MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT, MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT,
     MESSAGE_WARNING_PLACE_OF_PREVISIT, MESSAGE_WARNING_RANGE, MESSAGE_WARNING_FORBIDDEN_CHARACTER
@@ -53,12 +52,12 @@ export const processRules = (formFields, fieldsWithRules, props) => {
     return errors;
 }
 
-export const checkRequired = value => (_.isNull(value) || _.toString(value).length < 1) ? MESSAGE_REQUIRED_VALUE : null;
+export const checkRequired = value => (_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) ? MESSAGE_REQUIRED_VALUE : null;
 export const checkRequiredWithGlobalCondition = value => globalCondition ? checkRequired(value) : null;
 
 export const checkOnlyAlphabetical = (value) => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfOnlyAlphabetical).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfOnlyAlphabetical.test(value)) {
         message = MESSAGE_WARNING_ONLY_ALPHABETICAL;
     }
 
@@ -98,7 +97,7 @@ export const checkMaxLength = maxLength => value => {
 
 export const checkNumberDocument = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfNumberDocument.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfNumberDocument.test(value)) {
         message = MESSAGE_WARNING_NUMBER_DOCUMENT;
     }
 
@@ -107,7 +106,7 @@ export const checkNumberDocument = value => {
 
 export const checkObservations = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfObservation).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfObservation.test(value)) {
         message = MESSAGE_WARNING_OBSERVATIONS;
     }
 
@@ -173,6 +172,15 @@ export const checkContactRelevantFeatures = value => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfContactRelevantFeatures).test(value)) {
         message = MESSAGE_WARNING_RELEVANT_FEATURES;
+    }
+
+    return message;
+}
+
+export const checkPipeLineOpportunityName = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfOpportunityName).test(value)) {
+        message = MESSAGE_WARNING_OPPORTUNITY_NAME;
     }
 
     return message;

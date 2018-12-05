@@ -83,6 +83,7 @@ class Challenger extends Component {
                         error={clientTeachError}
                         onChange={onChangeClientTeach}
                         name="clientTeach"
+                        id="clientTeach"
                         style={{ width: '100%', height: '130pt', marginBottom: '10pt' }}
                         placeholder="Ingrese un valor..."
                         disabled={disabled}
@@ -104,6 +105,7 @@ class Challenger extends Component {
                         error={adaptMessageError}
                         onChange={onChangeAdaptMessage}
                         name="adaptMessage"
+                        id="adaptMessage"
                         style={{ width: '100%', height: '130pt', marginBottom: '10pt' }}
                         placeholder="Ingrese un valor..."
                         disabled={disabled}
@@ -125,6 +127,7 @@ class Challenger extends Component {
                         error={controlConversationError}
                         onChange={onChangeControlConversation}
                         name="controlConversation"
+                        id="controlConversation"
                         style={{ width: '100%', height: '130pt', marginBottom: '10pt' }}
                         placeholder="Ingrese un valor..."
                         disabled={disabled}
@@ -146,6 +149,7 @@ class Challenger extends Component {
                         error={constructiveTensionError}
                         onChange={onChangeConstructiveTension}
                         name="constructiveTension"
+                        id="constructiveTension"
                         style={{ width: '100%', height: '130pt', marginBottom: '10pt' }}
                         placeholder="Ingrese un valor..."
                         disabled={disabled}

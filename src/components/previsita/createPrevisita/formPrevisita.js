@@ -27,16 +27,15 @@ import { getMasterDataFields } from '../../selectsComponent/actions';
 import { createPrevisit, validateDatePreVisit } from '../actions';
 import { changeStateSaveData } from '../../dashboard/actions';
 import {
-    consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation
+    consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateResponse
 } from '../../../actionsGlobal';
 
 import { PREVISIT_TYPE } from '../../selectsComponent/constants';
 import { LAST_PREVISIT_REVIEW } from '../../../constantsParameters';
 import { PROPUEST_OF_BUSINESS } from '../constants';
 import {
-    SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OTHERS_PARTICIPANTS,
-    TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA, MESSAGE_ERROR,
-    ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_MESAGE,
+    SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS,
+    MESSAGE_SAVE_DATA, MESSAGE_ERROR, ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, REGEX_SIMPLE_XSS_MESAGE,
 } from '../../../constantsGlobal';
 
 
@@ -412,16 +411,14 @@ class FormPrevisita extends Component {
             this.setState({
                 durationPreVisitError: messageRequiredDuration
             });
-
         } else {
             const messageWarningDuration = checkDecimalNumbers(this.state.durationPreVisit);
             if (!_.isNull(messageWarningDuration)) {
                 errorInForm = true;
                 this.setState({
-                    lugarPrevisitError: messageWarningDuration
+                    durationPreVisitError: messageWarningDuration
                 });
             }
-
         }
 
         if (typeButtonClick === SAVE_PUBLISHED) {
@@ -431,12 +428,6 @@ class FormPrevisita extends Component {
                 this.setState({
                     targetPrevisitError: messageRequiredTargetPrevisit
                 });
-            } else if (xssValidation(this.state.targetPrevisit, true)) {
-                errorInForm = true;
-                this.setState({
-                    targetPrevisitError: VALUE_XSS_INVALID
-                });
-                errorMessage = REGEX_SIMPLE_XSS_MESAGE;
             }
         }
 
@@ -485,62 +476,6 @@ class FormPrevisita extends Component {
                 controlConversationError: null,
                 constructiveTensionError: null
             });
-        }
-
-        /**
-         * Validaciones texto enriquecido
-         */
-
-        if (xssValidation(this.state.targetPrevisit, true)) {
-            errorInForm = true;
-            this.setState({
-                targetPrevisitError: VALUE_XSS_INVALID
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.pendingPrevisit, true)) {
-            errorInForm = true;
-            this.setState({
-                pendingPrevisitError: VALUE_XSS_INVALID
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.clientTeach, true)) {
-            errorInForm = true;
-            this.setState({
-                clientTeachError: VALUE_XSS_INVALID,
-                clientTeachTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.adaptMessage, true)) {
-            errorInForm = true;
-            this.setState({
-                adaptMessageError: VALUE_XSS_INVALID,
-                adaptMessageTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.controlConversation, true)) {
-            errorInForm = true;
-            this.setState({
-                controlConversationError: VALUE_XSS_INVALID,
-                controlConversationTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.constructiveTension, true)) {
-            errorInForm = true;
-            this.setState({
-                constructiveTensionError: VALUE_XSS_INVALID,
-                constructiveTensionTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
         }
 
         if (!errorInForm) {
@@ -883,6 +818,7 @@ class FormPrevisita extends Component {
                     <Col xs={12} md={12} lg={12}>
                         <RichText
                             name="targetPrevisit"
+                            id="targetPrevisit"
                             value={this.state.targetPrevisit}
                             touched={true}
                             onChange={val => this._changeTargetPrevisit(val)}
@@ -952,6 +888,7 @@ class FormPrevisita extends Component {
                     <Col xs={12} md={12} lg={12}>
                         <RichText
                             name="pendingPrevisit"
+                            id="pendingPrevisit"
                             value={this.state.pendingPrevisit}
                             touched={true}
                             onChange={val => this._changePendingPrevisit(val)}
