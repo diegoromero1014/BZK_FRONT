@@ -112,12 +112,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       };
 
       isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
-      if (isChildren) {
-        fieldsWithRules.opportunityName.rules = [];
-      }
 
       if (origin === ORIGIN_PIPELIN_BUSINESS) {
         nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
+        fieldsWithRules.opportunityName.rules = [];
       } else {
         nameDisbursementPlansInReducer = "disbursementPlans";
       }
@@ -269,7 +267,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           )
         }).length > 0
       });
-
+      
       consultListWithParameterUbication("", currencyValue).then((data) => {
         this.setState({
           products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
@@ -939,7 +937,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       labelInput="Seleccione..."
                       valueProp={'id'}
                       textProp={'value'}
-                      max="15"
+                      max="30"
                       {...areaAssets}
                       name={nameAreaAssets}
                       parentId="dashboardComponentScroll"
@@ -958,6 +956,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     <Input
                       name="areaAssetsValue"
                       type="text"
+                      max="19"
                       {...areaAssetsValue}
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(1, areaAssetsValue, val, true, 2)}
