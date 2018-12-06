@@ -187,12 +187,7 @@ class ModalComponentContact extends Component {
 
         if (tipoDocumento.value && numeroDocumento.value) {
 
-            if (eval(patternOfNumberDocument).test(numeroDocumento.value)) {
-                return;
-            }
-
-            if (xssValidation(numeroDocumento.value)) {
-                this.setState({ showErrorXss: true });
+            if (!patternOfNumberDocument.test(numeroDocumento.value ? numeroDocumento.value : "")) {
                 return;
             }
 
@@ -213,7 +208,7 @@ class ModalComponentContact extends Component {
         } else {
             this.setState({ showCam: true });
         }
-        
+
     }
 
     _handleCreateContact() {
@@ -221,9 +216,9 @@ class ModalComponentContact extends Component {
         const {
             fields: {
                 id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial,
-                tipoActitud, tipoContacto, numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido,
-                fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo, tipoEntidad,
-                tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
+            tipoActitud, tipoContacto, numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido,
+            fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo, tipoEntidad,
+            tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
             },
         } = this.props;
 
@@ -293,10 +288,10 @@ class ModalComponentContact extends Component {
         const {
             fields: {
                 tipoDocumento, numeroDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia,
-                tipoEstiloSocial, tipoActitud, tipoContacto, primerNombre, segundoNombre, primerApellido,
-                segundoApellido, fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo,
-                tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures,
-                listaFavoritos
+            tipoEstiloSocial, tipoActitud, tipoContacto, primerNombre, segundoNombre, primerApellido,
+            segundoApellido, fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo,
+            tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures,
+            listaFavoritos
             }, handleSubmit, reducerGlobal
         } = this.props;
 
@@ -885,6 +880,7 @@ export default reduxForm({
     destroyOnUnmount: false,
     validate,
     onSubmitFail: errors => {
+        console.log(errors)
         document.getElementById('modalComponentScrollCreateContact').scrollTop = 0;
         if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
             thisForm.setState({ showErrorXss: true });
