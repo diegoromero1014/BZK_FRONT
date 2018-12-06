@@ -390,7 +390,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               });
             } else {
               pipelineJson.disbursementPlans = _.map(listDisburmentPlans, (item) => {
-                item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
+                if (item.id != null) {           
+                  item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
+                }
                 return item;
               });
 
@@ -937,7 +939,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       labelInput="Seleccione..."
                       valueProp={'id'}
                       textProp={'value'}
-                      max="30"
+                      max="29"
                       {...areaAssets}
                       name={nameAreaAssets}
                       parentId="dashboardComponentScroll"
@@ -956,7 +958,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     <Input
                       name="areaAssetsValue"
                       type="text"
-                      max="19"
+                      max="17"
                       {...areaAssetsValue}
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(1, areaAssetsValue, val, true, 2)}
@@ -1118,6 +1120,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     validate,
     touchOnChange: true,
     onSubmitFail: errors => {
+      console.log("onSubmitFail",errors)
       let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
 
     }
