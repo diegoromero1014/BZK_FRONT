@@ -9,7 +9,7 @@ import {
 const fieldsWithRules = {
     contactId: { rules: [] },
     contactType: { rules: [] },
-    contactIdentityNumber: { rules: [checkRequired, checkNumberDocument, checkMaxLength(30)] },
+    contactIdentityNumber: { rules: [checkRequired, checkNumberDocument, checkFirstCharacter, checkMaxLength(30)] },
     contactTitle: { rules: [checkRequired] },
     contactGender: { rules: [checkRequired] },
     contactFirstName: { rules: [checkRequired, checkOnlyAlphabetical, checkFirstCharacter, checkMinLength(2), checkMaxLength(60)] },

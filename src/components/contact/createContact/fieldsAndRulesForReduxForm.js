@@ -9,7 +9,7 @@ import {
 const fieldsWithRules = {
     id: { rules: [] },
     tipoDocumento: { rules: [] },
-    numeroDocumento: { rules: [checkRequired, checkNumberDocument, checkMaxLength(30)] },
+    numeroDocumento: { rules: [checkRequired, checkNumberDocument, checkFirstCharacter, checkMaxLength(30)] },
     tipoTratamiendo: { rules: [checkRequired] },
     tipoGenero: { rules: [checkRequired] },
     primerNombre: { rules: [checkRequired, checkOnlyAlphabetical, checkFirstCharacter, checkMinLength(2), checkMaxLength(60)] },

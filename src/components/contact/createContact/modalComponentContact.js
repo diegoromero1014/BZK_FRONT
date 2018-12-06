@@ -17,7 +17,7 @@ import { createErrorsPriority, shouldHandleError } from '../../../utils';
 import Tooltip from '../../toolTip/toolTipComponent';
 import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
-import { patternOfNumberDocument } from '../../../validationsFields/patternsToValidateField';
+import { patternOfNumberDocument, patternOfForbiddenCharacter } from '../../../validationsFields/patternsToValidateField';
 
 import { toggleModalContact, createContactNew, searchContact, clearSearchContact } from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate, downloadFilePDF } from '../actions'
@@ -38,6 +38,11 @@ import {
     VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS_MESAGE
 } from '../../../constantsGlobal';
+
+import {
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER
+} from '../../../validationsFields/validationsMessages';
+
 import {
     FILTER_CITY,
     FILTER_PROVINCE,
@@ -83,7 +88,8 @@ class ModalComponentContact extends Component {
             errorMap: OrderedMap(),
             showCam: false,
             showErrorXss: false,
-            showErrorForm: false
+            showErrorForm: false,
+            showErrorXssFirstCharacter: false
 
         };
         momentLocalizer(moment);
@@ -187,7 +193,8 @@ class ModalComponentContact extends Component {
 
         if (tipoDocumento.value && numeroDocumento.value) {
 
-            if (!patternOfNumberDocument.test(numeroDocumento.value ? numeroDocumento.value : "")) {
+            if (!patternOfNumberDocument.test(numeroDocumento.value ? numeroDocumento.value : "")
+                || patternOfForbiddenCharacter.test(numeroDocumento.value ? numeroDocumento.value : "")) {
                 return;
             }
 
@@ -879,10 +886,10 @@ export default reduxForm({
     fields,
     destroyOnUnmount: false,
     validate,
-    onSubmitFail: errors => {
-        console.log(errors)
+    onSubmitFail: errors => {        
         document.getElementById('modalComponentScrollCreateContact').scrollTop = 0;
-        if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
+        let arrErrors = Object.keys(errors).map(i => errors[i]);
+        if (arrErrors.indexOf(VALUE_XSS_INVALID) > -1 || arrErrors.indexOf(MESSAGE_WARNING_FORBIDDEN_CHARACTER) > -1) {
             thisForm.setState({ showErrorXss: true });
         } else {
             thisForm.setState({ showErrorForm: true });
