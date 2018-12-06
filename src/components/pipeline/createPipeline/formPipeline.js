@@ -332,7 +332,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         probability, nameUsuario, opportunityName,
         productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue,
         termInMonthsValues, pendingDisbursementAmount }, createEditPipeline, swtShowMessage,
-        changeStateSaveData, pipelineBusinessReducer, pipelineReducer, error } = this.props;
+        changeStateSaveData, pipelineBusinessReducer, pipelineReducer } = this.props;
 
       if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
         this.setState({
