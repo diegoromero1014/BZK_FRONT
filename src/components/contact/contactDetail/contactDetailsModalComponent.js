@@ -54,7 +54,8 @@ import {
     REGEX_SIMPLE_XSS_MESAGE
 } from '../../../constantsGlobal';
 import {
-    MESSAGE_WARNING_FORBIDDEN_CHARACTER
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER,
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER_PREFIX
 } from '../../../validationsFields/validationsMessages';
 
 var thisForm;
@@ -77,6 +78,7 @@ class ContactDetailsModalComponent extends Component {
             generoData: [],
             showErrorForm: false,
             showErrorXss: false,
+            showErrorFormInvalidValue: false
         };
         momentLocalizer(moment);
         thisForm = this;
@@ -864,6 +866,13 @@ class ContactDetailsModalComponent extends Component {
                     text="Señor usuario, para editar un contacto debe ingresar los campos obligatorios."
                     onConfirm={() => this.setState({ showErrorForm: false })}
                 />
+                <SweetAlert
+                    type="error"
+                    show={this.state.showErrorFormInvalidValue}
+                    title="Valores no validos"
+                    text="Señor usuario, algunos campos del formulario contienen valores inválidos."
+                    onConfirm={() => this.setState({ showErrorFormInvalidValue: false })}
+                />
             </form>
         );
     }
@@ -950,8 +959,13 @@ export default reduxForm({
     onSubmitFail: errors => {
         document.getElementById('modalEditCotact').scrollTop = 0;
         let arrErrors = Object.keys(errors).map(i => errors[i]);
+        let hasInvalidValues = Object.keys(errors).filter(item => (errors[item] ? errors[item] : "").indexOf(MESSAGE_WARNING_FORBIDDEN_CHARACTER_PREFIX) > -1);
+        hasInvalidValues = hasInvalidValues.length > 0;
+
         if (arrErrors.indexOf(VALUE_XSS_INVALID) > -1 || arrErrors.indexOf(MESSAGE_WARNING_FORBIDDEN_CHARACTER) > -1) {
             thisForm.setState({ showErrorXss: true });
+        } else if (hasInvalidValues) {
+            thisForm.setState({ showErrorFormInvalidValue: true });
         } else {
             thisForm.setState({ showErrorForm: true });
         }
