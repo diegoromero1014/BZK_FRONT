@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { redirectUrl } from '../globalComponents/actions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';

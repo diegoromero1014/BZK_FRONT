@@ -112,12 +112,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       };
 
       isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
-      if (isChildren) {
-        fieldsWithRules.opportunityName.rules = [];
-      }
 
       if (origin === ORIGIN_PIPELIN_BUSINESS) {
         nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
+        fieldsWithRules.opportunityName.rules = [];
       } else {
         nameDisbursementPlansInReducer = "disbursementPlans";
       }
@@ -269,7 +267,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           )
         }).length > 0
       });
-
+      
       consultListWithParameterUbication("", currencyValue).then((data) => {
         this.setState({
           products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
@@ -332,7 +330,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         probability, nameUsuario, opportunityName,
         productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue,
         termInMonthsValues, pendingDisbursementAmount }, createEditPipeline, swtShowMessage,
-        changeStateSaveData, pipelineBusinessReducer, pipelineReducer, error } = this.props;
+        changeStateSaveData, pipelineBusinessReducer, pipelineReducer } = this.props;
 
       if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
         this.setState({
@@ -392,7 +390,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               });
             } else {
               pipelineJson.disbursementPlans = _.map(listDisburmentPlans, (item) => {
-                item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
+                if (item.id != null) {           
+                  item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
+                }
                 return item;
               });
 
@@ -939,7 +939,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       labelInput="Seleccione..."
                       valueProp={'id'}
                       textProp={'value'}
-                      max="15"
+                      max="29"
                       {...areaAssets}
                       name={nameAreaAssets}
                       parentId="dashboardComponentScroll"
@@ -958,6 +958,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     <Input
                       name="areaAssetsValue"
                       type="text"
+                      max="17"
                       {...areaAssetsValue}
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(1, areaAssetsValue, val, true, 2)}

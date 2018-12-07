@@ -17,7 +17,7 @@ import { createErrorsPriority, shouldHandleError } from '../../../utils';
 import Tooltip from '../../toolTip/toolTipComponent';
 import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
-import { patternOfNumberDocument } from '../../../validationsFields/patternsToValidateField';
+import { patternOfNumberDocument, patternOfForbiddenCharacter } from '../../../validationsFields/patternsToValidateField';
 
 import { toggleModalContact, createContactNew, searchContact, clearSearchContact } from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate, downloadFilePDF } from '../actions'
@@ -38,6 +38,12 @@ import {
     VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS_MESAGE
 } from '../../../constantsGlobal';
+
+import {
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER,
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER_PREFIX
+} from '../../../validationsFields/validationsMessages';
+
 import {
     FILTER_CITY,
     FILTER_PROVINCE,
@@ -83,7 +89,8 @@ class ModalComponentContact extends Component {
             errorMap: OrderedMap(),
             showCam: false,
             showErrorXss: false,
-            showErrorForm: false
+            showErrorForm: false,
+            showErrorFormInvalidValue: false
 
         };
         momentLocalizer(moment);
@@ -187,12 +194,8 @@ class ModalComponentContact extends Component {
 
         if (tipoDocumento.value && numeroDocumento.value) {
 
-            if (!patternOfNumberDocument.test(numeroDocumento.value)) {
-                return;
-            }
-
-            if (xssValidation(numeroDocumento.value)) {
-                this.setState({ showErrorXss: true });
+            if (!patternOfNumberDocument.test(numeroDocumento.value ? numeroDocumento.value : "")
+                || patternOfForbiddenCharacter.test(numeroDocumento.value ? numeroDocumento.value : "")) {
                 return;
             }
 
@@ -213,7 +216,7 @@ class ModalComponentContact extends Component {
         } else {
             this.setState({ showCam: true });
         }
-        
+
     }
 
     _handleCreateContact() {
@@ -221,9 +224,9 @@ class ModalComponentContact extends Component {
         const {
             fields: {
                 id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial,
-                tipoActitud, tipoContacto, numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido,
-                fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo, tipoEntidad,
-                tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
+            tipoActitud, tipoContacto, numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido,
+            fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo, tipoEntidad,
+            tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
             },
         } = this.props;
 
@@ -293,10 +296,10 @@ class ModalComponentContact extends Component {
         const {
             fields: {
                 tipoDocumento, numeroDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia,
-                tipoEstiloSocial, tipoActitud, tipoContacto, primerNombre, segundoNombre, primerApellido,
-                segundoApellido, fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo,
-                tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures,
-                listaFavoritos
+            tipoEstiloSocial, tipoActitud, tipoContacto, primerNombre, segundoNombre, primerApellido,
+            segundoApellido, fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo,
+            tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures,
+            listaFavoritos
             }, handleSubmit, reducerGlobal
         } = this.props;
 
@@ -800,6 +803,13 @@ class ModalComponentContact extends Component {
                     text="Señor usuario, para crear un contacto debe ingresar los campos obligatorios."
                     onConfirm={() => this.setState({ showErrorForm: false })}
                 />
+                <SweetAlert
+                    type="error"
+                    show={this.state.showErrorFormInvalidValue}
+                    title="Valores no validos"
+                    text="Señor usuario, algunos campos del formulario contienen valores inválidos."
+                    onConfirm={() => this.setState({ showErrorFormInvalidValue: false })}
+                />
             </form>
         );
     }
@@ -886,8 +896,14 @@ export default reduxForm({
     validate,
     onSubmitFail: errors => {
         document.getElementById('modalComponentScrollCreateContact').scrollTop = 0;
-        if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
+        let arrErrors = Object.keys(errors).map(i => errors[i]);
+        let hasInvalidValues = Object.keys(errors).filter(item => (errors[item] ? errors[item] : "").indexOf(MESSAGE_WARNING_FORBIDDEN_CHARACTER_PREFIX) > -1);
+        hasInvalidValues = hasInvalidValues.length > 0;
+        
+        if (arrErrors.indexOf(VALUE_XSS_INVALID) > -1 || arrErrors.indexOf(MESSAGE_WARNING_FORBIDDEN_CHARACTER) > -1) {
             thisForm.setState({ showErrorXss: true });
+        } else if (hasInvalidValues) {
+            thisForm.setState({ showErrorFormInvalidValue: true });
         } else {
             thisForm.setState({ showErrorForm: true });
         }
