@@ -37,7 +37,7 @@ const fieldsWithRules = {
     tipoHobbie: { rules: [] },
     tipoDeporte: { rules: [] },
     contactRelevantFeatures: { rules: [checkContactRelevantFeatures, checkFirstCharacter] },
-    listaFavorito: { rules: [] }
+    listaFavoritos: { rules: [] }
 };
 
 export const fields = _.keys(fieldsWithRules);
