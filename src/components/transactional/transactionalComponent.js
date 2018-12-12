@@ -25,7 +25,7 @@ class Transactional extends Component {
     }
 
     componentWillMount() {
-        if (window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined) {
+        if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
             const {consultParameterServer, updateTitleNavBar, setUrlParameter} = this.props;

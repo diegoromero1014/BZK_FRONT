@@ -1,16 +1,31 @@
 import React, { Component } from "react";
 import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
-import { redirectUrl } from "../../globalComponents/actions";
 import { Col, Row } from "react-flexbox-grid";
+
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import { consultDataSelect, consultList, getMasterDataFields } from "../../selectsComponent/actions";
-import { VISIT_TYPE } from "../../selectsComponent/constants";
 import ParticipantesCliente from "../../participantsVisitPre/participantesCliente";
 import ParticipantesBancolombia from "../../participantsVisitPre/participantesBancolombia";
 import ParticipantesOtros from "../../participantsVisitPre/participantesOtros";
 import TaskVisit from "../tasks/taskVisit";
+import RaitingInternal from "../../clientInformation/ratingInternal";
+import SweetAlert from "../../sweetalertFocus";
+import ButtonAssociateComponent from "./associateVisit";
+import ToolTip from "../../toolTip/toolTipComponent";
+import RichText from "../../richText/richTextComponent";
+import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
+
+import { redirectUrl } from "../../globalComponents/actions";
+import { consultDataSelect, consultList, getMasterDataFields } from "../../selectsComponent/actions";
+import { clearIdPrevisit, createVisti } from "../actions";
+import { downloadFilePdf } from "../../clientInformation/actions";
+import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from "../../../actionsGlobal";
+import { detailPrevisit } from "../../previsita/actions";
+import { addParticipant, clearParticipants } from "../../participantsVisitPre/actions";
+import { changeStateSaveData } from "../../dashboard/actions";
+
+import { VISIT_TYPE } from "../../selectsComponent/constants";
 import { KEY_TYPE_VISIT } from "../constants";
 import {
   AEC_NO_APLIED,
@@ -27,21 +42,11 @@ import {
   REGEX_SIMPLE_XSS_TITLE
 } from "../../../constantsGlobal";
 import { LAST_VISIT_REVIEW } from "../../../constantsParameters";
-import RaitingInternal from "../../clientInformation/ratingInternal";
-import { clearIdPrevisit, createVisti } from "../actions";
-import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from "../../../actionsGlobal";
-import { downloadFilePdf } from "../../clientInformation/actions";
-import SweetAlert from "sweetalert-react";
-import moment from "moment";
-import ButtonAssociateComponent from "./associateVisit";
-import { detailPrevisit } from "../../previsita/actions";
-import { addParticipant, clearParticipants } from "../../participantsVisitPre/actions";
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from "../../participantsVisitPre/constants";
-import { changeStateSaveData } from "../../dashboard/actions";
 import { MENU_CLOSED } from "../../navBar/constants";
-import RichText from "../../richText/richTextComponent";
+
 import _ from "lodash";
-import ToolTip from "../../toolTip/toolTipComponent";
+import moment from "moment";
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral"];
 var dateVisitLastReview;
@@ -91,14 +96,14 @@ class FormVisita extends Component {
     this._addParticipantsToReducer = this._addParticipantsToReducer.bind(this);
     this._executeFunctionFromAssociatePrevisit = this._executeFunctionFromAssociatePrevisit.bind(this);
     this._redirectToVisit = this._redirectToVisit.bind(this);
-  
+
   }
 
   _redirectToVisit() {
     this.setState({ showAlertDate: false });
 
     if (this.state.idEqualDateVisit) {
-      redirectUrl("/dashboard/visitaEditar/"+this.state.idEqualDateVisit);
+      redirectUrl("/dashboard/visitaEditar/" + this.state.idEqualDateVisit);
     }
   }
 
@@ -250,7 +255,7 @@ class FormVisita extends Component {
 
         var visitJson = {
           "id": null,
-          "client": window.localStorage.getItem('idClientSelected'),
+          "client": window.sessionStorage.getItem('idClientSelected'),
           "visitTime": moment(this.state.dateVisit).format('x'),
           "participatingContacts": dataClient.length === 0 ? null : dataClient,
           "participatingEmployees": dataBanco,
@@ -296,7 +301,7 @@ class FormVisita extends Component {
       }
     } else {
       typeMessage = "error";
-      titleMessage =  errorMessageTitle;
+      titleMessage = errorMessageTitle;
       message = errorMessage;
       this.setState({ showMessageCreateVisit: true });
     }
@@ -319,10 +324,9 @@ class FormVisita extends Component {
 
     const { visitReducer } = this.props;
 
-    
+
 
     let fechaSeleccionada = moment(value).format('MM/DD/YYYY');
-    console.log("fecha componente", fechaSeleccionada);    
 
     // Consultar la lista de previsitas por cliente
     let visitas = visitReducer.get('visitList');
@@ -330,14 +334,14 @@ class FormVisita extends Component {
     let fechasIguales = false;
     let fechaVisita;
     let visitaIgual = null;
-    
+
 
     // Recorrer la respuesta comparando las fechas
-    for(let i = 0; i<visitas.length; i++ ) {
+    for (let i = 0; i < visitas.length; i++) {
 
       fechaVisita = moment(visitas[i].dateVisit).format('MM/DD/YYYY');
 
-      if(fechaVisita == fechaSeleccionada) {
+      if (fechaVisita == fechaSeleccionada) {
         fechasIguales = true;
         visitaIgual = visitas[i];
         break;
@@ -345,14 +349,11 @@ class FormVisita extends Component {
 
     }
     // Alertar en caso de que se encuentre una fecha igual
-    if(fechasIguales && visitaIgual) {
-      console.log("fechas iguales");
-      this.setState({showAlertDate: true, idEqualDateVisit: visitaIgual.id});
+    if (fechasIguales && visitaIgual) {
+      this.setState({ showAlertDate: true, idEqualDateVisit: visitaIgual.id });
     }
 
     // Permitir el redirect
-
-
     this.setState({
       dateVisit: value,
       dateVisitError: null
@@ -524,7 +525,8 @@ class FormVisita extends Component {
     return (
       <form onSubmit={handleSubmit(this._submitCreateVisita)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
         style={{ backgroundColor: "#FFFFFF", marginTop: "0px", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
-        <header className="header-client-detail">
+        <SecurityMessageComponent />
+        <header className="header-client-detail"  style={{ paddingTop: '10px' }}>
           <div className="company-detail" style={{ marginLeft: "20px", marginRight: "20px" }}>
             <div>
               <h3 style={{ wordBreak: 'keep-all' }} className="inline title-head">
@@ -722,9 +724,9 @@ class FormVisita extends Component {
           confirmButtonText='Ir a la Visita!'
           cancelButtonText="Continuar aquí"
           showCancelButton={true}
-          onCancel={() => this.setState({ showAlertDate: false })} 
+          onCancel={() => this.setState({ showAlertDate: false })}
           onConfirm={this._redirectToVisit} />
-          />
+        />
       </form>
     );
   }

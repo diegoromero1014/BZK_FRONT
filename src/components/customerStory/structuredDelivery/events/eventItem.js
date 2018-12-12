@@ -6,7 +6,7 @@ import Input from '../../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { deleteEvent, updateEvent } from './actions';
 import { updateEventErrors } from '../actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../../sweetalertFocus';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -94,7 +94,7 @@ class EventItem extends Component {
                     <button onClick={() => this.setState({ showConfirm: true })}
                         className="btn btn-sm  btn-danger"
                         type="button">
-                        <i style={{ margin: '0em', fontSize: '1.2em' }} className="trash outline icon"></i>
+                        <i style={{ margin: '0em', fontSize: '1.2em' }} className="trash icon"></i>
                     </button>
                 </Col>
                 <SweetAlert

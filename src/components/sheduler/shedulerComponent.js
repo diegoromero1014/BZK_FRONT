@@ -4,6 +4,7 @@ import moment from 'moment';
 import Modal from 'react-modal';
 import { reduxForm } from 'redux-form';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
+import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import { showLoading } from '../loading/actions';
 import { updateTitleNavBar } from '../navBar/actions';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -33,7 +34,8 @@ class Sheduler extends Component {
         super(props)
         this.state = {
             modalIsOpen: false,
-            idUser: 0
+            idUser: 0,
+            display: 'none'
         }
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -59,9 +61,6 @@ class Sheduler extends Component {
             }
         });
 
-        this.setState({
-            display: 'none'
-        })
         updateTitleNavBar('Agenda');
     }
 
@@ -75,7 +74,7 @@ class Sheduler extends Component {
         });
 
         const { consultInfoClient } = this.props;
-        window.localStorage.setItem("idClientSelected", idClient);
+        window.sessionStorage.setItem("idClientSelected", idClient);
         consultInfoClient().then((success) => {
             showLoading(false, null);
             this.setState({
@@ -110,26 +109,26 @@ class Sheduler extends Component {
             this._handlePrevisitsFind();
         }
 
-        this.setState({
-            display: 'block'
-        });
+
     }
 
     _cleanSearch() {
         const { resetForm, showLoading, clearFilter, consultList, consultDataSelect, clrearConsultListWithParameter, clearConsultListWithParameterUbication, clearLists } = this.props;
+
         showLoading(true, "cargando..");
+
         resetForm();
 
         clearLists([LIST_ZONES, TEAM_VALUE_OBJECTS]);
 
-        clearFilter().then((data) => {
-            if (_.has(data, "payload")) {
-                this.setState({
-                    display: 'none'
-                });
-                showLoading(false, null);
-            }
+        clearFilter();
+
+        this.setState({
+            display: 'none'
         });
+
+        showLoading(false, false);
+
     }
 
     _onChangeZoneStatus(val) {
@@ -147,9 +146,6 @@ class Sheduler extends Component {
             this._handlePrevisitsFind();
         }
 
-        this.setState({
-            display: 'block'
-        });
     }
 
     _onChangeTeam(val) {
@@ -159,24 +155,18 @@ class Sheduler extends Component {
         if (val) {
             this._handlePrevisitsFind();
         }
-        this.setState({
-            display: 'block'
-        });
+
     }
 
     _handlePrevisitsFind() {
         const { fields: { team, region, zone, idUsuario }, getSchedulerPrevisits, showLoading } = this.props;
         showLoading(true, 'Cargando..');
-        getSchedulerPrevisits(team.value, region.value, zone.value, idUsuario.value).then((response) => {
-            let lista = JSON.parse(response.payload.data.schedulerListPreviist);
-            let jsonP = lista.map((item) => {
-                item.title = item.clientName;
-                item.start = item.initialDatePrevisit;
-                item.end = item.finalDatePrevisit;
-                return item;
-            });
-            return jsonP;
+        getSchedulerPrevisits(team.value, region.value, zone.value, idUsuario.value)
+
+        this.setState({
+            display: 'block'
         });
+
         showLoading(false, null);
 
     }
@@ -205,7 +195,7 @@ class Sheduler extends Component {
     }
 
     componentDidMount() {
-        self = this;
+        let self = this;
         $("#iconSearchParticipants").click(function () {
             var e = { keyCode: 13, consultclick: true };
             self.updateKeyValueUsersBanco(e);
@@ -213,7 +203,7 @@ class Sheduler extends Component {
     }
 
     componentWillUpdate() {
-        self = this;
+        let self = this;
         $("#iconSearchParticipants").click(function () {
             var e = { keyCode: 13, consultclick: true };
             self.updateKeyValueUsersBanco(e);
@@ -262,7 +252,8 @@ class Sheduler extends Component {
     render() {
         const { fields: { team, region, zone, nameUsuario }, schedulerPrevisitReduser, selectsReducer } = this.props;
         const data = schedulerPrevisitReduser.get('schedulerPrevisitList');
-        const userName = sessionStorage.getItem('userName');
+        const userName = localStorage.getItem('userNameFront');
+
         return (
             <div>
                 <form>
@@ -310,25 +301,19 @@ class Sheduler extends Component {
                             />
                         </Col>
                         <Col xs={12} sm={12} md={3} lg={2}>
-                            <dt>
                                 <div className="ui dropdown search participantBanc fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
-                                    <div className="ui icon input" style={{ width: "100%", pointerEvents: 'auto !important' }}>
-                                        <input className="prompt" id="inputParticipantBanc"
-                                            style={{ borderRadius: "3px" }}
-                                            autoComplete="off"
-                                            type="text"
-                                            value={nameUsuario.value}
-                                            onChange={nameUsuario.onChange}
-                                            onBlur={this.onBlurClear}
-                                            placeholder="Creador"
-                                            onKeyPress={this.updateKeyValueUsersBanco}
-                                            onSelect={val => this._updateValue(val)}
-                                        />
-                                        <i className="search icon" id="iconSearchParticipants"></i>
-                                    </div>
-                                    <div className="menu results"></div>
+                                    <ComboBoxFilter
+                                        name="inputParticipantBanc"
+                                        placeholder="Creador"
+                                        {...nameUsuario}
+                                        parentId="dashboardComponentScroll"
+                                        value={nameUsuario.value}
+                                        onChange={nameUsuario.onChange}
+                                        onKeyPress={this.updateKeyValueUsersBanco}
+                                        onSelect={val => this._updateValue(val)}
+                                        max="255"
+                                    />
                                 </div>
-                            </dt>
                         </Col>
                         <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
                             <button className="btn btn-primary" type="button" onClick={this._cleanSearch}

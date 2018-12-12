@@ -20,7 +20,7 @@ export function contactsByFunctionOrTypeFindServer(idFunction, idType, pageNum, 
 
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",

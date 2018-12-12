@@ -25,7 +25,7 @@ export function viewAlertClient(view){
 export function consultModulesAccess(){
   const json = {
       messageHeader: {
-        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
         "service": "",
         "status": "0",
         "language": "es",

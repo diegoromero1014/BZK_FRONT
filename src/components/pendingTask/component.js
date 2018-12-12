@@ -26,12 +26,12 @@ class UserTaskComponent extends Component {
   }
 
   componentWillMount() {
-    if (window.localStorage.getItem('sessionToken') === "") {
+    if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
       const { tasksByClientFindServer, tasksByClient, clearUserTask, validatePermissionsByModule } = this.props;
       clearUserTask();
-      tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
+      tasksByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
       validatePermissionsByModule(MODULE_TASKS).then((data) => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
@@ -55,7 +55,7 @@ class UserTaskComponent extends Component {
     }
     return (
       <div className="tab-pane quickZoomIn animated" style={{ width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px" }}>
-        <div className="tab-content break-word" style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'initial' }}>
+        <div className="tab-content break-word" style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'visible' }}>
           <Grid style={{ width: "100%" }}>
             <Row>
               <Col xs><span style={{ fontWeight: 'bold', color: '#4C5360' }}>Estado de la tarea:</span>
@@ -66,7 +66,7 @@ class UserTaskComponent extends Component {
               </Col>
               <Col xs>
                 {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), CREAR), false) &&
-                  <ButtonCreatePendingTaskComponent actionEdit={actionEdit}/>
+                  <ButtonCreatePendingTaskComponent actionEdit={actionEdit} />
                 }
               </Col>
             </Row>

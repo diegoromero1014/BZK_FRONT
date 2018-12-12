@@ -5,7 +5,7 @@ import * as constants from './constants';
 export function businessPlanByClientFindServer(clientId, pageNum, maxRows, columnOrder, order, statusDocumentId, businessStatus) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -77,7 +77,7 @@ export function orderColumnBusinessPlan(orderBusinessPlan, columnBusinessPlan) {
 export function createBusiness(jsonBusiness){
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -102,7 +102,7 @@ export function createBusiness(jsonBusiness){
 export function detailBusiness(idBusiness){
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -127,7 +127,7 @@ var request = axios.post(APP_URL + "/businessDetail", json);
 export function getCsvBusinessPlanByClient(clientId, haveNeeds) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -153,7 +153,7 @@ export function getCsvBusinessPlanByClient(clientId, haveNeeds) {
 export function getCsvBusinessPlan(year, haveNeeds) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -184,13 +184,13 @@ export function changeOwnerDraft(ownerDraft){
 }
 
 export function pdfDescarga(clientId, businessPlanId) {
-  window.open(APP_URL + "/pdfReportBusinessPlan?clientId=" + clientId + "&businessPlanId=" + businessPlanId + "&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionToken'));
+  window.open(APP_URL + "/pdfReportBusinessPlan?clientId=" + clientId + "&businessPlanId=" + businessPlanId + "&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionTokenFront'));
 }
 
 export function validateRangeDates(startDate, endDate, idBusinessPlan){
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -202,7 +202,7 @@ export function validateRangeDates(startDate, endDate, idBusinessPlan){
       "isSuccessful": true
     },
     "messageBody": {
-      "idClient": window.localStorage.getItem('idClientSelected'),
+      "idClient": window.sessionStorage.getItem('idClientSelected'),
       "idBusinessPlan": idBusinessPlan,
       "initialDate": startDate,
       "finalDate": endDate

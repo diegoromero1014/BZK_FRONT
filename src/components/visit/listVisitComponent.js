@@ -59,7 +59,7 @@ class ListVisitComponent extends Component {
     const {visitByClientFindServer,orderColumnVisit,clearVisitPaginator} = this.props;
     clearVisitPaginator();
     orderColumnVisit(orderVisit,columnVisit);
-    visitByClientFindServer(window.localStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,columnVisit,orderVisit,v1);
+    visitByClientFindServer(window.sessionStorage.getItem('idClientSelected'),0,NUMBER_RECORDS,columnVisit,orderVisit,v1);
 }
   _renderHeaders(){
     return [
@@ -99,7 +99,7 @@ class ListVisitComponent extends Component {
     return _.forOwn(data, function(value, key) {
               var json1 = {
                 "messageHeader": {
-                  "sessionToken": window.localStorage.getItem('sessionToken'),
+                  "sessionToken": window.localStorage.getItem('sessionTokenFront'),
                       "timestamp": new Date().getTime(),
                       "service": "",
                       "status": "0",
@@ -126,7 +126,7 @@ class ListVisitComponent extends Component {
             if(value.idPrevisit !== null && value.idPrevisit !== 0){
               _.set(value, 'actionsPdf', {
                 title: "Ver >>",
-                urlRedirect: "/pdfReportPreVisit?idClient="+window.localStorage.getItem('idClientSelected')+"&idPrevisit="+value.idPrevisit+"&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionToken')
+                urlRedirect: "/pdfReportPreVisit?idClient="+window.sessionStorage.getItem('idClientSelected')+"&idPrevisit="+value.idPrevisit+"&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionTokenFront')
               });
             }
             var dateVisitFormat = moment(value.dateVisit).locale('es');

@@ -1,63 +1,61 @@
 import React, { Component } from "react";
 import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
-import { redirectUrl } from "../../globalComponents/actions";
 import { Col, Row } from "react-flexbox-grid";
+
 import Input from "../../../ui/input/inputComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
-import Textarea from "../../../ui/textarea/textareaComponent";
-import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import {
-  BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
-  MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS, PIPELINE_STATUS,
-  PROBABILITY, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES,
-  PRODUCTS, PRODUCTS_MASK
-} from "../../selectsComponent/constants";
+import SweetAlert from "../../sweetalertFocus";
+import Business from "../business/business";
+import { addBusiness, clearBusiness } from "../business/ducks";
+import HeaderPipeline from "../headerPipeline";
+import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
+import RichText from '../../richText/richTextComponent';
+import ToolTip from '../../toolTip/toolTipComponent';
+import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
+
+import { redirectUrl } from "../../globalComponents/actions";
+import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans } from "../actions";
+import { filterUsersBanco } from "../../participantsVisitPre/actions";
+import { changeStateSaveData } from "../../dashboard/actions";
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import {
   getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication,
   clearLists, consultDataSelect
 } from "../../selectsComponent/actions";
 import {
-  CURRENCY_COP,
-  LINE_OF_BUSINESS_LEASING,
+  consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, nonValidateEnter,
+  handleFocusValueNumber, xssValidation
+} from "../../../actionsGlobal";
+
+import {
+  BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
+  MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS,
+  PROBABILITY, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES,
+  PRODUCTS, PRODUCTS_MASK
+} from "../../selectsComponent/constants";
+import {
   ORIGIN_PIPELIN_BUSINESS,
   BUSINESS_STATUS_COMPROMETIDO,
   BUSINESS_STATUS_COTIZACION,
   PRODUCT_FAMILY_LEASING,
   HELP_PROBABILITY
 } from "../constants";
-import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans } from "../actions";
 import {
-  DATE_FORMAT, DATE_START_AFTER, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER,
-  OPTION_REQUIRED, SAVE_DRAFT, SAVE_PUBLISHED, 
-  VALUE_REQUIERED, 
-  MESSAGE_ERROR, 
+  MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER,
+  OPTION_REQUIRED, SAVE_DRAFT, SAVE_PUBLISHED,
+  VALUE_REQUIERED,
+  MESSAGE_ERROR,
   VALUE_XSS_INVALID,
   REGEX_SIMPLE_XSS_TITLE,
   REGEX_SIMPLE_XSS_MESAGE
 } from "../../../constantsGlobal";
 import { LAST_PIPELINE_REVIEW } from "../../../constantsParameters";
-import {
-  consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, nonValidateEnter,
-  handleFocusValueNumber, xssValidation
-} from "../../../actionsGlobal";
-import SweetAlert from "sweetalert-react";
+
 import moment from "moment";
-import { filterUsersBanco } from "../../participantsVisitPre/actions";
-import { changeStateSaveData } from "../../dashboard/actions";
-import { MENU_CLOSED } from "../../navBar/constants";
 import _ from "lodash";
 import $ from "jquery";
 import numeral from "numeral";
-import Business from "../business/business";
-import { addBusiness, clearBusiness } from "../business/ducks";
-import HeaderPipeline from "../headerPipeline";
-import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
-import RichText from '../../richText/richTextComponent';
-import { showLoading } from '../../loading/actions';
-import ToolTip from '../../toolTip/toolTipComponent';
-import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 const fields = ["nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths",
   "businessStatus", "businessCategory", "currency", "indexing", "need", "observations", "product",
@@ -86,6 +84,7 @@ const validate = values => {
   } else {
     errors.businessStatus = null;
   }
+
   if (!values.value) {
     errors.value = VALUE_REQUIERED;
   } else if (xssValidation(values.value)) {
@@ -93,11 +92,13 @@ const validate = values => {
   } else {
     errors.value = null;
   }
+
   if (!values.currency) {
     errors.currency = OPTION_REQUIRED;
   } else {
     errors.currency = null;
   }
+
   if (!values.need) {
     errors.need = OPTION_REQUIRED;
   } else {
@@ -137,6 +138,8 @@ const validate = values => {
     errors.nameUsuario = VALUE_REQUIERED;
   } else if (xssValidation(values.nameUsuario)) {
     errors.nameUsuario = VALUE_XSS_INVALID;
+  } else if (!values.idUsuario) {
+    errors.nameUsuario = "Seleccione un empleado"
   } else {
     errors.nameUsuario = null;
   }
@@ -201,7 +204,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         areaAssetsEnabled: false,
         //Se utilizan para controlar el componente de planes de desembolso 
         showFormAddDisbursementPlan: false,
-        disbursementPlanRequired: false
+        disbursementPlanRequired: false,
+        products: []
       };
 
       isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
@@ -238,12 +242,12 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       });
     }
 
-    // TODO: Revisar la asignación del state
     // Colcar aquí el limpiar el formulario
     _closeMessageCreatePipeline() {
       this.setState({
         showMessageCreatePipeline: false
       });
+
       if (origin !== ORIGIN_PIPELIN_BUSINESS && typeMessage === "success") {
         this._cleanForm();
         redirectUrl("/dashboard/clientInformation");
@@ -257,7 +261,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _cleanForm() {
-      const { initialValues, fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
+      const { fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, reviewedDate,
         client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues } } = this.props;
       nameUsuario.onChange('');
@@ -293,6 +297,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       if (idCurrencyAux == null) {
         idCurrencyAux = parseInt(currencyValue);
       }
+
       if (currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && parseInt(currencyValue) !== parseInt(idCurrencyAux) && !contollerErrorChangeType) {
         contollerErrorChangeType = true;
         if (idCurrencyAux !== null && value.value !== '') {
@@ -308,6 +313,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
             showConfirmChangeCurrency: false
           });
         }
+
       } else {
         idCurrencyAux = parseInt(currencyValue);
         contollerErrorChangeType = false;
@@ -315,6 +321,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           showConfirmChangeCurrency: false
         });
       }
+
       var lugarSelector = $('.valueMillions');
       var input = lugarSelector.find("input");
       input.focus();
@@ -340,6 +347,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       if (_.isNil(val) || val === '') {
         this.showFormDisbursementPlan(false);
       }
+
       value.onChange(val);
     }
 
@@ -354,7 +362,12 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           )
         }).length > 0
       });
-      consultListWithParameterUbication(PRODUCTS, currencyValue);
+
+      consultListWithParameterUbication("", currencyValue).then((data) => {
+        this.setState({
+          products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
+        });
+      });
       product.onChange('');
     }
 
@@ -365,6 +378,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           output += val.toString().charAt(i)
         }
       }
+
       valuReduxForm.onChange(output);
     }
 
@@ -383,23 +397,25 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.setState({
         showConfirmChangeCurrency: false
       });
+
       contollerErrorChangeType = false;
       const { fields: { currency } } = this.props;
       if (idCurrencyAux !== null) {
         currency.onChange(idCurrencyAux);
       }
-
     }
 
     _closeConfirmChangeCurrency() {
       this.setState({
         showConfirmChangeCurrency: false
       });
+
       contollerErrorChangeType = false;
       const { fields: { value, currency } } = this.props;
       if (idCurrencyAux !== null) {
         value.onChange('');
       }
+
       idCurrencyAux = currency.value;
     }
 
@@ -407,7 +423,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       if (errorBusinessCategory === null) {
         const { fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
           businessCategory, currency, indexing, need, observations, product,
-          client, documentStatus, probability, nameUsuario, opportunityName,
+          probability, nameUsuario, opportunityName,
           productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue,
           termInMonthsValues, pendingDisbursementAmount }, createEditPipeline, swtShowMessage,
           changeStateSaveData, pipelineBusinessReducer, pipelineReducer } = this.props;
@@ -425,11 +441,12 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
             } else {
               nameDisbursementPlansInReducer = "disbursementPlans";
             }
+
             const listDisburmentPlans = pipelineReducer.get(nameDisbursementPlansInReducer);
             if ((productFamily.value !== "" && productFamily.value !== null && productFamily.value !== undefined) || typeButtonClick === SAVE_DRAFT) {
               let pipelineJson = {
                 "id": null,
-                "client": window.localStorage.getItem('idClientSelected'),
+                "client": window.sessionStorage.getItem('idClientSelected'),
                 "documentStatus": typeButtonClick,
                 "product": product.value,
                 "businessStatus": businessStatus.value,
@@ -472,14 +489,15 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
                   return item;
                 });
+
                 pipelineJson.listPipelines = _.map(pipelineBusinessReducer.toArray(), (pipelineBusiness) => {
                   pipelineBusiness.disbursementPlans = _.map(pipelineBusiness.disbursementPlans, (item) => {
                     item.id = item.id === null || item.id.toString().includes('disburPlan_') ? null : item.id;
                     return item;
                   });
                   return _.omit(pipelineBusiness, ['uuid']);
-                }
-                );
+                });
+
                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
                 createEditPipeline(pipelineJson).then((data) => {
                   changeStateSaveData(false, "");
@@ -517,13 +535,19 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     updateKeyValueUsersBanco(e) {
-      const { fields: { nameUsuario, idUsuario }, filterUsersBanco } = this.props;
+      const { fields: { nameUsuario, idUsuario }, filterUsersBanco, swtShowMessage } = this.props;
       var self = this;
-      idUsuario.onChange('');
+
       if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
         e.consultclick ? "" : e.preventDefault();
         if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
+          if (nameUsuario.value.length < 3) {
+            swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
+            return;
+          }
+
           $('.ui.search.' + participantBanc).toggleClass('loading');
+
           filterUsersBanco(nameUsuario.value).then((data) => {
             let usersBanco = _.get(data, 'payload.data.data');
             $('.ui.search.' + participantBanc)
@@ -547,8 +571,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   return 'default';
                 }
               });
+
             $('.ui.search.' + participantBanc).toggleClass('loading');
             $('.ui.search.' + participantBanc).search('search local', nameUsuario.value);
+
             setTimeout(function () {
               $('#' + inputParticipantBanc).focus();
             }, 150);
@@ -567,6 +593,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           return contact;
         }
       });
+
       if (userSelected !== null && userSelected !== undefined) {
         idUsuario.onChange(userSelected.id);
         nameUsuario.onChange(userSelected.nameComplet);
@@ -584,15 +611,19 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     componentWillMount() {
       const { nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
         consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists, consultDataSelect } = this.props;
+
       nonValidateEnter(true);
       updateDisbursementPlans([], origin);
       clearLists([PRODUCTS]);
+
       if (origin !== ORIGIN_PIPELIN_BUSINESS) {
         clearBusiness();
       }
+
       const infoClient = clientInformacion.get('responseClientInfo');
       getPipelineCurrencies();
       getClientNeeds();
+
       typeButtonClick = null;
       if (_.isEmpty(infoClient)) {
         redirectUrl("/dashboard/clientInformation");
@@ -616,25 +647,33 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     render() {
       const { fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, pendingDisbursementAmount,
-        client, documentStatus, probability, amountDisbursed, estimatedDisburDate, opportunityName,
+        probability, amountDisbursed, estimatedDisburDate, opportunityName,
         productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues },
-        clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar, pipelineReducer } = this.props;
+        selectsReducer, handleSubmit, reducerGlobal, pipelineReducer } = this.props;
+
       const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
+
       return (
         <div>
           {origin !== ORIGIN_PIPELIN_BUSINESS && <HeaderPipeline />}
-          <form onSubmit={handleSubmit(this._submitCreatePipeline)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
+          <form onSubmit={handleSubmit(this._submitCreatePipeline)}
+            onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
+            className="my-custom-tab"
             style={origin === ORIGIN_PIPELIN_BUSINESS ? {} : { backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
 
-            <div className={origin === ORIGIN_PIPELIN_BUSINESS ? "modalBt4-body modal-body business-content editable-form-content clearfix" : ""} style={origin === ORIGIN_PIPELIN_BUSINESS ? { overflowX: "hidden", paddingBottom: "0px", marginTop: "10px" } : {}}>
-              <span style={{ marginLeft: "20px" }} >Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
+            <div className={origin === ORIGIN_PIPELIN_BUSINESS ? "modalBt4-body modal-body business-content editable-form-content clearfix" : ""}
+              style={origin === ORIGIN_PIPELIN_BUSINESS ? { overflowX: "hidden", paddingBottom: "0px", marginTop: "10px" } : {}}>
+
+              <span style={{ marginLeft: "20px" }} >
+                Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.
+              </span>
 
               <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
                   <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                     <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
                     <i className="browser icon" style={{ fontSize: "20px" }} />
-                    <span style={{ fontSize: "20px" }}> Oportunidad</span>
+                    <span style={{ fontSize: "20px" }}>Oportunidad</span>
                   </div>
                 </Col>
               </Row>
@@ -707,7 +746,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...product}
                       name={nameProduct}
                       parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(PRODUCTS) || []}
+                      data={this.state.products}
                     />
                   </div>
                 </Col>
@@ -744,9 +783,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                         type="text"
                         {...nameUsuario}
                         value={nameUsuario.value}
-                        onChange={nameUsuario.onChange}
+                        onChange={(val) => { if (idUsuario.value) { idUsuario.onChange(null) } nameUsuario.onChange(val) }}
                         placeholder="Ingrese un criterio de búsqueda..."
-                        onKeyPress={this.updateKeyValueUsersBanco}
+                        onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                         onSelect={val => this._updateValue(val)}
                       />
                     </div>
@@ -870,7 +909,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...commission}
                       max="10"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(2, commission, commission.value, true)}
+                      onBlur={val => handleBlurValueNumber(2, commission, val, true)}
                       onFocus={val => handleFocusValueNumber(commission, commission.value)}
                     />
                   </div>
@@ -886,7 +925,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...roe}
                       max="10"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(1, roe, roe.value, true)}
+                      onBlur={val => handleBlurValueNumber(1, roe, val, true)}
                       onFocus={val => handleFocusValueNumber(roe, roe.value)}
                     />
                   </div>
@@ -921,7 +960,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       max="15"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, value.value, true, 2)}
+                      onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
                       onFocus={val => handleFocusValueNumber(value, value.value)}
                       disabled={isEditableValue ? '' : 'disabled'}
                       onChange={val => this._changeValue(val)}
@@ -939,7 +978,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       max="15"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, pendingDisbursementAmount.value, false)}
+                      onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, val, false)}
                       onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, pendingDisbursementAmount.value)}
                       disabled={'disabled'}
                     />
@@ -962,7 +1001,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                           {...termInMonths}
                           max="3"
                           parentId="dashboardComponentScroll"
-                          onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
+                          onBlur={val => this._handleTermInMonths(termInMonths, val)}
                         />
                       </div>
                       <div style={{ width: "65%" }}>
@@ -1009,17 +1048,25 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       {...areaAssetsValue}
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(1, areaAssetsValue, areaAssetsValue.value, true, 2)}
+                      onBlur={val => handleBlurValueNumber(1, areaAssetsValue, val, true, 2)}
                       onFocus={val => handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
                     />
                   </div>
                 </Col>
               </Row>
+
               <ComponentDisbursementPlan
-                disbursementAmount={amountDisbursed} estimatedDisburDate={estimatedDisburDate}
-                fnShowForm={this.showFormDisbursementPlan} registrationRequired={this.state.disbursementPlanRequired}
-                showFormDisbursementPlan={this.state.showFormAddDisbursementPlan} nominalValue={value}
-                pendingDisbursementAmount={pendingDisbursementAmount} origin={origin} isEditable={true} />
+                disbursementAmount={amountDisbursed}
+                estimatedDisburDate={estimatedDisburDate}
+                fnShowForm={this.showFormDisbursementPlan}
+                registrationRequired={this.state.disbursementPlanRequired}
+                showFormDisbursementPlan={this.state.showFormAddDisbursementPlan}
+                nominalValue={value}
+                pendingDisbursementAmount={pendingDisbursementAmount}
+                origin={origin}
+                isEditable={true}
+              />
+
               <Business origin={origin} disabled={true} />
               <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 23px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
@@ -1034,8 +1081,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={12} md={12} lg={12}>
                   <RichText
                     name="observations"
-                    {... (origin === ORIGIN_PIPELIN_BUSINESS ? observations : observations) }
-                    placeholder="Ingrese una observación."                    
+                    {...observations}
+                    placeholder="Ingrese una observación."
                     touched={true}
                     style={{ width: '100%', height: '178px' }}
                   />
@@ -1140,7 +1187,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }, dispatch);
   }
 
-  function mapStateToProps({ pipelineReducer, clientInformacion, selectsReducer, contactsByClient, reducerGlobal, navBar, pipelineBusinessReducer }, ownerProps) {
+  function mapStateToProps({ pipelineReducer, clientInformacion, selectsReducer, contactsByClient,
+    reducerGlobal, navBar, pipelineBusinessReducer }, ownerProps) {
+
     return {
       pipelineReducer,
       clientInformacion,
@@ -1156,8 +1205,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     fields,
     form: name || _.uniqueId('business_'),
     validate,
-    onSubmitFail: errors => {      
-      let numXssValidation =  Object.keys(errors).filter(item=>errors[item] == VALUE_XSS_INVALID).length;
+    onSubmitFail: errors => {
+      let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
 
       thisForm.setState({
         errorValidateXss: numXssValidation > 0,

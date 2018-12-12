@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import { scrollToComponent } from '../../components/scrollTo/scrollComponent';
 import $ from 'jquery';
 import _ from 'lodash';
+
+import { scrollToComponent } from '../../components/scrollTo/scrollComponent';
 
 class comboBoxComponent extends Component {
     constructor(props) {
@@ -14,6 +15,11 @@ class comboBoxComponent extends Component {
         this._setUsed = this._setUsed.bind(this);
         this._changeValue = this._changeValue.bind(this);
         this._setPristine = this._setPristine.bind(this);
+        this.existValueToMap = this.existValueToMap.bind(this);
+
+        this.pastValue = null;
+        this.pastData = null;
+
     }
 
     _setUsed(used) {
@@ -27,11 +33,30 @@ class comboBoxComponent extends Component {
         selector.dropdown('clear');
     }
 
-    _changeValue(value, name) {
+    _changeValue(value, name, data) {
         const selector = $(`.ui.selection.dropdown.${name}`);
-        selector.dropdown('set selected', value);
-        selector.dropdown('set value', value);
+        let valueField = value;
+
+        if (data && data.length > 0 && !this.existValueToMap(value, data)) {
+            this.pastValue = value;
+            this.pastData = data;
+            valueField = null;
+        }
+
+        selector.dropdown('set selected', valueField);
+        selector.dropdown('set value', valueField);
         this._setUsed(true);
+    }
+
+    existValueToMap(value, dataSource = []) {
+        let existValue = false;
+        _.forEach(dataSource, function (data) {
+            if (_.isEqual(_.toString(value), _.toString(data.id))) {
+                existValue = true;
+            }
+        });
+
+        return existValue;
     }
 
     _setPristine(labelInput, name) {
@@ -41,18 +66,21 @@ class comboBoxComponent extends Component {
         selector.dropdown('set text', labelInput);
     }
 
-    componentWillReceiveProps({ value, name, pristine, labelInput }) {
+    componentWillReceiveProps({ value, name, pristine, labelInput, data }) {
         const selector = $(`.ui.selection.dropdown.${name}`);
         selector.dropdown('refresh');
         const isEmptyAndUsed = _.isEqual(value, '') && this.state.used;
         const valueIsNotEmpty = value !== null && value !== undefined && value !== "";
         const setPristineAgain = (value === null || value === undefined || value === "") && pristine && this.state.used;
+
         if (setPristineAgain) {
             this._setPristine(labelInput, name);
-        }
-        else {
-            if (valueIsNotEmpty) {
-                this._changeValue(value, name);
+        } else {
+
+            if (this.pastValue && this.pastData != data) {
+                this._changeValue(this.pastValue, name, data);
+            } else if (valueIsNotEmpty) {
+                this._changeValue(value, name, data);
             } else {
                 if (isEmptyAndUsed) {
                     this._clearValues(name);
@@ -62,7 +90,7 @@ class comboBoxComponent extends Component {
     }
 
     componentDidMount() {
-        const { onChange, onBlur, name, defaultValue, value, data } = this.props;
+        const { onChange, onBlur, name } = this.props;
         const selector = $(`.ui.selection.dropdown.${name}`);
         const self = this;
         selector.dropdown({
@@ -73,10 +101,10 @@ class comboBoxComponent extends Component {
                     value: id,
                     used: true
                 });
-                if(onBlur){
+                if (onBlur) {
                     onBlur(id, text);
                 }
-                if(onChange){
+                if (onChange) {
                     onChange(id, text);
                 }
             },
@@ -99,35 +127,37 @@ class comboBoxComponent extends Component {
     }
 
     render() {
-        const { nameInput, labelInput, data, touched, invalid, error, name, disabled, deployUp, scrollTo,
-            parentId, searchClient, styles, shouldHandleUpdate, defaultValue, textProp, valueProp, showEmptyObject } = this.props;
+        const {
+            nameInput, labelInput, data, touched, invalid, error, name, disabled, deployUp, scrollTo, parentId,
+            searchClient, shouldHandleUpdate, defaultValue, textProp, valueProp, showEmptyObject
+        } = this.props;
+
         if (touched && invalid && shouldHandleUpdate) {
             scrollTo(parentId);
         }
 
         let emptyObject = {};
-
         let comboData;
+        let _data = Object.assign([], data);
 
-        if(showEmptyObject) {
+        if (showEmptyObject) {
             emptyObject[valueProp] = '';
             emptyObject[textProp] = "Seleccione...";
-
-            comboData = [emptyObject, ...data];
-        }else{
-            comboData = data;
+            comboData = [emptyObject, ..._data];
+        } else {
+            comboData = _data;
         }
 
         return (
             <div className={disabled} >
                 <div
                     className={`styleWidthComponents ui search selection dropdown  ${name} ${deployUp === true ? 'bottom pointing' : ''} ${disabled}`}
-                    style={{ minWidth: '7em', marginBottom: '0px'}}>
+                    style={{ minWidth: '7em', marginBottom: '0px' }}>
                     <input type="hidden" name={nameInput} value={defaultValue} disabled={disabled} placeholder="Seleccione..." className={disabled} />
                     <i className="dropdown icon" />
                     <div className={`default text ${searchClient}`}>{labelInput}</div>
                     <div className={`right menu ${name}`}>
-                        {_.map(comboData , this.mapValuesToDropDown)}
+                        {_.map(comboData, this.mapValuesToDropDown)}
                     </div>
                 </div>
                 {

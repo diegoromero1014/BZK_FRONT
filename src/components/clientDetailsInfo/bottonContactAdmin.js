@@ -6,7 +6,7 @@ import Modal from 'react-modal';
 import ContactInfo from '../contact/component';
 import { redirectUrl } from '../globalComponents/actions';
 import { MODULE_CONTACTS } from '../../constantsGlobal';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../sweetalertFocus';
 
 class BottonContactAdmin extends Component {
   constructor(props) {

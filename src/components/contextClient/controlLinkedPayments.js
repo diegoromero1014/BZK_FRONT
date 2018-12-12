@@ -18,7 +18,8 @@ class ControlLinkedPayments extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            fieldReducerNoApplied: 'noAppliedControlLinkedPayments'
+            fieldReducerNoApplied: 'noAppliedControlLinkedPayments',
+            shouldUpdate: false
         }
         this._onChangeControlLinkedPayments = this._onChangeControlLinkedPayments.bind(this);
     }
@@ -30,9 +31,9 @@ class ControlLinkedPayments extends Component {
     }
 
     render() {
-        const { data, clientInformacion, controlLinkedPayments, controlLinkedPaymentsRequired } = this.props;
+        const { data, clientInformacion, controlLinkedPayments, controlLinkedPaymentsRequired, parentForm } = this.props;
         return (
-            <Row style={{ padding: "20px 10px 10px 20px" }}>
+            <Row style={{ padding: "20px 10px 10px 20px" }} onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <Col xs={12} md={12} lg={12}>
                     <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                         <div className="tab-content-row"
@@ -61,7 +62,7 @@ class ControlLinkedPayments extends Component {
                             max="1000"
                             rows={7}
                             placeholder="Ingrese el control de pagos entre vinculadas y cambios de control"
-                            {...controlLinkedPayments}
+                            {...controlLinkedPayments}                            
                             error={!stringValidate(controlLinkedPayments.value) && controlLinkedPaymentsRequired ? VALUE_REQUIERED : (xssValidation(controlLinkedPayments.value) ? VALUE_XSS_INVALID : '')}
                             touched={true}
                         />

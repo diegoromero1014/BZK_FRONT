@@ -1,35 +1,32 @@
 import React, { Component } from "react";
 import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
-import { redirectUrl } from "../../globalComponents/actions";
 import { Col, Row } from "react-flexbox-grid";
+import moment from "moment";
+import _ from "lodash";
+import $ from "jquery";
+import numeral from "numeral";
+
 import Input from "../../../ui/input/inputComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
-import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
+import SweetAlert from "../../sweetalertFocus";
+import HeaderPipeline from "../headerPipeline";
+import { addBusiness, clearBusiness, editBusiness } from "../business/ducks";
+import Business from "../business/business";
+import RichText from '../../richText/richTextComponent';
+import ToolTip from '../../toolTip/toolTipComponent';
+import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
+
+import { redirectUrl } from "../../globalComponents/actions";
+import { showLoading } from '../../loading/actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import { changeStateSaveData } from "../../dashboard/actions";
+import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import {
-    getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication, consultDataSelect
+    getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication,
+    consultDataSelect
 } from "../../selectsComponent/actions";
-import {
-    BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
-    MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_PRODUCTS,
-    PIPELINE_STATUS, PROBABILITY, PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET,
-    FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, PRODUCTS_MASK
-} from "../../selectsComponent/constants";
-import {
-    DATE_FORMAT, DATE_START_AFTER, EDITAR, MESSAGE_SAVE_DATA,
-    ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, REVIEWED_DATE_FORMAT, SAVE_DRAFT, SAVE_PUBLISHED,
-    VALUE_REQUIERED, ALLOWS_NEGATIVE_INTEGER, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT,
-    TITLE_ERROR_SWEET_ALERT,
-    VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS_TITLE,
-    REGEX_SIMPLE_XSS_MESAGE
-} from "../../../constantsGlobal";
-import {
-    CURRENCY_COP, INTEGER,
-    LINE_OF_BUSINESS_LEASING, ORIGIN_PIPELIN_BUSINESS, POSITIVE_INTEGER, PROPUEST_OF_BUSINESS,
-    REAL, BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, PRODUCT_FAMILY_LEASING, HELP_PROBABILITY
-} from "../constants";
 import {
     createEditPipeline, getPipelineById, pdfDescarga, updateDisbursementPlans
 } from "../actions";
@@ -37,22 +34,21 @@ import {
     consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, handleFocusValueNumber,
     nonValidateEnter, validateResponse, xssValidation
 } from "../../../actionsGlobal";
-import SweetAlert from "sweetalert-react";
-import moment from "moment";
-import { filterUsersBanco } from "../../participantsVisitPre/actions";
-import { changeStateSaveData } from "../../dashboard/actions";
-import { MENU_CLOSED } from "../../navBar/constants";
-import _ from "lodash";
-import $ from "jquery";
-import numeral from "numeral";
-import HeaderPipeline from "../headerPipeline";
-import { addBusiness, clearBusiness, editBusiness } from "../business/ducks";
-import Business from "../business/business";
-import RichText from '../../richText/richTextComponent';
-import { showLoading } from '../../loading/actions';
-import ToolTip from '../../toolTip/toolTipComponent';
-import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
+
+import {
+    BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
+    MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS, PROBABILITY,
+    PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, PRODUCTS_MASK
+} from "../../selectsComponent/constants";
+import {
+    EDITAR, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, REVIEWED_DATE_FORMAT, SAVE_DRAFT,
+    SAVE_PUBLISHED, VALUE_REQUIERED, ALLOWS_NEGATIVE_INTEGER, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT,
+    TITLE_ERROR_SWEET_ALERT, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE
+} from "../../../constantsGlobal";
+import {
+    ORIGIN_PIPELIN_BUSINESS, BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, PRODUCT_FAMILY_LEASING,
+    HELP_PROBABILITY
+} from "../constants";
 
 const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
     "businessCategory", "currency", "indexing", "need", "observations", "product",
@@ -76,6 +72,7 @@ const validate = values => {
     } else {
         errors.businessStatus = null;
     }
+
     if (!values.value) {
         errors.value = VALUE_REQUIERED;
     } else if (xssValidation(values.value)) {
@@ -83,11 +80,13 @@ const validate = values => {
     } else {
         errors.value = null;
     }
+
     if (!values.currency) {
         errors.currency = OPTION_REQUIRED;
     } else {
         errors.currency = null;
     }
+
     if (!values.need) {
         errors.need = OPTION_REQUIRED;
     } else {
@@ -109,9 +108,9 @@ const validate = values => {
 
     if (!values.opportunityName && !isChildren) {
         errors.opportunityName = VALUE_REQUIERED;
-    }  else if (xssValidation(values.opportunityName)) {
+    } else if (xssValidation(values.opportunityName)) {
         errors.opportunityName = VALUE_XSS_INVALID;
-    }else {
+    } else {
         errors.opportunityName = null;
     }
 
@@ -127,6 +126,8 @@ const validate = values => {
         errors.nameUsuario = VALUE_REQUIERED;
     } else if (xssValidation(values.nameUsuario)) {
         errors.nameUsuario = VALUE_XSS_INVALID;
+    } else if (!values.idUsuario) {
+        errors.nameUsuario = "Seleccione un empleado"
     } else {
         errors.nameUsuario = null;
     }
@@ -157,7 +158,6 @@ const validate = values => {
 };
 
 export default function createFormPipeline(name, origin, pipelineBusiness, functionCloseModal, disabled) {
-
     var nameMellowingPeriod = _.uniqueId('mellowingPeriod_');
     var nameProductFamily = _.uniqueId('productFamily_');
     let nameProduct = _.uniqueId('product_');
@@ -179,7 +179,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
     let contollerErrorChangeType = false;
 
     class FormEditPipeline extends Component {
-
         constructor(props) {
             super(props);
             thisForm = this;
@@ -199,7 +198,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 flagInitLoadAssests: false,
                 //Se utilizan para controlar el componente de planes de desembolso 
                 showFormAddDisbursementPlan: false,
-                disbursementPlanRequired: false
+                disbursementPlanRequired: false,
+                products: []
             };
 
             isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
@@ -208,6 +208,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             } else {
                 nameDisbursementPlansInReducer = "disbursementPlans";
             }
+
             this._submitEditPipeline = this._submitEditPipeline.bind(this);
             this._closeMessageEditPipeline = this._closeMessageEditPipeline.bind(this);
             this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
@@ -228,9 +229,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         showFormDisbursementPlan(isOpen) {
-            const { pipelineReducer } = this.props;
-            const listDisbursementPlans = pipelineReducer.get(nameDisbursementPlansInReducer);
-            const detailPipeline = pipelineReducer.get('detailPipeline');
             this.setState({
                 showFormAddDisbursementPlan: isOpen,
                 disbursementPlanRequired: false
@@ -241,6 +239,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this.setState({
                 showMessageEditPipeline: false
             });
+
             if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                 if (typeMessage === "success") {
                     redirectUrl("/dashboard/clientInformation");
@@ -256,7 +255,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         _onClickPDF() {
             const { pdfDescarga, params: { id } } = this.props;
-            pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
+            pdfDescarga(window.sessionStorage.getItem('idClientSelected'), id);
         }
 
         _changeCurrency(currencyValue) {
@@ -264,6 +263,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             if (idCurrencyAux == null) {
                 idCurrencyAux = parseInt(currencyValue);
             }
+
             if (this.state.isEditable && currencyValue !== undefined && currencyValue !== '' && currencyValue !== null && parseInt(currencyValue) !== parseInt(idCurrencyAux) && !contollerErrorChangeType) {
                 contollerErrorChangeType = true;
                 if (idCurrencyAux !== null && value.value !== '') {
@@ -286,6 +286,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     showConfirmChangeCurrency: false
                 });
             }
+
             var lugarSelector = $('.valueMillions');
             var input = lugarSelector.find("input");
             input.focus();
@@ -298,6 +299,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     output += val.toString().charAt(i)
                 }
             }
+
             valuReduxForm.onChange(output);
         }
 
@@ -316,6 +318,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this.setState({
                 showConfirmChangeCurrency: false
             });
+
             contollerErrorChangeType = false;
             const { fields: { currency } } = this.props;
             if (idCurrencyAux !== null) {
@@ -352,7 +355,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     )
                 }).length > 0
             });
-            consultListWithParameterUbication(PRODUCTS, currencyValue);
+
+            consultListWithParameterUbication("", currencyValue).then((data) => {
+                this.setState({
+                    products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
+                });
+            });
+
             if (!_.isEqual(pipelineReducer.get('detailPipeline').productFamily, productFamily.value)) {
                 product.onChange('');
             }
@@ -362,11 +371,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this.setState({
                 showConfirmChangeCurrency: false
             });
+
             contollerErrorChangeType = false;
             const { fields: { value, currency } } = this.props;
             if (idCurrencyAux !== null) {
                 value.onChange('');
             }
+
             idCurrencyAux = parseInt(currency.value);
         }
 
@@ -406,7 +417,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                         if ((productFamily.value !== "" && productFamily.value !== null && productFamily.value !== undefined) || typeButtonClick === SAVE_DRAFT) {
                             let pipelineJson = {
                                 "id": idPipeline,
-                                "client": window.localStorage.getItem('idClientSelected'),
+                                "client": window.sessionStorage.getItem('idClientSelected'),
                                 "documentStatus": typeButtonClick,
                                 "product": product.value,
                                 "businessStatus": businessStatus.value,
@@ -491,12 +502,16 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         updateKeyValueUsersBanco(e) {
-            const { fields: { nameUsuario, idUsuario }, filterUsersBanco } = this.props;
+            const { fields: { nameUsuario, idUsuario }, filterUsersBanco, swtShowMessage } = this.props;
             var self = this;
-            idUsuario.onChange('');
+            // idUsuario.onChange('');
             if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
                 e.consultclick ? "" : e.preventDefault();
                 if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
+                    if (nameUsuario.value.length < 3) {
+                        swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
+                        return;
+                    }
                     $('.ui.search.' + participantBanc).toggleClass('loading');
                     filterUsersBanco(nameUsuario.value).then((data) => {
                         let usersBanco = _.get(data, 'payload.data.data');
@@ -623,7 +638,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             } else {
                 showLoading(true, 'Cargando...');
 
-                consultDataSelect(PRODUCTS, PRODUCTS_MASK);
+                consultDataSelect(PRODUCTS, PRODUCTS_MASK).then((data) => {                    
+                    this.setState({
+                        products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
+                    });
+                });
 
                 getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                     PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
@@ -678,7 +697,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
                     positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate,
                     opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues
-            }, clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer,
+                }, clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer,
                 reducerGlobal, navBar } = this.props;
 
             const ownerDraft = pipelineReducer.get('ownerDraft');
@@ -688,11 +707,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 let fechaModDateMoment = moment(updatedTimestamp.value, "x").locale('es');
                 fechaModString = fechaModDateMoment.format("DD") + " " + fechaModDateMoment.format("MMM") + " " + fechaModDateMoment.format("YYYY") + ", " + fechaModDateMoment.format("hh:mm a");
             }
+
             let fechaCreateString = '';
             if (createdTimestamp.value !== null) {
                 let fechaCreateDateMoment = moment(createdTimestamp.value, "x").locale('es');
                 fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
             }
+
             return (
                 <div>
                     {origin !== ORIGIN_PIPELIN_BUSINESS && <HeaderPipeline />}
@@ -815,7 +836,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             valueProp={'id'}
                                             textProp={'value'}
                                             parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(PRODUCTS) || []}
+                                            data={this.state.products}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                             {...product}
                                             name={nameProduct}
@@ -856,9 +877,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                 type="text"
                                                 {...nameUsuario}
                                                 value={nameUsuario.value}
-                                                onChange={nameUsuario.onChange}
+                                                onChange={(val) => { if (idUsuario.value) { idUsuario.onChange(null) } nameUsuario.onChange(val) }}
                                                 placeholder="Ingrese un criterio de búsqueda..."
-                                                onKeyPress={this.updateKeyValueUsersBanco}
+                                                onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                                                 onSelect={val => this._updateValue(val)}
                                                 disabled={this.state.isEditable ? '' : 'disabled'}
                                             />
@@ -1001,7 +1022,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             max="10"
                                             parentId="dashboardComponentScroll"
                                             disabled={this.state.isEditable ? '' : 'disabled'}
-                                            onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, commission, commission.value, true)}
+                                            onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, commission, val, true)}
                                             onFocus={val => handleFocusValueNumber(commission, commission.value)}
                                         />
                                     </div>
@@ -1017,7 +1038,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             {...roe}
                                             max="10"
                                             parentId="dashboardComponentScroll"
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, roe, roe.value, true)}
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, roe, val, true)}
                                             onFocus={val => handleFocusValueNumber(roe, roe.value)}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
@@ -1055,7 +1076,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             type="text"
                                             max="15"
                                             parentId="dashboardComponentScroll"
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, value.value, true, 2)}
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
                                             onFocus={val => handleFocusValueNumber(value, value.value)}
                                             disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
                                             onChange={val => this._changeValue(val)}
@@ -1073,7 +1094,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             type="text"
                                             max="15"
                                             parentId="dashboardComponentScroll"
-                                            onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, pendingDisbursementAmount.value, false)}
+                                            onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, val, false)}
                                             onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, pendingDisbursementAmount.value)}
                                             disabled={'disabled'}
                                         />
@@ -1097,7 +1118,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                     max="4"
                                                     parentId="dashboardComponentScroll"
                                                     disabled={this.state.isEditable ? '' : 'disabled'}
-                                                    onBlur={val => this._handleTermInMonths(termInMonths, termInMonths.value)}
+                                                    onBlur={val => this._handleTermInMonths(termInMonths, val)}
                                                 />
                                             </div>
                                             <div style={{ width: "65%" }}>
@@ -1145,7 +1166,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             max="15"
                                             {...areaAssetsValue}
                                             parentId="dashboardComponentScroll"
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, areaAssetsValue, areaAssetsValue.value, true, 2)}
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, areaAssetsValue, val, true, 2)}
                                             onFocus={val => handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                         />

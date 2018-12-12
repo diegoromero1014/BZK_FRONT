@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import { reduxForm } from 'redux-form';
@@ -358,7 +358,7 @@ class ModalProduct extends Component {
                   value={this.state.averageMontlyAmount}
                   error={this.state.averageMontlyAmountError}
                   onChange={val => this._changeAverageMontlyAmount(val)}
-                  onBlur={val => this._handleBlurValueNumber(constants.ONLY_POSITIVE_INTEGER, this.state.averageMontlyAmount)}
+                  onBlur={val => this._handleBlurValueNumber(constants.ONLY_POSITIVE_INTEGER, val)}
                 />
               </Col>
             </Row>

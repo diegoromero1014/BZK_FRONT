@@ -53,7 +53,7 @@ class ListBusinessPlanComponent extends Component {
     const { businessPlanByClientFindServer, orderColumnBusinessPlan, clearBusinessPlanPaginator } = this.props;
     clearBusinessPlanPaginator();
     orderColumnBusinessPlan(orderBusinessPlan, columnBusinessPlan);
-    businessPlanByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, columnBusinessPlan, orderBusinessPlan, v1, "");
+    businessPlanByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, columnBusinessPlan, orderBusinessPlan, v1, "");
   }
   _renderHeaders() {
     return [
@@ -93,7 +93,7 @@ class ListBusinessPlanComponent extends Component {
     return _.forOwn(data, function (value, key) {
       var json1 = {
         "messageHeader": {
-          "sessionToken": window.localStorage.getItem('sessionToken'),
+          "sessionToken": window.localStorage.getItem('sessionTokenFront'),
           "timestamp": new Date().getTime(),
           "service": "",
           "status": "0",

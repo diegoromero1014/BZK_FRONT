@@ -28,3 +28,5 @@ export const CLEAR_MY_PENDINGS_TEAM_ORDER = 'CLEAR_MY_PENDINGS_TEAM_ORDER';
 
 export const ERROR_TITLE_FILTERS_TEAM = 'Error ejecutando la consulta';
 export const ERROR_TITLE_FILTERS_TEAM_MESSAGE = 'Señor usuario, por favor seleccione un filtro para ejecutar la consulta.';
+
+export const GET_XLS_TASK = 'GET_XLS_TASK';

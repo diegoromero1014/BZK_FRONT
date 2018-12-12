@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
-import SweetAlert from 'sweetalert-react';
 import { Row, Col } from 'react-flexbox-grid';
 import ComboBox from '../../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../../ui/input/inputComponent';
@@ -36,6 +35,7 @@ class ModaltrackingCovenant extends Component {
     render() {
         const {covenant, isOpen} = this.props;
         const infoCovenant = covenant.get('covenantInfo');
+  
         const dateCreate = _.isUndefined(infoCovenant.creationTimestamp) || _.isNull(infoCovenant.creationTimestamp) ? "" : mapDateValueFromTaskByFormat(infoCovenant.creationTimestamp.split(" ")[0], 'DD MMM YYYY');
         const dateExpiration = _.isUndefined(infoCovenant.expirationTimestamp) || _.isNull(infoCovenant.expirationTimestamp) ? "" : mapDateValueFromTaskByFormat(infoCovenant.expirationTimestamp.split(" ")[0], 'DD MMM YYYY');
         return (
@@ -44,17 +44,17 @@ class ModaltrackingCovenant extends Component {
                     <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información del covenant</span></dt>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>
-                            <Col xs={12} md={12} lg={12} >
+                            <Col xs={12} md={4} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Covenant</dt>
-                                <dd style={{ textAlign: 'justify' }}>{infoCovenant.covenant}</dd>
+                                <dd style={{ textAlign: 'justify' }}>{infoCovenant.strCovenant}</dd>
+                            </Col>
+                            <Col xs={12} md={8} lg={8} >
+                                <dt style={{ paddingTop: '5px' }}>Descripción Covenant</dt>
+                                <dd style={{ textAlign: 'justify' }}>{infoCovenant.description}</dd>
                             </Col>
                             <Col xs={12} md={6} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Id covenant</dt>
                                 <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.idCovenant) ? "" : infoCovenant.idCovenant}</dd>
-                            </Col>
-                            <Col xs={12} md={6} lg={4} >
-                                <dt style={{ paddingTop: '5px' }}>Condición de referencia</dt>
-                                <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.referenceCondition) ? "" : infoCovenant.referenceCondition}</dd>
                             </Col>
                             <Col xs={12} md={6} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Valor de referencia</dt>

@@ -9,9 +9,9 @@ import { getMasterDataFields } from "../../selectsComponent/actions";
 import NeedBusiness from "../need/needBusiness";
 import AreaBusiness from "../area/areaBusiness";
 import { EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR, VALUE_XSS_INVALID } from "../../../constantsGlobal";
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../../sweetalertFocus";
 import { OBJECTIVE_BUSINESS } from "../constants";
-import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, xssValidation } from "../../../actionsGlobal";
+import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, xssValidation, onSessionExpire } from "../../../actionsGlobal";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { createBusiness, detailBusiness, pdfDescarga, validateRangeDates } from "../actions";
 import { addNeed } from "../need/actions";
@@ -22,8 +22,8 @@ import Tooltip from "../../toolTip/toolTipComponent";
 import RichText from "../../richText/richTextComponent";
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-
-
+import BlockingComponent from '../../blockingComponent/blockingComponent';
+import {BLOCK_BUSINESS_PLAN} from '../../../constantsGlobal'
 
 const fields = ["initialValidityDate", "finalValidityDate", "objectiveBusiness", "opportunities"];
 let dateBusinessLastReview;
@@ -62,6 +62,8 @@ class FormEdit extends Component {
     }
 
     _editBusiness() {
+        const {hasAccess, swtShowMessage} = this.props;
+        
         this.setState({
             showMessage: false,
             isEditable: !this.state.isEditable
@@ -83,7 +85,7 @@ class FormEdit extends Component {
 
     _onClickPDF() {
         const { pdfDescarga, id } = this.props;
-        pdfDescarga(window.localStorage.getItem('idClientSelected'), id);
+        pdfDescarga(window.sessionStorage.getItem('idClientSelected'), id);
     }
 
     _closeConfirmClose() {
@@ -113,17 +115,22 @@ class FormEdit extends Component {
 
     _submitCreateBusiness() {
         const { fields: { initialValidityDate, finalValidityDate }, needs, areas, createBusiness, businessPlanReducer, changeStateSaveData,
-            validateRangeDates, swtShowMessage } = this.props;
+            validateRangeDates, swtShowMessage, canUserEditBlockedReport } = this.props;
+
         let errorInForm = false;
         const detailBusiness = businessPlanReducer.get('detailBusiness');
 
-        if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value)) {
+        canUserEditBlockedReport()
+        .then(() => {
+
+
+        if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid())) {
             errorInForm = true;
             this.setState({
                 initialDateError: "Debe seleccionar una fecha"
             });
         }
-        if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value)) {
+        if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value) || !moment(finalValidityDate.value, 'DD/MM/YYYY').isValid()) {
             errorInForm = true;
             this.setState({
                 finalDateError: "Debe seleccionar una fecha"
@@ -162,9 +169,10 @@ class FormEdit extends Component {
             _.map(needs.toArray(),
                 function (need) {
                     let data = {
-                        "id": null,
+                        "id": need.id,
                         "clientNeed": need.needIdType,
                         "clientNeedDescription": need.descriptionNeed,
+                        "productFamily": need.productFamilyId,
                         "product": need.needIdProduct,
                         "implementationTimeline": need.needIdImplementation,
                         "task": need.needTask,
@@ -194,7 +202,7 @@ class FormEdit extends Component {
             );
             let businessJson = {
                 "id": detailBusiness.data.id,
-                "client": window.localStorage.getItem('idClientSelected'),
+                "client": window.sessionStorage.getItem('idClientSelected'),
                 "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
                 "finalValidityDate": moment(finalValidityDate.value, DATE_FORMAT).format('x'),
                 "opportunitiesAndThreats": this.state.opportunities,
@@ -206,6 +214,19 @@ class FormEdit extends Component {
             //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
             this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
 
+        }
+
+        })
+        .catch((reason) => {
+            
+        });
+
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const { hasAccess, swtShowMessage, userEditing } = this.props;
+        if (!hasAccess) {
+            swtShowMessage(MESSAGE_ERROR, 'Error', 'Señor usuario, en este momento el formulario esta siendo editado por ' + userEditing + '. Por favor intente mas tarde', {onConfirmCallback: this._closeConfirmClose});
         }
     }
 
@@ -242,6 +263,8 @@ class FormEdit extends Component {
                         needType: value.clientNeedName,
                         descriptionNeed: value.clientNeedDescription,
                         descriptionNeedText: htmlToText(value.clientNeedDescription),
+                        productFamilyId: value.productFamily,
+                        productFamily: value.productFamilyName,                        
                         needIdProduct: value.product,
                         needProduct: value.productName,
                         needIdImplementation: value.implementationTimeline,
@@ -306,7 +329,7 @@ class FormEdit extends Component {
                             createBusiness(businessJson).then((data) => {
                                 changeStateSaveData(false, "");
                                 if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
-                                    redirectUrl("/login");
+                                    onSessionExpire();
                                 } else {
                                     if ((_.get(data, 'payload.data.status') === 200)) {
                                         typeMessage = "success";
@@ -645,8 +668,10 @@ function mapStateToProps({ clientInformacion, selectsReducer, needs, businessPla
         navBar
     };
 }
-export default reduxForm({
+const FormEditRedux = reduxForm({
     form: 'submitValidation',
     fields,
     validate
 }, mapStateToProps, mapDispatchToProps)(FormEdit);
+
+export default BlockingComponent(FormEditRedux, BLOCK_BUSINESS_PLAN);

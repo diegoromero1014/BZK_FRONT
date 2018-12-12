@@ -6,3 +6,4 @@ export const CLEAR_NEED = "CLEAR_NEED";
 export const IMPLEMENTATION_TIMELINE="implementationTimeline";
 export const STATUS_NEED ="needFulfillmentStatus";
 export const PRODUCTS = "products";
+export const PRODUCT_FAMILY = "productFamily";

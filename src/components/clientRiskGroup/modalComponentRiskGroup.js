@@ -4,15 +4,15 @@ import { reduxForm } from "redux-form";
 import Input from "../../ui/input/inputComponent";
 import Textarea from "../../ui/textarea/textareaComponent";
 
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../sweetalertFocus";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 
-import { MESSAGE_LOAD_DATA, MODULE_RISK_GROUP, VALUE_REQUIERED } from "../../constantsGlobal";
+import { MESSAGE_LOAD_DATA, MODULE_RISK_GROUP, VALUE_REQUIERED, VALUE_XSS_INVALID } from "../../constantsGlobal";
 import {
     formValidateKeyEnter,
     nonValidateEnter,
     validatePermissionsByModule,
-    validateResponse
+    validateResponse,xssValidation
 } from "../../actionsGlobal";
 import { bindActionCreators } from "redux";
 import { editNameRiskGroup, getClientsRiskGroup, updateValuesRiskGroup, getAllNoveltiesRiskGroup } from "./actions";
@@ -33,17 +33,24 @@ export const EDITAR = "Editar";
 export const ELIMINAR = "Eliminar";
 
 const fields = ["groupName", "groupObservations"]
+
+const numberThumbsRow = 3;
+
 const validate = values => {
     const errors = {};
 
     if (!values.groupName) {
         errors.groupName = VALUE_REQUIERED;
-    } else {
+    } else if (xssValidation(values.groupName)) {
+        errors.groupName = VALUE_XSS_INVALID;
+    }else {
         errors.groupName = null;
     }
 
     if (!values.groupObservations) {
         errors.groupObservations = VALUE_REQUIERED;
+    } else if (xssValidation(values.groupObservations)) {
+        errors.groupObservations = VALUE_XSS_INVALID;
     } else {
         errors.groupObservations = null;
     }
@@ -144,7 +151,16 @@ class ModalComponentRiskGroup extends Component {
         const { validateHasRiskGroup, riskGroupReducer } = this.props;
         const riskGroup = riskGroupReducer.get('riskGroupClients');
         const isPending = _.get(riskGroup, 'isPending', true);
+
+        let coord_position = index / numberThumbsRow;
+        let trunc_a = Math.trunc(coord_position);
+        let row_number = trunc_a + 1;
+        let trunc_b =  Math.trunc((coord_position - trunc_a ) * 10);
+        let column_number = trunc_b / numberThumbsRow;        
+
         return <ClientsRiskGroup
+            gridRow={row_number}
+            gridColumn={column_number}
             key={data.id}
             dataName={data.clientName}
             dataDocumentType={data.documentType}
@@ -364,13 +380,7 @@ class ModalComponentRiskGroup extends Component {
 
                                                 </Col>
 
-                                                <div className="team-modal" style={{
-                                                    width: "100%",
-                                                    display: "grid",
-                                                    gridTemplateColumns: "30% 30% 30%",
-                                                    justifyContent: "space-around",
-                                                    marginBottom: "30px"
-                                                }}>
+                                                <div className="team-modal grid c-3 " >
                                                     {members.length === 0 ?
                                                         <div style={{ textAlign: "center", marginTop: "15px" }}><h4 className="form-item">Señor
                                                             usuario, no hay clientes asociados a este grupo de riesgo.</h4></div>
@@ -395,6 +405,7 @@ class ModalComponentRiskGroup extends Component {
 
                         </Segment>
                     </Col>
+
                 </Row>
             </div >
         )

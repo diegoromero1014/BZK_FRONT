@@ -5,7 +5,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import SelectFilter from '../../selectsComponent/selectFilterContact/selectFilterComponent';
 import {getMasterDataFields} from '../../selectsComponent/actions';
 import {NUMERAL_MONTH} from '../constants';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import {Combobox} from 'react-widgets';
 import {consultInformationPrevisit, changeLoadChart} from '../actions';
 import BarSeries from '../barSeries';

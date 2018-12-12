@@ -1,4 +1,10 @@
 import React, { Component, PropTypes } from "react";
+import { Col, Row } from "react-flexbox-grid";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import moment from "moment";
+import _ from 'lodash';
+
 import ActividadEconomica from "./actividadEconomica";
 import InventoryPolicy from "./inventoryPolicy";
 import ControlLinkedPayments from "./controlLinkedPayments";
@@ -11,22 +17,21 @@ import DataComercial from "./dataComercial";
 import DeclarationOfOrigin from "./DeclarationOfOrigin";
 import InternationalOperations from "./internationalOperations";
 import DocumentInformationServices from "./managementDocumentary/documentInformationServices";
-import { Col, Row } from "react-flexbox-grid";
-import { changeAccordionValue, seletedButton, sendErrorsUpdate, validateContactShareholder } from "./actions";
-import { BUTTON_EDIT, BUTTON_UPDATE, CLOSE_TAB, OPEN_TAB } from "./constants";
-import Notas from "./notas";
-import { bindActionCreators } from "redux";
-import Products from "./product";
-import { connect } from "react-redux";
-import moment from "moment";
-import { EDITAR, ESTUDIO_DE_CREDITO, MODULE_CLIENTS, VINCULAR } from "../../constantsGlobal";
-import { validatePermissionsByModule, shorterStringValue } from "../../actionsGlobal";
-import { redirectUrl } from "../globalComponents/actions";
-import { MENU_CLOSED } from "../navBar/constants";
 import ButtonLinkClient from "./linkingClient/buttonLinkClientComponent";
 import ComponentAccordion from "../accordion/componentAccordion";
+import Notas from "./notas";
+import Products from "./product";
+
+import { changeAccordionValue, seletedButton, sendErrorsUpdate, validateContactShareholder } from "./actions";
+import { validatePermissionsByModule, shorterStringValue, onSessionExpire } from "../../actionsGlobal";
+import { redirectUrl } from "../globalComponents/actions";
 import { showModalRiskGroup } from "../clientRiskGroup/actions";
-import _ from 'lodash';
+
+import { BUTTON_EDIT, BUTTON_UPDATE, CLOSE_TAB, OPEN_TAB } from "./constants";
+import {
+    EDITAR, ESTUDIO_DE_CREDITO, MODULE_CLIENTS, VINCULAR, INFO_ESTUDIO_CREDITO,
+    GRUPO_RIESGO, GESTION_DOCUMENTAL
+} from "../../constantsGlobal";
 
 class DetailsInfoClient extends Component {
     constructor(props) {
@@ -41,12 +46,13 @@ class DetailsInfoClient extends Component {
 
     componentWillMount() {
         const { login, validatePermissionsByModule } = this.props;
-        if (window.localStorage.getItem('sessionToken') === "") {
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
         }
+
         validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                redirectUrl("/login");
+                onSessionExpire();
             } else {
                 if (!_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false') {
                     redirectUrl("/dashboard");
@@ -75,7 +81,7 @@ class DetailsInfoClient extends Component {
         //Valido si el cliente tiene un representante legal y accionistas
         validateContactShareholder().then((data) => {
             if (!_.get(data, 'payload.data.validateLogin')) {
-                redirectUrl("/login");
+                onSessionExpire();
             } else {
                 redirectUrl("/dashboard/clientEdit");
             }
@@ -115,10 +121,12 @@ class DetailsInfoClient extends Component {
             var actualizationDate = moment(infoClient.actualizationDate).locale('es');
             actualizationDateString = actualizationDate.format("DD") + " " + actualizationDate.format("MMM") + " " + actualizationDate.format("YYYY");
         }
+
         var { notes } = infoClient;
         if (notes === undefined || notes === null) {
             notes = [];
         }
+
         var { foreignProducts } = infoClient;
         if (foreignProducts === undefined || foreignProducts === null) {
             foreignProducts = [];
@@ -128,8 +136,9 @@ class DetailsInfoClient extends Component {
         if (infoClient.haveAccessEdit) {
             paddingDivEdit = "50px";
         }
+
         const paddingButtons = { paddingRight: '7px', paddingLeft: '7px' };
-        const paddingLink = { paddingTop: '8px', paddingRight: '10x', paddingLeft: '10px', paddingRight: '10px' };
+        const paddingLink = { paddingTop: '8px', paddingLeft: '10px', paddingRight: '10px' };
         const styleLink = { cursor: "pointer", textDecoration: "underline" };
         const containerButtons = {
             marginLeft: "-20px",
@@ -142,12 +151,18 @@ class DetailsInfoClient extends Component {
             height: "50px",
             background: "rgba(255,255,255,0.75)"
         };
+
         const allowEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), EDITAR), false);
         const allowLinked = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), VINCULAR), false);
         const allowCreditStudy = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), ESTUDIO_DE_CREDITO), false);
 
         const allowAccessAndEdit = infoClient.haveAccessEdit && allowEdit;
         const showFooterButtons = allowAccessAndEdit || allowLinked || allowCreditStudy;
+
+        const allowAccessRiskGroup = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GRUPO_RIESGO), false);
+        const allowAccessContextClient = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
+        const allowAccessGestionDocumental = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GESTION_DOCUMENTAL), false);
+
         return (
             <div style={{ width: "100%", marginTop: "10px", marginBottom: "70px" }}>
                 <div style={{ paddingBottom: paddingDivEdit, paddingTop: "10px" }}>
@@ -158,7 +173,11 @@ class DetailsInfoClient extends Component {
                                 </th>
                                 <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Segmento</span></th>
                                 <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Subsegmento</span></th>
-                                <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Grupo de riesgo</span></th>
+
+                                {
+                                    allowAccessRiskGroup && <th><span style={{ fontWeight: "bold", color: "#4C5360" }}>Grupo de riesgo</span></th>
+                                }
+
                             </tr>
                         </thead>
                         <tbody>
@@ -174,9 +193,14 @@ class DetailsInfoClient extends Component {
                                         <dd style={{ marginLeft: "0px" }}>{infoClient.subSegmentKey}</dd>
                                     </dl>
                                 </td>
+
                                 <td style={{ width: "25%", verticalAlign: "initial" }}>
-                                    <a onClick={this.openModalRiskGroup} style={{ marginLeft: "0px", cursor: 'pointer' }}>{shorterStringValue(infoClient.riskGroup)}</a>
+                                    {
+                                        allowAccessRiskGroup &&
+                                        <a onClick={this.openModalRiskGroup} style={{ marginLeft: "0px", cursor: 'pointer' }}>{shorterStringValue(infoClient.riskGroup)}</a>
+                                    }
                                 </td>
+
                             </tr>
                         </tbody>
                     </table>
@@ -210,16 +234,22 @@ class DetailsInfoClient extends Component {
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('economicActivity')}
                         codSection={accordion.economicActivity} title="Actividad económica" icon="payment"
-                        componentView={<ActividadEconomica infoClient={infoClient} />} />
+                        componentView={<ActividadEconomica infoClient={infoClient} reducerGlobal={reducerGlobal} />} />
 
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('inventoryPolicy')}
-                        codSection={accordion.inventoryPolicy} title="Política de inventarios" icon="cubes"
-                        componentView={<InventoryPolicy infoClient={infoClient} />} />
+                    {
+                        allowAccessContextClient &&
 
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('controlLinkedPayments')}
-                        codSection={accordion.controlLinkedPayments} title="Control para pagos entre vinculadas y cambios de control" icon="building"
-                        componentView={<ControlLinkedPayments infoClient={infoClient} />} />
+                        <ComponentAccordion functionChange={() => this._changeValueAccordion('inventoryPolicy')}
+                            codSection={accordion.inventoryPolicy} title="Política de inventarios" icon="cubes"
+                            componentView={<InventoryPolicy infoClient={infoClient} />} />
 
+                    }
+                    {
+                        allowAccessContextClient &&
+                        <ComponentAccordion functionChange={() => this._changeValueAccordion('controlLinkedPayments')}
+                            codSection={accordion.controlLinkedPayments} title="Control para pagos entre vinculadas y cambios de control" icon="building"
+                            componentView={<ControlLinkedPayments infoClient={infoClient} />} />
+                    }
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('ubicationCorrespondence')}
                         codSection={accordion.ubicationCorrespondence} title="Información de ubicación y correspondencia" icon="browser"
@@ -229,17 +259,26 @@ class DetailsInfoClient extends Component {
                         codSection={accordion.infoFinanciera} title="Información financiera" icon="suitcase"
                         componentView={<InfoFinanciera infoClient={infoClient} />} />
 
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('mainCustomer')}
-                        codSection={accordion.mainCustomer} title="Principales clientes" icon="users"
-                        componentView={<MainCustomer infoClient={infoClient} />} />
+                    {
+                        allowAccessContextClient &&
+                        <ComponentAccordion functionChange={() => this._changeValueAccordion('mainCustomer')}
+                            codSection={accordion.mainCustomer} title="Principales clientes" icon="users"
+                            componentView={<MainCustomer infoClient={infoClient} />} />
+                    }
 
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('mainSupplier')}
-                        codSection={accordion.mainSupplier} title="Principales proveedores" icon="shipping"
-                        componentView={<MainSupplier infoClient={infoClient} />} />
+                    {
+                        allowAccessContextClient &&
+                        <ComponentAccordion functionChange={() => this._changeValueAccordion('mainSupplier')}
+                            codSection={accordion.mainSupplier} title="Principales proveedores" icon="shipping"
+                            componentView={<MainSupplier infoClient={infoClient} />} />
+                    }
 
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('mainCompetition')}
-                        codSection={accordion.mainCompetition} title="Principales competidores" icon="factory"
-                        componentView={<MainCompetitor infoClient={infoClient} />} />
+                    {
+                        allowAccessContextClient &&
+                        <ComponentAccordion functionChange={() => this._changeValueAccordion('mainCompetition')}
+                            codSection={accordion.mainCompetition} title="Principales competidores" icon="factory"
+                            componentView={<MainCompetitor infoClient={infoClient} />} />
+                    }
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('dataComercial')}
                         codSection={accordion.dataComercial} title="Datos de conocimiento comercial" icon="book"
@@ -253,13 +292,17 @@ class DetailsInfoClient extends Component {
                         codSection={accordion.declarationOfOrigin} title="Declaración de origen de bienes y/o fondos" icon="money"
                         componentView={<DeclarationOfOrigin infoClient={infoClient} />} />
 
+
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('internationalOperations')}
                         codSection={accordion.internationalOperations} title="Información operaciones internacionales" icon="world"
-                        componentView={<InternationalOperations infoClient={infoClient} />} />
+                        componentView={<InternationalOperations infoClient={infoClient} allowAccessInfoContextClient={allowAccessContextClient} />} />
 
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('documentInformationServices')}
-                        codSection={accordion.documentInformationServices} title="Consulta de servicios de información documental" icon="newspaper"
-                        componentView={<DocumentInformationServices infoClient={infoClient} />} />
+                    {
+                        allowAccessGestionDocumental &&
+                        <ComponentAccordion functionChange={() => this._changeValueAccordion('documentInformationServices')}
+                            codSection={accordion.documentInformationServices} title="Consulta de servicios de información documental" icon="newspaper"
+                            componentView={<DocumentInformationServices infoClient={infoClient} />} />
+                    }
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('foreignProducts')}
                         codSection={accordion.foreignProducts} title="Descripción de los productos financieros en moneda extranjera" icon="product hunt"
@@ -280,7 +323,7 @@ class DetailsInfoClient extends Component {
                                             <span>Editar/Modificar</span></a>
                                     </Col>}
                                 {allowAccessAndEdit &&
-                                    <Col style={paddingButtons}  onClick={this._clickButtonClientCertify}>
+                                    <Col style={paddingButtons} onClick={this._clickButtonClientCertify}>
                                         <button className="btn"><span>Certificar cliente</span></button>
                                     </Col>}
                                 {allowAccessAndEdit &&

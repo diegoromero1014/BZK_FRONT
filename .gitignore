@@ -6,7 +6,11 @@ netbeans/
 npm-debug.log
 /node_modules/
 /semantic
+/semantic-ui
 semantic.json
 dist/
 .gitignore
 .vscode/
+package-lock.json
+.nyc_output/
+/coverage

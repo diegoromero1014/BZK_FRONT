@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { redirectUrl } from '../globalComponents/actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import DetailsInfoClient from '../clientDetailsInfo/detailsInfoClient';
 import ContactInfo from '../contact/component';
 import Partners from '../clients/partners/tabComponent';
@@ -8,24 +10,20 @@ import VisitaInfo from '../visit/component';
 import PipelineInfo from '../pipeline/component';
 import BusinessPlanInfo from '../businessPlan/component';
 import PendingInfo from '../pendingTask/component';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { updateTabSeleted } from '../clientDetailsInfo/actions';
-import { consultModulesAccess } from '../navBar/actions';
-import {
-    MODULE_CONTACTS, MODULE_SHAREHOLDERS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS,
-    MODULE_PIPELINE, MODULE_BUSSINESS_PLAN, MODULE_RISKS_MANAGEMENT, MODULE_CUSTOMER_STORY,
-    MODULE_BOARD_MEMBERS, MODULE_PARTNERS
-} from '../../constantsGlobal';
-import {
-    TAB_INFO, TAB_CONTACTS, TAB_SHAREHOLDER, TAB_PREVISITS, TAB_VISITS,
-    TAB_PENDING_TASK, TAB_PIPELINE, TAB_BUSINESS_PLAN, TAB_RISKS_MANAGEMENT,
-    TAB_CUSTOMER_STORY
-} from '../../constantsGlobal';
-
 import RisksManagements from '../risksManagement/componentRisksManagement';
 import ComponentCustomerStory from '../customerStory/componentCustomerStory';
+
+import { updateTabSeleted } from '../clientDetailsInfo/actions';
+import { consultModulesAccess } from '../navBar/actions';
+
+import {
+    MODULE_CONTACTS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS, MODULE_PIPELINE, MODULE_BUSSINESS_PLAN,
+    MODULE_RISKS_MANAGEMENT, MODULE_CUSTOMER_STORY, MODULE_PARTNERS
+} from '../../constantsGlobal';
+import {
+    TAB_INFO, TAB_CONTACTS, TAB_SHAREHOLDER, TAB_PREVISITS, TAB_VISITS, TAB_PENDING_TASK, TAB_PIPELINE,
+    TAB_BUSINESS_PLAN, TAB_RISKS_MANAGEMENT, TAB_CUSTOMER_STORY
+} from '../../constantsGlobal';
 
 class TabClientInfo extends Component {
     constructor(props) {
@@ -78,9 +76,8 @@ class TabClientInfo extends Component {
         if (tabActive === null || tabActive === undefined || tabActive === "") {
             tabActive = TAB_INFO;
         }
-        if (tabActive === TAB_INFO) {
-            //la configuración ya se hizo arriba
-        } else if (tabActive === TAB_CONTACTS) {
+        
+        if (tabActive === TAB_CONTACTS) {
             styleInfo = false;
             styleContacts = true;
             styleShareholders = false;

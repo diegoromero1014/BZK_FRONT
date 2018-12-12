@@ -1,6 +1,8 @@
-export const VERSION_DATE = "04/04/2018";
+export const VERSION_DATE = "12/12/2018";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
+export const NATURAL_PERSON = "Persona natural";
+export const JURIDICAL_PERSON = "Persona jurídica";
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
 export const FILE_OPTION_REPORT_VISIT = 2;
 export const FILE_OPTION_SHOPPING_MAP = 3;
@@ -32,6 +34,7 @@ export const GRAY_COLOR = "#c8c8c8";
 export const APP_NAME = "FRONT_OFFICE";
 export const YES = 1;
 export const NO = 0;
+export const MAX_LENGTH_EVENT_NAME = 50;
 
 export const TITLE_CONCLUSIONS_VISIT = "En este campo se podrán ingresar los aspectos más relevantes, los acuerdos " +
     " y compromisos que se dieron en la reunión. Además, registrar los comentarios del estado de servicio.\n\n" +
@@ -91,8 +94,16 @@ export const VINCULAR = "Vincular";
 export const ESTUDIO_DE_CREDITO = "Estudio de crédito";
 export const ENTREGA_ESTRUCTURADA = "Entrega estructurada";
 export const COMMERCIAL = "Comercial";
+export const GENERATE_PDF = "Generar PDF";
 export const ANALYST = "Analista";
 export const TRACKING_ENVIRONMENTAL = "Seguimiento ambiental";
+export const VISOR_CLIENTE = "Visor cliente";
+export const DOWNLOAD_TASK = "Descargar Tareas"
+
+export const INFO_ESTUDIO_CREDITO = "Info Estudio de Crédito";
+export const GENERAR_PDF_ESTUDIO_CREDITO = "Generar PDF Estudio de crédito";
+export const GESTION_DOCUMENTAL = "Gestión Documental";
+export const GRUPO_RIESGO = "Grupo de Riesgo";
 
 //Variables de los modulos de la aplicación
 export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";
@@ -129,11 +140,20 @@ export const TAB_BUSINESS_PLAN = 8;
 export const TAB_RISKS_MANAGEMENT = 9;
 export const TAB_CUSTOMER_STORY = 10;
 
+export const MAX_LENGTH_LINK_CLIENT_TRACER_CODE = 255;
+
 let API_URL;
-if (process.env.NODE_ENV === "production") {
-    API_URL = "https://biztrackdesarrollo.bancolombia.corp/Biztrack";
-} else {
+
+if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
     API_URL = "http://localhost:8084/Centricity";
+} else {
+    if (WP_VAR_ENVIRONMENT === "production") {
+        API_URL = "https://biztrackback.bancolombia.corp/Centricity";
+    } else if (WP_VAR_ENVIRONMENT === 'development') {
+        API_URL = "https://biztrackdesarrollo.bancolombia.corp/Biztrack";
+    } else if (WP_VAR_ENVIRONMENT === 'quality') {
+        API_URL = "https://biztrackcertificacion.bancolombia.corp/Biztrack";
+    }
 }
 
 export const APP_URL = API_URL;
@@ -148,6 +168,9 @@ export const REDIRECT_TO_LOGIN = 'ias-ayax/input/redirect-to-url';
 //Mensajes de error
 export const TITLE_ERROR_SWEET_ALERT = "Error ejecutando transacción";
 export const MESSAGE_ERROR_SWEET_ALERT = "Señor usuario ocurrió un error, por favor comuníquese  con el administrador.";
+
+//Mensajes advertencia
+export const MESSAGE_REPLACE_PDF = "Señor usuario, ya fue generado un PDF para este cliente, ¿Desea reemplazarlo?"
 
 export const STYLE_BUTTONS_ACTIONS = { paddingRight: '7px', paddingLeft: '7px' };
 export const STYLE_CONTAINER_BUTTONS = {
@@ -178,6 +201,7 @@ export const STYLE_BUTTON_BOTTOM = {
     height: '50px',
     background: 'rgba(255, 255, 255, 0.74902)'
 }
+
 export const ORDER_ASC = 0;
 export const ORDER_DESC = 1;
 export const STR_YES = "Si";
@@ -190,14 +214,14 @@ export const valuesYesNo = [
 /**
  * INICIO REGEX XSS
  */
-export const REGEX_GENERAL_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|(<meta|<iframe|<link|<script|(=.*cmd)|scriptlet|error=|http-equiv|@import)/g;
-export const REGEX_FUNCTIONS_XSS = /onstart|onabort|onbeforeunload|onerror|onhashchange|onload|onpageshow|onpagehide|onresize|onscroll|onunload|onmouseover/g; 
+export const REGEX_GENERAL_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|(<meta|<iframe|<link|<script|((\+|\-|\*|=).*cmd)|scriptlet|error=|http-equiv|@import)/g;
+export const REGEX_FUNCTIONS_XSS = /onstart|onabort|onbeforeunload|onerror|onhashchange|onload|onpageshow|onpagehide|onresize|onscroll|onunload|onmouseover/g;
 export const REGEX_SIMPLE_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|<.*?>/g;
 // export const REGEX_SIMPLE_XSS_STRING = "/(?![',.-])[#-.]|[[-^]|[?|{}]|<.*?>/g";
-export const REGEX_SIMPLE_XSS_STRING = "/<.*?>|(=.*cmd)|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onstart|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";
+export const REGEX_SIMPLE_XSS_STRING = "/<.*?>|((\\+|\\-|\\*|=).*cmd)|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onstart|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";
 
 export const REGEX_SIMPLE_XSS_STRING_TAG = "/<.*?>/g";
-export const REGEX_SIMPLE_XSS_STRING_R_W = "/(=.*cmd)|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onstart|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";
+export const REGEX_SIMPLE_XSS_STRING_R_W = "/((\\+|\\-|\\*|=).*cmd)|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onstart|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";
 export const REGEX_SIMPLE_XSS_STRING_SPECIFIC = "/((<[\\S\\s]*(.*?([#-.]|[\\[-^]|[?|{}]))\\s*>)|(<meta|<xss|<style|<iframe|<link|<script|scriptlet|error=|http-equiv|@import))/g";
 
 
@@ -211,27 +235,28 @@ export const REGEX_SIMPLE_XSS_MESAGE = "Señor usuario, la informacion ingresada
  */
 
 
- /**
-  * CONSTANTES INFORMES COMERCIALES QUE SE BLOQUEAN AL EDITAR
-  */
+/**
+ * CONSTANTES INFORMES COMERCIALES QUE SE BLOQUEAN AL EDITAR
+ */
 
- /**
-  * ACCIONES
-  */
-    export const BLOCK_REPORT_CONSTANT = "BLOCK_REPORT_CONSTANT";
-    export const STOP_BLOCK_REPORT = "STOP_BLOCK_REPORT";
+/**
+ * ACCIONES
+ */
+export const BLOCK_REPORT_CONSTANT = "BLOCK_REPORT_CONSTANT";
+export const STOP_BLOCK_REPORT = "STOP_BLOCK_REPORT";
 
- /**
-  * TIPOS DE DOCUMENTOS BLOQUEADOS
-  */
+/**
+ * TIPOS DE DOCUMENTOS BLOQUEADOS
+ */
 
-    export const NAME_REPORT_PREVISIT = "PreVisita";
-    export const BLOCK_CREDIT_STUDY = "CreditStudy";
+export const NAME_REPORT_PREVISIT = "PreVisita";
+export const BLOCK_CREDIT_STUDY = "CreditStudy";
+export const BLOCK_BUSINESS_PLAN = "BusinessPlan";
 
  /**
   * PARAMETROS BLOQUEO
   */
-    export const TIME_REQUEST_BLOCK_REPORT = 30000;
+    export const TIME_REQUEST_BLOCK_REPORT = 60000;
 
 
 /**
@@ -244,6 +269,9 @@ export const CLEAR_PERMISSIONS_MODULE_PREVISITS = "CLEAR_PERMISSIONS_MODULE_PREV
  * Constantes totalidad de los campos requeridos
  */
 
- export const INCOMPLETE_INFORMATION = "Información incompleta";
- export const ALL_FIELDS_REQUIERED = "Señor usuario, para guardar debe diligenciar todos los campos.";
- export const MOST_ADD_AN_EVENT = "Señor usuario, para guardar debe agregar un evento";
+export const INCOMPLETE_INFORMATION = "Información incompleta";
+export const ALL_FIELDS_REQUIERED = "Señor usuario, para guardar debe diligenciar todos los campos.";
+export const MOST_ADD_AN_EVENT = "Señor usuario, para guardar debe agregar un evento";
+
+//MENSAJE DE SEGURIDAD
+export const MESSAGE_SECURITY_FORM = "MENSAJE_SEGURIDAD_FORMULARIOS";

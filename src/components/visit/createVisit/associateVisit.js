@@ -11,7 +11,7 @@ import PaginationAssociateVisit from './paginationAssociateVisit';
 import { Col } from 'react-flexbox-grid';
 import { NUMBER_RECORDS } from '../constants';
 import Modal from 'react-modal';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import { Button, Icon } from 'semantic-ui-react'
 import moment from 'moment';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -47,7 +47,7 @@ class ButtonAssociateComponent extends Component {
         clearPrevisit();
         changePageAssociateVisit(1);
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
-        previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, 500, "pvd.visitTime", 1, "", true).then((data) => {
+        previsitByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, 500, "pvd.visitTime", 1, "", true).then((data) => {
             if (validateResponse(data)) {
                 changeStateSaveData(false, "");
             }

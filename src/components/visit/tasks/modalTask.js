@@ -2,7 +2,6 @@ import moment from "moment";
 import { reduxForm } from "redux-form";
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
-import SweetAlert from "sweetalert-react";
 import { Col, Row } from "react-flexbox-grid";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import { addTask, editTask } from "./actions";
@@ -14,6 +13,7 @@ import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
 import { htmlToText, xssValidation } from "../../../actionsGlobal";
 import { VALUE_XSS_INVALID } from "../../../constantsGlobal";
+import {swtShowMessage} from "../../sweetAlertMessages/actions";
 
 const fields = ["idEmployee", "responsable", "fecha", "tarea", "id"];
 const errors = {};
@@ -23,6 +23,8 @@ var idUsuario, nameUsuario;
 const validate = (values) => {
     if (!values.responsable) {
         errors.responsable = "Debe ingresar un valor";
+    } else if (!values.idEmployee) {
+        errors.responsable = "Debe seleccionar un empleado";
     } else {
         errors.responsable = null;
     }
@@ -79,10 +81,16 @@ class ModalTask extends Component {
     _closeCreate() {
         const { isOpen, taskEdit } = this.props;
         if (taskEdit !== undefined) {
+
+            // Esto se puede borrar
+
             this.setState({
                 showSuccessEdit: false
             });
         } else {
+
+            // Esto se puede borrar
+
             this.setState({
                 showSuccessAdd: false
             });
@@ -92,12 +100,16 @@ class ModalTask extends Component {
     }
 
     updateKeyValueUsersBanco(e) {
-        const { fields: { responsable, idEmployee }, filterUsersBanco } = this.props;
+        const { fields: { responsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
         const selector = $('.ui.search.responsable');
-        idEmployee.onChange(null);
+
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.preventDefault();
             if (responsable.value !== "" && responsable.value !== null && responsable.value !== undefined) {
+                if(responsable.value.length < 3) {
+                    swtShowMessage('error','Error','Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
+                    return;
+                }
                 selector.toggleClass('loading');
                 filterUsersBanco(responsable.value).then((data) => {
                     usersBanco = _.get(data, 'payload.data.data');
@@ -130,7 +142,7 @@ class ModalTask extends Component {
 
 
     _handleCreateTask() {
-        const { fields: { responsable, fecha, tarea, idEmployee, id }, handleSubmit, error, addTask, editTask, taskEdit } = this.props;
+        const { fields: { responsable, fecha, tarea, idEmployee, id }, handleSubmit, error, addTask, editTask, taskEdit, swtShowMessage } = this.props;
         if (responsable.value !== nameUsuario) {
             nameUsuario = responsable.value;
             idUsuario = null;
@@ -145,9 +157,9 @@ class ModalTask extends Component {
                 taskEdit.fechaForm = fecha.value;
                 taskEdit.id = id.value;
                 editTask(taskEdit);
-                this.setState({
-                    showSuccessEdit: true
-                });
+
+                swtShowMessage('success', 'Tarea editada','Señor usuario, la tarea fue editada exitosamente', {onConfirmCallback: this._closeCreate})
+
             } else {
                 const uuid = _.uniqueId('task_');
                 var task = {
@@ -161,9 +173,11 @@ class ModalTask extends Component {
                     fechaForm: fecha.value
                 }
                 addTask(task);
-                this.setState({
-                    showSuccessAdd: true
-                });
+
+                // Aqui hay que llamar la accion
+
+                swtShowMessage('success', 'Tarea agregada', 'Señor usuario, la tarea fue agregada exitosamente', { onConfirmCallback: this._closeCreate })
+
             }
         } else {
             fecha.onChange('');
@@ -172,7 +186,7 @@ class ModalTask extends Component {
 
     render() {
         const { modalStatus, selectsReducer } = this.props;
-        const { initialValues, fields: { responsable, fecha, tarea }, handleSubmit, error } = this.props;
+        const { initialValues, fields: { responsable, fecha, tarea, idEmployee }, handleSubmit, error } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateTask)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -192,7 +206,7 @@ class ModalTask extends Component {
                                         labelInput="Ingrese un criterio de búsqueda..."
                                         {...responsable}
                                         parentId="dashboardComponentScroll"
-                                        onChange={responsable.onChange}
+                                        onChange={(val) => {if (idEmployee.value) { idEmployee.onChange(null) } responsable.onChange(val)}}
                                         value={responsable.value}
                                         onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                                         onSelect={val => this._updateValue(val)}
@@ -233,20 +247,8 @@ class ModalTask extends Component {
                         <span>Guardar</span>
                     </button>
                 </div>
-                <SweetAlert
-                    type="success"
-                    show={this.state.showSuccessAdd}
-                    title="Tarea agregada"
-                    text="Señor usuario, la tarea fue agregada exitosamente"
-                    onConfirm={() => this._closeCreate()}
-                />
-                <SweetAlert
-                    type="success"
-                    show={this.state.showSuccessEdit}
-                    title="Tarea editada"
-                    text="Señor usuario, la tarea fue editada exitosamente"
-                    onConfirm={() => this._closeCreate()}
-                />
+                
+                
             </form>
         );
     }
@@ -256,7 +258,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         addTask,
         editTask,
-        filterUsersBanco
+        filterUsersBanco,
+        swtShowMessage
     }, dispatch);
 }
 

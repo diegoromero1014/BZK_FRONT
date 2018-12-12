@@ -6,7 +6,7 @@ export function validateProspectExists(typeDocument, numberDocument){
   const json = {
       messageHeader: {
         "timestamp": new Date().getTime(),
-        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
         "service": "",
         "status": "0",
         "language": "es",
@@ -44,7 +44,7 @@ export function createProspect(jsonCreateProspect){
   const jsonComplete = {
       messageHeader: {
         "timestamp": new Date().getTime(),
-        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
         "service": "",
         "status": "0",
         "language": "es",

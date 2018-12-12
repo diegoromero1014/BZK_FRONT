@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
-import {UPDATE, CREATE, DELETE, SET, CLEAR} from './constants';
 import _ from 'lodash';
+
+import { UPDATE, CREATE, DELETE, SET, CLEAR } from './constants';
 
 const initialState = Immutable.List();
 
@@ -9,7 +10,7 @@ export default (state = initialState, action) => {
     case UPDATE:
       const product = action.product;
       const indexProductToUpdate = state.findIndex(item => item.uid === product.uid);
-      var productToUpdate =  _.assign({}, state.get(indexProductToUpdate), {
+      var productToUpdate = _.assign({}, state.get(indexProductToUpdate), {
         name: product.name,
         type: product.type,
         number: product.number,
@@ -21,17 +22,17 @@ export default (state = initialState, action) => {
       return state.set(indexProductToUpdate, productToUpdate);
     case CREATE:
       var product = action.product;
-        const newProduct = _.assign({}, {
-          name: product.name,
-          type: product.type,
-          number: product.number,
-          averageMontlyAmount: product.averageMontlyAmount,
-          coin: product.coin,
-          country: product.country,
-          city: product.city,
-          uid: product.uid
-        });
-        return state.push(newProduct);
+      const newProduct = _.assign({}, {
+        name: product.name,
+        type: product.type,
+        number: product.number,
+        averageMontlyAmount: product.averageMontlyAmount,
+        coin: product.coin,
+        country: product.country,
+        city: product.city,
+        uid: product.uid
+      });
+      return state.push(newProduct);
     case DELETE:
       const index = state.findIndex(item => item.uid === action.index);
       return state.delete(index);
@@ -56,5 +57,5 @@ export default (state = initialState, action) => {
       return state.clear();
     default:
       return state;
-    }
+  }
 }

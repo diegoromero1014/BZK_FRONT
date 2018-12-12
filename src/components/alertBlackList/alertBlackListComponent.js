@@ -57,7 +57,7 @@ class AlertBlackList extends Component {
 
     componentWillMount() {
         const {redirectUrl, updateTitleNavBar} = this.props;
-        if (window.localStorage.getItem('sessionToken') === "" || window.localStorage.getItem('sessionToken') === undefined) {
+        if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
             this._cleanSearch();

@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 const e = {keyCode: 13, consultclick: true};
 
-class comboBoxFilter extends Component {
+export class comboBoxFilter extends Component {
     constructor(props) {
         super(props);
     }

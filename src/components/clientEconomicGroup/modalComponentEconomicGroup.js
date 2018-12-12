@@ -3,15 +3,19 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../globalComponents/actions';
 import { reduxForm } from 'redux-form';
-import SweetAlert from 'sweetalert-react';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import { REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS } from '../../constantsGlobal';
-import { stringValidate, validateIsNullOrUndefined, validateResponse } from '../../actionsGlobal';
+import { REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS, TAB_INFO } from '../../constantsGlobal';
+import { stringValidate, validateIsNullOrUndefined, validateResponse, onSessionExpire } from '../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import { getClientsEconomicGroup, updateEconomicGroupClient } from './actions';
 import ClientsEconomicGroup from './clientsEconomicGroup';
 import { clientsFindServer } from '../clients/actions';
 import ComboBoxFilter from '../../ui/comboBoxFilter/comboBoxFilter';
+import { showLoading } from '../loading/actions';
+import { consultInfoClient } from '../clientInformation/actions';
+
+import { updateTabSeleted } from '../clientDetailsInfo/actions';
+
 import _ from 'lodash';
 import $ from 'jquery';
 
@@ -27,6 +31,44 @@ class ModalComponentEconomicGroup extends Component {
     this._closeError = this._closeError.bind(this);
     this.updateKeyValueClient = this.updateKeyValueClient.bind(this);
     this.addClientToRelationship = this.addClientToRelationship.bind(this);
+    this._mapClientItems = this._mapClientItems.bind(this);
+    this._handleClickClientItem = this._handleClickClientItem.bind(this);
+  }
+
+  _handleClickClientItem(e) {
+    const { clientEconomicGroupReducer, consultInfoClient, showLoading, swtShowMessage, isOpen, updateTabSeleted, tabReducer } = this.props;
+    
+    const idMainClient = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "idMainClient", "");
+    const accessMainClient = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "accessMainClient", "");
+
+    if (accessMainClient) {
+
+    window.sessionStorage.setItem('idClientSelected', idMainClient);
+
+    showLoading(true, 'Cargando...');
+
+    consultInfoClient(idMainClient).then((data) => {
+      if (!_.get(data, 'payload.data.validateLogin')) {
+        onSessionExpire();
+      }
+      showLoading(false, '');
+      updateTabSeleted(TAB_INFO);
+      var tabActive = tabReducer.get('tabSelected');
+      updateTabSeleted(tabActive);
+      //isOpen cierra el modal
+      isOpen();
+    }).catch((reason) => {
+      showLoading(false, '');
+      swtShowMessage("error", "Señor usuario, ha ocurrido un error en el servidor.");
+    });
+
+    
+
+
+  } else {
+    swtShowMessage("error", "Acceso denegado", "Señor usuario, usted no pertenece a la célula del cliente seleccionado, por tal motivo no puede ver su información.");
+  }
+
   }
 
   _closeError() {
@@ -44,13 +86,14 @@ class ModalComponentEconomicGroup extends Component {
         });
       } else {
         if (_.get(data, 'payload.data.data.validateLogin')) {
-          redirectUrl("/login");
+          onSessionExpire();
         }
       }
     });
   }
 
   _mapClientItems(item, idx) {
+    const {isOpen} = this.props;
     return <ClientsEconomicGroup
       key={idx}
       dataId={item.id}
@@ -61,11 +104,12 @@ class ModalComponentEconomicGroup extends Component {
       dataEconomicGroup={item.economicGroup}
       dataIsProspect={item.prospect}
       dataIsAccess={item.access}
+      closeModal={isOpen}
     />
   }
 
   componentDidMount() {
-    self = this;
+    const self = this;
     $("#iconClientRelationship").click(function () {
       var e = { keyCode: 13, consultclick: true };
       self.updateKeyValueClient(e);
@@ -73,7 +117,7 @@ class ModalComponentEconomicGroup extends Component {
   }
 
   componentWillUpdate() {
-    self = this;
+    const self = this;
     $("#iconClientRelationship").click(function () {
       var e = { keyCode: 13, consultclick: true };
       self.updateKeyValueClient(e);
@@ -114,7 +158,7 @@ class ModalComponentEconomicGroup extends Component {
           }, 150);
         });
       } else {
-        swtShowMessage('error', 'Error buscando cliente', 'Señor usuario, para agregar un cliente al grupo económico primero debe selecionar uno.');
+        swtShowMessage('error', 'Error buscando cliente', 'Señor usuario, para realizar la busqueda es necesario ingresar mínimo 3 caracteres');
       }
     }
   }
@@ -153,9 +197,10 @@ class ModalComponentEconomicGroup extends Component {
   }
 
   render() {
-    const { clientEconomicGroupReducer, clientInformacion} = this.props;
+    const { clientEconomicGroupReducer, clientInformacion, isOpen} = this.props;
     const nameEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "nameEconomicGroup", "");
     const nitEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "nitEconomicGroup", "");
+    const accessMainClient = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "accessMainClient", "");
     const clientsEconomicGroup = _.get(clientEconomicGroupReducer.get('economicGroupClients'), "listClients", []);
     const haveAccessEdit = _.get(clientInformacion.get('responseClientInfo'),'haveAccessEdit',false);
 
@@ -195,7 +240,7 @@ class ModalComponentEconomicGroup extends Component {
             <div className="news-page content">
               <div className="team-modal" style={{ textAlign: 'center', marginBottom: "30px" }}>
                 <div className="client-card" style={{ width: '300px', textAlign: 'left', height: '100px' }}>
-                  <div className="celula-card-top" style={{ borderBottom: '0px' }}>
+                  <div className="celula-card-top" onClick={this._handleClickClientItem} style={{ borderBottom: '0px', cursor: "pointer"  }}>
                     <div className="celula-card-top-left">
                       <div className="celula-title">{nameEconomicGroup.length > 60 ? nameEconomicGroup.substring(0, 60) + "..." : nameEconomicGroup}</div>
                       {nitEconomicGroup !== '' &&
@@ -203,7 +248,7 @@ class ModalComponentEconomicGroup extends Component {
                       }
                     </div>
                   </div>
-                  <div className="celula-card-bottom" style={{ backgroundColor: "#B0E0E6", marginTop: '-45px' }}></div>
+                  <div className="celula-card-bottom" style={{ backgroundColor: accessMainClient ? "#B0E0E6" : "#DCDCDC", marginTop: '-45px' }}></div>
                 </div>
               </div>
             </div>
@@ -230,14 +275,18 @@ function mapDispatchToProps(dispatch) {
     updateEconomicGroupClient,
     getClientsEconomicGroup,
     clientsFindServer,
-    swtShowMessage
+    swtShowMessage,
+    consultInfoClient,
+    showLoading,
+    updateTabSeleted
   }, dispatch);
 }
 
-function mapStateToProps({ clientEconomicGroupReducer, clientInformacion }, ownerProps) {
+function mapStateToProps({ clientEconomicGroupReducer, clientInformacion, tabReducer }, ownerProps) {
   return {
     clientEconomicGroupReducer,
-    clientInformacion
+    clientInformacion,
+    tabReducer
   };
 }
 

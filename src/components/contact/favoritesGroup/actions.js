@@ -1,14 +1,12 @@
-/**
- * Created by ahurtado on 11/23/2016.
- */
+import axios from 'axios';
+
 import { APP_URL } from '../../../constantsGlobal';
 import * as constant from './constants';
-import axios from 'axios';
 
 export function groupFindServer(keyWordName, pageNum, maxRows) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -57,7 +55,7 @@ export function changeKeywordNameNewGroup(keyword) {
 export function clearFilterGroup() {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "",
             "timestamp": new Date().getTime(),
             "service": "",
@@ -87,7 +85,7 @@ export function clearFilterGroup() {
 export function getGroupForId(id) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -111,7 +109,7 @@ export function getGroupForId(id) {
 export function getListContactGroupForId(id) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -137,7 +135,7 @@ export function getListContactGroupForId(id) {
 export function getValidateExistGroup(name) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",
@@ -162,7 +160,7 @@ export function searchContactForGroup(typeDocument, numberDocument, clientId) {
     const json = {
         messageHeader: {
             "timestamp": new Date().getTime(),
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "lmejias",
             "service": "",
             "status": "0",
@@ -209,7 +207,7 @@ export function saveGroupFavoriteContacts(group) {
     const json = {
         messageHeader: {
             "timestamp": new Date().getTime(),
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "lmejias",
             "service": "",
             "status": "0",
@@ -252,7 +250,7 @@ export function getEmailsForGroup(group) {
     const json = {
         messageHeader: {
             "timestamp": new Date().getTime(),
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "lmejias",
             "service": "",
             "status": "0",
@@ -276,7 +274,7 @@ export function getContactsByTypeOrFunction(obj) {
     const json = {
         messageHeader: {
             "timestamp": new Date().getTime(),
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "lmejias",
             "service": "",
             "status": "0",
@@ -340,7 +338,6 @@ export function setFunctionContactsByFunctionOrType(functionContact) {
 
 export function setTypeContactsByFunctionOrType(type) {
     return {
-        type: constant.SET_TYPE_CONTACTS_BY_FUNCTION_OR_TYPE,
         type
     }
 }
@@ -355,7 +352,7 @@ export function setContactsByFunctionOrType(listContacts) {
 export function getListContactGroupById() {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "timestamp": new Date().getTime(),
             "service": "",
             "status": "0",

@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
-import SearchContactComponent from './searchContactComponent';
-import ListContactComponent from './listContactComponent';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { contactsByClientFindServer, clearContact } from './actions';
-import { Combobox } from 'react-widgets';
+
+import SearchContactComponent from './searchContactComponent';
+import ListContactComponent from './listContactComponent';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import PaginationContactComponent from './paginationContactComponent';
-import { FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, NUMBER_RECORDS } from './constants';
 import BotonCreateContactComponent from './createContact/botonCreateContactComponent';
-import { validatePermissionsByModule } from '../../actionsGlobal';
-import { redirectUrl } from '../globalComponents/actions';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
+
+import { redirectUrl } from '../globalComponents/actions';
+import { validatePermissionsByModule } from '../../actionsGlobal';
+import { contactsByClientFindServer, clearContact } from './actions';
+
 import { MODULE_CONTACTS, CREAR } from '../../constantsGlobal';
+import { FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, NUMBER_RECORDS } from './constants';
 
 class ContactComponent extends Component {
 
@@ -28,13 +30,12 @@ class ContactComponent extends Component {
   }
 
   componentWillMount() {
-    if (window.localStorage.getItem('sessionToken') === "") {
+    if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
-      const { contactsByClientFindServer, selectsReducer, contactsByClient, value1, value2,
-        value3, clearContact, validatePermissionsByModule } = this.props;
+      const { contactsByClientFindServer, clearContact, validatePermissionsByModule } = this.props;
       clearContact();
-      contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
+      contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
       validatePermissionsByModule(MODULE_CONTACTS).then((data) => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
@@ -58,7 +59,7 @@ class ContactComponent extends Component {
     return (
       <div className="tab-pane quickZoomIn animated"
         style={{ width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px" }}>
-        <div className="tab-content break-word" style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'initial' }}>
+        <div className="tab-content break-word" style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'visible' }}>
           <Grid style={{ width: "100%" }}>
             <Row>
               <Col xs={10} sm={10} md={11} lg={11}>

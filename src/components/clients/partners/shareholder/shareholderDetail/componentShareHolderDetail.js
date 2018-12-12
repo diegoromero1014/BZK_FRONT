@@ -3,32 +3,38 @@ import { Row, Grid, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import SweetAlert from 'sweetalert-react';
-import { NUMBER_RECORDS } from '../constants';
-import { shareholdersByClientFindServer, clearShareholderCreate, clearShareholderOrder } from '../actions';
-import { getDetailShareHolder, toggleModalShareholder } from './actions';
+import _ from 'lodash';
+
+import SweetAlert from '../../../../sweetalertFocus';
 import ComboBox from '../../../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../../../ui/input/inputComponent';
 import Textarea from '../../../../../ui/textarea/textareaComponent';
+import AuditFiles from '../../../../globalComponents/auditFiles';
+import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
+
+import { shareholdersByClientFindServer, clearShareholderCreate, clearShareholderOrder } from '../actions';
+import { getDetailShareHolder, toggleModalShareholder } from './actions';
 import { consultDataSelect, consultListWithParameterUbication, getMasterDataFields } from '../../../../selectsComponent/actions';
 import { createShareholder } from '../createShareholder/actions';
-import { CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER }
-  from '../../../../selectsComponent/constants';
+import { changeStateSaveData } from '../../../../dashboard/actions';
+import { formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation } from '../../../../../actionsGlobal';
+import { redirectUrl } from '../../../../globalComponents/actions';
+import { showLoading } from '../../../../loading/actions';
+import { swtShowMessage } from '../../../../sweetAlertMessages/actions';
+
+import { NUMBER_RECORDS } from '../constants';
 import {
-  PERSONA_NATURAL, PERSONA_JURIDICA, MESSAGE_SAVE_DATA, EDITAR,
+  CONTACT_ID_TYPE, CLIENT_TYPE, CLIENT_ID_TYPE, FILTER_COUNTRY,
+  FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND,
+  SHAREHOLDER_ID_TYPE, GENDER } from '../../../../selectsComponent/constants';
+import {
+  NATURAL_PERSON, JURIDICAL_PERSON, MESSAGE_SAVE_DATA, EDITAR,
   MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
   REGEX_SIMPLE_XSS,
   VALUE_XSS_INVALID,
   REGEX_SIMPLE_XSS_MESAGE,
   REGEX_SIMPLE_XSS_STRING
 } from '../../../../../constantsGlobal';
-import { changeStateSaveData } from '../../../../dashboard/actions';
-import { formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation } from '../../../../../actionsGlobal';
-import _ from 'lodash';
-import { redirectUrl } from '../../../../globalComponents/actions';
-import { showLoading } from '../../../../loading/actions';
-import { swtShowMessage } from '../../../../sweetAlertMessages/actions';
-import AuditFiles from '../../../../globalComponents/auditFiles';
 
 const fields = ["id", "address", "cityId", "clientId", "comment", "countryId", "firstLastName", "firstName",
   "fiscalCountryId", "genderId", "middleName", "provinceId", "secondLastName", "shareHolderIdNumber",
@@ -47,21 +53,21 @@ const validate = values => {
   } else {
     errors.shareHolderKindId = null;
   }
-  if (!values.firstName && valueTypeShareholder === PERSONA_NATURAL) {
+  if (!values.firstName && valueTypeShareholder === NATURAL_PERSON) {
     errors.firstName = "Debe ingresar un valor";
   } else if (xssValidation(values.firstName)) {
     errors.firstName = VALUE_XSS_INVALID;
   } else {
     errors.firstName = null;
   }
-  if (!values.firstLastName && valueTypeShareholder === PERSONA_NATURAL) {
+  if (!values.firstLastName && valueTypeShareholder === NATURAL_PERSON) {
     errors.firstLastName = "Debe ingresar un valor";
   } else if (xssValidation(values.firstLastName)) {
     errors.firstLastName = VALUE_XSS_INVALID;
   } else {
     errors.firstLastName = null;
   }
-  if (!values.shareHolderName && valueTypeShareholder === PERSONA_JURIDICA) {
+  if (!values.shareHolderName && valueTypeShareholder === JURIDICAL_PERSON) {
     errors.shareHolderName = "Debe ingresar un valor";
   } else if (xssValidation(values.shareHolderName)) {
     errors.shareHolderName = VALUE_XSS_INVALID;
@@ -257,7 +263,7 @@ class ComponentShareHolderDetail extends Component {
     showLoading(true, MESSAGE_LOAD_DATA);
     nonValidateEnter(true);
     this.props.resetForm();
-    getMasterDataFields([CONTACT_ID_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, SHAREHOLDER_ID_TYPE, GENDER]);
+    getMasterDataFields([CONTACT_ID_TYPE, CLIENT_ID_TYPE, CLIENT_TYPE, SHAREHOLDER_KIND, FILTER_COUNTRY, SHAREHOLDER_ID_TYPE, GENDER]);
     consultDataSelect(SHAREHOLDER_TYPE);
     getDetailShareHolder(shareHolderId).then((data) => {
       showLoading(false, "");
@@ -285,8 +291,15 @@ class ComponentShareHolderDetail extends Component {
       shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
       tributaryNumber }, handleSubmit, editShareholderReducer, selectsReducer, shareHolderId, reducerGlobal } = this.props;
     const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
+    var typeClient;
     if (shareHolderEdit !== null && shareHolderEdit !== '' && shareHolderEdit !== undefined) {
-      valueTypeShareholder = shareHolderEdit.shareHolderType;
+      valueTypeShareholder = shareHolderEdit.shareHolderTypeStr;
+      var valueSh = _.get(_.filter(selectsReducer.get(CLIENT_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value');
+      typeClient = CLIENT_ID_TYPE;
+      if (valueSh === undefined) {
+        valueSh = _.get(_.filter(selectsReducer.get(CONTACT_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value');
+        typeClient = CONTACT_ID_TYPE;
+      }
     }
     return (
       <form onSubmit={handleSubmit(this._submitEditShareHolderDetail)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
@@ -295,10 +308,20 @@ class ComponentShareHolderDetail extends Component {
           <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
             <Row>
               <Col xs={12} md={4} lg={4}>
+                <dt>
+                  <span>Tipo de persona</span>
+                </dt>
+                <dt>
+                  <p style={{ fontWeight: "normal" }}>
+                    {(shareHolderType.value !== "" && shareHolderType.value !== null && shareHolderType.value !== undefined && !_.isEmpty(selectsReducer.get("clientType"))) ? _.get(_.filter(selectsReducer.get("clientType"), ['id', parseInt(shareHolderType.value)]), '[0].value') : ''}
+                  </p>
+                </dt>
+              </Col>
+              <Col xs={12} md={4} lg={4}>
                 <dt><span>Tipo de documento</span></dt>
                 <dt>
                   <p style={{ fontWeight: "normal", wordBreak: 'keep-all' }}>
-                    {(shareHolderIdType.value !== "" && shareHolderIdType.value !== null && shareHolderIdType.value !== undefined && !_.isEmpty(selectsReducer.get(SHAREHOLDER_ID_TYPE))) ? _.get(_.filter(selectsReducer.get(SHAREHOLDER_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value') : ''}
+                    {(shareHolderIdType.value !== "" && shareHolderIdType.value !== null && shareHolderIdType.value !== undefined && !_.isEmpty(selectsReducer.get(typeClient))) ? valueSh : ''}
                   </p>
                 </dt>
               </Col>
@@ -309,16 +332,6 @@ class ComponentShareHolderDetail extends Component {
                 <dt>
                   <p style={{ fontWeight: "normal" }}>
                     {shareHolderIdNumber.value}
-                  </p>
-                </dt>
-              </Col>
-              <Col xs={12} md={4} lg={4}>
-                <dt>
-                  <span>Tipo de persona</span>
-                </dt>
-                <dt>
-                  <p style={{ fontWeight: "normal" }}>
-                    {(shareHolderType.value !== "" && shareHolderType.value !== null && shareHolderType.value !== undefined && !_.isEmpty(selectsReducer.get("dataTypeShareholdersType"))) ? _.get(_.filter(selectsReducer.get("dataTypeShareholdersType"), ['id', parseInt(shareHolderType.value)]), '[0].value') : ''}
                   </p>
                 </dt>
               </Col>
@@ -345,7 +358,7 @@ class ComponentShareHolderDetail extends Component {
                   type="text"
                   min={0}
                   max="5"
-                  onBlur={val => this._handleBlurValueNumber(sharePercentage, sharePercentage.value)}
+                  onBlur={val => this._handleBlurValueNumber(sharePercentage, val)}
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
@@ -356,7 +369,7 @@ class ComponentShareHolderDetail extends Component {
               </Col>
             </Row>
             <Row>
-              <Col xs={12} md={12} lg={12} style={valueTypeShareholder === PERSONA_JURIDICA ? { display: "block" } : { display: "none" }}>
+              <Col xs={12} md={12} lg={12} style={valueTypeShareholder === JURIDICAL_PERSON ? { display: "block" } : { display: "none" }}>
                 <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <InputComponent
                   {...shareHolderName}
@@ -366,7 +379,7 @@ class ComponentShareHolderDetail extends Component {
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === PERSONA_NATURAL ? { display: "block" } : { display: "none" }}>
+              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === NATURAL_PERSON ? { display: "block" } : { display: "none" }}>
                 <dt><span>Primer nombre (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <InputComponent
                   {...firstName}
@@ -376,7 +389,7 @@ class ComponentShareHolderDetail extends Component {
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === PERSONA_NATURAL ? { display: "block" } : { display: "none" }}>
+              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === NATURAL_PERSON ? { display: "block" } : { display: "none" }}>
                 <dt><span>Segundo nombre</span></dt>
                 <InputComponent
                   {...middleName}
@@ -386,7 +399,7 @@ class ComponentShareHolderDetail extends Component {
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === PERSONA_NATURAL ? { display: "block" } : { display: "none" }}>
+              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === NATURAL_PERSON ? { display: "block" } : { display: "none" }}>
                 <dt><span>Primer apellido (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <InputComponent
                   {...firstLastName}
@@ -396,7 +409,7 @@ class ComponentShareHolderDetail extends Component {
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === PERSONA_NATURAL ? { display: "block" } : { display: "none" }}>
+              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === NATURAL_PERSON ? { display: "block" } : { display: "none" }}>
                 <dt><span>Segundo apellido</span></dt>
                 <InputComponent
                   {...secondLastName}
@@ -406,7 +419,7 @@ class ComponentShareHolderDetail extends Component {
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
               </Col>
-              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === PERSONA_NATURAL ? { display: "block" } : { display: "none" }}>
+              <Col xs={12} md={4} lg={4} style={valueTypeShareholder === NATURAL_PERSON ? { display: "block" } : { display: "none" }}>
                 <dt><span>Género</span></dt>
                 <ComboBox name="genero" labelInput="Seleccione"
                   {...genderId}

@@ -1,11 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { nonValidateEnter } from '../../actionsGlobal';
-import SweetAlert from "sweetalert-react";
-import { REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT } from '../../constantsGlobal';
 import $ from 'jquery';
 import _ from 'lodash';
+
+import { nonValidateEnter } from '../../actionsGlobal';
 
 class TextareaComponent extends Component {
     constructor(props) {
@@ -13,12 +12,14 @@ class TextareaComponent extends Component {
 
         this.state = {
             value: '',
-            touched: false
+            touched: false,
+            focus: false
         };
 
         this._onEnter = this._onEnter.bind(this);
         this._onBlur = this._onBlur.bind(this);
         this._onChange = this._onChange.bind(this);
+        this._onFocus = this._onFocus.bind(this);
     }
 
     _onEnter(e) {
@@ -30,19 +31,28 @@ class TextareaComponent extends Component {
         } else {
             nonValidateEnter(false);
         }
+
         if (tecla === 13 && validateEnter) {
             e.preventDefault();
         }
     }
 
     _onBlur(e, event) {
-        const { nonValidateEnter } = this.props;
-        
+        const { nonValidateEnter, onChange } = this.props;
+
         this.setState({
-            touched: true
+            touched: true,
+            focus: false
         });
 
+        let trimmed = this.state.value ? this.state.value.trim() : '';
+
+        onChange(trimmed);
         nonValidateEnter(true);
+    }
+
+    _onFocus(e, event) {
+        this.setState({ focus: true })
     }
 
 
@@ -52,14 +62,24 @@ class TextareaComponent extends Component {
         this.setState({
             value: e.target.value
         });
+    }
 
-        onChange(e, event);
+    componentWillMount() {
+        const { value } = this.props;
+        this.setState({ value: value });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.value != this.state.value && !this.state.focus) {
+            this.setState({ value: nextProps.value });
+        }
     }
 
 
     render() {
-        const { nameInput, value, style, type, placeholder, max, touched, error, name, onChange,
-            min, defaultValue, rows, onKey, disabled } = this.props;
+        const { nameInput, value, style, type, placeholder, max, touched, error,
+            name, onChange, min, defaultValue, rows, onKey, disabled
+        } = this.props;
 
         return (
             <div className={disabled}>
@@ -69,11 +89,11 @@ class TextareaComponent extends Component {
                         placeholder={placeholder}
                         maxLength={max}
                         rows={rows}
-                        value={value || ''}
-                        {...this.props}
+                        value={this.state.value || ''}
+                        disabled={disabled}
                         style={style}
                         onChange={this._onChange}
-                        onKeyPress={this._onEnter}
+                        onFocus={this._onFocus}
                         onBlur={this._onBlur}
                     />
                 </div>

@@ -12,10 +12,48 @@ class SwtMessage extends Component {
     constructor(props) {
         super(props);
         this._closeMessage = this._closeMessage.bind(this);
+        this._onCancel = this._onCancel.bind(this);
     }
 
     _closeMessage() {
+        const {customProps} = this.props;
         this.props.swtCloseMessage();
+
+        if (typeof customProps !== 'undefined') {
+            if (typeof customProps.onConfirmCallback === "function") {
+                customProps.onConfirmCallback();
+            }
+        }
+
+    }
+
+    _onCancel() {
+        const {customProps} = this.props;
+        this.props.swtCloseMessage();
+
+        if (typeof customProps !== 'undefined') {
+            if (typeof customProps.onCancelCallback === "function") {
+                customProps.onCancelCallback();
+            }
+        }
+    }
+
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        let isShow = this.props.isShow;
+
+        let button;
+
+        if (isShow) {
+            button = document.getElementsByClassName('confirm');
+
+            if (button.length > 0) {
+                
+                setTimeout(function(){ button[0].focus(); }, 1);
+                button[0].focus();
+            }
+        }
+
     }
 
     render() {
@@ -23,15 +61,23 @@ class SwtMessage extends Component {
             isShow,
             typeMessage,
             title,
-            message
+            message,
+            onConfirmCallback,
+            customProps,
+            options
         } = this.props;
+
         return (
             <SweetAlert
                 type={typeMessage}
                 show={isShow}
                 title={title}
                 text={message}
-                onConfirm={() => this._closeMessage()}
+                {...options}
+                showCancelButton={typeof customProps !== 'undefined' && typeof customProps.onCancelCallback === "function"}
+                onConfirm={() => {this._closeMessage()}}
+                onCancel={() => {this._onCancel()}}
+                
             />);
     }
 
@@ -46,6 +92,8 @@ function mapStateToProps({ swtMessage }) {
         typeMessage: swtMessage.get('typeMessage'),
         title: swtMessage.get('title'),
         message: swtMessage.get('message'),
+        options: swtMessage.get('props'),
+        customProps: swtMessage.get('customProps')
     };
 }
 

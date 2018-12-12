@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import $ from 'jquery';
 import _ from 'lodash';
-import SweetAlert from "sweetalert-react";
-import { REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT } from '../../constantsGlobal';
 
 class inputComponent extends Component {
 
@@ -10,42 +8,84 @@ class inputComponent extends Component {
         super(props);
 
         this.state = {
-            value: ''
+            value: '',
+            focus: false
         };
 
+        this.inputFocus = false;
+
         this._onChange = this._onChange.bind(this);
+        this._onBlur = this._onBlur.bind(this);
+        this._onKey = this._onKey.bind(this);
+        this._onFocus = this._onFocus.bind(this);
     }
 
     _onChange(e, event) {
-        const { onChange, error, touched } = this.props;
         this.setState({
             value: e.target.value
         });
-
-        onChange(e.target.value, e);
     }
 
-    // _onBlur(e, event) {
-    //     const { onBlur } = this.props;
-    //     this.setState({
-    //         xssNotification: REGEX_SIMPLE_XSS.test(e.target.value),
-    //         value: e.target.value
-    //     });
+    _onBlur(e, event) {
+        const { onChange, onBlur } = this.props;
 
-    //     onBlur(e, event);
-    // }
+        let trimmed = this.state.value.trim();
+        this.inputFocus = false;
 
-    // _onInvalid(e, event) {
-    //     event.preventDefault();
-    //     e.target.setCustomValidity(REGEX_SIMPLE_XSS_MESAGE_SHORT);
-    // }
+        onChange(trimmed);
+        onBlur(trimmed);
+    }
+
+    _onFocus(e) {
+        const { onFocus } = this.props;
+        this.inputFocus = true;
+
+        if (onFocus) {
+            onFocus(e);
+        }
+    }
+
+    _onKey(e) {
+        const { onChange, onBlur, onKey, onKeyPress } = this.props;
+
+        if ((e.keyCode === 13 || e.which === 13)) {
+            let trimmed = this.state.value.trim();
+            onChange(trimmed);
+            onBlur(trimmed);
+
+            if (!_.isUndefined(onKeyPress)) {
+                this.inputFocus = false;
+                setTimeout(function () {
+                    onKeyPress(e);
+                }, 500);
+            }
+        }
+
+        if (onKey) {
+            onKey(e);
+        }
+    }
+
+    componentWillMount() {
+        const { value } = this.props;
+        this.setState({ value: value });
+    }
+
+    componentWillReceiveProps(nextProps) {        
+        if (nextProps.value != this.state.value && !this.inputFocus) {
+            this.setState({ value: nextProps.value });
+        }
+    }
 
     render() {
-        const { nameInput, type, style, placeholder, disabled, onKey, touched, error, name, onBlur, onChange, min, max, defaultValue, value, onFocus, shouldHandleUpdate } = this.props;
+        const {
+            nameInput, type, style, placeholder, disabled, touched, error, name, min, max, shouldHandleUpdate
+        } = this.props;
 
         if (touched && error && shouldHandleUpdate) {
             $(`.ui.input.${name} [type=text]`).focus();
         }
+
         return (
             <div className={disabled}>
                 <div className={`styleWidthComponents ui input ${name}`}>
@@ -56,12 +96,12 @@ class inputComponent extends Component {
                         style={style}
                         onChange={this._onChange}
                         placeholder={placeholder}
-                        onBlur={onBlur}
+                        onBlur={this._onBlur}
                         disabled={disabled}
                         className={disabled}
-                        onKeyPress={onKey}
-                        onFocus={onFocus}
-                        value={value || ''}
+                        onKeyPress={this._onKey}
+                        onFocus={this._onFocus}
+                        value={this.state.value || ''}
                     />
                 </div>
                 {

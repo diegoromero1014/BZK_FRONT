@@ -1,3 +1,5 @@
+export const CLIENT_TYPE = "clientType";
+export const DOCUMENT_TYPE_PERSON = "documentTypePerson";
 export const CLIENT_ID_TYPE = "clientIdType";
 export const CONTACT_ID_TYPE = "contactType";
 export const FILTER_FUNCTION_ID = "function";
@@ -55,7 +57,9 @@ export const TERM_IN_MONTHS_VALUES = "termInMonthsValue";
 export const CLIENT_TYPE_PRODUCT = "clientTypeProduct";
 export const CLIENT_TAX_NATURA = "clientTaxNatura";
 export const CLIENT_ORIGIN_GOODS = "clientOriginGoods";
+export const NATURAL_PERSON_ORIGIN_GOODS = "clientOriginGoodsNaturalPerson";
 export const CLIENT_ORIGIN_RESOURCE = "clientOriginResources";
+export const NATURAL_PERSON_ORIGIN_RESOURCE = "clientOriginResourcesNaturalPerson";
 export const CLIENT_OPERATIONS_FOREIGN_CURRENCY = "clientOperationsForeignCurrency";
 export const LIST_REGIONS = "region";
 export const LIST_REGIONS_BY_EMPLOYEE = "regionByEmployee"
@@ -77,3 +81,11 @@ export const REASON_CONFORMATION = "reasonConformation";
 export const CLEAR_LISTS = "clearLists";
 export const BUSINESS_ROL = "relationshipStatus";
 export const TEAM_VALUE_OBJECTS = "teamValueObjects";
+export const MANAGEMENT_BRAND = "managementBrand";
+export const MANAGEMENT_BRAND_KEY = "managementBrandKey";
+export const OCCUPATION = "occupation";
+export const MANAGEMENTS_OF_SECTOR_STRATEGY =  "managementsOfSectorStrategy"
+//INICIO prevent overwrite data reducer editclient
+export const FILTER_PROVINCE_CLIENT = 'provinceClient';
+export const FILTER_CITY_CLIENT = 'cityClient';
+//FIN

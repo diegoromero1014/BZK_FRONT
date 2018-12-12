@@ -24,7 +24,7 @@ export const mapDataGrid = (data = []) => {
             mensaje: mensaje + group.name + "?",
             json: {
                 "messageHeader": {
-                    "sessionToken": window.localStorage.getItem('sessionToken'),
+                    "sessionToken": window.localStorage.getItem('sessionTokenFront'),
                     "timestamp": new Date().getTime(),
                     "service": "",
                     "status": "0",

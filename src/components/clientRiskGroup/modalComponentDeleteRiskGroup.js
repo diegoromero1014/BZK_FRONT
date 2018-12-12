@@ -2,10 +2,10 @@ import React, {Component} from "react";
 import {Col, Row} from "react-flexbox-grid";
 import {reduxForm} from "redux-form";
 import Textarea from "../../ui/textarea/textareaComponent";
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../sweetalertFocus";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
-import {VALUE_REQUIERED} from "../../constantsGlobal";
-import {formValidateKeyEnter, nonValidateEnter, validateResponse} from "../../actionsGlobal";
+import {VALUE_REQUIERED, VALUE_XSS_INVALID} from "../../constantsGlobal";
+import {formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation} from "../../actionsGlobal";
 import {bindActionCreators} from "redux";
 import {deleteRiskGroup, getClientsRiskGroup, updateIsPendingRiskGroup} from "./actions";
 import {showLoading} from "../loading/actions";
@@ -19,6 +19,8 @@ const validate = values => {
 
     if (!values.justification) {
         errors.justification = VALUE_REQUIERED;
+    } else if (xssValidation(values.justification)) {
+        errors.justification = VALUE_XSS_INVALID;
     } else {
         errors.justification = null;
     }

@@ -6,7 +6,7 @@ export function searchShareholder(typeDocument,numberDocument,clientId){
   const json = {
       messageHeader: {
         "timestamp": new Date().getTime(),
-        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
          "username":"lmejias",
          "service": "",
         "status": "0",
@@ -34,7 +34,7 @@ export function createShareholder(jsonCreateShareholder){
   const json = {
       messageHeader: {
         "timestamp": new Date().getTime(),
-        "sessionToken": window.localStorage.getItem('sessionToken'),
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
          "username":"lmejias",
          "service": "",
         "status": "0",

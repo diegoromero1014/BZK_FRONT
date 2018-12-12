@@ -129,7 +129,7 @@ class NoteItem extends Component {
                         <button onClick={this._deleteNote}
                             className="btn btn-sm  btn-danger"
                             type="button">
-                            <i style={{ margin: '0em', fontSize: '1.2em' }} className="trash outline icon"></i>
+                            <i style={{ margin: '0em', fontSize: '1.2em' }} className="trash icon"></i>
                         </button>
                     </Col>
                 </Row>

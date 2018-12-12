@@ -87,6 +87,7 @@ export default (state = initialState, action = {}) => {
             });
             return state.set('group', groupList);
         case actions.VALID_EXISTS_GROUP:
+            
             let response6 = get(action.payload, 'data.data', []);
             let nameSearch = '';
             if (!_.isNull(response6) && !_.isNull(response6.id)) {
