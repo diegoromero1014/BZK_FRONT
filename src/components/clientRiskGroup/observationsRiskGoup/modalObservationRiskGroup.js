@@ -4,13 +4,13 @@ import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid';
 import _ from 'lodash';
-import { validateResponse, stringValidate } from '../../../actionsGlobal';
+import { validateResponse, stringValidate,xssValidation } from '../../../actionsGlobal';
 import Textarea from "../../../ui/textarea/textareaComponent";
 import { changeStateSaveData } from '../../dashboard/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import {
     MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, TITLE_ERROR_SWEET_ALERT, MESSAGE_SAVE_DATA,
-    MESSAGE_SUCCESS
+    MESSAGE_SUCCESS, VALUE_XSS_INVALID
 } from '../../../constantsGlobal';
 import ItemObservationRiskGroup from "./itemObservationRiskGroup";
 import { saveObservationsRiskGroup, getListObservationsRiskGroupById } from '../actions';
@@ -37,20 +37,26 @@ class modalObservationRiskGroup extends Component {
         var arr_ob = Object.assign([], observations);
         var ob = Object.assign({}, arr_ob.pop());
         if (stringValidate(this.state.observation)) {
-            changeStateSaveData(true, MESSAGE_SAVE_DATA);
-            saveObservationsRiskGroup(ob.codeEntity,infoRiskGroup.entity, this.state.observation).then((data) => {
-                changeStateSaveData(false, "");
-                if (validateResponse(data)) {
-                    isOpen();
-                    swtShowMessage(MESSAGE_SUCCESS, 'Observaciones', 'Señor usuario, las observaciones se han guardado exitosamente');
-                } else {
+            if (xssValidation(this.state.observation)){
+                swtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
+            }
+            else{
+                changeStateSaveData(true, MESSAGE_SAVE_DATA);
+                saveObservationsRiskGroup(ob.codeEntity,infoRiskGroup.entity, this.state.observation).then((data) => {
+                    changeStateSaveData(false, "");
+                    if (validateResponse(data)) {
+                        isOpen();
+                        swtShowMessage(MESSAGE_SUCCESS, 'Observaciones', 'Señor usuario, las observaciones se han guardado exitosamente');
+                    } else {
+                        swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                    }
+                }, (reason) => {
+                    changeStateSaveData(false, "");
                     swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-                }
-            }, (reason) => {
-                changeStateSaveData(false, "");
-                swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-            });
-        } else {
+                });
+            }
+        }
+        else {
             swtShowMessage(MESSAGE_ERROR, 'Información faltante', 'Señor usuario, debe ingresar la observación');
         }
 
@@ -125,7 +131,7 @@ class modalObservationRiskGroup extends Component {
                                 name="txtArea"
                                 value={this.state.observation}
                                 touched={true}
-                                onChange={(e) => this.setState({ observation: e.target.value })}
+                                onChange={(val) => this.setState({ observation: val })}
                                 title="Ingrese las observaciones"
                                 style={{ width: '100%', height: '108px' }}
                                 max={500}

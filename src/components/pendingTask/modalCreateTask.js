@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
-import SweetAlert from 'sweetalert-react';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../ui/comboBoxFilter/comboBoxFilter';
 import { Row, Grid, Col } from 'react-flexbox-grid';
@@ -23,6 +22,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import { htmlToText, validateValue, validateValueExist, formatLongDateToDateWithNameMonth, xssValidation } from '../../actionsGlobal';
 import RichText from '../richText/richTextComponent';
+import {swtShowMessage} from "../sweetAlertMessages/actions";
 
 const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateEntity"];
 var usersBanco = [];
@@ -33,6 +33,8 @@ const validate = values => {
   const errors = {};
   if (!values.responsable) {
     errors.responsable = "Debe ingresar un valor";
+  } else if (!values.idEmployee) {
+    errors.responsable = "Debe seleccionar un empleado";
   } else {
     errors.responsable = null;
   }
@@ -84,12 +86,15 @@ class ModalCreateTask extends Component {
   }
 
   updateKeyValueUsersBanco(e) {
-    const { fields: { responsable, idEmployee }, filterUsersBanco } = this.props;
+    const { fields: { responsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
     const selector = $('.ui.search.responsable');
-    idEmployee.onChange(null);
     if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
       e.consultclick ? "" : e.preventDefault();
       if (responsable.value !== "" && responsable.value !== null && responsable.value !== undefined) {
+        if(responsable.value.length < 3) {
+          swtShowMessage('error','Error','Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
+          return;
+        }
         selector.toggleClass('loading');
         filterUsersBanco(responsable.value).then((data) => {
           usersBanco = _.get(data, 'payload.data.data');
@@ -150,7 +155,7 @@ class ModalCreateTask extends Component {
     if (!_.isUndefined(functCloseModal) && !_.isNull(functCloseModal)) {
       functCloseModal();
     } else {
-      tasksByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
+      tasksByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
       clearMyPendingPaginator();
       tasksByUser(0, NUMBER_RECORDS, "", "", "");
     }
@@ -164,12 +169,13 @@ class ModalCreateTask extends Component {
   }
 
   _handleEditTask() {
-    const { createPendingTaskNew, changeStateSaveData, idClient } = this.props;
+    const { createPendingTaskNew, changeStateSaveData, idClient, swtShowMessage } = this.props;
     const { fields: { id, responsable, idEmployee, fecha, idEstado, tarea, advance }, handleSubmit, error } = this.props;
     if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
+
       var messageBody = {
         "id": id.value,
-        "clientId": _.isUndefined(idClient) || _.isNull(idClient) ? window.localStorage.getItem('idClientSelected') : idClient,
+        "clientId": _.isUndefined(idClient) || _.isNull(idClient) ? window.sessionStorage.getItem('idClientSelected') : idClient,
         "task": tarea.value,
         "advance": advance.value,
         "status": idEstado.value,
@@ -184,14 +190,18 @@ class ModalCreateTask extends Component {
           redirectUrl("/login");
         } else {
           if (_.get(data, 'payload.data.status') === 200) {
-            this.setState({ taskEdited: true });
+         
+            swtShowMessage('success',"Edición de tarea","Señor usuario, la tarea se editó exitosamente.",{onConfirmCallback: this._closeViewOrEditTask});
+
           } else {
-            this.setState({ showErrtask: true });
+            
+            swtShowMessage('error',"Error editando tarea","Señor usuario, ocurrió un error editando la tarea.");
+
           }
         }
       }, (reason) => {
         changeStateSaveData(false, "");
-        this.setState({ showErrtask: true });
+        swtShowMessage('error',"Error editando tarea","Señor usuario, ocurrió un error editando la tarea.");
       });
     } else {
       fecha.onChange('');
@@ -199,13 +209,14 @@ class ModalCreateTask extends Component {
   }
 
   render() {
-    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit, dateEntity },
+    
+    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit, dateEntity, idEmployee },
       selectsReducer, reducerGlobal, handleSubmit, myPendingsReducer, actionEdit } = this.props;
     const styleRow = {};
     var visibleEdit, editAction;
     var userName = myPendingsReducer.get('userName');
     if (actionEdit) {
-      visibleEdit = _.isNull(userName) || _.isUndefined(userName) ? true : _.isEqual(userName.toLowerCase(), sessionStorage.getItem('userName').toLowerCase());
+      visibleEdit = _.isNull(userName) || _.isUndefined(userName) ? true : _.isEqual(userName.toLowerCase(), localStorage.getItem('userNameFront').toLowerCase());
     } else {
       editAction = true;
     }
@@ -263,7 +274,7 @@ class ModalCreateTask extends Component {
                   labelInput="Ingrese un criterio de búsqueda..."
                   {...responsable}
                   parentId="dashboardComponentScroll"
-                  onChange={responsable.onChange}
+                  onChange={(val) => {if (idEmployee.value) { idEmployee.onChange(null) } responsable.onChange(val)}}
                   value={responsable.value}
                   onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                   onSelect={val => this._updateValue(val)}
@@ -331,20 +342,8 @@ class ModalCreateTask extends Component {
             >{'Guardar'}</button>
           }
         </div>
-        <SweetAlert
-          type="success"
-          show={this.state.taskEdited}
-          title="Edición de tarea"
-          text="Señor usuario, la tarea se editó exitosamente."
-          onConfirm={() => this._closeViewOrEditTask()}
-        />
-        <SweetAlert
-          type="error"
-          show={this.state.showErrtask}
-          title="Error editando tarea"
-          text="Señor usuario, ocurrió un error editando la tarea."
-          onConfirm={() => this.setState({ showErrtask: false })}
-        />
+        
+        
       </form>
     );
   }
@@ -363,6 +362,7 @@ function mapDispatchToProps(dispatch) {
     getInfoTaskUser,
     tasksByUser,
     validateValue,
+    swtShowMessage
   }, dispatch);
 }
 

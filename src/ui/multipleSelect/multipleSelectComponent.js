@@ -1,7 +1,8 @@
-import React, {Component, PropTypes} from 'react';
-import {scrollToComponent} from '../../components/scrollTo/scrollComponent';
+import React, { Component, PropTypes } from 'react';
 import $ from 'jquery';
 import _ from 'lodash';
+
+import { scrollToComponent } from '../../components/scrollTo/scrollComponent';
 
 class MultipleSelectComponent extends Component {
     constructor(props) {
@@ -12,63 +13,63 @@ class MultipleSelectComponent extends Component {
         this.mapValuesToDropDown = this.mapValuesToDropDown.bind(this);
     }
 
-    componentWillReceiveProps({value, name}) {
+    componentWillReceiveProps({ value, name }) {
         const selector = $(`.ui.selection.dropdown.${name}`);
         if (_.isEqual(value, '')) {
             selector.dropdown('clear');
         }
-        if(!_.isEqual(this.state.value, value)){
-          selector.dropdown('set selected', value);
+        if (!_.isEqual(this.state.value, value)) {
+            selector.dropdown('set selected', value);
         }
     }
 
     componentDidMount() {
-        const {onChange, onBlur, name, defaultValue, maxSelections} = this.props;
+        const { onChange, onBlur, name, maxSelections } = this.props;
         const selector = $(`.ui.selection.dropdown.${name}`);
         const self = this;
-        if(maxSelections !== null && maxSelections !== undefined && maxSelections !== ''){
-          selector.dropdown({
-              fullTextSearch : true,
-              maxSelections: 3,
-              onChange: function (id, text) {
-                  self.touched = true;
-                  self.setState({
-                      value: id
-                  });
-                  onBlur(id, text);
-                  onChange(id, text);
-              },
-              forceSelection: false,
-              selectOnKeydown: false
-          });
-        } else{
-          selector.dropdown({
-              fullTextSearch : true,
-              onChange: function (id, text) {
-                  self.touched = true;
-                  self.setState({
-                      value: id
-                  });
-                  onBlur(id, text);
-                  onChange(id, text);
-              },
-              forceSelection: false,
-              selectOnKeydown: false
-          });
+        if (maxSelections !== null && maxSelections !== undefined && maxSelections !== '') {
+            selector.dropdown({
+                fullTextSearch: true,
+                maxSelections: 3,
+                onChange: function (id, text) {
+                    self.touched = true;
+                    self.setState({
+                        value: id
+                    });
+                    onBlur(id, text);
+                    onChange(id, text);
+                },
+                forceSelection: false,
+                selectOnKeydown: false
+            });
+        } else {
+            selector.dropdown({
+                fullTextSearch: true,
+                onChange: function (id, text) {
+                    self.touched = true;
+                    self.setState({
+                        value: id
+                    });
+                    onBlur(id, text);
+                    onChange(id, text);
+                },
+                forceSelection: false,
+                selectOnKeydown: false
+            });
         }
         selector.dropdown('setting', {
-          allowAdditions: false,
-          message: {
-            maxSelections : 'Máximo 3 opciones',
-            noResults:'No hay valores que cumplan con el filtro'
-          },
+            allowAdditions: false,
+            message: {
+                maxSelections: 'Máximo 3 opciones',
+                noResults: 'No hay valores que cumplan con el filtro'
+            },
             forceSelection: false,
             selectOnKeydown: false
         });
     }
 
     mapValuesToDropDown(item, idx) {
-        const {textProp, valueProp, value} = this.props;
+        const { textProp, valueProp, value } = this.props;
         return (
             <div className="item" data-value={_.get(item, valueProp)} value={value || this.state.value} key={idx}>
                 {_.get(item, textProp)}
@@ -77,15 +78,15 @@ class MultipleSelectComponent extends Component {
     }
 
     render() {
-        const {nameInput, labelInput, style, data, touched, invalid, error, name, disabled, scrollTo, parentId, shouldHandleUpdate} = this.props;
-        if( touched && invalid && shouldHandleUpdate){
-          scrollTo(parentId);
+        const { nameInput, labelInput, style, data, touched, invalid, error, name, disabled, scrollTo, parentId, shouldHandleUpdate } = this.props;
+        if (touched && invalid && shouldHandleUpdate) {
+            scrollTo(parentId);
         }
         return (
             <div style={style} className={disabled}>
                 <div className={`styleWidthComponents ui multiple search selection dropdown ${disabled} ${name}`}>
-                    <input type="hidden" disabled={disabled} name={nameInput}/>
-                    <i className="dropdown icon"/>
+                    <input type="hidden" disabled={disabled} name={nameInput} />
+                    <i className="dropdown icon" />
                     <div className="default text">{labelInput}</div>
                     <div className="menu">
                         {_.map(data, this.mapValuesToDropDown)}

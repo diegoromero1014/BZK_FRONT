@@ -1,65 +1,63 @@
 import React, { Component } from 'react';
-import SweetAlert from 'sweetalert-react';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
-import { validateProspectExists, clearState, clearAllState } from './actions';
-import { redirectUrl } from '../globalComponents/actions';
-import SelectGeneric from '../selectsComponent/selectGeneric/selectGeneric';
+
+import SweetAlert from '../sweetalertFocus';
 import FormCreateProspect from './formCreateProspect';
-import { consultDataSelect, consultList } from '../selectsComponent/actions';
-import { SESSION_EXPIRED } from '../../constantsGlobal';
-import * as constants from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
+import SecurityMessageComponent from './../globalComponents/securityMessageComponent';
+
+import { validateProspectExists, clearState, clearAllState } from './actions';
+import { redirectUrl } from '../globalComponents/actions';
+import { consultDataSelect, consultList, getMasterDataFields } from '../selectsComponent/actions';
+import { onSessionExpire } from '../../actionsGlobal';
+
+import { SESSION_EXPIRED } from '../../constantsGlobal';
+import * as constants from '../selectsComponent/constants';
+import * as constantsPropect from './constants';
+
+import { fields, validations as validate } from './fieldsAndRulesCreatePropspect';
+
 import _ from 'lodash';
 
 var prospectInApplication = true;
-var nameTipeDocument = "";
 
 var typeMessage = "warning";
 var titleMessage = "Prospecto/cliente existente";
 var message = "El prospecto/cliente ya se encuentra registrado en la aplicación.";
-
-const validate = values => {
-  const errors = {}
-  if (!values.idType) {
-    errors.idType = "Debe seleccionar un valor";
-  } else {
-    errors.idType = null;
-  }
-  if (!values.idNumber) {
-    errors.idNumber = "Debe ingresar un valor";
-  } else {
-    errors.idNumber = null;
-  }
-  return errors
-};
 
 class CreatePropspect extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showEr: false,
-      showEx: false
+      showEx: false,
+      idTypeMaster: [],
+      idTypeMasterSelector: "",
+      personType: null
     }
     this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
     this._onClickButtonChange = this._onClickButtonChange.bind(this);
+    this.clientetypeChange = this.clientetypeChange.bind(this);
     this._closeError = this._closeError.bind(this);
   }
 
   componentWillMount() {
     const { clearAllState } = this.props;
     clearAllState();
-    if (window.localStorage.getItem('sessionToken') === "") {
+    if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     }
-    const { consultDataSelect, consultList } = this.props;
-    consultDataSelect(constants.CLIENT_ID_TYPE).then((data) => {
+    const { consultDataSelect, consultList, getMasterDataFields } = this.props;
+
+    getMasterDataFields([constants.CLIENT_ID_TYPE, constants.CONTACT_ID_TYPE, constants.CLIENT_TYPE]).then((data) => {
       if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
-        redirectUrl("/login");
+        onSessionExpire();
       }
     });
+
     consultList(constants.TEAM_FOR_EMPLOYEE);
   }
 
@@ -69,10 +67,18 @@ class CreatePropspect extends Component {
 
   _onClickButtonChange() {
     prospectInApplication = true;
-    const { fields: { idType, idNumber }, clearAllState } = this.props;
+    const { fields: { idType, idNumber, clientType }, clearAllState } = this.props;
     clearAllState();
     idNumber.onChange('');
     idType.onChange('');
+    clientType.onChange('');
+
+    this.setState({
+      idTypeMaster: [],
+      idTypeMasterSelector: "",
+      personType: null
+    });
+
   };
 
   _clickButtonCreateProps(formData) {
@@ -96,12 +102,41 @@ class CreatePropspect extends Component {
       });
   }
 
+
+  clientetypeChange(valor) {
+    const { fields: { idType }, selectsReducer } = this.props;
+    let clientTypes = selectsReducer.get('clientType');
+
+    if (clientTypes) {
+      let clientType = clientTypes.find(type => type.id == valor);
+      let idTypeMaster = clientType.key == constantsPropect.NATURE_PERSON ?
+        constants.CONTACT_ID_TYPE : constants.CLIENT_ID_TYPE;
+
+
+      this.setState({
+        idTypeMaster: selectsReducer.get(idTypeMaster),
+        idTypeMasterSelector: idTypeMaster,
+        personType: _.filter(selectsReducer.get('clientType'), ['id', parseInt(valor)]).pop()
+      });
+
+    } else {
+      this.setState({
+        idTypeMaster: [],
+        idTypeMasterSelector: "",
+        personType: null
+      });
+    }
+
+    idType.onChange('');
+
+
+  }
+
   render() {
-    const { fields: { idType, idNumber }, error, handleSubmit, clearState } = this.props
+    const { fields: { idType, idNumber, clientType }, error, handleSubmit, clearState } = this.props
     const { propspectReducer } = this.props;
     const { selectsReducer } = this.props;
     const status = propspectReducer.get('status');
-    const validateLogin = propspectReducer.get('validateLogin');
     const prospectExist = propspectReducer.get('prospectExist');
     if (status !== "OK") {
       prospectInApplication = prospectExist;
@@ -110,27 +145,40 @@ class CreatePropspect extends Component {
     }
     return (
       <div style={{ marginTop: "10px" }}>
+        <SecurityMessageComponent />
         <span style={{ marginLeft: "20px" }} >Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
         {prospectInApplication &&
           <form onSubmit={handleSubmit(this._clickButtonCreateProps)}>
             <Row style={{ padding: "10px 10px 20px 20px", boxShadow: "-2px 2px 4px 0 rgba(0, 0, 0, 0.2)" }}>
-              <Col xs={12} md={5} lg={5}>
+              <Col xs={12} md={5} lg={3}>
+                <dt><span>Tipo de cliente (</span><span style={{ color: "red" }}>*</span>)</dt>
+                <ComboBox
+                  name="tipoCliente"
+                  labelInput="Seleccione el tipo de persona del prospecto"
+                  {...clientType}
+                  valueProp={'id'}
+                  textProp={'value'}
+                  onChange={this.clientetypeChange}
+                  data={selectsReducer.get('clientType')}
+                />
+              </Col>
+              <Col xs={12} md={5} lg={4}>
                 <dt><span>Tipo de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <ComboBox
                   name="tipoDocumento"
-                  labelInput="Seleccion el tipo de documento del prospecto"
+                  labelInput="Seleccione el tipo de documento del prospecto"
                   {...idType}
                   valueProp={'id'}
                   textProp={'value'}
-                  data={selectsReducer.get('dataTypeDocument')}
+                  data={this.state.idTypeMaster}
                 />
               </Col>
-              <Col xs={12} md={5} lg={5} style={{ paddingRight: "30px" }}>
+              <Col xs={12} md={5} lg={3} style={{ paddingRight: "30px" }}>
                 <dt><span>Número de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <Input
                   name="documento"
                   type="text"
-                  max="20"
+                  max="30"
                   placeholder="Ingrese el número de documento del prospecto"
                   {...idNumber}
                 />
@@ -147,16 +195,20 @@ class CreatePropspect extends Component {
 
         {!prospectInApplication &&
           <Row style={{ marginLeft: "15px", marginTop: "20px", border: '1px solid #cecece', paddingTop: "10px", marginRight: "35px", borderRadius: "5px" }}>
-            <Col xs={12} md={4} lg={4}>
+            <Col xs={12} md={3} lg={3}>
+              <dt><span>Tipo de cliente</span></dt>
+              <dl><span>{clientType.value && this.state.personType.value}</span></dl>
+            </Col>
+            <Col xs={12} md={3} lg={4}>
               <dt><span>Tipo de documento</span></dt>
-              <dl><span>{idType.value && _.filter(selectsReducer.get('dataTypeDocument'), ['id', parseInt(idType.value)])[0].value}</span></dl>
+              <dl><span>{idType.value && _.filter(selectsReducer.get(this.state.idTypeMasterSelector), ['id', parseInt(idType.value)])[0].value}</span></dl>
             </Col>
             <Col xs={12} md={3} lg={3}>
               <dt><span>Número de documento</span></dt>
               <dl><span>{idNumber.value}</span></dl>
             </Col>
             <Col xs={12} md={3} lg={2} style={{ margingLeft: "30px" }}>
-              <button className="btn" type="button" title="cambiar tipo y número documento"
+              <button className="btn" type="button" title="cambiar tipo de cliente, tipo de documento y número documento"
                 style={{ marginTop: "5px", color: "white" }}
                 onClick={this._onClickButtonChange}
               >
@@ -167,7 +219,7 @@ class CreatePropspect extends Component {
         }
 
         {!prospectInApplication &&
-          <FormCreateProspect idTupeDocument={idType.value} numberDocument={idNumber.value} />
+          <FormCreateProspect clientType={this.state.personType} idTupeDocument={idType.value} numberDocument={idNumber.value} />
         }
         <SweetAlert
           type={typeMessage}
@@ -188,7 +240,8 @@ function mapDispatchToProps(dispatch) {
     clearState,
     clearAllState,
     consultDataSelect,
-    consultList
+    consultList,
+    getMasterDataFields
   }, dispatch);
 }
 
@@ -200,6 +253,9 @@ function mapStateToProps({ propspectReducer, selectsReducer }, ownerProps) {
 
 export default reduxForm({
   form: 'submitValidation',
-  fields: ["idType", "idNumber"],
-  validate
+  fields: fields,
+  validate,
+  onSubmitFail: errors => {
+    thisForm.setState({ showEr: true });
+  }
 }, mapStateToProps, mapDispatchToProps)(CreatePropspect);

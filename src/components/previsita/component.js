@@ -35,12 +35,12 @@ class PrevisitComponent extends Component {
   }
 
   componentWillMount() {
-    if( window.localStorage.getItem('sessionToken') === "" ) {
+    if( window.localStorage.getItem('sessionTokenFront') === "" ) {
       redirectUrl("/login");
     } else {
       const {previsitByClientFindServer, clearPrevisit, validatePermissionsByModule} = this.props;
       clearPrevisit();
-      previsitByClientFindServer(window.localStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
+      previsitByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
       validatePermissionsByModule(MODULE_PREVISITS).then((data) => {
         if( !_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
@@ -70,7 +70,7 @@ class PrevisitComponent extends Component {
     }
     return (
       <div className = "tab-pane quickZoomIn animated" style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
-        <div className="tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'initial'}}>
+        <div className="tab-content break-word" style={{zIndex :0,border: '1px solid #cecece',padding: '16px',borderRadius: '3px', overflow: 'visible'}}>
           <Grid style={{ width: "100%"}}>
             <Row>
               <Col xs>

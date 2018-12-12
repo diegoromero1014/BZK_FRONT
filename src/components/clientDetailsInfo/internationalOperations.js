@@ -46,7 +46,7 @@ class InternationalOperations extends Component {
 
 
   render() {
-    const { infoClient } = this.props;
+    const { infoClient, allowAccessInfoContextClient } = this.props;
     const { contextClient } = infoClient;
     var operationsForeignCurrency = '';
     if (_.isEqual(infoClient.operationsForeignCurrency, YES)) {
@@ -86,7 +86,7 @@ class InternationalOperations extends Component {
             <span style={{ width: "25%", verticalAlign: "initial" }}>{infoClient.otherOperationsForeign}</span>
           </Col>
         </Row>
-        {_.isEqual(infoClient.operationsForeignCurrency, YES) &&
+        {_.isEqual(infoClient.operationsForeignCurrency, YES) && allowAccessInfoContextClient &&
           <Row style={{ marginTop: '20px', marginLeft: '2px' }}>
             <h3 style={{ width: '100%', marginBottom: '0px' }}>Operaciones internacionales</h3>
             {validateValueExist(contextClient) && contextClient.noAppliedIntOperations ?

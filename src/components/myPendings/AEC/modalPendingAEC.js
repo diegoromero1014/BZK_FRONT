@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import { nonValidateEnter, formValidateKeyEnter, validateResponse } from '../../../actionsGlobal';
 import * as constants from './constants';

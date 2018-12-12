@@ -12,7 +12,7 @@ import {
 } from '../../../constantsGlobal';
 
 import Textarea from '../../../ui/textarea/textareaComponent';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { INT_OPERATIONS, MESSAGE_INT_OPERATIONS } from '../constants';
 import { FILTER_COUNTRY } from '../../selectsComponent/constants';
@@ -48,7 +48,8 @@ class ComponentListIntOperations extends Component {
             listCountrys: [],
             updateView: false,
             errorForm: false,
-            errorCountryForm: false
+            errorCountryForm: false,
+            shouldUpdate: false
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -185,7 +186,7 @@ class ComponentListIntOperations extends Component {
             } else {
                 swtShowMessage('error', 'Error agregando país', 'Señor usuario, el país que quiere agregar ya se encuentra en la lista de países.');
             }
-        } 
+        }
         // else {
         //     this.setState({ errorCountryForm: true });
         //     swtShowMessage('error', 'Error agregando país', 'Señor usuario, para agregar un país debe ingresar todos los valores.');
@@ -303,7 +304,8 @@ class ComponentListIntOperations extends Component {
             showCheckValidateSection, functionChangeIntOperations, registrationRequired } = this.props;
         const listOperations = clientInformacion.get('listOperations');
         return (
-            <div style={!_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 24px 0 20px', padding: '0px 0 0 15px' } : {}}>
+            <div style={!_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 24px 0 20px', padding: '0px 0 0 15px' } : {}}
+                onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <Row style={{ padding: "10px 10px 10px 0px" }}>
                     <Col xs={12} md={12} lg={12} style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { padding: "20px 10px 10px 20px" } : {}}>
                         <dl style={{ fontSize: "20px", color: "#505050", marginTop: "5px", marginBottom: "5px" }}>
@@ -371,8 +373,7 @@ class ComponentListIntOperations extends Component {
                                             max="5"
                                             placeholder="Participación"
                                             {...participation}
-                                            value={participation.value}
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
                                             error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (xssValidation(participation.value) ? VALUE_XSS_INVALID : null)}
                                             touched={this.state.errorForm || registrationRequired}
                                         />
@@ -447,8 +448,7 @@ class ComponentListIntOperations extends Component {
                                             max="6"
                                             placeholder="Participación del país"
                                             {...participationCountry}
-                                            value={participationCountry.value}
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participationCountry, participationCountry.value, true, 2)}
+                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participationCountry, val, true, 2)}
                                             error={_.isEmpty(participationCountry.value) ? VALUE_REQUIERED : (xssValidation(participationCountry.value) ? VALUE_XSS_INVALID : null)}
                                             touched={this.state.errorCountryForm}
                                         />

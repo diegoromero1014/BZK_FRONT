@@ -128,12 +128,10 @@ class MenuComponent extends Component {
         if (_.get(permissions, MODULE_CONTACTS)) {
             menuItems.push(itemContacts);
         }
-        //@ahurtado - 25/09/2017
-        //Se comenta por que esto es una solución temporal, mientras terminan transaccional.
-        // if (_.get(permissions, MODULE_TRANSACTIONAL)) {
-        menuItems.push(itemTransactional);
+        if (_.get(permissions, MODULE_TRANSACTIONAL)) {
+            menuItems.push(itemTransactional); 
+        }
         menuItems.push(itemScheduler);
-        // }
         if (_.get(permissions, MODULE_AEC)) {
             itemMyPendings.children.push(childrenMyPendingsAEC);
         }
@@ -142,8 +140,8 @@ class MenuComponent extends Component {
     }
 
     componentWillMount() {
-        if (window.localStorage.getItem('sessionToken') === "") {
-            redirectUrl("/login");
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
+            
         } else {
             const { consultModulesAccess, showLoading } = this.props;
             showLoading(true, 'Cargando...');

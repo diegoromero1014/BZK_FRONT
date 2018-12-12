@@ -9,14 +9,15 @@ import {
   CLEAR_LIST_MY_PENDINGS_TEAM,
   CLEAR_PENDING_TASK_TEAM,
   CLEAR_MY_PENDINGS_TEAM_ORDER,
-  ORDER_COLUMN_MY_PENDING_TEAM
+  ORDER_COLUMN_MY_PENDING_TEAM,
+  GET_XLS_TASK
 } from './constants';
 import axios from 'axios';
 
 export function tasksByUser(pageNum, maxRows, keyWord, orderMyPending, columnMyPending) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "username": "",
       "timestamp": new Date().getTime(),
       "service": "",
@@ -48,7 +49,7 @@ export function tasksByUser(pageNum, maxRows, keyWord, orderMyPending, columnMyP
 export function getInfoTaskUser(idTask) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "username": "",
       "timestamp": new Date().getTime(),
       "service": "",
@@ -74,7 +75,7 @@ export function getInfoTaskUser(idTask) {
 export function updateStatusTask(idTask, idStatus) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "username": "",
       "timestamp": new Date().getTime(),
       "service": "",
@@ -149,7 +150,7 @@ export function clearOnlyListPendingTask() {
 export function getDownloadPendingTask() {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -183,7 +184,7 @@ export function updateUserNameTask(username) {
 export function tasksTeamByUser(pageNum, maxRows, region, zone, team, taskStatus, dateTaskTeam, idUsuario, orderMyPending, columnMyPending) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "username": "",
       "timestamp": new Date().getTime(),
       "service": "",
@@ -264,4 +265,26 @@ export function clearMyPendingsTeamOrder() {
   return {
     type: CLEAR_MY_PENDINGS_TEAM_ORDER
   };
+}
+
+export function getXlsTask(initialDate, finalDate, states) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+        "initialDate": initialDate,
+        "finalDate": finalDate,
+        "states": states
+     }
+  }
 }

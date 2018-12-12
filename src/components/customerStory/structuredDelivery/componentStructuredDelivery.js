@@ -12,12 +12,22 @@ import {
 } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask, xssValidation } from '../../../actionsGlobal';
+import {MAX_LENGTH_EVENT_NAME} from '../../../constantsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import ComponentEvents from './events/componentEvents';
-import {addEvent} from './events/actions';
+import { addEvent } from './events/actions';
+
+
+import {
+    patternOfHistoryEvent
+} from './../../../validationsFields/patternsToValidateField';
+
+import {
+    MESSAGE_WARNING_HISTORY_EVENT, MESSAGE_WARNING_MAX_LENGTH
+} from './../../../validationsFields/validationsMessages';
 
 import { saveStructuredDelivery, structuredDeliveryDetail, updateEventErrors } from './actions';
 import _ from 'lodash';
@@ -27,65 +37,10 @@ import {
 import moment from 'moment';
 import { setEvents, clearEvents, } from './events/actions';
 import ToolTip from '../../toolTip/toolTipComponent';
+import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
+import { setGlobalCondition } from './../../../validationsFields/rulesField'
 
-const fields = ["id", "corporateGobernance", "corporateGobernanceDate", "reciprocity", "reciprocityDate", "specialConsiderations",
-    "specialConsiderationsDate", "businessWithAffiliates", "businessWithAffiliatesDate", "mergers", "mergersDate", "dificultSituations",
-    "dificultSituationsDate"];
-const errors = {};
-
-let const_callFromDeliveryClient = null; 
-let thisForm = null; 
-
-const validate = (values) => {    
-
-    if (!values.corporateGobernance && const_callFromDeliveryClient) {
-        errors.corporateGobernance = VALUE_REQUIERED;
-    } else if (xssValidation(values.corporateGobernance)) {
-        errors.corporateGobernance = VALUE_XSS_INVALID;
-    } else {
-        errors.corporateGobernance = null;
-    }
-    if (!values.reciprocity && const_callFromDeliveryClient) {
-        errors.reciprocity = VALUE_REQUIERED;
-    } else if (xssValidation(values.reciprocity)) {
-        errors.reciprocity = VALUE_XSS_INVALID;
-    } else {
-        errors.reciprocity = null;
-    }
-    if (!values.specialConsiderations && const_callFromDeliveryClient) {
-        errors.specialConsiderations = VALUE_REQUIERED;
-    } else if (xssValidation(values.specialConsiderations)) {
-        errors.specialConsiderations = VALUE_XSS_INVALID;
-    } else {
-        errors.specialConsiderations = null;
-    }
-    if (!values.businessWithAffiliates && const_callFromDeliveryClient) {
-        errors.businessWithAffiliates = VALUE_REQUIERED;
-    } else if (xssValidation(values.businessWithAffiliates)) {
-        errors.businessWithAffiliates = VALUE_XSS_INVALID;
-    } else {
-        errors.businessWithAffiliates = null;
-    }
-    if (!values.mergers && const_callFromDeliveryClient) {
-        errors.mergers = VALUE_REQUIERED;
-    } else if (xssValidation(values.mergers)) {
-        errors.mergers = VALUE_XSS_INVALID;
-    } else {
-        errors.mergers = null;
-    }
-    if (!values.dificultSituations && const_callFromDeliveryClient) {
-        errors.dificultSituations = VALUE_REQUIERED;
-    } else if (xssValidation(values.dificultSituations)) {
-        errors.dificultSituations = VALUE_XSS_INVALID;
-    } else {
-        errors.dificultSituations = null;
-    }
-
-
-    return errors;
-};
-
-
+let thisForm = null;
 
 class componentStructuredDelivery extends Component {
     constructor(props) {
@@ -107,20 +62,20 @@ class componentStructuredDelivery extends Component {
     _submitStructuredDelivery() {
         const {
             fields: { id, corporateGobernance, reciprocity, specialConsiderations, businessWithAffiliates, mergers, dificultSituations },
-            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData, 
+            structuredDeliveryEvents, swtShowMessage, saveStructuredDelivery, changeStateSaveData,
             idClientSeleted, updateEventErrors, callFromDeliveryClient, addEvent
         } = this.props;
 
         let invalidMessage = 'Señor usuario, debe diligenciar todos los campos de los eventos.';
         let _arrValues = [corporateGobernance.value, reciprocity.value, specialConsiderations.value, businessWithAffiliates.value, mergers.value, dificultSituations.value]
-        
+
         let succesValidateEmpty = stringValidate(_arrValues.join(""));
 
         let succesValidateXss = _arrValues.filter((value) => xssValidation(value)).length == 0;
 
         invalidMessage = !succesValidateXss ? REGEX_SIMPLE_XSS_MESAGE : invalidMessage;
 
-        if(callFromDeliveryClient && structuredDeliveryEvents.size == 0 ) {
+        if (callFromDeliveryClient && structuredDeliveryEvents.size == 0) {
             const uuid = _.uniqueId('event_');
             addEvent(uuid);
             updateEventErrors(true, "Debe ingresar un evento");
@@ -128,17 +83,21 @@ class componentStructuredDelivery extends Component {
             return;
         }
 
-        if ((succesValidateEmpty || structuredDeliveryEvents.size > 0) && succesValidateXss) { 
+        if ((succesValidateEmpty || structuredDeliveryEvents.size > 0) && succesValidateXss) {
             let listEvents = [];
             let allowSave = true;
-
+            let message = null;
             structuredDeliveryEvents.map((event) => {
                 if (!stringValidate(event.name) || !stringValidate(event.date)) {
                     updateEventErrors(true, "Debe ingresar todos los campos")
                     allowSave = false;
-                } else if (xssValidation(event.name)) {
-                    updateEventErrors(true, VALUE_XSS_INVALID);
-                    invalidMessage = REGEX_SIMPLE_XSS_MESAGE;
+                } else if (!_.isUndefined(event.name) && !_.isNull(event.name) && eval(patternOfHistoryEvent).test(event.name)) {                                    
+                    message = MESSAGE_WARNING_HISTORY_EVENT;
+                    updateEventErrors(true, message);
+                    allowSave = false;
+                } else if(!_.isUndefined(event.name) && !_.isNull(event.name) && event.name.length > MAX_LENGTH_EVENT_NAME) {
+                    message = MESSAGE_WARNING_MAX_LENGTH(MAX_LENGTH_EVENT_NAME);
+                    updateEventErrors(true, message);
                     allowSave = false;
                 }
                 listEvents.push({
@@ -146,7 +105,7 @@ class componentStructuredDelivery extends Component {
                     dateEvent: moment(event.date, 'DD/MM/YYYY').format("YYYY-MM-DD HH:mm:ss")
                 });
             });
-            const idClientSave = _.isUndefined(idClientSeleted) || _.isNull(idClientSeleted) ? window.localStorage.getItem('idClientSelected') : idClientSeleted;
+            const idClientSave = _.isUndefined(idClientSeleted) || _.isNull(idClientSeleted) ? window.sessionStorage.getItem('idClientSelected') : idClientSeleted;
             var jsonStructuredDelivery = {
                 "id": id.value,
                 "idClient": idClientSave,
@@ -165,12 +124,8 @@ class componentStructuredDelivery extends Component {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                     } else {
                         this._getStructuredDeliveryDetail();
-                        this.setState({
-                            typeMessage: 'success',
-                            titleMessage: 'Entrega estructurada',
-                            message: 'Señor usuario, se ha guardado la información exitosamente.',
-                            showMessage: true
-                        });
+                        swtShowMessage('success', "Entrega estructurada", "Señor usuario, se ha guardado la información exitosamente.");
+                        this._closeEdit();
                     }
                     changeStateSaveData(false, "");
                     updateEventErrors(false);
@@ -187,11 +142,14 @@ class componentStructuredDelivery extends Component {
     }
 
     _closeEdit() {
+
         const { closeModal } = this.props
+
         this.setState({
             showMessage: false
         });
         if (!_.isUndefined(closeModal)) {
+
             closeModal();
         }
     }
@@ -200,12 +158,12 @@ class componentStructuredDelivery extends Component {
         const {
             fields: {
                 id, corporateGobernance, corporateGobernanceDate, reciprocity, reciprocityDate, specialConsiderations,
-            specialConsiderationsDate, businessWithAffiliates, businessWithAffiliatesDate, mergers, mergersDate, dificultSituations,
-            dificultSituationsDate
+                specialConsiderationsDate, businessWithAffiliates, businessWithAffiliatesDate, mergers, mergersDate, dificultSituations,
+                dificultSituationsDate
             }, structuredDeliveryDetail, swtShowMessage, setEvents, clearEvents, changeStateSaveData, idClientSeleted
         } = this.props;
         clearEvents();
-        const idClientSave = _.isUndefined(idClientSeleted) || _.isNull(idClientSeleted) ? window.localStorage.getItem('idClientSelected') : idClientSeleted;
+        const idClientSave = _.isUndefined(idClientSeleted) || _.isNull(idClientSeleted) ? window.sessionStorage.getItem('idClientSelected') : idClientSeleted;
         structuredDeliveryDetail(idClientSave).then((data) => {
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -244,10 +202,10 @@ class componentStructuredDelivery extends Component {
     }
 
     componentWillMount() {
-        const { clearEvents, changeStateSaveData,callFromDeliveryClient} = this.props;
-        
-        const_callFromDeliveryClient = callFromDeliveryClient;
+        const { clearEvents, changeStateSaveData, callFromDeliveryClient, updateEventErrors } = this.props;
+        setGlobalCondition(callFromDeliveryClient);
         clearEvents();
+        updateEventErrors(false);
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
         this._getStructuredDeliveryDetail();
     }
@@ -256,8 +214,8 @@ class componentStructuredDelivery extends Component {
         const {
             fields: {
                 corporateGobernance, corporateGobernanceDate, reciprocity, reciprocityDate, specialConsiderations,
-            specialConsiderationsDate, businessWithAffiliates, businessWithAffiliatesDate, mergers, mergersDate, dificultSituations,
-            dificultSituationsDate
+                specialConsiderationsDate, businessWithAffiliates, businessWithAffiliatesDate, mergers, mergersDate, dificultSituations,
+                dificultSituationsDate
             }, reducerGlobal, handleSubmit, callFromDeliveryClient
         } = this.props;
         return (
@@ -275,9 +233,9 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Gobierno corporativo - Junta directiva del cliente</span>
-                                    {callFromDeliveryClient && 
-                                    <span>
-                                        (<span style={{ color: "red" }}>*</span>)
+                                    {callFromDeliveryClient &&
+                                        <span>
+                                            (<span style={{ color: "red" }}>*</span>)
                                     </span>
                                     }
                                     {
@@ -309,9 +267,9 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Reciprocidades</span>
-                                    {callFromDeliveryClient && 
-                                    <span>
-                                        (<span style={{ color: "red" }}>*</span>)
+                                    {callFromDeliveryClient &&
+                                        <span>
+                                            (<span style={{ color: "red" }}>*</span>)
                                     </span>
                                     }
                                     {
@@ -343,9 +301,9 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Consideraciones especiales de cuotas de manejo</span>
-                                    {callFromDeliveryClient && 
-                                    <span>
-                                        (<span style={{ color: "red" }}>*</span>)
+                                    {callFromDeliveryClient &&
+                                        <span>
+                                            (<span style={{ color: "red" }}>*</span>)
                                     </span>
                                     }
                                     {
@@ -373,9 +331,9 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Negocios del cliente con filiales</span>
-                                    {callFromDeliveryClient && 
-                                    <span>
-                                        (<span style={{ color: "red" }}>*</span>)
+                                    {callFromDeliveryClient &&
+                                        <span>
+                                            (<span style={{ color: "red" }}>*</span>)
                                     </span>
                                     }
                                     {
@@ -407,9 +365,9 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Fusiones - Adquisiciones</span>
-                                    {callFromDeliveryClient && 
-                                    <span>
-                                        (<span style={{ color: "red" }}>*</span>)
+                                    {callFromDeliveryClient &&
+                                        <span>
+                                            (<span style={{ color: "red" }}>*</span>)
                                     </span>
                                     }
                                     {
@@ -442,9 +400,9 @@ class componentStructuredDelivery extends Component {
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
                                     <span>Situaciones difíciles - Nuevos mercados</span>
-                                    {callFromDeliveryClient && 
-                                    <span>
-                                        (<span style={{ color: "red" }}>*</span>)
+                                    {callFromDeliveryClient &&
+                                        <span>
+                                            (<span style={{ color: "red" }}>*</span>)
                                     </span>
                                     }
                                     {
@@ -526,7 +484,7 @@ export default reduxForm({
     form: 'formStructuredCustomer',
     fields,
     validate,
-    onSubmitFail : (data)=>  {
+    onSubmitFail: (data) => {
         const { swtShowMessage } = thisForm.props;
         swtShowMessage('error', INCOMPLETE_INFORMATION, ALL_FIELDS_REQUIERED);
     }

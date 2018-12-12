@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react';
-import {XYPlot, XAxis, YAxis, VerticalGridLines, VerticalBarSeries, HorizontalGridLines, LineSeries, Crosshair} from 'react-vis';
+import React, { Component, PropTypes } from 'react';
+import { XYPlot, XAxis, YAxis, VerticalGridLines, VerticalBarSeries, HorizontalGridLines, Crosshair } from 'react-vis';
 import numeral from 'numeral';
 import _ from 'lodash';
 
@@ -9,7 +9,7 @@ const labelsFn = (labels, fnToExtend, context) => {
   });
 }
 
-class BarSerires extends Component{
+class BarSerires extends Component {
   constructor(props) {
     super(props);
 
@@ -23,8 +23,8 @@ class BarSerires extends Component{
     };
   }
 
-  componentWillReceiveProps(nextProps){
-    const {labels} = nextProps;
+  componentWillReceiveProps(nextProps) {
+    const { labels } = nextProps;
     this.setState({
       _onNearestXs: labelsFn(labels, this._onNearestX, this)
     });
@@ -32,16 +32,10 @@ class BarSerires extends Component{
 
   _mapBarSeries(items, idx) {
     return <VerticalBarSeries
-        onNearestX={this.state._onNearestXs[idx]}
-        key={idx+1}
-        data={items}
-      />
-  }
-
-  _onNearestX(seriesIndex, value) {
-    this._crosshairValues = this._crosshairValues.concat();
-    this._crosshairValues[seriesIndex] = value;
-    this.setState({crosshairValues: this._crosshairValues});
+      onNearestX={this.state._onNearestXs[idx]}
+      key={idx + 1}
+      data={items}
+    />
   }
 
   _formatCrosshairTitle(values) {
@@ -52,7 +46,7 @@ class BarSerires extends Component{
   }
 
   _formatCrosshairItems(values) {
-    const {labels} = this.props;
+    const { labels } = this.props;
     return values.map((v, i) => {
       return {
         title: `${labels[i]}`,
@@ -71,7 +65,7 @@ class BarSerires extends Component{
     this._crosshairValues = this._crosshairValues.concat();
     this._crosshairValues[seriesIndex] = value;
     value.y = numeral(value.y).format('0,000');
-    this.setState({crosshairValues: this._crosshairValues});
+    this.setState({ crosshairValues: this._crosshairValues });
   }
 
   /**
@@ -80,16 +74,16 @@ class BarSerires extends Component{
    */
   _onMouseLeave() {
     this._crosshairValues = [];
-    this.setState({crosshairValues: this._crosshairValues});
+    this.setState({ crosshairValues: this._crosshairValues });
   }
 
-  render(){
-    const {items, defaultData} = this.props;
-    return(
-      <div style={{overflowX: 'auto'}}>
+  render() {
+    const { items, defaultData } = this.props;
+    return (
+      <div style={{ overflowX: 'auto' }}>
         <XYPlot
           onMouseLeave={this._onMouseLeave}
-          margin={{left:130, top: 20, right: 20, bottom: 40}}
+          margin={{ left: 130, top: 20, right: 20, bottom: 40 }}
           xType="ordinal"
           width={900}
           height={400}>
@@ -99,15 +93,15 @@ class BarSerires extends Component{
           <YAxis />
           {items === defaultData ?
             <VerticalBarSeries
-                onNearestX={this.state._onNearestXs[0]}
-                data={items}
-              /> :
+              onNearestX={this.state._onNearestXs[0]}
+              data={items}
+            /> :
             items.map(this._mapBarSeries)
           }
           <Crosshair
             itemsFormat={this._formatCrosshairItems}
             titleFormat={this._formatCrosshairTitle}
-            values={this.state.crosshairValues}/>
+            values={this.state.crosshairValues} />
         </XYPlot>
       </div>
     );

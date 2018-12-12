@@ -14,7 +14,8 @@ const initialState = Immutable.Map({
     permissionsManagerialView: [],
     permissionsRiskGroup: [],
     permissionsBoardMembers: [],
-    permissionsCovenants: []
+    permissionsCovenants: [],
+    securityMessage: ''
 });
 
 export default (state = initialState, action) => {
@@ -66,9 +67,11 @@ export default (state = initialState, action) => {
             const permissionsCovenants = action.payload.data.data.permissions;
             return state.set('permissionsCovenants', permissionsCovenants);
         case constants.BLOCK_REPORT_CONSTANT:
-            return state;   
+            return state;
         case constants.STOP_BLOCK_REPORT:
             return state;
+        case constants.MESSAGE_SECURITY_FORM:
+            return state.set('securityMessage', action.message);
         default:
             return state;
     }

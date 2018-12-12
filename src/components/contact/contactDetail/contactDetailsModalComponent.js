@@ -1,29 +1,38 @@
 import React, { Component, PropTypes } from 'react';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
+import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
-import { Combobox, DateTimePicker, Multiselect } from 'react-widgets';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import moment from 'moment';
+
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
+import Input from '../../../ui/input/inputComponent';
+import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
+import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
+import SweetAlert from '../../sweetalertFocus';
+import Textarea from '../../../ui/textarea/textareaComponent';
+import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
+import { setGlobalCondition } from './../../../validationsFields/rulesField';
+
+import { showLoading } from '../../loading/actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
+import { changeStateSaveData } from '../../dashboard/actions';
+import { downloadFilePDF } from '../actions';
+import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer } from './actions';
+import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions';
 import {
     consultDataSelect,
     getMasterDataFields,
     consultListWithParameterUbication
 } from '../../selectsComponent/actions';
-import Input from '../../../ui/input/inputComponent';
-import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
-import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import moment from 'moment';
-import SweetAlert from 'sweetalert-react';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import { downloadFilePDF } from '../actions';
-import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../actionsGlobal';
-import Textarea from '../../../ui/textarea/textareaComponent';
-import { changeStateSaveData } from '../../dashboard/actions';
+
+import { NUMBER_RECORDS } from '../constants';
 import {
     CONTACT_ID_TYPE,
     FILTER_FUNCTION_ID,
     FILTER_TYPE_LBO_ID,
     FILTER_TYPE_CONTACT_ID,
-    FILTER_TYPE_LOB_ID,
     FILTER_GENDER,
     FILTER_TITLE,
     FILTER_ATTITUDE_OVER_GROUP,
@@ -36,186 +45,18 @@ import {
     FILTER_SPORTS,
     FILTER_SOCIAL_STYLE
 } from '../../selectsComponent/constants';
-import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer } from './actions';
-import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions';
 import {
     FILE_OPTION_SOCIAL_STYLE_CONTACT,
     MESSAGE_SAVE_DATA,
     EDITAR,
-    OPTION_REQUIRED,
-    VALUE_REQUIERED,
-    INVALID_EMAIL,
     MESSAGE_LOAD_DATA,
-    REGEX_SIMPLE_XSS,
-    REGEX_SIMPLE_XSS_STRING,
     VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS_MESAGE
 } from '../../../constantsGlobal';
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { NUMBER_RECORDS } from '../constants';
-import { showLoading } from '../../loading/actions';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
-
-const fields = ["contactId", "contactType", "contactTitle", "contactGender", "contactTypeOfContact", "contactPosition", "contactDependency", "contactAddress",
-    "contactCountry", "contactProvince", "contactCity", "contactNeighborhood", "contactPostalCode", "contactTelephoneNumber", "contactExtension",
-    "contactMobileNumber", "contactEmailAddress", "contactIdentityNumber", "contactFirstName", "contactMiddleName", "contactFirstLastName", "contactSecondLastName",
-    "contactLineOfBusiness", "contactFunctions", "contactHobbies", "contactSports", "contactSocialStyle", "contactAttitudeOverGroup", "contactDateOfBirth", "contactRelevantFeatures"];
-
 var thisForm;
-var thisCallFromModuleContact = false;
-
-const validate = values => {
-    const errors = {};
-    if (!values.contactPosition) {
-        errors.contactPosition = OPTION_REQUIRED;
-    } else {
-        errors.contactPosition = null;
-    }
-    if (!values.contactDependency) {
-        errors.contactDependency = OPTION_REQUIRED;
-    } else {
-        errors.contactDependency = null;
-    }
-    if (!values.contactType) {
-        errors.contactType = OPTION_REQUIRED;
-    } else {
-        errors.contactType = null;
-    }
-    if (!values.contactTitle) {
-        errors.contactTitle = OPTION_REQUIRED;
-    } else {
-        errors.contactTitle = null;
-    }
-    if (!values.contactGender) {
-        errors.contactGender = OPTION_REQUIRED;
-    } else {
-        errors.contactGender = null;
-    }
-    if (!thisCallFromModuleContact) {
-        if (!values.contactTypeOfContact) {
-            errors.contactTypeOfContact = OPTION_REQUIRED;
-        } else {
-            errors.contactTypeOfContact = null;
-        }
-    }
-    if (!values.contactCountry) {
-        errors.contactCountry = OPTION_REQUIRED;
-    } else {
-        errors.contactCountry = null;
-    }
-    if (!values.contactProvince) {
-        errors.contactProvince = OPTION_REQUIRED;
-    } else {
-        errors.contactProvince = null;
-    }
-    if (!values.contactCity) {
-        errors.contactCity = OPTION_REQUIRED;
-    } else {
-        errors.contactCity = null;
-    }
-    if (!values.contactIdentityNumber) {
-        errors.contactIdentityNumber = VALUE_REQUIERED;
-    } else if (xssValidation(values.contactIdentityNumber)) {
-        errors.contactIdentityNumber = VALUE_XSS_INVALID;
-    } else {
-        errors.contactIdentityNumber = null;
-    }
-    if (!values.contactFirstName) {
-        errors.contactFirstName = VALUE_REQUIERED;
-    } else if (xssValidation(values.contactFirstName)) {
-        errors.contactFirstName = VALUE_XSS_INVALID;
-    } else {
-        errors.contactFirstName = null;
-    }
-    if (!values.contactFirstLastName) {
-        errors.contactFirstLastName = VALUE_REQUIERED;
-    } else if (xssValidation(values.contactFirstLastName)) {
-        errors.contactFirstLastName = VALUE_XSS_INVALID;
-    } else {
-        errors.contactFirstLastName = null;
-    }
-    if (!values.contactEmailAddress) {
-        errors.contactEmailAddress = VALUE_REQUIERED;
-    } else {
-        if (!(/\S+@\S+\.\S+/.test(values.contactEmailAddress))) {
-            errors.contactEmailAddress = INVALID_EMAIL;
-        } else if (xssValidation(values.contactEmailAddress)) {
-            errors.contactEmailAddress = VALUE_XSS_INVALID;
-        } else {
-            errors.contactFunctions = null;
-        }
-    }
-    if (!values.contactTelephoneNumber) {
-        errors.contactTelephoneNumber = VALUE_REQUIERED;
-    } else if (xssValidation(values.contactTelephoneNumber)) {
-        errors.contactTelephoneNumber = VALUE_XSS_INVALID;
-    } else {
-        errors.contactTelephoneNumber = null;
-    }
-    if (!thisCallFromModuleContact) {
-        if (!values.contactFunctions) {
-            errors.contactFunctions = OPTION_REQUIRED;
-        } else {
-            errors.contactFunctions = null;
-        }
-    }
-    if (!values.contactAddress || values.contactAddress === '') {
-        errors.contactAddress = VALUE_REQUIERED;
-    } else if (xssValidation(values.contactAddress)) {
-        errors.contactAddress = VALUE_XSS_INVALID;
-    } else {
-        errors.contactAddress = null;
-    }
-
-    if (xssValidation(values.contactNeighborhood)) {
-        errors.contactNeighborhood = VALUE_XSS_INVALID;
-    }else {
-        errors.contactNeighborhood = null;
-    }
-    if (xssValidation(values.contactPostalCode)) {
-        errors.contactPostalCode = VALUE_XSS_INVALID;
-    }else {
-        errors.contactPostalCode = null;
-    }
-    if (xssValidation(values.contactExtension)) {
-        errors.contactExtension = VALUE_XSS_INVALID;
-    }else {
-        errors.contactExtension = null;
-    }
-    if (xssValidation(values.contactMobileNumber)) {
-        errors.contactMobileNumber = VALUE_XSS_INVALID;
-    }else {
-        errors.contactMobileNumber = null;
-    }
-    if (xssValidation(values.contactMiddleName)) {
-        errors.contactMiddleName = VALUE_XSS_INVALID;
-    }else {
-        errors.contactMiddleName = null;
-    }
-    if (xssValidation(values.contactSecondLastName)) {
-        errors.contactSecondLastName = VALUE_XSS_INVALID;
-    }else {
-        errors.contactSecondLastName = null;
-    }
-    if (xssValidation(values.contactDateOfBirth)) {
-        errors.contactDateOfBirth = VALUE_XSS_INVALID;
-    }else {
-        errors.contactDateOfBirth = null;
-    }
-    if (xssValidation(values.contactRelevantFeatures)) {
-        errors.contactRelevantFeatures = VALUE_XSS_INVALID;
-    }else {
-        errors.contactRelevantFeatures = null;
-    }
-
-    return errors;
-};
 
 class ContactDetailsModalComponent extends Component {
-
-    /* Constructor de la clase ContactDetailModalComponent */
     constructor(props) {
         super(props);
         this._handlerSubmitContact = this._handlerSubmitContact.bind(this);
@@ -242,35 +83,51 @@ class ContactDetailsModalComponent extends Component {
     componentWillMount() {
         const {
             nonValidateEnter, getMasterDataFields, getContactDetails, contactId, callFromModuleContact, showLoading
-            } = this.props;
-        thisCallFromModuleContact = callFromModuleContact;
+        } = this.props;
+
+        setGlobalCondition(!callFromModuleContact);
+
         nonValidateEnter(true);
-        const that = this;
         showLoading(true, MESSAGE_LOAD_DATA);
-        const { fields: { contactFunctions, contactHobbies, contactSports, contactLineOfBusiness } } = this.props;
-        const idClient = callFromModuleContact ? null : window.localStorage.getItem('idClientSelected');
-        getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID,
-            FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]).then(function (data) {
-                getContactDetails(contactId, idClient)
-                    .then(function (data) {
-                        showLoading(false, "");
-                        const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
-                        if (contact.country !== undefined && contact.country !== null) {
-                            that._uploadProvincesByCountryId(contact.country);
-                        }
-                        if (contact.province !== undefined && contact.province !== null) {
-                            that._uploadCitiesByProvinceId(contact.province);
-                        }
-                        if (!callFromModuleContact) {
-                            contactLineOfBusiness.onChange(JSON.parse('["' + _.join(contact.lineOfBusiness, '","') + '"]'));
-                            contactFunctions.onChange(JSON.parse('["' + _.join(contact.function, '","') + '"]'));
-                        }
-                        contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
-                        contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
-                    });
-            });
+        
+        const that = this;
+        const { fields: { contactFunctions, contactHobbies, contactSports, contactLineOfBusiness, contactCity } } = this.props;
+        const idClient = callFromModuleContact ? null : window.sessionStorage.getItem('idClientSelected');
+        const masterData = [
+            CONTACT_ID_TYPE, FILTER_TITLE, FILTER_GENDER, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY, FILTER_COUNTRY,
+            FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS,
+            FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP
+        ];
 
+        getMasterDataFields(masterData).then(function (data) {
+            getContactDetails(contactId, idClient)
+                .then(function (data) {
+                    showLoading(false, "");
+                    const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
+                    
+                    if (contact.country !== undefined && contact.country !== null) {
+                        that._uploadProvincesByCountryId(contact.country);
+                    }
 
+                    if (contact.province !== undefined && contact.province !== null) {
+                        that._uploadCitiesByProvinceId(contact.province);
+                    }
+
+                    if (!callFromModuleContact) {
+                        contactLineOfBusiness.onChange(JSON.parse('["' + _.join(contact.lineOfBusiness, '","') + '"]'));
+                        contactFunctions.onChange(JSON.parse('["' + _.join(contact.function, '","') + '"]'));
+                    }
+
+                    contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
+                    contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
+                    
+                    // Se vuelve a setear la ciudad para evitar que el cambio en el departamento deje vacio el campo ciudad
+                    setTimeout(() => {
+                        contactCity.onChange(contact.city);
+                    }, 1000);
+                    
+                });
+        });
     }
 
     _downloadFileSocialStyle() {
@@ -279,13 +136,13 @@ class ContactDetailsModalComponent extends Component {
         this.setState({ generoData: genero });
     }
 
-
     _genero(val) {
-        const { fields: { contactTitle, contactGender }, selectsReducer, contactDetail } = this.props;
+        const { fields: { contactGender }, selectsReducer, contactDetail } = this.props;
         var femenino = ['Señora', 'Señorita', 'Doctora'];
         var masculino = ['Señor', 'Doctor', 'Padre'];
         var genero;
         var tratamiento = _.get(_.filter(selectsReducer.get(FILTER_TITLE), ['id', parseInt(val)]), '[0].key');
+
         if (_.indexOf(femenino, tratamiento) !== -1) {
             genero = _.filter(selectsReducer.get(FILTER_GENDER), ['key', 'Femenino']);
         } else if (_.indexOf(masculino, tratamiento) !== -1) {
@@ -293,15 +150,13 @@ class ContactDetailsModalComponent extends Component {
         } else {
             genero = selectsReducer.get(FILTER_GENDER);
         }
+
         const contact = contactDetail.get('contactDetailList');
         this.setState({ generoData: genero });
         contactGender.onChange(contact.gender);
-
     }
 
-    /* Cambio en los valores */
     _onchangeValue(type, val) {
-
         switch (type) {
             case "contactIdentityNumber":
                 var { fields: { contactIdentityNumber } } = this.props;
@@ -366,6 +221,7 @@ class ContactDetailsModalComponent extends Component {
             default:
                 break;
         }
+
         const { clearState } = this.props;
         clearState();
     }
@@ -382,7 +238,7 @@ class ContactDetailsModalComponent extends Component {
     }
 
     _onChangeProvince(val) {
-        const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
+        const { fields: { contactProvince, contactCity } } = this.props;
         if (val !== undefined && val !== null) {
             contactProvince.onChange(val);
             const { consultListWithParameterUbication } = this.props;
@@ -392,7 +248,6 @@ class ContactDetailsModalComponent extends Component {
     }
 
     _uploadProvincesByCountryId(countryId) {
-        const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
         const { consultListWithParameterUbication } = this.props;
         if (countryId !== undefined && countryId !== null) {
             consultListWithParameterUbication(FILTER_PROVINCE, countryId);
@@ -400,7 +255,6 @@ class ContactDetailsModalComponent extends Component {
     }
 
     _uploadCitiesByProvinceId(provinceId) {
-        const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
         const { consultListWithParameterUbication } = this.props;
         if (provinceId !== undefined && provinceId !== null) {
             consultListWithParameterUbication(FILTER_CITY, provinceId);
@@ -423,24 +277,24 @@ class ContactDetailsModalComponent extends Component {
             clearContactCreate();
             clearContactOrder();
         }
-
     }
 
-    /* metodo para enviar el formulario */
     _handlerSubmitContact() {
         const {
             fields: {
-                contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
-            contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
-            contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies,
-            contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
-                }, error, handleSubmit, selectsReducer, isOpen, changeStateSaveData, callFromModuleContact, deleteRelationshipServer, resetPage, swtShowMessage
-            } = this.props;
+                contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName,
+                contactFirstLastName, contactSecondLastName, contactPosition, contactDependency, contactAddress,
+                contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
+                contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact,
+                contactLineOfBusiness, contactFunctions, contactHobbies, contactSports, contactSocialStyle,
+                contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
+            }, changeStateSaveData, callFromModuleContact, resetPage, swtShowMessage
+        } = this.props;
         const { contactDetail, contactsByClientFindServer } = this.props;
         const contact = contactDetail.get('contactDetailList');
         const { saveContact } = this.props;
         const jsonUpdateContact = {
-            "client": window.localStorage.getItem('idClientSelected'),
+            "client": window.sessionStorage.getItem('idClientSelected'),
             "id": contact.id,
             "title": contactTitle.value !== undefined ? contactTitle.value : null,
             "gender": contactGender.value !== undefined ? contactGender.value : null,
@@ -478,6 +332,7 @@ class ContactDetailsModalComponent extends Component {
             "attitudeOverGroup": contactAttitudeOverGroup.value !== undefined ? contactAttitudeOverGroup.value : null,
             "callFromModuleContact": _.isNull(callFromModuleContact) || _.isUndefined(callFromModuleContact) ? false : callFromModuleContact
         };
+
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         saveContact(jsonUpdateContact).then((data) => {
             changeStateSaveData(false, "");
@@ -487,7 +342,7 @@ class ContactDetailsModalComponent extends Component {
                 if (_.get(data, 'payload.data.status') === 200) {
                     this._closeViewOrEditContact();
                     swtShowMessage('success', 'Edición de contacto', 'Señor usuario, el contacto se editó de forma exitosa.');
-                    contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
+                    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
                     if (!_.isUndefined(resetPage)) {
                         resetPage();
                     }
@@ -504,19 +359,21 @@ class ContactDetailsModalComponent extends Component {
     render() {
         const { callFromModuleContact } = this.props;
         const {
-            initialValues, fields: {
-            contactId, contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName, contactFirstLastName,
-                contactSecondLastName, contactPosition, contactDependency, contactAddress, contactCountry, contactProvince, contactCity, contactNeighborhood,
-                contactPostalCode, contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact, contactLineOfBusiness,
-                contactFunctions, contactHobbies, contactSports, contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
-            }, error, handleSubmit, selectsReducer, reducerGlobal
-            } = this.props;
+            fields: {
+                contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName,
+                contactFirstLastName, contactSecondLastName, contactPosition, contactDependency, contactAddress,
+                contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
+                contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress,
+                contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies, contactSports,
+                contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
+            }, handleSubmit, selectsReducer, reducerGlobal
+        } = this.props;
+
         return (
             <form onSubmit={handleSubmit(this._handlerSubmitContact)}
                 onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
-                    id="modalEditCotact"
-                    style={callFromModuleContact ? { backgroundColor: '#FFF' } : {}}>
+                    id="modalEditCotact" style={callFromModuleContact ? { backgroundColor: '#FFF' } : {}}>
                     <dt className="business-title" style={{ fontSize: '17px' }}>
                         <span style={{ paddingLeft: '20px' }}>Información básica</span>
                     </dt>
@@ -575,7 +432,7 @@ class ContactDetailsModalComponent extends Component {
                                         disabled={this.state.isEditable ? '' : 'disabled'}
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        data={this.state.generoData ? this.state.generoData : selectsReducer.get(FILTER_GENDER)}
+                                        data={selectsReducer.get(FILTER_GENDER)}
                                     />
                                 </dd>
                             </Col>
@@ -731,7 +588,7 @@ class ContactDetailsModalComponent extends Component {
                                         onBlur={contactCountry.onBlur}
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        data={selectsReducer.get(FILTER_COUNTRY) || []}
+                                        data={selectsReducer.get(FILTER_COUNTRY)}
                                         disabled={this.state.isEditable ? '' : 'disabled'}
                                     />
                                 </dd>
@@ -749,7 +606,7 @@ class ContactDetailsModalComponent extends Component {
                                         onBlur={contactProvince.onBlur}
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        data={selectsReducer.get('dataTypeProvince') || []}
+                                        data={selectsReducer.get('dataTypeProvince')}
                                         disabled={this.state.isEditable ? '' : 'disabled'}
                                     />
                                 </dd>
@@ -764,7 +621,7 @@ class ContactDetailsModalComponent extends Component {
                                         {...contactCity}
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        data={selectsReducer.get('dataTypeCity') || []}
+                                        data={selectsReducer.get('dataTypeCity')}
                                         disabled={this.state.isEditable ? '' : 'disabled'}
                                     />
                                 </dd>
@@ -779,9 +636,9 @@ class ContactDetailsModalComponent extends Component {
                                         {...contactAddress}
                                         validateEnter={true}
                                         name="contactAddress"
-                                        maxLength="250"
+                                        maxLength="60"
                                         disabled={this.state.isEditable ? '' : 'disabled'}
-                                    //onChange={val => this._onchangeValue("address", val)}
+                                        style={{ width: '100%', height: '100%' }}
                                     />
                                 </dd>
                             </Col>
@@ -793,9 +650,8 @@ class ContactDetailsModalComponent extends Component {
                                     <Input
                                         name="contactNeighborhood"
                                         type="text"
-                                        max="120"
+                                        max="40"
                                         disabled={this.state.isEditable ? '' : 'disabled'}
-                                        //onChange={val => this._onchangeValue("neighborhood", val)}
                                         {...contactNeighborhood}
                                     />
                                 </dd>
@@ -806,9 +662,8 @@ class ContactDetailsModalComponent extends Component {
                                     <Input
                                         name="contactPostalCode"
                                         type="text"
-                                        max="25"
+                                        max="10"
                                         disabled={this.state.isEditable ? '' : 'disabled'}
-                                        //onChange={val => this._onchangeValue("postalCode", val)}
                                         {...contactPostalCode}
                                     />
                                 </dd>
@@ -822,7 +677,6 @@ class ContactDetailsModalComponent extends Component {
                                         type="text"
                                         max="30"
                                         disabled={this.state.isEditable ? '' : 'disabled'}
-                                        //onChange={val => this._onchangeValue("telephoneNumber", val)}
                                         {...contactTelephoneNumber}
                                     />
                                 </dd>
@@ -835,9 +689,8 @@ class ContactDetailsModalComponent extends Component {
                                     <Input
                                         name="contactExtension"
                                         type="text"
-                                        max="20"
+                                        max="14"
                                         disabled={this.state.isEditable ? '' : 'disabled'}
-                                        //onChange={val => this._onchangeValue("extension", val)}
                                         {...contactExtension}
                                     />
                                 </dd>
@@ -850,7 +703,6 @@ class ContactDetailsModalComponent extends Component {
                                         type="text"
                                         max="30"
                                         disabled={this.state.isEditable ? '' : 'disabled'}
-                                        //onChange={val => this._onchangeValue("mobileNumber", val)}
                                         {...contactMobileNumber}
                                     />
                                 </dd>
@@ -862,9 +714,8 @@ class ContactDetailsModalComponent extends Component {
                                     <Input
                                         name="contactEmailAddress"
                                         type="text"
-                                        max="150"
+                                        max="50"
                                         disabled={this.state.isEditable ? '' : 'disabled'}
-                                        //onChange={val => this._onchangeValue("emailAddress", val)}
                                         {...contactEmailAddress}
                                     />
                                 </dd>

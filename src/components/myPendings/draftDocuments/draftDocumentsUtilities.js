@@ -123,7 +123,7 @@ export const mapDataGrid = (data = [], viewPrevisit, viewVisit, viewPipeline, vi
         mensaje: "Señor usuario ¿está seguro que desea eliminar el informe?",
         json: {
   				'messageHeader': {
-  					'sessionToken': window.localStorage.getItem('sessionToken'),
+  					'sessionToken': window.localStorage.getItem('sessionTokenFront'),
   					'timestamp': new Date().getTime(),
   					'service': '',
   					'status': '0',

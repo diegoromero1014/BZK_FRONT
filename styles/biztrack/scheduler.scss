@@ -38,7 +38,11 @@
 
   .rbc-calendar {
     min-height: calc(80vh - 50px) !important;
+    height:100vh!important;
 }   
+.rbc-time-content{
+    min-height: 500px;
+}
 
 .cls-green{
     background: #5cb85c !important;

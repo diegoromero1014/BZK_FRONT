@@ -5,7 +5,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import BotonCreateNeed from './botonCreateNeed';
 import {DELETE_NEED_VIEW} from './constants';
 import {deleteNeed} from './actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import Modal from 'react-modal';
 import ModalNeed from './modalNeed';
 import _ from 'lodash';
@@ -38,7 +38,7 @@ class ListNeed extends Component {
         if (needs.size > 0) {
             var data = _.chain(needs.toArray()).map(need => {
                 const {
-                    uuid, needType, needIdType, needFormat, descriptionNeed, descriptionNeedText, needProduct, needIdProduct, needImplementation,
+                    uuid, needType, needIdType, needFormat, descriptionNeed, descriptionNeedText, productFamily, productFamilyId, needProduct, needIdProduct, needImplementation,
                     statusNeed, needIdImplementation, needTask, needBenefits, needIdResponsable, needResponsable, needDate, statusIdNeed
                 } = need;
                 return _.assign({}, {
@@ -52,6 +52,8 @@ class ListNeed extends Component {
                     needType: needType,
                     needIdType: needIdType,
                     descriptionNeed: descriptionNeed,
+                    productFamily: productFamily,
+                    productFamilyId: productFamilyId,
                     needProduct: needProduct,
                     needIdProduct: needIdProduct,
                     needImplementation: needImplementation,

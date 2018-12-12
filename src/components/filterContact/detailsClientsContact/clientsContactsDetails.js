@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { updateTitleNavBar } from '../../navBar/actions';
 import { STYLE_CONTAINER_BUTTONS, STYLE_BUTTONS_ACTIONS, MODULE_CONTACTS } from '../../../constantsGlobal';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import FormContactDetails from '../../contact/contactDetail/contactDetailsModalComponent';
 import { validatePermissionsByModule } from '../../../actionsGlobal';
 import ListClientsContact from './ListClientsContact';
@@ -30,9 +30,9 @@ class ClientsContactsDetails extends Component {
     }
 
     componentWillMount() {
-        if (window.localStorage.getItem('sessionToken') === "") {
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
-        } else if (window.localStorage.getItem('idContactSelected') === "") {
+        } else if (window.sessionStorage.getItem('idContactSelected') === "") {
             redirectUrl("/dashboard/clients");
         } else {
             const { updateTitleNavBar, validatePermissionsByModule } = this.props;
@@ -48,7 +48,7 @@ class ClientsContactsDetails extends Component {
     render() {
         const { contactDetail } = this.props;
 
-        const contactId = window.localStorage.getItem('idContactSelected');
+        const contactId = window.sessionStorage.getItem('idContactSelected');
         return (
             <div style={{ backgroundColor: "#FFFFFF", width: "100%", paddingBottom: '70px' }}>
                 <FormContactDetails callFromModuleContact={true} contactId={contactId} />

@@ -3,19 +3,22 @@ import ListParticipantesBancolombia from './listParticipantesBancolombia';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import Input from '../../ui/input/inputComponent';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
+import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import Textarea from '../../ui/textarea/textareaComponent';
 import { addParticipant, clearParticipants, filterUsersBanco } from './actions';
-import SweetAlert from 'sweetalert-react';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import { contactsByClientFindServer } from '../contact/actions';
 import { NUMBER_CONTACTS, KEY_PARTICIPANT_BANCO } from './constants';
-import { APP_URL, 
+import {
+  APP_URL,
   VALUE_XSS_INVALID,
-  REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT } from '../../constantsGlobal';
+  REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+} from '../../constantsGlobal';
 import { validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from '../../actionsGlobal';
 import _ from 'lodash';
 import $ from 'jquery';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 var self;
 const validate = values => {
@@ -41,17 +44,15 @@ class ParticipantesBancolombia extends Component {
   }
 
   _addParticipantBanc() {
-    const { fields: { idUsuario, objetoUsuario, nameUsuario, cargoUsuario, empresaUsuario }, participants, addParticipant } = this.props;
-    if (validateValue(nameUsuario.value) && !validateIsNullOrUndefined(idUsuario.value)) {
+    const { fields: { idUsuario, objetoUsuario, nameUsuario, cargoUsuario, empresaUsuario }, participants, addParticipant, swtShowMessage } = this.props;
+    if (validateValue(nameUsuario.value) && !(validateIsNullOrUndefined(idUsuario.value) || idUsuario.value <= 0)) {
       var particip = participants.find(function (item) {
         if (item.tipoParticipante === KEY_PARTICIPANT_BANCO) {
           return item.idParticipante === objetoUsuario.value.idUsuario;
         }
       });
       if (xssValidation(nameUsuario.value)) {
-        this.setState({
-          showInvalidCharacter: true
-        });
+        swtShowMessage('error', "Error participante", REGEX_SIMPLE_XSS_MESAGE);
         return;
       }
       if (particip === undefined) {
@@ -73,18 +74,16 @@ class ParticipantesBancolombia extends Component {
         cargoUsuario.onChange('');
         empresaUsuario.onChange('');
       } else {
-        this.setState({
-          showParticipantExistBanco: true
-        });
+        swtShowMessage('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
+
       }
     } else {
-      this.setState({
-        showEmptyParticipantBanco: true
-      });
+      swtShowMessage('error', "Error participante", "Señor usuario, para agregar un participante debe seleccionar un usuario del banco");
     }
   }
 
   _updateValue(value) {
+
     const { fields: { idUsuario, nameUsuario, cargoUsuario }, contactsByClient } = this.props;
     var contactClient = contactsByClient.get('contacts');
     var userSelected;
@@ -99,6 +98,12 @@ class ParticipantesBancolombia extends Component {
       nameUsuario.onChange(userSelected.nameComplet);
       cargoUsuario.onChange(userSelected.contactPosition);
       empresaUsuario.onChange(userSelected.company);
+    } else {
+
+      if (idUsuario.value > 0) {
+        idUsuario.onChange('');
+      }
+
     }
   }
 
@@ -108,7 +113,7 @@ class ParticipantesBancolombia extends Component {
     this.props.resetForm();
     const valuesContactsClient = contactsByClient.get('contacts');
     if (_.isEmpty(valuesContactsClient) || valuesContactsClient === null || valuesContactsClient === undefined) {
-      contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_CONTACTS, "", 0, "", "", "", "");
+      contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_CONTACTS, "", 0, "", "", "", "");
     }
   }
 
@@ -129,11 +134,11 @@ class ParticipantesBancolombia extends Component {
   }
 
   updateKeyValueUsersBanco(e) {
-    const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco } = this.props;
+    const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco, swtShowMessage } = this.props;
     const selfThis = this;
     if (e.keyCode === 13 || e.which === 13) {
       e.consultclick ? "" : e.preventDefault();
-      if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
+      if (nameUsuario.value !== "" && nameUsuario.value.length >= 3 && nameUsuario.value !== null && nameUsuario.value !== undefined) {
         $('.ui.search.participantBanc').toggleClass('loading');
         filterUsersBanco(nameUsuario.value).then((data) => {
           usersBanco = _.get(data, 'payload.data.data');
@@ -162,6 +167,10 @@ class ParticipantesBancolombia extends Component {
             $('#inputParticipantBanc').focus();
           }, 150);
         });
+      } else {
+        if (nameUsuario.value.length <= 3) {
+          swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
+        }
       }
     }
   }
@@ -195,19 +204,17 @@ class ParticipantesBancolombia extends Component {
                 <dt><span>Nombre (<span style={{ color: "red" }}>*</span>)</span></dt>
                 <dt>
                   <div className="ui dropdown search participantBanc fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
-                    <div className="ui icon input" style={{ width: "100%", pointerEvents: 'auto !important' }}>
-                      <input className="prompt" id="inputParticipantBanc"
-                        style={{ borderRadius: "3px" }}
-                        autoComplete="off"
-                        type="text"
-                        value={nameUsuario.value}
-                        onChange={nameUsuario.onChange}
-                        placeholder="Ingrese un criterio de búsqueda..."
-                        onKeyPress={this.updateKeyValueUsersBanco}
-                        onSelect={val => this._updateValue(val)}
-                      />
-                      <i className="search icon" id="iconSearchParticipants"></i>
-                    </div>
+                    <ComboBoxFilter
+                      name="inputParticipantBanc"
+                      placeholder="Ingrese un criterio de búsqueda..."
+                      {...nameUsuario}
+                      parentId="dashboardComponentScroll"
+                      value={nameUsuario.value}
+                      onChange={nameUsuario.onChange}
+                      onKeyPress={this.updateKeyValueUsersBanco}
+                      onSelect={val => this._updateValue(val)}
+                      max="255"
+                    />
                     <div className="menu results"></div>
                   </div>
                 </dt>
@@ -257,27 +264,6 @@ class ParticipantesBancolombia extends Component {
             </Col>
           }
         </Row>
-        <SweetAlert
-          type="error"
-          show={this.state.showEmptyParticipantBanco}
-          title="Error participante"
-          text="Señor usuario, para agregar un participante debe seleccionar un usuario del banco"
-          onConfirm={() => this.setState({ showEmptyParticipantBanco: false })}
-        />
-        <SweetAlert
-          type="error"
-          show={this.state.showParticipantExistBanco}
-          title="Participante existente"
-          text="Señor usuario, el participante que desea agregar ya se encuentra en la lista"
-          onConfirm={() => this.setState({ showParticipantExistBanco: false })}
-        />
-        <SweetAlert
-          type="error"
-          show={this.state.showInvalidCharacter}
-          title="Error participante"
-          text={REGEX_SIMPLE_XSS_MESAGE}
-          onConfirm={() => this.setState({ showInvalidCharacter: false })}
-        />
       </div>
     );
   }
@@ -288,7 +274,8 @@ function mapDispatchToProps(dispatch) {
     addParticipant,
     clearParticipants,
     contactsByClientFindServer,
-    filterUsersBanco
+    filterUsersBanco,
+    swtShowMessage
   }, dispatch);
 }
 

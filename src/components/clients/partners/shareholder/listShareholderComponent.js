@@ -54,7 +54,7 @@ class ListShareholderComponent extends Component {
     const { shareholdersReducer, shareholdersByClientFindServer, orderColumnShareholder, clearShareholderPaginator } = this.props;
     clearShareholderPaginator();
     orderColumnShareholder(orderShareholder, columnShareholder);
-    shareholdersByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, columnShareholder, orderShareholder, shareholdersReducer.get('keywordShareholder'), v1, v2);
+    shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, columnShareholder, orderShareholder, shareholdersReducer.get('keywordShareholder'), v1, v2);
   }
 
   _renderHeaders() {
@@ -101,9 +101,10 @@ class ListShareholderComponent extends Component {
     const { reducerGlobal } = this.props;
     var permissionsShareholders = reducerGlobal.get('permissionsShareholders');
     return _.forOwn(data, function (value, key) {
+      
       var json1 = {
         "messageHeader": {
-          "sessionToken": window.localStorage.getItem('sessionToken'),
+          "sessionToken": window.localStorage.getItem('sessionTokenFront'),
           "timestamp": new Date().getTime(),
           "service": "",
           "status": "0",

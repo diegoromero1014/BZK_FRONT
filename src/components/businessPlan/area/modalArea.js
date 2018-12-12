@@ -2,23 +2,25 @@ import moment from "moment";
 import { reduxForm } from "redux-form";
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
-import SweetAlert from "sweetalert-react";
 import { Col, Row } from "react-flexbox-grid";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
+import _ from "lodash";
+import $ from "jquery";
+
 import Input from "../../../ui/input/inputComponent";
-import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import { getMasterDataFields } from "../../selectsComponent/actions";
-import { STATUS_AREAS } from "./constants";
-import { addArea, editArea } from "./actions";
-import _ from "lodash";
-import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
-import { htmlToText, xssValidation } from "../../../actionsGlobal";
-import { MESSAGE_ERROR, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
+
+import { filterUsersBanco } from "../../participantsVisitPre/actions";
+import { getMasterDataFields } from "../../selectsComponent/actions";
+import { addArea, editArea } from "./actions";
+import { htmlToText, xssValidation } from "../../../actionsGlobal";
+
+import { STATUS_AREAS } from "./constants";
+import { MESSAGE_ERROR, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE } from '../../../constantsGlobal';
 
 const fields = ["idEmployee", "areaDes", "actionArea", "areaResponsable", "areaDate", "statusArea"];
 const errors = {};
@@ -45,6 +47,8 @@ const validate = (values) => {
 
   if (!values.areaResponsable) {
     errors.areaResponsable = "Debe ingresar un valor";
+  } else if (!values.idEmployee) {
+    errors.areaResponsable = "Seleccione un empleado";
   } else {
     errors.areaResponsable = null;
   }
@@ -55,9 +59,12 @@ const validate = (values) => {
   }
   if (!values.areaDate) {
     errors.areaDate = "Debe seleccionar una fecha";
+  } else if (!moment(values.areaDate, 'DD/MM/YYYY').isValid()) {
+    errors.needDate = "Debe seleccionar una fecha";
   } else {
     errors.areaDate = null;
   }
+
   return errors;
 };
 class ModalArea extends Component {
@@ -115,12 +122,14 @@ class ModalArea extends Component {
   }
 
   _handleCreateArea() {
-    const { fields: { idEmployee, areaDes, actionArea, areaResponsable, areaDate, statusArea }, handleSubmit, error, addArea, editArea, areaEdit, selectsReducer } = this.props;
+    const { fields: { idEmployee, areaDes, actionArea, areaResponsable, areaDate, statusArea }, handleSubmit, error, addArea, editArea, areaEdit, selectsReducer, swtShowMessage } = this.props;
     let status = _.get(_.filter(selectsReducer.get(STATUS_AREAS), ['id', parseInt(statusArea.value)]), '[0].value');
     if (areaResponsable.value !== nameUsuario) {
       nameUsuario = areaResponsable.value;
       idUsuario = idEmployee.value;
     }
+
+
     if (areaEdit !== undefined) {
       areaEdit.actionArea = actionArea.value;
       areaEdit.areaDes = areaDes.value;
@@ -131,9 +140,8 @@ class ModalArea extends Component {
       areaEdit.areaIdResponsable = idUsuario;
       areaEdit.areaResponsable = nameUsuario;
       editArea(areaEdit);
-      this.setState({
-        showSuccessEdit: true
-      });
+      swtShowMessage('success', "Área editada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas editadas se perderán.", { onConfirmCallback: this._closeCreate });
+
     } else {
       const uuid = _.uniqueId('area_');
       let area = {
@@ -148,18 +156,24 @@ class ModalArea extends Component {
         statusArea: status
       }
       addArea(area);
-      this.setState({
-        showSuccessAdd: true
-      });
+      swtShowMessage('success', "Área agregada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas agregadas se perderán.", { onConfirmCallback: this._closeCreate });
+
     }
+
   }
 
   updateKeyValueUsersBanco(e) {
-    const { fields: { areaResponsable, idEmployee }, filterUsersBanco } = this.props;
+    const { fields: { areaResponsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
+    let self = this;
+
     const selector = $('.ui.search.areaResponsable');
     if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
       e.consultclick ? "" : e.preventDefault();
       if (areaResponsable.value !== "" && areaResponsable.value !== null && areaResponsable.value !== undefined) {
+        if (areaResponsable.value.length < 3) {
+          swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
+          return;
+        }
         selector.toggleClass('loading');
         filterUsersBanco(areaResponsable.value).then((data) => {
           usersBanco = _.get(data, 'payload.data.data');
@@ -174,6 +188,7 @@ class ModalArea extends Component {
             onSelect: function (event) {
               areaResponsable.onChange(event.title);
               idEmployee.onChange(event.idUsuario);
+
               return 'default';
             }
           });
@@ -198,7 +213,7 @@ class ModalArea extends Component {
   }
 
   render() {
-    const { selectsReducer, disabled, initialValues, fields: { areaDes, actionArea, areaResponsable, areaDate, statusArea }, handleSubmit, error } = this.props;
+    const { selectsReducer, disabled, initialValues, fields: { areaDes, actionArea, areaResponsable, areaDate, statusArea, idEmployee }, handleSubmit, error } = this.props;
     return (
       <form onSubmit={handleSubmit(this._handleCreateArea)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScrollArea">
@@ -237,15 +252,16 @@ class ModalArea extends Component {
                   <ComboBoxFilter
                     name="areaResponsable"
                     {...areaResponsable}
-                    onChange={areaResponsable.onChange}
                     value={areaResponsable.value}
                     labelInput="Ingrese un criterio de búsqueda..."
                     parentId="dashboardComponentScroll"
+                    onChange={(val) => { if (idEmployee.value) { idEmployee.onChange(null) } areaResponsable.onChange(val) }}
                     onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                     onSelect={val => this._updateValue(val)}
                     max="50"
                     disabled={disabled}
                   />
+
                 </dt>
               </Col>
             </Row>
@@ -263,6 +279,7 @@ class ModalArea extends Component {
                     data={selectsReducer.get(STATUS_AREAS) || []}
                     disabled={disabled}
                   />
+
                 </dt>
               </Col>
               <Col xs>
@@ -286,20 +303,8 @@ class ModalArea extends Component {
             <span>Agregar</span>
           </button>
         </div>
-        <SweetAlert
-          type="success"
-          show={this.state.showSuccessAdd}
-          title="Área agregada exitosamente"
-          text="Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas agregadas se perderán."
-          onConfirm={() => this._closeCreate()}
-        />
-        <SweetAlert
-          type="success"
-          show={this.state.showSuccessEdit}
-          title="Área editada exitosamente"
-          text="Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas editadas se perderán."
-          onConfirm={() => this._closeCreate()}
-        />
+
+
       </form>
     );
   }

@@ -27,7 +27,7 @@ export function changeErrorYearSeleted(value){
 export function consultInformationPipeline(idStatusPipeline, idCurrency){
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
           "timestamp": new Date().getTime(),
           "service": "",
           "status": "0",
@@ -59,7 +59,7 @@ export function consultInformationPipeline(idStatusPipeline, idCurrency){
 export function consultInformationPrevisit() {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -85,7 +85,7 @@ export function consultInformationPrevisit() {
 export function consultInformationVisit() {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -111,7 +111,7 @@ export function consultInformationVisit() {
 export function getCsv(year,url, hasParticipatingContacts, hasParticipatingEmployees, hasRelatedEmployees) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",
@@ -139,7 +139,7 @@ export function getCsv(year,url, hasParticipatingContacts, hasParticipatingEmplo
 export function consultCurrencys(){
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
           "timestamp": new Date().getTime(),
           "service": "",
           "status": "0",
@@ -163,7 +163,7 @@ export function consultCurrencys(){
 export function consultInformationBusinessPlans(year) {
   const json = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionToken'),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
       "service": "",
       "status": "0",

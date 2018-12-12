@@ -9,7 +9,7 @@ import { shorterStringValue } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import ModalEditRelationship from './modalEditRelationship';
 import ModalCreateRelationship from './cretaeRelationship/modalCreateRelationship';
 import Modal from 'react-modal';
@@ -140,7 +140,7 @@ class ListClientsContact extends Component {
         const { contactDetail, filterContactsReducer } = this.props;
         const valueCheckAll = contactDetail.get('listDeleteClientContact').length === contactDetail.get('listClientcontacts').length ? true : false;
         return (
-            <div className="tab-content break-word" style={{ padding: '16px', borderRadius: '3px', overflow: 'initial', position: 'initial' }}>
+            <div className="tab-content break-word" style={{ padding: '16px', borderRadius: '3px', overflow: 'initial', position: 'static' }}>
                 {contactDetail.get('listClientcontacts').length > 0 ?
                     <Row style={{ marginTop: '20px' }}>
                         <Col xs={12} md={12} lg={12}>
@@ -166,7 +166,7 @@ class ListClientsContact extends Component {
                         </Col>
                         <Col xsOffset={1} mdOffset={3} lgOffset={3} xs={12} md={9} lg={9} >
                             <button className="btn btn-danger" onClick={this._validateDelete} style={{ float: 'right', cursor: 'pointer', marginTop: '15px', marginLeft: '15px' }}>
-                                <i className="trash outline icon"></i> Eliminar relación(es)
+                                <i className="trash icon"></i> Eliminar relación(es)
                             </button>
                             <button className="btn btn-primary" onClick={this._openModalCreateRelationship} style={{ float: 'right', cursor: 'pointer', marginTop: '15px' }}>
                                 <i className="plus icon"></i> Adicionar relación(es)

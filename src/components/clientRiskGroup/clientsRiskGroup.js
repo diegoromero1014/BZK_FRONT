@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
-import SweetAlert from 'sweetalert-react';
 import { } from './actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { MESSAGE_SAVE_DATA } from '../../constantsGlobal';
@@ -32,14 +31,16 @@ class clientsRiskGroup extends Component {
   }
 
   closeModalRemoveClient() {
+    
     this.setState({ modalRemoveClientIsOpen: false });
   }
 
   render() {
-    const { dataName, dataDocumentType, dataDocument, key, client, validateHasRiskGroup, isPending } = this.props;
+    const { dataName, dataDocumentType, dataDocument, key, client, validateHasRiskGroup, isPending, gridRow, gridColumn } = this.props;
+    let clsName = ["client-card", "g-c-" + gridColumn , "g-r-" + gridRow].join(" ");
     return (
-      <div key={key} className="client-card" style={{
-        width: "100%",
+      <div key={key} className={clsName} style={{
+        width: "95%",
         marginBottom: "15px",
         cursor: 'auto',
         height: "auto",
@@ -56,7 +57,7 @@ class clientsRiskGroup extends Component {
         </div>
         <div className="celula-card-bottom" style={{ backgroundColor: (client.isPending ? "rgb(220, 220, 220)" : "#B0E0E6"), width: "100%" }}>
           {!client.isPending && !isPending &&
-            <i className="trash outline icon delete-tab" style={{ marginTop: "-14px", fontSize: '13pt' }}
+            <i className="trash icon delete-tab" style={{ marginTop: "-14px", fontSize: '13pt' }}
               onClick={this.openModalRemoveClient}
               title="Remover cliente grupo de riesgo" />
           }

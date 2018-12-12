@@ -43,11 +43,13 @@ const initialState = Immutable.Map({
     subSegment: [],
     reasonConformation: [],
     products: [],
-    allProducts: []
+    allProducts: [],
+    managementsOfsectorStrategy: [],
+    dataTypeProvinceClient: [],
+    dataTypeCityClient: []
 });
 
 export default (state = initialState, action) => {
-
     switch (action.type) {
         case constants.CLIENT_ID_TYPE:
             return state.set("dataTypeDocument", defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
@@ -75,10 +77,17 @@ export default (state = initialState, action) => {
             return state.set('dataTypeSocialStyle', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_COUNTRY:
             return state.set('dataTypeCountry', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        
         case constants.FILTER_PROVINCE:
             return state.set('dataTypeProvince', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_CITY:
             return state.set('dataTypeCity', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        
+        case constants.FILTER_PROVINCE_CLIENT:
+            return state.set('dataTypeProvinceClient', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.FILTER_CITY_CLIENT:
+            return state.set('dataTypeCityClient', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+
         case constants.FILTER_HOBBIES:
             return state.set('dataTypeHobbies', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_SPORTS:
@@ -160,6 +169,8 @@ export default (state = initialState, action) => {
                     map.set(item, []);
                 });
             });
+        case constants.MANAGEMENTS_OF_SECTOR_STRATEGY :
+            return state.set('managementsOfsectorStrategy', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         default:
             return state;
     }

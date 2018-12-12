@@ -10,7 +10,7 @@ class ContactListItem extends Component {
 
     _handleClickContactItem(e) {
         const {id} = this.props;
-        window.localStorage.setItem('idContactSelected', id);
+        window.sessionStorage.setItem('idContactSelected', id);
         redirectUrl("/dashboard/clientsContacts");
     }
 

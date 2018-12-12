@@ -1,25 +1,27 @@
-import React, {Component} from 'react';
-import {Row, Col} from 'react-flexbox-grid';
-import {redirectUrl} from '../globalComponents/actions';
-import {reduxForm} from 'redux-form';
+import React, { Component } from 'react';
+import { Row, Col } from 'react-flexbox-grid';
+import { redirectUrl } from '../globalComponents/actions';
+import { reduxForm } from 'redux-form';
+
 import Input from '../../ui/input/inputComponent';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import SweetAlert from 'sweetalert-react';
-import {swtShowMessage} from '../sweetAlertMessages/actions';
-import {VALUE_REQUIERED, SESSION_EXPIRED} from '../../constantsGlobal';
-import {validateResponse, formValidateKeyEnter, nonValidateEnter} from '../../actionsGlobal';
-import {bindActionCreators} from 'redux';
+import SweetAlert from '../sweetalertFocus';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
+import { VALUE_REQUIERED, SESSION_EXPIRED, VALUE_XSS_INVALID, NATURAL_PERSON } from '../../constantsGlobal';
+import { validateResponse, formValidateKeyEnter, nonValidateEnter, xssValidation, onSessionExpire } from '../../actionsGlobal';
+import { bindActionCreators } from 'redux';
 import * as constants from '../selectsComponent/constants';
-import {findClientByStrTypeIdAndNumber} from '../clients/actions';
-import {getMasterDataFields} from '../selectsComponent/actions';
-import {showLoading} from '../loading/actions';
+import { findClientByStrTypeIdAndNumber } from '../clients/actions';
+import { getMasterDataFields } from '../selectsComponent/actions';
+import { showLoading } from '../loading/actions';
 import MemberRiskGroup from './memberRiskGroup'
 import _ from 'lodash';
 
 const fields = [
-    "idType", "idNumber"
+    "idType", "idNumber", "clientType"
 ];
 
+let isPersonaNatural = false;
 const validate = values => {
     const errors = {};
 
@@ -30,6 +32,8 @@ const validate = values => {
     }
     if (!values.idNumber) {
         errors.idNumber = VALUE_REQUIERED;
+    } else if (xssValidation(values.idNumber)) {
+        errors.idNumber = VALUE_XSS_INVALID;
     } else {
         errors.idNumber = null;
     }
@@ -37,6 +41,7 @@ const validate = values => {
 };
 
 let thisForm;
+let myForm = null;
 class modalComponentMemberRiskGroup extends Component {
     constructor(props) {
         super(props);
@@ -46,38 +51,66 @@ class modalComponentMemberRiskGroup extends Component {
             showForm: false,
             showConfirmCreateUser: false,
             disabledPrimaryFields: false,
-            clientsBasicInfo: {}
+            clientsBasicInfo: {},
+            selectTypeReducer: false
         };
 
         this._handlerSubmitGroup = this._handlerSubmitGroup.bind(this);
         this._closeError = this._closeError.bind(this);
         this._onchangeValue = this._onchangeValue.bind(this);
         this.confirmExtClients = this.confirmExtClients.bind(this);
+        this.subrmitFormChild = this.subrmitFormChild.bind(this);
+        this._onchangeValueEC = this._onchangeValueEC.bind(this);
         thisForm = this;
     }
 
     _closeError() {
-        this.setState({showError: false, messageError: ''});
+        this.setState({ showError: false, messageError: '' });
     }
 
     componentWillMount() {
-        this.setState({showForm: false});
-        this.props.getMasterDataFields([constants.SHAREHOLDER_ID_TYPE]).then((data) => {
+        this.setState({ showForm: false });
+        this.props.getMasterDataFields([constants.CLIENT_TYPE]).then((data) => {
             if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
-                redirectUrl("/login");
+                //selectTypeReducer = constants.CONTACT_ID_TYPE;
+                onSessionExpire();
+            }
+        });
+        this.props.getMasterDataFields([constants.CONTACT_ID_TYPE]).then((data) => {
+            if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
+                //selectTypeReducer = constants.CLIENT_ID_TYPE;
+                onSessionExpire();
+            }
+        });
+        this.props.getMasterDataFields([constants.CLIENT_ID_TYPE]).then((data) => {
+            if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
+                //selectTypeReducer = constants.CONTACT_ID_TYPE;
+                onSessionExpire();
             }
         });
 
     }
 
+    _onchangeValueEC(value, text) {
+        const { selectsReducer } = this.props;
+
+        const catalogoPN = selectsReducer.get(constants.CLIENT_TYPE);
+        let typeClient = _.get(_.filter(catalogoPN, ['value', text]), '[0].value');
+        if (_.isEqual(typeClient, NATURAL_PERSON)) {
+            this.setState({ selectTypeReducer: constants.CONTACT_ID_TYPE });
+        } else {
+            this.setState({ selectTypeReducer: constants.CLIENT_ID_TYPE });
+        }
+    }
+
     _onchangeValue(file, val) {
         switch (file) {
             case "idType":
-                let {fields: {idType}} = this.props;
+                let { fields: { idType } } = this.props;
                 idType.onChange(val);
                 break;
             case "idNumber":
-                let {fields: {idNumber}} = this.props;
+                let { fields: { idNumber } } = this.props;
                 idNumber.onChange(val);
                 break;
             default:
@@ -86,12 +119,15 @@ class modalComponentMemberRiskGroup extends Component {
     }
 
     _handlerSubmitGroup() {
-        const {fields: {idType, idNumber}, swtShowMessage, findClientByStrTypeIdAndNumber, selectsReducer} = this.props;
-        const strTypeDocument =  _.get(_.find(selectsReducer.get(constants.SHAREHOLDER_ID_TYPE), (item) => _.isEqual(item.id, parseInt(idType.value))),'value','');
+        const { fields: { idType, idNumber, clientType }, swtShowMessage, findClientByStrTypeIdAndNumber, selectsReducer } = this.props;
+        const strTypeDocument = _.get(_.find(selectsReducer.get(constants.CLIENT_ID_TYPE), (item) => _.isEqual(item.id, parseInt(idType.value))), 'value', '');
+        const strClientType = _.get(_.find(selectsReducer.get(constants.CLIENT_TYPE), (item) => _.isEqual(item.id, parseInt(clientType.value))), 'key', '');
+        
         const jsonFindClient = {
             strTypeDocument: strTypeDocument,
             typeDocument: idType.value !== undefined ? idType.value : null,
-            numberDocument: idNumber.value !== undefined ? idNumber.value : null
+            numberDocument: idNumber.value !== undefined ? idNumber.value : null,
+            strClientType: strClientType
         };
         findClientByStrTypeIdAndNumber(jsonFindClient).then((data) => {
             if (validateResponse(data)) {
@@ -104,7 +140,7 @@ class modalComponentMemberRiskGroup extends Component {
                 swtShowMessage('error', 'Error consultando el cliente', 'Señor usuario, ocurrió un error tratando de consultar el cliente.');
             }
         }, (reason) => {
-            this.setState({showConfirmCreateUser: true});
+            this.setState({ showConfirmCreateUser: true });
         })
     }
 
@@ -123,20 +159,41 @@ class modalComponentMemberRiskGroup extends Component {
         }
     }
 
+    subrmitFormChild() {
+        myForm.submit()
+    }
+
     render() {
 
-        const {fields: {idType, idNumber}, handleSubmit, isOpen, riskGroup, validateHasRiskGroup} = this.props;
-        const {selectsReducer} = this.props;
+        const { fields: { clientType, idType, idNumber }, handleSubmit, isOpen, riskGroup, validateHasRiskGroup } = this.props;
+        const { selectsReducer } = this.props;
+        // onClick={() => dispatch(submit('submitMemberForm'))}
         return (
             <div>
                 <div id="content-modal-rosk-group"
-                     className="modalBt4-body modal-body business-content editable-form-content clearfix"
-                     style={{overflowX: "hidden"}}>
+                    className="modalBt4-body modal-body business-content editable-form-content clearfix"
+                    style={{ overflowX: "hidden" }}>
                     <form onSubmit={handleSubmit(this._handlerSubmitGroup)}
-                          onKeyPress={val => formValidateKeyEnter(val, true)} style={{width: "100%"}}>
-                        <Row style={{padding: "10px 20px 0px"}}>
+                        onKeyPress={val => formValidateKeyEnter(val, true)} style={{ width: "100%" }}>
+                        <Row style={{ padding: "10px 20px 0px" }}>
                             <Col xs={12} md={!this.state.disabledPrimaryFields ? 5 : 6}>
-                                <dt><span>Tipo de documento (</span><span style={{color: "red"}}>*</span>)</dt>
+                                <dt><span>Tipo de cliente (</span><span style={{ color: "red" }}>*</span>)</dt>
+                                <ComboBox
+                                    name="tipoCliente"
+                                    labelInput="Seleccione..."
+                                    {...clientType}
+                                    onChange={(value, text) => { this._onchangeValueEC(value, text) }}
+                                    disabled={this.state.disabledPrimaryFields ? "disabled" : ""}
+                                    valueProp={'id'}
+                                    textProp={'value'}
+                                    data={selectsReducer.get(constants.CLIENT_TYPE)}
+                                />
+                            </Col>
+                        </Row>
+                        <Row style={{ padding: "10px 20px 0px" }}>
+
+                            <Col xs={12} md={!this.state.disabledPrimaryFields ? 5 : 6}>
+                                <dt><span>Tipo de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                                 <ComboBox
                                     name="tipoDocumento"
                                     onChange={val => this._onchangeValue("idType", val)}
@@ -145,11 +202,11 @@ class modalComponentMemberRiskGroup extends Component {
                                     disabled={this.state.disabledPrimaryFields ? "disabled" : ""}
                                     valueProp={'id'}
                                     textProp={'value'}
-                                    data={selectsReducer.get(constants.SHAREHOLDER_ID_TYPE)}
+                                    data={selectsReducer.get(this.state.selectTypeReducer)}
                                 />
                             </Col>
                             <Col xs={12} md={!this.state.disabledPrimaryFields ? 5 : 6}>
-                                <dt><span>Número de documento (</span><span style={{color: "red"}}>*</span>)</dt>
+                                <dt><span>Número de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                                 <Input
                                     name="documento"
                                     type="text"
@@ -160,12 +217,12 @@ class modalComponentMemberRiskGroup extends Component {
                                 />
                             </Col>
                             {!this.state.disabledPrimaryFields &&
-                            <Col xs={2} md={4} lg={2} style={{paddingTop: '25pt'}}>
-                                <button className="btn btn-primary" type="submit" title="Buscar cliente"
-                                        style={{fontSize: '1.2em'}}>
-                                    <i className="search icon"/>
-                                </button>
-                            </Col>
+                                <Col xs={2} md={4} lg={2} style={{ paddingTop: '25pt' }}>
+                                    <button className="btn btn-primary" type="submit" title="Buscar cliente"
+                                        style={{ fontSize: '1.2em' }}>
+                                        <i className="search icon" />
+                                    </button>
+                                </Col>
                             }
                             <SweetAlert
                                 type="warning"
@@ -180,33 +237,36 @@ class modalComponentMemberRiskGroup extends Component {
                                     showForm: true,
                                     clientsBasicInfo: {}
                                 })}
-                                onCancel={() => this.setState({showConfirmCreateUser: false})}
+                                onCancel={() => this.setState({ showConfirmCreateUser: false })}
                             />
                         </Row>
                     </form >
 
                     {this.state.showForm &&
-                    <MemberRiskGroup
-                        validateHasRiskGroup={validateHasRiskGroup}
-                        isOpen={isOpen}
-                        riskGroup={riskGroup}
-                        clientsBasicInfo={this.state.clientsBasicInfo}
-                        documentType={idType.value}
-                        documentNumber={idNumber.value}
-                    />
+                        <MemberRiskGroup
+                            ref={(input) => { myForm = input; }}
+                            validateHasRiskGroup={validateHasRiskGroup}
+                            isOpen={isOpen}
+                            riskGroup={riskGroup}
+                            clientsBasicInfo={this.state.clientsBasicInfo}
+                            documentType={idType.value}
+                            documentNumber={idNumber.value}
+                            clientType={clientType.value}
+                        />
                     }
                 </div >
 
                 <div className="modalBt4-footer modal-footer">
                     {this.state.showForm &&
-                    <button className="btn btn-prymary" type="submit"
-                            form={"submitMemberForm"} style={{cursor: 'pointer', marginLeft: "20px"}}>
-                        Agregar </button>
+                        <button className="btn btn-prymary" type="button"
+                            onClick={this.subrmitFormChild} style={{ cursor: 'pointer', marginLeft: "20px" }}>
+                            Agregar </button>
+
                     }
                     <button className="btn btn-default btnDefaultAyax " type="button"
-                            style={{cursor: 'pointer', marginLeft: "20px"}} onClick={() => {
-                        isOpen()
-                    }}>
+                        style={{ cursor: 'pointer', marginLeft: "20px" }} onClick={() => {
+                            isOpen()
+                        }}>
                         Cancelar
                     </button>
                 </div>
@@ -215,6 +275,7 @@ class modalComponentMemberRiskGroup extends Component {
         )
     };
 }
+// {/*form={"submitMemberForm"}  */}
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
@@ -226,7 +287,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({riskGroupReducer, clientInformacion, selectsReducer, clientR}, ownerProps) {
+function mapStateToProps({ riskGroupReducer, clientInformacion, selectsReducer, clientR }, ownerProps) {
     return {
         riskGroupReducer,
         clientInformacion,
@@ -241,6 +302,6 @@ export default reduxForm({
     destroyOnUnmount: true,
     validate,
     onSubmitFail: errors => {
-        thisForm.setState({showErrorForm: true});
+        thisForm.setState({ showErrorForm: true });
     }
 }, mapStateToProps, mapDispatchToProps)(modalComponentMemberRiskGroup);

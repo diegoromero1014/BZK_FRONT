@@ -2,20 +2,23 @@ import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { reduxForm } from "redux-form";
 import { Col, Row } from "react-flexbox-grid";
+import $ from "jquery";
+
+import ButtonDeleteLocalComponent from "../../../grid/buttonDeleteLocalComponent";
+import ComboBoxFilter from "../../../../ui/comboBoxFilter/comboBoxFilter";
+import BtnAddByFunctionOrType from './btnAddByFunctionOrType';
+
+import { contactsFindServer } from "../../../filterContact/actions";
+import { swtShowMessage } from "../../../sweetAlertMessages/actions";
+import { showLoading } from "../../../loading/actions";
+import { shorterStringValue, xssValidation } from "../../../../actionsGlobal";
 import {
     addContactList, changeKeywordNameNewGroup, clearContactName, clearFilterGroup, deleteContactList,
     getGroupForId, getListContactGroupForId, getValidateExistGroup, groupFindServer,
     resetModal, saveGroupFavoriteContacts, saveNameGroup, searchContactForGroup
 } from "../actions";
-import { contactsFindServer } from "../../../filterContact/actions";
-import { swtShowMessage } from "../../../sweetAlertMessages/actions";
-import { joinName, shorterStringValue } from "../../../../actionsGlobal";
-import { showLoading } from "../../../loading/actions";
-import ButtonDeleteLocalComponent from "../../../grid/buttonDeleteLocalComponent";
-import ComboBoxFilter from "../../../../ui/comboBoxFilter/comboBoxFilter";
-import { MESSAGE_LOAD_DATA } from "../../../../constantsGlobal";
-import $ from "jquery";
-import BtnAddByFunctionOrType from './btnAddByFunctionOrType';
+
+import { MESSAGE_ERROR, MESSAGE_LOAD_DATA, VALUE_XSS_INVALID } from "../../../../constantsGlobal";
 import { MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP } from '../constants';
 
 var listContact = [];
@@ -58,7 +61,7 @@ class ModalComponentGroup extends Component {
         const { groupId, getGroupForId,
             getListContactGroupForId, clearContactName, resetForm,
             resetModal, fields: { searchGroup }, showLoading, swtShowMessage
-            } = this.props;
+        } = this.props;
         resetForm();
         resetModal();
         if (groupId != undefined) {
@@ -88,7 +91,7 @@ class ModalComponentGroup extends Component {
 
     _handleValidateExistGroup() {
         const { showLoading, fields: { searchGroup }, getValidateExistGroup, swtShowMessage, resetForm, resetModal, saveNameGroup, groupsFavoriteContacts } = this.props;
-        showLoading(true, MESSAGE_LOAD_DATA);
+        searchGroup.onChange(searchGroup.value.trim());
         if (!_.isEqual(searchGroup.value.trim(), '')) {
             getValidateExistGroup(searchGroup.value).then((data) => {
                 const groupSearch = _.get(data.payload, 'data.data', null);
@@ -114,45 +117,57 @@ class ModalComponentGroup extends Component {
                     thisForm._saveGroupFavoriteContacts();
                 }
             });
+
         } else {
+            showLoading(false, '');
             swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no puede estar vacio');
+
         }
     }
 
     _handleValidateExistGroupSearch() {
         const { showLoading, fields: { searchGroup }, getValidateExistGroup, swtShowMessage, resetForm, resetModal, saveNameGroup, groupsFavoriteContacts } = this.props;
-        showLoading(true, MESSAGE_LOAD_DATA);
+        searchGroup.onChange(searchGroup.value.trim());
         if (!_.isEqual(searchGroup.value.trim(), '')) {
-            getValidateExistGroup(searchGroup.value).then((data) => {
-                const groupSearch = _.get(data.payload, 'data.data', null);
-                if (!_.isNull(groupSearch)) {
-                    if (groupsFavoriteContacts.get('group').get('id') == groupSearch.id) {
-                        saveNameGroup(searchGroup.value);
-                        showLoading(false, '');
+            if (xssValidation(searchGroup.value)) {
+                swtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
+                showLoading(false, '');
+            }
+            else {
+                getValidateExistGroup(searchGroup.value).then((data) => {
+                    const groupSearch = _.get(data.payload, 'data.data', null);
+                    if (!_.isNull(groupSearch)) {
+                        if (groupsFavoriteContacts.get('group').get('id') == groupSearch.id) {
+                            saveNameGroup(searchGroup.value);
+                            showLoading(false, '');
+                        } else {
+                            if (groupsFavoriteContacts.get('group').get('id') !== '') {
+                                swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                                saveNameGroup(searchGroup.value);
+                            } else {
+                                swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                                resetForm();
+                                resetModal();
+                                this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
+                            }
+                            showLoading(false, '');
+                        }
                     } else {
                         if (groupsFavoriteContacts.get('group').get('id') !== '') {
-                            swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
                             saveNameGroup(searchGroup.value);
+                            showLoading(false, '');
                         } else {
-                            swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
-                            resetForm();
-                            resetModal();
-                            this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
+                            this.setState({ disableName: '', disabled: '', validateExistGroup: true });
+                            saveNameGroup(searchGroup.value);
+                            showLoading(false, '');
                         }
-                        showLoading(false, '');
                     }
-                } else {
-                    if (groupsFavoriteContacts.get('group').get('id') !== '') {
-                        saveNameGroup(searchGroup.value);
-                        showLoading(false, '');
-                    } else {
-                        this.setState({ disableName: '', disabled: '', validateExistGroup: true });
-                        saveNameGroup(searchGroup.value);
-                        showLoading(false, '');
-                    }
-                }
-            });
+                });
+            }
+
+
         } else {
+            showLoading(false, '');
             swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no puede estar vacio');
         }
     }
@@ -295,6 +310,7 @@ class ModalComponentGroup extends Component {
         }
     }
 
+
     render() {
         let { groupId, fields: { contact, searchGroup }, groupsFavoriteContacts, selectsReducer } = this.props;
         let { createGroup, searchContact, visibleMessage, visibleTable, visibleNameContact } = this.state;
@@ -377,7 +393,7 @@ class ModalComponentGroup extends Component {
                         <Row>
                             <Col xs={12} sm={12} md={12} lg={12} style={{ display: visibleTable }}>
                                 <div className="horizontal-scroll-wrapper"
-                                    style={{ overflow: 'scroll', background: '#fff', maxHeight: "200px !important", overflow: "scroll" }}>
+                                    style={{ overflow: 'scroll', background: '#fff', maxHeight: "200px !important" }}>
                                     <table className="ui striped table">
                                         <thead>
                                             <tr>
@@ -455,4 +471,3 @@ export default reduxForm({
     form: 'FORM_SEARCH_CONTACTS',
     fields
 }, mapStateToProps, mapDispatchToProps)(ModalComponentGroup);
-

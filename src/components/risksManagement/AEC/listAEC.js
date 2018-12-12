@@ -30,7 +30,7 @@ class ListAECComponent extends Component {
             const statesAEC = data.payload.data.messageBody.masterDataDetailEntries;
             const idActiveState = _.get(_.filter(statesAEC, ['key', ACTIVE_STATE]), '[0].id');
             const json = {
-                idClient: window.localStorage.getItem('idClientSelected'),
+                idClient: window.sessionStorage.getItem('idClientSelected'),
                 statusAEC: idActiveState
             };
             getAssetsAEC(json).then((data) => {

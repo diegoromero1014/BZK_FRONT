@@ -16,7 +16,7 @@ class ButtonDownloadPipelineComponent extends Component {
 	_downloadPipeline() {
 		const {changeStateSaveData, getCsvPipelineByClient,clearPipeline} = this.props;
 		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-		getCsvPipelineByClient(window.localStorage.getItem('idClientSelected')).then(function(data) {
+		getCsvPipelineByClient(window.sessionStorage.getItem('idClientSelected')).then(function(data) {
 			changeStateSaveData(false, "");
 			if (data.payload.data.status === 200) {
 				window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');

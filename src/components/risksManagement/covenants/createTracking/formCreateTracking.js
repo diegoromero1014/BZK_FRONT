@@ -1,28 +1,32 @@
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { reduxForm } from "redux-form";
+import { Col, Row } from "react-flexbox-grid";
+import moment from "moment";
+import _ from "lodash";
+
 import ComboBox from "../../../../ui/comboBox/comboBoxComponent";
 import InputComponent from "../../../../ui/input/inputComponent";
 import Textarea from "../../../../ui/textarea/textareaComponent";
 import DateTimePickerUi from "../../../../ui/dateTimePicker/dateTimePickerComponent";
-import { Col, Row } from "react-flexbox-grid";
-import { DATE_FORMAT, MESSAGE_SAVE_DATA, OPTION_REQUIRED, STR_YES, VALUE_REQUIERED, VALUE_XSS_INVALID } from "../../../../constantsGlobal";
-import { xssValidation } from "../../../../actionsGlobal";
+
+import { xssValidation, validateIsNullOrUndefined } from "../../../../actionsGlobal";
 import { redirectUrl } from "../../../globalComponents/actions";
 import { changeStatusCreate, clientCovenants, createTrackingCovenant, getInfoCovenant } from "../actions";
-import { FULLFILLMENT_COVENANT, VALID_COVENANT } from "../../../selectsComponent/constants";
-import { TITLE_FIELD_OBSERVED_VALUE } from "../constants";
 import { getMasterDataFields } from "../../../selectsComponent/actions";
 import { changePage, covenantsFindServer } from "../../../alertCovenants/actions";
 import { showLoading } from "../../../loading/actions";
-import { NUMBER_RECORDS } from "../../../alertCovenants/constants";
-import moment from "moment";
-import _ from "lodash";
 import { swtShowMessage } from "../../../sweetAlertMessages/actions";
+
+import { DATE_FORMAT, MESSAGE_SAVE_DATA, OPTION_REQUIRED, STR_YES, VALUE_REQUIERED, VALUE_XSS_INVALID } from "../../../../constantsGlobal";
+import { FULLFILLMENT_COVENANT, VALID_COVENANT } from "../../../selectsComponent/constants";
+import { TITLE_FIELD_OBSERVED_VALUE, CLASSIFICATION_SPECIFIC } from "../constants";
+import { NUMBER_RECORDS } from "../../../alertCovenants/constants";
 
 const fields = ["validCovenant", "fullfillmentCovenant", "observedValue", "dateFinancialStatements", "observations"];
 const errors = {};
 let isMandatoryObservations = false;
+let isFinancialStatements = false;
 
 const validate = (values) => {
     if (!values.validCovenant) {
@@ -30,11 +34,13 @@ const validate = (values) => {
     } else {
         errors.validCovenant = null;
     }
+
     if (!values.fullfillmentCovenant) {
         errors.fullfillmentCovenant = OPTION_REQUIRED;
     } else {
         errors.fullfillmentCovenant = null;
     }
+
     if (!values.observedValue) {
         errors.observedValue = VALUE_REQUIERED;
     } else if (xssValidation(values.observedValue)) {
@@ -42,10 +48,14 @@ const validate = (values) => {
     } else {
         errors.observedValue = null;
     }
-// error={isMandatoryObservations ? VALUE_REQUIERED : null}
+
+    // error={isMandatoryObservations ? VALUE_REQUIERED : null}
     if (isMandatoryObservations) {
+
         if (!values.observations) {
             errors.observations = VALUE_REQUIERED;
+        } else if (xssValidation(values.observations)) {
+            errors.observations = VALUE_XSS_INVALID;;
         } else {
             errors.observations = null;
         }
@@ -55,21 +65,37 @@ const validate = (values) => {
         errors.observations = null;
     }
 
-    VALUE_XSS_INVALID
-    xssValidation
+    if (isFinancialStatements) {
+        if (!values.dateFinancialStatements) {
+            errors.dateFinancialStatements = VALUE_REQUIERED;
+        } else {
+            if (!values.dateFinancialStatements.trim()) {
+                errors.dateFinancialStatements = VALUE_REQUIERED;
+            } else {
+                errors.dateFinancialStatements = null;
+            }
+        }
+    } else {
+        errors.dateFinancialStatements = null;
+    }
+
     return errors;
 };
 
-class FormCreateTracking extends Component {
+export class FormCreateTracking extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isMandatoryObservations: false
+            isMandatoryObservations: false,
+            isFinancialStatements: false
         };
         this._handleCreateTracking = this._handleCreateTracking.bind(this);
         this._handleRefreshAlertCovenants = this._handleRefreshAlertCovenants.bind(this);
         this._cancelCreate = this._cancelCreate.bind(this);
         this._onChangeValidCovenant = this._onChangeValidCovenant.bind(this);
+        this._onFullfillmentCovenant = this._onFullfillmentCovenant.bind(this);
+        this.validateCovenantObservation = this.validateCovenantObservation.bind(this);
+        this._onBlurComboBox = this._onBlurComboBox.bind(this);
 
     }
 
@@ -78,12 +104,41 @@ class FormCreateTracking extends Component {
         getMasterDataFields([VALID_COVENANT, FULLFILLMENT_COVENANT]);
     }
 
-    _onChangeValidCovenant(val) {
-        const { selectsReducer, fields: { validCovenant } } = this.props;
-        validCovenant.onChange(val);
-        let validCovenantObj = _.find(_.toArray(selectsReducer.get(VALID_COVENANT)), (item) => item.id == val);
-        isMandatoryObservations = !_.isEqual(_.get(validCovenantObj, 'value'), STR_YES);
+    validateCovenantObservation(validCovenantVal, fullfillmentCovenantVal) {
+        const { selectsReducer, fields: { validCovenant, fullfillmentCovenant } } = this.props;
+        let validCovenantObj = _.find(_.toArray(selectsReducer.get(VALID_COVENANT)), (item) => item.id == validCovenantVal);
+        let fullfillmentCovenantObj = _.find(_.toArray(selectsReducer.get(FULLFILLMENT_COVENANT)), (item) => item.id == fullfillmentCovenantVal);
+        if (!validateIsNullOrUndefined(validCovenantObj) && !validateIsNullOrUndefined(fullfillmentCovenantObj)) {
+            isMandatoryObservations = !_.isEqual(_.get(validCovenantObj, 'value'), STR_YES) || (_.isEqual(_.get(validCovenantObj, 'value'), STR_YES) && !_.isEqual(_.get(fullfillmentCovenantObj, 'value'), STR_YES));
+        } else {
+            if (!validateIsNullOrUndefined(validCovenantObj)) {
+                isMandatoryObservations = !_.isEqual(_.get(validCovenantObj, 'value'), STR_YES);
+            }
+        }
         this.setState({ isMandatoryObservations: isMandatoryObservations });
+
+    }
+
+    _onBlurComboBox() {
+        this.setState(this.state);
+    }
+
+    _onChangeValidCovenant(val) {
+        const { selectsReducer, fields: { validCovenant, fullfillmentCovenant } } = this.props;
+        this.validateCovenantObservation(val, fullfillmentCovenant.value);
+        validCovenant.onChange(val);
+    }
+
+    _onFullfillmentCovenant(val) {
+        const { selectsReducer, covenant, fields: { validCovenant, fullfillmentCovenant } } = this.props;
+        const infoCovenant = covenant.get('covenantInfo');
+        this.validateCovenantObservation(validCovenant.value, val);
+
+        let fullfillmentCovenantObj = _.find(_.toArray(selectsReducer.get(FULLFILLMENT_COVENANT)), (item) => item.id == val);
+        isFinancialStatements = _.isEqual(_.get(fullfillmentCovenantObj, 'value'), STR_YES) && _.isEqual(_.get(infoCovenant, 'strClassification'), CLASSIFICATION_SPECIFIC);
+        this.setState({ isFinancialStatements: isFinancialStatements });
+
+        fullfillmentCovenant.onChange(val);
     }
 
     _handleCreateTracking() {
@@ -107,12 +162,16 @@ class FormCreateTracking extends Component {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                 redirectUrl("/login");
             } else {
+                var messageProcess = _.get(data, 'payload.data.data');
                 if (_.isEqual(_.get(data, 'payload.data.status'), 500)) {
-                    swtShowMessage("error", "Creación seguimiento", "Señor usuario, ocurrió un error tratando de crear el seguimiento.");
-                    console.error('Error creando seguimiento', _.get(data, 'payload.data.data'));
+                    if(messageProcess){
+                        swtShowMessage("error", "Creación seguimiento", messageProcess);
+                    }else{
+                        swtShowMessage("error", "Creación seguimiento", "Señor usuario, ocurrió un error tratando de crear el seguimiento.");
+                    }
                 } else {
                     swtShowMessage("success", "Creación seguimiento", "Señor usuario, el seguimiento se creó de forma exitosa.");
-                    if (_.get(data, 'payload.data.data') || _.get(data, 'payload.data.data') === true) {
+                    if (messageProcess || messageProcess === true) {
                         isOpen();
                     } else {
                         getInfoCovenant(_.get(covenant.get('covenantInfo'), 'idCovenant'));
@@ -150,13 +209,13 @@ class FormCreateTracking extends Component {
     render() {
         const {
             fields: { validCovenant, fullfillmentCovenant, observedValue, dateFinancialStatements, observations },
-            handleSubmit, selectsReducer
+            handleSubmit, selectsReducer, infoCovenant
         } = this.props;
-        if (!_.isEmpty(validCovenant.value)) {
-            isMandatoryObservations = _.isEmpty(observations.value) && !_.isEqual(_.get(_.find(_.toArray(selectsReducer.get(VALID_COVENANT)), (item) => item.id == validCovenant.value), 'value'), STR_YES);
-        } else {
-            isMandatoryObservations = false;
-        }
+        /* if (!_.isEmpty(validCovenant.value)) {
+             isMandatoryObservations = _.isEmpty(observations.value) && !_.isEqual(_.get(_.find(_.toArray(selectsReducer.get(VALID_COVENANT)), (item) => item.id == validCovenant.value), 'value'), STR_YES);
+         } else {
+             isMandatoryObservations = false;
+         }*/
         return (
             <form onSubmit={handleSubmit(this._handleCreateTracking)}>
                 <div className="tab-content break-word" style={{
@@ -179,6 +238,7 @@ class FormCreateTracking extends Component {
                                 textProp={'value'}
                                 {...validCovenant}
                                 onChange={val => this._onChangeValidCovenant(val)}
+                                onBlur={() => this._onBlurComboBox()}
                                 data={selectsReducer.get(VALID_COVENANT) || []}
                             />
                         </Col>
@@ -192,14 +252,20 @@ class FormCreateTracking extends Component {
                                 valueProp={'id'}
                                 textProp={'value'}
                                 {...fullfillmentCovenant}
+                                onChange={val => this._onFullfillmentCovenant(val)}
+                                onBlur={() => this._onBlurComboBox()}
                                 data={selectsReducer.get(FULLFILLMENT_COVENANT) || []}
                             />
                         </Col>
                         <Col xs={12} md={6} lg={4} style={{ paddingRight: "15px" }}>
                             <dt>
-                                <span>Fecha de estados financieros </span>
+                                <span>Fecha de estados financieros
+                                    {this.state.isFinancialStatements ?
+                                        <span> (<span style={{ color: "red" }}>*</span>)</span> : ""}
+                                </span>
                             </dt>
                             <DateTimePickerUi
+                                name='dateFinancialStatements'
                                 culture='es'
                                 format={DATE_FORMAT}
                                 time={false}

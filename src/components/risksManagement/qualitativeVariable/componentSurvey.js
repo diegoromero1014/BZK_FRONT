@@ -115,7 +115,7 @@ class ComponentSurvey extends Component {
             const filterQuestions = listquestions;
             const jsonSave = {
                 "idSurvey": get(qualitativeVariableReducer.get('survey'), 'id', null),
-                "idClient": window.localStorage.getItem('idClientSelected'),
+                "idClient": window.sessionStorage.getItem('idClientSelected'),
                 "analyst": isEqual(analyst, ANALYST) ? true : false,
                 "listQuestions": filterQuestions
             };
@@ -177,7 +177,7 @@ class ComponentSurvey extends Component {
                 {size(listFactorCommercial) > 0 || size(listFactorAnalyst) > 0 ?
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ }} >
-                            <span>Ultima fecha de diligenciamiento: </span><span>{fechaActualizacion}</span> 
+                            <span>Última fecha de diligenciamiento: </span><span>{fechaActualizacion}</span> 
                         </div>
                         <div>
                             <span>Estado: {survey.estado}</span>

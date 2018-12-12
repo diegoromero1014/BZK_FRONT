@@ -1,50 +1,44 @@
-/**
- * Created by Andres Hurtado on 15/03/2017.
- */
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid';
-import LinkEntities from './linkEntitiesComponent/linkEntities';
 import Modal from 'react-modal';
 import { isEmpty, isEqual, get, isNil } from 'lodash';
+
+import LinkEntities from './linkEntitiesComponent/linkEntities';
 import Textarea from '../../../ui/textarea/textareaComponent';
+import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
+
 import { setEntities, clearEntities, saveLinkClient } from './linkEntitiesComponent/actions';
 import { updateErrorsLinkEntities } from '../../clientDetailsInfo/actions';
-import { ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, START_STATUS, HELP_LINK_MESSAGE } from './linkEntitiesComponent/constants';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { FILTER_TYPE_LBO_ID } from '../../selectsComponent/constants';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import { updateFieldInfoClient } from '../../clientInformation/actions';
 import { consultStateBlackListClient, updateValuesBlackList } from './actions';
 import { showLoading } from '../../loading/actions';
 import { consultInfoClient } from '../../clientInformation/actions';
+
+import { ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, START_STATUS, HELP_LINK_MESSAGE } from './linkEntitiesComponent/constants';
+import { FILTER_TYPE_LBO_ID } from '../../selectsComponent/constants';
 import { consultParameterServer } from "../../../actionsGlobal";
+import { MAX_LENGTH_LINK_CLIENT_TRACER_CODE} from "../../../constantsGlobal";
+
 import {
     VALUE_REQUIERED, VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
-import ToolTipComponent from '../../toolTip/toolTipComponent';
-import { xssValidation } from '../../../actionsGlobal';
-
-const fields = ["observationTrader"];
-const errors = {};
-
-const validate = (values) => {
-
-    if (xssValidation(values.observationTrader)) {
-        errors.observationTrader = VALUE_XSS_INVALID;
-    } else {
-        errors.observationTrader = null;
-    }
-
-    return errors;
-};
+import {fields, validations as validate} from './fieldsAndRulesForReduxForm';
+import {
+    patternOfOnlyNumbersLinkClient,patternOfObservationLinkClient
+    } from './../../../validationsFields/patternsToValidateField';
+    
+    import {
+    MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT, MESSAGE_WARNING_MAX_LENGTH,MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_REQUIRED_VALUE
+    } from './../../../validationsFields/validationsMessages'; 
 
 let helpLinksMessage = "";
 
 class ButtonLinkClientComponent extends Component {
-
     constructor(props) {
         super(props);
         this.closeModal = this.closeModal.bind(this);
@@ -80,15 +74,20 @@ class ButtonLinkClientComponent extends Component {
                 swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
             }
         }, (reason) => {
-            updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));            
+            updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));
             showLoading(false, '');
             swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
         });
     }
 
     closeModal() {
+        const {
+            fields: { observationTrader } } = this.props;
         this.setState({ modalIsOpen: false });
         this.props.updateValuesBlackList(null, null);
+        this.props.updateErrorsLinkEntities(false);
+        
+        observationTrader.onChange('');
     }
 
     _handleSaveLinkingClient() {
@@ -98,28 +97,49 @@ class ButtonLinkClientComponent extends Component {
             swtShowMessage, saveLinkClient, showLoading, updateFieldInfoClient,
             message, level, consultInfoClient
         } = this.props;
+        let messageWhiteList = null;
         updateErrorsLinkEntities(false);
         let isValidLinkEntities = true;
+        
+        let listOfEntities = [];
+
         let inValidMessageLinkEntities = "Señor usuario, por favor ingrese todos los campos obligatorios.";
         const newListEntities = linkEntitiesClient.map(linkEntity => {
+
+            if (listOfEntities.indexOf(linkEntity.entity) == -1 ) {
+                listOfEntities.push(linkEntity.entity);
+            } else {
+                updateErrorsLinkEntities(true, "Error: Entidad/Linea de negocio duplicada");
+                inValidMessageLinkEntities = "Señor usuario, por favor borre la(s) Entidad/Linea de negocio(s) duplicada(s)";
+                isValidLinkEntities = false;
+            }
+
             if (isEqual(linkEntity.entity, "") || isEqual(linkEntity.entity, null)) {
                 updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
                 isValidLinkEntities = false;
             }
-
-
+            
             if (isValidLinkEntities) {
                 if (isEqual(ENTITY_BANCOLOMBIA.toLowerCase(), linkEntity.entityText.toLowerCase())
                     || isEqual(ENTITY_VALORES_BANCOLOMBIA.toLowerCase(), linkEntity.entityText.toLowerCase())) {
                     if (isEmpty(linkEntity.traderCode)) {
                         updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
+                         isValidLinkEntities = false;
+                     } 
+                    else  if  (!_.isUndefined(linkEntity.traderCode)  &&  !_.isNull(linkEntity.traderCode) && eval(patternOfOnlyNumbersLinkClient).test(linkEntity.traderCode)) {
+                        messageWhiteList  = MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT;
+                        updateErrorsLinkEntities(true, messageWhiteList);
                         isValidLinkEntities = false;
-                    } else if (xssValidation(linkEntity.traderCode)) {
-                        updateErrorsLinkEntities(true, VALUE_XSS_INVALID);
-                        inValidMessageLinkEntities = REGEX_SIMPLE_XSS_MESAGE;
+                    }  else  if (!_.isUndefined(linkEntity.traderCode)  &&  !_.isNull(linkEntity.traderCode) && linkEntity.traderCode.length > MAX_LENGTH_LINK_CLIENT_TRACER_CODE) {
+                        messageWhiteList  =  MESSAGE_WARNING_MAX_LENGTH(MAX_LENGTH_LINK_CLIENT_TRACER_CODE);
+                        updateErrorsLinkEntities(true, messageWhiteList);
+                        isValidLinkEntities = false;
+                    } else if(!_.isNull(linkEntity.traderCode) && _.isEmpty(linkEntity.traderCode)){
+                        messageWhiteList  =  MESSAGE_REQUIRED_VALUE;
+                        updateErrorsLinkEntities(true, messageWhiteList);
                         isValidLinkEntities = false;
                     }
-
+                    
                     return {
                         id: linkEntity.idEntity,
                         entity: linkEntity.entity,
@@ -140,30 +160,29 @@ class ButtonLinkClientComponent extends Component {
             }
         });
 
-        if (xssValidation(observationTrader.value)) {
-            inValidMessageLinkEntities = REGEX_SIMPLE_XSS_MESAGE;
+        if  (!_.isUndefined(observationTrader.value)  &&  !_.isNull(observationTrader.value) && eval(patternOfObservationLinkClient).test(observationTrader.value)) {
+            messageWhiteList  =  MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
             isValidLinkEntities = false;
-        }
-
-
+        } 
+  
 
         if (linkEntitiesClient.size == 0) {
             swtShowMessage('error', 'Vinculación', 'Señor usuario, debe ingresar por lo menos una entidad a vincular.');
         } else if (!isValidLinkEntities) {
-            swtShowMessage('error', 'Vinculación', inValidMessageLinkEntities);
+            swtShowMessage('error', 'Vinculación', inValidMessageLinkEntities );
         } else {
             const jsonLinkEntityClient = {
                 "idClient": infoClient.id,
                 "idLinkRequest": infoClient.linkingRequestId,
-                "observationTrader": observationTrader.value,
+                "observationTrader": infoClient.linkingRequestId == null ? observationTrader.value : '',
                 "linkEntity": newListEntities.toArray(),
                 "levelBlackList": level,
                 "messageBlackList": message
             };
             showLoading(true, 'Guardando..');
             saveLinkClient(jsonLinkEntityClient)
-                .then((data) => {
-                    if ((_.get(data, 'payload.data.responseSaveLinkingClient') === "save")) {
+                .then((data) => {                   
+                    if ((_.get(data, 'payload.data.status') === 200)) {
                         consultInfoClient();
                         showLoading(false, '');
                         this.closeModal();
@@ -187,18 +206,16 @@ class ButtonLinkClientComponent extends Component {
             setEntities(listLinkEntitiesClient);
         }
     }
-
     componentWillMount() {
         const { getMasterDataFields, consultParameterServer } = this.props;
         getMasterDataFields([FILTER_TYPE_LBO_ID]);
         this._getListEntities();
-
         consultParameterServer(HELP_LINK_MESSAGE).then((data) => {
             if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
-              data.payload.data.parameter !== undefined) {
-              helpLinksMessage = JSON.parse(data.payload.data.parameter).value;
+                data.payload.data.parameter !== undefined) {
+                helpLinksMessage = JSON.parse(data.payload.data.parameter).value;
             }
-          });
+        });
     }
 
     componentWillUnmount() {
@@ -229,6 +246,7 @@ class ButtonLinkClientComponent extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
+                            <SecurityMessageComponent />
                             <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                                 style={{ padding: '20px 20px 20px 20px' }} id="containerModal">
                                 <table style={{ width: "100%" }}>
@@ -342,7 +360,7 @@ class ButtonLinkClientComponent extends Component {
                                         </div>
                                     </Col>
                                 </Row>
-                                <Row>
+                                <Row style={{ paddingBottom: '10px' }}>
                                     <Col xs={12} md={12} lg={12}>
                                         <h4>Observación vinculación</h4>
                                         {_.isEmpty(infoClient.observationAdmin) ?
@@ -353,7 +371,7 @@ class ButtonLinkClientComponent extends Component {
                                     </Col>
                                 </Row>
                                 {infoClient.linkingRequestId == null &&
-                                    <Row style={{ paddingTop: '10px' }}>
+                                    <Row style={{ paddingBottom: '10px' }}>
                                         <Col xs={12} md={12} lg={12}>
                                             <h4>Observación</h4>
                                             <div>
@@ -362,7 +380,7 @@ class ButtonLinkClientComponent extends Component {
                                                     name="actionArea"
                                                     type="text"
                                                     style={{ width: '100%', height: '100%', textAlign: 'justify' }}
-                                                    max="500"
+                                                    max="1000"
                                                     rows={3}
                                                     touched={true}
                                                 />
@@ -373,12 +391,12 @@ class ButtonLinkClientComponent extends Component {
                             </div>
                             <div className="modalBt4-footer modal-footer">
                                 <Row >
-                                    <Col xs={9} md={9} lg={9}>   
+                                    <Col xs={9} md={9} lg={9}>
                                         <div style={{ textAlign: "left", fontStyle: "italic" }} >
                                             <span>{helpLinksMessage}</span>
                                         </div>
                                     </Col>
-                                    <Col xs={3} md={3} lg={3}>  
+                                    <Col xs={3} md={3} lg={3}>
                                         <button type="button" onClick={this._handleSaveLinkingClient}
                                             className="btn btn-primary modal-button-edit">Guardar
                                         </button>

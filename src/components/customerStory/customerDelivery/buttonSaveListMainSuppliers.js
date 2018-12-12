@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
-import { clientsByEconomicGroup, saveContextClientDeliveryClients } from '../actions';
-import ComponentListMainSuppliers from '../../contextClient/listMainSupplier/componentListMainSupplier';
-import { validateResponse } from '../../../actionsGlobal';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { reduxForm } from 'redux-form';
-import { showLoading } from '../../loading/actions';
-import { MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
+
+import ComponentListMainSuppliers from '../../contextClient/listMainSupplier/componentListMainSupplier';
+import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
+
+import { clientsByEconomicGroup, saveContextClientDeliveryClients } from '../actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { getContextClient } from '../../clients/creditStudy/actions';
+import { showLoading } from '../../loading/actions';
+
+import { validateResponse } from '../../../actionsGlobal';
+import { MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import { UPDATE_CONTEXT_CLIENT } from '../constants';
 
 const fields = ["nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier"];
@@ -43,7 +47,7 @@ class ButtonSaveListMainSuppliers extends Component {
         const { clientsByEconomicGroup, customerStory, clientInformacion } = this.props;
         const checkEconomicGroup = customerStory.get('checkEconomicGroup');
         const economicGroup = clientInformacion.get('responseClientInfo').economicGroup;
-        const idClient = window.localStorage.getItem('idClientSelected');
+        const idClient = window.sessionStorage.getItem('idClientSelected');
         this.setState({ modalIsOpen: false });
         clientsByEconomicGroup(checkEconomicGroup ? null : idClient, checkEconomicGroup ? economicGroup : null).then((data) => {
             if (!validateResponse(data)) {
@@ -66,7 +70,7 @@ class ButtonSaveListMainSuppliers extends Component {
                 }
                 const checkEconomicGroup = customerStory.get('checkEconomicGroup');
                 const economicGroup = clientInformacion.get('responseClientInfo').economicGroup;
-                const idClient = window.localStorage.getItem('idClientSelected');
+                const idClient = window.sessionStorage.getItem('idClientSelected');
                 clientsByEconomicGroup(checkEconomicGroup ? null : idClient, checkEconomicGroup ? economicGroup : null).then((data) => {
                     if (!validateResponse(data)) {
                         swtShowMessage('error', 'Error validando clientes', 'Señor usuario, ocurrió un error validando los clientes.');
@@ -125,6 +129,7 @@ class ButtonSaveListMainSuppliers extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
+                            <SecurityMessageComponent />
                             <ComponentListMainSuppliers nameSupplier={nameMainSupplier} participation={participationMS}
                                 term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
                                 showFormMainSupplier={this.state.fshowFormAddMainSupplier} fnShowForm={this.showFormMainSuppliers}

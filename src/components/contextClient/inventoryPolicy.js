@@ -16,13 +16,16 @@ class InventorPolicy extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            shouldUpdate: false
+        }
     }
 
     render() {
         const { inventoryPolicy, data, valueCheckSectionInventoryPolicy, clientInformacion,
             showCheckValidateSection, functionChangeInventoryPolicy } = this.props;
-        return (
-            <Row style={{ padding: "20px 10px 10px 20px" }}>
+        return (            
+            <Row style={{ padding: "20px 10px 10px 20px" }} onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })} >
                 <Col xs={12} md={12} lg={12}>
                     <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                         <div className="tab-content-row"
@@ -55,6 +58,7 @@ class InventorPolicy extends Component {
                             rows={7}
                             placeholder="Ingrese las políticas de inventario"
                             {...inventoryPolicy}
+                            value={inventoryPolicy.value}
                             touched={true}
                         />
                     </div>

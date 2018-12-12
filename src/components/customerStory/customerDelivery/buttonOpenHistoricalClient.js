@@ -3,10 +3,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
-import { clientsByEconomicGroup } from '../actions';
+
 import StructuredDelivery from '../structuredDelivery/componentStructuredDelivery';
-import { validateResponse } from '../../../actionsGlobal';
+import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
+
+import { clientsByEconomicGroup } from '../actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
+
+import { validateResponse } from '../../../actionsGlobal';
 
 class ButtonOpenHistoricalClient extends Component {
     constructor(props) {
@@ -26,9 +30,9 @@ class ButtonOpenHistoricalClient extends Component {
         const { clientsByEconomicGroup, customerStory, clientInformacion } = this.props;
         const checkEconomicGroup = customerStory.get('checkEconomicGroup');
         const economicGroup = clientInformacion.get('responseClientInfo').economicGroup;
-        const idClient = window.localStorage.getItem('idClientSelected');
+        const idClient = window.sessionStorage.getItem('idClientSelected');
         this.setState({ modalIsOpen: false });
-        clientsByEconomicGroup(checkEconomicGroup ? null: idClient, checkEconomicGroup ? economicGroup : null).then((data) => {
+        clientsByEconomicGroup(checkEconomicGroup ? null : idClient, checkEconomicGroup ? economicGroup : null).then((data) => {
             if (!validateResponse(data)) {
                 swtShowMessage('error', 'Error validando clientes', 'Señor usuario, ocurrió un error validando los clientes.');
             }
@@ -56,6 +60,7 @@ class ButtonOpenHistoricalClient extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
+                            <SecurityMessageComponent />
                             <StructuredDelivery callFromDeliveryClient={true} closeModal={this.closeModal} idClientSeleted={idClient} />
                         </div>
                     </div>

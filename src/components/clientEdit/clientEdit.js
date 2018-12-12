@@ -1,58 +1,25 @@
 import React, { Component } from "react";
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../sweetalertFocus";
 import { bindActionCreators } from "redux";
-import { updateTitleNavBar } from "../navBar/actions";
-import {
-    seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
-    validateContactShareholder
-} from "../clientDetailsInfo/actions";
-import {Col, Row} from "react-flexbox-grid";
-import {goBack, redirectUrl} from "../globalComponents/actions";
-import {
-    clearValuesAdressess, consultDataSelect, consultList, consultListWithParameter,
-    consultListWithParameterUbication, economicGroupsByKeyword, getMasterDataFields
-} from "../selectsComponent/actions";
-import * as constants from "../selectsComponent/constants";
-import {
-    GOVERNMENT, FINANCIAL_INSTITUTIONS, CONSTRUCT_PYME, KEY_DESMONTE,
-    KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME,
-    KEY_OPTION_OTHER_OPERATIONS_FOREIGNS, KEY_OPTION_OTHER_ORIGIN_GOODS,
-    KEY_OPTION_OTHER_ORIGIN_RESOURCE, MAXIMUM_OPERATIONS_FOREIGNS, TITLE_DESCRIPTION
-} from "./constants";
-import {
-    ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA,
-    ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, VALUE_REQUIERED, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
-} from '../../constantsGlobal';
+import { Col, Row } from "react-flexbox-grid";
+import { reduxForm } from "redux-form";
+import numeral from "numeral";
+import _ from "lodash";
+import $ from "jquery";
+import moment from "moment";
 
-import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
 import Input from "../../ui/input/inputComponent";
 import Textarea from "../../ui/textarea/textareaComponent";
-import { reduxForm } from "redux-form";
 import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
-import moment from "moment";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import NotesClient from "./notes/notesClient";
 import ProductsClient from "./products/productList";
-import { clearProducts, setProducts } from "./products/actions";
-import { clearNotes, deleteNote, setNotes } from "./notes/actions";
-import { createProspect } from "../propspect/actions";
-import { changeStateSaveData } from "../dashboard/actions";
 import BottonContactAdmin from "../clientDetailsInfo/bottonContactAdmin";
 import BottonShareholderAdmin from "../clientDetailsInfo/bottonShareholderAdmin";
 import ModalErrorsUpdateClient from "./modalErrorsUpdateClient";
-import { swtShowMessage } from "../sweetAlertMessages/actions";
-import numeral from "numeral";
-import _ from "lodash";
-import $ from "jquery";
-import { showLoading } from "../loading/actions";
-import {
-    DISTRIBUTION_CHANNEL, INT_OPERATIONS, LINE_OF_BUSINESS, MAIN_CLIENTS,
-    MAIN_COMPETITOR, MAIN_SUPPLIER
-} from "../contextClient/constants";
 import ClientTypology from "../contextClient/ClientTypology";
 import ContextEconomicActivity from "../contextClient/contextEconomicActivity";
 import ComponentListLineBusiness from "../contextClient/listLineOfBusiness/componentListLineBusiness";
@@ -63,8 +30,54 @@ import ComponentListMainClients from "../contextClient/listMainClients/component
 import ComponentListMainSupplier from "../contextClient/listMainSupplier/componentListMainSupplier";
 import ComponentListMainCompetitor from "../contextClient/listMainCompetitor/componentListMainCompetitor";
 import ComponentListIntOperations from "../contextClient/listInternationalOperations/componentListIntOperations";
+import ComponentInfoClient from './components/InfoClient';
+import ComponentInfoClientPN from './components/InfoClientPN';
+import { validationRules as rulesInfoClient } from './components/InfoClient.js';
+import { validationRules as rulesInfoClientPN } from './components/InfoClientPN.js';
+import ActividadEconomicaPN from './components/ActividadEconomicaPN';
+import ActividadEconomica from './components/ActividadEconomica';
+import { validationRules as rulesActividadEconomica } from './components/ActividadEconomica';
+import { validationRules as rulesActividadEconomicaPN } from './components/ActividadEconomicaPN';
+import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
+
+import { clearProducts, setProducts } from "./products/actions";
+import { clearNotes, deleteNote, setNotes } from "./notes/actions";
+import { createProspect } from "../propspect/actions";
+import { changeStateSaveData } from "../dashboard/actions";
+import { swtShowMessage } from "../sweetAlertMessages/actions";
+import { showLoading } from "../loading/actions";
 import { saveCreditStudy } from "../clients/creditStudy/actions";
-import { validateResponse, stringValidate, xssValidation } from "../../actionsGlobal";
+import { validateResponse, stringValidate, xssValidation, onSessionExpire, validateFields } from "../../actionsGlobal";
+import { updateTitleNavBar } from "../navBar/actions";
+import {
+    seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
+    validateContactShareholder
+} from "../clientDetailsInfo/actions";
+import { goBack, redirectUrl } from "../globalComponents/actions";
+import {
+    clearValuesAdressess, consultDataSelect, consultList, consultListWithParameter,
+    consultListWithParameterUbication, economicGroupsByKeyword, getMasterDataFields
+} from "../selectsComponent/actions";
+
+import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
+import * as constants from "../selectsComponent/constants";
+import {
+    GOVERNMENT, FINANCIAL_INSTITUTIONS, CONSTRUCT_PYME, KEY_DESMONTE,
+    KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME,
+    KEY_OPTION_OTHER_OPERATIONS_FOREIGNS, KEY_OPTION_OTHER_ORIGIN_GOODS,
+    KEY_OPTION_OTHER_ORIGIN_RESOURCE, MAXIMUM_OPERATIONS_FOREIGNS, TITLE_DESCRIPTION
+} from "./constants";
+import {
+    ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA,
+    ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, VALUE_REQUIERED, VALUE_XSS_INVALID,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT,
+    INFO_ESTUDIO_CREDITO
+} from '../../constantsGlobal';
+import {
+    DISTRIBUTION_CHANNEL, INT_OPERATIONS, LINE_OF_BUSINESS, MAIN_CLIENTS,
+    MAIN_COMPETITOR, MAIN_SUPPLIER
+} from "../contextClient/constants";
+
 
 let idButton;
 let errorContact;
@@ -96,7 +109,7 @@ const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCII
     "relevantInformationMainClient", "nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier",
     "nameMainCompetitor", "participationMComp", "obsevationsCompetitor", "typeOperationIntOpera", "participationIntOpe",
     "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe", "contributionDC",
-    "contributionLB", "controlLinkedPayments"];
+    "contributionLB", "controlLinkedPayments", "firstName", "middleName", "lastName", "middleLastName", "occupation"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 let isProspect = false;
@@ -112,9 +125,12 @@ let infoJustificationNeedLME = true;
 let infoMarcaGeren = true;
 //Controla que el componente suba el scroll, solo cuando hallan errores y se de click en el botón de guardar, o actualizar
 var clickButttonSave = false;
+//Valida si es necesario la justificacion para la marca de gerenciamiento
+let validateMarcManagement = true;
 
-//Controla si el campo Segmento esta seleccionado constructor pyme.
-let isSegmentPymeConstruct = false;
+let isPersonaNatural = false;
+//Controla las validaciones cuando se esta en edicion de clientes
+let isMethodEditClient = false;
 
 let otherOperationsForeignEnable = 'disabled';
 let otherOriginGoodsEnable = 'disabled';
@@ -136,47 +152,27 @@ const UPDATE_STYLE = {
     height: '110px'
 };
 
+const requiredField = <span>(<span style={{ color: "red" }}>*</span>)</span>;
+
+const drawRequiredField = (condition) => {
+    if (condition) {
+        return requiredField;
+    }
+}
+
 const validate = (values, props) => {
+    const { reducerGlobal, tabReducer } = props;
+    const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
+
     const errors = {}
     let errorScrollTop = false;
-    if (!values.razonSocial) {
-        errors.razonSocial = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.razonSocial)) {
-        errors.razonSocial = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.razonSocial = null;
-    }
 
-    if (!values.idTypeClient) {
-        errors.idTypeClient = OPTION_REQUIRED;
-        errorScrollTop = true;
+    if (props.isPersonaNatural) {
+        validateFields(values, rulesInfoClientPN(props), errors);
+        validateFields(values, rulesActividadEconomicaPN(props), errors);
     } else {
-        errors.idTypeClient = null;
-    }
-
-    if (!values.idNumber) {
-        errors.idNumber = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.idNumber)) {
-        errors.idNumber = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.idNumber = null;
-    }
-
-    if (!values.idCIIU && idButton !== BUTTON_EDIT) {
-        errors.idCIIU = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.idCIIU = null;
-    }
-    if (!values.idSubCIIU && idButton !== BUTTON_EDIT) {
-        errors.idSubCIIU = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.idSubCIIU = null;
+        validateFields(values, rulesInfoClient(props), errors);
+        validateFields(values, rulesActividadEconomica(props), errors);
     }
 
     if (!values.addressClient && idButton !== BUTTON_EDIT) {
@@ -199,7 +195,7 @@ const validate = (values, props) => {
         errors.telephone = null;
     }
 
-    if (!values.annualSales && idButton !== BUTTON_EDIT) {
+    if (!values.annualSales && idButton !== BUTTON_EDIT && !isPersonaNatural) {
         errors.annualSales = VALUE_REQUIERED;
         errorScrollTop = true;
     } else if (xssValidation(values.annualSales)) {
@@ -230,7 +226,7 @@ const validate = (values, props) => {
         errors.city = null;
     }
 
-    if ((!values.dateSalesAnnuals || values.dateSalesAnnuals === '') && idButton !== BUTTON_EDIT ) {
+    if ((!values.dateSalesAnnuals || values.dateSalesAnnuals === '') && (idButton !== BUTTON_EDIT && !isPersonaNatural)) {
         errors.dateSalesAnnuals = DATE_REQUIERED;
         errorScrollTop = true;
     } else if (xssValidation(values.dateSalesAnnuals)) {
@@ -297,7 +293,7 @@ const validate = (values, props) => {
         errors.marcGeren = null;
     }
 
-    if (values.marcGeren === 'false' && !values.justifyNoGeren && idButton !== BUTTON_EDIT) {
+    if (validateMarcManagement === false && !values.justifyNoGeren && idButton !== BUTTON_EDIT) {
         errors.justifyNoGeren = OPTION_REQUIRED;
         errorScrollTop = true;
     } else {
@@ -360,6 +356,7 @@ const validate = (values, props) => {
             errors.otherOriginResource = null;
         }
     }
+
     if (otherOperationsForeignEnable !== 'disabled') {
         if ((values.otherOperationsForeign === null || values.otherOperationsForeign === undefined || values.otherOperationsForeign === '') && idButton !== BUTTON_EDIT) {
             errors.otherOperationsForeign = OPTION_REQUIRED;
@@ -386,20 +383,13 @@ const validate = (values, props) => {
         if (xssValidation(values.detailNonOperatingIncome)) {
             errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
             errorScrollTop = true;
-        }else{
+        } else {
             errors.detailNonOperatingIncome = null;
         }
     }
 
     //Valido los campos que son necesarios para actualizar un cliente
     if (idButton === BUTTON_UPDATE) {
-        if ((values.taxNature === null || values.taxNature === undefined || values.taxNature === '') && idButton !== BUTTON_EDIT) {
-            errors.taxNature = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            errors.taxNature = null;
-        }
-
         //Valido si el cliente tiene ingresos no operaciones
         if ((values.nonOperatingIncome === null || values.nonOperatingIncome === undefined || values.nonOperatingIncome === '') && idButton !== BUTTON_EDIT) {
             errors.nonOperatingIncome = OPTION_REQUIRED;
@@ -464,6 +454,7 @@ const validate = (values, props) => {
             errors.operationsForeignCurrency = null;
             if (values.operationsForeignCurrency.toString() === 'true') {
                 if ((values.operationsForeigns === null || values.operationsForeigns === undefined || values.operationsForeigns === '' || values.operationsForeigns[0] === '') && idButton !== BUTTON_EDIT) {
+
                     errors.operationsForeigns = OPTION_REQUIRED;
                     errorScrollTop = true;
                 } else {
@@ -482,12 +473,13 @@ const validate = (values, props) => {
             errors.economicGroupName = null;
         }
 
-        if ((!props.clientInformacion.get('noAppliedControlLinkedPayments') && !values.controlLinkedPayments) && idButton !== BUTTON_EDIT) {
+        if ((!props.clientInformacion.get('noAppliedControlLinkedPayments') && !values.controlLinkedPayments) && idButton !== BUTTON_EDIT && allowRiskGroupEdit) {
+
             errors.controlLinkedPayments = OPTION_REQUIRED;
             errorScrollTop = true;
         } else {
             errors.controlLinkedPayments = null;
-    }
+        }
 
     }
 
@@ -504,8 +496,6 @@ const validate = (values, props) => {
         }
         errors.segment = null;
     }
-
-
 
     if (xssValidation(values.description)) {
         errors.description = VALUE_XSS_INVALID;
@@ -535,18 +525,11 @@ const validate = (values, props) => {
         errors.inventoryPolicy = null;
     }
 
-    //ComponentListLineBusiness
-    //ComponentListDistributionChannel
-    //ComponentListMainClients
-    //ComponentListMainSupplier
-    //ComponentListMainCompetitor
-    //ComponentListIntOperations
-
     if (errorScrollTop && clickButttonSave) {
         clickButttonSave = false;
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
     }
-    
+
     return errors;
 };
 
@@ -555,7 +538,7 @@ function SelectsJustificacion(props) {
     if (props.visible !== undefined && props.visible !== null && props.visible.toString() === "false") {
         return <Col xs={12} md={4} lg={4}>
             <dt>
-                {props.title}
+                {props.title} {drawRequiredField(props.obligatory)}
             </dt>
             <dt>
                 <ComboBox
@@ -598,11 +581,13 @@ class clientEdit extends Component {
             showFormAddMainClient: false,
             showFormAddMainSupplier: false,
             showFormAddMainCompetitor: false,
-            showFormAddIntOperatrions: false
+            showFormAddIntOperatrions: false,
+            showJustifyNoGeren: true,
+            shouldUpdate: false
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
-        this._onChangeCIIU = this._onChangeCIIU.bind(this);
+
         this._onChangeOperationsForeigns = this._onChangeOperationsForeigns.bind(this);
         this._onChangeOriginGoods = this._onChangeOriginGoods.bind(this);
         this._onChangeOriginResource = this._onChangeOriginResource.bind(this);
@@ -621,7 +606,6 @@ class clientEdit extends Component {
         this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
         this._onConfirmSaveJustClient = this._onConfirmSaveJustClient.bind(this);
         this.clickButtonScrollTop = this.clickButtonScrollTop.bind(this);
-        this._changeSegment = this._changeSegment.bind(this);
         this._createJsonSaveContextClient = this._createJsonSaveContextClient.bind(this);
         this.showFormOut = this.showFormOut.bind(this);
 
@@ -729,31 +713,31 @@ class clientEdit extends Component {
             if (economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined) {
                 $('.ui.search.participantBanc').toggleClass('loading');
                 economicGroupsByKeyword(economicGroupName.value).then((data) => {
-                        let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
-                        let economicGroup2 = _.forEach(economicGroup1, function (data1) {
-                            data1.title = data1.group;
-                            data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
+                    let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
+                    let economicGroup2 = _.forEach(economicGroup1, function (data1) {
+                        data1.title = data1.group;
+                        data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
+                    });
+                    $('.ui.search.participantBanc')
+                        .search({
+                            cache: false,
+                            source: economicGroup1,
+                            searchFields: [
+                                'title',
+                                'description',
+                                'id',
+                                'relationshipManagerId'
+                            ],
+                            onSelect: function (event) {
+                                economicGroupName.onChange(event.group);
+                                groupEconomic.onChange(event.id);
+                                nitPrincipal.onChange(event.nitPrincipal);
+                                return 'default';
+                            }
                         });
-                        $('.ui.search.participantBanc')
-                            .search({
-                                cache: false,
-                                source: economicGroup1,
-                                searchFields: [
-                                    'title',
-                                    'description',
-                                    'id',
-                                    'relationshipManagerId'
-                                ],
-                                onSelect: function (event) {
-                                    economicGroupName.onChange(event.group);
-                                    groupEconomic.onChange(event.id);
-                                    nitPrincipal.onChange(event.nitPrincipal);
-                                    return 'default';
-                                }
-                            });
-                        $('.ui.search.participantBanc').toggleClass('loading');
-                        $('.prompt').focus();
-                    }
+                    $('.ui.search.participantBanc').toggleClass('loading');
+                    $('.prompt').focus();
+                }
                 );
             }
         }
@@ -775,7 +759,41 @@ class clientEdit extends Component {
     }
 
     _onChangeMarcGeren(val) {
-        if (!infoMarcaGeren && val === 'true') {
+        // Traer el selectReducer con el select de campos
+        // Buscar el key que tenga el val
+        const { selectsReducer, clientInformacion } = this.props;
+        const optionMarcMagnament = selectsReducer.get(constants.MANAGEMENT_BRAND);
+
+        let optionSelected = null;
+
+        if (typeof optionMarcMagnament == 'undefined') {
+            var infoClient = clientInformacion.get('responseClientInfo');
+            // Crear el objeto optionSelected
+            optionSelected = { key: infoClient.isManagedByRmKey };
+        } else {
+            for (let i = 0; i < optionMarcMagnament.length; i++) {
+                let option = optionMarcMagnament[i];
+
+
+                if (val == option.id) {
+                    optionSelected = option;
+                    break;
+                }
+            }
+        }
+
+        // Si el key es Gerenciamiento a Demanda.
+        if (optionSelected == null) {
+            validateMarcManagement = true;
+            this.setState({ showJustifyNoGeren: true });
+        } else if (optionSelected.key === 'Gerenciamiento a Demanda') {
+            validateMarcManagement = false;
+            this.setState({ showJustifyNoGeren: false });
+        } else {
+            validateMarcManagement = true;
+            this.setState({ showJustifyNoGeren: true });
+        }
+        if (!infoMarcaGeren && validateMarcManagement === true) {
             var dataTypeNote, idExcepcionNoGerenciado;
             const { selectsReducer, deleteNote, notes, updateErrorsNotes } = this.props;
             dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
@@ -798,7 +816,7 @@ class clientEdit extends Component {
         } else {
             infoMarcaGeren = false;
         }
-        if (val === 'true' || val === true && initValueJustifyNonGeren) {
+        if (validateMarcManagement === true && initValueJustifyNonGeren) {
             const { fields: { justifyNoGeren } } = this.props;
             justifyNoGeren.onChange('');
         } else {
@@ -978,18 +996,6 @@ class clientEdit extends Component {
         }
     }
 
-    //Detecta el cambio en el select de ciiu para ejecutar la consulta de subciiu
-    _onChangeCIIU(val) {
-        const { fields: { idCIIU, idSubCIIU } } = this.props;
-        idCIIU.onChange(val);
-        const { clientInformacion } = this.props;
-        var infoClient = clientInformacion.get('responseClientInfo');
-        const { consultListWithParameter } = this.props;
-        consultListWithParameter(constants.SUB_CIIU, idCIIU.value);
-        if (!_.isEqual(infoClient.ciiu, idCIIU.value)) {
-            idSubCIIU.onChange('');
-        }
-    }
 
     _onChangeOperationsForeigns(val) {
         const { fields: { otherOperationsForeign }, selectsReducer, clientInformacion } = this.props;
@@ -1081,7 +1087,7 @@ class clientEdit extends Component {
         const { fields: { country, province, city } } = this.props;
         country.onChange(val);
         const { consultListWithParameterUbication } = this.props;
-        consultListWithParameterUbication(constants.FILTER_PROVINCE, country.value);
+        consultListWithParameterUbication(constants.FILTER_PROVINCE_CLIENT, country.value);
         if (!_.isEqual(infoClient.addresses[0].country, country.value)) {
             province.onChange('');
             city.onChange('');
@@ -1095,7 +1101,7 @@ class clientEdit extends Component {
         const { fields: { country, province, city } } = this.props;
         province.onChange(val);
         const { consultListWithParameterUbication } = this.props;
-        consultListWithParameterUbication(constants.FILTER_CITY, province.value);
+        consultListWithParameterUbication(constants.FILTER_CITY_CLIENT, province.value);
         if (!_.isEqual(infoClient.addresses[0].province, province.value)) {
             city.onChange('');
         }
@@ -1127,7 +1133,8 @@ class clientEdit extends Component {
                 dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods,
                 originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
                 detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
-                originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology
+                originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology,
+                firstName, middleName, lastName, middleLastName, occupation
             },
             error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer
         } = this.props;
@@ -1136,127 +1143,137 @@ class clientEdit extends Component {
             productsArray.push(_.omit(map, ['uid']))
         });
         const infoClient = clientInformacion.get('responseClientInfo');
-        
-        if (idButton === BUTTON_EDIT || (moment(dateSalesAnnuals.value, "DD/MM/YYYY").isValid() && dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined)) {
-            
-           
 
-            const jsonCreateProspect = {
-                "id": infoClient.id,
-                "clientIdType": idTypeClient.value,
-                "clientIdNumber": idNumber.value,
-                "clientName": razonSocial.value,
-                "clientStatus": infoClient.clientStatus,
-                "riskRating": infoClient.riskRating,
-                "isProspect": infoClient.isProspect,
-                "ciiu": idCIIU.value,
-                "commercialRelationshipType": infoClient.commercialRelationshipType,
-                "countryOfOrigin": infoClient.countryOfOrigin,
-                "isDecisionCenter": centroDecision.value,
-                "economicGroup": groupEconomic.value,
-                "internalRating": infoClient.internalRating,
-                "isic": infoClient.isic,
-                "ratingHistory": infoClient.ratingHistory,
-                "registrationKey": infoClient.registrationKey,
-                "riskGroup": infoClient.riskGroup,
-                "segment": segment.value,
-                "subCiiu": idSubCIIU.value,
-                "subSegment": subSegment.value,
-                "countryOfFirstLevelManagement": infoClient.countryOfFirstLevelManagement,
-                "countryOfMainMarket": infoClient.countryOfMainMarket,
-                "relationshipStatus": infoClient.relationshipStatus,
-                "typeOfClient": infoClient.typeOfClient,
-                "status": infoClient.status,
-                "isCreditNeeded": necesitaLME.value,
-                "annualSales": annualSales.value === undefined ? infoClient.annualSales : numeral(annualSales.value).format('0'),
-                "salesUpadateDate": dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x') : null,
-                "assets": assets.value === undefined ? infoClient.assets : numeral(assets.value).format('0'),
-                "liabilities": liabilities.value === undefined ? infoClient.liabilities : numeral(liabilities.value).format('0'),
-                "operatingIncome": operatingIncome.value === undefined ? infoClient.operatingIncome : numeral(operatingIncome.value).format('0'),
-                "nonOperatingIncome": nonOperatingIncome.value === undefined ? infoClient.nonOperatingIncome : numeral(nonOperatingIncome.value).format('0'),
-                "expenses": expenses.value === undefined ? infoClient.expenses : numeral(expenses.value).format('0'),
-                "localMarket": infoClient.localMarket,
-                "marketLeader": infoClient.marketLeader,
-                "territory": infoClient.territory,
-                "actualizationDate": infoClient.actualizationDate,
-                "justificationForNoRM": marcGeren.value !== null && marcGeren.value.toString() === 'false' ? justifyNoGeren.value : '',
-                "justificationForLostClient": justifyExClient.value,
-                "justificationForCreditNeed": necesitaLME.value !== null && necesitaLME.value.toString() === 'false' ? justifyNoLME.value : '',
-                "isVirtualStatement": extractsVirtual.value,
-                "lineOfBusiness": infoClient.lineOfBusiness,
-                "isManagedByRm": marcGeren.value,
-                "addresses": [
-                    {
-                        "typeOfAddress": 41,
-                        "address": addressClient.value,
-                        "country": country.value,
-                        "province": province.value,
-                        "city": city.value,
-                        "neighborhood": neighborhood.value,
-                        "isPrincipalAddress": reportVirtual.value,
-                        "phoneNumber": telephone.value,
-                        "postalCode": infoClient.addresses[0] === null ? "" : infoClient.addresses.postalCoode,
-                    }],
-                "notes": notesArray,
-                "description": description.value,
-                "celulaId": infoClient.celulaId,
-                "nitPrincipal": ((!_.isNull(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null),
-                "foreignProducts": productsArray,
-                "originGoods": JSON.parse('[' + ((originGoods.value) ? originGoods.value : "") + ']'),
-                "originResources": JSON.parse('[' + ((originResource.value) ? originResource.value : "") + ']'),
-                "taxNature": taxNature.value,
-                "detailNonOperatinIncome": detailNonOperatingIncome.value,
-                "otherOriginGoods": otherOriginGoods.value,
-                "otherOriginResource": otherOriginResource.value,
-                "countryOriginId": countryOrigin.value,
-                "originCityResource": originCityResource.value,
-                "operationsForeignCurrency": operationsForeignCurrency.value? (operationsForeignCurrency.value === 'false' ? 0 : 1): '',
-                "otherOperationsForeign": otherOperationsForeign.value,
-                "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
-                "idCustomerTypology": customerTypology.value
-            };
-           
-            const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
-            changeStateSaveData(true, MESSAGE_SAVE_DATA);
-            createProspect(jsonCreateProspect).then((data) => {
-                if (_.get(data, 'payload.data.status', 500) === 200) {
-                    saveCreditStudy(this._createJsonSaveContextClient()).then((response) => {
-                        if (validateResponse(response)) {
-                            if (_.get(data, 'payload.data.responseCreateProspect', false)) {
-                                if (typeSave === BUTTON_EDIT) {
-                                    changeStateSaveData(false, "");
-                                    messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
-                                    this.setState({ showEx: true });
-                                } else {
-                                    updateClient(UPDATE).then((data) => {
-                                        if (!_.get(data, 'payload.data.validateLogin')) {
-                                            changeStateSaveData(false, "");
-                                            redirectUrl("/login");
-                                        } else {
-                                            changeStateSaveData(false, "");
-                                            messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
-                                            this.setState({ showEx: true });
-                                        }
-                                    });
-                                }
-                            } else {
+        let razonSocialPN = "";
+
+        if (isPersonaNatural) {
+            razonSocialPN = firstName.value + (middleName.value ? " " + middleName.value : "") + " " + lastName.value + (middleLastName.value ? " " + middleLastName.value : "");
+        }
+
+        const jsonCreateProspect = {
+            "id": infoClient.id,
+            "clientIdType": idTypeClient.value,
+            "clientIdNumber": idNumber.value,
+            "clientName": isPersonaNatural ? razonSocialPN : razonSocial.value,
+            "clientStatus": infoClient.clientStatus,
+            "riskRating": infoClient.riskRating,
+            "isProspect": infoClient.isProspect,
+            "ciiu": idCIIU.value,
+            "idCiiu": idCIIU.value,
+            "commercialRelationshipType": infoClient.commercialRelationshipType,
+            "countryOfOrigin": infoClient.countryOfOrigin,
+            "isDecisionCenter": centroDecision.value,
+            "economicGroup": groupEconomic.value,
+            "internalRating": infoClient.internalRating,
+            "isic": infoClient.isic,
+            "ratingHistory": infoClient.ratingHistory,
+            "registrationKey": infoClient.registrationKey,
+            "riskGroup": infoClient.riskGroup,
+            "segment": segment.value,
+            "subCiiu": idSubCIIU.value,
+            "subSegment": subSegment.value,
+            "countryOfFirstLevelManagement": infoClient.countryOfFirstLevelManagement,
+            "countryOfMainMarket": infoClient.countryOfMainMarket,
+            "relationshipStatus": infoClient.relationshipStatus,
+            "typeOfClient": infoClient.typeOfClient,
+            "status": infoClient.status,
+            "isCreditNeeded": necesitaLME.value,
+            "annualSales": (annualSales.value === undefined || annualSales.value === null || annualSales.value === '') ? null : numeral(annualSales.value).format('0'),
+            "salesUpadateDate": dateSalesAnnuals.value !== '' && dateSalesAnnuals.value !== null && dateSalesAnnuals.value !== undefined ? moment(dateSalesAnnuals.value, "DD/MM/YYYY").format('x') : null,
+            "assets": (assets.value === undefined || assets.value === null || assets.value === '') ? null : numeral(assets.value).format('0'),
+            "liabilities": (liabilities.value === undefined || liabilities.value === null || liabilities.value === '') ? null : numeral(liabilities.value).format('0'),
+            "operatingIncome": (operatingIncome.value === undefined || operatingIncome.value === null || operatingIncome.value === '') ? null : numeral(operatingIncome.value).format('0'),
+            "nonOperatingIncome": (nonOperatingIncome.value === undefined || nonOperatingIncome.value === null || nonOperatingIncome.value === '') ? null : numeral(nonOperatingIncome.value).format('0'),
+            "expenses": (expenses.value === undefined || expenses.value === null || expenses.value === '') ? null : numeral(expenses.value).format('0'),
+            "localMarket": infoClient.localMarket,
+            "marketLeader": infoClient.marketLeader,
+            "territory": infoClient.territory,
+            "actualizationDate": infoClient.actualizationDate,
+            "justificationForNoRM": marcGeren.value !== null && this.state.showJustifyNoGeren === false ? justifyNoGeren.value : '',
+            "justificationForLostClient": justifyExClient.value,
+            "justificationForCreditNeed": necesitaLME.value !== null && necesitaLME.value.toString() === 'false' ? justifyNoLME.value : '',
+            "isVirtualStatement": extractsVirtual.value,
+            "lineOfBusiness": infoClient.lineOfBusiness,
+            "isManagedByRm": marcGeren.value,
+            "addresses": [
+                {
+                    "typeOfAddress": 41,
+                    "address": addressClient.value,
+                    "country": country.value,
+                    "province": province.value,
+                    "city": city.value,
+                    "neighborhood": neighborhood.value,
+                    "isPrincipalAddress": reportVirtual.value,
+                    "phoneNumber": telephone.value,
+                    "postalCode": infoClient.addresses[0] === null ? "" : infoClient.addresses.postalCoode,
+                }],
+            "notes": notesArray,
+            "description": description.value,
+            "celulaId": infoClient.celulaId,
+            "nitPrincipal": ((!_.isNull(groupEconomic.value) && !_.isEmpty(selectsReducer.get('dataEconomicGroup'))) ? _.get(_.filter(selectsReducer.get('dataEconomicGroup'), ['id', parseInt(groupEconomic.value)]), '[0].nitPrincipal') : null),
+            "foreignProducts": productsArray,
+            "originGoods": JSON.parse('[' + ((originGoods.value) ? originGoods.value : "") + ']'),
+            "originResources": JSON.parse('[' + ((originResource.value) ? originResource.value : "") + ']'),
+            "taxNature": taxNature.value,
+            "detailNonOperatinIncome": detailNonOperatingIncome.value,
+            "otherOriginGoods": otherOriginGoods.value,
+            "otherOriginResource": otherOriginResource.value,
+            "countryOriginId": countryOrigin.value,
+            "originCityResource": originCityResource.value,
+            "operationsForeignCurrency": operationsForeignCurrency.value ? (operationsForeignCurrency.value === 'false' ? 0 : 1) : '',
+            "otherOperationsForeign": otherOperationsForeign.value,
+            "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
+            "idCustomerTypology": customerTypology.value,
+
+            "firstName": firstName.value,
+            "middleName": middleName.value,
+            "lastName": lastName.value,
+            "middleLastName": middleLastName.value,
+            "occupation": occupation.value,
+            "clientType": infoClient.clientType,
+        };
+
+        const { createProspect, sendErrorsUpdate, updateClient, saveCreditStudy } = this.props;
+        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+        createProspect(jsonCreateProspect).then((data) => {
+            if (_.get(data, 'payload.data.status', 500) === 200) {
+                saveCreditStudy(this._createJsonSaveContextClient()).then((response) => {
+                    if (validateResponse(response)) {
+                        if (_.get(data, 'payload.data.status') === 200) {
+                            if (typeSave === BUTTON_EDIT) {
                                 changeStateSaveData(false, "");
-                                this.setState({ showErrorClientExists: true });
+                                messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
+                                this.setState({ showEx: true });
+                            } else {
+                                updateClient(UPDATE).then((data) => {
+                                    if (!_.get(data, 'payload.data.validateLogin')) {
+                                        changeStateSaveData(false, "");
+                                        onSessionExpire();
+                                    } else {
+                                        changeStateSaveData(false, "");
+                                        messageAlertSuccess = "Señor usuario, el cliente ha sido actualizado exitosamente. ";
+                                        this.setState({ showEx: true });
+                                    }
+                                });
                             }
                         } else {
                             changeStateSaveData(false, "");
-                            this.setState({ showEr: true });
+                            this.setState({ showErrorClientExists: true });
                         }
-                    });
-                } else {
-                    changeStateSaveData(false, "");
-                    this.setState({ showEr: true });
-                }
-            }, (reason) => {
+                    } else {
+                        changeStateSaveData(false, "");
+                        this.setState({ showEr: true });
+                    }
+                });
+            } else {
                 changeStateSaveData(false, "");
                 this.setState({ showEr: true });
-            });
-        }
+            }
+        }, (reason) => {
+            changeStateSaveData(false, "");
+            this.setState({ showEr: true });
+        });
+
     }
 
     _createJsonSaveContextClient() {
@@ -1355,7 +1372,6 @@ class clientEdit extends Component {
 
     //Edita el cliente después de haber validado los campos, solo acá se validan las notas
     _submitEditClient() {
-       
         const { fields: { justifyNoGeren, marcGeren, necesitaLME, justifyNoLME }, notes, setNotes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage } = this.props;
         notesArray = [];
         const dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
@@ -1365,11 +1381,11 @@ class clientEdit extends Component {
         let existNoteExceptionNoNeedLME = false;
         notes.map(map => {
             if (map.combo === idExcepcionNoGerenciado) {
-                
+
                 existNoteExceptionNoGeren = true;
             }
             if (map.combo === idExcepcionNoNeedLME) {
-               
+
                 existNoteExceptionNoNeedLME = true;
             }
             const noteItem = {
@@ -1382,10 +1398,10 @@ class clientEdit extends Component {
         const idJustify = _.get(_.filter(dataJustifyNoGeren, ['key', KEY_DESMONTE]), '[0].id');
         const dataJustifyNoNeedLME = selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED);
         const idJustifyNoNeedLME = _.get(_.filter(dataJustifyNoNeedLME, ['key', KEY_EXCEPCION]), '[0].id');
-        const addNoteNoGeren = (marcGeren.value === 'false' && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren);
+        const addNoteNoGeren = (this.state.showJustifyNoGeren === false && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren);
         const addNoteNoNeedLME = (necesitaLME.value === 'false' && idJustifyNoNeedLME === parseInt(justifyNoLME.value) && !existNoteExceptionNoNeedLME);
         if (addNoteNoGeren && addNoteNoNeedLME) {
-           
+
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
                 typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
@@ -1397,7 +1413,7 @@ class clientEdit extends Component {
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}" y una de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
         } else if (addNoteNoGeren) {
-           
+
             setNotes([{
                 typeOfNote: idExcepcionNoGerenciado,
                 typeOfNoteKey: KEY_EXCEPCION_NO_GERENCIADO,
@@ -1405,7 +1421,7 @@ class clientEdit extends Component {
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_GERENCIADO}"`);
         } else if (addNoteNoNeedLME) {
-            
+
             setNotes([{
                 typeOfNote: idExcepcionNoNeedLME,
                 typeOfNoteKey: KEY_EXCEPCION_NO_NECESITA_LME,
@@ -1413,33 +1429,34 @@ class clientEdit extends Component {
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
         } else {
-           
+
             errorContact = tabReducer.get('errorConstact');
             errorShareholder = tabReducer.get('errorShareholder');
-            if ((errorContact || errorShareholder)  && idButton !== BUTTON_EDIT) {
-                
+            if ((errorContact || errorShareholder) && idButton !== BUTTON_EDIT && !isPersonaNatural) {
                 updateErrorsNotes(false);
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
+
+                return;
             }
-            if ((_.isEqual(this.state.sumErrorsForm, 0) && _.isEqual(tabReducer.get('errorConstact'), false) && _.isEqual(tabReducer.get('errorShareholder'), false) && !tabReducer.get('errorNotesEditClient'))  || idButton === BUTTON_EDIT) {
-               
+            if ((_.isEqual(this.state.sumErrorsForm, 0) && !tabReducer.get('errorNotesEditClient')) || idButton === BUTTON_EDIT) {
+
                 if (this.state.showFormAddLineOfBusiness || this.state.showFormAddDistribution || this.state.showFormAddMainClient ||
                     this.state.showFormAddMainSupplier || this.state.showFormAddMainCompetitor || this.state.showFormAddIntOperatrions) {
-                        
-                        swtShowMessage('error', 'Error actualización cliente', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
+
+                    swtShowMessage('error', 'Error actualización cliente', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
                 } else {
-                   
+
                     if (idButton === BUTTON_UPDATE) {
                         this.setState({
                             showConfirmSave: true
                         });
                     } else {
-                        
+
                         this._saveClient(BUTTON_EDIT);
                     }
                 }
             } else {
-               
+
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
             }
         }
@@ -1450,24 +1467,34 @@ class clientEdit extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion } = nextProps;
+        const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion, reducerGlobal } = nextProps;
+
         let { errors } = nextProps;
-        if (idButton === BUTTON_UPDATE) {
-        if (clientInformacion.get('noAppliedControlLinkedPayments')) {
-            errors = _.omit(errors, 'controlLinkedPayments');
-        } else {
-            if (!stringValidate(controlLinkedPayments.value)) {
-                errors.controlLinkedPayments = OPTION_REQUIRED;
+
+        const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
+        if (idButton === BUTTON_UPDATE && allowRiskGroupEdit) {
+            if (clientInformacion.get('noAppliedControlLinkedPayments')) {
+                errors = _.omit(errors, 'controlLinkedPayments');
+            } else {
+                if (!stringValidate(controlLinkedPayments.value)) {
+                    errors.controlLinkedPayments = OPTION_REQUIRED;
+                }
             }
         }
+
+        if (otherOperationsForeignEnable == 'disabled') {
+            errors = _.omit(errors, 'otherOperationsForeign');
         }
+
         const errorsArray = _.toArray(errors);
+
         this.setState({
             sumErrorsForm: errorsArray.length
         });
         if (operationsForeignCurrency.value.toString() === 'false' && operationsForeigns.value !== '') {
             operationsForeigns.onChange('');
         }
+        this.setState({ shouldUpdate: true });
     }
 
     componentWillMount() {
@@ -1479,12 +1506,18 @@ class clientEdit extends Component {
             clientInformacion, clearValuesAdressess, sendErrorsUpdate, setNotes, clearNotes,
             clearProducts, setProducts, tabReducer, updateErrorsNotes, showLoading
         } = this.props;
-        idButton = tabReducer.get('seletedButton');
+
         updateErrorsNotes(false);
         clearValuesAdressess();
         clearNotes();
         clearProducts();
-        updateTitleNavBar("Actualizar/Editar cliente");
+
+        if (isMethodEditClient) {
+            updateTitleNavBar("Editar cliente");
+        } else {
+            updateTitleNavBar("Actualizar cliente");
+        }
+
         var infoClient = clientInformacion.get('responseClientInfo');
         if (infoClient !== null && infoClient.notes !== null && infoClient.notes !== undefined && infoClient.notes !== '') {
             setNotes(infoClient.notes);
@@ -1492,7 +1525,7 @@ class clientEdit extends Component {
         if (infoClient !== null && infoClient.foreignProducts !== null && infoClient.foreignProducts !== undefined && infoClient.foreignProducts !== '') {
             setProducts(infoClient.foreignProducts);
         }
-        if (window.localStorage.getItem('sessionToken') === "") {
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
         } else {
             if (_.isEmpty(infoClient)) {
@@ -1502,8 +1535,9 @@ class clientEdit extends Component {
                 showLoading(true, MESSAGE_LOAD_DATA);
                 const { economicGroupsByKeyword, selectsReducer, consultList, clientInformacion, consultListWithParameterUbication, getMasterDataFields } = this.props;
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
-                    constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS,
-                    constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE])
+                constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS, constants.CUSTOMER_TYPOLOGY,
+                constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE,
+                constants.MANAGEMENT_BRAND, constants.CONTACT_ID_TYPE, constants.OCCUPATION, constants.NATURAL_PERSON_ORIGIN_RESOURCE, constants.NATURAL_PERSON_ORIGIN_GOODS])
                     .then((data) => {
                         if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -1512,8 +1546,8 @@ class clientEdit extends Component {
                         var dataOriginGoods = JSON.parse('["' + _.join(infoClient.originGoods, '","') + '"]');
                         var dataOriginResource = JSON.parse('["' + _.join(infoClient.originResources, '","') + '"]');
                         var dataOperationsForeign = JSON.parse('["' + _.join(infoClient.operationsForeigns, '","') + '"]');
-                        
-                        this._changeSegment(infoClient.segment, true, infoClient.subSegment);
+
+
                         originGoods.onChange(dataOriginGoods);
                         originResource.onChange(dataOriginResource);
                         operationsForeigns.onChange(dataOperationsForeign);
@@ -1541,31 +1575,6 @@ class clientEdit extends Component {
         </div>
     }
 
-    _changeSegment(idSegment, firstConsult, subSegmentId) {
-        const { fields: { segment, customerTypology, subSegment }, selectsReducer, getMasterDataFields, consultListWithParameterUbication } = this.props;
-        const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
-        segment.onChange(idSegment);
-        if (!_.isUndefined(value)) {
-            if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {
-                consultListWithParameterUbication(constants.CUSTOMER_TYPOLOGY, idSegment);
-            } else {
-                getMasterDataFields([constants.CUSTOMER_TYPOLOGY], true);
-            }
-            if (_.isEqual(CONSTRUCT_PYME, value)) {
-                consultListWithParameterUbication(constants.SUBSEGMENTS, idSegment).then((data) => {
-                    if (!_.isNull(subSegmentId) && firstConsult) {
-                        subSegment.onChange(subSegmentId);
-                    }
-                });
-            }
-            isSegmentPymeConstruct = _.isEqual(CONSTRUCT_PYME, value);
-            if (!firstConsult) {
-                customerTypology.onChange('');
-                subSegment.onChange('');
-            }
-        }
-    }
-
     render() {
         const {
             fields: {
@@ -1579,15 +1588,18 @@ class clientEdit extends Component {
                 termMainClient, relevantInformationMainClient, nameMainSupplier, participationMS, termMainSupplier,
                 relevantInformationMainSupplier, nameMainCompetitor, participationMComp, obsevationsCompetitor, typeOperationIntOpera,
                 participationIntOpe, contributionDC, contributionLB, descriptionCoverageIntOpe, idCountryIntOpe,
-                participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments
+                participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments, firstName, middleName, lastName, middleLastName, occupation
             }, handleSubmit,
-            tabReducer, selectsReducer, clientInformacion, validateContactShareholder
+            tabReducer, selectsReducer, clientInformacion, validateContactShareholder, reducerGlobal, isPersonaNatural
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
         errorShareholder = tabReducer.get('errorShareholder');
         var infoClient = clientInformacion.get('responseClientInfo');
         const isProspect = infoClient.isProspect;
         const allowChangeEconomicGroup = !infoClient.allowChangeEconomicGroup ? 'disabled' : '';
+
+        const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
+
         if (errorShareholder) {
             messageShareholder = 'Falta Accionistas';
         } else {
@@ -1599,12 +1611,15 @@ class clientEdit extends Component {
             messageContact = 'El cliente tiene información de Representante Legal,';
 
         }
+
         return (
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{ backgroundColor: "#FFFFFF" }}>
+                <SecurityMessageComponent />
                 <div>
                     <p style={{ paddingTop: '10px' }}></p>
                     <Row xs={12} md={12} lg={12} style={idButton === BUTTON_EDIT ? EDIT_STYLE : UPDATE_STYLE}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: '20px' }}>
+
                             {this.state.sumErrorsForm > 0 || tabReducer.get('errorsMessage') > 0 || tabReducer.get('errorNotesEditClient') ?
                                 <div>
                                     <span
@@ -1622,11 +1637,15 @@ class clientEdit extends Component {
                             }
                             {idButton === BUTTON_UPDATE ?
                                 <div>
-                                    <BottonContactAdmin errorContact={errorContact} message={messageContact}
-                                        functionToExecute={validateContactShareholder} />
-                                    <BottonShareholderAdmin errorShareholder={errorShareholder}
-                                                            message={messageShareholder}
-                                        functionToExecute={validateContactShareholder} />
+                                    {!isPersonaNatural &&
+                                        <BottonContactAdmin errorContact={errorContact} message={messageContact}
+                                            functionToExecute={validateContactShareholder} />
+                                    }
+                                    {!isPersonaNatural &&
+                                        <BottonShareholderAdmin errorShareholder={errorShareholder}
+                                            message={messageShareholder}
+                                            functionToExecute={validateContactShareholder} />
+                                    }
                                 </div>
                                 :
                                 <div></div>
@@ -1634,207 +1653,54 @@ class clientEdit extends Component {
                         </Col>
                     </Row>
                 </div>
-                <Row style={{ padding: "10px 28px 10px 20px" }}>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
-                        <dt>
-                            <Input
-                                name="razonSocial"
-                                type="text"
-                                max="150"
-                                placeholder="Razón social del cliente"
-                                {...razonSocial}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Tipo de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
-                        <dt>
-                            <ComboBox
-                                name="tipoDocumento"
-                                labelInput="Tipo de documento del cliente"
-                                {...idTypeClient}
-                                value={idTypeClient.value}
-                                onBlur={idTypeClient.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.CLIENT_ID_TYPE)}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <dt><span>Número de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
-                        <dt>
-                            <Input
-                                name="documento"
-                                type="text"
-                                max="20"
-                                placeholder="Número de documento del cliente"
-                                {...idNumber}
-                                touched={true}
-                            />
-                        </dt>
-                    </Col>
-                    <Col xs={12} md={4} lg={4}>
-                        <div style={{ marginTop: "10px" }}>
-                            <dt><span>Segmento (</span><span style={{ color: "red" }}>*</span>)</dt>
-                            <ComboBox
-                                name="segment"
-                                labelInput="Segmento"
-                                {...segment}
-                                value={segment.value}
-                                onBlur={segment.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                style={{ marginBottom: '0px !important' }}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.SEGMENTS)}
-                                onChange={(val) => this._changeSegment(val, false, null)}
-                                touched={true}
-                            />
-                        </div>
-                    </Col>
-                    {
-                        isSegmentPymeConstruct && <Col xs={12} md={4} lg={4}>
-                            <div style={{ marginTop: "10px" }}>
-                                <dt><span>Subsegmento</span> {idButton !== BUTTON_EDIT &&(<span style={{ color: "red" }}>*</span>)}</dt>
-                                <ComboBox
-                                    name="subSegment"
-                                    labelInput="Sebsegmento"
-                                    {...subSegment}
-                                    value={subSegment.value}
-                                    onBlur={subSegment.onBlur}
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    parentId="dashboardComponentScroll"
-                                    data={selectsReducer.get(constants.SUBSEGMENTS)}
-                                    touched={true}
-                                    showEmptyObject={true}
-                                />
-                            </div>
-                        </Col>
+                {
+                    isPersonaNatural
+                        ?
+                        <ComponentInfoClientPN firstName={firstName} middleName={middleName} lastName={lastName} middleLastName={middleLastName} idTypeClient={idTypeClient} idNumber={idNumber}
+                            segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
+                            idButton={idButton} isMethodEditClient={isMethodEditClient}
+                        />
+                        :
+                        <ComponentInfoClient razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber}
+                            segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
+                            idButton={idButton} isMethodEditClient={isMethodEditClient}
+                        />
+                }
+
+                {
+                    isPersonaNatural
+
+                        ? <ActividadEconomicaPN idSubCIIU={idSubCIIU} idCIIU={idCIIU} occupation={occupation} isMethodEditClient={isMethodEditClient} />
+                        : <ActividadEconomica idSubCIIU={idSubCIIU} idCIIU={idCIIU} taxNature={taxNature} isMethodEditClient={isMethodEditClient} />
+
+                }
+
+                <Row>
+
+                    {allowRiskGroupEdit &&
+                        <ContextEconomicActivity contextClientField={contextClientField} />
                     }
-                    <ClientTypology customerTypology={customerTypology}
-                        data={selectsReducer.get(constants.CUSTOMER_TYPOLOGY)} />
+                    {allowRiskGroupEdit &&
+                        <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
+                            participation={participationLB} experience={experience}
+                            showFormLinebusiness={this.state.showFormAddLineOfBusiness}
+                            fnShowForm={this.showFormOut} contribution={contributionLB} />
+                    }
+                    {allowRiskGroupEdit &&
+                        <ComponentListDistributionChannel distributionChannel={distributionChannel}
+                            participation={participationDC} contribution={contributionDC}
+                            showFormDistribution={this.state.showFormAddDistribution}
+                            fnShowForm={this.showFormOut} />
+                    }
+                </Row>
 
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ marginTop: "10px" }}>
-                            <dt>
-                                <span>Breve descripción de la empresa</span>
-                                <i className="help circle icon blue"
-                                    style={{ fontSize: "15px", cursor: "pointer", marginLeft: "2px" }}
-                                    title={TITLE_DESCRIPTION} />
-                            </dt>
-                            <dt>
-                                <Textarea
-                                    name="description"
-                                    type="text"
-                                    style={{ width: '100%', height: '100%' }}
-                                    onChange={val => this._onchangeValue("description", val)}
-                                    placeholder="Ingrese la descripción"
-                                    max="1000"
-                                    rows={4}
-                                    {...description}
-                                />
-                            </dt>
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                            <div className="tab-content-row"
-                                style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                            <i className="payment icon" style={{ fontSize: "25px" }} />
-                            <span className="title-middle"> Actividad económica</span>
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{ padding: "0px 10px 10px 0px" }}>
-                    <Col xs>
-                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
-                            <dt><span>Naturaleza tributaria</span></dt>
-                            <ComboBox
-                                name="idtaxNature"
-                                labelInput="Seleccione la naturaleza..."
-                                {...taxNature}
-                                onBlur={taxNature.onBlur}
-                                valueProp={'id'}
-                                textProp={'value'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.CLIENT_TAX_NATURA)}
-                                touched={true}
-                                showEmptyObject={true}
-                            />
-                        </div>
-                    </Col>
-                    <Col xs>
-                        <div style={{ paddingLeft: "20px", marginTop: "10px" }}>
-                            <dt><span>CIIU</span></dt>
-                            <ComboBox
-                                name="idCIIU"
-                                labelInput="Seleccione CIIU..."
-                                {...idCIIU}
-                                onChange={val => this._onChangeCIIU(val)}
-                                onBlur={idCIIU.onBlur}
-                                valueProp={'id'}
-                                textProp={'ciiu'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get('dataCIIU')}
-                                touched={true}
-                                showEmptyObject={true}
-                            />
-                        </div>
-                    </Col>
-                    <Col xs>
-                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
-                            <dt style={{ paddingBottom: "10px" }}><span>Sector</span></dt>
-                            <span style={{ width: "25%", verticalAlign: "initial", paddingTop: "5px" }}>
-                                {(idCIIU.value !== "" && idCIIU.value !== null && idCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataCIIU'))) ? _.get(_.filter(selectsReducer.get('dataCIIU'), ['id', parseInt(idCIIU.value)]), '[0].economicSector') : ''}
-                            </span>
-                        </div>
-                    </Col>
-                    <Col xs>
-                        <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
-                            <dt><span>SubCIIU</span></dt>
-                            <ComboBox
-                                name="idSubCIIU"
-                                labelInput="Seleccione subCIIU..."
-                                {...idSubCIIU}
-                                onBlur={idSubCIIU.onBlur}
-                                valueProp={'id'}
-                                textProp={'subCiiu'}
-                                parentId="dashboardComponentScroll"
-                                data={selectsReducer.get('dataSubCIIU')}
-                                touched={true}
-                                showEmptyObject={true}
-                            />
-                        </div>
-                    </Col>
-                    <Col xs>
-                        <div style={{ paddingLeft: "20px", paddingRight: "35px", marginTop: "10px" }}>
-                            <dt style={{ paddingBottom: "10px" }}><span>Subsector</span></dt>
-                            <span style={{ width: "25%", verticalAlign: "initial" }}>
-                                {(idSubCIIU.value !== "" && idSubCIIU.value !== null && idSubCIIU.value !== undefined && !_.isEmpty(selectsReducer.get('dataSubCIIU'))) ? _.get(_.filter(selectsReducer.get('dataSubCIIU'), ['id', parseInt(idSubCIIU.value)]), '[0].economicSubSector') : ''}
-                            </span>
-                        </div>
-                    </Col>
-                    <ContextEconomicActivity contextClientField={contextClientField} />
-                    <ComponentListLineBusiness contextLineBusiness={contextLineBusiness}
-                                               participation={participationLB} experience={experience}
-                                               showFormLinebusiness={this.state.showFormAddLineOfBusiness}
-                        fnShowForm={this.showFormOut} contribution={contributionLB} />
-
-                    <ComponentListDistributionChannel distributionChannel={distributionChannel}
-                                                      participation={participationDC} contribution={contributionDC}
-                                                      showFormDistribution={this.state.showFormAddDistribution}
-                        fnShowForm={this.showFormOut} />
-                </Row>
-                <InventorPolicy inventoryPolicy={inventoryPolicy}/>
-                <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments}
-                    controlLinkedPaymentsRequired={idButton === BUTTON_UPDATE} />
+                {allowRiskGroupEdit &&
+                    <InventorPolicy inventoryPolicy={inventoryPolicy} />
+                }
+                {allowRiskGroupEdit &&
+                    <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments}
+                        controlLinkedPaymentsRequired={idButton === BUTTON_UPDATE} />
+                }
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -1849,24 +1715,24 @@ class clientEdit extends Component {
                     <Col xs={12} md={12} lg={12}>
                         <table style={{ width: "100%" }}>
                             <tbody>
-                            <tr>
-                                <td>
-                                    <dl style={{
-                                        fontSize: "20px",
-                                        color: "#505050",
-                                        marginTop: "5px",
-                                        marginBottom: "5px"
-                                    }}>
-                                        <span className="section-title">Dirección sede principal</span>
-                                    </dl>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div className="tab-content-row"
+                                <tr>
+                                    <td>
+                                        <dl style={{
+                                            fontSize: "20px",
+                                            color: "#505050",
+                                            marginTop: "5px",
+                                            marginBottom: "5px"
+                                        }}>
+                                            <span className="section-title">Dirección sede principal</span>
+                                        </dl>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div className="tab-content-row"
                                             style={{ borderTop: "1px solid #505050", width: "99%" }}></div>
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </Col>
@@ -1874,7 +1740,7 @@ class clientEdit extends Component {
                 <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Dirección</span>
+                            <span>Dirección {drawRequiredField(!isMethodEditClient)}</span>
                         </dt>
                         <dt>
                             <Textarea
@@ -1894,7 +1760,7 @@ class clientEdit extends Component {
                 <Row style={{ padding: "0px 20px 10px 0px" }}>
                     <Col xs={12} md={4} lg={4}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                            <dt><span>País</span></dt>
+                            <dt><span>País {drawRequiredField(!isMethodEditClient)}</span></dt>
                             <ComboBox
                                 name="country"
                                 labelInput="Seleccione país..."
@@ -1913,7 +1779,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs={12} md={4} lg={4}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                            <dt><span>Departamento</span></dt>
+                            <dt><span>Departamento {drawRequiredField(!isMethodEditClient)}</span></dt>
                             <ComboBox
                                 name="province"
                                 labelInput="Seleccione departamento..."
@@ -1922,7 +1788,7 @@ class clientEdit extends Component {
                                 valueProp={'id'}
                                 textProp={'value'}
                                 parentId="dashboardComponentScroll"
-                                data={selectsReducer.get('dataTypeProvince') || []}
+                                data={selectsReducer.get('dataTypeProvinceClient') || []}
                                 touched={true}
                                 showEmptyObject={true}
                             />
@@ -1930,7 +1796,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs={12} md={4} lg={4}>
                         <div style={{ paddingLeft: "20px", paddingRight: "15px" }}>
-                            <dt><span>Ciudad</span></dt>
+                            <dt><span>Ciudad {drawRequiredField(!isMethodEditClient)}</span></dt>
                             <ComboBox
                                 name="city"
                                 labelInput="Seleccione ciudad..."
@@ -1938,7 +1804,7 @@ class clientEdit extends Component {
                                 valueProp={'id'}
                                 textProp={'value'}
                                 parentId="dashboardComponentScroll"
-                                data={selectsReducer.get('dataTypeCity') || []}
+                                data={selectsReducer.get('dataTypeCityClient') || []}
                                 touched={true}
                                 showEmptyObject={true}
                             />
@@ -1961,7 +1827,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs style={{ marginLeft: "10px" }}>
                         <dt>
-                            <span>Teléfono</span>
+                            <span>Teléfono {drawRequiredField(!isMethodEditClient)}</span>
                         </dt>
                         <dt style={{ marginRight: "15px" }}>
                             <Input
@@ -1978,7 +1844,7 @@ class clientEdit extends Component {
                 <Row style={{ padding: "10px 0px 20px 20px", width: '100%' }}>
                     <Col xs>
                         <dt>
-                            <span>¿Desea consultar sus extractos de forma virtual?</span>
+                            <span>¿Desea consultar sus extractos de forma virtual? {drawRequiredField(!isMethodEditClient)}</span>
                         </dt>
                         <dt style={{ marginRight: "17px" }}>
                             <ComboBox
@@ -1995,7 +1861,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs style={{ marginLeft: "10px" }}>
                         <dt>
-                            <span>¿Desea recibir su reporte de costos consolidado de forma virtual?</span>
+                            <span>¿Desea recibir su reporte de costos consolidado de forma virtual? {drawRequiredField(!isMethodEditClient)}</span>
                         </dt>
                         <dt style={{ marginRight: "15px" }}>
                             <ComboBox
@@ -2024,7 +1890,7 @@ class clientEdit extends Component {
                 <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Ventas anuales</span>
+                            <span>Ventas anuales {drawRequiredField(!isMethodEditClient && !isPersonaNatural)}</span>
                         </dt>
                         <dt>
                             <Input
@@ -2036,14 +1902,14 @@ class clientEdit extends Component {
                                 placeholder="Ingrese las ventas anuales"
                                 {...annualSales}
                                 value={annualSales.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, annualSales, annualSales.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, annualSales, val)}
                                 touched={true}
                             />
                         </dt>
                     </Col>
                     <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Fecha de ventas anuales - DD/MM/YYYY</span>
+                            <span>Fecha de ventas anuales - DD/MM/YYYY {drawRequiredField(!isMethodEditClient && !isPersonaNatural)}</span>
                         </dt>
                         <dt>
                             <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}
@@ -2052,7 +1918,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Activos</span>
+                            <span>Activos {drawRequiredField(!isMethodEditClient)}</span>
                         </dt>
                         <dt>
                             <Input
@@ -2065,7 +1931,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los activos"
                                 {...assets}
                                 value={assets.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, assets, assets.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, assets, val)}
                                 touched={true}
                             />
                         </dt>
@@ -2074,7 +1940,7 @@ class clientEdit extends Component {
                 <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Pasivos</span>
+                            <span>Pasivos {drawRequiredField(!isMethodEditClient)}</span>
                         </dt>
                         <dt>
                             <Input
@@ -2087,14 +1953,14 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los pasivos"
                                 {...liabilities}
                                 value={liabilities.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, liabilities, liabilities.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, liabilities, val)}
                                 touched={true}
                             />
                         </dt>
                     </Col>
                     <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Ingresos operacionales mensuales</span>
+                            <span>Ingresos operacionales mensuales {drawRequiredField(!isMethodEditClient)}</span>
                         </dt>
                         <dt>
                             <Input
@@ -2107,14 +1973,14 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los ingresos operacionales mensuales"
                                 {...operatingIncome}
                                 value={operatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, operatingIncome, operatingIncome.value)}
+                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, operatingIncome, val)}
                                 touched={true}
                             />
                         </dt>
                     </Col>
                     <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Egresos mensuales</span>
+                            <span>Egresos mensuales {drawRequiredField(!isMethodEditClient)}</span>
                         </dt>
                         <dt>
                             <Input
@@ -2127,7 +1993,7 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los egresos mensuales"
                                 {...expenses}
                                 value={expenses.value}
-                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, expenses, expenses.value)}
+                                onBlur={val => this._handleBlurValueNumber(ONLY_POSITIVE_INTEGER, expenses, val)}
                                 touched={true}
                             />
                         </dt>
@@ -2136,7 +2002,7 @@ class clientEdit extends Component {
                 <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Ingresos no operacionales mensuales</span>
+                            <span>Ingresos no operacionales mensuales {drawRequiredField(!isMethodEditClient)}</span>
                         </dt>
                         <dt>
                             <Input
@@ -2149,14 +2015,14 @@ class clientEdit extends Component {
                                 placeholder="Ingrese los ingresos no operacionales mensuales"
                                 {...nonOperatingIncome}
                                 value={nonOperatingIncome.value}
-                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, nonOperatingIncome, nonOperatingIncome.value)}
+                                onBlur={val => this._handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, nonOperatingIncome, val)}
                                 touched={true}
                             />
                         </dt>
                     </Col>
                     <Col xs={8} md={8} lg={8} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Detalle de ingresos no operacionales u originados en actividades diferente a la principal</span>
+                            <span>Detalle de ingresos no operacionales u originados en actividades diferente a la principal {drawRequiredField(!isMethodEditClient && numeral(nonOperatingIncome.value).format('0') > 0)}</span>
                         </dt>
                         <dt>
                             <Input
@@ -2170,21 +2036,24 @@ class clientEdit extends Component {
                         </dt>
                     </Col>
                 </Row>
-
-                <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
-                                          term={termMainClient} relevantInformation={relevantInformationMainClient}
-                                          showFormMainClients={this.state.showFormAddMainClient}
-                    fnShowForm={this.showFormOut} />
-
-                <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
-                                           term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
-                                           showFormMainSupplier={this.state.showFormAddMainSupplier}
-                    fnShowForm={this.showFormOut} />
-
-                <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
-                                             observations={obsevationsCompetitor}
-                                             showFormMainCompetitor={this.state.showFormAddMainCompetitor}
-                    fnShowForm={this.showFormOut} />
+                {allowRiskGroupEdit &&
+                    <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
+                        term={termMainClient} relevantInformation={relevantInformationMainClient}
+                        showFormMainClients={this.state.showFormAddMainClient}
+                        fnShowForm={this.showFormOut} />
+                }
+                {allowRiskGroupEdit &&
+                    <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
+                        term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
+                        showFormMainSupplier={this.state.showFormAddMainSupplier}
+                        fnShowForm={this.showFormOut} />
+                }
+                {allowRiskGroupEdit &&
+                    <ComponentListMainCompetitor nameCompetitor={nameMainCompetitor} participation={participationMComp}
+                        observations={obsevationsCompetitor}
+                        showFormMainCompetitor={this.state.showFormAddMainCompetitor}
+                        fnShowForm={this.showFormOut} />
+                }
 
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
@@ -2206,15 +2075,15 @@ class clientEdit extends Component {
                             <div className="ui search participantBanc fluid">
                                 <ComboBoxFilter className="prompt" id="inputEconomicGroup"
                                     style={{ borderRadius: "3px" }}
-                                                autoComplete="off"
-                                                disabled={allowChangeEconomicGroup}
-                                                type="text"
-                                                {...economicGroupName}
-                                                value={economicGroupName.value}
-                                                onChange={this._onChangeGroupEconomic}
-                                                placeholder="Ingrese un criterio de búsqueda..."
-                                                onKeyPress={this.updateKeyValueUsersBanco}
-                                                touched={true}
+                                    autoComplete="off"
+                                    disabled={allowChangeEconomicGroup}
+                                    type="text"
+                                    {...economicGroupName}
+                                    value={economicGroupName.value}
+                                    onChange={this._onChangeGroupEconomic}
+                                    placeholder="Ingrese un criterio de búsqueda..."
+                                    onKeyPress={this.updateKeyValueUsersBanco}
+                                    touched={true}
                                 />
                             </div>
                         </dt>
@@ -2232,7 +2101,7 @@ class clientEdit extends Component {
                 <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={12} md={4} lg={4} style={{ paddingRight: "10px" }}>
                         <dt>
-                            <span>Marca gerenciamiento </span> {!infoClient.isProspect &&
+                            <span>Marca gerenciamiento {drawRequiredField(!isMethodEditClient)}</span> {!infoClient.isProspect &&
                                 <div style={{ display: "inline" }}></div>}
                         </dt>
                         <dt>
@@ -2242,15 +2111,16 @@ class clientEdit extends Component {
                                 valueProp={'id'}
                                 textProp={'value'}
                                 parentId="dashboardComponentScroll"
-                                data={valuesYesNo}
+                                data={selectsReducer.get(constants.MANAGEMENT_BRAND) || []}
                                 {...marcGeren}
                                 onChange={val => this._onChangeMarcGeren(val)}
                                 touched={true}
+                                showEmptyObject={true}
                             />
                         </dt>
                     </Col>
                     <SelectsJustificacion
-                        visible={marcGeren.value}
+                        visible={this.state.showJustifyNoGeren}
                         title="Justificación no gerenciamiento"
                         labelInput="Seleccione..."
                         value={justifyNoGeren.value}
@@ -2259,15 +2129,15 @@ class clientEdit extends Component {
                         textProp={"value"}
                         parentId="dashboardComponentScroll"
                         justify={justifyNoGeren}
-                        obligatory={true}
+                        obligatory={!validateMarcManagement && !isMethodEditClient}
                         data={selectsReducer.get(constants.JUSTIFICATION_NO_RM) || []}
                         onChange={val => this._onChangeJustifyNoGeren(val)}
                         touched={true}
-                        
+
                     />
                     <Col xs={12} md={4} lg={4}>
                         <dt>
-                            <span>Centro de decisión </span> {!infoClient.isProspect &&
+                            <span>Centro de decisión {drawRequiredField(!isMethodEditClient)}</span> {!infoClient.isProspect &&
                                 <div style={{ display: "inline" }}></div>}
                         </dt>
                         <dt>
@@ -2287,7 +2157,7 @@ class clientEdit extends Component {
                 <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={12} md={4} lg={4}>
                         <dt>
-                            <span>¿Necesita LME? </span> {!infoClient.isProspect &&
+                            <span>¿Necesita LME? {drawRequiredField(!isMethodEditClient)}</span> {!infoClient.isProspect &&
                                 <div style={{ display: "inline" }}></div>}
                         </dt>
                         <dt>
@@ -2314,7 +2184,7 @@ class clientEdit extends Component {
                         valueProp={"id"}
                         textProp={"value"}
                         justify={justifyNoLME}
-                        obligatory={true}
+                        obligatory={necesitaLME.value === 'false' && !isMethodEditClient}
                         data={selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED) || []}
                         onChange={val => this._onChangeValueJustifyNoNeedLME(val)}
                         touched={true}
@@ -2359,7 +2229,7 @@ class clientEdit extends Component {
                     <Col xs={12} md={6} lg={6}>
                         <dl style={{ width: '100%' }}>
                             <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Origen de bienes</span></dt>
+                                <dt><span>Origen de bienes {drawRequiredField(!isMethodEditClient)}</span></dt>
                                 <dd>
                                     <MultipleSelect
                                         {...originGoods}
@@ -2368,7 +2238,7 @@ class clientEdit extends Component {
                                         valueProp={'id'}
                                         textProp={'value'}
                                         parentId="dashboardComponentScroll"
-                                        data={selectsReducer.get(constants.CLIENT_ORIGIN_GOODS)}
+                                        data={isPersonaNatural ? selectsReducer.get(constants.NATURAL_PERSON_ORIGIN_GOODS) : selectsReducer.get(constants.CLIENT_ORIGIN_GOODS)}
                                         onChange={val => this._onChangeOriginGoods(val)}
                                         touched={true}
                                         maxSelections={MAXIMUM_OPERATIONS_FOREIGNS}
@@ -2379,7 +2249,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>¿Cuál?</span>
+                            <span>¿Cuál? {drawRequiredField(otherOriginGoodsEnable !== 'disabled' && !isMethodEditClient)}</span>
                         </dt>
                         <dt>
                             <Input
@@ -2399,7 +2269,7 @@ class clientEdit extends Component {
                     <Col xs={12} md={6} lg={6}>
                         <dl style={{ width: '100%' }}>
                             <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Origen de recursos</span></dt>
+                                <dt><span>Origen de recursos {drawRequiredField(!isMethodEditClient)}</span></dt>
                                 <dd>
                                     <MultipleSelect
                                         {...originResource}
@@ -2408,7 +2278,7 @@ class clientEdit extends Component {
                                         valueProp={'id'}
                                         textProp={'value'}
                                         parentId="dashboardComponentScroll"
-                                        data={selectsReducer.get(constants.CLIENT_ORIGIN_RESOURCE)}
+                                        data={isPersonaNatural ? selectsReducer.get(constants.NATURAL_PERSON_ORIGIN_RESOURCE) : selectsReducer.get(constants.CLIENT_ORIGIN_RESOURCE)}
                                         onChange={val => this._onChangeOriginResource(val)}
                                         touched={true}
                                         maxSelections={MAXIMUM_OPERATIONS_FOREIGNS}
@@ -2419,7 +2289,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>¿Cuál?</span>
+                            <span>¿Cuál? {drawRequiredField(otherOriginResourceEnable !== 'disabled' && !isMethodEditClient)}</span>
                         </dt>
                         <dt>
                             <Input
@@ -2438,7 +2308,7 @@ class clientEdit extends Component {
                 <Row style={{ padding: "0px 10px 20px 0px" }}>
                     <Col xs={12} md={6} lg={6}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                            <dt><span>País de origen</span></dt>
+                            <dt><span>País de origen {drawRequiredField(!isMethodEditClient)}</span></dt>
                             <ComboBox
                                 name="country"
                                 labelInput="Seleccione país..."
@@ -2456,7 +2326,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Ciudad origen de los recursos</span>
+                            <span>Ciudad origen de los recursos {drawRequiredField(!isMethodEditClient)}</span>
                         </dt>
                         <dt>
                             <Input
@@ -2483,7 +2353,7 @@ class clientEdit extends Component {
                 <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs>
                         <dt>
-                            <span>¿Realiza operaciones en moneda extranjera?</span>
+                            <span>¿Realiza operaciones en moneda extranjera? {drawRequiredField(!isMethodEditClient)}</span>
                         </dt>
                         <dt style={{ marginRight: "17px" }}>
                             <ComboBox
@@ -2500,7 +2370,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs>
                         <dt>
-                            <span>¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera?</span>
+                            <span>¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera? {drawRequiredField(!isMethodEditClient && operationsForeignCurrency.value.toString() === 'true')} </span>
                         </dt>
                         <dt style={{ marginRight: "17px" }}>
                             <MultipleSelect
@@ -2523,7 +2393,7 @@ class clientEdit extends Component {
                 <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>¿Cuál?</span>
+                            <span>¿Cuál? {drawRequiredField(!isMethodEditClient && otherOperationsForeignEnable != 'disabled')}</span>
                         </dt>
                         <dt>
                             <Input
@@ -2540,13 +2410,13 @@ class clientEdit extends Component {
                     </Col>
                 </Row>
 
-                {_.isEqual(operationsForeignCurrency.value, "true") &&
-                <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
-                                            idCountry={idCountryIntOpe}
-                                            participationCountry={participationIntOpeCountry}
-                                            customerCoverage={customerCoverageIntOpe}
-                                            descriptionCoverage={descriptionCoverageIntOpe}
-                                            showFormIntOperations={this.state.showFormAddIntOperatrions}
+                {_.isEqual(operationsForeignCurrency.value, "true") && allowRiskGroupEdit &&
+                    <ComponentListIntOperations typeOperation={typeOperationIntOpera} participation={participationIntOpe}
+                        idCountry={idCountryIntOpe}
+                        participationCountry={participationIntOpeCountry}
+                        customerCoverage={customerCoverageIntOpe}
+                        descriptionCoverage={descriptionCoverageIntOpe}
+                        showFormIntOperations={this.state.showFormAddIntOperatrions}
                         fnShowForm={this.showFormOut} />
                 }
 
@@ -2578,13 +2448,13 @@ class clientEdit extends Component {
                         {idButton === BUTTON_UPDATE ?
                             <button className="btn"
                                 style={{ float: "right", margin: "8px 0px 0px 50px", position: "fixed" }}
-                                    onClick={this.clickButtonScrollTop} type="submit">
+                                onClick={this.clickButtonScrollTop} type="submit">
                                 <span style={{ color: "#FFFFFF", padding: "10px" }}>Actualizar/Sarlaft</span>
                             </button>
                             :
                             <button className="btn"
                                 style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
-                                    onClick={this.clickButtonScrollTop} type="submit">
+                                onClick={this.clickButtonScrollTop} type="submit">
                                 <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
                             </button>
                         }
@@ -2682,9 +2552,15 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes, reducerGlobal }, ownerProps) {
     const infoClient = clientInformacion.get('responseClientInfo');
     const { contextClient } = infoClient;
+
+    isPersonaNatural = infoClient.clientTypeKey === 'Persona natural';
+
+    idButton = tabReducer.get('seletedButton');
+
+    isMethodEditClient = idButton === BUTTON_EDIT;
 
     return {
         clientInformacion,
@@ -2692,12 +2568,15 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
         clientProductReducer,
         tabReducer,
         notes,
+        reducerGlobal,
+        isPersonaNatural,
+        idButton,
         initialValues: {
             razonSocial: infoClient.clientName,
             idTypeClient: infoClient.clientIdType,
             idNumber: infoClient.clientIdNumber,
             description: infoClient.description,
-            idCIIU: infoClient.ciiu,
+            idCIIU: infoClient.idCiiu,
             idSubCIIU: infoClient.subCiiu,
             addressClient: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].address : '',
             country: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].country : '',
@@ -2739,7 +2618,14 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
             customerTypology: _.isUndefined(infoClient.idCustomerTypology) ? null : infoClient.idCustomerTypology,
             contextClientField: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.context,
             inventoryPolicy: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.inventoryPolicy,
-            controlLinkedPayments: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.controlLinkedPayments
+            controlLinkedPayments: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.controlLinkedPayments,
+
+            occupation: infoClient.occupation,
+            firstName: infoClient.firstName,
+            middleName: infoClient.middleName,
+            lastName: infoClient.lastName,
+            middleLastName: infoClient.middleLastName
+
         }
     };
 }
@@ -2753,7 +2639,7 @@ function fomatInitialStateNumber(val) {
 }
 
 export default reduxForm({
-    form: 'submitValidation',
+    form: 'formClientEdit',
     fields,
     validate
 }, mapStateToProps, mapDispatchToProps)(clientEdit);

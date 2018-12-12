@@ -32,7 +32,7 @@ export const mapDataGrid = (data = []) => {
             mensaje: DELETE_MESSAGE + clientContact.clientName + "?",
             json: {
                 "messageHeader": {
-                    "sessionToken": window.localStorage.getItem('sessionToken'),
+                    "sessionToken": window.localStorage.getItem('sessionTokenFront'),
                     "timestamp": new Date().getTime(),
                     "service": "",
                     "status": "0",

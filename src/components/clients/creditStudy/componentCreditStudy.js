@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
-import { updateTitleNavBar } from '../../navBar/actions';
-import { redirectUrl } from '../../globalComponents/actions';
-import SweetAlert from 'sweetalert-react';
-import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_COMPETITOR, MAIN_SUPPLIER, INT_OPERATIONS } from '../../contextClient/constants';
+import { Grid, Row, Col } from 'react-flexbox-grid';
+import _ from "lodash";
+import moment from 'moment';
+
+import SweetAlert from '../../sweetalertFocus';
 import ClientTypology from '../../contextClient/ClientTypology';
 import ContextEconomicActivity from '../../contextClient/contextEconomicActivity';
 import ComponentListLineBusiness from '../../contextClient/listLineOfBusiness/componentListLineBusiness';
@@ -16,34 +16,39 @@ import ComponentListMainClients from '../../contextClient/listMainClients/compon
 import ComponentListMainSupplier from '../../contextClient/listMainSupplier/componentListMainSupplier';
 import ComponentListMainCompetitor from '../../contextClient/listMainCompetitor/componentListMainCompetitor';
 import ComponentListIntOperations from '../../contextClient/listInternationalOperations/componentListIntOperations';
-import * as constantsSelects from '../../selectsComponent/constants';
+import ButtonShareholderAdmin from '../../clientDetailsInfo/bottonShareholderAdmin';
+import ButtonContactAdmin from '../../clientDetailsInfo/bottonContactAdmin';
+import ButtonBoardMembersAdmin from '../../clientDetailsInfo/buttonBoardMembersAdmin';
+import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
+
+import { updateTitleNavBar } from '../../navBar/actions';
+import * as globalActions from '../../globalComponents/actions';
 import { consultListWithParameterUbication, getMasterDataFields } from '../../selectsComponent/actions';
-import { ORIGIN_STUDY_CREDIT } from '../../contextClient/constants';
-import {
-    getContextClient, saveCreditStudy, validateInfoCreditStudy,
-    updateNotApplyCreditContact
-} from './actions';
-import { validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport, xssValidation } from '../../../actionsGlobal';
-import {
-    MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
-    MESSAGE_SAVE_DATA, YES, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT, 
-    BLOCK_CREDIT_STUDY, BLOCK_REPORT_CONSTANT, TIME_REQUEST_BLOCK_REPORT
-} from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { showLoading } from "../../loading/actions";
+import {
+    getContextClient, saveCreditStudy, validateInfoCreditStudy,
+    updateNotApplyCreditContact, existsPDFforTheSameDay, generatePDF
+} from './actions';
+
+import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_COMPETITOR, MAIN_SUPPLIER, INT_OPERATIONS } from '../../contextClient/constants';
+import * as constantsSelects from '../../selectsComponent/constants';
+import { ORIGIN_STUDY_CREDIT } from '../../contextClient/constants';
+import { validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport, xssValidation } from '../../../actionsGlobal';
 import { GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../../clientEdit/constants';
-import moment from 'moment';
+import {
+    MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_REPLACE_PDF,
+    MESSAGE_SAVE_DATA, YES, VALUE_XSS_INVALID, APP_URL,
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT,
+    BLOCK_CREDIT_STUDY, BLOCK_REPORT_CONSTANT, TIME_REQUEST_BLOCK_REPORT, GENERAR_PDF_ESTUDIO_CREDITO
+} from '../../../constantsGlobal';
 import {
     A_WITH_OBSERVATION, ALL_WITH_COMMENTS, ORIGIN_CREDIT_STUDY,
     ERROR_MESSAGE_FOR_A_SHAREHOLDER_WITH_OBSERVATION, ERROR_MESSAGE_FOR_ALL_SHAREHOLDER_WITH_OBSERVATION,
     ERROR_MESSAGE_FOR_A_BOARD_MEMBERS_WITH_OBSERVATION, ERROR_MESSAGE_FOR_ALL_BOARD_MEMBERS_WITH_OBSERVATION,
     SUCCESS_MESSAGE_FOR_SHAREHOLDER, SUCCESS_MESSAGE_FOR_BOARD_MEMBERS
 } from './constants';
-import ButtonShareholderAdmin from '../../clientDetailsInfo/bottonShareholderAdmin';
-import ButtonContactAdmin from '../../clientDetailsInfo/bottonContactAdmin';
-import ButtonBoardMembersAdmin from '../../clientDetailsInfo/buttonBoardMembersAdmin';
 
 const fields = ["customerTypology", "contextClientField", "inventoryPolicy", "participationLB", "participationDC", "participationMC",
     "contextLineBusiness", "experience", "distributionChannel", "nameMainClient", "tbermMainClient", "relevantInformationMainClient",
@@ -59,9 +64,7 @@ var contextClientInfo, numberOfShareholders, infoValidate, showCheckValidateSect
 var showCheckValidateSection, overdueCreditStudy, fechaModString, errorShareholder, errorContact, errorBoardMembers;
 var infoClient, fechaModString = '', updatedBy = null, createdBy = null, createdTimestampString;
 
-
 const containerButtons = {
-    
     position: "fixed",
     border: "1px solid #C2C2C2",
     bottom: "0px",
@@ -96,7 +99,7 @@ const validate = (values, props) => {
 
 }
 
-class ComponentStudyCredit extends Component {
+export class ComponentStudyCredit extends Component {
     constructor(props) {
         super(props);
         this._closeWindow = this._closeWindow.bind(this);
@@ -116,7 +119,9 @@ class ComponentStudyCredit extends Component {
         this._validateInformationToSave = this._validateInformationToSave.bind(this);
         this.canUserEditBlockedReport = this.canUserEditBlockedReport.bind(this);
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
-        
+        this.handleClickButtonPDF = this.handleClickButtonPDF.bind(this);
+        this.callGeneratePDF = this.callGeneratePDF.bind(this);
+
         this._ismounted = false;
 
         this.state = {
@@ -149,7 +154,9 @@ class ComponentStudyCredit extends Component {
             showErrorBlockedPreVisit: false,
             intervalId: null,
             userEditingPrevisita: '',
-            isComponentMounted: true
+            isComponentMounted: true,
+            showButtonPDF: false,
+            isPDFGenerated: false
 
         }
     }
@@ -194,7 +201,7 @@ class ComponentStudyCredit extends Component {
         const { fields: { notApplyCreditContact }, updateNotApplyCreditContact, swtShowMessage,
             changeStateSaveData } = this.props;
         var jsonCreditContact = {
-            idClient: window.localStorage.getItem('idClientSelected'),
+            idClient: window.sessionStorage.getItem('idClientSelected'),
             notApplyCreditContact: !notApplyCreditContact.value
         }
         notApplyCreditContact.onChange(!notApplyCreditContact.value);
@@ -257,7 +264,7 @@ class ComponentStudyCredit extends Component {
             showConfirmExit: false
         });
         const { updateTabSeleted } = this.props;
-        redirectUrl("/dashboard/clientInformation");
+        globalActions.redirectUrl("/dashboard/clientInformation");
     }
 
     _createJsonSaveContextClient(isDraft) {
@@ -327,7 +334,7 @@ class ComponentStudyCredit extends Component {
                 noAppliedMainCompetitors,
                 noAppliedIntOperations,
                 noAppliedControlLinkedPayments,
-                
+
                 isDraft
             };
         } else {
@@ -411,7 +418,7 @@ class ComponentStudyCredit extends Component {
                             shouldDisplayMessage = true;
                             contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
 
-                           
+
 
                         }
                         if (listDistribution.length === 0 &&
@@ -504,33 +511,29 @@ class ComponentStudyCredit extends Component {
             }
         }
 
-        if(shouldDisplayMessage) {
-            swtShowMessage('error','Estudio de crédito', contentErrorMessage);
+        if (shouldDisplayMessage) {
+            swtShowMessage('error', 'Estudio de crédito', contentErrorMessage);
         }
-        
+
         return allowSave;
     }
 
     _submitSaveContextClient(tipoGuardado) {
-
         const { getUserBlockingReport, swtShowMessage } = this.props;
-
-        
         showLoading(true, "Cargando...");
 
-        let username = window.sessionStorage.getItem('userName');
+        let username = window.localStorage.getItem('userNameFront');
 
         this.canUserEditBlockedReport(username).then((success) => {
-
             showLoading(false, "Cargando...");
 
             let isAvance;
 
-            if( typeof tipoGuardado == 'undefined') {
+            if (typeof tipoGuardado == 'undefined') {
                 isAvance = false;
-            }else if(tipoGuardado == "Avance") {
+            } else if (tipoGuardado == "Avance") {
                 isAvance = true;
-            }else {
+            } else {
                 isAvance = false;
             }
 
@@ -562,12 +565,12 @@ class ComponentStudyCredit extends Component {
         this.setState({
             showSuccessMessage: false
         });
-        redirectUrl("/dashboard/clientInformation");
+        globalActions.redirectUrl("/dashboard/clientInformation");
     }
 
     _validateInfoStudyCredit() {
         const { swtShowMessage, changeStateSaveData, validateInfoCreditStudy } = this.props;
-        var idClient = window.localStorage.getItem('idClientSelected');
+        var idClient = window.sessionStorage.getItem('idClientSelected');
         validateInfoCreditStudy(idClient).then((data) => {
             changeStateSaveData(false, "");
             if (!validateResponse(data)) {
@@ -579,44 +582,70 @@ class ComponentStudyCredit extends Component {
         });
     }
 
+    callGeneratePDF() {
+        const { generatePDF, swtShowMessage, showLoading } = this.props;
+
+        showLoading(true, 'Cargando..');
+
+        generatePDF().then((response) => {
+            swtShowMessage('success', 'Estudio de crédito', 'Señor usuario, el PDF ha sido generado correctamente');
+            window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
+
+            showLoading(false, null);
+            this.setState({ isPDFGenerated: true });
+        }).catch((error) => {
+            showLoading(false, null);
+            swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, ocurrió un error generando el PDF.');
+        })
+    }
+
+    handleClickButtonPDF() {
+        const { existsPDFforTheSameDay, swtShowMessage, studyCreditReducer } = this.props;
+
+        if (this.state.isPDFGenerated) {
+            swtShowMessage(
+                "warning", "Advertencia",
+                MESSAGE_REPLACE_PDF,
+                {
+                    onConfirmCallback: this.callGeneratePDF,
+                    onCancelCallback: () => { }
+                },
+                {
+                    confirmButtonText: 'Confirmar'
+                }
+            );
+        } else {
+            this.callGeneratePDF();
+        }
+    }
+
 
     canUserEditBlockedReport(myUserName) {
-
         const { getUserBlockingReport, swtShowMessage } = this.props;
-
-        let idClient = window.localStorage.getItem('idClientSelected');
+        let idClient = window.sessionStorage.getItem('idClientSelected');
 
         // Envio el id del cliente como primer parametro ya que solo hay un estudio de credito por cliente
-
         return getUserBlockingReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
 
-            if (! this._ismounted) {
+            if (!this._ismounted) {
 
                 clearInterval(this.state.intervalId);
                 return;
             }
 
-
-            if(success.payload.data.data == null) {
+            if (success.payload.data.data == null) {
                 clearInterval(this.state.intervalId);
-
                 this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: "Error", shouldRedirect: true })
-
                 return;
             }
 
             let username = success.payload.data.data.username
-
-
-
             let name = success.payload.data.data.name
 
             if (_.isNull(username)) {
                 // Error servidor
                 swtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
-
                 return Promise.reject(new Error('Error interno del servidor'))
-
             } else if (username.toUpperCase() === myUserName.toUpperCase()) {
                 // Usuario pidiendo permiso es el mismo que esta bloqueando
                 if (!this.state.isEditable) {
@@ -627,74 +656,58 @@ class ComponentStudyCredit extends Component {
                         isEditable: true,
                         intervalId: setInterval(() => { this.canUserEditBlockedReport(myUserName) }, TIME_REQUEST_BLOCK_REPORT)
                     })
-
                 }
-
             } else {
                 // El reporte esta siendo editado por otra persona
                 if (this.state.isEditable) {
                     // Estoy editando pero no tengo permisos
                     // Salir de edicion y detener intervalo
-
-              
                     clearInterval(this.state.intervalId);
                     this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: true, isEditable: false })
-                    
                 } else {
                     // Mostar mensaje de el usuario que tiene bloqueado el informe
-
                     this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
                 }
 
                 return Promise.reject(new Error('el reporte se encuentra bloqueado por otro usuario'));
             }
-
             return success
         })
-
     }
 
     _closeShowErrorBlockedPrevisit() {
         this.setState({ showErrorBlockedPreVisit: false })
-        redirectUrl("/dashboard/clientInformation")
+        globalActions.redirectUrl("/dashboard/clientInformation")
     }
 
     componentWillUnmount() {
-
         const { stopBlockToReport, id } = this.props;
-
-        let idClient = window.localStorage.getItem('idClientSelected');
-
+        let idClient = window.sessionStorage.getItem('idClientSelected');
         this._ismounted = false;
 
         // Detener envio de peticiones para bloquear el informe
         clearInterval(this.state.intervalId)
+
         // Informar al backend que el informe se puede liberar
-
         if (this.state.isEditable) {
-
             stopBlockToReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
-
             }).catch((error) => {
-    
             })
-        }        
-
+        }
     }
-
 
     componentWillMount() {
         const { fields: { customerTypology, contextClientField, inventoryPolicy, controlLinkedPayments }, updateTitleNavBar, getContextClient, swtShowMessage, changeStateSaveData,
             clientInformacion, selectsReducer, consultListWithParameterUbication,
-            getMasterDataFields, validateInfoCreditStudy, getUserBlockingReport } = this.props;
+            getMasterDataFields, validateInfoCreditStudy, getUserBlockingReport, reducerGlobal, studyCreditReducer } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
-        
+
         if (_.isEmpty(infoClient)) {
-            redirectUrl("/dashboard/clientInformation");
+            globalActions.redirectUrl("/dashboard/clientInformation");
         } else {
 
-            let logUser = window.sessionStorage.getItem('userName');
-            var idClient = window.localStorage.getItem('idClientSelected');
+            let logUser = window.localStorage.getItem('userNameFront');
+            var idClient = window.sessionStorage.getItem('idClientSelected');
 
             this.canUserEditBlockedReport(logUser);
             getMasterDataFields([constantsSelects.SEGMENTS, constantsSelects.FILTER_COUNTRY]).then((data) => {
@@ -716,6 +729,7 @@ class ComponentStudyCredit extends Component {
             updateTitleNavBar("Informe estudio de crédito");
             changeStateSaveData(true, MESSAGE_LOAD_DATA);
             getContextClient(idClient).then((data) => {
+
                 changeStateSaveData(false, "");
                 if (!validateResponse(data)) {
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -725,6 +739,10 @@ class ComponentStudyCredit extends Component {
                     inventoryPolicy.onChange(contextClientInfo.inventoryPolicy);
                     controlLinkedPayments.onChange(contextClientInfo.controlLinkedPayments);
                 }
+
+                const showButtonPDF = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GENERAR_PDF_ESTUDIO_CREDITO), false) && data.payload.data.data.id != null;
+                this.setState({ isPDFGenerated: data.payload.data.data.isPDFGenerated, showButtonPDF });
+
             }, (reason) => {
                 changeStateSaveData(false, "");
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -812,6 +830,7 @@ class ComponentStudyCredit extends Component {
         }
         return (
             <form id="formComponentCreditStudy" style={{ backgroundColor: "#FFFFFF", paddingBottom: "70px" }} onSubmit={handleSubmit(this._submitSaveContextClient)} >
+                <SecurityMessageComponent />
                 <Row>
                     <Col xs={12} sm={12} md={12} lg={12} style={{ marginLeft: '20px', paddingTop: '10px' }}>
                         <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
@@ -845,7 +864,7 @@ class ComponentStudyCredit extends Component {
                         <span >No aplican contactos con función estudio de crédito</span>
                     </Col>
                     <Col xs={12} md={12} lg={12}>
-                        
+
                         <ClientTypology customerTypology={customerTypology}
                             data={selectsReducer.get(constantsSelects.CUSTOMER_TYPOLOGY)}
                             fieldRequiered={this.state.customerTypology}
@@ -888,8 +907,8 @@ class ComponentStudyCredit extends Component {
                     functionChangeInventoryPolicy={this._handleChangeValueInventoryPolicy}
                     controlLinkedPayments={controlLinkedPayments} controlLinkedPaymentsRequired={this.state.controlLinkedPaymentsRequired} />
 
-                <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments} controlLinkedPaymentsRequired={this.state.controlLinkedPaymentsRequired}/>
-                
+                <ControlLinkedPayments controlLinkedPayments={controlLinkedPayments} controlLinkedPaymentsRequired={this.state.controlLinkedPaymentsRequired} />
+
                 <ComponentListMainClients nameClient={nameMainClient} participation={participationMC}
                     term={termMainClient} relevantInformation={relevantInformationMainClient} showCheckValidateSection={overdueCreditStudy}
                     showFormMainClients={this.state.showFormAddMainClient} fnShowForm={this.showFormOut}
@@ -955,29 +974,37 @@ class ComponentStudyCredit extends Component {
                     </Col>
                 </Row>
                 <div className="" style={containerButtons}>
-                        <div style={{
-                            right: '0px',
-                            position: 'fixed',
-                            paddingRight: '15px'
-                        }}>
-                            <Row style={{ paddingTop: '8px' }}>
+                    <div style={{
+                        right: '0px',
+                        position: 'fixed',
+                        paddingRight: '15px'
+                    }}>
+                        <Row style={{ paddingTop: '8px' }}>
 
 
-                                    <Col style={paddingButtons} onClick={ () => this._submitSaveContextClient("Avance") } >
-                                        <button className="btn" type="button" style={ { backgroundColor: "#00B5AD" } } ><span >Guardar Avance</span></button>
-                                    </Col>
+                            <Col style={paddingButtons} onClick={() => this._submitSaveContextClient("Avance")} >
+                                <button className="btn" type="button" style={{ backgroundColor: "#00B5AD" }} ><span >Guardar Avance</span></button>
+                            </Col>
 
-                                    <Col style={paddingButtons}   >
-                                        <button className="btn" type="submit"  ><span>Guardar Definitivo</span></button>
-                                    </Col>
-                                
-                                    <Col style={paddingButtons} onClick={this._closeWindow} >
-                                        <button className="btn btn-secondary modal-button-edit" type="button"><span >Cancelar</span></button>
-                                    </Col>
-                                
-                            </Row>
-                        </div>
+                            <Col style={paddingButtons}   >
+                                <button className="btn" type="submit"  ><span>Guardar Definitivo</span></button>
+                            </Col>
+
+                            {this.state.showButtonPDF &&
+                                <Col style={paddingButtons} onClick={() => this.handleClickButtonPDF()} >
+                                    <button className="btn" type="button" style={{ backgroundColor: "#eb984e" }}><span>Generar PDF</span></button>
+                                </Col>
+                            }
+
+                            <Col style={paddingButtons} onClick={this._closeWindow} >
+                                <button className="btn btn-secondary modal-button-edit" type="button"><span >Cancelar</span></button>
+                            </Col>
+
+
+
+                        </Row>
                     </div>
+                </div>
                 <SweetAlert
                     type="success"
                     show={this.state.showSuccessMessage}
@@ -1016,6 +1043,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         updateTitleNavBar,
         getContextClient,
+        existsPDFforTheSameDay,
+        generatePDF,
         swtShowMessage,
         changeStateSaveData,
         consultListWithParameterUbication,
@@ -1024,15 +1053,17 @@ function mapDispatchToProps(dispatch) {
         validateInfoCreditStudy,
         updateNotApplyCreditContact,
         getUserBlockingReport,
-        stopBlockToReport
+        stopBlockToReport,
+        showLoading
     }, dispatch);
 }
 
-function mapStateToProps({ selectsReducer, clientInformacion, studyCreditReducer }, ownerProps) {
+function mapStateToProps({ selectsReducer, clientInformacion, studyCreditReducer, reducerGlobal }, ownerProps) {
     return {
         selectsReducer,
         clientInformacion,
-        studyCreditReducer
+        studyCreditReducer,
+        reducerGlobal
     };
 }
 

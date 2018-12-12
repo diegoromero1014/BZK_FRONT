@@ -10,7 +10,7 @@ import {CODE_BLACK_LIST_ALERT} from '../alerts/constants';
 import {getAlertsByUser} from '../alerts/actions';
 import {NUMBER_RECORDS} from './constants';
 import {redirectUrl} from '../globalComponents/actions';
-import SweetAlert from 'sweetalert-react';
+import SweetAlertFocus from '../sweetalertFocus';
 import {showLoading} from '../loading/actions';
 import {updateTabSeleted} from '../clientDetailsInfo/actions';
 import _ from 'lodash';
@@ -35,7 +35,7 @@ class SearchBarClient extends Component {
         const {login, updateTabSeleted, getAlertsByUser} = this.props;
         const self = this;
         updateTabSeleted(null);
-        if (window.localStorage.getItem('sessionToken') === "") {
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
         }
         getAlertsByUser().then((data) => {
@@ -89,7 +89,7 @@ class SearchBarClient extends Component {
                         <i className="search icon" style={{margin: '0em', fontSize: '1.2em'}}/>
                     </button>
                 </div>
-                <SweetAlert
+                <SweetAlertFocus
                     type="error"
                     show={this.state.showEr}
                     title="Error de búsqueda"

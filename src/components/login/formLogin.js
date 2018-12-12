@@ -16,7 +16,7 @@ import { MESSAGE_SERVER_ERROR, REQUEST_SUCCESS } from '../../constantsGlobal';
 import { showLoading } from '../loading/actions';
 import { changeActiveItemMenu } from '../menu/actions';
 
-import SweetAlert from "sweetalert-react";
+import SweetAlert from "../sweetalertFocus";
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 
@@ -30,12 +30,9 @@ class FormLogin extends Component {
             showMessageNotification: false,
             messageTitle: '¡Aviso!',
             messageNotification: ''
-
-
         }
 
         this._redirectLogin = this._redirectLogin.bind(this);
-
     }
 
     _handleChangeId(e) {
@@ -54,7 +51,7 @@ class FormLogin extends Component {
         this.setState({ showMessageNotification: false });
         redirectUrl("/dashboard/clients");
     }
-    
+
 
     _handleValidateLogin(e) {
         e.preventDefault();
@@ -75,15 +72,12 @@ class FormLogin extends Component {
                         saveSessionUserName(usuario);
                         changeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
 
+                        // Activar cookie
+                        document.cookie = 'estadoconexion=activa;path=/';
+
                         let messageNotification = _.get(response, 'payload.data.data.messageNotification');
 
-                        if (_.get(response, 'payload.data.data.messageNotification', true) &&  messageNotification){
-                           //Mensaje notificacion
-                           this.setState({showMessageNotification : true, messageNotification: messageNotification  });
-
-                        } else {
-                           redirectUrl("/dashboard/clients");
-                        }
+                        redirectUrl("/dashboard/clients");
                     }
                 } else {
                     this.setState({
@@ -102,9 +96,20 @@ class FormLogin extends Component {
 
     componentWillMount() {
         const { stopObservablesLeftTimer, clearStateLogin } = this.props;
-        stopObservablesLeftTimer();
-        clearSessionUserName();
-        clearStateLogin();
+
+        let token = window.localStorage.getItem('sessionTokenFront');
+
+        if (token == null || token === '') {
+
+            stopObservablesLeftTimer();
+            //Limpiar variables de sesion (idClientSelected)
+            clearSessionUserName();
+            //Esto no hace nada
+            clearStateLogin();
+        } else {
+            // El usuario ya se encuentra logueado
+            redirectUrl("/dashboard/clients");
+        }
     }
 
     render() {
@@ -155,7 +160,7 @@ class FormLogin extends Component {
                     text={this.state.messageNotification}
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='Continuar'
-            
+
                     onConfirm={this._redirectLogin} />
             </form>
         );

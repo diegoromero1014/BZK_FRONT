@@ -1,30 +1,36 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
-import { redirectUrl } from '../../globalComponents/actions';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import Input from '../../../ui/input/inputComponent';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import Textarea from '../../../ui/textarea/textareaComponent';
-import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import { consultDataSelect, consultList, getMasterDataFields } from '../../selectsComponent/actions';
-import NeedBusiness from '../need/needBusiness';
-import AreaBusiness from '../area/areaBusiness';
-import { TITLE_OPPORTUNITY_BUSINESS, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA, MESSAGE_ERROR, DATE_FORMAT, VALUE_XSS_INVALID } from '../../../constantsGlobal';
-import { LAST_BUSINESS_REVIEW } from '../../../constantsParameters';
-import SweetAlert from 'sweetalert-react';
-import { OBJECTIVE_BUSINESS } from '../constants';
-import { consultParameterServer, formValidateKeyEnter, htmlToText, validateResponse, xssValidation } from '../../../actionsGlobal';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { changeStateSaveData } from '../../dashboard/actions';
-import { createBusiness, validateRangeDates } from '../actions';
+import { Row, Col } from 'react-flexbox-grid';
 import moment from 'moment';
 import _ from 'lodash';
 import $ from 'jquery';
 import numeral from 'numeral';
+
+import ComboBox from '../../../ui/comboBox/comboBoxComponent';
+import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
+import NeedBusiness from '../need/needBusiness';
+import AreaBusiness from '../area/areaBusiness';
+import SweetAlertFocus from '../../sweetalertFocus';
 import Tooltip from "../../toolTip/toolTipComponent";
 import RichText from "../../richText/richTextComponent";
+
+import { redirectUrl } from '../../globalComponents/actions';
+import { getMasterDataFields } from '../../selectsComponent/actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import { changeStateSaveData } from '../../dashboard/actions';
+import { createBusiness, validateRangeDates } from '../actions';
+import {
+    consultParameterServer, formValidateKeyEnter, htmlToText, validateResponse,
+    xssValidation, onSessionExpire
+} from '../../../actionsGlobal';
+
+import { LAST_BUSINESS_REVIEW } from '../../../constantsParameters';
+import { OBJECTIVE_BUSINESS } from '../constants';
+import {
+    TITLE_OPPORTUNITY_BUSINESS, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA,
+    MESSAGE_ERROR, DATE_FORMAT, VALUE_XSS_INVALID
+} from '../../../constantsGlobal';
 
 
 const fields = ["initialValidityDate", "finalValidityDate", "dateBusiness", "objectiveBusiness", "opportunities"];
@@ -84,14 +90,14 @@ class FormBusinessPlan extends Component {
         const { fields: { initialValidityDate, finalValidityDate }, needs, areas } = this.props;
         var errorInForm = false;
 
-        if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value)) {
+        if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value) || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid()) {
             errorInForm = true;
             this.setState({
                 initialDateError: "Debe seleccionar una fecha"
             });
         }
 
-        if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value)) {
+        if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value) || !moment(finalValidityDate.value, 'DD/MM/YYYY').isValid()) {
             errorInForm = true;
             this.setState({
                 finalDateError: "Debe seleccionar una fecha"
@@ -106,12 +112,14 @@ class FormBusinessPlan extends Component {
                     dateBusinessError: "Debe seleccionar una fecha"
                 });
             }
+
             if (this.state.objectiveBusiness === null || this.state.objectiveBusiness === undefined || this.state.objectiveBusiness === "") {
                 errorInForm = true;
                 this.setState({
                     objectiveBusinessError: "Debe seleccionar una opción"
                 });
             }
+
             if (_.isEmpty(htmlToText(this.state.opportunities)) || this.state.opportunities === null || this.state.opportunities === undefined || this.state.opportunities === "") {
                 errorInForm = true;
                 this.setState({
@@ -141,6 +149,7 @@ class FormBusinessPlan extends Component {
                         "id": null,
                         "clientNeed": need.needIdType,
                         "clientNeedDescription": need.descriptionNeed,
+                        "productFamily": need.productFamilyId,
                         "product": need.needIdProduct,
                         "implementationTimeline": need.needIdImplementation,
                         "task": need.needTask,
@@ -152,6 +161,7 @@ class FormBusinessPlan extends Component {
                     needsbB.push(data);
                 }
             );
+
             var areasB = [];
             _.map(areas.toArray(),
                 function (area) {
@@ -168,9 +178,10 @@ class FormBusinessPlan extends Component {
                     areasB.push(data);
                 }
             );
+
             var businessJson = {
                 "id": null,
-                "client": window.localStorage.getItem('idClientSelected'),
+                "client": window.sessionStorage.getItem('idClientSelected'),
                 "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
                 "finalValidityDate": moment(finalValidityDate.value, DATE_FORMAT).format('x'),
                 "opportunitiesAndThreats": this.state.opportunities,
@@ -179,6 +190,7 @@ class FormBusinessPlan extends Component {
                 "clientNeedFulfillmentPlan": needsbB,
                 "relatedInternalParties": areasB
             }
+
             //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
             this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
         }
@@ -198,6 +210,7 @@ class FormBusinessPlan extends Component {
     }
 
     _changeObjective(value) {
+
         this.setState({
             objectiveBusiness: value,
             objectiveBusinessError: null
@@ -270,7 +283,7 @@ class FormBusinessPlan extends Component {
                             createBusiness(businessJson).then((data) => {
                                 changeStateSaveData(false, "");
                                 if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
-                                    redirectUrl("/login");
+                                    onSessionExpire();
                                 } else {
                                     if ((_.get(data, 'payload.data.status') === 200)) {
                                         typeMessage = "success";
@@ -457,21 +470,21 @@ class FormBusinessPlan extends Component {
                         </button>
                     </div>
                 </div>
-                <SweetAlert
+                <SweetAlertFocus
                     type="error"
                     show={this.state.showErrorSaveBusiness}
                     title="Error necesidades"
                     text="Señor usuario, para guardar un plan de negocio como definitivo debe agregar como mínimo una necesidad."
                     onConfirm={() => this.setState({ showErrorSaveBusiness: false })}
                 />
-                <SweetAlert
+                <SweetAlertFocus
                     type={typeMessage}
                     show={this.state.showMessageCreateBusiness}
                     title={titleMessage}
                     text={message}
                     onConfirm={this._closeMessageCreateBusiness}
                 />
-                <SweetAlert
+                <SweetAlertFocus
                     type="warning"
                     show={this.state.showConfirm}
                     title={titleMessage}
@@ -507,6 +520,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, reducerGlobal, nee
         navBar
     };
 }
+
 export default reduxForm({
     form: 'formBusinessPlanCreate',
     fields,

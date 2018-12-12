@@ -8,7 +8,7 @@ import axios from 'axios';
 export function getAECForEmployee(pageNum, maxRows) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "",
             "timestamp": new Date().getTime(),
             "service": "",
@@ -37,7 +37,7 @@ export function getAECForEmployee(pageNum, maxRows) {
 export function saveCommercialObservations(jsonAEC) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "",
             "timestamp": new Date().getTime(),
             "service": "",
@@ -63,7 +63,7 @@ export function saveCommercialObservations(jsonAEC) {
 export function getDetailAEC(idAEC) {
     const json = {
         "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionToken'),
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
             "username": "",
             "timestamp": new Date().getTime(),
             "service": "",

@@ -3,7 +3,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
+
 import ModalComponentPendingTask from './modalComponentPendingTask';
+import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
 
 class ButtonCreatePendingTaskComponent extends Component {
 
@@ -44,6 +46,7 @@ class ButtonCreatePendingTaskComponent extends Component {
                   <span className="sr-only">Close</span>
                 </button>
               </div>
+              <SecurityMessageComponent />
               <ModalComponentPendingTask isOpen={this.closeModal} actionEdit={actionEdit} />
             </div>
           </div>

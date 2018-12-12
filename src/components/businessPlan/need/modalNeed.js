@@ -2,25 +2,27 @@ import moment from "moment";
 import { reduxForm } from "redux-form";
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
-import SweetAlert from "sweetalert-react";
 import { Col, Row } from "react-flexbox-grid";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
+import { PRODUCTS_MASK } from "../../selectsComponent/constants";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import { getClientNeeds, getMasterDataFields } from "../../selectsComponent/actions";
-import { IMPLEMENTATION_TIMELINE, PRODUCTS, STATUS_NEED } from "./constants";
+import { getClientNeeds, getMasterDataFields, consultListWithParameterUbication, consultDataSelect } from "../../selectsComponent/actions";
+import { IMPLEMENTATION_TIMELINE, PRODUCTS, STATUS_NEED, PRODUCT_FAMILY } from "./constants";
 import { addNeed, editNeed } from "./actions";
 import _ from "lodash";
 import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
 import { htmlToText, shorterStringValue, xssValidation } from "../../../actionsGlobal";
 import { MESSAGE_ERROR, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE } from '../../../constantsGlobal';
+import {TASK_STATUS} from '../../selectsComponent/constants';
+
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 
-const fields = ["idEmployee", "needType", "descriptionNeed", "needProduct", "needImplementation", "needTask", "needBenefits", "needResponsable", "needDate", "statusNeed"];
+const fields = ["idEmployee", "needType", "descriptionNeed", "productFamily", "needProduct", "needImplementation", "needTask", "needBenefits", "needResponsable", "needDate", "statusNeed"];
 const errors = {};
 let usersBanco = [];
 let idUsuario, nameUsuario;
@@ -29,7 +31,7 @@ let thisForm;
 const validate = (values) => {
     if (!values.needType) {
         errors.needType = "Debe seleccionar una opción";
-    } else {
+    }  else {
         errors.needType = null;
     }
 
@@ -70,22 +72,33 @@ const validate = (values) => {
 
     if (!values.needResponsable) {
         errors.needResponsable = "Debe ingresar un valor";
-    } else if (xssValidation(values.needResponsable, true)) {
-        errors.needResponsable = VALUE_XSS_INVALID;
-    } else {
+    } else if(!values.idEmployee){
+        errors.needResponsable = "Seleccione un empleado";        
+    }else {
         errors.needResponsable = null;
     }
 
     if (!values.needDate) {
         errors.needDate = "Debe seleccionar una fecha";
+    } else if (xssValidation(values.needDate, true)) {
+        errors.needDate = VALUE_XSS_INVALID;
+    } else if(!moment(values.needDate, 'DD/MM/YYYY').isValid()){
+        errors.needDate = "Debe seleccionar una fecha";
     } else {
         errors.needDate = null;
     }
+
     if (!values.statusNeed) {
         errors.statusNeed = "Debe seleccionar una opción";
-    } else {
+    }  else {
         errors.statusNeed = null;
     }
+    if (!values.productFamily) {
+        errors.productFamily = "Debeseleccionar una opción";
+    }  else {
+        errors.productFamily = null;
+    }
+    
     return errors;
 };
 
@@ -99,13 +112,14 @@ class ModalNeed extends Component {
         this._closeCreate = this._closeCreate.bind(this);
         this._onClickDate = this._onClickDate.bind(this);
         this._scroll = this._scroll.bind(this);
+        this._changeProductFamily = this._changeProductFamily.bind(this);
+        this.disableSubmitButton = false;
         this.state = {
             showSuccessAdd: false,
             showSuccessEdit: false,
             showEr: false,
-            employeeResponsible: false,
             prueba: [],
-            showErrorYa: false
+            showErrorYa: false,
         }
         momentLocalizer(moment);
         thisForm = this;
@@ -124,11 +138,12 @@ class ModalNeed extends Component {
     }
 
     componentDidMount() {
-        const { fields: { idEmployee, needType, descriptionNeed, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, needEdit } = this.props;
-        if (needEdit !== undefined) {
+        const { fields: { idEmployee, needType, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, needEdit } = this.props;
+        if (needEdit !== undefined) {        
             needType.onChange(needEdit.needIdType);
             descriptionNeed.onChange(needEdit.descriptionNeed);
-            needProduct.onChange(needEdit.needIdProduct);
+            productFamily.onChange(needEdit.productFamilyId);
+            needProduct.onChange(needEdit.needIdProduct);            
             needImplementation.onChange(needEdit.needIdImplementation);
             needTask.onChange(needEdit.needTask);
             needBenefits.onChange(needEdit.needBenefits);
@@ -136,6 +151,8 @@ class ModalNeed extends Component {
             needResponsable.onChange(needEdit.needResponsable);
             statusNeed.onChange(needEdit.statusIdNeed);
             needDate.onChange(moment(needEdit.needFormat, 'DD/MM/YYYY'));
+        } else {
+            this._changeProductFamily(null);
         }
     }
 
@@ -154,28 +171,43 @@ class ModalNeed extends Component {
         this.props.resetForm();
     }
 
+    _changeProductFamily(currencyValue) {
+        const { selectsReducer, fields: { needProduct }, consultListWithParameterUbication } = this.props;        
+        if (!currencyValue || currencyValue == null) {
+            needProduct.onChange('');
+        }
+        consultListWithParameterUbication(PRODUCTS, currencyValue);  
+        needProduct.onChange('');
+      }
+
     _handleCreateNeed() {
-        const { fields: { needType, idEmployee, descriptionNeed, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit } = this.props;
-        let status = _.get(_.filter(selectsReducer.get(STATUS_NEED), ['id', parseInt(statusNeed.value)]), '[0].value');
+        const { fields: { needType, idEmployee, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit, swtShowMessage } = this.props;
+        let status = _.get(_.filter(selectsReducer.get(TASK_STATUS), ['id', parseInt(statusNeed.value)]), '[0].value');
         let implementation = _.get(_.filter(selectsReducer.get(IMPLEMENTATION_TIMELINE), ['id', parseInt(needImplementation.value)]), '[0].value');
         let needC = _.get(_.filter(selectsReducer.get('pipelineClientNeeds'), ['id', parseInt(needType.value)]), '[0].need');
-        let productC = _.get(_.filter(selectsReducer.get(PRODUCTS), ['id', parseInt(needProduct.value)]), '[0].product');
+        let productF = _.get(_.filter(selectsReducer.get(PRODUCT_FAMILY), ['id', parseInt(productFamily.value)]), '[0].value');
+        let productC = _.get(_.filter(selectsReducer.get(PRODUCTS), ['id', parseInt(needProduct.value)]), '[0].value');
+
+        if (this.disableSubmitButton == true) {
+            return;
+        }
+
+        this.disableSubmitButton = true;
+
         if (needResponsable.value !== nameUsuario) {
             nameUsuario = needResponsable.value;
             idUsuario = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
         }
-        if ((needResponsable.value !== '' && needResponsable.value !== undefined && needResponsable.value !== null) && (idEmployee.value === null || idEmployee.value === '' || idEmployee.value === undefined)) {
-            this.setState({
-                employeeResponsible: true
-            });
-        } else {
-            if (needEdit !== undefined) {
+        
+            if (needEdit !== undefined) {                
                 needEdit.needIdType = needType.value;
                 needEdit.needType = needC;
                 needEdit.descriptionNeed = descriptionNeed.value;
                 needEdit.descriptionNeedText = shorterStringValue(htmlToText(descriptionNeed.value), 120);
+                needEdit.productFamilyId = productFamily.value;
+                needEdit.productFamily = productF;
                 needEdit.needIdProduct = needProduct.value;
-                needEdit.needProduct = productC;
+                needEdit.needProduct = productC;                
                 needEdit.needIdImplementation = needImplementation.value;
                 needEdit.needImplementation = implementation;
                 needEdit.needTask = needTask.value;
@@ -187,9 +219,9 @@ class ModalNeed extends Component {
                 needEdit.statusIdNeed = statusNeed.value;
                 needEdit.statusNeed = status;
                 editNeed(needEdit);
-                this.setState({
-                    showSuccessEdit: true
-                });
+                
+                swtShowMessage('success',"Necesidad editada exitosamente","Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán.",{onConfirmCallback: this._closeCreate});
+
             } else {
                 const uuid = _.uniqueId('need_');
                 let need = {
@@ -198,8 +230,10 @@ class ModalNeed extends Component {
                     needType: needC,
                     descriptionNeed: descriptionNeed.value,
                     descriptionNeedText: shorterStringValue(htmlToText(descriptionNeed.value), 120),
+                    productFamilyId: productFamily.value,
+                    productFamily: productF,
                     needIdProduct: needProduct.value,
-                    needProduct: productC,
+                    needProduct: productC,                    
                     needIdImplementation: needImplementation.value,
                     needImplementation: implementation,
                     needTask: needTask.value,
@@ -212,21 +246,23 @@ class ModalNeed extends Component {
                     statusNeed: status
                 };
                 addNeed(need);
-                this.setState({
-                    showSuccessAdd: true
-                });
+                swtShowMessage('success',"Necesidad agregada exitosamente","Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán.",{onConfirmCallback: this._closeCreate});
             }
-        }
     }
 
     updateKeyValueUsersBanco(e) {
-        const { fields: { needResponsable, idEmployee }, filterUsersBanco } = this.props;
+        const { fields: { needResponsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
         let self = this;
-        idEmployee.onChange(null);
+        
         const selector = $('.ui.search.needResponsable');
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.consultclick ? "" : e.preventDefault();
             if (needResponsable.value !== "" && needResponsable.value !== null && needResponsable.value !== undefined) {
+                if(needResponsable.value.length < 3) {
+                    swtShowMessage('error','Error','Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
+                    return;
+                }
+               
                 selector.toggleClass('loading');
                 filterUsersBanco(needResponsable.value).then((data) => {
                     usersBanco = _.get(data, 'payload.data.data');
@@ -241,9 +277,7 @@ class ModalNeed extends Component {
                         onSelect: function (event) {
                             needResponsable.onChange(event.title);
                             idEmployee.onChange(event.idUsuario);
-                            self.setState({
-                                employeeResponsible: false
-                            });
+                            
                             return 'default';
                         }
                     });
@@ -263,14 +297,15 @@ class ModalNeed extends Component {
     }
 
     componentWillMount() {
-        const { getClientNeeds, getMasterDataFields, selectsReducer } = this.props;
+        const { getClientNeeds, getMasterDataFields, selectsReducer, consultDataSelect } = this.props;
         getClientNeeds();
-        getMasterDataFields([IMPLEMENTATION_TIMELINE, STATUS_NEED, PRODUCTS]);
+        consultDataSelect(PRODUCTS, PRODUCTS_MASK);        
+        getMasterDataFields([IMPLEMENTATION_TIMELINE, TASK_STATUS, PRODUCT_FAMILY]);        
     }
 
     render() {
         const { initialValues, selectsReducer, disabled, handleSubmit, error,
-            fields: { needType, descriptionNeed, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed } } = this.props;
+            fields: { needType, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed, idEmployee} } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateNeed)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -311,8 +346,25 @@ class ModalNeed extends Component {
                             </Col>
                         </Row>
                         <Row style={{ paddingTop: '20px' }}>
+                            <Col xs={6} md={3} lg={3}>
+                                <dt><span>Familia de productos (<span
+                                    style={{ color: "red" }}>*</span>)</span></dt>
+                                <dt style={{ paddingTop: "0px" }}>
+                                    <ComboBox
+                                        name='productFamily'
+                                        labelInput="Seleccione..."
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        {...productFamily}                                        
+                                        parentId="dashboardComponentScroll"
+                                        data={selectsReducer.get(PRODUCT_FAMILY) || []}
+                                        onChange={val => this._changeProductFamily(val)}
+                                        disabled={disabled}
+                                    />
+                                </dt>
+                            </Col>
                             <Col xs>
-                                <dt><span>Producto(s) que satisface(n) la necesidad  (<span
+                                <dt><span>Producto(s) que satisface(n) la necesidad (<span
                                     style={{ color: "red" }}>*</span>)</span></dt>
                                 <dt style={{ paddingTop: "0px" }}>
                                     <ComboBox
@@ -376,22 +428,15 @@ class ModalNeed extends Component {
                                     <ComboBoxFilter
                                         name="needResponsable"
                                         {...needResponsable}
-                                        onChange={needResponsable.onChange}
                                         value={needResponsable.value}
                                         labelInput="Ingrese un criterio de búsqueda..."
                                         parentId="dashboardComponentScroll"
+                                        onChange={(val) => {if (idEmployee.value) { idEmployee.onChange(null) } needResponsable.onChange(val)}}
                                         onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                                         onSelect={val => this._updateValue(val)}
                                         disabled={disabled}
                                     />
-                                    {
-                                        this.state.employeeResponsible &&
-                                        <div>
-                                            <div className="ui pointing red basic label">
-                                                Debe seleccionar un empleado del banco
-                                            </div>
-                                        </div>
-                                    }
+                                    
                                 </dt>
                             </Col>
                         </Row>
@@ -406,7 +451,7 @@ class ModalNeed extends Component {
                                         textProp={'value'}
                                         {...statusNeed}
                                         parentId="dashboardComponentScroll"
-                                        data={selectsReducer.get(STATUS_NEED) || []}
+                                        data={selectsReducer.get(TASK_STATUS) || []}
                                         disabled={disabled}
                                     />
                                 </dt>
@@ -434,20 +479,8 @@ class ModalNeed extends Component {
                         <span>Agregar</span>
                     </button>
                 </div>
-                <SweetAlert
-                    type="success"
-                    show={this.state.showSuccessAdd}
-                    title="Necesidad agregada exitosamente"
-                    text="Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán."
-                    onConfirm={() => this._closeCreate()}
-                />
-                <SweetAlert
-                    type="success"
-                    show={this.state.showSuccessEdit}
-                    title="Necesidad editada exitosamente"
-                    text="Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán."
-                    onConfirm={() => this._closeCreate()}
-                />
+                
+                
             </form>
         );
     }
@@ -460,7 +493,9 @@ function mapDispatchToProps(dispatch) {
         filterUsersBanco,
         addNeed,
         editNeed,
-        swtShowMessage
+        swtShowMessage,
+        consultDataSelect,
+        consultListWithParameterUbication
     }, dispatch);
 }
 
@@ -472,7 +507,8 @@ function mapStateToProps({ needs, selectsReducer }, { needEdit }) {
             initialValues: {
                 needType: needEdit.needIdType,
                 descriptionNeed: needEdit.descriptionNeed,
-                needProduct: needEdit.needIdProduct,
+                productFamily: needEdit.productFamilyId,
+                needProduct: needEdit.needIdProduct,                
                 needImplementation: needEdit.needIdImplementation,
                 needTask: needEdit.needTask,
                 needBenefits: needEdit.needBenefits,
@@ -490,7 +526,8 @@ function mapStateToProps({ needs, selectsReducer }, { needEdit }) {
             initialValues: {
                 needType: '',
                 descriptionNeed: '',
-                needProduct: '',
+                productFamily: '',
+                needProduct: '',                
                 needImplementation: '',
                 needTask: '',
                 needBenefits: '',

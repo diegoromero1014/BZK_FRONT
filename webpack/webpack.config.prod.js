@@ -19,6 +19,7 @@ var webpack = require('webpack'),
         context: path.resolve(__dirname, '..'),
         entry: {
             'main': [
+                'babel-polyfill',
                 './src/index.js'
             ]
         },
@@ -102,7 +103,8 @@ var webpack = require('webpack'),
                 __CLIENT__: true,
                 __SERVER__: false,
                 __DEVELOPMENT__: false,
-                __DEVTOOLS__: false
+                __DEVTOOLS__: false,
+                WP_VAR_ENVIRONMENT: JSON.stringify("production")
             }),
 
             // ignore dev config

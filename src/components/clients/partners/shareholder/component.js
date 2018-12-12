@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { clearShareholder, shareholdersByClientFindServer, updateCertificateNoShareholder } from './actions';
-import { changeCheckInfoClient } from '../../../clientInformation/actions';
 import { bindActionCreators } from 'redux';
+import { Row, Grid, Col } from 'react-flexbox-grid';
+import $ from 'jquery';
+
 import SearchShareholderComponent from './searchShareholderComponent';
 import BotonCreateShareholderComponent from './createShareholder/botonCreateShareholderComponent';
 import PaginationShareholderComponent from './paginationShareholderComponent';
 import ListShareholderComponent from './listShareholderComponent';
-import { Row, Grid, Col } from 'react-flexbox-grid';
-import { NUMBER_RECORDS, SHAREHOLDER_KIND, SHAREHOLDER_TYPE } from './constants';
 import SelectFilterContact from '../../../selectsComponent/selectFilterContact/selectFilterComponent';
-import $ from 'jquery';
-import { redirectUrl } from '../../../globalComponents/actions';
-import { validatePermissionsByModule } from '../../../../actionsGlobal';
 import AlertWithoutPermissions from '../../../globalComponents/alertWithoutPermissions';
+
+import { clearShareholder, shareholdersByClientFindServer, updateCertificateNoShareholder } from './actions';
+import { changeCheckInfoClient } from '../../../clientInformation/actions';
+import { redirectUrl } from '../../../globalComponents/actions';
+import { validatePermissionsByModule, onSessionExpire } from '../../../../actionsGlobal';
+
+import { NUMBER_RECORDS, SHAREHOLDER_KIND, SHAREHOLDER_TYPE } from './constants';
 import { MODULE_SHAREHOLDERS, CREAR, EDITAR } from '../../../../constantsGlobal';
 
 var enableClickCertificationShareholder = "";
@@ -33,13 +36,13 @@ class ShareholderComponent extends Component {
   }
 
   componentWillMount() {
-    if (window.localStorage.getItem('sessionToken') === "") {
+    if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
       const { clearShareholder, shareholdersByClientFindServer, clientInformacion, validatePermissionsByModule } = this.props;
       const infoClient = clientInformacion.get('responseClientInfo');
       clearShareholder();
-      shareholdersByClientFindServer(0, window.localStorage.getItem('idClientSelected'),
+      shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'),
         NUMBER_RECORDS, "sh.sharePercentage", 1, "", "", "").then((data) => {
           if (_.get(data, 'payload.data.rowCount') !== 0) {
             enableClickCertificationShareholder = "disabled";
@@ -61,7 +64,7 @@ class ShareholderComponent extends Component {
         );
       validatePermissionsByModule(MODULE_SHAREHOLDERS).then((data) => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-          redirectUrl("/login");
+          onSessionExpire();
         } else {
           if (!_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false') {
             this.setState({ openMessagePermissions: true });
@@ -118,7 +121,7 @@ class ShareholderComponent extends Component {
             </label>
           </div>
         }
-        <div className="tab-content break-word" style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'initial' }}>
+        <div className="tab-content break-word" style={{ zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'visible' }}>
           <Grid style={{ width: "100%" }}>
             <Row>
               <Col xs={10} sm={10} md={11} lg={11}>
@@ -128,8 +131,11 @@ class ShareholderComponent extends Component {
                   disabled={this.state.disabledComponents}
                 />
               </Col>
-              {_.get(reducerGlobal.get('permissionsShareholders'), _.indexOf(reducerGlobal.get('permissionsShareholders'), CREAR), false) &&
-                <BotonCreateShareholderComponent disabled={this.state.disabledComponents} />
+              {
+                _.get(
+                  reducerGlobal.get('permissionsShareholders'),
+                  _.indexOf(reducerGlobal.get('permissionsShareholders'), CREAR),
+                  false) && <BotonCreateShareholderComponent disabled={this.state.disabledComponents} />
               }
             </Row>
             <Row>

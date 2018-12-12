@@ -1,22 +1,22 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import HeaderBusinessPlan from '../headerBusinessPlan';
 import FormBusinessPlan from './formBusinessPlan';
-import {redirectUrl} from '../../globalComponents/actions';
+import { redirectUrl } from '../../globalComponents/actions';
 
 class CreateBusinessPlan extends Component {
 
   componentWillMount() {
-    const {clientInformacion} = this.props;
+    const { clientInformacion } = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
-    if(_.isEmpty(infoClient)) {
-        redirectUrl("/dashboard/clientInformation");
+    if (_.isEmpty(infoClient)) {
+      redirectUrl("/dashboard/clientInformation");
     }
   }
 
   render() {
-    return(
+    return (
       <div>
         <HeaderBusinessPlan />
         <FormBusinessPlan />
@@ -30,10 +30,10 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion}, ownerProps) {
-    return {
-      clientInformacion
-    };
+function mapStateToProps({ clientInformacion }, ownerProps) {
+  return {
+    clientInformacion
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateBusinessPlan);

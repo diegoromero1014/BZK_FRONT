@@ -40,7 +40,7 @@ class PaginationPendingTaskComponent extends Component {
 
   _handleTaskByClientsFind(limInf) {
       const {tasksByClient, tasksByClientFindServer} = this.props;
-      tasksByClientFindServer(limInf, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, tasksByClient.get('columnTask'), tasksByClient.get('orderTask'), v1);
+      tasksByClientFindServer(limInf, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, tasksByClient.get('columnTask'), tasksByClient.get('orderTask'), v1);
   }
 
   render() {

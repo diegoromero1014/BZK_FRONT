@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import _ from 'lodash';
+
 import { contactsByClientFindServer, changeKeywordContact, clearContactPaginator, clearContactOrder } from './actions';
 import * as constants from '../../constantsGlobal';
 import { NUMBER_RECORDS } from './constants';
-import _ from 'lodash';
 
 let v1 = "";
 let v2 = "";
@@ -23,11 +24,6 @@ class SearchContactComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-          value1,
-      value2,
-      value3
-      } = nextProps;
     if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2) ||
       (v3 !== nextProps.value3)) {
       v1 = nextProps.value1;
@@ -36,7 +32,6 @@ class SearchContactComponent extends Component {
       this._handleContactsByClientsFind();
     }
   }
-
 
   _handleChangeKeyword(e) {
     if (e.keyCode === 13 || e.which === 13) {
@@ -51,9 +46,7 @@ class SearchContactComponent extends Component {
   }
 
   _handleContactsByClientsFind() {
-    const { contactsByClientFindServer, contactsByClient, clearContactPaginator, clearContactOrder } = this.props;
-
-
+    const { contactsByClientFindServer, clearContactPaginator, clearContactOrder } = this.props;
 
     clearContactPaginator();
     clearContactOrder();
@@ -65,7 +58,7 @@ class SearchContactComponent extends Component {
         errorKeyword: null
       });
 
-      contactsByClientFindServer(0, window.localStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, _keywordContact,
+      contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, _keywordContact,
         v1,
         v2,
         v3);
@@ -74,7 +67,6 @@ class SearchContactComponent extends Component {
         errorKeyword: constants.VALUE_XSS_INVALID
       });
     }
-
   }
 
   render() {

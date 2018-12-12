@@ -10,7 +10,7 @@ import {
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../../constantsGlobal';
 import Textarea from '../../../ui/textarea/textareaComponent';
-import SweetAlert from 'sweetalert-react';
+import SweetAlert from '../../sweetalertFocus';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { MAIN_SUPPLIER, MESSAGE_MAIN_SUPPLIER, MESSAGE_RELEVANT_MAIN_SUPPLIERS } from '../constants';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
@@ -26,7 +26,8 @@ class ComponentListMainSupplier extends Component {
             entitySeleted: null,
             errorForm: false,
             fieldReducerList: 'listMainSupplier',
-            fieldReducerNoApplied: 'noAppliedMainSuppliers'
+            fieldReducerNoApplied: 'noAppliedMainSuppliers',
+            shouldUpdate: false
         }
         this.validateInfo = this.validateInfo.bind(this);
         this.clearValues = this.clearValues.bind(this);
@@ -180,7 +181,7 @@ class ComponentListMainSupplier extends Component {
             functionChangeMainSupplier, registrationRequired, origin } = this.props;
         const listMainSupplier = clientInformacion.get(this.state.fieldReducerList);
         return (
-            <div>
+            <div onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <Row style={{ padding: "20px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -234,7 +235,7 @@ class ComponentListMainSupplier extends Component {
                                         type="text"
                                         max="100"
                                         placeholder="Nombre del proveedor"
-                                        {...nameSupplier}
+                                        {...nameSupplier}                                        
                                         error={_.isEmpty(nameSupplier.value) ? VALUE_REQUIERED : (xssValidation(nameSupplier.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -252,8 +253,7 @@ class ComponentListMainSupplier extends Component {
                                         max="3"
                                         placeholder="Plazo"
                                         {...term}
-                                        value={term.value}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, term.value)}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, term, val)}
                                         error={_.isEmpty(term.value) ? VALUE_REQUIERED : (xssValidation(term.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
@@ -271,8 +271,7 @@ class ComponentListMainSupplier extends Component {
                                         max="5"
                                         placeholder="Participación"
                                         {...participation}
-                                        value={participation.value}
-                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, participation.value, true, 2)}
+                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, participation, val, true, 2)}
                                         error={_.isEmpty(participation.value) ? VALUE_REQUIERED : (xssValidation(participation.value) ? VALUE_XSS_INVALID : null)}
                                         touched={this.state.errorForm || registrationRequired}
                                     />
