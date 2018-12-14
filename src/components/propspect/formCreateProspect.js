@@ -304,7 +304,7 @@ class FormCreateProspect extends Component {
                     marginBottom: "100px",
                     backgroundColor: "#F0F0F0"
                 }}>
-                        <Col xs={12} md={8} lg={8} style={{ marginTop: "20px", paddingRight: "35px" }}>
+                        <Col xs={12} md={12} lg={6} style={{ marginTop: "20px", paddingRight: "35px" }}>
                             <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                                 <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
                                 <Input
@@ -318,25 +318,7 @@ class FormCreateProspect extends Component {
                         </Col>
                 
                 
-                    {isNature &&
-
-                        <Col xs={12} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Ocupación </span></dt>
-                                <ComboBox
-                                    name="occupation"
-                                    labelInput="Ocupación"
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    style={{ marginBottom: '0px !important' }}
-                                    data={selectsReducer.get("occupation")}
-                                    {...occupation}
-                                />
-                            </div>
-                        </Col>
-                    }
-
-                    <Col xs={10} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
+                    <Col xs={8} md={6} lg={6} style={{ marginTop: "20px", paddingRight: "35px" }}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>Célula (</span><span style={{ color: "red" }}>*</span>)</dt>
                             <ComboBox
@@ -351,7 +333,7 @@ class FormCreateProspect extends Component {
                         </div>
                     </Col>
 
-                    <Col xs={12} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
+                    <Col xs={12} md={6} lg={6} style={{ marginTop: "20px", paddingRight: "35px" }}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>Segmento (</span><span style={{ color: "red" }}>*</span>)</dt>
                             <ComboBox
