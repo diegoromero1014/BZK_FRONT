@@ -1,8 +1,8 @@
 import _ from 'lodash';
-import {processRules, checkMaxLength, checkObservationsLinkClient} from './../../../validationsFields/rulesField';
+import {processRules, checkMaxLength, checkObservationsLinkClient, checkFirstCharacter} from './../../../validationsFields/rulesField';
 
 const fieldsWithRules = {
-    observationTrader: {rules:[checkMaxLength(1000), checkObservationsLinkClient]}
+    observationTrader: {rules:[checkMaxLength(1000), checkObservationsLinkClient, checkFirstCharacter]}
 };
 
 export const fields = _.keys(fieldsWithRules);

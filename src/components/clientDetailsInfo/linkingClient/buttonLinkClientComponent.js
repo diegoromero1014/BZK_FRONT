@@ -29,11 +29,11 @@ import {
 } from '../../../constantsGlobal';
 import {fields, validations as validate} from './fieldsAndRulesForReduxForm';
 import {
-    patternOfOnlyNumbersLinkClient,patternOfObservationLinkClient
+    patternOfOnlyNumbersLinkClient,patternOfObservationLinkClient, patternOfForbiddenCharacter
     } from './../../../validationsFields/patternsToValidateField';
     
     import {
-    MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT, MESSAGE_WARNING_MAX_LENGTH,MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_REQUIRED_VALUE
+    MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT, MESSAGE_WARNING_MAX_LENGTH,MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_FORBIDDEN_CHARACTER
     } from './../../../validationsFields/validationsMessages'; 
 
 let helpLinksMessage = "";
@@ -163,7 +163,11 @@ class ButtonLinkClientComponent extends Component {
         if  (!_.isUndefined(observationTrader.value)  &&  !_.isNull(observationTrader.value) && eval(patternOfObservationLinkClient).test(observationTrader.value)) {
             messageWhiteList  =  MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
             isValidLinkEntities = false;
-        } 
+        }  else if(!_.isNil(observationTrader.value) && patternOfForbiddenCharacter.test(observationTrader.value)) {                                       
+            messageWhiteList = MESSAGE_WARNING_FORBIDDEN_CHARACTER;                    
+            updateEventErrors(true, message);
+            isValidLinkEntities = false;
+        }
   
 
         if (linkEntitiesClient.size == 0) {
