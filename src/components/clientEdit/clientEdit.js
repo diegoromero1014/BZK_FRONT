@@ -138,6 +138,8 @@ let otherOperationsForeignEnable = 'disabled';
 let otherOriginGoodsEnable = 'disabled';
 let otherOriginResourceEnable = 'disabled';
 
+let isPersonaNatural = false;
+
 const EDIT_STYLE = {
     border: '1px solid #e5e9ec',
     backgroundColor: '#F8F8F8',
@@ -1590,7 +1592,7 @@ class clientEdit extends Component {
             relevantInformationMainSupplier, typeOperationIntOpera,
             participationIntOpe, descriptionCoverageIntOpe, idCountryIntOpe,
             participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments }, handleSubmit,
-            tabReducer, selectsReducer, clientInformacion, validateContactShareholder, reducerGlobal
+            tabReducer, selectsReducer, clientInformacion, validateContactShareholder, reducerGlobal, isPersonaNatural
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
         errorShareholder = tabReducer.get('errorShareholder');
@@ -1652,7 +1654,7 @@ class clientEdit extends Component {
 
                 <ComponentInfoClient razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber}
                     segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
-                    idButton={idButton} isMethodEditClient={isMethodEditClient}
+                    idButton={idButton} isMethodEditClient={isMethodEditClient} isPersonaNatural={isPersonaNatural}
                 />
 
                 <ActividadEconomica idSubCIIU={idSubCIIU} idCIIU={idCIIU} taxNature={taxNature} isMethodEditClient={isMethodEditClient} />
@@ -2534,6 +2536,9 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
     const infoClient = clientInformacion.get('responseClientInfo');
     const { contextClient } = infoClient;
 
+    isPersonaNatural = infoClient.clientTypeKey === 'Persona natural';
+
+
     idButton = tabReducer.get('seletedButton');
 
     isMethodEditClient = idButton === BUTTON_EDIT;
@@ -2545,6 +2550,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
         tabReducer,
         notes,
         reducerGlobal,
+        isPersonaNatural,
         idButton,
         initialValues: {
             razonSocial: infoClient.clientName,
