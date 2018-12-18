@@ -1,22 +1,24 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ListParticipantesCliente from './listParticipantesCliente';
-import {Grid, Row, Col} from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
+import { bindActionCreators } from 'redux';
+import { reduxForm } from 'redux-form';
+import _ from 'lodash';
+
 import Input from '../../ui/input/inputComponent';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import Textarea from '../../ui/textarea/textareaComponent';
-import {addParticipant, clearParticipants} from './actions';
-import {bindActionCreators} from 'redux';
-import {reduxForm} from 'redux-form';
-import {contactsByClientFindServer} from '../contact/actions';
 import BotonCreateContactComponent from '../contact/createContact/botonCreateContactComponent';
-import {FILE_OPTION_SOCIAL_STYLE_CONTACT} from '../../constantsGlobal';
-import {downloadFilePDF} from '../contact/actions'
-import {validatePermissionsByModule} from '../../actionsGlobal';
-import {MODULE_CONTACTS, CREAR} from '../../constantsGlobal';
-import {NUMBER_CONTACTS, KEY_PARTICIPANT_CLIENT} from './constants';
-import _ from 'lodash';
 import Tooltip from "../toolTip/toolTipComponent";
+
+import { addParticipant, clearParticipants } from './actions';
+import { contactsByClientFindServer } from '../contact/actions';
+import { downloadFilePDF } from '../contact/actions'
+import { validatePermissionsByModule } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
+
+import { FILE_OPTION_SOCIAL_STYLE_CONTACT } from '../../constantsGlobal';
+import { MODULE_CONTACTS, CREAR } from '../../constantsGlobal';
+import { NUMBER_CONTACTS, KEY_PARTICIPANT_CLIENT } from './constants';
 
 const validate = values => {
     const errors = {}
@@ -43,7 +45,7 @@ class ParticipantesCliente extends Component {
     }
 
     _addParticipantClient() {
-        const {fields: {idContacto, nameContacto, contactoCliente, cargoContacto, estiloSocial, actitudGrupo}, participants, addParticipant, swtShowMessage} = this.props;
+        const { fields: { idContacto, nameContacto, contactoCliente, cargoContacto, estiloSocial, actitudGrupo }, participants, addParticipant, swtShowMessage } = this.props;
         if (contactoCliente.value !== "" && contactoCliente.value !== null && contactoCliente.value !== undefined) {
             var particip = participants.find(function (item) {
                 return item.idParticipante === idContacto.value;
@@ -62,7 +64,7 @@ class ParticipantesCliente extends Component {
                     actitudBanco: actitudGrupo.value === null || actitudGrupo.value === undefined || actitudGrupo.value === '' ?
                         '' : ' - ' + actitudGrupo.value,
                     fecha: Date.now(),
-                    uuid                 
+                    uuid
                 }
                 addParticipant(clientParticipant);
                 idContacto.onChange('');
@@ -72,38 +74,40 @@ class ParticipantesCliente extends Component {
                 estiloSocial.onChange('');
                 actitudGrupo.onChange('');
             } else {
-                swtShowMessage('error',"Participante existente","Señor usuario, el participante que desea agregar ya se encuentra en la lista");
-
+                swtShowMessage('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
             }
         } else {
-            swtShowMessage('error',"Error participante","Señor usuario, para agregar un participante debe seleccionar un contacto");
+            swtShowMessage('error', "Error participante", "Señor usuario, para agregar un participante debe seleccionar un contacto");
         }
     }
 
     _downloadFileSocialStyle() {
-        const {downloadFilePDF} = this.props;
+        const { downloadFilePDF } = this.props;
         downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
     }
 
     componentWillMount() {
-        const {contactsByClient, contactsByClientFindServer, clearParticipants, participants, validatePermissionsByModule} = this.props;
+        const { contactsByClientFindServer, clearParticipants, validatePermissionsByModule } = this.props;
+        
         clearParticipants();
         this.props.resetForm();
-        const valuesContactsClient = contactsByClient.get('contacts');
         contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_CONTACTS, "", 0, "", "", "", "");
         validatePermissionsByModule(MODULE_CONTACTS).then((data) => {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                 redirectUrl("/login");
             } else {
                 if (!_.get(data, 'payload.data.data.showModule') || _.get(data, 'payload.data.data.showModule') === 'false') {
-                    this.setState({openMessagePermissions: true});
+                    this.setState({ openMessagePermissions: true });
                 }
             }
         });
     }
 
     _updateValue(value) {
-        const {fields: {idContacto, nameContacto, contactoCliente, cargoContacto, estiloSocial, actitudGrupo}, contactsByClient} = this.props;
+        const {
+            fields: { idContacto, nameContacto, cargoContacto, estiloSocial, actitudGrupo }, contactsByClient
+        } = this.props;
+
         var contactClient = contactsByClient.get('contacts');
         var contactSelected;
         _.map(contactClient, contact => {
@@ -128,9 +132,10 @@ class ParticipantesCliente extends Component {
 
     render() {
         const {
-            fields: {contactoCliente, cargoContacto, estiloSocial, actitudGrupo}, reducerGlobal, error, handleSubmit, participants, contactsByClient,
-            addParticipant, disabled
+            fields: { contactoCliente, cargoContacto, estiloSocial, actitudGrupo }, reducerGlobal, participants,
+            contactsByClient, disabled
         } = this.props;
+
         var numColumnList = 6;
         var data = _.chain(participants.toArray()).map(participant => {
             return participant;
@@ -145,13 +150,14 @@ class ParticipantesCliente extends Component {
         if (disabled === "disabled") {
             numColumnList = 12;
         }
+
         return (
             <div>
-                <Row style={{padding: "0px 10px 0px 10px"}}>
-                    { disabled === '' || disabled === undefined ?
-                        <Col xs={12} md={6} lg={6} style={{paddingRight: "0px"}}>
+                <Row style={{ padding: "0px 10px 0px 10px" }}>
+                    {disabled === '' || disabled === undefined ?
+                        <Col xs={12} md={6} lg={6} style={{ paddingRight: "0px" }}>
                             <Col xs={12} md={12} lg={12}>
-                                <dt><span>Nombre (<span style={{color: "red"}}>*</span>)</span></dt>
+                                <dt><span>Nombre (<span style={{ color: "red" }}>*</span>)</span></dt>
                                 <dt>
                                     <ComboBox
                                         name="txtContactoCliente"
@@ -162,11 +168,11 @@ class ParticipantesCliente extends Component {
                                         textProp={'nameComplet'}
                                         data={contactsByClient.get('contacts')}
                                         onComboChange={(val) => null}
-                                    
+
                                     />
                                 </dt>
                             </Col>
-                            <Col xs={12} md={12} lg={12} style={{paddingTop: "5px"}}>
+                            <Col xs={12} md={12} lg={12} style={{ paddingTop: "5px" }}>
                                 <dt><span>Cargo</span></dt>
                                 <dt>
                                     <Input
@@ -177,18 +183,18 @@ class ParticipantesCliente extends Component {
                                     />
                                 </dt>
                             </Col>
-                            <Row style={{padding: "5px 10px 0px 10px"}}>
+                            <Row style={{ padding: "5px 10px 0px 10px" }}>
                                 <Col xs={12} md={6} lg={6}>
                                     <dt>
                                         <span>Estilo social </span>
                                         <Tooltip text={titleMessageSocialStyle}>
                                             <i className="help circle icon blue"
-                                               style={{fontSize: "14px", cursor: "pointer", marginLeft: "2px"}}/>
+                                                style={{ fontSize: "14px", cursor: "pointer", marginLeft: "2px" }} />
                                         </Tooltip>
                                         <Tooltip text='Descargar archivo de estilo social'>
                                             <i onClick={this._downloadFileSocialStyle}
-                                               style={{marginLeft: "0px", cursor: "pointer", fontSize: "13px"}}
-                                               className="red file pdf outline icon"/>
+                                                style={{ marginLeft: "0px", cursor: "pointer", fontSize: "13px" }}
+                                                className="red file pdf outline icon" />
                                         </Tooltip>
                                     </dt>
                                     <dt>
@@ -212,35 +218,35 @@ class ParticipantesCliente extends Component {
                                     </dt>
                                 </Col>
                             </Row>
-                            <Row style={{paddingRight: "0px !important", paddingLeft: "0px", marginLeft: "10px"}}>
-                                <Col xs={12} md={5} lg={5} style={{paddingRight: "0px !important"}}>
+                            <Row style={{ paddingRight: "0px !important", paddingLeft: "0px", marginLeft: "10px" }}>
+                                <Col xs={12} md={5} lg={5} style={{ paddingRight: "0px !important" }}>
                                     <button className="btn btn-primary" onClick={this._addParticipantClient}
-                                            disabled={disabledButtonCreate}
-                                            type="button" title="Adicionar participante, máximo 10"
-                                            style={{marginTop: "20px"}}>
-                                        <i className="white plus icon"/> Agregar participante
+                                        disabled={disabledButtonCreate}
+                                        type="button" title="Adicionar participante, máximo 10"
+                                        style={{ marginTop: "20px" }}>
+                                        <i className="white plus icon" /> Agregar participante
                                     </button>
                                 </Col>
-                                { _.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), CREAR), false) &&
-                                <BotonCreateContactComponent typeButton={1}/>
+                                {_.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), CREAR), false) &&
+                                    <BotonCreateContactComponent typeButton={1} />
                                 }
                             </Row>
                         </Col>
                         : ''}
                     {data.length > 0 ?
                         <Col xs={12} md={numColumnList} lg={numColumnList}
-                             style={{paddingLeft: "5px", paddingTop: "10px"}}>
-                            <ListParticipantesCliente disabled={disabled}/>
+                            style={{ paddingLeft: "5px", paddingTop: "10px" }}>
+                            <ListParticipantesCliente disabled={disabled} />
                         </Col> :
                         <Col xs={12} md={numColumnList} lg={numColumnList}>
-                            <div style={{textAlign: "center", marginTop: "20px", marginBottom: "20px"}}>
+                            <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
                                 <span className="form-item">Aún no se han adicionado participantes</span>
                             </div>
                         </Col>
                     }
                 </Row>
-                
-                
+
+
             </div>
         );
     }
@@ -258,7 +264,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({selectsReducer, participants, contactsByClient, reducerGlobal}) {
+function mapStateToProps({ selectsReducer, participants, contactsByClient, reducerGlobal }) {
     return {
         participants,
         selectsReducer,

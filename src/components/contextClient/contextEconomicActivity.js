@@ -1,14 +1,12 @@
 import React, { Component, PropTypes } from 'react';
-import { Row, Col } from 'react-flexbox-grid';
+import { Col } from 'react-flexbox-grid';
 import { connect } from 'react-redux';
 import Textarea from '../../ui/textarea/textareaComponent';
 import _ from 'lodash';
 import ToolTipComponent from '../toolTip/toolTipComponent';
 import {
-    VALUE_REQUIERED, VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
 } from '../../constantsGlobal';
-import { stringValidate, xssValidation } from '../../actionsGlobal';
 import { ORIGIN_CREDIT_STUDY } from '../clients/creditStudy/constants';
 import { MESSAGE_CONTEXT } from './constants';
 
@@ -35,7 +33,7 @@ class ContextEconomicActivity extends Component {
     }
 
     render() {
-        const { contextClientField, data, isCheckbox, fieldRequiered, origin } = this.props;
+        const { contextClientField, origin } = this.props;
         return (
             <Col xs={12} md={12} lg={12} onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
                 <div style={{ marginTop: "15px", marginLeft: '20px', marginRight: '20px' }}>
@@ -58,11 +56,10 @@ class ContextEconomicActivity extends Component {
                                 validateEnter={true}
                                 type="text"
                                 style={{ width: '100%' }}
-                                max="5000"
+                                max="5"
                                 rows={7}
                                 placeholder="Ingrese el contexto del cliente"
                                 {...contextClientField}
-                                error={!stringValidate(contextClientField.value) && fieldRequiered ? VALUE_REQUIERED : (xssValidation(contextClientField.value) ? VALUE_XSS_INVALID : '')}
                                 touched={true}
                             />
                         } />

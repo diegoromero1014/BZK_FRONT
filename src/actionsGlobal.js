@@ -284,7 +284,7 @@ export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allows
             valuReduxForm.onChange(val + decimal);
         }
     } else { //Valido si el valor es negativo o positivo
-        var value = _.isNil(valuReduxForm) ? numeral(val).format('0') : numeral(valuReduxForm.value).format('0');
+        var value = numeral(val).format('0');
         if (value >= 0) {
             pattern = /(-?\d+)(\d{3})/;
             while (pattern.test(val)) {
@@ -327,6 +327,10 @@ export function validateResponse(response) {
         }
     }
     return true;
+}
+
+export function validateWhileListResponse(response) {
+    return _.get(response, 'payload.data.status') !==  constants.REQUEST_INVALID_INPUT;
 }
 
 /**
@@ -453,6 +457,18 @@ export function xssValidation(value, isFullValidation) {
 export function onSessionExpire() {
     window.localStorage.setItem('sessionTokenFront', '');
     redirectUrl("/login");
+}
+
+export function replaceCommaInNumber(value) {
+    if (_.isNil(value)) {
+        return value;
+    }
+
+    if (typeof value == 'string') {
+        return value.replace(',','');
+    }
+
+    return value;
 }
 
 export function validateFields(values, validations, errors) {

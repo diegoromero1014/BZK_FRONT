@@ -1,18 +1,24 @@
 import _ from "lodash";
 
+import { htmlToText } from './../actionsGlobal';
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
     patternOfStructureEmail, patternOfEmail, patternOfHistory, patternOfClientName, patternOfDescription,
-    patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers
+    patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
+    patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant, 
+    patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit
 } from './patternsToValidateField';
 
 import {
     MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH,
     MESSAGE_WARNING_MAX_LENGTH, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_WARNING_HISTORY, MESSAGE_WARNING_NUMBER_DOCUMENT,
     MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE, MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS,
-    MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT,
-    MESSAGE_WARNING_CLIENT_NAME
+    MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_OPPORTUNITY_NAME,
+    MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_NAME_OTHER_PARTICIPANT,
+    MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT, MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT,
+    MESSAGE_WARNING_PLACE_OF_PREVISIT, MESSAGE_WARNING_RANGE, MESSAGE_WARNING_FORBIDDEN_CHARACTER
+
 } from './validationsMessages';
 
 import {
@@ -43,16 +49,15 @@ export const processRules = (formFields, fieldsWithRules, props) => {
             });
         }
     });
-
     return errors;
 }
 
-export const checkRequired = value => (_.isNull(value) || _.toString(value).length < 1) ? MESSAGE_REQUIRED_VALUE : null;
+export const checkRequired = value => (_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) ? MESSAGE_REQUIRED_VALUE : null;
 export const checkRequiredWithGlobalCondition = value => globalCondition ? checkRequired(value) : null;
 
 export const checkOnlyAlphabetical = (value) => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfOnlyAlphabetical).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfOnlyAlphabetical.test(value)) {
         message = MESSAGE_WARNING_ONLY_ALPHABETICAL;
     }
 
@@ -92,7 +97,7 @@ export const checkMaxLength = maxLength => value => {
 
 export const checkNumberDocument = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfNumberDocument).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfNumberDocument.test(value)) {
         message = MESSAGE_WARNING_NUMBER_DOCUMENT;
     }
 
@@ -101,7 +106,7 @@ export const checkNumberDocument = value => {
 
 export const checkObservations = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfObservation).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfObservation.test(value)) {
         message = MESSAGE_WARNING_OBSERVATIONS;
     }
 
@@ -172,6 +177,15 @@ export const checkContactRelevantFeatures = value => {
     return message;
 }
 
+export const checkPipeLineOpportunityName = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfOpportunityName).test(value)) {
+        message = MESSAGE_WARNING_OPPORTUNITY_NAME;
+    }
+
+    return message;
+}
+
 export const checkObservationsLinkClient = value => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfObservationLinkClient).test(value)) {
@@ -180,6 +194,7 @@ export const checkObservationsLinkClient = value => {
 
     return message;
 }
+
 export const checkHistoryFields = value => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfHistory).test(value)) {
@@ -237,6 +252,100 @@ export const checkNumbers = value => {
         message = MESSAGE_WARNING_ONLY_NUMBERS;
     }
 
-    return message;
+    return message;  
 
+}
+
+export const checkValueClientInformacion = reducer => (value, fields, props) => {
+    if (!props) {
+        return null;
+    }
+    const applied = props.clientInformacion.get(reducer);
+    let message = null;
+    if (! applied) {
+        message = checkRequired(value);
+    }
+    return message;
+}
+
+export const checkNameOtherParticipant = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfNameOtherParticipant.test(value)) {
+        message = MESSAGE_WARNING_NAME_OTHER_PARTICIPANT;
+    }
+
+    return message;
+}
+
+export const checkPositionOtherParticipant = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) &&
+        !patternOfPositionOtherParticipant.test(value)) {
+        message = MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT;
+    }
+
+    return message;
+}
+
+export const checkCompanyOtherParticipant = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) &&
+        !patternOfCompanyOtherParticipant.test(value)) {
+        message = MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT;
+    }
+
+    return message;
+}
+
+export const checkDecimalNumbers = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternDecimalNumbers.test(value)) {
+        message = MESSAGE_WARNING_ONLY_NUMBERS;
+    }
+
+    return message;
+}
+
+export const checkPlaceOfPrevisit = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfPlaceOfPrevisit.test(value)) {
+        message = MESSAGE_WARNING_PLACE_OF_PREVISIT;
+    }
+
+    return message;
+}
+
+export const checkRichTextRequired = value => {
+    if(!_.isUndefined(value)){
+        return checkRequired(htmlToText(value));
+    } else {
+        return MESSAGE_REQUIRED_VALUE;
+    }
+}
+
+export const checkNumberInRange = (min, max) => value => {
+    let message = null;
+    let number;
+    if (_.isNil(value)) {
+        return message;
+    }
+    if (typeof value == 'string') {
+        number = parseFloat(value.replace(",",""));
+    } else {
+        number = parseFloat(value);
+    }
+    if (number < min || number > max) {
+        message = MESSAGE_WARNING_RANGE(min, max);
+    }
+    return message;
+}
+
+export const checkFirstCharacter = value => {
+    let message = null;
+    if (!_.isNil(value) && patternOfForbiddenCharacter.test(value)) {
+        message = MESSAGE_WARNING_FORBIDDEN_CHARACTER;
+    }
+    return message;
 }

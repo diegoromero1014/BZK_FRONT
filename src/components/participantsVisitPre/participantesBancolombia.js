@@ -1,24 +1,21 @@
 import React, { Component } from 'react';
 import ListParticipantesBancolombia from './listParticipantesBancolombia';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import Input from '../../ui/input/inputComponent';
-import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
-import Textarea from '../../ui/textarea/textareaComponent';
-import { addParticipant, clearParticipants, filterUsersBanco } from './actions';
+import { Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
-import { contactsByClientFindServer } from '../contact/actions';
-import { NUMBER_CONTACTS, KEY_PARTICIPANT_BANCO } from './constants';
-import {
-  APP_URL,
-  VALUE_XSS_INVALID,
-  REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
-} from '../../constantsGlobal';
-import { validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from '../../actionsGlobal';
 import _ from 'lodash';
 import $ from 'jquery';
+
+import Input from '../../ui/input/inputComponent';
+import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
+
+import { addParticipant, clearParticipants, filterUsersBanco } from './actions';
+import { contactsByClientFindServer } from '../contact/actions';
+import { validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
+
+import { NUMBER_CONTACTS, KEY_PARTICIPANT_BANCO } from './constants';
+import { REGEX_SIMPLE_XSS_MESAGE } from '../../constantsGlobal';
 
 var self;
 const validate = values => {
@@ -38,6 +35,7 @@ class ParticipantesBancolombia extends Component {
       validateConsultParticipants: false,
       showInvalidCharacter: false,
     }
+
     this._addParticipantBanc = this._addParticipantBanc.bind(this);
     this._updateValue = this._updateValue.bind(this);
     this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
@@ -51,10 +49,12 @@ class ParticipantesBancolombia extends Component {
           return item.idParticipante === objetoUsuario.value.idUsuario;
         }
       });
+
       if (xssValidation(nameUsuario.value)) {
         swtShowMessage('error', "Error participante", REGEX_SIMPLE_XSS_MESAGE);
         return;
       }
+
       if (particip === undefined) {
         const uuid = _.uniqueId('participanBanco_');
         var clientParticipant = {
@@ -68,6 +68,7 @@ class ParticipantesBancolombia extends Component {
           fecha: Date.now(),
           uuid,
         }
+
         addParticipant(clientParticipant);
         idUsuario.onChange('');
         nameUsuario.onChange('');
@@ -75,7 +76,6 @@ class ParticipantesBancolombia extends Component {
         empresaUsuario.onChange('');
       } else {
         swtShowMessage('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
-
       }
     } else {
       swtShowMessage('error', "Error participante", "Señor usuario, para agregar un participante debe seleccionar un usuario del banco");
@@ -83,27 +83,26 @@ class ParticipantesBancolombia extends Component {
   }
 
   _updateValue(value) {
-
     const { fields: { idUsuario, nameUsuario, cargoUsuario }, contactsByClient } = this.props;
     var contactClient = contactsByClient.get('contacts');
     var userSelected;
+
     _.map(contactClient, contact => {
       if (contact.id.toString() === value) {
         userSelected = contact;
         return contact;
       }
     });
+
     if (validateValue(userSelected)) {
       idUsuario.onChange(userSelected.id);
       nameUsuario.onChange(userSelected.nameComplet);
       cargoUsuario.onChange(userSelected.contactPosition);
       empresaUsuario.onChange(userSelected.company);
     } else {
-
       if (idUsuario.value > 0) {
         idUsuario.onChange('');
       }
-
     }
   }
 
@@ -135,7 +134,7 @@ class ParticipantesBancolombia extends Component {
 
   updateKeyValueUsersBanco(e) {
     const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco, swtShowMessage } = this.props;
-    const selfThis = this;
+    
     if (e.keyCode === 13 || e.which === 13) {
       e.consultclick ? "" : e.preventDefault();
       if (nameUsuario.value !== "" && nameUsuario.value.length >= 3 && nameUsuario.value !== null && nameUsuario.value !== undefined) {
@@ -176,9 +175,8 @@ class ParticipantesBancolombia extends Component {
   }
 
   render() {
-    const { fields: {
-      idUsuario, nameUsuario, cargoUsuario, empresaUsuario
-    }, error, handleSubmit, participants, contactsByClient, addParticipant, disabled } = this.props;
+    const { fields: { nameUsuario, cargoUsuario, empresaUsuario }, participants, disabled } = this.props;
+
     var numColumnList = 6;
     var data = _.chain(participants.toArray()).map(participant => {
       return participant;

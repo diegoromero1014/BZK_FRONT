@@ -22,11 +22,11 @@ import { addEvent } from './events/actions';
 
 
 import {
-    patternOfHistoryEvent
+    patternOfHistoryEvent, patternOfForbiddenCharacter
 } from './../../../validationsFields/patternsToValidateField';
 
 import {
-    MESSAGE_WARNING_HISTORY_EVENT, MESSAGE_WARNING_MAX_LENGTH
+    MESSAGE_WARNING_HISTORY_EVENT, MESSAGE_WARNING_MAX_LENGTH, MESSAGE_WARNING_FORBIDDEN_CHARACTER
 } from './../../../validationsFields/validationsMessages';
 
 import { saveStructuredDelivery, structuredDeliveryDetail, updateEventErrors } from './actions';
@@ -97,6 +97,10 @@ class componentStructuredDelivery extends Component {
                     allowSave = false;
                 } else if(!_.isUndefined(event.name) && !_.isNull(event.name) && event.name.length > MAX_LENGTH_EVENT_NAME) {
                     message = MESSAGE_WARNING_MAX_LENGTH(MAX_LENGTH_EVENT_NAME);
+                    updateEventErrors(true, message);
+                    allowSave = false;
+                } else if(!_.isNil(event.name) && patternOfForbiddenCharacter.test(event.name)) {                                       
+                    message = MESSAGE_WARNING_FORBIDDEN_CHARACTER;                    
                     updateEventErrors(true, message);
                     allowSave = false;
                 }
