@@ -25,7 +25,6 @@ import InfoFinancieraPN from './components/InfoFinancieraPN';
 import { validate as validateInfoFinancieraPN } from './components/InfoFinancieraPN';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
 
-
 import { goBack, redirectUrl } from "../globalComponents/actions";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { changeStateSaveData } from "../dashboard/actions";
@@ -512,7 +511,11 @@ class clientCertify extends React.Component {
             if (economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined) {
                 $('.ui.search.participantBanc').toggleClass('loading');
                 economicGroupsByKeyword(economicGroupName.value).then((data) => {
-                    let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');                    
+                    let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
+                    let economicGroup2 = _.forEach(economicGroup1, function (data1) {
+                        data1.title = data1.group;
+                        data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
+                    });
                     $('.ui.search.participantBanc')
                         .search({
                             cache: false,
