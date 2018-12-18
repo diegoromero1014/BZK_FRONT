@@ -32,7 +32,7 @@ class buttonClientVisorComponent extends Component {
     }
 
     componentWillMount() {
-        const { consultParameterServer, clientdIdNumber } = this.props;
+        const { consultParameterServer } = this.props;
 
         consultParameterServer(URL_VISOR_PARAMETER).then((data) => {
             if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&

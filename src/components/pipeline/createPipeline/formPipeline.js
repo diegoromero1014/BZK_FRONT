@@ -44,8 +44,7 @@ import {
 } from "../constants";
 import {
   MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER,
-  OPTION_REQUIRED, SAVE_DRAFT, SAVE_PUBLISHED,
-  VALUE_REQUIERED,
+  SAVE_DRAFT, SAVE_PUBLISHED,
   MESSAGE_ERROR,
   VALUE_XSS_INVALID,
   REGEX_SIMPLE_XSS_TITLE,
@@ -1119,9 +1118,5 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     form: name || _.uniqueId('business_'),
     validate,
     touchOnChange: true,
-    onSubmitFail: errors => {
-      let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
-
-    }
   }, mapStateToProps, mapDispatchToProps)(FormPipeline);
 }

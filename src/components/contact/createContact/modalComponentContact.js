@@ -23,7 +23,7 @@ import { toggleModalContact, createContactNew, searchContact, clearSearchContact
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate, downloadFilePDF } from '../actions'
 import { changeStateSaveData } from '../../dashboard/actions';
 import { getListContactGroupById } from '../favoritesGroup/actions';
-import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../actionsGlobal';
+import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
 import {
     consultDataSelect,
     consultList,
