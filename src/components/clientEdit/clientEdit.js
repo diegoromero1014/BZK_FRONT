@@ -31,13 +31,9 @@ import ComponentListMainSupplier from "../contextClient/listMainSupplier/compone
 import ComponentListMainCompetitor from "../contextClient/listMainCompetitor/componentListMainCompetitor";
 import ComponentListIntOperations from "../contextClient/listInternationalOperations/componentListIntOperations";
 import ComponentInfoClient from './components/InfoClient';
-import ComponentInfoClientPN from './components/InfoClientPN';
 import { validationRules as rulesInfoClient } from './components/InfoClient.js';
-import { validationRules as rulesInfoClientPN } from './components/InfoClientPN.js';
-import ActividadEconomicaPN from './components/ActividadEconomicaPN';
 import ActividadEconomica from './components/ActividadEconomica';
 import { validationRules as rulesActividadEconomica } from './components/ActividadEconomica';
-import { validationRules as rulesActividadEconomicaPN } from './components/ActividadEconomicaPN';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
 
 import { clearProducts, setProducts } from "./products/actions";
