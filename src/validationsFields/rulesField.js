@@ -17,7 +17,8 @@ import {
     MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_OPPORTUNITY_NAME,
     MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_NAME_OTHER_PARTICIPANT,
     MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT, MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT,
-    MESSAGE_WARNING_PLACE_OF_PREVISIT, MESSAGE_WARNING_RANGE, MESSAGE_WARNING_FORBIDDEN_CHARACTER
+    MESSAGE_WARNING_PLACE_OF_PREVISIT, MESSAGE_WARNING_RANGE, MESSAGE_WARNING_FORBIDDEN_CHARACTER,
+    MESSAGE_WARNING_NUMBER_LENGTH
 
 } from './validationsMessages';
 
@@ -346,6 +347,20 @@ export const checkFirstCharacter = value => {
     let message = null;
     if (!_.isNil(value) && patternOfForbiddenCharacter.test(value)) {
         message = MESSAGE_WARNING_FORBIDDEN_CHARACTER;
+    }
+    return message;
+}
+
+export const checkNumberLength = length => value => {
+    //Conventir a string
+    let message = null;
+    if (_.isNil(value)) {
+        return message;
+    }
+    let number = value + "";
+    number = number.replace(",","").replace(".","").replace("-","");
+    if (number.length > length) {
+        message = MESSAGE_WARNING_NUMBER_LENGTH(length);
     }
     return message;
 }

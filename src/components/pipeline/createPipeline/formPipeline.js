@@ -818,7 +818,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name={_.uniqueId('commission_')}
                       type="text"
                       {...commission}
-                      max="10"
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(1, commission, val, true)}
                       onFocus={val => handleFocusValueNumber(commission, commission.value)}
@@ -834,7 +833,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name="roe"
                       type="text"
                       {...roe}
-                      max="10"
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(1, roe, val, true)}
                       onFocus={val => handleFocusValueNumber(roe, roe.value)}
@@ -869,7 +867,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...value}
                       name="valueMillions"
                       type="text"
-                      max="15"
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
                       onFocus={val => handleFocusValueNumber(value, value.value)}
@@ -887,7 +884,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...pendingDisbursementAmount}
                       name="pendingDisbursementAmount"
                       type="text"
-                      max="15"
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, val, false)}
                       onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, pendingDisbursementAmount.value)}
@@ -910,7 +906,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                           name="termInMonths"
                           type="text"
                           {...termInMonths}
-                          max="3"
                           parentId="dashboardComponentScroll"
                           onBlur={val => this._handleTermInMonths(termInMonths, val)}
                         />
@@ -957,7 +952,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     <Input
                       name="areaAssetsValue"
                       type="text"
-                      max="17"
                       {...areaAssetsValue}
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(1, areaAssetsValue, val, true, 2)}
