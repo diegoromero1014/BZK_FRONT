@@ -1,7 +1,9 @@
 import _ from "lodash";
 
 import {
-    checkRequired, processRules, checkRequiredWithGlobalCondition, checkOnlyAlphabetical, checkPipeLineOpportunityName, checkFirstCharacter
+    checkRequired, processRules, checkRequiredWithGlobalCondition,
+    checkOnlyAlphabetical, checkPipeLineOpportunityName, 
+    checkFirstCharacter, checkNumberLength
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -16,10 +18,10 @@ export const fieldsWithRules = {
     positionUpdatedBy: { rules: [] }, 
     nameUsuario: { rules: [checkRequired, checkOnlyAlphabetical] }, 
     idUsuario: { rules: [checkRequired] }, 
-    value: { rules: [checkRequired] }, 
-    commission: { rules: [] }, 
-    roe: { rules: [] }, 
-    termInMonths: { rules: [checkRequired] }, 
+    value: { rules: [checkRequired, checkNumberLength(15)] }, 
+    commission: { rules: [checkNumberLength(10)] }, 
+    roe: { rules: [checkNumberLength(10)] }, 
+    termInMonths: { rules: [checkRequired, checkNumberLength(4)] }, 
     businessStatus: { rules: [] }, 
     businessCategory: { rules: [checkRequiredWithGlobalCondition] }, 
     currency: { rules: [checkRequired] }, 
@@ -38,9 +40,9 @@ export const fieldsWithRules = {
     mellowingPeriod: { rules: [] }, 
     moneyDistribitionMarket: { rules: [] }, 
     areaAssets: { rules: [] }, 
-    areaAssetsValue: { rules: [] }, 
+    areaAssetsValue: { rules: [checkNumberLength(15)] }, 
     termInMonthsValues: { rules: [checkRequired] },
-    pendingDisbursementAmount: { rules: [] }
+    pendingDisbursementAmount: { rules: [checkNumberLength(15)] }
 }
 
 export const fields = _.keys(fieldsWithRules);

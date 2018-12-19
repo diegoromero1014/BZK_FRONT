@@ -934,7 +934,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             name="commission"
                                             type="text"
                                             {...commission}
-                                            max="10"
                                             parentId="dashboardComponentScroll"
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                             onBlur={val => handleBlurValueNumber(1, commission, val, true)}
@@ -951,7 +950,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             name="roe"
                                             type="text"
                                             {...roe}
-                                            max="10"
                                             parentId="dashboardComponentScroll"
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, roe, val, true)}
                                             onFocus={val => handleFocusValueNumber(roe, roe.value)}
@@ -989,7 +987,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             {...value}
                                             name="valueMillions"
                                             type="text"
-                                            max="15"
                                             parentId="dashboardComponentScroll"
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
                                             onFocus={val => handleFocusValueNumber(value, value.value)}
@@ -1007,7 +1004,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             {...pendingDisbursementAmount}
                                             name="pendingDisbursementAmount"
                                             type="text"
-                                            max="15"
                                             parentId="dashboardComponentScroll"
                                             onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, val, false)}
                                             onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, pendingDisbursementAmount.value)}
@@ -1030,7 +1026,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                     name="termInMonths"
                                                     type="text"
                                                     {...termInMonths}
-                                                    max="4"
                                                     parentId="dashboardComponentScroll"
                                                     disabled={this.state.isEditable ? '' : 'disabled'}
                                                     onBlur={val => this._handleTermInMonths(termInMonths, val)}
@@ -1078,7 +1073,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         <Input
                                             name="areaAssetsValue"
                                             type="text"
-                                            max="15"
                                             {...areaAssetsValue}
                                             parentId="dashboardComponentScroll"
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, areaAssetsValue, val, true, 2)}
