@@ -212,6 +212,7 @@ class ListDisbursementPlans extends Component {
                                     initialView='year'
                                     error={_.isEmpty(estimatedDisburDate.value) ? VALUE_REQUIERED : null}
                                     touched={this.state.errorForm || registrationRequired}
+                                    onBlur={() => {/*No borrar*/}}
                                 />
                             </div>
                         </Col>
