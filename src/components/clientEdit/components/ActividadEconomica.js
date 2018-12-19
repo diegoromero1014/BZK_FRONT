@@ -153,7 +153,10 @@ var validations = [
 export function validationRules(props) {
 
     if (props.idButton === BUTTON_EDIT) {
-        return [];
+        return [{
+            validation: 'option-required',
+            fields: ['idCIIU']
+        }];
     } else {
         return validations;
     }
