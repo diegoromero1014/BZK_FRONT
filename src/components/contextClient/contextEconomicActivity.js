@@ -56,7 +56,7 @@ class ContextEconomicActivity extends Component {
                                 validateEnter={true}
                                 type="text"
                                 style={{ width: '100%' }}
-                                max="5"
+                                max="1000"
                                 rows={7}
                                 placeholder="Ingrese el contexto del cliente"
                                 {...contextClientField}
