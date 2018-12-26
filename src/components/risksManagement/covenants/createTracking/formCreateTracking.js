@@ -190,7 +190,7 @@ export class FormCreateTracking extends Component {
                         </Col>
                         <Col xs={12} md={6} lg={4} style={{ paddingRight: "15px" }}>
                             <dt>
-                                <span>Cumplimiento del covenant xd(</span><span style={{ color: "red" }}>*</span>)
+                                <span>Cumplimiento del covenant (</span><span style={{ color: "red" }}>*</span>)
                             </dt>
                             <ComboBox
                                 name="fullfillmentCovenant"
