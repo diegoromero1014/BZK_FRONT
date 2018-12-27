@@ -51,17 +51,25 @@ export class FormCreateTracking extends Component {
     }
 
     validateCovenantObservation(validCovenantVal, fullfillmentCovenantVal) {
-        const { selectsReducer, fields: { validCovenant, fullfillmentCovenant } } = this.props;
+        const { selectsReducer, fields: { isMandatoryObservations } } = this.props;
         let validCovenantObj = _.find(_.toArray(selectsReducer.get(VALID_COVENANT)), (item) => item.id == validCovenantVal);
         let fullfillmentCovenantObj = _.find(_.toArray(selectsReducer.get(FULLFILLMENT_COVENANT)), (item) => item.id == fullfillmentCovenantVal);
+        
+        let newValue = isMandatoryObservations.value;
+        
         if (!validateIsNullOrUndefined(validCovenantObj) && !validateIsNullOrUndefined(fullfillmentCovenantObj)) {
-            isMandatoryObservations = !_.isEqual(_.get(validCovenantObj, 'value'), STR_YES) || (_.isEqual(_.get(validCovenantObj, 'value'), STR_YES) && !_.isEqual(_.get(fullfillmentCovenantObj, 'value'), STR_YES));
+            newValue = !_.isEqual(_.get(validCovenantObj, 'value'), STR_YES) || (_.isEqual(_.get(validCovenantObj, 'value'), STR_YES) && !_.isEqual(_.get(fullfillmentCovenantObj, 'value'), STR_YES));
         } else {
             if (!validateIsNullOrUndefined(validCovenantObj)) {
-                isMandatoryObservations = !_.isEqual(_.get(validCovenantObj, 'value'), STR_YES);
+                newValue = !_.isEqual(_.get(validCovenantObj, 'value'), STR_YES);
             }
         }
-        this.setState({ isMandatoryObservations: isMandatoryObservations });
+
+        if (newValue != isMandatoryObservations.value) {
+            isMandatoryObservations.onChange(newValue);
+        }
+
+        this.setState({ isMandatoryObservations: newValue});
 
     }
 
@@ -76,13 +84,17 @@ export class FormCreateTracking extends Component {
     }
 
     _onFullfillmentCovenant(val) {
-        const { selectsReducer, covenant, fields: { validCovenant, fullfillmentCovenant } } = this.props;
+        const { selectsReducer, covenant, fields: { validCovenant, fullfillmentCovenant, isFinancialStatements } } = this.props;
         const infoCovenant = covenant.get('covenantInfo');
         this.validateCovenantObservation(validCovenant.value, val);
 
         let fullfillmentCovenantObj = _.find(_.toArray(selectsReducer.get(FULLFILLMENT_COVENANT)), (item) => item.id == val);
-        isFinancialStatements = _.isEqual(_.get(fullfillmentCovenantObj, 'value'), STR_YES) && _.isEqual(_.get(infoCovenant, 'strClassification'), CLASSIFICATION_SPECIFIC);
-        this.setState({ isFinancialStatements: isFinancialStatements });
+        let newValue = isFinancialStatements.value;
+        newValue = _.isEqual(_.get(fullfillmentCovenantObj, 'value'), STR_YES) && _.isEqual(_.get(infoCovenant, 'strClassification'), CLASSIFICATION_SPECIFIC);
+        if (newValue != isFinancialStatements.value) {
+            isFinancialStatements.onChange(newValue);
+        }
+        this.setState({ isFinancialStatements: newValue });
 
         fullfillmentCovenant.onChange(val);
     }
