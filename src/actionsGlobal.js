@@ -497,3 +497,20 @@ export function validateFields(values, validations, errors) {
         });
     })
 }
+/**
+ * Ejecuta las funciones que se pasan como parametro
+ * @param {[function]} rules 
+ */
+export function checkRules(rules, value) {
+    let result;
+    let errorMessage = null;
+    _.forEach(rules, (rule) => {
+        result = rule(value);
+        if (!_.isEmpty(result)) {
+            errorMessage = result;
+            return;
+        }
+    });
+
+    return errorMessage;
+}
