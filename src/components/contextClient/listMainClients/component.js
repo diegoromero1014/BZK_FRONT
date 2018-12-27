@@ -3,7 +3,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue, validateValueExist } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue, validateValueExist, checkRules } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
     ONLY_POSITIVE_INTEGER
@@ -15,6 +15,10 @@ import { MAIN_CLIENTS, MESSAGE_MAIN_CLIENTS, MESSAGE_RELEVANT_MAIN_CLIENTS } fro
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
+import {
+    checkRequired, processRules, checkClientDescription,
+    checkNumberInRange, checkMaxLength, checkFirstCharacter
+} from '../../../validationsFields/rulesField';
 
 export class ComponentListMainClients extends Component {
     constructor(props) {
@@ -35,6 +39,12 @@ export class ComponentListMainClients extends Component {
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteMainClients = this._deleteMainClients.bind(this);
         this.hasErrors = this.hasErrors.bind(this);
+
+        this.rulesNameClient = [checkRequired, checkClientDescription, checkMaxLength(50), checkFirstCharacter];
+        this.rulesParticipation = [checkRequired, checkNumberInRange(0, 100)];
+        this.rulesTerm = [checkRequired, checkNumberInRange(0, 9999)];
+        this.rulesRelevantInformation = [checkClientDescription, checkFirstCharacter];
+
     }
 
     componentWillMount() {
@@ -140,15 +150,54 @@ export class ComponentListMainClients extends Component {
     }
 
     _mapValuesMainClients(entity, idx) {
+
+        const errorNameClient = checkRules(this.rulesNameClient, entity.nameClient);
+        const errorParticipation = checkRules(this.rulesParticipation, entity.participation);
+        const errorTerm = checkRules(this.rulesTerm, entity.term);
+        const errorRelevantInformation = checkRules(this.rulesRelevantInformation, entity.relevantInformation);
+
         return <tr key={idx}>
             <td className="collapsing">
                 <i className="zoom icon" title="Editar cliente principal" style={{ cursor: "pointer" }}
                     onClick={() => this._viewInformationClient(entity)} />
             </td>
-            <td>{entity.nameClient}</td>
-            <td>{entity.term}</td>
-            <td>{entity.participation} %</td>
-            <td>{shorterStringValue(entity.relevantInformation, 80)}</td>
+            <td>{entity.nameClient}
+            {
+                errorNameClient &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorNameClient}
+                    </div>
+                </div>
+            }
+            </td>
+            <td>{entity.term}
+            {
+                errorTerm &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorTerm}
+                    </div>
+                </div>
+            }</td>
+            <td>{entity.participation} %
+            {
+                errorParticipation &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorParticipation}
+                    </div>
+                </div>
+            }</td>
+            <td>{shorterStringValue(entity.relevantInformation, 80)}
+            {
+                errorRelevantInformation &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorRelevantInformation}
+                    </div>
+                </div>
+            }</td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar cliente principal" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />
