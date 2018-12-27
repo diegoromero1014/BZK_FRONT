@@ -52,6 +52,14 @@ import {
     HELP_PROBABILITY
 } from "../constants";
 
+/*const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
+    "businessCategory", "currency", "indexing", "need", "observations", "product",
+    "client", "documentStatus", "reviewedDate", "createdBy", "updatedBy", "createdTimestamp",
+    "updatedTimestamp", "createdByName", "updatedByName", "positionCreatedBy", "positionUpdatedBy",
+    "probability", "amountDisbursed", "estimatedDisburDate", "pendingDisbursementAmount",
+    "opportunityName", "productFamily", "mellowingPeriod", "moneyDistribitionMarket",
+    "areaAssets", "areaAssetsValue", "termInMonthsValues"]; */
+
 var thisForm;
 let typeButtonClick = null;
 let errorBusinessCategory = false;

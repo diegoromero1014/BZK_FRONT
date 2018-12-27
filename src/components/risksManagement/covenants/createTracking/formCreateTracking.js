@@ -4,7 +4,6 @@ import { reduxForm } from "redux-form";
 import { Col, Row } from "react-flexbox-grid";
 import moment from "moment";
 import _ from "lodash";
-import { fields, validations as validate } from './filesAndRules';
 
 import ComboBox from "../../../../ui/comboBox/comboBoxComponent";
 import InputComponent from "../../../../ui/input/inputComponent";
@@ -24,9 +23,64 @@ import { FULLFILLMENT_COVENANT, VALID_COVENANT } from "../../../selectsComponent
 import { TITLE_FIELD_OBSERVED_VALUE, CLASSIFICATION_SPECIFIC } from "../constants";
 import { NUMBER_RECORDS } from "../../../alertCovenants/constants";
 
+const fields = ["validCovenant", "fullfillmentCovenant", "observedValue", "dateFinancialStatements", "observations"];
 const errors = {};
 let isMandatoryObservations = false;
 let isFinancialStatements = false;
+
+const validate = (values) => {
+    if (!values.validCovenant) {
+        errors.validCovenant = OPTION_REQUIRED;
+    } else {
+        errors.validCovenant = null;
+    }
+
+    if (!values.fullfillmentCovenant) {
+        errors.fullfillmentCovenant = OPTION_REQUIRED;
+    } else {
+        errors.fullfillmentCovenant = null;
+    }
+
+    if (!values.observedValue) {
+        errors.observedValue = VALUE_REQUIERED;
+    } else if (xssValidation(values.observedValue)) {
+        errors.observedValue = VALUE_XSS_INVALID;
+    } else {
+        errors.observedValue = null;
+    }
+
+    // error={isMandatoryObservations ? VALUE_REQUIERED : null}
+    if (isMandatoryObservations) {
+
+        if (!values.observations) {
+            errors.observations = VALUE_REQUIERED;
+        } else if (xssValidation(values.observations)) {
+            errors.observations = VALUE_XSS_INVALID;;
+        } else {
+            errors.observations = null;
+        }
+    } else if (xssValidation(values.observations)) {
+        errors.observations = VALUE_XSS_INVALID;;
+    } else {
+        errors.observations = null;
+    }
+
+    if (isFinancialStatements) {
+        if (!values.dateFinancialStatements) {
+            errors.dateFinancialStatements = VALUE_REQUIERED;
+        } else {
+            if (!values.dateFinancialStatements.trim()) {
+                errors.dateFinancialStatements = VALUE_REQUIERED;
+            } else {
+                errors.dateFinancialStatements = null;
+            }
+        }
+    } else {
+        errors.dateFinancialStatements = null;
+    }
+
+    return errors;
+};
 
 export class FormCreateTracking extends Component {
     constructor(props) {
