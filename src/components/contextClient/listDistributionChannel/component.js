@@ -3,18 +3,21 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber } from '../../../actionsGlobal';
+import { handleBlurValueNumber, checkRules, stringValidate } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
     ONLY_POSITIVE_INTEGER
 } from '../../../constantsGlobal';
-import { stringValidate } from '../../../actionsGlobal';
 import SweetAlert from '../../sweetalertFocus';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import { DISTRIBUTION_CHANNEL, MESSAGE_DISTRIBUTION_CHANNEL } from '../constants';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
+import {
+    checkRequired, processRules, checkClientDescription,
+    checkNumberInRange, checkMaxLength, checkFirstCharacter
+} from '../../../validationsFields/rulesField';
 
 
 export class ComponentListDistributionChannel extends Component {
@@ -34,6 +37,11 @@ export class ComponentListDistributionChannel extends Component {
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteDistribution = this._deleteDistribution.bind(this);
         this.hasErrors = this.hasErrors.bind(this);
+
+        this.rulesDistributionChannel = [checkRequired, checkClientDescription, checkMaxLength(50), checkFirstCharacter];
+        this.rulesParticipation = [checkRequired, checkNumberInRange(0, 100)];
+        this.rulesContribution = [checkNumberInRange(0, 100)];
+
     }
 
     hasErrors(fields) {
@@ -45,7 +53,7 @@ export class ComponentListDistributionChannel extends Component {
             }
         }
         if (hasError) {
-            this.setState({'errorForm': true});
+            this.setState({ 'errorForm': true });
         }
         return hasError;
     }
@@ -86,7 +94,7 @@ export class ComponentListDistributionChannel extends Component {
             this.clearValues();
             this.setState({ entitySeleted: null });
         }
-       
+
     }
 
     clearValues() {
@@ -127,14 +135,46 @@ export class ComponentListDistributionChannel extends Component {
     }
 
     _mapValuesDistribution(entity, idx) {
+
+        const errorDistributionChannel = checkRules(this.rulesDistributionChannel, entity.distributionChannel);
+        const errorParticipation = checkRules(this.rulesParticipation, entity.participation);
+        const errorContribution = checkRules(this.rulesContribution, entity.contribution);
+ 
         return <tr key={idx}>
             <td className="collapsing">
                 <i className="zoom icon" title="Editar canal de distribución" style={{ cursor: "pointer" }}
                     onClick={() => this._viewInformationDistribution(entity)} />
             </td>
-            <td>{entity.distributionChannel}</td>
-            <td>{entity.participation} %</td>
-            <td>{stringValidate(entity.contribution) ? entity.contribution + "%" : entity.contribution}</td>
+            <td>{entity.distributionChannel}
+            {
+                errorDistributionChannel &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorDistributionChannel}
+                    </div>
+                </div>
+            }
+            </td>
+            
+            <td>{entity.participation} %
+            {
+                errorParticipation && 
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorParticipation}
+                    </div>
+                </div>
+            }</td>
+            <td>{stringValidate(entity.contribution) ? entity.contribution + "%" : entity.contribution}
+            {
+                errorContribution &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorContribution}
+                    </div>
+                </div>
+            }
+            </td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar canal de distribución" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />

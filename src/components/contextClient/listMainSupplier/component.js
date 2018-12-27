@@ -3,7 +3,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue, validateValueExist } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue, validateValueExist, checkRules } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
     ONLY_POSITIVE_INTEGER
@@ -15,6 +15,10 @@ import { MAIN_SUPPLIER, MESSAGE_MAIN_SUPPLIER, MESSAGE_RELEVANT_MAIN_SUPPLIERS }
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
+import {
+    checkRequired, processRules, checkClientDescription,
+    checkNumberInRange, checkMaxLength, checkFirstCharacter
+} from '../../../validationsFields/rulesField';
 
 export class ComponentListMainSupplier extends Component {
     constructor(props) {
@@ -35,6 +39,12 @@ export class ComponentListMainSupplier extends Component {
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteMainSupplier = this._deleteMainSupplier.bind(this);
         this.hasErrors = this.hasErrors.bind(this);
+
+        this.rulesNameSupplier = [checkRequired, checkClientDescription, checkMaxLength(50), checkFirstCharacter];
+        this.rulesParticipation = [checkRequired, checkNumberInRange(0, 100)];
+        this.rulesTerm = [checkRequired];
+        this.relevantInformation = [checkClientDescription, checkFirstCharacter];
+
     }
 
     componentWillMount() {
@@ -140,14 +150,46 @@ export class ComponentListMainSupplier extends Component {
     }
 
     _mapValuesMainSupplier(entity, idx) {
+
+        const errorNameSupplier = checkRules(this.rulesNameSupplier, entity.nameSupplier);
+        const errorTerm = checkRules(this.rulesTerm, entity.term);
+        const errorParticipation = checkRules(this.rulesParticipation, entity.participation);
+
         return <tr key={idx}>
             <td className="collapsing">
                 <i className="zoom icon" title="Editar proveedor principal" style={{ cursor: "pointer" }}
                     onClick={() => this._viewInformationSupplier(entity)} />
             </td>
-            <td>{entity.nameSupplier}</td>
-            <td>{entity.term}</td>
-            <td>{entity.participation} %</td>
+            <td>{entity.nameSupplier}
+            {
+                errorNameSupplier &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorNameSupplier}
+                    </div>
+                </div>
+            }
+            </td>
+            <td>{entity.term}
+            {
+                errorTerm &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorTerm}
+                    </div>
+                </div>
+            }
+            </td>
+            <td>{entity.participation} %
+            {
+                errorParticipation &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorParticipation}
+                    </div>
+                </div>
+            }
+            </td>
             <td>{shorterStringValue(entity.relevantInformation, 80)}</td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar proveedor principal" style={{ cursor: "pointer" }}
