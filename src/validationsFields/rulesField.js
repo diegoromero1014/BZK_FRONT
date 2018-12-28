@@ -6,7 +6,7 @@ import {
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
     patternOfStructureEmail, patternOfEmail, patternOfHistory, patternOfClientName, patternOfDescription,
     patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
-    patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant, 
+    patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant,
     patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit
 } from './patternsToValidateField';
 
@@ -253,7 +253,7 @@ export const checkNumbers = value => {
         message = MESSAGE_WARNING_ONLY_NUMBERS;
     }
 
-    return message;  
+    return message;
 
 }
 
@@ -263,7 +263,7 @@ export const checkValueClientInformacion = reducer => (value, fields, props) => 
     }
     const applied = props.clientInformacion.get(reducer);
     let message = null;
-    if (! applied) {
+    if (!applied) {
         message = checkRequired(value);
     }
     return message;
@@ -319,7 +319,7 @@ export const checkPlaceOfPrevisit = value => {
 }
 
 export const checkRichTextRequired = value => {
-    if(!_.isUndefined(value)){
+    if (!_.isUndefined(value)) {
         return checkRequired(htmlToText(value));
     } else {
         return MESSAGE_REQUIRED_VALUE;
@@ -333,7 +333,7 @@ export const checkNumberInRange = (min, max) => value => {
         return message;
     }
     if (typeof value == 'string') {
-        number = parseFloat(value.replace(",",""));
+        number = parseFloat(value.replace(",", ""));
     } else {
         number = parseFloat(value);
     }
@@ -353,13 +353,21 @@ export const checkFirstCharacter = value => {
 
 export const checkNumberLength = length => value => {
     //Conventir a string
+    console.log("checkNumberLenght")
     let message = null;
     if (_.isNil(value)) {
+        console.log('vacio')
         return message;
+
     }
+
     let number = value + "";
-    number = number.replace(",","").replace(".","").replace("-","");
-    if (number.length > length) {
+    let formatedNumber = number;
+    formatedNumber = formatedNumber.replace(/,/g, "");
+    formatedNumber = formatedNumber.replace(/\./g, "");
+    formatedNumber = formatedNumber.replace(/\-/g, "");
+    console.log(formatedNumber, formatedNumber.length, length);
+    if (formatedNumber.length > length) {
         message = MESSAGE_WARNING_NUMBER_LENGTH(length);
     }
     return message;

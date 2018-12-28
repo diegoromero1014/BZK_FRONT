@@ -146,7 +146,7 @@ export const MAX_LENGTH_LINK_CLIENT_TRACER_CODE = 255;
 let API_URL;
 
 if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
-    API_URL = "http://localhost:8084/Centricity";
+    API_URL = "http://localhost:8088/Centricity";
 } else {
     if (WP_VAR_ENVIRONMENT === "production") {
         API_URL = "https://biztrackback.bancolombia.corp/Centricity";
