@@ -19,7 +19,7 @@ import RichText from '../../richText/richTextComponent';
 import ToolTip from '../../toolTip/toolTipComponent';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import {
-    checkRequired, checkPlaceOfPrevisit, checkDecimalNumbers, checkRichTextRequired
+    checkRequired, checkPlaceOfPrevisit, checkDecimalNumbers, checkRichTextRequired, checkNumberLength
 } from './../../../validationsFields/rulesField';
 
 import { redirectUrl } from '../../globalComponents/actions';
@@ -397,20 +397,17 @@ class FormPrevisita extends Component {
             }
         }
 
-        const messageRequiredDuration = checkRequired(this.state.durationPreVisit);
+        let messageRequiredDuration = checkRequired(this.state.durationPreVisit);
+
+        messageRequiredDuration = messageRequiredDuration || checkDecimalNumbers(this.state.durationPreVisit);
+
+        messageRequiredDuration = messageRequiredDuration || checkNumberLength(4)(this.state.durationPreVisit);
+
         if (!_.isNull(messageRequiredDuration)) {
             errorInForm = true;
             this.setState({
                 durationPreVisitError: messageRequiredDuration
             });
-        } else {
-            const messageWarningDuration = checkDecimalNumbers(this.state.durationPreVisit);
-            if (!_.isNull(messageWarningDuration)) {
-                errorInForm = true;
-                this.setState({
-                    durationPreVisitError: messageWarningDuration
-                });
-            }
         }
 
         if (typeButtonClick === SAVE_PUBLISHED) {

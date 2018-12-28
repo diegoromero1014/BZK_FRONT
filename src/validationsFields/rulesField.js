@@ -419,10 +419,8 @@ export const checkFirstCharacter = value => {
 
 export const checkNumberLength = length => value => {
     //Conventir a string
-    console.log("checkNumberLenght")
     let message = null;
     if (_.isNil(value)) {
-        console.log('vacio')
         return message;
 
     }
@@ -432,7 +430,6 @@ export const checkNumberLength = length => value => {
     formatedNumber = formatedNumber.replace(/,/g, "");
     formatedNumber = formatedNumber.replace(/\./g, "");
     formatedNumber = formatedNumber.replace(/\-/g, "");
-    console.log(formatedNumber, formatedNumber.length, length);
     if (formatedNumber.length > length) {
         message = MESSAGE_WARNING_NUMBER_LENGTH(length);
     }
