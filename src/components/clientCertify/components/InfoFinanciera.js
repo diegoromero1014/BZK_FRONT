@@ -4,10 +4,7 @@ import Input from "../../../ui/input/inputComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import {Col, Row} from "react-flexbox-grid";
 
-import {ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, OPTION_REQUIRED, 
-    VALUE_REQUIERED, VALUE_XSS_INVALID} from "../../../constantsGlobal"
-
-import {xssValidation} from "../../../actionsGlobal";
+import {ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER} from "../../../constantsGlobal";
 
 import numeral from "numeral";
 import moment from "moment";
@@ -22,7 +19,7 @@ class InfoFinanciera extends React.Component {
     _handleBlurValueNumber(typeValidation, valuReduxForm, val) {
         var pattern;
         //Elimino los caracteres no validos
-        for (var i = 0, output = '', validos = "-0123456789"; i < (val + "").length; i++) {
+        for (var i = 0, output = '', validos = "0123456789"; i < (val + "").length; i++) {
             if (validos.indexOf(val.toString().charAt(i)) !== -1) {
                 output += val.toString().charAt(i)
             }
@@ -83,7 +80,6 @@ class InfoFinanciera extends React.Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 type="text"
                                 min={0}
-                                max="16"
                                 placeholder="Ingrese las ventas anuales"
                                 {...annualSales}
                                 value={annualSales.value}
@@ -111,7 +107,6 @@ class InfoFinanciera extends React.Component {
                                 format="0,000"
                                 min={0}
                                 type="text"
-                                max="16"
                                 placeholder="Ingrese los activos"
                                 {...assets}
                                 value={assets.value}
@@ -131,7 +126,6 @@ class InfoFinanciera extends React.Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
-                                max="16"
                                 type="text"
                                 placeholder="Ingrese los pasivos"
                                 {...liabilities}
@@ -150,7 +144,6 @@ class InfoFinanciera extends React.Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
-                                max="16"
                                 type="text"
                                 placeholder="Ingrese los ingresos operacionales mensuales"
                                 {...operatingIncome}
@@ -169,7 +162,6 @@ class InfoFinanciera extends React.Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
-                                max="16"
                                 type="text"
                                 placeholder="Ingrese los egresos mensuales"
                                 {...expenses}
@@ -190,7 +182,6 @@ class InfoFinanciera extends React.Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
-                                max="16"
                                 type="text"
                                 placeholder="Ingrese los ingresos no operacionales mensuales"
                                 {...nonOperatingIncome}
@@ -206,66 +197,5 @@ class InfoFinanciera extends React.Component {
         )
     }
 }
-
-export function validate(values, props, errors) {
-
-    if (!values.annualSales  && !props.isExclient) {
-        errors.annualSales = VALUE_REQUIERED;
-    } else if (xssValidation(values.annualSales)) {
-        errors.annualSales = VALUE_XSS_INVALID;
-    } else {
-        errors.annualSales = null;
-    }
-
-
-    if ((!values.dateSalesAnnuals || values.dateSalesAnnuals === '')  && !props.isExclient) {
-        errors.dateSalesAnnuals = DATE_REQUIERED;
-    } else if (xssValidation(values.dateSalesAnnuals)) {
-        errors.dateSalesAnnuals = VALUE_XSS_INVALID;
-    } else {
-        errors.dateSalesAnnuals = null;
-    }
-
-    if (!values.liabilities  && !props.isExclient) {
-        errors.liabilities = VALUE_REQUIERED;
-    } else if (xssValidation(values.liabilities)) {
-        errors.liabilities = VALUE_XSS_INVALID;
-    } else {
-        errors.liabilities = null;
-    }
-
-    if (!values.assets  && !props.isExclient) {
-        errors.assets = VALUE_REQUIERED;
-    } else if (xssValidation(values.assets)) {
-        errors.assets = VALUE_XSS_INVALID;
-    } else {
-        errors.assets = null;
-    }
-
-    if (!values.operatingIncome  && !props.isExclient) {
-        errors.operatingIncome = VALUE_REQUIERED;
-    } else if (xssValidation(values.operatingIncome)) {
-        errors.operatingIncome = VALUE_XSS_INVALID;
-    } else {
-        errors.operatingIncome = null;
-    }
-
-    if (!values.nonOperatingIncome  && !props.isExclient) {
-        errors.nonOperatingIncome = VALUE_REQUIERED;
-    } else if (xssValidation(values.nonOperatingIncome)) {
-        errors.nonOperatingIncome = VALUE_XSS_INVALID;
-    } else {
-        errors.nonOperatingIncome = null;
-    }
-
-    if (!values.expenses  && !props.isExclient) {
-        errors.expenses = VALUE_REQUIERED;
-    } else if (xssValidation(values.expenses)) {
-        errors.expenses = VALUE_XSS_INVALID;
-    } else {
-        errors.expenses = null;
-    }
-    
-};
 
 export default InfoFinanciera;

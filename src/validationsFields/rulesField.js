@@ -1,7 +1,7 @@
 import _ from "lodash";
 
 import { htmlToText } from './../actionsGlobal';
-import {OTHER} from './../constantsGlobal';
+import {OTHER, EXCLIENT, RESPONSE_INFO, MARK_GEREN} from './../constantsGlobal';
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
@@ -24,7 +24,7 @@ import {
 } from './validationsMessages';
 
 import {
-    SEGMENTS, REASON_TRANFER
+    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, MANAGEMENT_BRAND_KEY
 } from '../components/selectsComponent/constants';
 
 import {
@@ -84,6 +84,52 @@ export const checkForValueReasonTransfer = (value, fields, props) => {
     let reasonTransferValue = _.get(_.find(props.selectsReducer.get(REASON_TRANFER), ['id', parseInt(fields.reasonTranfer)]), 'value');
     if(_.isEqual(OTHER, reasonTransferValue)) {
         if(_.isNull(value) || _.isEmpty(value)) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+    return message;
+}
+
+export const checkForValueJustifyNoGeren = (value, fields, props) => {
+    let message = null;
+    let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
+    let justifyNoGerenValue = _.get(_.find(props.selectsReducer.get(MANAGEMENT_BRAND), ['id', parseInt(fields.marcGeren)]), 'value');    
+    if(!_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName) && _.isEqual(MARK_GEREN, justifyNoGerenValue)) {
+        if(_.isNull(value) || _.isEmpty(String(value))) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+    return message;
+}
+
+export const checkForValueJustifyNoLME = (value, fields, props) => {
+    let message = null;
+    let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
+    let justifyNoLMEValue = fields.necesitaLME;
+    if(!(justifyNoLMEValue === "true") && !_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName)) {
+        if(_.isNull(value) || _.isEmpty(String(value))) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+    return message;
+}
+
+export const checkForValueIsExClient = (value, fields, props) => {
+    let message = null;
+    let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
+    if(!_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName)) {
+        if(_.isNull(value) || _.isEmpty(String(value))) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+    return message;
+}
+
+export const checkForValueIsNotExClient = (value, fields, props) => {
+    let message = null;
+    let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
+    if(_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName)) {
+        if(_.isNull(value) || _.isEmpty(String(value))) {
             message = MESSAGE_REQUIRED_VALUE;
         }
     }

@@ -80,6 +80,9 @@ export const MESSAGE_WARNING = "warning";
 export const MESSAGE_SUCCESS = "success";
 
 export const OTHER = "Otro";
+export const EXCLIENT = "Excliente";
+export const RESPONSE_INFO = "responseClientInfo";
+export const MARK_GEREN = "Gerenciamiento a Demanda";
 
 //Variable de tipo de aplicacion
 export const FRONT_APP = "Front";
