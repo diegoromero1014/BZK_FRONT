@@ -7,6 +7,8 @@ import { deleteNote, updateNote } from './actions';
 import { updateErrorsNotes } from '../../clientDetailsInfo/actions';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import {patternNotesClient, patternOfForbiddenCharacter} from '../../../validationsFields/patternsToValidateField';
+import {MESSAGE_WARNING_NOTES_CLIENT, MESSAGE_WARNING_FORBIDDEN_CHARACTER} from '../../../validationsFields/validationsMessages';
 
 import {
     EDITAR,
@@ -48,27 +50,34 @@ class NoteItem extends Component {
         });
         updateErrorsNotes(false, "");
 
-        
-            notesArray.forEach(function (note) {
-                if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
-                    updateErrorsNotes(true, "Debe ingresar todos los campos");
-                } else if (xssValidation(note.note)) {
-                    updateErrorsNotes(true, VALUE_XSS_INVALID);
-                }
-            });
-        
 
-        
+        notesArray.forEach(function (note) {
+            let message = null;
+            if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
+                updateErrorsNotes(true, "Debe ingresar todos los campos");
+            }
+            if (!_.isUndefined(note.note) && !_.isNull(note.note) && eval(patternNotesClient).test(note.note)) {
+                message = MESSAGE_WARNING_NOTES_CLIENT;
+                updateErrorsNotes(true, message);
+            }
+            if (!_.isNil(note.note) && patternOfForbiddenCharacter.test(note.note)) {
+                message = MESSAGE_WARNING_FORBIDDEN_CHARACTER;
+                updateErrorsNotes(true, message);
+            }
+        });
+
+
+
     }
 
     _deleteNote() {
-        const { index, deleteNote, updateErrorsNotes, onDeletedNote} = this.props;
+        const { index, deleteNote, updateErrorsNotes, onDeletedNote } = this.props;
 
         deleteNote(index);
         //Avisar al padre que una nota se elimino
         onDeletedNote();
 
-        
+
 
     }
 
@@ -77,15 +86,21 @@ class NoteItem extends Component {
         this.updateValue("combo", combo);
         this.updateValue("body", body);
 
-        
-            if (_.isEqual(body, "") || _.isEqual(body, null) || _.isEqual(combo, "") || _.isEqual(combo, null)) {
-                updateErrorsNotes(true, "Debe ingresar todos los campos");
-            } else if (xssValidation(body)) {
-                updateErrorsNotes(true, VALUE_XSS_INVALID);
-            }
-        
+        let message = null;
+        if (_.isEqual(body, "") || _.isEqual(body, null) || _.isEqual(combo, "") || _.isEqual(combo, null)) {
+            updateErrorsNotes(true, "Debe ingresar todos los campos");
+        }
+        if (!_.isUndefined(body) && !_.isNull(body) && eval(patternNotesClient).test(body)) {
+            message = MESSAGE_WARNING_NOTES_CLIENT;
+            updateErrorsNotes(true, message);
+        }
+        if (!_.isNil(body) && patternOfForbiddenCharacter.test(body)) {
+            message = MESSAGE_WARNING_FORBIDDEN_CHARACTER;
+            updateErrorsNotes(true, message);
+        }
 
-        
+
+
     }
 
     componentDidMount() {
@@ -121,7 +136,7 @@ class NoteItem extends Component {
                                 style={{ height: "22px !important", minHeight: "26px !important", width: "100%" }}
                                 value={this.state.body}
                                 max={600}
-                                onChange={this.updateValue.bind(this, 'body')}                                
+                                onChange={this.updateValue.bind(this, 'body')}
                             />
                         </div>
                     </Col>

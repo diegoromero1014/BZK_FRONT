@@ -1,13 +1,14 @@
 import _ from "lodash";
 
 import { htmlToText } from './../actionsGlobal';
+import {OTHER, EXCLIENT, RESPONSE_INFO, MARK_GEREN} from './../constantsGlobal';
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
     patternOfStructureEmail, patternOfEmail, patternOfHistory, patternOfClientName, patternOfDescription,
     patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
-    patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant,
-    patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit
+    patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant, 
+    patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason
 } from './patternsToValidateField';
 
 import {
@@ -18,12 +19,12 @@ import {
     MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_NAME_OTHER_PARTICIPANT,
     MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT, MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT,
     MESSAGE_WARNING_PLACE_OF_PREVISIT, MESSAGE_WARNING_RANGE, MESSAGE_WARNING_FORBIDDEN_CHARACTER,
-    MESSAGE_WARNING_NUMBER_LENGTH
+    MESSAGE_WARNING_NUMBER_LENGTH, MESSAGE_WARNING_OTHER_REASON
 
 } from './validationsMessages';
 
 import {
-    SEGMENTS
+    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, MANAGEMENT_BRAND_KEY
 } from '../components/selectsComponent/constants';
 
 import {
@@ -75,6 +76,63 @@ export const checkForValueSubSegment = (value, fields, props) => {
         }
     }
 
+    return message;
+}
+
+export const checkForValueReasonTransfer = (value, fields, props) => {
+    let message = null;
+    let reasonTransferValue = _.get(_.find(props.selectsReducer.get(REASON_TRANFER), ['id', parseInt(fields.reasonTranfer)]), 'value');
+    if(_.isEqual(OTHER, reasonTransferValue)) {
+        if(_.isNull(value) || _.isEmpty(value)) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+    return message;
+}
+
+export const checkForValueJustifyNoGeren = (value, fields, props) => {
+    let message = null;
+    let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
+    let justifyNoGerenValue = _.get(_.find(props.selectsReducer.get(MANAGEMENT_BRAND), ['id', parseInt(fields.marcGeren)]), 'value');    
+    if(!_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName) && _.isEqual(MARK_GEREN, justifyNoGerenValue)) {
+        if(_.isNull(value) || _.isEmpty(String(value))) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+    return message;
+}
+
+export const checkForValueJustifyNoLME = (value, fields, props) => {
+    let message = null;
+    let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
+    let justifyNoLMEValue = fields.necesitaLME;
+    if(!(justifyNoLMEValue === "true") && !_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName)) {
+        if(_.isNull(value) || _.isEmpty(String(value))) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+    return message;
+}
+
+export const checkForValueIsExClient = (value, fields, props) => {
+    let message = null;
+    let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
+    if(!_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName)) {
+        if(_.isNull(value) || _.isEmpty(String(value))) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+    return message;
+}
+
+export const checkForValueIsNotExClient = (value, fields, props) => {
+    let message = null;
+    let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
+    if(_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName)) {
+        if(_.isNull(value) || _.isEmpty(String(value))) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
     return message;
 }
 
@@ -202,6 +260,14 @@ export const checkHistoryFields = value => {
         message = MESSAGE_WARNING_HISTORY;
     }
 
+    return message;
+}
+
+export const checkOtherReason = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOtherReason).test(value)) {
+        message = MESSAGE_WARNING_OTHER_REASON;
+    }
     return message;
 }
 

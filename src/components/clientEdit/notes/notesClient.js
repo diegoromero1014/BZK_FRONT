@@ -8,6 +8,8 @@ import { updateErrorsNotes } from '../../clientDetailsInfo/actions';
 import { CLIENT_ID_TYPE, TYPE_NOTES } from '../../selectsComponent/constants';
 import Note from './noteItem';
 import _ from 'lodash';
+import {patternNotesClient, patternOfForbiddenCharacter} from '../../../validationsFields/patternsToValidateField';
+import {MESSAGE_WARNING_NOTES_CLIENT, MESSAGE_WARNING_FORBIDDEN_CHARACTER} from '../../../validationsFields/validationsMessages';
 
 class NotesClient extends Component {
   constructor(props) {
@@ -55,9 +57,18 @@ class NotesClient extends Component {
 
         
             notesArray.forEach(function (note) {
+                let message = null;
                 if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
-                    updateErrorsNotes(true, "Debe ingresar todos los campos");
+                  updateErrorsNotes(true, "Debe ingresar todos los campos");
                 } 
+                if (!_.isUndefined(note.note) && !_.isNull(note.note) && eval(patternNotesClient).test(note.note)) {
+                  message = MESSAGE_WARNING_NOTES_CLIENT;
+                  updateErrorsNotes(true, message);
+                }
+                if (!_.isNil(note.note) && patternOfForbiddenCharacter.test(note.note)) {
+                  message = MESSAGE_WARNING_FORBIDDEN_CHARACTER;
+                  updateErrorsNotes(true, message);
+                }
             });
 
 
