@@ -1,39 +1,41 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import HeaderPrevisita from '../headerPrevisita';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import HeaderPrevisita from './../headerPrevisita';
 import FormPrevisita from './formPrevisita';
-import {redirectUrl} from '../../globalComponents/actions';
 
-class CreatePrevisita extends Component{
+import { redirectUrl } from '../../globalComponents/actions';
 
-  componentWillMount(){
-    const {clientInformacion} = this.props;
+class CreatePrevisita extends Component {
+
+  componentWillMount() {
+    const { clientInformacion } = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
-    if(_.isEmpty(infoClient)){
-        redirectUrl("/dashboard/clientInformation");
+    if (_.isEmpty(infoClient)) {
+      redirectUrl("/dashboard/clientInformation");
     }
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div>
-        <HeaderPrevisita/>
-        <FormPrevisita/>
+        <HeaderPrevisita />
+        <FormPrevisita />
       </div>
     );
   }
 }
 
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(dispatch) {
   return bindActionCreators({
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion}, ownerProps){
-    return {
-      clientInformacion
-    };
+function mapStateToProps({ clientInformacion }, ownerProps) {
+  return {
+    clientInformacion
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreatePrevisita);

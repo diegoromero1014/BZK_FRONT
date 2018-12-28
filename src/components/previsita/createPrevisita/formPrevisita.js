@@ -1,41 +1,44 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
-import { redirectUrl } from '../../globalComponents/actions';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import Input from '../../../ui/input/inputComponent';
+import { Row, Col } from 'react-flexbox-grid';
+import moment from 'moment';
+import $ from 'jquery';
+import _ from 'lodash';
+import numeral from 'numeral';
+
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import Textarea from '../../../ui/textarea/textareaComponent';
+import Input from '../../../ui/input/inputComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import { PREVISIT_TYPE } from '../../selectsComponent/constants';
-import { consultDataSelect, consultList, getMasterDataFields } from '../../selectsComponent/actions';
 import ParticipantesCliente from '../../participantsVisitPre/participantesCliente';
 import ParticipantesBancolombia from '../../participantsVisitPre/participantesBancolombia';
 import ParticipantesOtros from '../../participantsVisitPre/participantesOtros';
-import {
-    SAVE_DRAFT, SAVE_PUBLISHED, TITLE_CONCLUSIONS_VISIT, TITLE_OTHERS_PARTICIPANTS,
-    TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, MESSAGE_SAVE_DATA, MESSAGE_ERROR,
-    ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS,
-    VALUE_REQUIERED, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
-} from '../../../constantsGlobal';
-import { LAST_PREVISIT_REVIEW } from '../../../constantsParameters';
-import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateResponse, xssValidation } from '../../../actionsGlobal';
-import { PROPUEST_OF_BUSINESS } from '../constants';
-import { createPrevisit, validateDatePreVisit } from '../actions';
 import Challenger from '../../methodologyChallenger/component';
-import { changeStateSaveData } from '../../dashboard/actions';
-import { MENU_CLOSED } from '../../navBar/constants';
 import SweetAlert from '../../sweetalertFocus';
-import moment from 'moment';
-import $ from 'jquery';
 import RichText from '../../richText/richTextComponent';
 import ToolTip from '../../toolTip/toolTipComponent';
-import _ from 'lodash';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import numeral from 'numeral';
+import {
+    checkRequired, checkPlaceOfPrevisit, checkDecimalNumbers, checkRichTextRequired
+} from './../../../validationsFields/rulesField';
 
-const fields = [];
+import { redirectUrl } from '../../globalComponents/actions';
+import { getMasterDataFields } from '../../selectsComponent/actions';
+import { createPrevisit, validateDatePreVisit } from '../actions';
+import { changeStateSaveData } from '../../dashboard/actions';
+import {
+    consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateResponse
+} from '../../../actionsGlobal';
+
+import { PREVISIT_TYPE } from '../../selectsComponent/constants';
+import { LAST_PREVISIT_REVIEW } from '../../../constantsParameters';
+import { PROPUEST_OF_BUSINESS } from '../constants';
+import {
+    SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS,
+    MESSAGE_SAVE_DATA, MESSAGE_ERROR, ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, REGEX_SIMPLE_XSS_MESAGE,
+} from '../../../constantsGlobal';
+
+
 var datePrevisitLastReview;
 var titleMethodologyChallenger = "Enseñanza (Oportunidades – Retos): Diligencie de manera resumida los siguientes " +
     "campos. Recuerde que lo importante es la necesidad del cliente, por lo cual no debe hablar de Bancolombia hasta cuando se expone la solución a la situación del cliente.\n" +
@@ -54,8 +57,6 @@ var titleMessageTarget = "En este campo deberá registrar de manera clara cual e
 var titleMessageTypePrevisit = "En este campo se deberá indicar la razón de la visita si es: seguimiento (mantenimiento de la relación con el cliente) o propuesta comercial (cuando lleva un insight o enseñanza al cliente).\n" +
     "Si el tipo de visita es propuesta comercial, se deberá responder la sección Metodología Challenger.";
 
-var dateVisitLastReview;
-var showMessageCreatePreVisit = false;
 var typeMessage = "success";
 var titleMessage = "";
 var message = "";
@@ -65,6 +66,7 @@ var idTypeVisitAux = null;
 var idTypeVisitAuxTwo = null;
 var contollerErrorChangeType = false;
 
+const fields = [];
 const validate = values => {
     const errors = {};
     return errors;
@@ -106,6 +108,7 @@ class FormPrevisita extends Component {
             constructiveTensionTouch: false,
             constructiveTensionError: "",
         }
+
         this._submitCreatePrevisita = this._submitCreatePrevisita.bind(this);
         this._changeTypePreVisit = this._changeTypePreVisit.bind(this);
         this._changeDatePreVisit = this._changeDatePreVisit.bind(this);
@@ -123,6 +126,7 @@ class FormPrevisita extends Component {
         this._closeCancelConfirmChanType = this._closeCancelConfirmChanType.bind(this);
         this._changeDurationPreVisit = this._changeDurationPreVisit.bind(this);
         this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
+        this.processValidation = this.processValidation.bind(this);
     }
 
     _closeMessageCreatePreVisit() {
@@ -138,7 +142,6 @@ class FormPrevisita extends Component {
             });
         }
     }
-
 
     _handleBlurValueNumber(typeValidation, val, allowsDecimal, lengthDecimal) {
         //Elimino los caracteres no validos
@@ -235,6 +238,7 @@ class FormPrevisita extends Component {
         if (typeSeleted !== null && typeSeleted !== '' && typeSeleted !== undefined) {
             valueTypePrevisit = typeSeleted[0].key;
         }
+
         this.setState({
             typePreVisit: parseInt(idTypeVisitAux),
             showConfirmChangeTypeVisit: false,
@@ -330,8 +334,6 @@ class FormPrevisita extends Component {
         });
     }
 
-   
-
     _clickSeletedTab(tab) {
         if (tab === 1) {
             this.setState({
@@ -369,88 +371,104 @@ class FormPrevisita extends Component {
         const { participants, createPrevisit, changeStateSaveData, validateDatePreVisit, swtShowMessage } = this.props;
         var errorInForm = false;
         var errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
-        if (this.state.typePreVisit === null || this.state.typePreVisit === undefined || this.state.typePreVisit === "") {
+
+        const messageRequiredTypePrevisit = checkRequired(this.state.typePreVisit);
+        if (!_.isNull(messageRequiredTypePrevisit)) {
             errorInForm = true;
             this.setState({
-                typePreVisitError: "Debe seleccionar una opción"
+                typePreVisitError: messageRequiredTypePrevisit
             });
         }
-        if (this.state.datePreVisit === null || this.state.datePreVisit === undefined || this.state.datePreVisit === "") {
+
+        const messageRequiredDatePrevisit = checkRequired(this.state.datePreVisit);
+        if (!_.isNull(messageRequiredDatePrevisit)) {
             errorInForm = true;
             this.setState({
-                datePreVisitError: "Debe seleccionar una opción"
+                datePreVisitError: messageRequiredDatePrevisit
             });
         }
-        if (this.state.lugarPrevisit === null || this.state.lugarPrevisit === undefined || this.state.lugarPrevisit === "") {
+
+        const messageRequiredPlacePrevisit = checkRequired(this.state.lugarPrevisit);
+        if (!_.isNull(messageRequiredPlacePrevisit)) {
             errorInForm = true;
             this.setState({
-                lugarPrevisitError: "Debe ingresar un valor"
+                lugarPrevisitError: messageRequiredPlacePrevisit
             });
-        } else if (xssValidation(this.state.lugarPrevisit)) {
-            errorInForm = true;
-            this.setState({
-                lugarPrevisitError: VALUE_XSS_INVALID
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (this.state.durationPreVisit === null || this.state.durationPreVisit === undefined || this.state.durationPreVisit === "") {
-            errorInForm = true;
-            this.setState({
-                durationPreVisitError: "Debe ingresar un valor"
-            });
-
-        }
-
-
-
-        if (typeButtonClick === SAVE_PUBLISHED) {
-            if (_.isEmpty(htmlToText(this.state.targetPrevisit)) || this.state.targetPrevisit === null || this.state.targetPrevisit === undefined || this.state.targetPrevisit === "") {
+        } else {
+            const messageWarningPlacePrevisit = checkPlaceOfPrevisit(this.state.lugarPrevisit);
+            if (!_.isNull(messageWarningPlacePrevisit)) {
                 errorInForm = true;
                 this.setState({
-                    targetPrevisitError: "Debe ingresar un valor"
-                });
-            } else if (xssValidation(this.state.targetPrevisit, true)) {
-                errorInForm = true;
-                this.setState({
-                    targetPrevisitError: VALUE_XSS_INVALID
+                    lugarPrevisitError: messageWarningPlacePrevisit
                 });
                 errorMessage = REGEX_SIMPLE_XSS_MESAGE;
             }
         }
 
-        //Validaciones de la metodología challenger y si estoy guardando como definitivo
-        if (valueTypePrevisit === PROPUEST_OF_BUSINESS && typeButtonClick === SAVE_PUBLISHED) {
-
-            if (_.isEmpty(htmlToText(this.state.clientTeach)) || this.state.clientTeach === null || this.state.clientTeach === undefined || this.state.clientTeach === "") {
+        const messageRequiredDuration = checkRequired(this.state.durationPreVisit);
+        if (!_.isNull(messageRequiredDuration)) {
+            errorInForm = true;
+            this.setState({
+                durationPreVisitError: messageRequiredDuration
+            });
+        } else {
+            const messageWarningDuration = checkDecimalNumbers(this.state.durationPreVisit);
+            if (!_.isNull(messageWarningDuration)) {
                 errorInForm = true;
                 this.setState({
-                    clientTeachError: "Debe ingresar un valor",
+                    durationPreVisitError: messageWarningDuration
+                });
+            }
+        }
+
+        if (typeButtonClick === SAVE_PUBLISHED) {
+            const messageRequiredTargetPrevisit = checkRichTextRequired(this.state.targetPrevisit);
+            if (!_.isNull(messageRequiredTargetPrevisit)) {
+                errorInForm = true;
+                this.setState({
+                    targetPrevisitError: messageRequiredTargetPrevisit
+                });
+            }
+        }
+
+        //Validaciones de la metodología challenger y si estoy guardando como definitivo
+        if (valueTypePrevisit === PROPUEST_OF_BUSINESS && typeButtonClick === SAVE_PUBLISHED) {
+            const messageRequiredClientTech = checkRichTextRequired(this.state.clientTeach);
+            if (!_.isNull(messageRequiredClientTech)) {
+                errorInForm = true;
+                this.setState({
+                    clientTeachError: messageRequiredClientTech,
                     clientTeachTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.adaptMessage)) || this.state.adaptMessage === null || this.state.adaptMessage === undefined || this.state.adaptMessage === "") {
+
+            const messageRequiredOfAdaptMessage = checkRichTextRequired(this.state.adaptMessage);
+            if (!_.isNull(messageRequiredOfAdaptMessage)) {
                 errorInForm = true;
                 this.setState({
-                    adaptMessageError: "Debe ingresar un valor",
+                    adaptMessageError: messageRequiredOfAdaptMessage,
                     adaptMessageTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.controlConversation)) || this.state.controlConversation === null || this.state.controlConversation === undefined || this.state.controlConversation === "") {
+
+            const messageRequiredControlConversation = checkRichTextRequired(this.state.controlConversation);
+            if (!_.isNull(messageRequiredControlConversation)) {
                 errorInForm = true;
                 this.setState({
-                    controlConversationError: "Debe ingresar un valor",
+                    controlConversationError: messageRequiredControlConversation,
                     controlConversationTouch: true
                 });
             }
-            if (_.isEmpty(htmlToText(this.state.constructiveTension)) || this.state.constructiveTension === null || this.state.constructiveTension === undefined || this.state.constructiveTension === "") {
+
+            const messageRequiredConstructiveTension = checkRichTextRequired(this.state.constructiveTension);
+            if (!_.isNull(messageRequiredConstructiveTension)) {
                 errorInForm = true;
                 this.setState({
-                    constructiveTensionError: "Debe ingresar un valor",
+                    constructiveTensionError: messageRequiredConstructiveTension,
                     constructiveTensionTouch: true
                 });
             }
-            
+
         } else {
             this.setState({
                 clientTeachError: null,
@@ -459,68 +477,6 @@ class FormPrevisita extends Component {
                 constructiveTensionError: null
             });
         }
-
-
-        /**
-         * Validaciones texto enriquecido
-         */
-        
-        if (xssValidation(this.state.targetPrevisit, true)) {
-            errorInForm = true;
-            this.setState({
-                targetPrevisitError: VALUE_XSS_INVALID
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        
-        if (xssValidation(this.state.pendingPrevisit, true)) {
-            errorInForm = true;
-            this.setState({
-                pendingPrevisitError: VALUE_XSS_INVALID
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.clientTeach, true)) {
-            errorInForm = true;
-            this.setState({
-                clientTeachError: VALUE_XSS_INVALID,
-                clientTeachTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.adaptMessage, true)) {
-            errorInForm = true;
-            this.setState({
-                adaptMessageError: VALUE_XSS_INVALID,
-                adaptMessageTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.controlConversation, true)) {
-            errorInForm = true;
-            this.setState({
-                controlConversationError: VALUE_XSS_INVALID,
-                controlConversationTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        if (xssValidation(this.state.constructiveTension, true)) {
-            errorInForm = true;
-            this.setState({
-                constructiveTensionError: VALUE_XSS_INVALID,
-                constructiveTensionTouch: true
-            });
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
-        }
-
-        
-
-
 
         if (!errorInForm) {
             var dataBanco = [];
@@ -536,9 +492,11 @@ class FormPrevisita extends Component {
                     }
                 }
             );
+
             if (dataBanco.length > 0 && dataBanco[0] === undefined) {
                 dataBanco = [];
             }
+
             var dataClient = [];
             _.map(participants.toArray(),
                 function (participant) {
@@ -552,9 +510,11 @@ class FormPrevisita extends Component {
                     }
                 }
             );
+
             if (dataClient.length > 0 && dataClient[0] === undefined) {
                 dataClient = [];
             }
+
             //Valido que haya por los menos 1 usuairo por parte del banco o si
             //la previsita se está guardando como borrador
             if ((dataBanco.length > 0) || typeButtonClick === SAVE_DRAFT) {
@@ -573,9 +533,11 @@ class FormPrevisita extends Component {
                         }
                     }
                 );
+
                 if (dataOthers.length > 0 && dataOthers[0] === undefined) {
                     dataOthers = [];
                 }
+
                 var previsitJson = {
                     "id": null,
                     "client": window.sessionStorage.getItem('idClientSelected'),
@@ -594,6 +556,7 @@ class FormPrevisita extends Component {
                     "documentStatus": typeButtonClick,
                     "endTime": this.state.durationPreVisit
                 }
+
                 validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit).then((data) => {
                     if (validateResponse(data)) {
                         const response = _.get(data, 'payload.data.data', false);
@@ -603,6 +566,7 @@ class FormPrevisita extends Component {
                             if (!response.allowUserPreVisit) {
                                 swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha y hora para el mismo usuario.');
                             } else {
+                                const that = this;
                                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
                                 createPrevisit(previsitJson).then((data) => {
                                     changeStateSaveData(false, "");
@@ -611,29 +575,64 @@ class FormPrevisita extends Component {
                                     } else {
                                         if ((_.get(data, 'payload.data.status') === 200)) {
                                             typeMessage = "success";
-                                            swtShowMessage('success',"Creación previsita", "Señor usuario, la previsita se creó de forma exitosa.",{onConfirmCallback: this._closeMessageCreatePreVisit});
-
+                                            swtShowMessage('success', "Creación previsita", "Señor usuario, la previsita se creó de forma exitosa.", { onConfirmCallback: this._closeMessageCreatePreVisit });
                                         } else {
-                                            typeMessage = "error";
-                                            swtShowMessage('error',"Creación previsita", "Señor usuario, ocurrió un error creando la previsita.",{onConfirmCallback: this._closeMessageCreatePreVisit});
+                                            if ((_.get(data, 'payload.data.status') === 500)) {
+                                                const validationFromServer = _.get(data, 'payload.data.data');
+                                                _.forEach(validationFromServer, function (field) {
+                                                    that.processValidation(field);
+                                                });
+
+                                                typeMessage = "error";
+                                                swtShowMessage('error', "Creación previsita", "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.", { onConfirmCallback: this._closeMessageCreatePreVisit });
+                                            } else {
+                                                typeMessage = "error";
+                                                swtShowMessage('error', "Creación previsita", "Señor usuario, ocurrió un error creando la previsita.", { onConfirmCallback: this._closeMessageCreatePreVisit });
+                                            }
                                         }
                                     }
                                 }, (reason) => {
                                     changeStateSaveData(false, "");
                                     typeMessage = "error";
-                                    swtShowMessage('error',"Creación previsita", "Señor usuario, ocurrió un error creando la previsita.",{onConfirmCallback: this._closeMessageCreatePreVisit});
+                                    swtShowMessage('error', "Creación previsita", "Señor usuario, ocurrió un error creando la previsita.", { onConfirmCallback: this._closeMessageCreatePreVisit });
                                 });
                             }
                         }
                     }
                 });
             } else {
-                
-                swtShowMessage('error',"Error participantes","Señor usuario, para guardar una previsita como mínimo debe agregar un participante por parte del Grupo Bancolombia.");
+                swtShowMessage('error', "Error participantes", "Señor usuario, para guardar una previsita como mínimo debe agregar un participante por parte del Grupo Bancolombia.");
             }
         } else {
             typeMessage = "error";
-            swtShowMessage('error',"Campos obligatorios", errorMessage ,{onConfirmCallback: this._closeMessageCreatePreVisit});
+            swtShowMessage('error', "Campos obligatorios", errorMessage, { onConfirmCallback: this._closeMessageCreatePreVisit });
+        }
+    }
+
+    processValidation(field) {
+        if (field && field.fieldName) {
+            switch (field.fieldName) {
+                case 'adaptMessage':
+                    this.setState({ adaptMessageError: field.message });
+                    break;
+                case 'principalObjective':
+                    this.setState({ targetPrevisitError: field.message });
+                    break;
+                case 'observations':
+                    this.setState({ pendingPrevisitError: field.message });
+                    break;
+                case 'constructiveTension':
+                    this.setState({ constructiveTensionError: field.message });
+                    break;
+                case 'clientTeach':
+                    this.setState({ clientTeachError: field.message });
+                    break;
+                case 'controlConversation':
+                    this.setState({ controlConversationError: field.message });
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -661,10 +660,7 @@ class FormPrevisita extends Component {
     }
 
     render() {
-        const {
-            fields: { clientTeach, adaptMessage, controlConversation, constructiveTension },
-            clientInformacion, selectsReducer, handleSubmit, reducerGlobal, navBar
-        } = this.props;
+        const { selectsReducer, handleSubmit, reducerGlobal } = this.props;
 
         return (
             <form onSubmit={handleSubmit(this._submitCreatePrevisita)}
@@ -822,6 +818,7 @@ class FormPrevisita extends Component {
                     <Col xs={12} md={12} lg={12}>
                         <RichText
                             name="targetPrevisit"
+                            id="targetPrevisit"
                             value={this.state.targetPrevisit}
                             touched={true}
                             onChange={val => this._changeTargetPrevisit(val)}
@@ -867,7 +864,7 @@ class FormPrevisita extends Component {
                                     constructiveTensionTouch={this.state.constructiveTensionTouch}
                                     constructiveTensionError={this.state.constructiveTensionError}
                                     onChangeConstructiveTension={val => this._changeConstructiveTension(val)}
-                                    
+
                                 />
                             </Col>
                         </Row>
@@ -891,6 +888,7 @@ class FormPrevisita extends Component {
                     <Col xs={12} md={12} lg={12}>
                         <RichText
                             name="pendingPrevisit"
+                            id="pendingPrevisit"
                             value={this.state.pendingPrevisit}
                             touched={true}
                             onChange={val => this._changePendingPrevisit(val)}
@@ -942,7 +940,7 @@ class FormPrevisita extends Component {
                         </button>
                     </div>
                 </div>
-                
+
                 <SweetAlert
                     type={typeMessage}
                     show={this.state.showMessageCreatePreVisit}

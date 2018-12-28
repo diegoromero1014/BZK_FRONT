@@ -2,12 +2,12 @@ import _ from "lodash";
 
 import {
     checkRequired, checkNumberDocument,
-    processRules
+    processRules, checkFirstCharacter
 } from '../../validationsFields/rulesField';
 
 const fieldsWithRules = {
     idType: { rules: [checkRequired] },
-    idNumber: { rules: [checkRequired, checkNumberDocument] },
+    idNumber: { rules: [checkRequired, checkNumberDocument, checkFirstCharacter] },
     clientType: { rules: [checkRequired] }
 }
 

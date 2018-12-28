@@ -1,12 +1,14 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {previsitByClientFindServer, orderColumnPrevisit, clearPrevisitOrder} from './actions';
-import GridComponent from '../grid/component';
-import {NUMBER_RECORDS, DELETE_TYPE_PREVISIT} from './constants';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import moment from 'moment';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import {ELIMINAR} from '../../constantsGlobal';
+
+import GridComponent from '../grid/component';
+
+import { previsitByClientFindServer, orderColumnPrevisit, clearPrevisitOrder } from './actions';
+
+import { NUMBER_RECORDS, DELETE_TYPE_PREVISIT } from './constants';
+import { ELIMINAR } from '../../constantsGlobal';
 import { MODULE_PREVISIT } from '../grid/constants';
 
 let v1 = '';
@@ -14,16 +16,15 @@ let v1 = '';
 class ListPrevisitComponent extends Component {
 
 	constructor(props) {
-	  super(props);
-	  this._renderCellView = this._renderCellView.bind(this);
-	  this._renderHeaders = this._renderHeaders.bind(this);
-	  //this._orderColumn = this._orderColumn.bind(this);
-	  this.state = {
-	  	column: '',
-	  	order: '',
-	  	orderA: 'none',
-	  	orderD: 'inline-block'
-	  };
+		super(props);
+		this._renderCellView = this._renderCellView.bind(this);
+		this._renderHeaders = this._renderHeaders.bind(this);
+		this.state = {
+			column: '',
+			order: '',
+			orderA: 'none',
+			orderD: 'inline-block'
+		};
 	}
 
 	componentWillMount() {
@@ -34,10 +35,9 @@ class ListPrevisitComponent extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const {value1} = nextProps;
 		if ((v1 !== nextProps.value1)) {
 			v1 = nextProps.value1;
-			const {clearPrevisitOrder} = this.props;
+			const { clearPrevisitOrder } = this.props;
 			clearPrevisitOrder();
 			this._orderColumn(1, 'pvd.visitTime');
 		}
@@ -45,11 +45,11 @@ class ListPrevisitComponent extends Component {
 
 	_orderColumn(orderPrevisit, columnPrevisit) {
 		if (orderPrevisit === 1) {
-			this.setState({orderA: 'none', orderD: 'inline-block'});
+			this.setState({ orderA: 'none', orderD: 'inline-block' });
 		} else {
-			this.setState({orderA: 'inline-block', orderD: 'none'});
+			this.setState({ orderA: 'inline-block', orderD: 'none' });
 		}
-		const {previsitByClientFindServer, orderColumnPrevisit, clearPrevisitOrder} = this.props;
+		const { previsitByClientFindServer, orderColumnPrevisit, clearPrevisitOrder } = this.props;
 		clearPrevisitOrder();
 		orderColumnPrevisit(orderPrevisit, columnPrevisit);
 		previsitByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, columnPrevisit, orderPrevisit, v1);
@@ -66,21 +66,21 @@ class ListPrevisitComponent extends Component {
 		}, {
 			title: "Fecha de reunión",
 			key: "datePrevisitFormat",
-			orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display:this.state.orderD}} onClick={() => this._orderColumn(0,"pvd.visitTime")}></i><i className="caret up icon" style={{cursor: 'pointer',display:this.state.orderA}} onClick={() =>  this._orderColumn(1,"pvd.visitTime")}></i></span>
+			orderColumn: <span><i className="caret down icon" style={{ cursor: 'pointer', display: this.state.orderD }} onClick={() => this._orderColumn(0, "pvd.visitTime")}></i><i className="caret up icon" style={{ cursor: 'pointer', display: this.state.orderA }} onClick={() => this._orderColumn(1, "pvd.visitTime")}></i></span>
 		}, {
 			title: "Estado del documento",
-			key:"statusDocument"
+			key: "statusDocument"
 		}, {
 			title: "",
-			key:"delete"
+			key: "delete"
 		}]
 	}
 
 	_renderCellView(data) {
 		const mensaje = "Señor usuario ¿está seguro que desea eliminar el informe de previsita?";
-		const {reducerGlobal} = this.props;
+		const { reducerGlobal } = this.props;
 		var permissionsPrevisits = reducerGlobal.get('permissionsPrevisits');
-		return _.forOwn(data, function(value, key) {
+		return _.forOwn(data, function (value, key) {
 			let json1 = {
 				'messageHeader': {
 					'sessionToken': window.localStorage.getItem('sessionTokenFront'),
@@ -111,7 +111,7 @@ class ListPrevisitComponent extends Component {
 			_.set(value, 'datePrevisitFormat', datePrevisitFormat.format('DD') + ' ' + datePrevisitFormat.format('MMM')
 				+ ' ' + datePrevisitFormat.format('YYYY') + ', ' + datePrevisitFormat.format('hh:mm a'));
 
-			if( _.get(permissionsPrevisits, _.indexOf(permissionsPrevisits, ELIMINAR), false) ){
+			if (_.get(permissionsPrevisits, _.indexOf(permissionsPrevisits, ELIMINAR), false)) {
 				if (value.idStatusDocument === 0) {
 					_.set(value, 'delete', {
 						actionDelete: true,
@@ -127,10 +127,10 @@ class ListPrevisitComponent extends Component {
 
 	render() {
 		const modalTitle = 'Vista Detalle';
-		const {previsitReducer} = this.props;
+		const { previsitReducer } = this.props;
 		const data = previsitReducer.get('previsitList');
 		return (
-			<div className="horizontal-scroll-wrapper" style={{overflow: 'scroll'}}>
+			<div className="horizontal-scroll-wrapper" style={{ overflow: 'scroll' }}>
 				<GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} />
 			</div>
 		);
@@ -143,7 +143,7 @@ function mapDispatchToProps(dispatch) {
 	}, dispatch);
 }
 
-function mapStateToProps({previsitReducer, reducerGlobal}, ownerProps) {
+function mapStateToProps({ previsitReducer, reducerGlobal }, ownerProps) {
 	return {
 		previsitReducer,
 		reducerGlobal

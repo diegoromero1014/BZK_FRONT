@@ -11,8 +11,17 @@ export const MESSAGE_WARNING_POSTAL_CODE = "Solo se permiten valores alfanuméri
 export const MESSAGE_WARNING_PHONE = "Solo se permiten valores numéricos sin espacios";
 export const MESSAGE_WARNING_ONLY_NUMBERS = "Solo se permiten valores numéricos";
 export const MESSAGE_WARNING_RELEVANT_FEATURES = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
+export const MESSAGE_WARNING_OPPORTUNITY_NAME = 'Solo se permiten valores alfanuméricos y () ; , . - " ! $ % & /¿? ° # = ¡ : ´ + [ ] _';
 export const MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
 export const MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT = "Solo se permiten valores numéricos";
 export const MESSAGE_WARNING_HISTORY = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
 export const MESSAGE_WARNING_HISTORY_EVENT = "Solo se permiten valores alfanuméricos y &, /, \\, ,, ;, :, ., #, \", °, (, ), ', -, +, ´";
 export const MESSAGE_WARNING_CLIENT_NAME = "Solo se permiten valores alfanuméricos y &/\\,;.#\"°()'-+´:";
+export const MESSAGE_WARNING_NAME_OTHER_PARTICIPANT = "Solo se permiten valores alfanuméricos y &/\\,;.#\"\"";
+export const MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT = "Solo se permiten valores alfanuméricos y &/\\,;.#\"\"";
+export const MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT = "Solo se permiten valores alfanuméricos y & /\\,;.#\"\"°()'-+´:";
+export const MESSAGE_WARNING_PLACE_OF_PREVISIT = "Solo se permiten valores alfanuméricos y & /\\,;.#\"\"";
+export const MESSAGE_WARNING_RANGE = (min, max) => "Solo se permiten valores entre " + min + " y " + max;
+export const MESSAGE_WARNING_FORBIDDEN_CHARACTER = "No se permiten textos que inicien con los siguientes caracteres: = + - @";
+export const MESSAGE_WARNING_FORBIDDEN_CHARACTER_PREFIX = "Solo se permiten";
+export const MESSAGE_WARNING_NUMBER_LENGTH = length => "Solo se permiten números de maximo " + length + " digitos";

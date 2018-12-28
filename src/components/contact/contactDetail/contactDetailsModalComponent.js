@@ -53,6 +53,10 @@ import {
     VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS_MESAGE
 } from '../../../constantsGlobal';
+import {
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER,
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER_PREFIX
+} from '../../../validationsFields/validationsMessages';
 
 var thisForm;
 
@@ -74,6 +78,7 @@ class ContactDetailsModalComponent extends Component {
             generoData: [],
             showErrorForm: false,
             showErrorXss: false,
+            showErrorFormInvalidValue: false
         };
         momentLocalizer(moment);
         thisForm = this;
@@ -89,7 +94,7 @@ class ContactDetailsModalComponent extends Component {
 
         nonValidateEnter(true);
         showLoading(true, MESSAGE_LOAD_DATA);
-        
+
         const that = this;
         const { fields: { contactFunctions, contactHobbies, contactSports, contactLineOfBusiness, contactCity } } = this.props;
         const idClient = callFromModuleContact ? null : window.sessionStorage.getItem('idClientSelected');
@@ -104,7 +109,7 @@ class ContactDetailsModalComponent extends Component {
                 .then(function (data) {
                     showLoading(false, "");
                     const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
-                    
+
                     if (contact.country !== undefined && contact.country !== null) {
                         that._uploadProvincesByCountryId(contact.country);
                     }
@@ -120,12 +125,12 @@ class ContactDetailsModalComponent extends Component {
 
                     contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
                     contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
-                    
+
                     // Se vuelve a setear la ciudad para evitar que el cambio en el departamento deje vacio el campo ciudad
                     setTimeout(() => {
                         contactCity.onChange(contact.city);
                     }, 1000);
-                    
+
                 });
         });
     }
@@ -283,11 +288,11 @@ class ContactDetailsModalComponent extends Component {
         const {
             fields: {
                 contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName,
-                contactFirstLastName, contactSecondLastName, contactPosition, contactDependency, contactAddress,
-                contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
-                contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact,
-                contactLineOfBusiness, contactFunctions, contactHobbies, contactSports, contactSocialStyle,
-                contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
+            contactFirstLastName, contactSecondLastName, contactPosition, contactDependency, contactAddress,
+            contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
+            contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact,
+            contactLineOfBusiness, contactFunctions, contactHobbies, contactSports, contactSocialStyle,
+            contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
             }, changeStateSaveData, callFromModuleContact, resetPage, swtShowMessage
         } = this.props;
         const { contactDetail, contactsByClientFindServer } = this.props;
@@ -361,11 +366,11 @@ class ContactDetailsModalComponent extends Component {
         const {
             fields: {
                 contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName,
-                contactFirstLastName, contactSecondLastName, contactPosition, contactDependency, contactAddress,
-                contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
-                contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress,
-                contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies, contactSports,
-                contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
+            contactFirstLastName, contactSecondLastName, contactPosition, contactDependency, contactAddress,
+            contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
+            contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress,
+            contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies, contactSports,
+            contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
             }, handleSubmit, selectsReducer, reducerGlobal
         } = this.props;
 
@@ -861,6 +866,13 @@ class ContactDetailsModalComponent extends Component {
                     text="Señor usuario, para editar un contacto debe ingresar los campos obligatorios."
                     onConfirm={() => this.setState({ showErrorForm: false })}
                 />
+                <SweetAlert
+                    type="error"
+                    show={this.state.showErrorFormInvalidValue}
+                    title="Valores no validos"
+                    text="Señor usuario, algunos campos del formulario contienen valores inválidos."
+                    onConfirm={() => this.setState({ showErrorFormInvalidValue: false })}
+                />
             </form>
         );
     }
@@ -946,8 +958,14 @@ export default reduxForm({
     validate,
     onSubmitFail: errors => {
         document.getElementById('modalEditCotact').scrollTop = 0;
-        if (Object.keys(errors).map(i => errors[i]).indexOf(VALUE_XSS_INVALID) > -1) {
+        let arrErrors = Object.keys(errors).map(i => errors[i]);
+        let hasInvalidValues = Object.keys(errors).filter(item => (errors[item] ? errors[item] : "").indexOf(MESSAGE_WARNING_FORBIDDEN_CHARACTER_PREFIX) > -1);
+        hasInvalidValues = hasInvalidValues.length > 0;
+
+        if (arrErrors.indexOf(VALUE_XSS_INVALID) > -1 || arrErrors.indexOf(MESSAGE_WARNING_FORBIDDEN_CHARACTER) > -1) {
             thisForm.setState({ showErrorXss: true });
+        } else if (hasInvalidValues) {
+            thisForm.setState({ showErrorFormInvalidValue: true });
         } else {
             thisForm.setState({ showErrorForm: true });
         }

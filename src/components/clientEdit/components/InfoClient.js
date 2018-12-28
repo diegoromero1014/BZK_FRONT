@@ -79,7 +79,7 @@ export class InfoClient extends React.Component {
 
     render() {
 
-        const { razonSocial, idTypeClient, idNumber, segment, subSegment, description, customerTypology, idButton, selectsReducer } = this.props;
+        const { razonSocial, idTypeClient, idNumber, segment, subSegment, description, customerTypology, idButton, selectsReducer, isPersonaNatural } = this.props;
 
         return (
             <Row style={{ padding: "10px 28px 10px 20px" }}>
@@ -107,7 +107,7 @@ export class InfoClient extends React.Component {
                             valueProp={'id'}
                             textProp={'value'}
                             parentId="dashboardComponentScroll"
-                            data={selectsReducer.get(constants.CLIENT_ID_TYPE)}
+                            data={isPersonaNatural ? selectsReducer.get(constants.CONTACT_ID_TYPE) : selectsReducer.get(constants.CLIENT_ID_TYPE)}
                             touched={true}
                         />
                     </dt>

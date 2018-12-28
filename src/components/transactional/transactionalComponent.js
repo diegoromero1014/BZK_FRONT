@@ -1,25 +1,31 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Row} from 'react-flexbox-grid';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Row } from 'react-flexbox-grid';
+import { bindActionCreators } from 'redux';
 import {
     PARAMETER_FUND_FLOWS_URL,
-    PARAMETER_COMEX_URL,
     FUND_FLOWS_TITLE,
-    COMEX_TITLE,
+    VISOR_CONSOLIDATE_TITLE,
     MODULE_WALLET_SHARE_TITLE,
     CONTROL_DASHBOARD_TITLE
 } from './constants';
-import {redirectUrl} from '../globalComponents/actions';
-import {updateTitleNavBar} from '../navBar/actions';
-import {setUrlParameter} from './actions';
-import {consultParameterServer} from '../../actionsGlobal';
-import {Card, Icon, Button} from 'semantic-ui-react'
-import {MODULE_TRANSACTIONAL} from '../../constantsGlobal';
+import { redirectUrl } from '../globalComponents/actions';
+import { updateTitleNavBar } from '../navBar/actions';
+import { setUrlParameter } from './actions';
+import { consultParameterServer } from '../../actionsGlobal';
+import { Card, Icon, Button } from 'semantic-ui-react'
+import { MODULE_TRANSACTIONAL } from '../../constantsGlobal';
+import VisorConsolidate from './visorConsolidate';
+
 
 class Transactional extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            VISOR_CONSOLIDATE_MODAL: false
+        }
+
         this.openWalletShare = this.openWalletShare.bind(this);
         this.openControlDashboard = this.openControlDashboard.bind(this);
     }
@@ -28,17 +34,11 @@ class Transactional extends Component {
         if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
-            const {consultParameterServer, updateTitleNavBar, setUrlParameter} = this.props;
+            const { consultParameterServer, updateTitleNavBar, setUrlParameter } = this.props;
             consultParameterServer(PARAMETER_FUND_FLOWS_URL).then((data) => {
                 if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
                     data.payload.data.parameter !== undefined) {
                     setUrlParameter(PARAMETER_FUND_FLOWS_URL, JSON.parse(data.payload.data.parameter).value);
-                }
-            });
-            consultParameterServer(PARAMETER_COMEX_URL).then((data) => {
-                if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
-                    data.payload.data.parameter !== undefined) {
-                    setUrlParameter(PARAMETER_COMEX_URL, JSON.parse(data.payload.data.parameter).value);
                 }
             });
             updateTitleNavBar(MODULE_TRANSACTIONAL);
@@ -49,20 +49,20 @@ class Transactional extends Component {
         window.open(url, "_blank");
     }
 
-    openWalletShare(){
+    openWalletShare() {
         redirectUrl("/dashboard/walletShare");
     }
 
-    openControlDashboard(){
+    openControlDashboard() {
         redirectUrl("/dashboard/controlDashboard");
     }
 
     render() {
-        const {transactional} = this.props;
-        const styleHeader = {minHeight: '10px', paddingBottom: '0.5em', borderBottom: '1px solid rgba(0, 0, 0, 0.05)'};
+        const { transactional } = this.props;
+        const styleHeader = { minHeight: '10px', paddingBottom: '0.5em', borderBottom: '1px solid rgba(0, 0, 0, 0.05)' };
         return (
             <div >
-                <Row xs={12} md={12} lg={12} style={{padding: '15px 20px 10px 20px'}}>
+                <Row xs={12} md={12} lg={12} style={{ padding: '15px 20px 10px 20px' }}>
                     <Card.Group>
                         <Card >
                             <Card.Content>
@@ -82,33 +82,30 @@ class Transactional extends Component {
                             </Card.Content>
                             <Card.Content extra>
                                 <Button fluid
-                                        onClick={this.openWalletShare}>
-                                    <Icon color="blue" name='computer'/>Abrir</Button>
+                                    onClick={this.openWalletShare}>
+                                    <Icon color="blue" name='computer' />Abrir</Button>
                             </Card.Content>
-                        </Card>
+                        </Card>                        
                         <Card >
                             <Card.Content>
                                 <Card.Header style={styleHeader}>
-                                    {COMEX_TITLE}
+                                    {VISOR_CONSOLIDATE_TITLE}
                                 </Card.Header>
                                 <Card.Description>
-                                    <ul>
-                                        <li>Resume la actividad de comercio internacional (importaciones +
-                                            exportaciones) del cliente durante los últimos cinco (5) trimestres.
-                                        </li>
-                                        <li>Presenta un resumen de los productos del Grupo que utiliza para su
-                                            actividad de comercio internacional, el resumen también se puede
-                                            consultar por gerente de Moneda Extranjera.
-                                        </li>
-                                    </ul>
+                                    Rentabilidad para la VEG a nivel de gerente, zona, región, banca, segmento, sector y relación.
                                 </Card.Description>
                             </Card.Content>
                             <Card.Content extra>
                                 <Button fluid
-                                        onClick={this.downLoadFileUrl.bind(this, transactional.get(PARAMETER_COMEX_URL))}>
-                                    <Icon color="green" name='file excel outline'/>Descargar</Button>
+                                    onClick={() => {
+                                        this.setState({
+                                            VISOR_CONSOLIDATE_MODAL: true
+                                        })
+                                    }}>
+                                    <Icon color="green" name='computer' />Abrir</Button>
                             </Card.Content>
                         </Card>
+
                         <Card>
                             <Card.Content>
                                 <Card.Header style={styleHeader}>
@@ -123,8 +120,8 @@ class Transactional extends Component {
                             </Card.Content>
                             <Card.Content extra>
                                 <Button fluid
-                                        onClick={this.downLoadFileUrl.bind(this, transactional.get(PARAMETER_FUND_FLOWS_URL))}>
-                                    <Icon color="green" name='file excel outline'/>Descargar</Button>
+                                    onClick={this.downLoadFileUrl.bind(this, transactional.get(PARAMETER_FUND_FLOWS_URL))}>
+                                    <Icon color="green" name='file excel outline' />Descargar</Button>
                             </Card.Content>
                         </Card>
                         <Card>
@@ -138,12 +135,19 @@ class Transactional extends Component {
                             </Card.Content>
                             <Card.Content extra>
                                 <Button fluid
-                                        onClick={this.openControlDashboard}>
-                                    <Icon color="blue" name='computer'/>Abrir</Button>
+                                    onClick={this.openControlDashboard}>
+                                    <Icon color="blue" name='computer' />Abrir</Button>
                             </Card.Content>
                         </Card>
                     </Card.Group>
                 </Row>
+                {this.state.VISOR_CONSOLIDATE_MODAL &&
+                    <VisorConsolidate closeModal={() => {                        
+                        this.setState({
+                            VISOR_CONSOLIDATE_MODAL: false
+                        })
+                    }} />
+                }
             </div>
         );
     }
@@ -157,8 +161,8 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({transactional}) {
-    return {transactional};
+function mapStateToProps({ transactional }) {
+    return { transactional };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Transactional);
