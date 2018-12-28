@@ -25,3 +25,5 @@ export const patternOfNameOtherParticipant = /^[a-zA-Z0-9\sÁ-Úá-úÑñÜü&/\
 export const patternOfPositionOtherParticipant = /^[a-zA-Z0-9\sÁ-Úá-úÑñÜü&/\\,;.#"]+$/;
 export const patternOfCompanyOtherParticipant = /^[a-zA-Z0-9\sÁ-Úá-úÑñÜü&/\\,;.#"°()´'\-+:]+$/;
 export const patternOfPlaceOfPrevisit = /^[a-zA-Z0-9\sÁ-Úá-úÑñÜü&/\\,;.#"]+$/;
+export const patternOtherReason = "/[^a-zA-Z0-9\\s()\\[\\];,.\"!¡$%&\/¿?°#=':´+_\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
+export const patternNotesClient = "/[^a-zA-Z0-9\\s()\\[\\];,.\"!¡$%&\/¿?°#=':´+_\\-ÁÉÍÓÚáéíóúÑñÜü]/g";

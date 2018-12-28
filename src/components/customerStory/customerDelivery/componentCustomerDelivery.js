@@ -19,40 +19,12 @@ import Input from '../../../ui/input/inputComponent';
 import SweetAlert from '../../sweetalertFocus';
 import _ from 'lodash';
 
-const fields = ["idCelula", "reasonTranfer", "otherReason"];
+import { fields, validations as validate } from './fieldsAndRulesCustomerDelivery';
+
 const meesageOneClient = "¿Señor usuario, certifica que el cliente y su información de historial se encuentra actualizada ?";
 const meesageMoreOneClient = "¿Señor usuario, certifica que los clientes y su información de historial se cuentra actualizada ?";
 var valuesReasonTranfer = [];
 let allowAccessContextClient = false;
-
-const validate = values => {
-    const errors = {}
-    if (!values.idCelula) {
-        errors.idCelula = OPTION_REQUIRED;
-    } else {
-        errors.idCelula = null;
-    }
-    if (!values.reasonTranfer) {
-        errors.reasonTranfer = OPTION_REQUIRED;
-    } else {
-        errors.reasonTranfer = null;
-        errors.otherReason = null;
-        const valueSeleted = _.map(_.filter(valuesReasonTranfer, { "id": parseInt(values.reasonTranfer) }), "value");
-        if (_.isEqual(valueSeleted[0], OTHER)) {
-            if (!values.otherReason) {
-                errors.otherReason = VALUE_REQUIERED;
-            } else {
-                errors.otherReason = null;
-            }
-        }
-    }
-
-    if (xssValidation(values.otherReason)) {
-        errors.otherReason = VALUE_XSS_INVALID;
-    }
-
-    return errors;
-}
 
 class ComponentCustomerDelivery extends Component {
     constructor(props) {
@@ -72,7 +44,7 @@ class ComponentCustomerDelivery extends Component {
     _handleChangeCheck() {
         const { updateCheckEconomicGroup } = this.props;
         if (!this.state.checkEconomicGroup) {
-            const { clientInformacion, clientsByEconomicGroup, swtShowMessage } = this.props;
+            const { clientInformacion, swtShowMessage } = this.props;
             const economicGroup = clientInformacion.get('responseClientInfo').economicGroup;
             if (_.isNull(economicGroup) || _.isUndefined(economicGroup)) {
                 swtShowMessage('error', 'Error grupo económico', 'Señor usuario, el cliente no tiene asociado un grupo económico.');
@@ -99,7 +71,7 @@ class ComponentCustomerDelivery extends Component {
     }
 
     componentWillMount() {
-        const { consultList, getAllteams, getMasterDataFields, updateCheckEconomicGroup } = this.props;
+        const { getAllteams, getMasterDataFields, updateCheckEconomicGroup } = this.props;
         getAllteams();
         updateCheckEconomicGroup(false);
         getMasterDataFields([REASON_TRANFER]).then((data) => {
@@ -116,6 +88,7 @@ class ComponentCustomerDelivery extends Component {
 
     _handleSubmitDelivery() {
         const { fields: { idCelula }, customerStory, clientInformacion, swtShowMessage } = this.props;
+        
         if (_.isEqual(idCelula.value, clientInformacion.get("responseClientInfo").celulaId.toString())) {
             swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, la célula que seleccionó es a la que pertenece(n) actualmente.');
         } else {

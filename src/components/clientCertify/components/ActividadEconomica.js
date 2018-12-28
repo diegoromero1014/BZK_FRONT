@@ -4,7 +4,6 @@ import { bindActionCreators } from "redux";
 
 import {Col, Row} from "react-flexbox-grid";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
-import {OPTION_REQUIRED} from "../../../constantsGlobal";
 import * as constants from "../../selectsComponent/constants";
 import { consultListWithParameter } from '../../selectsComponent/actions';
 

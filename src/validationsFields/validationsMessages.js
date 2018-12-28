@@ -25,3 +25,5 @@ export const MESSAGE_WARNING_RANGE = (min, max) => "Solo se permiten valores ent
 export const MESSAGE_WARNING_FORBIDDEN_CHARACTER = "No se permiten textos que inicien con los siguientes caracteres: = + - @";
 export const MESSAGE_WARNING_FORBIDDEN_CHARACTER_PREFIX = "Solo se permiten";
 export const MESSAGE_WARNING_NUMBER_LENGTH = length => "Solo se permiten números de maximo " + length + " digitos";
+export const MESSAGE_WARNING_OTHER_REASON = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
+export const MESSAGE_WARNING_NOTES_CLIENT = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
