@@ -339,8 +339,7 @@ class FormEditPrevisita extends Component {
     }
 
     _handleBlurValueNumber(typeValidation, val, allowsDecimal, lengthDecimal) {
-        console.log(val);
-        //Elimino los caracteres no validos
+             //Elimino los caracteres no validos
         for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
             if (validos.indexOf(val.toString().charAt(i)) !== -1) {
                 output += val.toString().charAt(i)
