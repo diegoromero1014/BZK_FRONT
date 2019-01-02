@@ -11,13 +11,13 @@ import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import { getClientNeeds, getMasterDataFields, consultListWithParameterUbication, consultDataSelect } from "../../selectsComponent/actions";
 import { IMPLEMENTATION_TIMELINE, PRODUCTS, STATUS_NEED, PRODUCT_FAMILY } from "./constants";
-import { addNeed, editNeed } from "./actions";
+import { addNeed, editNeed, validateWhiteListOnNeed } from "./actions";
 import _ from "lodash";
 import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
 import { htmlToText, shorterStringValue, xssValidation } from "../../../actionsGlobal";
 import { MESSAGE_ERROR, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE } from '../../../constantsGlobal';
-import {TASK_STATUS} from '../../selectsComponent/constants';
+import { TASK_STATUS } from '../../selectsComponent/constants';
 
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
@@ -31,7 +31,7 @@ let thisForm;
 const validate = (values) => {
     if (!values.needType) {
         errors.needType = "Debe seleccionar una opción";
-    }  else {
+    } else {
         errors.needType = null;
     }
 
@@ -72,9 +72,9 @@ const validate = (values) => {
 
     if (!values.needResponsable) {
         errors.needResponsable = "Debe ingresar un valor";
-    } else if(!values.idEmployee){
-        errors.needResponsable = "Seleccione un empleado";        
-    }else {
+    } else if (!values.idEmployee) {
+        errors.needResponsable = "Seleccione un empleado";
+    } else {
         errors.needResponsable = null;
     }
 
@@ -82,7 +82,7 @@ const validate = (values) => {
         errors.needDate = "Debe seleccionar una fecha";
     } else if (xssValidation(values.needDate, true)) {
         errors.needDate = VALUE_XSS_INVALID;
-    } else if(!moment(values.needDate, 'DD/MM/YYYY').isValid()){
+    } else if (!moment(values.needDate, 'DD/MM/YYYY').isValid()) {
         errors.needDate = "Debe seleccionar una fecha";
     } else {
         errors.needDate = null;
@@ -90,15 +90,15 @@ const validate = (values) => {
 
     if (!values.statusNeed) {
         errors.statusNeed = "Debe seleccionar una opción";
-    }  else {
+    } else {
         errors.statusNeed = null;
     }
     if (!values.productFamily) {
         errors.productFamily = "Debeseleccionar una opción";
-    }  else {
+    } else {
         errors.productFamily = null;
     }
-    
+
     return errors;
 };
 
@@ -121,6 +121,11 @@ class ModalNeed extends Component {
             prueba: [],
             showErrorYa: false,
         }
+
+        this.errorTask = null;
+        this.errorBenefits = null;
+        this.errorDescrption = null;
+
         momentLocalizer(moment);
         thisForm = this;
     }
@@ -139,11 +144,11 @@ class ModalNeed extends Component {
 
     componentDidMount() {
         const { fields: { idEmployee, needType, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, needEdit } = this.props;
-        if (needEdit !== undefined) {        
+        if (needEdit !== undefined) {
             needType.onChange(needEdit.needIdType);
             descriptionNeed.onChange(needEdit.descriptionNeed);
             productFamily.onChange(needEdit.productFamilyId);
-            needProduct.onChange(needEdit.needIdProduct);            
+            needProduct.onChange(needEdit.needIdProduct);
             needImplementation.onChange(needEdit.needIdImplementation);
             needTask.onChange(needEdit.needTask);
             needBenefits.onChange(needEdit.needBenefits);
@@ -172,16 +177,17 @@ class ModalNeed extends Component {
     }
 
     _changeProductFamily(currencyValue) {
-        const { selectsReducer, fields: { needProduct }, consultListWithParameterUbication } = this.props;        
+        const { selectsReducer, fields: { needProduct }, consultListWithParameterUbication } = this.props;
         if (!currencyValue || currencyValue == null) {
             needProduct.onChange('');
         }
-        consultListWithParameterUbication(PRODUCTS, currencyValue);  
+        consultListWithParameterUbication(PRODUCTS, currencyValue);
         needProduct.onChange('');
-      }
+    }
 
     _handleCreateNeed() {
-        const { fields: { needType, idEmployee, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit, swtShowMessage } = this.props;
+        console.log("1", this.disableSubmitButton);
+        const { fields: { needType, idEmployee, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit, swtShowMessage, validateWhiteListOnNeed } = this.props;
         let status = _.get(_.filter(selectsReducer.get(TASK_STATUS), ['id', parseInt(statusNeed.value)]), '[0].value');
         let implementation = _.get(_.filter(selectsReducer.get(IMPLEMENTATION_TIMELINE), ['id', parseInt(needImplementation.value)]), '[0].value');
         let needC = _.get(_.filter(selectsReducer.get('pipelineClientNeeds'), ['id', parseInt(needType.value)]), '[0].need');
@@ -198,8 +204,45 @@ class ModalNeed extends Component {
             nameUsuario = needResponsable.value;
             idUsuario = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
         }
-        
-            if (needEdit !== undefined) {                
+        let jsonValidate = {
+            descriptionNeed: descriptionNeed.value,
+            needTask: needTask.value,
+            needBenefits: needBenefits.value,
+        };
+        validateWhiteListOnNeed(jsonValidate).then((data) => {
+            let errors = data.payload.data.data;
+
+            this.errorTask = null;
+            this.errorBenefits = null;
+            this.errorDescrption = null;
+
+            for (let index = 0; index < errors.length; index++) {
+                const error = errors[index];
+                const field = error.fieldName;
+                console.log(field);
+                switch (field) {
+                    case "task":
+                        this.errorTask = error.message;
+                        break;
+                    case "expected_benefits":
+                        this.errorBenefits = error.message;
+                        break;
+                    case "descriptionOfClientNeed":
+                        this.errorDescrption = error.message;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (errors.length > 0) {
+                this.disableSubmitButton = false;
+                this.forceUpdate();
+                return;
+            }
+
+
+            if (needEdit !== undefined) {
                 needEdit.needIdType = needType.value;
                 needEdit.needType = needC;
                 needEdit.descriptionNeed = descriptionNeed.value;
@@ -207,7 +250,7 @@ class ModalNeed extends Component {
                 needEdit.productFamilyId = productFamily.value;
                 needEdit.productFamily = productF;
                 needEdit.needIdProduct = needProduct.value;
-                needEdit.needProduct = productC;                
+                needEdit.needProduct = productC;
                 needEdit.needIdImplementation = needImplementation.value;
                 needEdit.needImplementation = implementation;
                 needEdit.needTask = needTask.value;
@@ -219,8 +262,8 @@ class ModalNeed extends Component {
                 needEdit.statusIdNeed = statusNeed.value;
                 needEdit.statusNeed = status;
                 editNeed(needEdit);
-                
-                swtShowMessage('success',"Necesidad editada exitosamente","Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán.",{onConfirmCallback: this._closeCreate});
+
+                swtShowMessage('success', "Necesidad editada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán.", { onConfirmCallback: this._closeCreate });
 
             } else {
                 const uuid = _.uniqueId('need_');
@@ -233,7 +276,7 @@ class ModalNeed extends Component {
                     productFamilyId: productFamily.value,
                     productFamily: productF,
                     needIdProduct: needProduct.value,
-                    needProduct: productC,                    
+                    needProduct: productC,
                     needIdImplementation: needImplementation.value,
                     needImplementation: implementation,
                     needTask: needTask.value,
@@ -246,23 +289,27 @@ class ModalNeed extends Component {
                     statusNeed: status
                 };
                 addNeed(need);
-                swtShowMessage('success',"Necesidad agregada exitosamente","Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán.",{onConfirmCallback: this._closeCreate});
+                swtShowMessage('success', "Necesidad agregada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán.", { onConfirmCallback: this._closeCreate });
             }
+
+        }).catch((error) => {
+            console.log(error);
+        });
     }
 
     updateKeyValueUsersBanco(e) {
         const { fields: { needResponsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
         let self = this;
-        
+
         const selector = $('.ui.search.needResponsable');
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.consultclick ? "" : e.preventDefault();
             if (needResponsable.value !== "" && needResponsable.value !== null && needResponsable.value !== undefined) {
-                if(needResponsable.value.length < 3) {
-                    swtShowMessage('error','Error','Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
+                if (needResponsable.value.length < 3) {
+                    swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
                     return;
                 }
-               
+
                 selector.toggleClass('loading');
                 filterUsersBanco(needResponsable.value).then((data) => {
                     usersBanco = _.get(data, 'payload.data.data');
@@ -277,7 +324,7 @@ class ModalNeed extends Component {
                         onSelect: function (event) {
                             needResponsable.onChange(event.title);
                             idEmployee.onChange(event.idUsuario);
-                            
+
                             return 'default';
                         }
                     });
@@ -299,13 +346,13 @@ class ModalNeed extends Component {
     componentWillMount() {
         const { getClientNeeds, getMasterDataFields, selectsReducer, consultDataSelect } = this.props;
         getClientNeeds();
-        consultDataSelect(PRODUCTS, PRODUCTS_MASK);        
-        getMasterDataFields([IMPLEMENTATION_TIMELINE, TASK_STATUS, PRODUCT_FAMILY]);        
+        consultDataSelect(PRODUCTS, PRODUCTS_MASK);
+        getMasterDataFields([IMPLEMENTATION_TIMELINE, TASK_STATUS, PRODUCT_FAMILY]);
     }
 
     render() {
         const { initialValues, selectsReducer, disabled, handleSubmit, error,
-            fields: { needType, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed, idEmployee} } = this.props;
+            fields: { needType, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed, idEmployee } } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateNeed)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -341,6 +388,7 @@ class ModalNeed extends Component {
                                     style={{ width: '100%', height: '180px' }}
                                     {...descriptionNeed}
                                     disabled={disabled}
+                                    error={this.errorDescrption}
                                     readOnly={_.isEqual(disabled, 'disabled')}
                                 />
                             </Col>
@@ -355,7 +403,7 @@ class ModalNeed extends Component {
                                         labelInput="Seleccione..."
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        {...productFamily}                                        
+                                        {...productFamily}
                                         parentId="dashboardComponentScroll"
                                         data={selectsReducer.get(PRODUCT_FAMILY) || []}
                                         onChange={val => this._changeProductFamily(val)}
@@ -403,6 +451,7 @@ class ModalNeed extends Component {
                                     name="needTask"
                                     style={{ width: '100%', height: '180px' }}
                                     {...needTask}
+                                    error={this.errorTask}
                                     disabled={disabled}
                                     readOnly={_.isEqual(disabled, 'disabled')}
                                 />
@@ -417,6 +466,7 @@ class ModalNeed extends Component {
                                     style={{ width: '100%', height: '180px' }}
                                     {...needBenefits}
                                     disabled={disabled}
+                                    error={this.errorBenefits}
                                     readOnly={_.isEqual(disabled, 'disabled')}
                                 />
                             </Col>
@@ -431,12 +481,12 @@ class ModalNeed extends Component {
                                         value={needResponsable.value}
                                         labelInput="Ingrese un criterio de búsqueda..."
                                         parentId="dashboardComponentScroll"
-                                        onChange={(val) => {if (idEmployee.value) { idEmployee.onChange(null) } needResponsable.onChange(val)}}
+                                        onChange={(val) => { if (idEmployee.value) { idEmployee.onChange(null) } needResponsable.onChange(val) }}
                                         onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                                         onSelect={val => this._updateValue(val)}
                                         disabled={disabled}
                                     />
-                                    
+
                                 </dt>
                             </Col>
                         </Row>
@@ -479,8 +529,8 @@ class ModalNeed extends Component {
                         <span>Agregar</span>
                     </button>
                 </div>
-                
-                
+
+
             </form>
         );
     }
@@ -492,6 +542,7 @@ function mapDispatchToProps(dispatch) {
         getMasterDataFields,
         filterUsersBanco,
         addNeed,
+        validateWhiteListOnNeed,
         editNeed,
         swtShowMessage,
         consultDataSelect,
@@ -508,7 +559,7 @@ function mapStateToProps({ needs, selectsReducer }, { needEdit }) {
                 needType: needEdit.needIdType,
                 descriptionNeed: needEdit.descriptionNeed,
                 productFamily: needEdit.productFamilyId,
-                needProduct: needEdit.needIdProduct,                
+                needProduct: needEdit.needIdProduct,
                 needImplementation: needEdit.needIdImplementation,
                 needTask: needEdit.needTask,
                 needBenefits: needEdit.needBenefits,
@@ -527,7 +578,7 @@ function mapStateToProps({ needs, selectsReducer }, { needEdit }) {
                 needType: '',
                 descriptionNeed: '',
                 productFamily: '',
-                needProduct: '',                
+                needProduct: '',
                 needImplementation: '',
                 needTask: '',
                 needBenefits: '',
@@ -549,7 +600,7 @@ export default reduxForm({
         const { swtShowMessage } = thisForm.props;
 
         let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
-        
+
         if (numXssValidation > 0) {
             swtShowMessage(MESSAGE_ERROR, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE);
         } else {
