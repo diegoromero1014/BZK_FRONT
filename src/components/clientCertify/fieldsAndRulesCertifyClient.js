@@ -16,7 +16,7 @@ const fieldsWithRules= {
     taxNature:{rules: []},
     idCIIU:{rules: [checkForValueIsExClient]},
     idSubCIIU:{rules: [checkForValueIsExClient]},
-    annualSales:{rules: [checkForValueIsExClient, checkNumberLength(15)]},
+    annualSales:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(15)]},
     addressClient:{rules: [checkFirstCharacter, checkMaxLength(60), checkForValueIsExClient, checkAddress]},
     country:{rules: [checkForValueIsExClient]},
     province:{rules: [checkForValueIsExClient]},
