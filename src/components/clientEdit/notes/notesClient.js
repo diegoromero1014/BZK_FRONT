@@ -100,12 +100,12 @@ class NotesClient extends Component {
   }
 
   render() {
-    const { notes, tabReducer } = this.props;
+    const { notes, tabReducer, className } = this.props;
     
     return (
       <Row style={{ padding: "0px 10px 20px 20px" }}>
         <Col xs={12} md={12} lg={12} style={{ marginTop: "-46px", paddingRight: "35px", textAlign: "right" }}>
-          <button className="btn" type="button" onClick={this._addNote} >
+          <button className="btn" name={className} type="button" onClick={this._addNote} >
             <i className="plus white icon"/>
           </button>
         </Col>
