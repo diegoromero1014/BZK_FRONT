@@ -25,7 +25,7 @@ import { changeStateSaveData } from "../../dashboard/actions";
 import { showLoading } from "../../loading/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import {
-    checkRequired, checkPlaceOfPrevisit, checkDecimalNumbers, checkRichTextRequired
+    checkRequired, checkPlaceOfPrevisit, checkDecimalNumbers, checkRichTextRequired, checkNumberLength
 } from './../../../validationsFields/rulesField';
 import {
     createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit, canEditPrevisita, disableBlockedReport,
@@ -339,7 +339,7 @@ class FormEditPrevisita extends Component {
     }
 
     _handleBlurValueNumber(typeValidation, val, allowsDecimal, lengthDecimal) {
-        //Elimino los caracteres no validos
+             //Elimino los caracteres no validos
         for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
             if (validos.indexOf(val.toString().charAt(i)) !== -1) {
                 output += val.toString().charAt(i)
@@ -364,10 +364,7 @@ class FormEditPrevisita extends Component {
         }
 
         if (typeValidation === ALLOWS_NEGATIVE_INTEGER) { //Realizo simplemente el formateo
-            var pattern = /(-?\d+)(\d{2})/;
-            while (pattern.test(val)) {
-                val = val.replace(pattern, "$1.$2");
-            }
+            
             if (_.isNil(this.state.durationPreVisit)) {
                 return (val + decimal);
             } else {
@@ -378,10 +375,7 @@ class FormEditPrevisita extends Component {
         } else { //Valido si el valor es negativo o positivo
             var value = _.isNil(val) ? -1 : numeral(val).format('0');
             if (value >= 0) {
-                pattern = /(-?\d+)(\d{2})/;
-                while (pattern.test(val)) {
-                    val = val.replace(pattern, "$1.$2");
-                }
+                
                 if (_.isNil(this.state.durationPreVisit)) {
                     return (val + decimal);
                 } else {
@@ -620,20 +614,18 @@ class FormEditPrevisita extends Component {
             }
         }
 
-        const messageRequiredDuration = checkRequired(this.state.durationPreVisit);
+        let messageRequiredDuration = checkRequired(this.state.durationPreVisit);
+
+        messageRequiredDuration = messageRequiredDuration || checkDecimalNumbers(this.state.durationPreVisit);
+
+        messageRequiredDuration = messageRequiredDuration || checkNumberLength(4)(this.state.durationPreVisit);
+
+
         if (!_.isNull(messageRequiredDuration)) {
             errorInForm = true;
             this.setState({
                 durationPreVisitError: messageRequiredDuration
             });
-        } else {
-            const messageWarningDuration = checkDecimalNumbers(this.state.durationPreVisit);
-            if (!_.isNull(messageWarningDuration)) {
-                errorInForm = true;
-                this.setState({
-                    durationPreVisitError: messageWarningDuration
-                });
-            }
         }
 
         if (typeButtonClick === SAVE_PUBLISHED) {
@@ -1113,7 +1105,6 @@ class FormEditPrevisita extends Component {
                                 name="txtDuracion"
                                 value={this.state.durationPreVisit}
                                 min={1}
-                                max="4"
                                 touched={true}
                                 placeholder="Duración previsita"
                                 error={this.state.durationPreVisitError}
