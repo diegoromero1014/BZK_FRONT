@@ -20,7 +20,7 @@ class InfoFinanciera extends React.Component {
         var pattern;
         //Elimino los caracteres no validos
         for (var i = 0, output = '', validos = "0123456789"; i < (val + "").length; i++) {
-            if (validos.indexOf(val.toString().charAt(i)) !== -1) {
+            if (validos.indexOf(String(val).charAt(i)) !== -1) {
                 output += val.toString().charAt(i)
             }
         }

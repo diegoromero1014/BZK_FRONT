@@ -856,8 +856,8 @@ class clientCertify extends React.Component {
                         </Col>
                     </Row>
 
-                    <div  >
-                        <NotesClient />
+                    <div>
+                        <NotesClient className= "NotesCertify"/>
                     </div>
 
                     <div style={{ height: "100px" }}>
@@ -1017,5 +1017,8 @@ function mapDispatchToProps(dispatch) {
 export default reduxForm({
     form: 'clientCertify',
     fields,
-    validate
+    validate,
+    onSubmitFail: () => {
+        document.getElementById('dashboardComponentScroll').scrollTop = 0;
+    },
 }, mapStateToProps, mapDispatchToProps)(clientCertify)

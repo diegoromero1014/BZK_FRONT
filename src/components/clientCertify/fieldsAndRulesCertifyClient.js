@@ -16,7 +16,7 @@ const fieldsWithRules= {
     taxNature:{rules: []},
     idCIIU:{rules: [checkForValueIsExClient]},
     idSubCIIU:{rules: [checkForValueIsExClient]},
-    annualSales:{rules: [checkForValueIsExClient, checkNumberLength(15), checkOnlyNumbers]},
+    annualSales:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(15)]},
     addressClient:{rules: [checkFirstCharacter, checkMaxLength(60), checkForValueIsExClient, checkAddress]},
     country:{rules: [checkForValueIsExClient]},
     province:{rules: [checkForValueIsExClient]},
@@ -25,11 +25,11 @@ const fieldsWithRules= {
     razonSocial:{rules: []},
     idTypeClient:{rules: []},
     idNumber:{rules: []},
-    assets:{rules: [checkFirstCharacter, checkMaxLength(), checkForValueIsExClient, checkNumberLength(15)]},
-    liabilities:{rules: [checkFirstCharacter, checkMaxLength(), checkForValueIsExClient, checkNumberLength(15)]},
-    operatingIncome:{rules: [checkFirstCharacter, checkMaxLength(), checkForValueIsExClient, checkNumberLength(15)]},
-    expenses:{rules: [checkFirstCharacter, checkMaxLength(), checkForValueIsExClient, checkNumberLength(15)]},
-    nonOperatingIncome:{rules: [checkFirstCharacter, checkMaxLength(), checkForValueIsExClient, checkNumberLength(15)]},
+    assets:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(15)]},
+    liabilities:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(15)]},
+    operatingIncome:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(15)]},
+    expenses:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(15)]},
+    nonOperatingIncome:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(15)]},
     dateSalesAnnuals:{rules: [checkForValueIsExClient]}
 };
 
