@@ -435,3 +435,10 @@ export const checkNumberLength = length => value => {
     }
     return message;
 }
+
+export const checkRequiredWhenFieldIsTrue = field => (value, fields, _) => {
+    if (fields[field])  {
+        return checkRequired(value);
+    }
+    return null;
+}
