@@ -20,7 +20,7 @@ import ProductsClient from "./products/productList";
 import BottonContactAdmin from "../clientDetailsInfo/bottonContactAdmin";
 import BottonShareholderAdmin from "../clientDetailsInfo/bottonShareholderAdmin";
 import ModalErrorsUpdateClient from "./modalErrorsUpdateClient";
-import ClientTypology from "../contextClient/ClientTypology";
+import ClientTypology from "../contextClient/clientTypology";
 import ContextEconomicActivity from "../contextClient/contextEconomicActivity";
 import ComponentListLineBusiness from "../contextClient/listLineOfBusiness/whiteListLineBusiness";
 import ComponentListDistributionChannel from "../contextClient/listDistributionChannel/componentListDistributionChannel";

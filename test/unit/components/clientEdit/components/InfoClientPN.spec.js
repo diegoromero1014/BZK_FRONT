@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 
-import ClientTypology from '~/src/components/contextClient/ClientTypology';
+import ClientTypology from '~/src/components/contextClient/clientTypology';
 import Input from "~/src/ui/input/inputComponent";
 import ComboBox from "~/src/ui/comboBox/comboBoxComponent";
 import Textarea from "~/src/ui/textarea/textareaComponent";
