@@ -91,7 +91,7 @@ class componentStructuredDelivery extends Component {
                 if (!stringValidate(event.name) || !stringValidate(event.date)) {
                     updateEventErrors(true, "Debe ingresar todos los campos")
                     allowSave = false;
-                } else if (!_.isUndefined(event.name) && !_.isNull(event.name) && eval(patternOfHistoryEvent).test(event.name)) {                                    
+                } else if (!_.isUndefined(event.name) && !_.isNull(event.name) && patternOfHistoryEvent.test(event.name)) {                                    
                     message = MESSAGE_WARNING_HISTORY_EVENT;
                     updateEventErrors(true, message);
                     allowSave = false;
@@ -442,7 +442,7 @@ class componentStructuredDelivery extends Component {
                         <div style={{ width: '580px', height: '100%', position: 'fixed', right: '0px' }}>
                             <button className="btn" type="submit"
                                 style={{ float: 'right', margin: '8px 0px 0px 450px', position: 'fixed' }}>
-                                <span style={{ color: '#FFFFFF', padding: '10px' }}>Guardar</span>
+                                <span style={{ color: '#FFFFFF', padding: '10px' }}>a</span>
                             </button>
                         </div>
                     </div>

@@ -11,8 +11,8 @@ export const patternOfStructureEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\
 export const patternOfEmail = "/[^a-zA-Z0-9\\-ÁÉÍÓÚáéíóúÑñÜü@._&#]/g";
 export const patternOfObservationLinkClient = "/[^a-zA-Z0-9\\s()\\[\\];,.\"!¡$%&\/¿?°#=':´+_\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
 export const patternOfOnlyNumbersLinkClient = "/[^0-9]/g";
-export const patternOfHistory = "/[^a-zA-Z0-9\\s()\\[\\];,.\"!¡$%&\/¿?°#=':´+_\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
-export const patternOfHistoryEvent = "/[^a-zA-Z0-9\\s()\\\\;,.´'\"&\/°#':´+\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
+export const patternOfHistory = /^[^a-zA-Z0-9\s()\[\];,.\"!¡$%&/¿?°#=':´+_\-ÁÉÍÓÚáéíóúÑñÜü]+$/;
+export const patternOfHistoryEvent = /^[^a-zA-Z0-9\s()\\;,.´'\"&/°#':´+\-ÁÉÍÓÚáéíóúÑñÜü]+$/;
 export const patternOfClientName = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s&/\\,;.#"°()'\-+´:]+$/;
 export const patternOfDescription = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
 export const patternOfClientAddress = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s#();,.\-"/_´']+$/;
