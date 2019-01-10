@@ -247,7 +247,7 @@ export const checkPipeLineOpportunityName = value => {
 
 export const checkObservationsLinkClient = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfObservationLinkClient).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfObservationLinkClient.test(value)) {
         message = MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
     }
 
