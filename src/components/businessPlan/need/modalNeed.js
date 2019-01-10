@@ -186,7 +186,6 @@ class ModalNeed extends Component {
     }
 
     _handleCreateNeed() {
-        console.log("1", this.disableSubmitButton);
         const { fields: { needType, idEmployee, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit, swtShowMessage, validateWhiteListOnNeed } = this.props;
         let status = _.get(_.filter(selectsReducer.get(TASK_STATUS), ['id', parseInt(statusNeed.value)]), '[0].value');
         let implementation = _.get(_.filter(selectsReducer.get(IMPLEMENTATION_TIMELINE), ['id', parseInt(needImplementation.value)]), '[0].value');
@@ -219,7 +218,7 @@ class ModalNeed extends Component {
             for (let index = 0; index < errors.length; index++) {
                 const error = errors[index];
                 const field = error.fieldName;
-                console.log(field);
+                
                 switch (field) {
                     case "task":
                         this.errorTask = error.message;

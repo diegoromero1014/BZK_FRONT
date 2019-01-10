@@ -16,7 +16,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import { getMasterDataFields } from "../../selectsComponent/actions";
-import { addArea, editArea } from "./actions";
+import { addArea, editArea, validateWhiteListOnArea } from "./actions";
 import { htmlToText, xssValidation } from "../../../actionsGlobal";
 
 import { STATUS_AREAS } from "./constants";
@@ -84,6 +84,9 @@ class ModalArea extends Component {
       showErrorYa: false,
       openDatePicker: false
     }
+
+    this.errorArea = null;
+    this.errorActionArea = null;
     momentLocalizer(moment);
     thisForm = this;
   }
@@ -122,43 +125,74 @@ class ModalArea extends Component {
   }
 
   _handleCreateArea() {
-    const { fields: { idEmployee, areaDes, actionArea, areaResponsable, areaDate, statusArea }, handleSubmit, error, addArea, editArea, areaEdit, selectsReducer, swtShowMessage } = this.props;
+    const { fields: { idEmployee, areaDes, actionArea, areaResponsable, areaDate, statusArea }, handleSubmit, error, addArea, editArea, areaEdit, selectsReducer, swtShowMessage, validateWhiteListOnArea } = this.props;
     let status = _.get(_.filter(selectsReducer.get(STATUS_AREAS), ['id', parseInt(statusArea.value)]), '[0].value');
     if (areaResponsable.value !== nameUsuario) {
       nameUsuario = areaResponsable.value;
       idUsuario = idEmployee.value;
     }
 
-
-    if (areaEdit !== undefined) {
-      areaEdit.actionArea = actionArea.value;
-      areaEdit.areaDes = areaDes.value;
-      areaEdit.statusIdArea = statusArea.value;
-      areaEdit.areaDate = areaDate.value;
-      areaEdit.areaFormat = areaDate.value;
-      areaEdit.statusArea = status;
-      areaEdit.areaIdResponsable = idUsuario;
-      areaEdit.areaResponsable = nameUsuario;
-      editArea(areaEdit);
-      swtShowMessage('success', "Área editada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas editadas se perderán.", { onConfirmCallback: this._closeCreate });
-
-    } else {
-      const uuid = _.uniqueId('area_');
-      let area = {
-        uuid,
-        areaDes: areaDes.value,
-        actionArea: actionArea.value,
-        areaIdResponsable: idUsuario,
-        areaResponsable: nameUsuario,
-        areaDate: areaDate.value,
-        areaFormat: areaDate.value,
-        statusIdArea: statusArea.value,
-        statusArea: status
-      }
-      addArea(area);
-      swtShowMessage('success', "Área agregada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas agregadas se perderán.", { onConfirmCallback: this._closeCreate });
-
+    let jsonValidate = {
+      area: areaDes.value,
+      actionArea: actionArea.value
     }
+    validateWhiteListOnArea(jsonValidate).then((data) => {
+      let errors = data.payload.data.data;
+      console.log("errors", errors);
+      for (let index = 0; index < errors.length; index++) {
+        const error = errors[index];
+        const field = error.fieldName;
+
+        switch (field) {
+          case "relatedInternalParty":
+            this.errorArea = error.message;
+            break;
+          case "actionNeeded":
+            this.errorActionArea = error.message;
+          default:
+            break;
+        }
+
+      }
+      if (errors.length > 0) {
+        this.disableSubmitButton = false;
+        this.forceUpdate();
+        return;
+      }
+
+      this.errorArea = null;
+      this.errorActionArea = null;
+
+      if (areaEdit !== undefined) {
+        areaEdit.actionArea = actionArea.value;
+        areaEdit.areaDes = areaDes.value;
+        areaEdit.statusIdArea = statusArea.value;
+        areaEdit.areaDate = areaDate.value;
+        areaEdit.areaFormat = areaDate.value;
+        areaEdit.statusArea = status;
+        areaEdit.areaIdResponsable = idUsuario;
+        areaEdit.areaResponsable = nameUsuario;
+        editArea(areaEdit);
+        swtShowMessage('success', "Área editada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas editadas se perderán.", { onConfirmCallback: this._closeCreate });
+
+      } else {
+        const uuid = _.uniqueId('area_');
+        let area = {
+          uuid,
+          areaDes: areaDes.value,
+          actionArea: actionArea.value,
+          areaIdResponsable: idUsuario,
+          areaResponsable: nameUsuario,
+          areaDate: areaDate.value,
+          areaFormat: areaDate.value,
+          statusIdArea: statusArea.value,
+          statusArea: status
+        }
+        addArea(area);
+        swtShowMessage('success', "Área agregada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las áreas agregadas se perderán.", { onConfirmCallback: this._closeCreate });
+
+      }
+    });
 
   }
 
@@ -229,6 +263,7 @@ class ModalArea extends Component {
                     name="areaDes"
                     {...areaDes}
                     disabled={disabled}
+                    error={this.errorArea}
                     max="200" />
                 </dt>
               </Col>
@@ -241,6 +276,7 @@ class ModalArea extends Component {
                   style={{ width: '100%', height: '180px' }}
                   {...actionArea}
                   disabled={disabled}
+                  error={this.errorActionArea}
                   readOnly={_.isEqual(disabled, 'disabled')}
                 />
               </Col>
@@ -316,7 +352,8 @@ function mapDispatchToProps(dispatch) {
     filterUsersBanco,
     addArea,
     editArea,
-    swtShowMessage
+    swtShowMessage,
+    validateWhiteListOnArea
   }, dispatch);
 }
 
