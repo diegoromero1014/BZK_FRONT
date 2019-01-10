@@ -238,7 +238,7 @@ export const checkContactRelevantFeatures = value => {
 
 export const checkPipeLineOpportunityName = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfOpportunityName).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && patternOfOpportunityName.test(value)) {
         message = MESSAGE_WARNING_OPPORTUNITY_NAME;
     }
 
