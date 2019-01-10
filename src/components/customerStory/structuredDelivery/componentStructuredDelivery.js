@@ -442,7 +442,7 @@ class componentStructuredDelivery extends Component {
                         <div style={{ width: '580px', height: '100%', position: 'fixed', right: '0px' }}>
                             <button className="btn" type="submit"
                                 style={{ float: 'right', margin: '8px 0px 0px 450px', position: 'fixed' }}>
-                                <span style={{ color: '#FFFFFF', padding: '10px' }}>a</span>
+                                <span style={{ color: '#FFFFFF', padding: '10px' }}>Guardar</span>
                             </button>
                         </div>
                     </div>
