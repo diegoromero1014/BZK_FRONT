@@ -138,7 +138,6 @@ class ModalArea extends Component {
     }
     validateWhiteListOnArea(jsonValidate).then((data) => {
       let errors = data.payload.data.data;
-      console.log("errors", errors);
       for (let index = 0; index < errors.length; index++) {
         const error = errors[index];
         const field = error.fieldName;
