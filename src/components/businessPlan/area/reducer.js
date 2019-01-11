@@ -5,7 +5,7 @@ import _ from 'lodash';
 const initialState = Immutable.List();
 
 export default (state = initialState, action) => {
-    switch (action.type) {
+  switch (action.type) {
     case constants.ADD_AREA:
       const area = action.data;
       const newArea = _.assign({}, {
@@ -13,7 +13,7 @@ export default (state = initialState, action) => {
         areaDes: area.areaDes,
         actionArea: area.actionArea,
         areaResponsable: area.areaResponsable,
-        areaIdResponsable:area.areaIdResponsable,
+        areaIdResponsable: area.areaIdResponsable,
         areaDate: area.areaDate,
         areaFormat: area.areaFormat,
         statusIdArea: area.statusIdArea,
@@ -27,21 +27,24 @@ export default (state = initialState, action) => {
     case constants.EDIT_AREA:
       const areaEdit = action.data;
       return state.update(
-        state.findIndex(function(item) {
+        state.findIndex(function (item) {
           return item.uuid === areaEdit.uuid;
-        }), function(item) {
+        }), function (item) {
           item.areaDes = areaEdit.areaDes;
           item.actionArea = areaEdit.actionArea;
           item.areaResponsable = areaEdit.areaResponsable;
-          item.areaIdResponsable  = areaEdit.areaIdResponsable;
+          item.areaIdResponsable = areaEdit.areaIdResponsable;
           item.areaDate = areaEdit.areaDate;
           item.statusIdArea = areaEdit.statusIdArea;
           item.statusArea = areaEdit.statusArea;
-          item.areaFormat= areaEdit.areaFormat;
+          item.areaFormat = areaEdit.areaFormat;
           return item;
         }
       );
+
+    case constants.VALIDATE_AREA:
+      return state;
     default:
       return state;
-    }
+  }
 }
