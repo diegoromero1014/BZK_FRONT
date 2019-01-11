@@ -1,33 +1,32 @@
 import React, { Component } from "react";
 import { Col, Row } from "react-flexbox-grid";
 import { reduxForm } from "redux-form";
+import { bindActionCreators } from "redux";
+import Modal from "react-modal";
+import { Menu, Segment } from 'semantic-ui-react'
+
 import Input from "../../ui/input/inputComponent";
 import Textarea from "../../ui/textarea/textareaComponent";
-
 import SweetAlert from "../sweetalertFocus";
+import ModalComponentDeleteRiskGroup from "./modalComponentDeleteRiskGroup";
+import ModalComponentMemberRiskGroup from "./modalComponentMemberRiskGroup";
+import ClientsRiskGroup from "./clientsRiskGroup";
+import ListNoveltiesRiskGroup from "./ListNoveltiesRiskGroup";
+
 import { swtShowMessage } from "../sweetAlertMessages/actions";
+import { editNameRiskGroup, getClientsRiskGroup, updateValuesRiskGroup, getAllNoveltiesRiskGroup } from "./actions";
+import { showLoading } from "../loading/actions";
 
 import { MESSAGE_LOAD_DATA, MODULE_RISK_GROUP, VALUE_REQUIERED, VALUE_XSS_INVALID } from "../../constantsGlobal";
 import {
     formValidateKeyEnter,
     nonValidateEnter,
     validatePermissionsByModule,
-    validateResponse,xssValidation
+    validateResponse, xssValidation
 } from "../../actionsGlobal";
-import { bindActionCreators } from "redux";
-import { editNameRiskGroup, getClientsRiskGroup, updateValuesRiskGroup, getAllNoveltiesRiskGroup } from "./actions";
-import ModalComponentDeleteRiskGroup from "./modalComponentDeleteRiskGroup";
-import ModalComponentMemberRiskGroup from "./modalComponentMemberRiskGroup";
-import ClientsRiskGroup from "./clientsRiskGroup";
-import { showLoading } from "../loading/actions";
-import Modal from "react-modal";
-import { Menu, Segment } from 'semantic-ui-react'
 import { OPTION_RISK_GROUP, OPTION_NOVELTY } from './constants';
-import ListNoveltiesRiskGroup from "./ListNoveltiesRiskGroup";
-
 
 import _ from "lodash";
-
 
 export const EDITAR = "Editar";
 export const ELIMINAR = "Eliminar";
@@ -43,7 +42,7 @@ const validate = values => {
         errors.groupName = VALUE_REQUIERED;
     } else if (xssValidation(values.groupName)) {
         errors.groupName = VALUE_XSS_INVALID;
-    }else {
+    } else {
         errors.groupName = null;
     }
 
@@ -155,8 +154,8 @@ class ModalComponentRiskGroup extends Component {
         let coord_position = index / numberThumbsRow;
         let trunc_a = Math.trunc(coord_position);
         let row_number = trunc_a + 1;
-        let trunc_b =  Math.trunc((coord_position - trunc_a ) * 10);
-        let column_number = trunc_b / numberThumbsRow;        
+        let trunc_b = Math.trunc((coord_position - trunc_a) * 10);
+        let column_number = trunc_b / numberThumbsRow;
 
         return <ClientsRiskGroup
             gridRow={row_number}
@@ -203,7 +202,9 @@ class ModalComponentRiskGroup extends Component {
             swtShowMessage('error', 'Error editando grupo de riesgo', 'Señor usuario, ocurrió un error editando el grupo de riesgo.');
         })
     }
+
     handleItemClick = (e, { name }) => this.setState({ tabActive: name });
+
     _handlerSubmitGroup() {
         const { validateHasRiskGroup } = this.props;
         validateHasRiskGroup(() => {
@@ -312,7 +313,6 @@ class ModalComponentRiskGroup extends Component {
                                                                 style={{ cursor: 'pointer', marginLeft: "10px" }}>
                                                                 Eliminar </button>
                                                         }
-
 
                                                         <Modal isOpen={this.state.modalDelteRiskGroupIsOpen}
                                                             onRequestClose={this.closeModalDelteRiskGroup}

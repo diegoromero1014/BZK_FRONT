@@ -2,18 +2,22 @@ import React, { Component } from 'react';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import SweetAlert from '../../sweetalertFocus';
 import moment from 'moment';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import { reduxForm } from 'redux-form';
 import { OrderedMap } from 'immutable';
-import { getMasterDataFields } from '../../selectsComponent/actions';
-import { addProduct, updateProduct } from './actions';
-import { CLIENT_TYPE_PRODUCT, FILTER_COUNTRY } from '../../selectsComponent/constants';
-import * as constants from '../../../constantsGlobal';
+import numeral from 'numeral';
+
+import SweetAlert from '../../sweetalertFocus';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
-import numeral from 'numeral';
+import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
+
+import { getMasterDataFields } from '../../selectsComponent/actions';
+import { addProduct, updateProduct } from './actions';
+
+import { CLIENT_TYPE_PRODUCT, FILTER_COUNTRY } from '../../selectsComponent/constants';
+import * as constants from '../../../constantsGlobal';
 
 class ModalProduct extends Component {
 
@@ -296,6 +300,7 @@ class ModalProduct extends Component {
 
     return (
       <form onSubmit={this._handleProduct.bind(this)}>
+        <SecurityMessageComponent />
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
           <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
             <Row>

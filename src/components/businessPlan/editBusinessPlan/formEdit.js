@@ -1,29 +1,32 @@
 import React, { Component } from "react";
 import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
-import { redirectUrl } from "../../globalComponents/actions";
 import { Col, Row } from "react-flexbox-grid";
+import moment from "moment";
+import _ from "lodash";
+
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import { getMasterDataFields } from "../../selectsComponent/actions";
 import NeedBusiness from "../need/needBusiness";
 import AreaBusiness from "../area/areaBusiness";
-import { EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR, VALUE_XSS_INVALID } from "../../../constantsGlobal";
 import SweetAlert from "../../sweetalertFocus";
-import { OBJECTIVE_BUSINESS } from "../constants";
+import Tooltip from "../../toolTip/toolTipComponent";
+import RichText from "../../richText/richTextComponent";
+import BlockingComponent from '../../blockingComponent/blockingComponent';
+
+import { redirectUrl } from "../../globalComponents/actions";
+import { getMasterDataFields } from "../../selectsComponent/actions";
 import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, xssValidation, onSessionExpire } from "../../../actionsGlobal";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { createBusiness, detailBusiness, pdfDescarga, validateRangeDates } from "../actions";
 import { addNeed } from "../need/actions";
 import { addArea } from "../area/actions";
-import moment from "moment";
-import _ from "lodash";
-import Tooltip from "../../toolTip/toolTipComponent";
-import RichText from "../../richText/richTextComponent";
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import BlockingComponent from '../../blockingComponent/blockingComponent';
-import {BLOCK_BUSINESS_PLAN} from '../../../constantsGlobal'
+
+import { EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR, VALUE_XSS_INVALID } from "../../../constantsGlobal";
+import { OBJECTIVE_BUSINESS } from "../constants";
+import { BLOCK_BUSINESS_PLAN } from '../../../constantsGlobal'
 
 const fields = ["initialValidityDate", "finalValidityDate", "objectiveBusiness", "opportunities"];
 let dateBusinessLastReview;
@@ -62,8 +65,8 @@ class FormEdit extends Component {
     }
 
     _editBusiness() {
-        const {hasAccess, swtShowMessage} = this.props;
-        
+        const { hasAccess, swtShowMessage } = this.props;
+
         this.setState({
             showMessage: false,
             isEditable: !this.state.isEditable
@@ -121,112 +124,110 @@ class FormEdit extends Component {
         const detailBusiness = businessPlanReducer.get('detailBusiness');
 
         canUserEditBlockedReport()
-        .then(() => {
+            .then(() => {
 
 
-        if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid())) {
-            errorInForm = true;
-            this.setState({
-                initialDateError: "Debe seleccionar una fecha"
-            });
-        }
-        if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value) || !moment(finalValidityDate.value, 'DD/MM/YYYY').isValid()) {
-            errorInForm = true;
-            this.setState({
-                finalDateError: "Debe seleccionar una fecha"
-            });
-        }
-        if (typeButtonClick === SAVE_PUBLISHED) {
-            let needsBusiness = [];
-            if (this.state.objectiveBusiness === null || this.state.objectiveBusiness === undefined || this.state.objectiveBusiness === "") {
-                errorInForm = true;
-                this.setState({
-                    objectiveBusinessError: "Debe seleccionar una opción"
-                });
-            }
-            if (_.isEmpty(htmlToText(this.state.opportunities)) || this.state.opportunities === null || this.state.opportunities === undefined || this.state.opportunities === "") {
-                errorInForm = true;
-                this.setState({
-                    opportunitiesError: "Debe ingresar un valor"
-                });
-            }
-            needsBusiness = needs.toArray();
-            if (needsBusiness.length === 0) {
-                errorInForm = true;
-                this.setState({ showErrorSaveBusiness: true });
-            }
-        }
-
-        if (xssValidation(this.state.opportunities, true)) {
-            errorInForm = true;
-            this.setState({
-                opportunitiesError: VALUE_XSS_INVALID
-            });
-        }
-
-        if (!errorInForm) {
-            let needsbB = [];
-            _.map(needs.toArray(),
-                function (need) {
-                    let data = {
-                        "id": need.id,
-                        "clientNeed": need.needIdType,
-                        "clientNeedDescription": need.descriptionNeed,
-                        "productFamily": need.productFamilyId,
-                        "product": need.needIdProduct,
-                        "implementationTimeline": need.needIdImplementation,
-                        "task": need.needTask,
-                        "expected_benefits": need.needBenefits,
-                        "employeeResponsible": need.needIdResponsable,
-                        "needFulfillmentStatus": need.statusIdNeed,
-                        "estimatedClosingDate": moment(need.needDate, "DD/MM/YYYY").format('x')
-                    }
-                    needsbB.push(data);
+                if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid())) {
+                    errorInForm = true;
+                    this.setState({
+                        initialDateError: "Debe seleccionar una fecha"
+                    });
                 }
-            );
-            let areasB = [];
-            _.map(areas.toArray(),
-                function (area) {
-                    let data = {
-                        "id": null,
-                        "relatedInternalParty": area.areaDes,
-                        "actionNeeded": area.actionArea,
-                        "employeeResponsible": area.areaResponsable,
-                        "employeeResponsibleId": area.areaIdResponsable,
-                        "needFulfillmentStatus": area.statusIdArea,
-                        "actionStatus": area.needBenefits,
-                        "estimatedClosingDate": moment(area.areaDate, "DD/MM/YYYY").format('x')
-                    }
-                    areasB.push(data);
+                if (_.isNil(finalValidityDate.value) || _.isEmpty(finalValidityDate.value) || !moment(finalValidityDate.value, 'DD/MM/YYYY').isValid()) {
+                    errorInForm = true;
+                    this.setState({
+                        finalDateError: "Debe seleccionar una fecha"
+                    });
                 }
-            );
-            let businessJson = {
-                "id": detailBusiness.data.id,
-                "client": window.sessionStorage.getItem('idClientSelected'),
-                "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
-                "finalValidityDate": moment(finalValidityDate.value, DATE_FORMAT).format('x'),
-                "opportunitiesAndThreats": this.state.opportunities,
-                "objective": this.state.objectiveBusiness,
-                "documentStatus": typeButtonClick,
-                "clientNeedFulfillmentPlan": needsbB.length === 0 ? null : needsbB,
-                "relatedInternalParties": areasB.length === 0 ? null : areasB
-            }
-            //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
-            this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
+                if (typeButtonClick === SAVE_PUBLISHED) {
+                    let needsBusiness = [];
+                    if (this.state.objectiveBusiness === null || this.state.objectiveBusiness === undefined || this.state.objectiveBusiness === "") {
+                        errorInForm = true;
+                        this.setState({
+                            objectiveBusinessError: "Debe seleccionar una opción"
+                        });
+                    }
+                    if (_.isEmpty(htmlToText(this.state.opportunities)) || this.state.opportunities === null || this.state.opportunities === undefined || this.state.opportunities === "") {
+                        errorInForm = true;
+                        this.setState({
+                            opportunitiesError: "Debe ingresar un valor"
+                        });
+                    }
+                    needsBusiness = needs.toArray();
+                    if (needsBusiness.length === 0) {
+                        errorInForm = true;
+                        this.setState({ showErrorSaveBusiness: true });
+                    }
+                }
 
-        }
+                if (xssValidation(this.state.opportunities, true)) {
+                    errorInForm = true;
+                    this.setState({
+                        opportunitiesError: VALUE_XSS_INVALID
+                    });
+                }
 
-        })
-        .catch((reason) => {
-            
-        });
+                if (!errorInForm) {
+                    let needsbB = [];
+                    _.map(needs.toArray(),
+                        function (need) {
+                            let data = {
+                                "id": need.id,
+                                "clientNeed": need.needIdType,
+                                "clientNeedDescription": need.descriptionNeed,
+                                "productFamily": need.productFamilyId,
+                                "product": need.needIdProduct,
+                                "implementationTimeline": need.needIdImplementation,
+                                "task": need.needTask,
+                                "expected_benefits": need.needBenefits,
+                                "employeeResponsible": need.needIdResponsable,
+                                "needFulfillmentStatus": need.statusIdNeed,
+                                "estimatedClosingDate": moment(need.needDate, "DD/MM/YYYY").format('x')
+                            }
+                            needsbB.push(data);
+                        }
+                    );
+                    let areasB = [];
+                    _.map(areas.toArray(),
+                        function (area) {
+                            let data = {
+                                "id": null,
+                                "relatedInternalParty": area.areaDes,
+                                "actionNeeded": area.actionArea,
+                                "employeeResponsible": area.areaResponsable,
+                                "employeeResponsibleId": area.areaIdResponsable,
+                                "needFulfillmentStatus": area.statusIdArea,
+                                "actionStatus": area.needBenefits,
+                                "estimatedClosingDate": moment(area.areaDate, "DD/MM/YYYY").format('x')
+                            }
+                            areasB.push(data);
+                        }
+                    );
+                    let businessJson = {
+                        "id": detailBusiness.data.id,
+                        "client": window.sessionStorage.getItem('idClientSelected'),
+                        "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
+                        "finalValidityDate": moment(finalValidityDate.value, DATE_FORMAT).format('x'),
+                        "opportunitiesAndThreats": this.state.opportunities,
+                        "objective": this.state.objectiveBusiness,
+                        "documentStatus": typeButtonClick,
+                        "clientNeedFulfillmentPlan": needsbB.length === 0 ? null : needsbB,
+                        "relatedInternalParties": areasB.length === 0 ? null : areasB
+                    }
+                    //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
+                    this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
+
+                }
+
+            })
+            .catch((reason) => {});
 
     }
 
     componentDidUpdate(prevProps, prevState) {
         const { hasAccess, swtShowMessage, userEditing } = this.props;
         if (!hasAccess) {
-            swtShowMessage(MESSAGE_ERROR, 'Error', 'Señor usuario, en este momento el formulario esta siendo editado por ' + userEditing + '. Por favor intente mas tarde', {onConfirmCallback: this._closeConfirmClose});
+            swtShowMessage(MESSAGE_ERROR, 'Error', 'Señor usuario, en este momento el formulario esta siendo editado por ' + userEditing + '. Por favor intente mas tarde', { onConfirmCallback: this._closeConfirmClose });
         }
     }
 
@@ -264,7 +265,7 @@ class FormEdit extends Component {
                         descriptionNeed: value.clientNeedDescription,
                         descriptionNeedText: htmlToText(value.clientNeedDescription),
                         productFamilyId: value.productFamily,
-                        productFamily: value.productFamilyName,                        
+                        productFamily: value.productFamilyName,
                         needIdProduct: value.product,
                         needProduct: value.productName,
                         needIdImplementation: value.implementationTimeline,

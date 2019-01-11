@@ -1,15 +1,19 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {Grid, Row, Col} from 'react-flexbox-grid';
-import BotonCreateNeed from './botonCreateNeed';
-import {DELETE_NEED_VIEW} from './constants';
-import {deleteNeed} from './actions';
-import SweetAlert from '../../sweetalertFocus';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
-import ModalNeed from './modalNeed';
 import _ from 'lodash';
-import {shorterStringValue} from '../../../actionsGlobal';
+
+import BotonCreateNeed from './botonCreateNeed';
+import SweetAlert from '../../sweetalertFocus';
+import ModalNeed from './modalNeed';
+import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
+
+import { deleteNeed } from './actions';
+import { shorterStringValue } from '../../../actionsGlobal';
+
+import { DELETE_NEED_VIEW } from './constants';
 
 var arrayValueNeed = [];
 var idNeedSeleted = null;
@@ -30,11 +34,11 @@ class ListNeed extends Component {
     }
 
     closeModal() {
-        this.setState({modalIsOpen: false});
+        this.setState({ modalIsOpen: false });
     }
 
     _getValuesNeed() {
-        var {needs} = this.props;
+        var { needs } = this.props;
         if (needs.size > 0) {
             var data = _.chain(needs.toArray()).map(need => {
                 const {
@@ -89,7 +93,7 @@ class ListNeed extends Component {
     }
 
     _deleteNeed() {
-        const {deleteNeed, needs} = this.props;
+        const { deleteNeed, needs } = this.props;
         var indexDelete = needs.findIndex(function (item) {
             return item.uuid === idNeedSeleted;
         });
@@ -114,20 +118,20 @@ class ListNeed extends Component {
     }
 
     _mapValuesNeed(needData, idx) {
-        var {disabled} = this.props;
+        var { disabled } = this.props;
         return <tr key={idx}>
             <td className="collapsing">
                 <i className="zoom icon" title="Ver detalle"
-                   onClick={this._viewDetailsNeed.bind(this, needData)}
-                   style={{cursor: "pointer"}}/>
+                    onClick={this._viewDetailsNeed.bind(this, needData)}
+                    style={{ cursor: "pointer" }} />
             </td>
             <td>{needData.needType}</td>
             <td>{needData.descripcionNecesidad}</td>
             <td>{needData.statusNeed}</td>
             <td className="collapsing">
                 <i className="remove icon" title="Eliminar necesidad"
-                   onClick={this._confirmDeleteNeed.bind(this, needData.uuid)}
-                   style={disabled === 'disabled' ? {display: 'none'} : {cursor: "pointer"}}/>
+                    onClick={this._confirmDeleteNeed.bind(this, needData.uuid)}
+                    style={disabled === 'disabled' ? { display: 'none' } : { cursor: "pointer" }} />
             </td>
         </tr>
     }
@@ -135,7 +139,7 @@ class ListNeed extends Component {
     render() {
         var disabledButtonCreate = '';
         this._getValuesNeed();
-        const {needs, disabled} = this.props;
+        const { needs, disabled } = this.props;
         if (needs.size === 40) {
             disabledButtonCreate = 'disabled';
         } else {
@@ -152,31 +156,31 @@ class ListNeed extends Component {
             }}>
                 {disabled === '' || disabled === undefined ?
                     <Row xs={12} md={12} lg={12}>
-                        <BotonCreateNeed disabled={disabledButtonCreate}/>
+                        <BotonCreateNeed disabled={disabledButtonCreate} />
                     </Row>
                     : ''}
                 {needs.size > 0 ?
-                    <Row style={disabled === '' || disabled === undefined ? {marginTop: '20px'} : {}}>
+                    <Row style={disabled === '' || disabled === undefined ? { marginTop: '20px' } : {}}>
                         <Col xs>
                             <table className="ui striped table">
                                 <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Necesidades</th>
-                                    <th>Descripción</th>
-                                    <th>Estado</th>
-                                    <th></th>
-                                </tr>
+                                    <tr>
+                                        <th></th>
+                                        <th>Necesidades</th>
+                                        <th>Descripción</th>
+                                        <th>Estado</th>
+                                        <th></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {arrayValueNeed.map(this._mapValuesNeed)}
+                                    {arrayValueNeed.map(this._mapValuesNeed)}
                                 </tbody>
                             </table>
                         </Col>
                     </Row> :
                     <Row>
                         <Col xs={12} md={12} lg={12}>
-                            <div style={{textAlign: "center", marginTop: "20px", marginBottom: "20px"}}>
+                            <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
                                 <span className="form-item">Aún no se han adicionado necesidades</span>
                             </div>
                         </Col>
@@ -191,14 +195,15 @@ class ListNeed extends Component {
                         <div className="modalBt4-content modal-content">
                             <div className="modalBt4-header modal-header">
                                 <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal"
-                                        role="close">
+                                    role="close">
                                     <span className="modal-title" aria-hidden="true" role="close"><i
                                         className="remove icon modal-icon-close" role="close"></i></span>
                                     <span className="sr-only">Close</span>
                                 </button>
                                 <h4 className="modal-title" id="myModalLabel">{modalTitle}</h4>
                             </div>
-                            <ModalNeed needEdit={this.state.actions.need} isOpen={this.closeModal} disabled={disabled}/>
+                            <SecurityMessageComponent />
+                            <ModalNeed needEdit={this.state.actions.need} isOpen={this.closeModal} disabled={disabled} />
                         </div>
                     </div>
                 </Modal>
@@ -211,8 +216,8 @@ class ListNeed extends Component {
                     confirmButtonText='Sí, estoy seguro!'
                     cancelButtonText="Cancelar"
                     showCancelButton={true}
-                    onCancel={() => this.setState({showConfirmDeleteNeed: false})}
-                    onConfirm={this._deleteNeed}/>
+                    onCancel={() => this.setState({ showConfirmDeleteNeed: false })}
+                    onConfirm={this._deleteNeed} />
             </div>
         );
     }
@@ -225,7 +230,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({needs}) {
+function mapStateToProps({ needs }) {
     return {
         needs
     };
