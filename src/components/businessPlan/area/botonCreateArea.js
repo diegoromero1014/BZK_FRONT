@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Col } from 'react-flexbox-grid';
-import ModalArea from './modalArea';
 import Modal from 'react-modal';
 import _ from 'lodash';
+
+import ModalArea from './modalArea';
+import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
 
 const style = {
   btnEnable: { float: 'right', cursor: 'pointer' },
@@ -50,6 +52,7 @@ class BotonCreateArea extends Component {
                     <span className="sr-only">Close</span>
                   </button>
                 </div>
+                <SecurityMessageComponent />
                 <ModalArea isOpen={this.closeModal} />
               </div>
             </div>

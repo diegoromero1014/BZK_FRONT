@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
 import HeaderBusinessPlan from '../headerBusinessPlan';
 import FormBusinessPlan from './formBusinessPlan';
+
 import { redirectUrl } from '../../globalComponents/actions';
 
 class CreateBusinessPlan extends Component {
