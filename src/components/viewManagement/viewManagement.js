@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../globalComponents/actions';
 import { updateTitleNavBar } from '../navBar/actions';
-import ItemChart from './ItemChart';
+import ItemChart from './itemChart';
 import { changeTabSeletedChartView, changeErrorYearSeleted } from './actions';
 import ViewChartPrevisit from './chartPrevisit/viewChartPrevisit';
 import ViewChartVisit from './chartVisit/viewChartVisit';
