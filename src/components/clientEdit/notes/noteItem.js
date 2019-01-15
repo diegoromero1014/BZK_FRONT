@@ -56,7 +56,7 @@ class NoteItem extends Component {
             if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
                 updateErrorsNotes(true, "Debe ingresar todos los campos");
             }
-            if (!_.isUndefined(note.note) && !_.isNull(note.note) && eval(patternNotesClient).test(note.note)) {
+            if (!_.isUndefined(note.note) && !_.isNull(note.note) && !_.isEmpty(value) && !patternNotesClient.test(note.note)) {
                 message = MESSAGE_WARNING_NOTES_CLIENT;
                 updateErrorsNotes(true, message);
             }
