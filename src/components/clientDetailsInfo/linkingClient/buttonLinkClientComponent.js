@@ -126,7 +126,7 @@ class ButtonLinkClientComponent extends Component {
                         updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
                          isValidLinkEntities = false;
                      } 
-                    else  if  (!_.isUndefined(linkEntity.traderCode)  &&  !_.isNull(linkEntity.traderCode) && eval(patternOfOnlyNumbersLinkClient).test(linkEntity.traderCode)) {
+                    else  if  (!_.isUndefined(linkEntity.traderCode)  &&  !_.isNull(linkEntity.traderCode) && !patternOfOnlyNumbersLinkClient.test(linkEntity.traderCode)) {
                         messageWhiteList  = MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT;
                         updateErrorsLinkEntities(true, messageWhiteList);
                         isValidLinkEntities = false;
@@ -160,7 +160,7 @@ class ButtonLinkClientComponent extends Component {
             }
         });
 
-        if  (!_.isUndefined(observationTrader.value)  &&  !_.isNull(observationTrader.value) && eval(patternOfObservationLinkClient).test(observationTrader.value)) {
+        if  (!_.isUndefined(observationTrader.value)  &&  !_.isNull(observationTrader.value) && !patternOfObservationLinkClient.test(observationTrader.value)) {
             messageWhiteList  =  MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
             isValidLinkEntities = false;
         }  else if(!_.isNil(observationTrader.value) && patternOfForbiddenCharacter.test(observationTrader.value)) {                                       

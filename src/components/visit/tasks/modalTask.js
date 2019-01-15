@@ -1,19 +1,22 @@
+import React, { Component } from "react";
 import moment from "moment";
 import { reduxForm } from "redux-form";
-import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { Col, Row } from "react-flexbox-grid";
-import momentLocalizer from "react-widgets/lib/localizers/moment";
-import { addTask, editTask } from "./actions";
-import { filterUsersBanco } from "../../participantsVisitPre/actions";
-import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
-import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import _ from "lodash";
 import $ from "jquery";
+
+import momentLocalizer from "react-widgets/lib/localizers/moment";
+import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
+import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import RichText from "../../richText/richTextComponent";
+
+import { addTask, editTask } from "./actions";
+import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import { htmlToText, xssValidation } from "../../../actionsGlobal";
+import { swtShowMessage } from "../../sweetAlertMessages/actions";
+
 import { VALUE_XSS_INVALID } from "../../../constantsGlobal";
-import {swtShowMessage} from "../../sweetAlertMessages/actions";
 
 const fields = ["idEmployee", "responsable", "fecha", "tarea", "id"];
 const errors = {};
@@ -106,8 +109,8 @@ class ModalTask extends Component {
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.preventDefault();
             if (responsable.value !== "" && responsable.value !== null && responsable.value !== undefined) {
-                if(responsable.value.length < 3) {
-                    swtShowMessage('error','Error','Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
+                if (responsable.value.length < 3) {
+                    swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
                     return;
                 }
                 selector.toggleClass('loading');
@@ -158,7 +161,7 @@ class ModalTask extends Component {
                 taskEdit.id = id.value;
                 editTask(taskEdit);
 
-                swtShowMessage('success', 'Tarea editada','Señor usuario, la tarea fue editada exitosamente', {onConfirmCallback: this._closeCreate})
+                swtShowMessage('success', 'Tarea editada', 'Señor usuario, la tarea fue editada exitosamente', { onConfirmCallback: this._closeCreate })
 
             } else {
                 const uuid = _.uniqueId('task_');
@@ -206,7 +209,7 @@ class ModalTask extends Component {
                                         labelInput="Ingrese un criterio de búsqueda..."
                                         {...responsable}
                                         parentId="dashboardComponentScroll"
-                                        onChange={(val) => {if (idEmployee.value) { idEmployee.onChange(null) } responsable.onChange(val)}}
+                                        onChange={(val) => { if (idEmployee.value) { idEmployee.onChange(null) } responsable.onChange(val) }}
                                         value={responsable.value}
                                         onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                                         onSelect={val => this._updateValue(val)}
@@ -247,8 +250,8 @@ class ModalTask extends Component {
                         <span>Guardar</span>
                     </button>
                 </div>
-                
-                
+
+
             </form>
         );
     }

@@ -1,16 +1,18 @@
 import React, { Component, PropTypes } from 'react';
-import GridComponent from '../../grid/component';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import BotonCreateTaskComponent from './botonCreateTaskVisit';
-import { DELETE_TASK_VIEW } from './constants';
-import { deleteTask } from './actions';
-import SweetAlert from '../../sweetalertFocus';
+import { Row, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
-import ModalTask from './modalTask';
 import _ from 'lodash';
 import moment from 'moment';
+
+import BotonCreateTaskComponent from './botonCreateTaskVisit';
+import SweetAlert from '../../sweetalertFocus';
+import ModalTask from './modalTask';
+
+import { deleteTask } from './actions';
+
+import { DELETE_TASK_VIEW } from './constants';
 
 var arrayValueTask = [];
 var idTaskSeleted = null;
@@ -23,6 +25,7 @@ class ListTasks extends Component {
       actions: {},
       modalIsOpen: false
     };
+
     this._mapValuesTask = this._mapValuesTask.bind(this);
     this._getValuesTask = this._getValuesTask.bind(this);
     this._deleteTask = this._deleteTask.bind(this);
@@ -38,9 +41,10 @@ class ListTasks extends Component {
     tasks = tasks.sort(function (valueA, valueB) {
       return valueA.fecha > valueB.fecha;
     });
+
     if (tasks.size > 0) {
       var data = _.chain(tasks.toArray()).map(task => {
-        const { uuid, responsable, fechaForm, fecha, tarea,textTarea, idResponsable, id } = task;
+        const { uuid, responsable, fechaForm, fecha, tarea, textTarea, idResponsable, id } = task;
         var descripcionTarea = textTarea.length > 120 ? textTarea.substring(0, 120) + "..." : textTarea;
         var fechaDateMoment = moment(fecha, "DD/MM/YYYY").locale('es');
         var fechaDateMomentString = fechaDateMoment.format("DD") + " " + fechaDateMoment.format("MMM") + " " + fechaDateMoment.format("YYYY");
@@ -99,6 +103,7 @@ class ListTasks extends Component {
       urlServer: "./component",
       component: "VIEW_TASK"
     }
+
     this.setState({
       actions,
       modalIsOpen: true
@@ -195,7 +200,6 @@ class ListTasks extends Component {
     );
   }
 }
-
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({

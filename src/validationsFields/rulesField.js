@@ -323,7 +323,7 @@ export const checkObservations = value => {
 
 export const checkAddress = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfAddress).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfAddress.test(value)) {
         message = MESSAGE_WARNING_ADDRESS;
     }
 
@@ -332,7 +332,7 @@ export const checkAddress = value => {
 
 export const checkNeighborhood = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfNeighborhood).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfNeighborhood.test(value)) {
         message = MESSAGE_WARNING_NEIGHBORHOOD;
     }
 
@@ -341,7 +341,7 @@ export const checkNeighborhood = value => {
 
 export const checkPostalCode = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfPostalCode).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) &&  !patternOfPostalCode.test(value)) {
         message = MESSAGE_WARNING_POSTAL_CODE;
     }
 
@@ -350,7 +350,7 @@ export const checkPostalCode = value => {
 
 export const checkPhone = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfPhone).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && patternOfPhone.test(value)) {
         message = MESSAGE_WARNING_PHONE;
     }
 
@@ -359,7 +359,7 @@ export const checkPhone = value => {
 
 export const checkOnlyNumbers = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfOnlyNumbers).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && patternOfOnlyNumbers.test(value)) {
         message = MESSAGE_WARNING_ONLY_NUMBERS;
     }
 
@@ -369,7 +369,7 @@ export const checkOnlyNumbers = value => {
 export const checkEmail = value => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) &&
-        (!patternOfStructureEmail.test(value) || eval(patternOfEmail).test(value))) {
+        (!patternOfStructureEmail.test(value) || patternOfEmail.test(value))) {
         message = MESSAGE_WARNING_INVALID_EMAIL;
     }
 
@@ -387,7 +387,7 @@ export const checkContactRelevantFeatures = value => {
 
 export const checkPipeLineOpportunityName = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfOpportunityName).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && patternOfOpportunityName.test(value)) {
         message = MESSAGE_WARNING_OPPORTUNITY_NAME;
     }
 
@@ -396,7 +396,7 @@ export const checkPipeLineOpportunityName = value => {
 
 export const checkObservationsLinkClient = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfObservationLinkClient).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfObservationLinkClient.test(value)) {
         message = MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
     }
 
@@ -405,7 +405,7 @@ export const checkObservationsLinkClient = value => {
 
 export const checkHistoryFields = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfHistory).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && patternOfHistory.test(value)) {
         message = MESSAGE_WARNING_HISTORY;
     }
 
