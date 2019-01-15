@@ -24,7 +24,7 @@ import { addArea } from "../area/actions";
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
-import { EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR, VALUE_XSS_INVALID } from "../../../constantsGlobal";
+import { EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR, VALUE_XSS_INVALID, REQUEST_INVALID_INPUT, REQUEST_SUCCESS } from "../../../constantsGlobal";
 import { OBJECTIVE_BUSINESS } from "../constants";
 import { BLOCK_BUSINESS_PLAN } from '../../../constantsGlobal'
 
@@ -330,20 +330,19 @@ class FormEdit extends Component {
                             changeStateSaveData(true, MESSAGE_SAVE_DATA);
                             createBusiness(businessJson).then((data) => {
                                 changeStateSaveData(false, "");
-                                const that=this;
                                 if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
                                     onSessionExpire();
                                 } else {
-                                    if ((_.get(data, 'payload.data.status') === 200)) {
+                                    if ((_.get(data, 'payload.data.status') === REQUEST_SUCCESS)) {
                                         typeMessage = "success";
                                         titleMessage = "Edición plan de negocio";
                                         message = "Señor usuario, el plan de negocio se editó de forma exitosa.";
                                         this.setState({ showMessageCreateBusiness: true });
                                     } else {
-                                        if ((_.get(data, 'payload.data.status') === 500)) {
+                                        if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
                                             const validationsErrorFromServer = _.get(data, 'payload.data.data');
-                                            _.forEach(validationsErrorFromServer, function (field) {
-                                                that.processValidation(field);
+                                            _.forEach(validationsErrorFromServer, (field)=> {
+                                                this.processValidation(field);
                                             });
                                         }else{
 
