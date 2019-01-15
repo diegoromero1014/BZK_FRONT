@@ -1,14 +1,23 @@
 import _ from "lodash";
 
+import numeral from "numeral";
+
 import { htmlToText } from './../actionsGlobal';
-import {OTHER, EXCLIENT, RESPONSE_INFO, MARK_GEREN} from './../constantsGlobal';
+import {OTHER, EXCLIENT, RESPONSE_INFO, MARK_GEREN, BUTTON_EDIT,
+    PERMISSIONSCLIENTS,
+    INFO_CREDIT_STUDY,
+    CLIENT_OPERATION_FOREIGN_CURRENCY,
+    OTHERS_OPERATIONS,
+    DATA_CIUU, CLIENT_ORIGIN_RESOURCES,
+    CLIENT_ORIGIN_GOODS} from './../constantsGlobal';
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
     patternOfStructureEmail, patternOfEmail, patternOfHistory, patternOfClientName, patternOfDescription,
     patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
     patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant, 
-    patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason
+    patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
+    patternOfInventoryPolice, patternOfControlLinkedPayments
 } from './patternsToValidateField';
 
 import {
@@ -79,6 +88,33 @@ export const checkForValueSubSegment = (value, fields, props) => {
     return message;
 }
 
+export const checkForValueSubSegmentEditClient = (value, fields, props) => {
+    let message = null;
+    let segmentValue = _.get(_.find(props.selectsReducer.get(SEGMENTS), ['id', parseInt(fields.segment)]), 'value');
+    let isEditButton = props.idButton;
+    if (_.isEqual(CONSTRUCT_PYME, segmentValue) && isEditButton !== BUTTON_EDIT) {
+        if (_.isNull(String(value)) || _.isEmpty(String(value)) || _.isUndefined(value)) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+
+    return message;
+}
+
+export const checkForValueIdSubCiiuEditClient = (value, fields, props) => {
+    let message = null;
+    let idCiiuValue = props.selectsReducer.get(DATA_CIUU);
+    let isEditButton = props.idButton;
+    if ((!_.isEmpty(idCiiuValue) || !_.isNull(idCiiuValue) || !_.isUndefined(idCiiuValue)) && isEditButton !== BUTTON_EDIT) {
+        if (_.isNull(value) || _.isEmpty(String(value))) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+
+    return message;
+}
+
+
 export const checkForValueReasonTransfer = (value, fields, props) => {
     let message = null;
     let reasonTransferValue = _.get(_.find(props.selectsReducer.get(REASON_TRANFER), ['id', parseInt(fields.reasonTranfer)]), 'value');
@@ -102,6 +138,30 @@ export const checkForValueJustifyNoGeren = (value, fields, props) => {
     return message;
 }
 
+export const checkForValueJustifyNoGerenEditClient = (value, fields, props) => {
+    let message = null;
+    let isEditButton = props.idButton;
+    let justifyNoGerenValue = _.get(_.find(props.selectsReducer.get(MANAGEMENT_BRAND), ['id', parseInt(fields.marcGeren)]), 'value');    
+    if(isEditButton !== BUTTON_EDIT && _.isEqual(MARK_GEREN, justifyNoGerenValue)) {
+        if(_.isNull(value) || _.isEmpty(String(value))) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+    return message;
+}
+
+export const checkForValueJustifyNoLMEEditClient = (value, fields, props) => {
+    let message = null;
+    let isEditButton = props.idButton;
+    let justifyNoLMEValue = fields.necesitaLME;
+    if(!(justifyNoLMEValue === "true") && isEditButton !== BUTTON_EDIT) {
+        if(_.isNull(value) || _.isEmpty(String(value))) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+    return message;
+}
+
 export const checkForValueJustifyNoLME = (value, fields, props) => {
     let message = null;
     let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
@@ -111,6 +171,95 @@ export const checkForValueJustifyNoLME = (value, fields, props) => {
             message = MESSAGE_REQUIRED_VALUE;
         }
     }
+    return message;
+}
+
+export const checkForValueOperationsForeigns = (value, fields, props) => {
+    let message = null;
+    let operationsForeigns = fields.operationsForeignCurrency;
+    let isEditButton = props.idButton;
+    if((operationsForeigns === "true") && isEditButton !== BUTTON_EDIT) {
+        if(_.isNull(value) || _.isEmpty(String(value))) {
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+    return message;
+}
+
+export const checkIsUpdateClient = (value, fields, props) => {
+    let message = null;
+    let isEditButton = props.idButton;
+    if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT) {
+        message = MESSAGE_REQUIRED_VALUE;
+    }
+
+    return message;
+}
+
+export const checkOthersEnabledOriginResources = (value, fields, props) => {
+    let message = null;
+    let isEditButton = props.idButton;
+    let dataOriginResource = props.selectsReducer.get(CLIENT_ORIGIN_RESOURCES);
+    let idOptionOther = _.get(_.filter(dataOriginResource, ['key', OTHERS_OPERATIONS]), '[0].id');
+    let originField = _.split(fields.originResource, ',');
+    if(_.includes(originField, String(idOptionOther))) {
+        if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT) {        
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+
+    return message;
+}
+
+export const checkOthersEnabledOriginGoods = (value, fields, props) => {
+    let message = null;
+    let isEditButton = props.idButton;
+    let dataOriginResource = props.selectsReducer.get(CLIENT_ORIGIN_GOODS);
+    let idOptionOther = _.get(_.filter(dataOriginResource, ['key', OTHERS_OPERATIONS]), '[0].id');
+    let originField = _.split(fields.originGoods, ',');
+    if(_.includes(originField, String(idOptionOther))) {
+        if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT) {        
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+
+    return message;
+}
+
+export const checkOthersEnabledclientOperationsForeignCurrency = (value, fields, props) => {
+    let message = null;
+    let isEditButton = props.idButton;
+    let dataOriginResource = props.selectsReducer.get(CLIENT_OPERATION_FOREIGN_CURRENCY);
+    let idOptionOther = _.get(_.filter(dataOriginResource, ['key', OTHERS_OPERATIONS]), '[0].id');
+    let originField = _.split(fields.operationsForeigns, ',');
+    if(_.includes(originField, String(idOptionOther))) {
+        if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT) {        
+            message = MESSAGE_REQUIRED_VALUE;
+        }
+    }
+
+    return message;
+}
+
+export const checkdetailNonOperatingIncome = (value, fields, props) => {
+    let message = null;
+    let isEditButton = props.idButton;
+    
+    if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT && numeral(fields.nonOperatingIncome).format('0') > 0) {
+        message = MESSAGE_REQUIRED_VALUE;
+    }
+
+    return message;
+}
+
+export const checkControlLinkedPaymentsRequired = (value, fields, props) => {
+    let message = null;
+    let isEditButton = props.idButton;
+    let allowRiskGroupEdit = _.get(props.reducerGlobal.get(PERMISSIONSCLIENTS), _.indexOf(props.reducerGlobal.get(PERMISSIONSCLIENTS), INFO_CREDIT_STUDY), false);
+    if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT && allowRiskGroupEdit) {
+        message = MESSAGE_REQUIRED_VALUE;
+    }
+
     return message;
 }
 
@@ -276,6 +425,36 @@ export const checkClientName = value => {
 
     if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfClientName.test(value)) {
         message = MESSAGE_WARNING_CLIENT_NAME;
+    }
+
+    return message;
+}
+
+export const checkClientContext = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfContextClient.test(value)) {
+        message = MESSAGE_WARNING_OBSERVATIONS;
+    }
+
+    return message;
+}
+
+export const checkInventoryPolicy = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfInventoryPolice.test(value)) {
+        message = MESSAGE_WARNING_OBSERVATIONS;
+    }
+
+    return message;
+}
+
+export const checkControlLinkedPayments = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfControlLinkedPayments.test(value)) {
+        message = MESSAGE_WARNING_OBSERVATIONS;
     }
 
     return message;

@@ -14,6 +14,16 @@ import * as constants from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
 import numeral from 'numeral';
+import _ from "lodash";
+
+import {
+  MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_NUMBER_DOCUMENT, MESSAGE_WARNING_NUMBER_LENGTH,
+  MESSAGE_WARNING_NAME_ENTITY, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_FORBIDDEN_CHARACTER
+} from '../../../validationsFields/validationsMessages';
+
+import {
+  patternOfNameEntity, patternOfNumberDocument, patternOfOnlyAlphabetical, patternOfForbiddenCharacter
+} from '../../../validationsFields/patternsToValidateField';
 
 class ModalProduct extends Component {
 
@@ -162,78 +172,112 @@ class ModalProduct extends Component {
       uid = _.uniqueId('product_');
     }
     var errorInForm = false;
-    if (this.state.name === null || this.state.name === undefined || this.state.name === "") {
+    if (_.isNull(this.state.name) || _.toString(this.state.name).length < 1 || _.isUndefined(this.state.name)) {
       errorInForm = true;
       this.setState({
-        nameError: constants.VALUE_REQUIERED
+        nameError: MESSAGE_REQUIRED_VALUE        
       });
-    } else if (eval(constants.REGEX_SIMPLE_XSS_STRING).test(this.state.name)) {
+    } else if (!patternOfNameEntity.test(this.state.name)) {
       errorInForm = true;
       this.setState({
-        nameError: constants.VALUE_XSS_INVALID
+        nameError: MESSAGE_WARNING_NAME_ENTITY
       });
-    }
-
-    if (this.state.type === null || this.state.type === undefined || this.state.type === "") {
+    } else if (patternOfForbiddenCharacter.test(this.state.name)) {
       errorInForm = true;
       this.setState({
-        typeError: constants.OPTION_REQUIRED
+        nameError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
       });
     }
-
-    if (this.state.number === null || this.state.number === undefined || this.state.number === "") {
+    
+    if (_.isNull(this.state.type) || _.toString(this.state.type).length < 1 || _.isUndefined(this.state.type)) {
       errorInForm = true;
       this.setState({
-        numberError: constants.VALUE_REQUIERED
-      });
-    } else if (eval(constants.REGEX_SIMPLE_XSS_STRING).test(this.state.number)) {
-      errorInForm = true;
-      this.setState({
-        numberError: constants.VALUE_XSS_INVALID
+        typeError: MESSAGE_REQUIRED_VALUE
       });
     }
-
-    if (this.state.averageMontlyAmount === null || this.state.averageMontlyAmount === undefined || this.state.averageMontlyAmount === "") {
+    
+    if (_.isNull(this.state.number) || _.toString(this.state.number).length < 1 || _.isUndefined(this.state.number)) {
       errorInForm = true;
       this.setState({
-        averageMontlyAmountError: constants.VALUE_REQUIERED
+        numberError: MESSAGE_REQUIRED_VALUE
       });
-    } else if (eval(constants.REGEX_SIMPLE_XSS_STRING).test(this.state.averageMontlyAmount)) {
+    } else if (!patternOfNumberDocument.test(this.state.number)) {
       errorInForm = true;
       this.setState({
-        averageMontlyAmountError: constants.VALUE_XSS_INVALID
+        numberError: MESSAGE_WARNING_NUMBER_DOCUMENT
       });
-    }
-
-
-    if (this.state.coin === null || this.state.coin === undefined || this.state.coin === "") {
+    } else if (patternOfForbiddenCharacter.test(this.state.number)) {
       errorInForm = true;
       this.setState({
-        coinError: constants.VALUE_REQUIERED
-      });
-    } else if (eval(constants.REGEX_SIMPLE_XSS_STRING).test(this.state.coin)) {
-      errorInForm = true;
-      this.setState({
-        coinError: constants.VALUE_XSS_INVALID
+        nameError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
       });
     }
-
-    if (this.state.countryProduct === null || this.state.countryProduct === undefined || this.state.countryProduct === "") {
+    
+    if (_.isNull(this.state.averageMontlyAmount) || _.toString(this.state.averageMontlyAmount).length < 1 || _.isUndefined(this.state.averageMontlyAmount)) {
       errorInForm = true;
       this.setState({
-        countryError: constants.OPTION_REQUIRED
+        averageMontlyAmountError: MESSAGE_REQUIRED_VALUE
+      });
+    } else if (!patternOfNumberDocument.test(this.state.averageMontlyAmount)) {
+      errorInForm = true;
+      let message = null;
+      let length = 15;
+      let number = this.state.averageMontlyAmount + "";
+      let formatedNumber = number;
+      formatedNumber = formatedNumber.replace(/,/g, "");
+      formatedNumber = formatedNumber.replace(/\./g, "");
+      formatedNumber = formatedNumber.replace(/\-/g, "");
+      if (formatedNumber.length > length) {
+        message = MESSAGE_WARNING_NUMBER_LENGTH(length);
+      }
+      this.setState({
+        averageMontlyAmountError: message
+      });
+    } else if (patternOfForbiddenCharacter.test(this.state.averageMontlyAmount)) {
+      errorInForm = true;
+      this.setState({
+        nameError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
       });
     }
-
-    if (this.state.cityProduct === null || this.state.cityProduct === undefined || this.state.cityProduct === "") {
+    
+    if (_.isNull(this.state.coin) || _.toString(this.state.coin).length < 1 || _.isUndefined(this.state.coin)) {
       errorInForm = true;
       this.setState({
-        cityError: constants.VALUE_REQUIERED
+        coinError: MESSAGE_REQUIRED_VALUE
       });
-    } else if (eval(constants.REGEX_SIMPLE_XSS_STRING).test(this.state.cityProduct)) {
+    } else if (!patternOfNameEntity.test(this.state.coin)) {
       errorInForm = true;
       this.setState({
-        cityError: constants.VALUE_XSS_INVALID
+        coinError: MESSAGE_WARNING_NAME_ENTITY
+      });
+    } else if (patternOfForbiddenCharacter.test(this.state.coin)) {
+      errorInForm = true;
+      this.setState({
+        coinError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
+      });
+    }
+    
+    if (_.isNull(this.state.countryProduct) || _.toString(this.state.countryProduct).length < 1 || _.isUndefined(this.state.countryProduct)) {
+      errorInForm = true;
+      this.setState({
+        countryError: MESSAGE_REQUIRED_VALUE
+      });
+    }
+    
+    if (_.isNull(this.state.cityProduct) || _.toString(this.state.cityProduct).length < 1 || _.isUndefined(this.state.cityProduct)) {
+      errorInForm = true;
+      this.setState({
+        cityError: MESSAGE_REQUIRED_VALUE
+      });
+    } else if (!patternOfOnlyAlphabetical.test(this.state.cityProduct)) {
+      errorInForm = true;
+      this.setState({
+        cityError: MESSAGE_WARNING_ONLY_ALPHABETICAL
+      });
+    } else if (patternOfForbiddenCharacter.test(this.state.cityProduct)) {
+      errorInForm = true;
+      this.setState({
+        nameError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
       });
     }
 

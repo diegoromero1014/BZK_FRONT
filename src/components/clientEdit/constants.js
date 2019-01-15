@@ -10,3 +10,5 @@ export const KEY_OPTION_OTHER_ORIGIN_RESOURCE = "Otro";
 export const GOVERNMENT = "Gobierno";
 export const FINANCIAL_INSTITUTIONS = "Instituciones financieras";
 export const CONSTRUCT_PYME = "Constructor Pyme";
+export const UPDATE_METHOD = 'Actualizar';
+export const EDIT_METHOD = 'Editar';

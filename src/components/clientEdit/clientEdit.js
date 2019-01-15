@@ -64,7 +64,8 @@ import {
     CONSTRUCT_PYME, KEY_DESMONTE,
     KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME,
     KEY_OPTION_OTHER_OPERATIONS_FOREIGNS, KEY_OPTION_OTHER_ORIGIN_GOODS,
-    KEY_OPTION_OTHER_ORIGIN_RESOURCE, MAXIMUM_OPERATIONS_FOREIGNS
+    KEY_OPTION_OTHER_ORIGIN_RESOURCE, MAXIMUM_OPERATIONS_FOREIGNS, UPDATE_METHOD,
+    EDIT_METHOD
 } from "./constants";
 import {
     ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA,
@@ -75,6 +76,8 @@ import {
     DISTRIBUTION_CHANNEL, INT_OPERATIONS, LINE_OF_BUSINESS, MAIN_CLIENTS,
     MAIN_COMPETITOR, MAIN_SUPPLIER
 } from "../contextClient/constants";
+
+import { fields, validations as validate } from './fieldsAndRulesClientEditUpdate';
 
 
 let idButton;
@@ -95,19 +98,6 @@ const valuesYesNo = [
     { 'id': true, 'value': "Si" },
     { 'id': false, 'value': "No" }
 ];
-
-const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCIIU", "idSubCIIU", "addressClient", "country", "city",
-    "province", "neighborhood", "district", "telephone", "reportVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
-    "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren", "operationsForeigns",
-    "centroDecision", "necesitaLME", "groupEconomic", "nitPrincipal", "economicGroupName", "justifyNoGeren", "justifyNoLME",
-    "justifyExClient", "taxNature", "detailNonOperatingIncome", "otherOriginGoods", "originGoods", "originResource",
-    "otherOriginResource", "countryOrigin", "originCityResource", "operationsForeignCurrency", "otherOperationsForeign",
-    "segment", "subSegment", "customerTypology", "contextClientField", "experience",
-    "inventoryPolicy",
-    "nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier",
-    "typeOperationIntOpera", "participationIntOpe",
-    "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe",
-    "controlLinkedPayments"];
 
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 let isProspect = false;
@@ -159,374 +149,6 @@ const drawRequiredField = (condition) => {
         return requiredField;
     }
 }
-
-const validate = (values, props) => {
-    const { reducerGlobal, tabReducer } = props;
-    const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
-
-    const errors = {}
-    let errorScrollTop = false;
-
-    validateFields(values, rulesInfoClient(props), errors);
-    validateFields(values, rulesActividadEconomica(props), errors);
-
-    if (!values.addressClient && idButton !== BUTTON_EDIT) {
-        errors.addressClient = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.addressClient)) {
-        errors.addressClient = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.addressClient = null;
-    }
-
-    if (!values.telephone && idButton !== BUTTON_EDIT) {
-        errors.telephone = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.telephone)) {
-        errors.telephone = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.telephone = null;
-    }
-
-    if (!values.annualSales && idButton !== BUTTON_EDIT) {
-        errors.annualSales = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.annualSales)) {
-        errors.annualSales = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.annualSales = null;
-    }
-
-    if (!values.country && idButton !== BUTTON_EDIT) {
-        errors.country = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.country = null;
-    }
-
-    if (!values.province && idButton !== BUTTON_EDIT) {
-        errors.province = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.province = null;
-    }
-
-    if (!values.city && idButton !== BUTTON_EDIT) {
-        errors.city = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.city = null;
-    }
-
-    if ((!values.dateSalesAnnuals || values.dateSalesAnnuals === '') && (idButton !== BUTTON_EDIT)) {
-        errors.dateSalesAnnuals = DATE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.dateSalesAnnuals)) {
-        errors.dateSalesAnnuals = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.dateSalesAnnuals = null;
-    }
-
-    if (!values.liabilities && idButton !== BUTTON_EDIT) {
-        errors.liabilities = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.liabilities)) {
-        errors.liabilities = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.liabilities = null;
-    }
-
-    if (!values.assets && idButton !== BUTTON_EDIT) {
-        errors.assets = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.assets)) {
-        errors.assets = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.assets = null;
-    }
-
-    if (!values.operatingIncome && idButton !== BUTTON_EDIT) {
-        errors.operatingIncome = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.operatingIncome)) {
-        errors.operatingIncome = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.operatingIncome = null;
-    }
-
-    if (!values.nonOperatingIncome && idButton !== BUTTON_EDIT) {
-        errors.nonOperatingIncome = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.nonOperatingIncome)) {
-        errors.nonOperatingIncome = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.nonOperatingIncome = null;
-    }
-
-    if (!values.expenses && idButton !== BUTTON_EDIT) {
-        errors.expenses = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.expenses)) {
-        errors.expenses = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.expenses = null;
-    }
-
-    if ((values.marcGeren === null || values.marcGeren === undefined || values.marcGeren === '') && !isProspect && idButton !== BUTTON_EDIT) {
-        errors.marcGeren = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.marcGeren = null;
-    }
-
-    if (validateMarcManagement === false && !values.justifyNoGeren && idButton !== BUTTON_EDIT) {
-        errors.justifyNoGeren = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.justifyNoGeren = null;
-    }
-
-    if ((values.centroDecision === null || values.centroDecision === undefined || values.centroDecision === '') && !isProspect && idButton !== BUTTON_EDIT) {
-        errors.centroDecision = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.centroDecision = null;
-    }
-
-    if ((values.necesitaLME === null || values.necesitaLME === undefined || values.necesitaLME === '') && !isProspect && idButton !== BUTTON_EDIT) {
-        errors.necesitaLME = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.necesitaLME = null;
-    }
-
-    if (values.necesitaLME === 'false' && !values.justifyNoLME && idButton !== BUTTON_EDIT) {
-        errors.justifyNoLME = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.justifyNoLME = null;
-    }
-
-    if ((values.reportVirtual === null || values.reportVirtual === undefined || values.reportVirtual === '') && idButton !== BUTTON_EDIT) {
-        errors.reportVirtual = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.reportVirtual = null;
-    }
-    if ((values.extractsVirtual === null || values.extractsVirtual === undefined || values.extractsVirtual === '') && idButton !== BUTTON_EDIT) {
-        errors.extractsVirtual = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.extractsVirtual = null;
-    }
-
-    if (otherOriginGoodsEnable !== 'disabled') {
-        if ((values.otherOriginGoods === null || values.otherOriginGoods === undefined || values.otherOriginGoods === '') && idButton !== BUTTON_EDIT) {
-            errors.otherOriginGoods = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else if (xssValidation(values.otherOriginGoods)) {
-            errors.otherOriginGoods = VALUE_XSS_INVALID;
-            errorScrollTop = true;
-        } else {
-            errors.otherOriginGoods = null;
-        }
-    }
-    if (otherOriginResourceEnable !== 'disabled') {
-        if ((values.otherOriginResource === null || values.otherOriginResource === undefined || values.otherOriginResource === '') && idButton !== BUTTON_EDIT) {
-            errors.otherOriginResource = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else if (xssValidation(values.otherOriginResource)) {
-            errors.otherOriginResource = VALUE_XSS_INVALID;
-            errorScrollTop = true;
-        } else {
-            errors.otherOriginResource = null;
-        }
-    }
-
-    if (otherOperationsForeignEnable !== 'disabled') {
-        if ((values.otherOperationsForeign === null || values.otherOperationsForeign === undefined || values.otherOperationsForeign === '') && idButton !== BUTTON_EDIT) {
-            errors.otherOperationsForeign = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else if (xssValidation(values.otherOperationsForeign)) {
-            errors.otherOperationsForeign = VALUE_XSS_INVALID;
-            errorScrollTop = true;
-        } else {
-            errors.otherOperationsForeign = null;
-        }
-    }
-
-    //Valido que el cliente tenga ciudad de origen de los recursos
-    if (values.originCityResource) {
-        if (xssValidation(values.originCityResource)) {
-            errors.originCityResource = VALUE_XSS_INVALID;
-            errorScrollTop = true;
-        } else {
-            errors.originCityResource = null;
-        }
-    }
-
-    if (values.detailNonOperatingIncome) {
-        if (xssValidation(values.detailNonOperatingIncome)) {
-            errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
-            errorScrollTop = true;
-        } else {
-            errors.detailNonOperatingIncome = null;
-        }
-    }
-
-    //Valido los campos que son necesarios para actualizar un cliente
-    if (idButton === BUTTON_UPDATE) {
-        //Valido si el cliente tiene ingresos no operaciones
-        if ((values.nonOperatingIncome === null || values.nonOperatingIncome === undefined || values.nonOperatingIncome === '') && idButton !== BUTTON_EDIT) {
-            errors.nonOperatingIncome = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            errors.nonOperatingIncome = null;
-            //En caso tal de que los ingresos operacionales sean mayor a 0, se debe de validar el de
-            if (numeral(values.nonOperatingIncome).format('0') > 0) {
-                if ((values.detailNonOperatingIncome === null || values.detailNonOperatingIncome === undefined || values.detailNonOperatingIncome === '') && idButton !== BUTTON_EDIT) {
-                    errors.detailNonOperatingIncome = OPTION_REQUIRED;
-                    errorScrollTop = true;
-                } else if (xssValidation(values.detailNonOperatingIncome)) {
-                    errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
-                    errorScrollTop = true;
-                } else {
-                    errors.detailNonOperatingIncome = null;
-                }
-            }
-        }
-
-        //Valido que el cliente tenga asociado el origen de los bienes
-        if ((values.originGoods === null || values.originGoods === undefined || values.originGoods === '' || values.originGoods[0] === '') && idButton !== BUTTON_EDIT) {
-            errors.originGoods = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            errors.originGoods = null;
-        }
-
-        //Valido que el cliente tenga asociado el origen de los recursos
-        if ((values.originResource === null || values.originResource === undefined || values.originResource === '' || values.originResource[0] === '') && idButton !== BUTTON_EDIT) {
-            errors.originResource = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            errors.originResource = null;
-        }
-
-        //Valido que el cliente tenga asociado el país de origen
-        if ((values.countryOrigin === null || values.countryOrigin === undefined || values.countryOrigin === '') && idButton !== BUTTON_EDIT) {
-            errors.countryOrigin = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            errors.countryOrigin = null;
-        }
-
-        //Valido que el cliente tenga ciudad de origen de los recursos
-        if ((values.originCityResource === null || values.originCityResource === undefined || values.originCityResource === '') && idButton !== BUTTON_EDIT) {
-            errors.originCityResource = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else if (xssValidation(values.originCityResource)) {
-            errors.originCityResource = VALUE_XSS_INVALID;
-            errorScrollTop = true;
-        } else {
-            errors.originCityResource = null;
-        }
-
-        //Valido si el cliente realiza operaciones en moneda extranjera
-        if ((values.operationsForeignCurrency === null || values.operationsForeignCurrency === undefined || values.operationsForeignCurrency === '') && idButton !== BUTTON_EDIT) {
-            errors.operationsForeignCurrency = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            //En caso de que si realice operaciones, obligo a que me indique cuales
-            errors.operationsForeignCurrency = null;
-            if (values.operationsForeignCurrency.toString() === 'true') {
-                if ((values.operationsForeigns === null || values.operationsForeigns === undefined || values.operationsForeigns === '' || values.operationsForeigns[0] === '') && idButton !== BUTTON_EDIT) {
-
-                    errors.operationsForeigns = OPTION_REQUIRED;
-                    errorScrollTop = true;
-                } else {
-                    errors.operationsForeigns = null;
-                }
-            } else {
-                values.operationsForeigns = null;
-                errors.operationsForeigns = null;
-            }
-        }
-
-        if ((!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) && idButton !== BUTTON_EDIT) {
-            errors.economicGroupName = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            errors.economicGroupName = null;
-        }
-
-        if ((!props.clientInformacion.get('noAppliedControlLinkedPayments') && !values.controlLinkedPayments) && idButton !== BUTTON_EDIT && allowRiskGroupEdit) {
-
-            errors.controlLinkedPayments = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            errors.controlLinkedPayments = null;
-        }
-
-    }
-
-    if (!values.segment) {
-        errors.segment = OPTION_REQUIRED;
-    } else {
-        const value = _.get(_.find(props.selectsReducer.get(constants.SEGMENTS), ['id', parseInt(values.segment)]), 'value');
-        if (_.isEqual(CONSTRUCT_PYME, value) && idButton !== BUTTON_EDIT) {
-            if (!values.subSegment) {
-                errors.subSegment = OPTION_REQUIRED;
-            } else {
-                errors.subSegment = null;
-            }
-        }
-        errors.segment = null;
-    }
-
-    if (xssValidation(values.description)) {
-        errors.description = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.description = null;
-    }
-
-    if (xssValidation(values.neighborhood)) {
-        errors.neighborhood = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.neighborhood = null;
-    }
-
-    if (xssValidation(values.contextClientField)) {
-        errors.contextClientField = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.contextClientField = null;
-    }
-
-    if (xssValidation(values.inventoryPolicy)) {
-        errors.inventoryPolicy = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.inventoryPolicy = null;
-    }
-
-    if (errorScrollTop && clickButttonSave) {
-        clickButttonSave = false;
-        document.getElementById('dashboardComponentScroll').scrollTop = 0;
-    }
-
-    return errors;
-};
 
 //Componente genérico para cargar los selects de justificación
 function SelectsJustificacion(props) {
@@ -964,7 +586,7 @@ class clientEdit extends Component {
     _handleBlurValueNumber(typeValidation, valuReduxForm, val) {
         var pattern;
         //Elimino los caracteres no validos
-        for (var i = 0, output = '', validos = "-0123456789"; i < (val + "").length; i++) {
+        for (var i = 0, output = '', validos = "0123456789"; i < (val + "").length; i++) {
             if (validos.indexOf(val.toString().charAt(i)) !== -1) {
                 output += val.toString().charAt(i)
             }
@@ -1027,12 +649,14 @@ class clientEdit extends Component {
         var infoClient = clientInformacion.get('responseClientInfo');
         var originGoodsSelected = [];
         var originGoodsClient = _.isEmpty(infoClient.originGoods) ? [] : _.split(infoClient.originGoods, ',');
+        
         if (countOriginGoods < originGoodsClient.length) {
             originGoodsSelected = originGoodsClient;
             countOriginGoods = countOriginGoods + 1;
         } else {
             originGoodsSelected = _.split(val, ',');
         }
+        
         if (idOptionOther === undefined || _.indexOf(originGoodsSelected, idOptionOther.toString()) === -1) {
             otherOriginGoods.onChange('');
             otherOriginGoodsEnable = 'disabled';
@@ -1213,14 +837,20 @@ class clientEdit extends Component {
             "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
             "idCustomerTypology": customerTypology.value,
             "clientType": infoClient.clientType,
+            "saveMethod": BUTTON_EDIT  === typeSave ? EDIT_METHOD : UPDATE_METHOD
         };
-
+                
         const { createProspect, updateClient, saveCreditStudy, swtShowMessage } = this.props;
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createProspect(jsonCreateProspect).then((data) => {
+
+            if (!validateWhileListResponse(data)) {
+                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_INVALID_INPUT);
+                changeStateSaveData(false, "");
+                return;
+            }
             if (_.get(data, 'payload.data.status', 500) === 200) {
                 saveCreditStudy(this._createJsonSaveContextClient()).then((response) => {
-
                     if (!validateResponse(response)) {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                         changeStateSaveData(false, "");
@@ -1233,9 +863,10 @@ class clientEdit extends Component {
                         return;
                     }
 
-
+                    
                     if (validateResponse(response)) {
                         if (_.get(data, 'payload.data.status') === 200) {
+                            
                             if (typeSave === BUTTON_EDIT) {
                                 changeStateSaveData(false, "");
                                 messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
@@ -1445,7 +1076,6 @@ class clientEdit extends Component {
 
                     swtShowMessage('error', 'Error actualización cliente', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
                 } else {
-
                     if (idButton === BUTTON_UPDATE) {
                         this.setState({
                             showConfirmSave: true
@@ -1662,11 +1292,13 @@ class clientEdit extends Component {
                     }
                     {allowRiskGroupEdit &&
                         <ComponentListLineBusiness
+                            className={"listaLineasDeNegocios"}
                             showFormLinebusiness={this.state.showFormAddLineOfBusiness}
                             fnShowForm={this.showFormOut} />
                     }
                     {allowRiskGroupEdit &&
                         <ComponentListDistributionChannel
+                            className={"canalesDeDistribucuion"}
                             showFormDistribution={this.state.showFormAddDistribution}
                             fnShowForm={this.showFormOut} />
                     }
@@ -1875,7 +1507,6 @@ class clientEdit extends Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 type="text"
                                 min={0}
-                                max="16"
                                 onChange={val => this._onChangeValue("annualSales", val)}
                                 placeholder="Ingrese las ventas anuales"
                                 {...annualSales}
@@ -1904,7 +1535,6 @@ class clientEdit extends Component {
                                 format="0,000"
                                 min={0}
                                 type="text"
-                                max="16"
                                 onChange={val => this._onChangeValue("assets", val)}
                                 placeholder="Ingrese los activos"
                                 {...assets}
@@ -1925,7 +1555,6 @@ class clientEdit extends Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
-                                max="16"
                                 type="text"
                                 onChange={val => this._onChangeValue("liabilities", val)}
                                 placeholder="Ingrese los pasivos"
@@ -1946,7 +1575,6 @@ class clientEdit extends Component {
                                 format="0,000"
                                 onChange={val => this._onChangeValue("operatingIncome", val)}
                                 min={0}
-                                max="16"
                                 type="text"
                                 placeholder="Ingrese los ingresos operacionales mensuales"
                                 {...operatingIncome}
@@ -1965,7 +1593,6 @@ class clientEdit extends Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
-                                max="16"
                                 type="text"
                                 onChange={val => this._onChangeValue("expenses", val)}
                                 placeholder="Ingrese los egresos mensuales"
@@ -1987,7 +1614,6 @@ class clientEdit extends Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
-                                max="16"
                                 type="text"
                                 onChange={val => this._onChangeValue("nonOperatingIncome", val)}
                                 placeholder="Ingrese los ingresos no operacionales mensuales"
@@ -2017,16 +1643,19 @@ class clientEdit extends Component {
                 {allowRiskGroupEdit &&
                     <ComponentListMainClients
                         showFormMainClients={this.state.showFormAddMainClient}
+                        className={"principalesClientes"}
                         fnShowForm={this.showFormOut} />
                 }
                 {allowRiskGroupEdit &&
                     <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
                         term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
                         showFormMainSupplier={this.state.showFormAddMainSupplier}
+                        className={"principalesProveedores"}
                         fnShowForm={this.showFormOut} />
                 }
                 {allowRiskGroupEdit &&
                     <ComponentListMainCompetitor
+                        className={"principalesCompetidores"}
                         showFormMainCompetitor={this.state.showFormAddMainCompetitor}
                         fnShowForm={this.showFormOut} />
                 }
@@ -2190,7 +1819,7 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                 </Row>
-                <NotesClient />
+                <NotesClient className={"notasEditClient"} />
                 <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -2407,7 +2036,7 @@ class clientEdit extends Component {
                     </Col>
                 </Row>
                 <div style={{ marginBottom: "50px" }}>
-                    <ProductsClient />
+                    <ProductsClient className={"productsClients"}/>
                 </div>
                 <div className="" style={{
                     marginTop: "50px",
