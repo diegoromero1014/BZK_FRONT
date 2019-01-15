@@ -8,7 +8,7 @@ import * as globalActions from '~/src/components/globalComponents/actions';
 import ButtonContactAdmin from '~/src/components/clientDetailsInfo/bottonContactAdmin';
 import ButtonShareholderAdmin from '~/src/components/clientDetailsInfo/bottonShareholderAdmin';
 import ButtonBoardMembersAdmin from '~/src/components/clientDetailsInfo/buttonBoardMembersAdmin';
-import ClientTypology from '~/src/components/contextClient/ClientTypology';
+import ClientTypology from '~/src/components/contextClient/clientTypology';
 import ContextEconomicActivity from '~/src/components/contextClient/contextEconomicActivity';
 import ComponentListLineBusiness from '~/src/components/contextClient/listLineOfBusiness/whiteListLineBusiness';
 import ComponentListDistributionChannel from '~/src/components/contextClient/listDistributionChannel/componentListDistributionChannel';
