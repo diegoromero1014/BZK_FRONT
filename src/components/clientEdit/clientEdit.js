@@ -2240,5 +2240,8 @@ function fomatInitialStateNumber(val) {
 export default reduxForm({
     form: 'formClientEdit',
     fields,
-    validate
+    validate,
+    onSubmitFail: () => {
+        document.getElementById('dashboardComponentScroll').scrollTop = 0;
+    },
 }, mapStateToProps, mapDispatchToProps)(clientEdit);
