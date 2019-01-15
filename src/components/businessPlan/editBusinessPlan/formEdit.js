@@ -51,6 +51,7 @@ class FormEdit extends Component {
         this._closeMessageCreateBusiness = this._closeMessageCreateBusiness.bind(this);
         this._onClickPDF = this._onClickPDF.bind(this);
         this._onSelectFieldDate = this._onSelectFieldDate.bind(this);
+        this.processValidation = this.processValidation.bind(this);
         this.state = {
             showErrorSaveBusiness: null,
             showConfirm: false,
@@ -329,6 +330,7 @@ class FormEdit extends Component {
                             changeStateSaveData(true, MESSAGE_SAVE_DATA);
                             createBusiness(businessJson).then((data) => {
                                 changeStateSaveData(false, "");
+                                const that=this;
                                 if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
                                     onSessionExpire();
                                 } else {
@@ -338,10 +340,18 @@ class FormEdit extends Component {
                                         message = "Señor usuario, el plan de negocio se editó de forma exitosa.";
                                         this.setState({ showMessageCreateBusiness: true });
                                     } else {
-                                        typeMessage = "error";
-                                        titleMessage = "Edición plan de negocio";
-                                        message = "Señor usuario, ocurrió un error editando el plan de negocio.";
-                                        this.setState({ showMessageCreateBusiness: true });
+                                        if ((_.get(data, 'payload.data.status') === 500)) {
+                                            const validationsErrorFromServer = _.get(data, 'payload.data.data');
+                                            _.forEach(validationsErrorFromServer, function (field) {
+                                                that.processValidation(field);
+                                            });
+                                        }else{
+
+                                            typeMessage = "error";
+                                            titleMessage = "Edición plan de negocio";
+                                            message = "Señor usuario, ocurrió un error editando el plan de negocio.";
+                                            this.setState({ showMessageCreateBusiness: true });
+                                        }
                                     }
                                 }
                             }, (reason) => {
@@ -367,7 +377,17 @@ class FormEdit extends Component {
             }
         }
     }
-
+    processValidation(field) {
+        if (field) {
+            switch (field.fieldName) {
+                case "opportunitiesAndThreats":
+                    this.setState({ opportunitiesError: field.message });
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
     render() {
         let fechaModString = '';
         let fechaCreateString = '';

@@ -31,16 +31,12 @@ let thisForm;
 const validate = (values) => {
   if (!values.areaDes) {
     errors.areaDes = "Debe ingresar un valor";
-  } else if (xssValidation(values.areaDes)) {
-    errors.areaDes = VALUE_XSS_INVALID;
   } else {
     errors.areaDes = null;
   }
 
   if (!values.actionArea || _.isEmpty(htmlToText(values.actionArea))) {
     errors.actionArea = "Debe ingresar un valor";
-  } else if (xssValidation(values.actionArea, true)) {
-    errors.actionArea = VALUE_XSS_INVALID;
   } else {
     errors.actionArea = null;
   }
@@ -76,6 +72,8 @@ class ModalArea extends Component {
     this._handleCreateArea = this._handleCreateArea.bind(this);
     this._closeCreate = this._closeCreate.bind(this);
     this._onClickDate = this._onClickDate.bind(this);
+    this.processValidation = this.processValidation.bind(this);
+
     this.state = {
       showSuccessAdd: false,
       showSuccessEdit: false,
@@ -142,15 +140,7 @@ class ModalArea extends Component {
         const error = errors[index];
         const field = error.fieldName;
 
-        switch (field) {
-          case "relatedInternalParty":
-            this.errorArea = error.message;
-            break;
-          case "actionNeeded":
-            this.errorActionArea = error.message;
-          default:
-            break;
-        }
+        this.processValidation(field, error);
 
       }
       if (errors.length > 0) {
@@ -193,6 +183,20 @@ class ModalArea extends Component {
       }
     });
 
+  }
+
+  processValidation(field, error){
+    if(field){
+      switch (field) {
+        case "relatedInternalParty":
+          this.errorArea = error.message;
+          break;
+        case "actionNeeded":
+          this.errorActionArea = error.message;
+        default:
+          break;
+      }
+    }
   }
 
   updateKeyValueUsersBanco(e) {
