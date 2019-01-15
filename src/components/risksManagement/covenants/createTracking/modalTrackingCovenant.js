@@ -3,24 +3,23 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid';
-import ComboBox from '../../../../ui/comboBox/comboBoxComponent';
-import InputComponent from '../../../../ui/input/inputComponent';
-import { MESSAGE_LOAD_DATA } from '../../../../constantsGlobal';
-import { redirectUrl } from '../../../globalComponents/actions';
-import { changeStateSaveData } from '../../../dashboard/actions';
-import { getInfoCovenant, clearCovenant, changeStatusCreate } from '../actions';
-import { mapDateValueFromTaskByFormat } from '../../../../actionsGlobal';
-import CreateTracking from './createTacking';
 import _ from 'lodash';
 
-class ModaltrackingCovenant extends Component {
+import { redirectUrl } from '../../../globalComponents/actions';
+import { changeStateSaveData } from '../../../dashboard/actions';
+import CreateTracking from './createTacking';
+import { getInfoCovenant, clearCovenant, changeStatusCreate } from '../actions';
+import { mapDateValueFromTaskByFormat } from '../../../../actionsGlobal';
 
+import { MESSAGE_LOAD_DATA } from '../../../../constantsGlobal';
+
+class ModaltrackingCovenant extends Component {
     constructor(props) {
         super(props);
     }
 
     componentWillMount() {
-        const {clearCovenant, getInfoCovenant, covenantId, changeStateSaveData, changeStatusCreate} = this.props;
+        const { clearCovenant, getInfoCovenant, covenantId, changeStateSaveData, changeStatusCreate } = this.props;
         clearCovenant();
         changeStatusCreate(false);
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
@@ -33,9 +32,9 @@ class ModaltrackingCovenant extends Component {
     }
 
     render() {
-        const {covenant, isOpen} = this.props;
+        const { covenant, isOpen } = this.props;
         const infoCovenant = covenant.get('covenantInfo');
-  
+
         const dateCreate = _.isUndefined(infoCovenant.creationTimestamp) || _.isNull(infoCovenant.creationTimestamp) ? "" : mapDateValueFromTaskByFormat(infoCovenant.creationTimestamp.split(" ")[0], 'DD MMM YYYY');
         const dateExpiration = _.isUndefined(infoCovenant.expirationTimestamp) || _.isNull(infoCovenant.expirationTimestamp) ? "" : mapDateValueFromTaskByFormat(infoCovenant.expirationTimestamp.split(" ")[0], 'DD MMM YYYY');
         return (
@@ -107,7 +106,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({reducerGlobal, covenant}, ownerProps) {
+function mapStateToProps({ reducerGlobal, covenant }, ownerProps) {
     return {
         reducerGlobal,
         covenant

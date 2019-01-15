@@ -1,14 +1,14 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
+import ModalArea from './modalArea';
 import _ from 'lodash';
-import moment from 'moment';
 
 import BotonCreateArea from './botonCreateArea';
 import SweetAlert from '../../sweetalertFocus';
-import ModalArea from './modalArea';
+import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
 
 import { deleteArea } from './actions';
 
@@ -174,6 +174,7 @@ class ListArea extends Component {
                 </button>
                 <h4 className="modal-title" id="myModalLabel">{modalTitle}</h4>
               </div>
+              <SecurityMessageComponent />
               <ModalArea areaEdit={this.state.actions.area} isOpen={this.closeModal} disabled={disabled} />
             </div>
           </div>
