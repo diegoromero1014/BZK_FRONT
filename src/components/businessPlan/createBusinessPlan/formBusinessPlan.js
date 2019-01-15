@@ -29,7 +29,7 @@ import { LAST_BUSINESS_REVIEW } from '../../../constantsParameters';
 import { OBJECTIVE_BUSINESS } from '../constants';
 import {
     TITLE_OPPORTUNITY_BUSINESS, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA,
-    MESSAGE_ERROR, DATE_FORMAT, VALUE_XSS_INVALID
+    MESSAGE_ERROR, DATE_FORMAT, VALUE_XSS_INVALID,REQUEST_SUCCESS,REQUEST_INVALID_INPUT
 } from '../../../constantsGlobal';
 
 
@@ -274,23 +274,22 @@ class FormBusinessPlan extends Component {
                         if (!response) {
                             swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe un plan de negocio registrado en este rango de fechas, por favor complemente el informe ya creado o modifique las fechas.');
                         } else if (makeSaveBusiness) {
-                            const that = this;
                             changeStateSaveData(true, MESSAGE_SAVE_DATA);
                             createBusiness(businessJson).then((data) => {
                                 changeStateSaveData(false, "");
                                 if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
                                     onSessionExpire();
                                 } else {
-                                    if ((_.get(data, 'payload.data.status') === 200)) {
+                                    if ((_.get(data, 'payload.data.status') === REQUEST_SUCCESS)) {
                                         typeMessage = "success";
                                         titleMessage = "Creación plan de negocio";
                                         message = "Señor usuario, el plan de negocio se creó de forma exitosa.";
                                         this.setState({ showMessageCreateBusiness: true });
                                     } else {
-                                        if ((_.get(data, 'payload.data.status') === 500)) {
+                                        if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
                                             const validationsErrorFromServer = _.get(data, 'payload.data.data');
-                                            _.forEach(validationsErrorFromServer, function (field) {
-                                                that.processValidation(field);
+                                            _.forEach(validationsErrorFromServer, (field) => {
+                                                this.processValidation(field);
                                             });
                                         } else {
                                             typeMessage = "error";
