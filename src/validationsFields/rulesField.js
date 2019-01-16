@@ -229,7 +229,7 @@ export const checkEmail = value => {
 
 export const checkContactRelevantFeatures = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOfContactRelevantFeatures).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && patternOfContactRelevantFeatures.test(value)) {
         message = MESSAGE_WARNING_RELEVANT_FEATURES;
     }
 
@@ -265,7 +265,7 @@ export const checkHistoryFields = value => {
 
 export const checkOtherReason = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && eval(patternOtherReason).test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && patternOtherReason.test(value)) {
         message = MESSAGE_WARNING_OTHER_REASON;
     }
     return message;
