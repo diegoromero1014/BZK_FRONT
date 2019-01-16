@@ -10,20 +10,6 @@ import _ from 'lodash';
 import {patternNotesClient, patternOfForbiddenCharacter} from '../../../validationsFields/patternsToValidateField';
 import {MESSAGE_WARNING_NOTES_CLIENT, MESSAGE_WARNING_FORBIDDEN_CHARACTER} from '../../../validationsFields/validationsMessages';
 
-import {
-    EDITAR,
-    MESSAGE_ERROR_SWEET_ALERT,
-    MESSAGE_LOAD_DATA,
-    OPTION_REQUIRED,
-    TITLE_ERROR_SWEET_ALERT,
-    VALUE_REQUIERED,
-    REGEX_SIMPLE_XSS,
-    REGEX_SIMPLE_XSS_STRING,
-    VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS_MESAGE
-} from "../../../constantsGlobal";
-import { xssValidation } from "../../../actionsGlobal";
-
 class NoteItem extends Component {
     constructor(props) {
         super(props);
@@ -71,7 +57,7 @@ class NoteItem extends Component {
     }
 
     _deleteNote() {
-        const { index, deleteNote, updateErrorsNotes, onDeletedNote } = this.props;
+        const { index, deleteNote, onDeletedNote } = this.props;
 
         deleteNote(index);
         //Avisar al padre que una nota se elimino
@@ -141,9 +127,9 @@ class NoteItem extends Component {
                         </div>
                     </Col>
                     <Col xs={1} md={1} lg={1} style={{ marginTop: "37px" }}>
-                        <button onClick={this._deleteNote}
+                        <button name={"trashNotes"} onClick={this._deleteNote}
                             className="btn btn-sm  btn-danger"
-                            type="button">
+                            type="button">                            
                             <i style={{ margin: '0em', fontSize: '1.2em' }} className="trash icon"></i>
                         </button>
                     </Col>
