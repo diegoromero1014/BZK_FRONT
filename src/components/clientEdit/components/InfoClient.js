@@ -13,7 +13,7 @@ import * as constants from "../../selectsComponent/constants";
 import { getMasterDataFields, consultListWithParameterUbication } from '../../selectsComponent/actions';
 
 import { TITLE_DESCRIPTION, CONSTRUCT_PYME, GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../constants';
-import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../../clientDetailsInfo/constants";
+import { BUTTON_EDIT } from "../../clientDetailsInfo/constants";
 
 
 export class InfoClient extends React.Component {
@@ -195,36 +195,6 @@ export class InfoClient extends React.Component {
     }
 
 }
-
-var validations = [
-    {
-        validation: 'required',
-        fields: ['razonSocial', 'idTypeClient', 'idNumber']
-    },
-    {
-        validation: 'xss',
-        fields: ['razonSocial', 'idNumber']
-    }
-]
-
-var validationsEditClient = [
-    {
-        validation: 'required',
-        fields: ['razonSocial', 'idTypeClient', 'idNumber']
-    },
-    {
-        validation: 'xss',
-        fields: ['razonSocial', 'idNumber']
-    }
-]
-
-export function validationRules(props) {
-    if (props.idButton === BUTTON_EDIT) {
-        return validationsEditClient;
-    } else {
-        return validations;
-    }
-};
 
 function mapStateToProps({ selectsReducer, clientInformacion }) {
     return {

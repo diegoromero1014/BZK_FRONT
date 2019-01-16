@@ -15,6 +15,9 @@ export const patternOfOnlyNumbersLinkClient = /^[0-9]+$/;
 export const patternOfHistoryEvent = /^[^a-zA-Z0-9\s()\\;,.´'"&/°#':´+\-ÁÉÍÓÚáéíóúÑñÜü]+$/;
 export const patternOfClientName = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s&/\\,;.#"°()'\-+´:]+$/;
 export const patternOfDescription = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
+export const patternOfContextClient = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
+export const patternOfInventoryPolice = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
+export const patternOfControlLinkedPayments = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
 export const patternOfClientAddress = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s#();,.\-"/_´']+$/;
 export const patternOfClientNeighborhood = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s#();,.\-"/]+$/;
 export const regexNumbers = /^[0-9]+$/;
@@ -26,4 +29,5 @@ export const patternOfPositionOtherParticipant = /^[a-zA-Z0-9\sÁ-Úá-úÑñÜ�
 export const patternOfCompanyOtherParticipant = /^[a-zA-Z0-9\sÁ-Úá-úÑñÜü&/\\,;.#"°()´'\-+:]+$/;
 export const patternOfPlaceOfPrevisit = /^[a-zA-Z0-9\sÁ-Úá-úÑñÜü&/\\,;.#"]+$/;
 export const patternOtherReason = /[^a-zA-Z0-9\s()\[\];,."!¡$%&\/¿?°#=':´+_\-ÁÉÍÓÚáéíóúÑñÜü]+$/;
-export const patternNotesClient = "/[^a-zA-Z0-9\\s()\\[\\];,.\"!¡$%&\/¿?°#=':´+_\\-ÁÉÍÓÚáéíóúÑñÜü]/g";
+export const patternNotesClient = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
+export const patternOfNameEntity = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;

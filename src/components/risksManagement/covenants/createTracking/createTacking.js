@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid';
-import { changeStatusCreate } from '../actions';
+import _ from 'lodash';
+
 import InfoLastTracking from './infoLastTracking';
 import FormCreateTracking from './formCreateTracking';
 import ListTracking from './listTracking';
-import {TRACKING_ENVIRONMENTAL } from '../../../../constantsGlobal';
-import _ from 'lodash';
-import {CLASSIFICATION_ENVIRONMENTAL} from '../constants.js';
 
+import { changeStatusCreate } from '../actions';
+
+import { TRACKING_ENVIRONMENTAL } from '../../../../constantsGlobal';
+import { CLASSIFICATION_ENVIRONMENTAL } from '../constants.js';
 
 class CreateTracking extends Component {
     constructor(props) {
@@ -18,12 +20,12 @@ class CreateTracking extends Component {
     }
 
     _addTracking() {
-        const {changeStatusCreate} = this.props;
+        const { changeStatusCreate } = this.props;
         changeStatusCreate(true);
     }
 
     render() {
-        const {covenant, isOpen,reducerGlobal} = this.props;
+        const { covenant, isOpen, reducerGlobal } = this.props;
         const infoCovenant = covenant.get('covenantInfo');
         const permissionsCovenants = reducerGlobal.get('permissionsCovenants');
         let allowTracking = false;
@@ -34,11 +36,12 @@ class CreateTracking extends Component {
          * Nota: El gerente responsable de un covenant de clasificación "Ambiental" siempre y cuando no tenga el permiso
          * no podra realizar seguimientos, sólo visualizar.
         **/
-        if(_.isEqual(infoCovenant.strClassification, CLASSIFICATION_ENVIRONMENTAL)){
+        if (_.isEqual(infoCovenant.strClassification, CLASSIFICATION_ENVIRONMENTAL)) {
             allowTracking = _.get(permissionsCovenants, _.indexOf(permissionsCovenants, TRACKING_ENVIRONMENTAL), false);
-        }else{
-            allowTracking =  infoCovenant.showButtonAddTrackingCovenant;
+        } else {
+            allowTracking = infoCovenant.showButtonAddTrackingCovenant;
         }
+
         return (
             <div style={{ marginLeft: '15px', marginRight: '15px', marginTop: '15px' }}>
                 <Row xs={12} md={12} lg={12}>
@@ -47,7 +50,7 @@ class CreateTracking extends Component {
                     </Col>
                 </Row>
                 {covenant.get('showFormCreatetracking') &&
-                    <FormCreateTracking isOpen={isOpen}/>
+                    <FormCreateTracking isOpen={isOpen} />
                 }
                 {!covenant.get('showFormCreatetracking') &&
                     <Row xs={12} md={12} lg={12} style={{ marginBottom: '10px', marginTop: '15px' }} >
@@ -76,7 +79,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({reducerGlobal, covenant}, ownerProps) {
+function mapStateToProps({ reducerGlobal, covenant }, ownerProps) {
     return {
         reducerGlobal,
         covenant

@@ -4,12 +4,17 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {deleteProduct} from './actions';
 import {getMasterDataFields} from '../../selectsComponent/actions';
-import {CLIENT_TYPE_PRODUCT, FILTER_COUNTRY} from '../../selectsComponent/constants';
+import {CLIENT_TYPE_PRODUCT} from '../../selectsComponent/constants';
 import * as constants from '../../../constantsGlobal';
+import {checkRules} from '../../../actionsGlobal';
 import SweetAlert from '../../sweetalertFocus';
 import _ from 'lodash';
 import ModalProduct from './modalProduct';
 import Modal from 'react-modal';
+
+import {
+  checkRequired, checkFirstCharacter
+} from '../../../validationsFields/rulesField';
 
 class ProductList extends Component {
     constructor(props) {
@@ -29,6 +34,9 @@ class ProductList extends Component {
         uidProductDelete: '',
         productDetail: null
       };
+      this.rulesProductName = [checkRequired, checkFirstCharacter];
+      this.rulesProductType = [checkRequired];
+      this.rulesProductNumber = [checkRequired, checkFirstCharacter];
     }
 
     openModal(){
@@ -72,15 +80,47 @@ class ProductList extends Component {
 
     _mapProducts(product, idx) {
       const {selectsReducer} = this.props;
+      const productType = _.get(_.filter(selectsReducer.get(CLIENT_TYPE_PRODUCT), ['id', parseInt(product.type)]), '[0].value');
+      const errorrulesProductName = checkRules(this.rulesProductName, product.name);
+      const errorrulesProductType = checkRules(this.rulesProductType, productType);
+      const errorrulesProductNumber = checkRules(this.rulesProductNumber, product.number);      
+
       return <tr key={idx}>
               <td className="collapsing">
                 <i className="zoom icon" title="Ver detalle"
                   onClick={() => this._viewDetailsProduct(product)}
                   style={{cursor: "pointer"}} />
               </td>
-              <td>{product.name.length > 60 ? product.name.substring(0, 60) + "..." : product.name}</td>
-              <td>{_.get(_.filter(selectsReducer.get(CLIENT_TYPE_PRODUCT), ['id', parseInt(product.type)]), '[0].value')}</td>
-              <td>{product.number.length > 60 ? product.number.substring(0, 60) + "..." : product.number}</td>
+              <td>{product.name.length > 60 ? product.name.substring(0, 60) + "..." : product.name}
+              {
+                errorrulesProductName &&
+                <div>
+                    <div className="ui pointing red basic label">
+                      {errorrulesProductName}
+                        
+                    </div>
+                </div>
+                
+              }</td>
+              <td>{productType}
+              {
+                errorrulesProductType &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorrulesProductType}
+                    </div>
+                </div>
+              }</td>
+              <td>{product.number.length > 60 ? product.number.substring(0, 60) + "..." : product.number}
+              
+              {
+                errorrulesProductNumber &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorrulesProductNumber}
+                    </div>
+                </div>
+              }</td>
               <td  className="collapsing">
                 <i className="remove icon" title="Eliminar producto"
                   onClick={() => this._confirmDeleteProduct(product.uid)}
@@ -95,12 +135,12 @@ class ProductList extends Component {
     }
 
     render() {
-      const {error, clientProductReducer} = this.props;
+      const {error, clientProductReducer, className} = this.props;      
       return (
         <div>
           <Row style={{padding: "0px 10px 20px 20px"}}>
             <Col xs={12} sm={12} md={12} lg={12} style={{marginTop: "-50px", paddingRight: "35px", textAlign: "right"}}>
-              <button className="btn  btn-secondary" disabled={clientProductReducer.size === 3 || clientProductReducer.size > 3 ? 'disabled' : ''} style={{margin:"12px 0px 0px 12px"}} type="button" onClick={this.openModal}>
+              <button className="btn  btn-secondary" name={className} disabled={clientProductReducer.size === 3 || clientProductReducer.size > 3 ? 'disabled' : ''} style={{margin:"12px 0px 0px 12px"}} type="button" onClick={this.openModal}>
                 <i className="plus icon" style={{color: "white", padding: "3px 0 0 5px"}}></i>
               </button>
               <Modal
@@ -173,7 +213,7 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({notes, selectsReducer, clientProductReducer}) {
+function mapStateToProps({selectsReducer, clientProductReducer}) {
   return {
     clientProductReducer,
     selectsReducer

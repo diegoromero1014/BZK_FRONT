@@ -184,7 +184,7 @@ export class ComponentListMainCompetitor extends Component {
     render() {
         const { nameCompetitor, participation, observations, showFormMainCompetitor, fnShowForm,
             clientInformacion, changeValueListClient, valueCheckSectionMainCompetitor, showCheckValidateSection,
-            functionChangeMainCompetitor, registrationRequired, origin } = this.props;
+            functionChangeMainCompetitor, registrationRequired, origin, className } = this.props;
         const listMainCompetitor = clientInformacion.get('listMainCompetitor');
         return (
             <div onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
@@ -225,7 +225,7 @@ export class ComponentListMainCompetitor extends Component {
                 {!clientInformacion.get('noAppliedMainCompetitors') &&
                     <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px' }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-70px", paddingRight: "16px", textAlign: "right" }}>
-                            <button className="btn" disabled={showFormMainCompetitor} type="button"
+                            <button className="btn" name={className} disabled={showFormMainCompetitor} type="button"
                                 onClick={() => fnShowForm(MAIN_COMPETITOR, true)} style={showFormMainCompetitor ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
                                 <ToolTipComponent text="Agregar competidor principal">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
