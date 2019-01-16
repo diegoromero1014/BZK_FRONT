@@ -96,7 +96,7 @@ class NoteItem extends Component {
     }
 
     render() {
-        const { combo, body, data, index, _onBlurField, trashNotes } = this.props;
+        const { combo, body, data, index, _onBlurField } = this.props;
         return (
             <div>
                 <Row>
