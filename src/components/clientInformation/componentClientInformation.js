@@ -15,7 +15,7 @@ import ButtonClientVisorComponent from '../clientVisor/buttonClientVisorComponen
 import { consultInfoClient } from './actions';
 import { updateTitleNavBar, viewAlertClient } from '../navBar/actions';
 import { redirectUrl } from '../globalComponents/actions';
-import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
+import { clearEntities } from '../clientDetailsInfo/linkingClient/LinkEntitiesComponent/actions';
 import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
 import { updateTabSeletedCS } from '../customerStory/actions';

@@ -6,7 +6,7 @@ import _ from "lodash";
 import moment from 'moment';
 
 import SweetAlert from '../../sweetalertFocus';
-import ClientTypology from '../../contextClient/ClientTypology';
+import ClientTypology from '../../contextClient/clientTypology';
 import ContextEconomicActivity from '../../contextClient/contextEconomicActivity';
 import ComponentListLineBusiness from '../../contextClient/listLineOfBusiness/whiteListLineBusiness';
 import ComponentListDistributionChannel from '../../contextClient/listDistributionChannel/componentListDistributionChannel';
