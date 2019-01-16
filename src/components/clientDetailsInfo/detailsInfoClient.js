@@ -14,7 +14,7 @@ import MainCompetitor from "./mainCompetitor";
 import UbicationCorrespondence from "./ubicationCorrespondence";
 import InfoFinanciera from "./infoFinanciera";
 import DataComercial from "./dataComercial";
-import DeclarationOfOrigin from "./DeclarationOfOrigin";
+import DeclarationOfOrigin from "./declarationOfOrigin";
 import InternationalOperations from "./internationalOperations";
 import DocumentInformationServices from "./managementDocumentary/documentInformationServices";
 import ButtonLinkClient from "./linkingClient/buttonLinkClientComponent";

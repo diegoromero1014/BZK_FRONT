@@ -5,11 +5,11 @@ import { Row, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import { isEmpty, isEqual, get, isNil } from 'lodash';
 
-import LinkEntities from './linkEntitiesComponent/linkEntities';
+import LinkEntities from './LinkEntitiesComponent/linkEntities';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 
-import { setEntities, clearEntities, saveLinkClient } from './linkEntitiesComponent/actions';
+import { setEntities, clearEntities, saveLinkClient } from './LinkEntitiesComponent/actions';
 import { updateErrorsLinkEntities } from '../../clientDetailsInfo/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { getMasterDataFields } from '../../selectsComponent/actions';
@@ -18,7 +18,7 @@ import { consultStateBlackListClient, updateValuesBlackList } from './actions';
 import { showLoading } from '../../loading/actions';
 import { consultInfoClient } from '../../clientInformation/actions';
 
-import { ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, START_STATUS, HELP_LINK_MESSAGE } from './linkEntitiesComponent/constants';
+import { ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, START_STATUS, HELP_LINK_MESSAGE } from './LinkEntitiesComponent/constants';
 import { FILTER_TYPE_LBO_ID } from '../../selectsComponent/constants';
 import { consultParameterServer } from "../../../actionsGlobal";
 import { MAX_LENGTH_LINK_CLIENT_TRACER_CODE} from "../../../constantsGlobal";
