@@ -33,7 +33,7 @@ import {
 } from './validationsMessages';
 
 import {
-    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, MANAGEMENT_BRAND_KEY
+    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND
 } from '../components/selectsComponent/constants';
 
 import {
