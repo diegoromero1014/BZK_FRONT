@@ -211,7 +211,7 @@ class ModalProduct extends Component {
     } else if (patternOfForbiddenCharacter.test(this.state.number)) {
       errorInForm = true;
       this.setState({
-        nameError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
+        numberError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
       });
     }
     
@@ -220,8 +220,7 @@ class ModalProduct extends Component {
       this.setState({
         averageMontlyAmountError: MESSAGE_REQUIRED_VALUE
       });
-    } else if (!patternOfNumberDocument.test(this.state.averageMontlyAmount)) {
-      errorInForm = true;
+    } else if (!_.isNull(this.state.averageMontlyAmount) && !_.toString(this.state.averageMontlyAmount).length < 1 && !_.isUndefined(this.state.averageMontlyAmount)) {      
       let message = null;
       let length = 15;
       let number = this.state.averageMontlyAmount + "";
@@ -230,6 +229,7 @@ class ModalProduct extends Component {
       formatedNumber = formatedNumber.replace(/\./g, "");
       formatedNumber = formatedNumber.replace(/\-/g, "");
       if (formatedNumber.length > length) {
+        errorInForm = true;
         message = MESSAGE_WARNING_NUMBER_LENGTH(length);
       }
       this.setState({
@@ -238,7 +238,7 @@ class ModalProduct extends Component {
     } else if (patternOfForbiddenCharacter.test(this.state.averageMontlyAmount)) {
       errorInForm = true;
       this.setState({
-        nameError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
+        averageMontlyAmountError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
       });
     }
     
@@ -279,7 +279,7 @@ class ModalProduct extends Component {
     } else if (patternOfForbiddenCharacter.test(this.state.cityProduct)) {
       errorInForm = true;
       this.setState({
-        nameError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
+        cityError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
       });
     }
 
@@ -400,7 +400,6 @@ class ModalProduct extends Component {
                   style={{ width: "100%", textAlign: "right" }}
                   type="text"
                   min={0}
-                  max="16"
                   touched={true}
                   value={this.state.averageMontlyAmount}
                   error={this.state.averageMontlyAmountError}
