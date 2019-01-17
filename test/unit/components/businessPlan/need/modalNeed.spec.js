@@ -6,7 +6,7 @@ import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
 import { ModalNeed } from "../../../../../src/components/businessPlan/need/modalNeed";
 import RichText from "../../../../../src/components/richText/richTextComponent";
 import DateTimePickerUi from "../../../../../src/ui/dateTimePicker/dateTimePickerComponent";
-import ComboBoxFilter from "../../../../../src/ui/ComboBoxFilter/comboBoxFilter";
+import ComboBoxFilter from "../../../../../src/ui/comboBoxFilter/comboBoxFilter";
 
 const fields = createFieldsFromArray(["needType", "descriptionNeed", "productFamily", "needProduct",
     "needImplementation", "needTask", "needBenefits", "needResponsable", "statusNeed"]);
