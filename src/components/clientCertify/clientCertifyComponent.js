@@ -670,7 +670,7 @@ class clientCertify extends React.Component {
             justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient, idCIIU, idSubCIIU,
             annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, dateSalesAnnuals,
             addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber,}, 
-            handleSubmit, clientInformacion, selectsReducer, tabReducer, isPersonaNatural } = this.props;
+            handleSubmit, clientInformacion, selectsReducer, tabReducer } = this.props;
 
         var infoClient = clientInformacion.get('responseClientInfo');
 
