@@ -189,8 +189,13 @@ class ModalProduct extends Component {
       this.setState({
         nameError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
       });
+    } else if (!_.isUndefined(this.state.name) && !_.isNull(this.state.name) && this.state.name.length > 50) {
+      errorInForm = true;
+      this.setState({
+        typeError: MESSAGE_WARNING_MAX_LENGTH(50)
+      });
     }
-    
+
     if (_.isNull(this.state.type) || _.toString(this.state.type).length < 1 || _.isUndefined(this.state.type)) {
       errorInForm = true;
       this.setState({
@@ -212,6 +217,11 @@ class ModalProduct extends Component {
       errorInForm = true;
       this.setState({
         numberError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
+      });
+    } else if (!_.isUndefined(this.state.number) && !_.isNull(this.state.number) && this.state.number.length > 30) {
+      errorInForm = true;
+      this.setState({
+        typeError: MESSAGE_WARNING_MAX_LENGTH(30)
       });
     }
     
@@ -256,6 +266,11 @@ class ModalProduct extends Component {
       errorInForm = true;
       this.setState({
         coinError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
+      });
+    } else if (!_.isUndefined(this.state.coin) && !_.isNull(this.state.coin) && this.state.coin.length > 100) {
+      errorInForm = true;
+      this.setState({
+        typeError: MESSAGE_WARNING_MAX_LENGTH(100)
       });
     }
     
@@ -385,7 +400,7 @@ class ModalProduct extends Component {
                 <Input
                   name="txtNumber"
                   type="text"
-                  max="200"
+                  max="30"
                   touched={true}
                   value={this.state.number}
                   error={this.state.numberError}

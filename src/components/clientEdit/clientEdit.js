@@ -1428,7 +1428,7 @@ class clientEdit extends Component {
                             <Input
                                 name="txtBarrio"
                                 type="text"
-                                max="120"
+                                max="40"
                                 placeholder="Ingrese el barrio"
                                 {...neighborhood}
                                 touched={true}
