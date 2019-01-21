@@ -185,8 +185,8 @@ export class ModalArea extends Component {
 
   }
 
-  processValidation(field, error){
-    if(field){
+  processValidation(field, error) {
+    if (field) {
       switch (field) {
         case "relatedInternalParty":
           this.errorArea = error.message;
@@ -325,6 +325,7 @@ export class ModalArea extends Component {
                 <dt><span>Fecha de solución - DD/MM/YYYY (<span style={{ color: "red" }}>*</span>)</span></dt>
                 <dt style={{ paddingTop: "0px" }}>
                   <DateTimePickerUi
+                    id='fecha'
                     culture='es'
                     format={"DD/MM/YYYY"}
                     time={false}
