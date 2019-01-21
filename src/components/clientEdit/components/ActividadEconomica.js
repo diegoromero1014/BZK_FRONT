@@ -2,13 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 
-import { OPTION_REQUIRED } from "../../../constantsGlobal"
-
 import { Col, Row } from "react-flexbox-grid";
-import Input from "../../../ui/input/inputComponent";
-import Textarea from "../../../ui/textarea/textareaComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
-import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../../clientDetailsInfo/constants";
 
 import { consultListWithParameter } from '../../selectsComponent/actions';
 import * as constants from "../../selectsComponent/constants";
@@ -141,27 +136,6 @@ export class ActividadEconomica extends React.Component {
 
     }
 }
-
-var validations = [
-    {
-        validation: 'option-required',
-        fields: ['taxNature', 'idCIIU', 'idSubCIIU']
-    }
-]
-
-
-export function validationRules(props) {
-
-    if (props.idButton === BUTTON_EDIT) {
-        return [{
-            validation: 'option-required',
-            fields: ['idCIIU']
-        }];
-    } else {
-        return validations;
-    }
-
-};
 
 function mapStateToProps({ selectsReducer, clientInformacion }) {
     return {

@@ -284,8 +284,9 @@ export function handleBlurValueNumber(typeValidation, valuReduxForm, val, allows
             valuReduxForm.onChange(val + decimal);
         }
     } else { //Valido si el valor es negativo o positivo
+        
         var value = numeral(val).format('0');
-        if (value >= 0) {
+        if (val !== '-' && value >= 0) {
             pattern = /(-?\d+)(\d{3})/;
             while (pattern.test(val)) {
                 val = val.replace(pattern, "$1,$2");
