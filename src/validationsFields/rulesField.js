@@ -256,7 +256,7 @@ export const checkObservationsLinkClient = value => {
 
 export const checkHistoryFields = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && patternOfHistory.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfHistory.test(value)) {
         message = MESSAGE_WARNING_HISTORY;
     }
 
