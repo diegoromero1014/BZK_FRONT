@@ -31,3 +31,5 @@ export const patternOfPlaceOfPrevisit = /^[a-zA-Z0-9\sÁ-Úá-úÑñÜü&/\\,;.#
 export const patternOtherReason = /[^a-zA-Z0-9\s()\[\];,."!¡$%&\/¿?°#=':´+_\-ÁÉÍÓÚáéíóúÑñÜü]+$/;
 export const patternNotesClient = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
 export const patternOfNameEntity = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
+export const patternOfNoOperatingInCome = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
+export const patternOfOnlyAlphabeticalAndSlash = /^[a-zA-Z\sÁ-Úá-úÑñÜü\\\]/]+$/;

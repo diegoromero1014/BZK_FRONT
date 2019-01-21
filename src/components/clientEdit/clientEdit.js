@@ -1031,6 +1031,7 @@ class clientEdit extends Component {
         const idJustifyNoNeedLME = _.get(_.filter(dataJustifyNoNeedLME, ['key', KEY_EXCEPCION]), '[0].id');
         const addNoteNoGeren = (this.state.showJustifyNoGeren === false && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren);
         const addNoteNoNeedLME = (necesitaLME.value === 'false' && idJustifyNoNeedLME === parseInt(justifyNoLME.value) && !existNoteExceptionNoNeedLME);
+        let errorInNotes = tabReducer.get('errorNotesEditClient');
         if (addNoteNoGeren && addNoteNoNeedLME) {
 
             setNotes([{
@@ -1059,6 +1060,10 @@ class clientEdit extends Component {
                 note: ''
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
+        } else if(errorInNotes){
+            document.getElementById('dashboardComponentScroll').scrollTop = 0;
+
+            return;
         } else {
 
             errorContact = tabReducer.get('errorConstact');
@@ -1115,9 +1120,8 @@ class clientEdit extends Component {
         if (otherOperationsForeignEnable == 'disabled') {
             errors = _.omit(errors, 'otherOperationsForeign');
         }
-
+        
         const errorsArray = _.toArray(errors);
-
         this.setState({
             sumErrorsForm: errorsArray.length
         });
@@ -1428,7 +1432,7 @@ class clientEdit extends Component {
                             <Input
                                 name="txtBarrio"
                                 type="text"
-                                max="120"
+                                max="40"
                                 placeholder="Ingrese el barrio"
                                 {...neighborhood}
                                 touched={true}

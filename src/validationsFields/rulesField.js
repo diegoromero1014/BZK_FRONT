@@ -17,7 +17,8 @@ import {
     patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
     patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant, 
     patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
-    patternOfInventoryPolice, patternOfControlLinkedPayments
+    patternOfInventoryPolice, patternOfControlLinkedPayments, patternOfNameEntity, patternOfNoOperatingInCome,
+    patternOfOnlyAlphabeticalAndSlash
 } from './patternsToValidateField';
 
 import {
@@ -28,8 +29,8 @@ import {
     MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_NAME_OTHER_PARTICIPANT,
     MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT, MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT,
     MESSAGE_WARNING_PLACE_OF_PREVISIT, MESSAGE_WARNING_RANGE, MESSAGE_WARNING_FORBIDDEN_CHARACTER,
-    MESSAGE_WARNING_NUMBER_LENGTH, MESSAGE_WARNING_OTHER_REASON
-
+    MESSAGE_WARNING_NUMBER_LENGTH, MESSAGE_WARNING_OTHER_REASON, MESSAGE_WARNING_NAME_ENTITY,
+    MESSAGE_WARNING_NO_OPERATING_IN_COME, MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH
 } from './validationsMessages';
 
 import {
@@ -190,6 +191,16 @@ export const checkIsUpdateClient = (value, fields, props) => {
     let message = null;
     let isEditButton = props.idButton;
     if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT) {
+        message = MESSAGE_REQUIRED_VALUE;
+    }
+
+    return message;
+}
+
+export const checkEconomicGroup = (value, fields, props) => {
+    let message = null;
+    let isEditButton = props.idButton;
+    if ((_.toString(fields.nitPrincipal).length < 1 || _.toString(fields.groupEconomic).length < 1 || _.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT) {
         message = MESSAGE_REQUIRED_VALUE;
     }
 
@@ -479,6 +490,36 @@ export const checkClientAddress = value => {
 
     return message;
 
+}
+
+export const checkNameEntityProduct = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfNameEntity.test(value)) {
+        message = MESSAGE_WARNING_NAME_ENTITY;
+    }
+
+    return message;
+}
+
+export const checkdetailNonOperatingIncomePrincipal = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfNoOperatingInCome.test(value)) {
+        message = MESSAGE_WARNING_NO_OPERATING_IN_COME;
+    }
+
+    return message;
+}
+
+export const checkOttherOperationsForeign = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfOnlyAlphabeticalAndSlash.test(value)) {
+        message = MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH;
+    }
+
+    return message;
 }
 
 export const checkClientNeighborhood = value => {

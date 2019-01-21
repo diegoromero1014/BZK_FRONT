@@ -42,7 +42,7 @@ export class ComponentListMainClients extends Component {
 
         this.rulesNameClient = [checkRequired, checkClientDescription, checkMaxLength(50), checkFirstCharacter];
         this.rulesParticipation = [checkRequired, checkNumberInRange(0, 100)];
-        this.rulesTerm = [checkRequired, checkNumberInRange(0, 9999)];
+        this.rulesTerm = [checkRequired, checkNumberInRange(0, 9999), checkMaxLength(4)];
         this.rulesRelevantInformation = [checkClientDescription, checkFirstCharacter];
 
     }

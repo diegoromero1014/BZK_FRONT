@@ -118,7 +118,7 @@ export class InfoClient extends React.Component {
                         <Input
                             name="documento"
                             type="text"
-                            max="20"
+                            max="30"
                             placeholder="Número de documento del cliente"
                             {...idNumber}
                             touched={true}

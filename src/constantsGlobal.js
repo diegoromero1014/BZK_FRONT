@@ -36,6 +36,10 @@ export const APP_NAME = "FRONT_OFFICE";
 export const YES = 1;
 export const NO = 0;
 export const MAX_LENGTH_EVENT_NAME = 50;
+export const MAX_LENGTH_NAME_ENTITY_PRODUCT = 50;
+export const MAX_LENGTH_PRODUCT_NUMBER = 30;
+export const MAX_LENGTH_PRODUCT_COIN = 100;
+export const MAX_LENGTH_PRODUCT_CITY = 20
 
 export const BUTTON_EDIT = "BUTTON_EDIT";
 export const PERMISSIONSCLIENTS = "permissionsClients";
