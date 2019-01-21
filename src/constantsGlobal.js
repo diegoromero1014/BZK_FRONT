@@ -36,6 +36,19 @@ export const APP_NAME = "FRONT_OFFICE";
 export const YES = 1;
 export const NO = 0;
 export const MAX_LENGTH_EVENT_NAME = 50;
+export const MAX_LENGTH_NAME_ENTITY_PRODUCT = 50;
+export const MAX_LENGTH_PRODUCT_NUMBER = 30;
+export const MAX_LENGTH_PRODUCT_COIN = 100;
+export const MAX_LENGTH_PRODUCT_CITY = 20
+
+export const BUTTON_EDIT = "BUTTON_EDIT";
+export const PERMISSIONSCLIENTS = "permissionsClients";
+export const INFO_CREDIT_STUDY = "Info Estudio de Crédito";
+export const CLIENT_OPERATION_FOREIGN_CURRENCY = "clientOperationsForeignCurrency";
+export const OTHERS_OPERATIONS = "Otro";
+export const DATA_CIUU = "dataCIIU";
+export const CLIENT_ORIGIN_RESOURCES = "clientOriginResources";
+export const CLIENT_ORIGIN_GOODS = "clientOriginGoods";
 
 export const TITLE_CONCLUSIONS_VISIT = "En este campo se podrán ingresar los aspectos más relevantes, los acuerdos " +
     " y compromisos que se dieron en la reunión. Además, registrar los comentarios del estado de servicio.\n\n" +

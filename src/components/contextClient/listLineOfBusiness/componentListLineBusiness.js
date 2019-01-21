@@ -16,7 +16,7 @@ import { LINE_OF_BUSINESS, MESSAGE_LINE_OF_BUSINESS } from '../constants';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 import {
-    processRules, checkClientDescription, checkMaxLength,
+    checkNumberLength, checkClientDescription, checkMaxLength,
     checkValueClientInformacion, checkNumberInRange, checkFirstCharacter
 } from '../../../validationsFields/rulesField';
 
@@ -41,7 +41,7 @@ export class ComponentListLineBusiness extends Component {
 
         this.rulesLineOfBusiness = [checkClientDescription, checkMaxLength(50), checkFirstCharacter];
         this.rulesParticipation = [checkNumberInRange(0,100)];
-        this.rulesExperience = [checkNumberInRange(0,100)];
+        this.rulesExperience = [checkNumberLength(4)];
         this.rulesContribution = [checkNumberInRange(0,100)];
 
     }
@@ -201,7 +201,7 @@ export class ComponentListLineBusiness extends Component {
     render() {
         const { contextLineBusiness, participation, experience, showFormLinebusiness,
             fnShowForm, contribution, clientInformacion, changeValueListClient,
-            registrationRequired, origin } = this.props;
+            registrationRequired, origin, className } = this.props;
         const listParticipation = clientInformacion.get('listParticipation');
         return (
             <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 29px 0 25px' } : { width: '100%', border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 25px 0 29px' }}
@@ -231,7 +231,7 @@ export class ComponentListLineBusiness extends Component {
                 {!clientInformacion.get('noAppliedLineOfBusiness') &&
                     <Row style={{ padding: "0px 10px 10px 20px" }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "15px", textAlign: "right" }}>
-                            <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button"
+                            <button className="btn btn-secondary" name={className} disabled={showFormLinebusiness} type="button"
                                 onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
                                 <ToolTipComponent text="Agregar línea de negocio">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>

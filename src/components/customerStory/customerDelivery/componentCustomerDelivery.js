@@ -6,12 +6,12 @@ import { consultList } from '../../selectsComponent/actions';
 import { REASON_TRANFER } from '../../selectsComponent/constants';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import {
-    OPTION_REQUIRED, VALUE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA, OTHER, VALUE_XSS_INVALID, INFO_ESTUDIO_CREDITO
+    MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA, OTHER, INFO_ESTUDIO_CREDITO
 } from '../../../constantsGlobal';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ListClientsValidations from './listClientsValidations';
 import { clientsByEconomicGroup, updateTeamClients, getAllteams, updateCheckEconomicGroup } from '../actions';
-import { validateResponse, xssValidation } from '../../../actionsGlobal';
+import { validateResponse } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { consultInfoClient } from '../../clientInformation/actions';

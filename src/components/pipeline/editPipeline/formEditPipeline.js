@@ -17,7 +17,7 @@ import { addBusiness, clearBusiness, editBusiness } from "../business/ducks";
 import Business from "../business/business";
 import RichText from '../../richText/richTextComponent';
 import ToolTip from '../../toolTip/toolTipComponent';
-import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
+import ComponentDisbursementPlan from '../disbursementPlan/componentDisbursementPlan';
 import { setGlobalCondition } from './../../../validationsFields/rulesField';
 
 import { redirectUrl } from "../../globalComponents/actions";
