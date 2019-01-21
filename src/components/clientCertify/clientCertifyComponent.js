@@ -7,6 +7,7 @@ import numeral from "numeral";
 import { Col, Row } from "react-flexbox-grid";
 
 import * as constants from "../selectsComponent/constants";
+import _ from 'lodash';
 
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
@@ -104,7 +105,7 @@ function SelectsJustificacion(props) {
     }
 }
 
-class clientCertify extends React.Component {
+export class ClientCertify extends React.Component {
     constructor(props) {
         super(props)
 
@@ -875,14 +876,13 @@ class clientCertify extends React.Component {
                         background: "rgba(255,255,255,0.75)"
                     }}>
                         <div style={{ width: "400px", height: "100%", position: "fixed", right: "0px" }}>
-
-                            <button className="btn"
+                            <button  id="btnGuardar" className="btn"
                                 style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
                                 onClick={this.clickButtonScrollTop} type="submit">
                                 <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
                             </button>
 
-                            <button className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
+                            <button id="btnCancelar" className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
                                 float: "right",
                                 margin: "8px 0px 0px 250px",
                                 position: "fixed",
@@ -1021,4 +1021,4 @@ export default reduxForm({
     onSubmitFail: () => {
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
     },
-}, mapStateToProps, mapDispatchToProps)(clientCertify)
+}, mapStateToProps, mapDispatchToProps)(ClientCertify)
