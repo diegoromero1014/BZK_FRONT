@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {processRules, checkAddress, checkFirstCharacter, checkOnlyNumbers, checkMaxLength, checkForValueIsExClient,
+import {processRules, checkAddress, checkFirstCharacter, checkMaxLength, checkForValueIsExClient,
      checkForValueIsNotExClient, checkForValueJustifyNoGeren, checkForValueJustifyNoLME, checkPhone,
      checkNumberLength} from './../../validationsFields/rulesField';
 

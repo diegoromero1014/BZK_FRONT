@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
@@ -41,52 +41,37 @@ class NoteItem extends Component {
             let message = null;
             if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
                 updateErrorsNotes(true, "Debe ingresar todos los campos");
-            }
-            if (!_.isUndefined(note.note) && !_.isNull(note.note) && !_.isEmpty(value) && !patternNotesClient.test(note.note)) {
+            } else if (!_.isUndefined(note.note) && !_.isNull(note.note) && !_.isEmpty(value) && !patternNotesClient.test(note.note)) {
                 message = MESSAGE_WARNING_NOTES_CLIENT;
                 updateErrorsNotes(true, message);
-            }
-            if (!_.isNil(note.note) && patternOfForbiddenCharacter.test(note.note)) {
+            } else if (!_.isNil(note.note) && patternOfForbiddenCharacter.test(note.note)) {
                 message = MESSAGE_WARNING_FORBIDDEN_CHARACTER;
                 updateErrorsNotes(true, message);
             }
         });
-
-
-
     }
 
     _deleteNote() {
         const { index, deleteNote, onDeletedNote } = this.props;
-
         deleteNote(index);
         //Avisar al padre que una nota se elimino
         onDeletedNote();
-
-
-
     }
 
     componentWillMount() {
         const { combo, body } = this.props;
         this.updateValue("combo", combo);
         this.updateValue("body", body);
-
         let message = null;
         if (_.isEqual(body, "") || _.isEqual(body, null) || _.isEqual(combo, "") || _.isEqual(combo, null)) {
             updateErrorsNotes(true, "Debe ingresar todos los campos");
-        }
-        if (!_.isUndefined(body) && !_.isNull(body) && eval(patternNotesClient).test(body)) {
+        } else if (!_.isUndefined(body) && !_.isNull(body) && !_.isEmpty(body) && !patternNotesClient.test(body)) {
             message = MESSAGE_WARNING_NOTES_CLIENT;
             updateErrorsNotes(true, message);
-        }
-        if (!_.isNil(body) && patternOfForbiddenCharacter.test(body)) {
+        } else if (!_.isNil(body) && patternOfForbiddenCharacter.test(body)) {
             message = MESSAGE_WARNING_FORBIDDEN_CHARACTER;
             updateErrorsNotes(true, message);
         }
-
-
-
     }
 
     componentDidMount() {
@@ -96,7 +81,7 @@ class NoteItem extends Component {
     }
 
     render() {
-        const { combo, body, data, index, _onBlurField } = this.props;
+        const { data, index } = this.props;
         return (
             <div>
                 <Row>

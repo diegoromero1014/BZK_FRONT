@@ -63,7 +63,7 @@ const validate = (values) => {
 
   return errors;
 };
-class ModalArea extends Component {
+export class ModalArea extends Component {
 
   constructor(props) {
     super(props);

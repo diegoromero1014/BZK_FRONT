@@ -102,7 +102,7 @@ const validate = (values) => {
     return errors;
 };
 
-class ModalNeed extends Component {
+export class ModalNeed extends Component {
 
     constructor(props) {
         super(props);
