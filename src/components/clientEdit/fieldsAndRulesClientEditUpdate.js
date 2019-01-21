@@ -6,7 +6,7 @@ import {processRules, checkIsUpdateClient, checkClientName, checkMaxLength,
     checkNumberLength, checkdetailNonOperatingIncome, checkForValueJustifyNoGerenEditClient, checkForValueJustifyNoLMEEditClient,
     checkOthersEnabledOriginGoods, checkForValueOperationsForeigns, checkOnlyAlphabetical, checkClientAddress,
     checkOthersEnabledclientOperationsForeignCurrency, checkOthersEnabledOriginResources, checkdetailNonOperatingIncomePrincipal,
-    checkOttherOperationsForeign
+    checkOttherOperationsForeign, checkEconomicGroup
 } from './../../validationsFields/rulesField';
 
 const fieldsWithRules= {
@@ -38,7 +38,7 @@ const fieldsWithRules= {
      countryOrigin:{rules: [checkIsUpdateClient]},
      operationsForeignCurrency:{rules: [checkIsUpdateClient]},
      operationsForeigns:{rules: [checkForValueOperationsForeigns]},
-     economicGroupName:{rules: [checkIsUpdateClient]},
+     economicGroupName:{rules: [checkEconomicGroup]},
      controlLinkedPayments:{rules: [checkControlLinkedPaymentsRequired, checkControlLinkedPayments, checkFirstCharacter, checkMaxLength(1000)]},
      description:{rules: [checkFirstCharacter, checkClientDescription]},
      neighborhood:{rules: [checkFirstCharacter, checkClientNeighborhood, checkMaxLength(40)]},
@@ -57,7 +57,7 @@ const fieldsWithRules= {
      idTypeClient: { rules: [checkRequired] },
      segment: { rules: [checkRequired] },
      subSegment: { rules: [checkForValueSubSegmentEditClient] },
-     groupEconomic:{rules:[checkIsUpdateClient]},
+     groupEconomic:{rules:[]},
      customerCoverageIntOpe:{rules:[]}
  };
  

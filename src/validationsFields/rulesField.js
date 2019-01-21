@@ -197,6 +197,16 @@ export const checkIsUpdateClient = (value, fields, props) => {
     return message;
 }
 
+export const checkEconomicGroup = (value, fields, props) => {
+    let message = null;
+    let isEditButton = props.idButton;
+    if ((_.toString(fields.nitPrincipal).length < 1 || _.toString(fields.groupEconomic).length < 1 || _.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT) {
+        message = MESSAGE_REQUIRED_VALUE;
+    }
+
+    return message;
+}
+
 export const checkOthersEnabledOriginResources = (value, fields, props) => {
     let message = null;
     let isEditButton = props.idButton;
