@@ -5,17 +5,15 @@ import ReduxFormField, { createFieldsFromArray } from "~/test/helpers/ReduxFormF
 import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
 import RichText from "../../../../../src/components/richText/richTextComponent";
 import DateTimePickerUi from "../../../../../src/ui/dateTimePicker/dateTimePickerComponent";
-import ComboBoxFilter from "../../../../../src/ui/ComboBoxFilter/comboBoxFilter";
+import ComboBoxFilter from "../../../../../src/ui/comboBoxFilter/comboBoxFilter";
 import Input from "../../../../../src/ui/input/inputComponent";
 import { ModalArea } from "../../../../../src/components/businessPlan/area/modalArea";
 
 const fields = createFieldsFromArray(["areaDes", "areaResponsable"]);
 
 const selectsReducer = Immutable.Map({});
-const consultDataSelect = () => { };
 const getMasterDataFields = () => { };
 const handleSubmit = () => { };
-const consultListWithParameterUbication = () => { };
 
 const defaultProps = { fields: fields, getMasterDataFields, handleSubmit, selectsReducer }
 
