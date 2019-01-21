@@ -11,8 +11,8 @@ import {
 const fieldsWithRules = {
     nameClient: { rules: [checkRequired, checkClientDescription, checkMaxLength(50), checkFirstCharacter] },
     participation: { rules: [checkRequired, checkNumberInRange(0, 100)] },
-    term: { rules: [checkRequired, checkNumberInRange(0, 9999)] },
-    relevantInformation: { rules: [checkClientDescription, checkFirstCharacter] }
+    term: { rules: [checkRequired, checkNumberInRange(0, 9999), checkMaxLength(4)] },
+    relevantInformation: { rules: [checkClientDescription, checkFirstCharacter, checkMaxLength(1300)] }
 }
 
 const fields = _.keys(fieldsWithRules);

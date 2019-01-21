@@ -88,12 +88,24 @@ class ProductList extends Component {
       const errorrulesProductName = checkRules(this.rulesProductName, product.name);
       const errorrulesProductType = checkRules(this.rulesProductType, productType);
       const errorrulesProductNumber = checkRules(this.rulesProductNumber, product.number);
+      let errorGeneral = checkRules(this.rulesAverageMonlyAmount, product.averageMontlyAmount);
+      errorGeneral = checkRules(this.rulesCoin, product.coin);
+      errorGeneral = checkRules(this.rulesCountry, product.country);
+      errorGeneral = checkRules(this.rulesCity, product.city);
 
       return <tr key={idx}>
               <td className="collapsing">
                 <i className="zoom icon" title="Ver detalle"
                   onClick={() => this._viewDetailsProduct(product)}
                   style={{cursor: "pointer"}} />
+                  {
+                    errorGeneral &&
+                    <div>
+                      <div className="ui pointing red basic label">
+                       {"Ver errores"}                        
+                      </div>
+                    </div>
+                  }
               </td>
               <td>{product.name.length > 60 ? product.name.substring(0, 60) + "..." : product.name}
               {

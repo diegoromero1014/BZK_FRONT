@@ -41,7 +41,7 @@ class NoteItem extends Component {
             let message = null;
             if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
                 updateErrorsNotes(true, "Debe ingresar todos los campos");
-            } else if (!_.isUndefined(note.note) && !_.isNull(note.note) && !_.isEmpty(value) && !patternNotesClient.test(note.note)) {
+            } else if (!_.isUndefined(note.note) && !_.isNull(note.note) && !_.isEmpty(note.note) && !patternNotesClient.test(note.note)) {
                 message = MESSAGE_WARNING_NOTES_CLIENT;
                 updateErrorsNotes(true, message);
             } else if (!_.isNil(note.note) && patternOfForbiddenCharacter.test(note.note)) {

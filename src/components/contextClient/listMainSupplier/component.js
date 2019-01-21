@@ -42,7 +42,7 @@ export class ComponentListMainSupplier extends Component {
 
         this.rulesNameSupplier = [checkRequired, checkClientDescription, checkMaxLength(50), checkFirstCharacter];
         this.rulesParticipation = [checkRequired, checkNumberInRange(0, 100)];
-        this.rulesTerm = [checkRequired];
+        this.rulesTerm = [checkRequired, checkNumberInRange(0, 9999)];
         this.relevantInformation = [checkClientDescription, checkFirstCharacter];
 
     }

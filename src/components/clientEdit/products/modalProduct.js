@@ -20,7 +20,8 @@ import _ from "lodash";
 
 import {
   MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_NUMBER_DOCUMENT, MESSAGE_WARNING_NUMBER_LENGTH,
-  MESSAGE_WARNING_NAME_ENTITY, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_FORBIDDEN_CHARACTER
+  MESSAGE_WARNING_NAME_ENTITY, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_FORBIDDEN_CHARACTER,
+  MESSAGE_WARNING_MAX_LENGTH
 } from '../../../validationsFields/validationsMessages';
 
 import {
@@ -87,7 +88,7 @@ class ModalProduct extends Component {
 
     } else {
       var value = numeral(val).format('0');
-      if (value >= 0) {
+      if (val !== '-' && value >= 0) {
         pattern = /(-?\d+)(\d{3})/;
         while (pattern.test(val)) {
           val = val.replace(pattern, "$1,$2");
@@ -189,10 +190,10 @@ class ModalProduct extends Component {
       this.setState({
         nameError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
       });
-    } else if (!_.isUndefined(this.state.name) && !_.isNull(this.state.name) && this.state.name.length > 50) {
+    } else if (!_.isUndefined(this.state.name) && !_.isNull(this.state.name) && this.state.name.length > constants.MAX_LENGTH_NAME_ENTITY_PRODUCT) {
       errorInForm = true;
       this.setState({
-        typeError: MESSAGE_WARNING_MAX_LENGTH(50)
+        nameError: MESSAGE_WARNING_MAX_LENGTH(constants.MAX_LENGTH_NAME_ENTITY_PRODUCT)
       });
     }
 
@@ -218,10 +219,10 @@ class ModalProduct extends Component {
       this.setState({
         numberError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
       });
-    } else if (!_.isUndefined(this.state.number) && !_.isNull(this.state.number) && this.state.number.length > 30) {
+    } else if (!_.isUndefined(this.state.number) && !_.isNull(this.state.number) && !_.isEmpty(this.state.number) && this.state.number.length > constants.MAX_LENGTH_PRODUCT_NUMBER) {
       errorInForm = true;
       this.setState({
-        typeError: MESSAGE_WARNING_MAX_LENGTH(30)
+        numberError: MESSAGE_WARNING_MAX_LENGTH(constants.MAX_LENGTH_PRODUCT_NUMBER)
       });
     }
     
@@ -267,10 +268,10 @@ class ModalProduct extends Component {
       this.setState({
         coinError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
       });
-    } else if (!_.isUndefined(this.state.coin) && !_.isNull(this.state.coin) && this.state.coin.length > 100) {
+    } else if (!_.isUndefined(this.state.coin) && !_.isNull(this.state.coin) && this.state.coin.length > constants.MAX_LENGTH_PRODUCT_COIN) {
       errorInForm = true;
       this.setState({
-        typeError: MESSAGE_WARNING_MAX_LENGTH(100)
+        coinError: MESSAGE_WARNING_MAX_LENGTH(constants.MAX_LENGTH_PRODUCT_COIN)
       });
     }
     
@@ -295,6 +296,11 @@ class ModalProduct extends Component {
       errorInForm = true;
       this.setState({
         cityError: MESSAGE_WARNING_FORBIDDEN_CHARACTER
+      });
+    } else if (!_.isUndefined(this.state.cityProduct) && !_.isNull(this.state.cityProduct) && this.state.cityProduct.length > constants.MAX_LENGTH_PRODUCT_CITY) {
+      errorInForm = true;
+      this.setState({
+        cityError: MESSAGE_WARNING_MAX_LENGTH(constants.MAX_LENGTH_PRODUCT_CITY)
       });
     }
 
@@ -461,7 +467,7 @@ class ModalProduct extends Component {
                 <Input
                   name="txtCityProduct"
                   type="text"
-                  max="150"
+                  max="20"
                   touched={true}
                   value={this.state.cityProduct}
                   error={this.state.cityError}

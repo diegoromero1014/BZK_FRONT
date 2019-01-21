@@ -57,7 +57,7 @@ const fieldsWithRules= {
      idTypeClient: { rules: [checkRequired] },
      segment: { rules: [checkRequired] },
      subSegment: { rules: [checkForValueSubSegmentEditClient] },
-     groupEconomic:{rules:[]},
+     groupEconomic:{rules:[checkIsUpdateClient]},
      customerCoverageIntOpe:{rules:[]}
  };
  
