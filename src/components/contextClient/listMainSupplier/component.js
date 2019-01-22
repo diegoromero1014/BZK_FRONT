@@ -16,7 +16,7 @@ import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 import {
-    checkRequired, processRules, checkClientDescription,
+    checkRequired, checkNumberLength, checkClientDescription,
     checkNumberInRange, checkMaxLength, checkFirstCharacter
 } from '../../../validationsFields/rulesField';
 
@@ -42,7 +42,7 @@ export class ComponentListMainSupplier extends Component {
 
         this.rulesNameSupplier = [checkRequired, checkClientDescription, checkMaxLength(50), checkFirstCharacter];
         this.rulesParticipation = [checkRequired, checkNumberInRange(0, 100)];
-        this.rulesTerm = [checkRequired, checkNumberInRange(0, 9999)];
+        this.rulesTerm = [checkRequired, checkNumberInRange(0, 9999), checkNumberLength(4)];
         this.relevantInformation = [checkClientDescription, checkFirstCharacter];
 
     }
