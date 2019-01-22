@@ -121,8 +121,8 @@ class modalComponentMemberRiskGroup extends Component {
 
     _handlerSubmitGroup() {
         const { fields: { idType, idNumber, clientType }, swtShowMessage, findClientByStrTypeIdAndNumber, selectsReducer } = this.props;
-        const strTypeDocument = _.get(_.find(selectsReducer.get(constants.CLIENT_ID_TYPE), (item) => _.isEqual(item.id, parseInt(idType.value))), 'value', '');
-        const strClientType = _.get(_.find(selectsReducer.get(constants.CLIENT_TYPE), (item) => _.isEqual(item.id, parseInt(clientType.value))), 'key', '');
+        const strTypeDocument = _.get(_.find(selectsReducer.get(this.state.selectTypeReducer), (item) => _.isEqual(item.id, parseInt(idType.value))), 'value', '');
+        const strClientType = _.get(_.find(selectsReducer.get(constants.CLIENT_TYPE), (item) => _.isEqual(item.id, parseInt(clientType.value))), 'value', '');
 
         const jsonFindClient = {
             strTypeDocument: strTypeDocument,
