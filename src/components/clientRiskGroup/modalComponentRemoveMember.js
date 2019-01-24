@@ -23,10 +23,11 @@ import { showLoading } from '../loading/actions';
 
 import _ from 'lodash';
 import $ from 'jquery';
+import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 
 
-const fields = ["justification"]
-const validate = values => {
+//const fields = ["justification"]
+/*const validate = values => {
   const errors = {};
 
   if (!values.justification) {
@@ -38,7 +39,7 @@ const validate = values => {
   }
 
   return errors;
-};
+};*/
 
 var thisForm;
 class modalComponentRemoveMember extends Component {
@@ -89,10 +90,6 @@ class modalComponentRemoveMember extends Component {
             'Señor usuario, para retirar el cliente debe ser aprobado por el analista de riesgos.');
           getClientsRiskGroup(infoClient.id);
 
-          // self.setState({
-          //   showError: false,
-          //   showErrorForm: false
-          // });
         } else {
           swtShowMessage('error', 'Error retirando el cliente', 'Señor usuario, ocurrió un error tratando de retirar el cliente.');
         }

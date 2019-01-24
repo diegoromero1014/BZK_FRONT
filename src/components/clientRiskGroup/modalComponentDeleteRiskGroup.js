@@ -11,22 +11,9 @@ import {deleteRiskGroup, getClientsRiskGroup, updateIsPendingRiskGroup} from "./
 import {showLoading} from "../loading/actions";
 
 import _ from "lodash";
+import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 
 
-const fields = ["justification"]
-const validate = values => {
-    const errors = {};
-
-    if (!values.justification) {
-        errors.justification = VALUE_REQUIERED;
-    } else if (xssValidation(values.justification)) {
-        errors.justification = VALUE_XSS_INVALID;
-    } else {
-        errors.justification = null;
-    }
-
-    return errors;
-};
 
 let thisForm;
 class modalComponentDeleteRiskGroup extends Component {

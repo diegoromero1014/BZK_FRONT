@@ -27,35 +27,13 @@ import {
 import { OPTION_RISK_GROUP, OPTION_NOVELTY } from './constants';
 
 import _ from "lodash";
+import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 
 export const EDITAR = "Editar";
 export const ELIMINAR = "Eliminar";
 
-const fields = ["groupName", "groupObservations"]
 
 const numberThumbsRow = 3;
-
-const validate = values => {
-    const errors = {};
-
-    if (!values.groupName) {
-        errors.groupName = VALUE_REQUIERED;
-    } else if (xssValidation(values.groupName)) {
-        errors.groupName = VALUE_XSS_INVALID;
-    } else {
-        errors.groupName = null;
-    }
-
-    if (!values.groupObservations) {
-        errors.groupObservations = VALUE_REQUIERED;
-    } else if (xssValidation(values.groupObservations)) {
-        errors.groupObservations = VALUE_XSS_INVALID;
-    } else {
-        errors.groupObservations = null;
-    }
-
-    return errors;
-};
 
 let thisForm;
 class ModalComponentRiskGroup extends Component {
