@@ -26,20 +26,6 @@ import $ from 'jquery';
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 
 
-//const fields = ["justification"]
-/*const validate = values => {
-  const errors = {};
-
-  if (!values.justification) {
-    errors.justification = VALUE_REQUIERED;
-  } else if (xssValidation(values.justification)) {
-      errors.justification = VALUE_XSS_INVALID;
-  } else {
-    errors.justification = null;
-  }
-
-  return errors;
-};*/
 
 var thisForm;
 class modalComponentRemoveMember extends Component {
