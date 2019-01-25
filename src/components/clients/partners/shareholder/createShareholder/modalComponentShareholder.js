@@ -117,7 +117,6 @@ class ModalComponentShareholder extends Component {
       searchShareholder, clearSearchShareholder } = this.props;
     let numeroDocumentoTrimmed = numeroDocumento.value.trim();
     numeroDocumento.onChange(numeroDocumentoTrimmed);
-    console.log(errors);
     if (tipoDocumento.value && numeroDocumentoTrimmed && !errors.numeroDocumento) {
 
       searchShareholder(tipoDocumento.value, numeroDocumentoTrimmed,
