@@ -22,14 +22,14 @@ import { changeStateSaveData } from '../../dashboard/actions';
 import { createBusiness, validateRangeDates } from '../actions';
 import {
     consultParameterServer, formValidateKeyEnter, htmlToText, validateResponse,
-    xssValidation, onSessionExpire
+    onSessionExpire
 } from '../../../actionsGlobal';
 
 import { LAST_BUSINESS_REVIEW } from '../../../constantsParameters';
 import { OBJECTIVE_BUSINESS } from '../constants';
 import {
     TITLE_OPPORTUNITY_BUSINESS, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA,
-    MESSAGE_ERROR, DATE_FORMAT, VALUE_XSS_INVALID
+    MESSAGE_ERROR, DATE_FORMAT, VALUE_XSS_INVALID,REQUEST_SUCCESS,REQUEST_INVALID_INPUT
 } from '../../../constantsGlobal';
 
 
@@ -57,6 +57,7 @@ class FormBusinessPlan extends Component {
         this._closeMessageCreateBusiness = this._closeMessageCreateBusiness.bind(this);
         this._submitCreateBusiness = this._submitCreateBusiness.bind(this);
         this._onSelectFieldDate = this._onSelectFieldDate.bind(this);
+        this.processValidation = this.processValidation.bind(this);
         this.state = {
             showErrorSaveBusiness: null,
             showConfirm: false,
@@ -134,12 +135,6 @@ class FormBusinessPlan extends Component {
             }
         }
 
-        if (xssValidation(this.state.opportunities, true)) {
-            errorInForm = true;
-            this.setState({
-                opportunitiesError: VALUE_XSS_INVALID
-            });
-        }
 
         if (!errorInForm) {
             var needsbB = [];
@@ -285,16 +280,23 @@ class FormBusinessPlan extends Component {
                                 if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
                                     onSessionExpire();
                                 } else {
-                                    if ((_.get(data, 'payload.data.status') === 200)) {
+                                    if ((_.get(data, 'payload.data.status') === REQUEST_SUCCESS)) {
                                         typeMessage = "success";
                                         titleMessage = "Creación plan de negocio";
                                         message = "Señor usuario, el plan de negocio se creó de forma exitosa.";
                                         this.setState({ showMessageCreateBusiness: true });
                                     } else {
-                                        typeMessage = "error";
-                                        titleMessage = "Creación plan de negocio";
-                                        message = "Señor usuario, ocurrió un error creando el plan de negocio.";
-                                        this.setState({ showMessageCreateBusiness: true });
+                                        if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
+                                            const validationsErrorFromServer = _.get(data, 'payload.data.data');
+                                            _.forEach(validationsErrorFromServer, (field) => {
+                                                this.processValidation(field);
+                                            });
+                                        } else {
+                                            typeMessage = "error";
+                                            titleMessage = "Creación plan de negocio";
+                                            message = "Señor usuario, ocurrió un error creando el plan de negocio.";
+                                            this.setState({ showMessageCreateBusiness: true });
+                                        }
                                     }
                                 }
                             }, (reason) => {
@@ -317,6 +319,18 @@ class FormBusinessPlan extends Component {
                 this.setState({
                     finalDateError: false
                 });
+            }
+        }
+    }
+
+    processValidation(field) {
+        if (field) {
+            switch (field.fieldName) {
+                case "opportunitiesAndThreats":
+                    this.setState({ opportunitiesError: field.message });
+                    break;
+                default:
+                    break;
             }
         }
     }

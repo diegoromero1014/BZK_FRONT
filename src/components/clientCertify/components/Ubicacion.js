@@ -9,9 +9,6 @@ import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 
 import {consultListWithParameterUbication} from '../../selectsComponent/actions'
 import * as selectConstants from "../../selectsComponent/constants";
-import {VALUE_REQUIERED, VALUE_XSS_INVALID} from "../../../constantsGlobal"
-
-import { xssValidation, validateFields } from '../../../actionsGlobal';
 
 class Ubicacion extends React.Component {
 
@@ -215,34 +212,5 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-var validationsWhenIsExclient = [
-    {
-        validation: 'xss',
-        fields: ['addressClient','telephone','country','province','city']
-    }
-]
-
-var validationsWhenIsNotExclient = [
-    {
-        validation: 'required',
-        fields: ['addressClient','telephone','country','province','city']
-    },
-    {
-        validation: 'xss',
-        fields: ['addressClient','telephone','country','province','city']
-    }
-]
-
-
-
-export function validationsRules(props) {
-
-    if (props.isExclient) {
-        return validationsWhenIsExclient;
-    } else {
-        return validationsWhenIsNotExclient;
-    }
-
-};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Ubicacion)

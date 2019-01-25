@@ -7,3 +7,4 @@ export const IMPLEMENTATION_TIMELINE="implementationTimeline";
 export const STATUS_NEED ="needFulfillmentStatus";
 export const PRODUCTS = "products";
 export const PRODUCT_FAMILY = "productFamily";
+export const VALIDATE_NEED = "VALIDATE_NEED";

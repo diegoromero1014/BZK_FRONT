@@ -185,7 +185,7 @@ export class ComponentListDistributionChannel extends Component {
     render() {
         const { distributionChannel, participation, showFormDistribution, fnShowForm,
             contribution, clientInformacion, changeValueListClient,
-            registrationRequired, origin } = this.props;
+            registrationRequired, origin, className } = this.props;
         const listDistribution = clientInformacion.get('listDistribution');
         return (
             <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 29px 0 25px' } : { width: '100%', border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 25px 0 29px' }}
@@ -215,7 +215,7 @@ export class ComponentListDistributionChannel extends Component {
                 {!clientInformacion.get('noAppliedDistributionChannel') &&
                     <Row style={{ padding: "0px 10px 10px 20px" }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "15px", textAlign: "right" }}>
-                            <button className="btn btn-secondary" disabled={showFormDistribution} type="button"
+                            <button className="btn btn-secondary" name={className} disabled={showFormDistribution} type="button"
                                 onClick={() => fnShowForm(DISTRIBUTION_CHANNEL, true)} style={showFormDistribution ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
                                 <ToolTipComponent text="Agregar canal de distribución">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>

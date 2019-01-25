@@ -7,6 +7,7 @@ import numeral from "numeral";
 import { Col, Row } from "react-flexbox-grid";
 
 import * as constants from "../selectsComponent/constants";
+import _ from 'lodash';
 
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
@@ -16,13 +17,8 @@ import SweetAlert from "../sweetalertFocus";
 import Errores from './components/Errores';
 import InfoCliente from './components/InfoCliente';
 import ActividadEconomica from './components/ActividadEconomica';
-import { validationRules as rulesActividadEconomica } from './components/ActividadEconomica';
 import Ubicacion from './components/Ubicacion';
-import { validationsRules as rulesUbicacion } from './components/Ubicacion';
 import InfoFinanciera from './components/InfoFinanciera';
-import { validate as validateInfoFinanciera } from './components/InfoFinanciera';
-import InfoFinancieraPN from './components/InfoFinancieraPN';
-import { validate as validateInfoFinancieraPN } from './components/InfoFinancieraPN';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
 
 import { goBack, redirectUrl } from "../globalComponents/actions";
@@ -39,23 +35,16 @@ import {
 import {
     sendErrorsUpdate, updateErrorsNotes
 } from "../clientDetailsInfo/actions";
-
-import { validateFields } from '../../actionsGlobal';
 import {
-    MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA, OPTION_REQUIRED
+    MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA
 } from '../../constantsGlobal';
 import {
     KEY_DESMONTE,
     KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME
 } from "../clientEdit/constants";
 
-const fields = [
-    'economicGroupName', 'nitPrincipal', 'groupEconomic', 'marcGeren', 'justifyNoGeren',
-    'centroDecision', 'necesitaLME', 'justifyNoLME', 'justifyExClient', 'taxNature', 'idCIIU', 'idSubCIIU',
-    'annualSales', 'assets', 'liabilities', 'operatingIncome', 'expenses', 'nonOperatingIncome', 'detailNonOperatingIncome',
-    'dateSalesAnnuals', 'addressClient', 'country', 'province', 'city', 'telephone', 'razonSocial', 'idTypeClient', 'idNumber',
-    'firstName', 'middleName', 'lastName', 'middleLastName'
-]
+import { fields, validations as validate } from './fieldsAndRulesCertifyClient';
+
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
     { 'id': '', 'value': "Seleccione..." },
@@ -89,72 +78,6 @@ let isExclient = false;
 let validateMarcManagement = true;
 //Establece si el ciente a editar es persona natural para controlar las validaciones
 
-const validate = (values, props) => {
-    let errors = {}
-    let errorScrollTop = false;
-
-    let isExclient = props.isExclient;
-
-    validateFields(values, rulesUbicacion(props), errors);
-    if (props.isPersonaNatural) {
-        validateInfoFinancieraPN(values, props, errors);
-    } else {
-        validateInfoFinanciera(values, props, errors);
-    }
-    validateFields(values, rulesActividadEconomica(props), errors);
-
-    if ((!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) && !props.isExclient) {
-        errors.economicGroupName = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.economicGroupName = null;
-    }
-
-    if ((values.marcGeren === null || values.marcGeren === undefined || values.marcGeren === '') && !isExclient) {
-        errors.marcGeren = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.marcGeren = null;
-    }
-
-    if (validateMarcManagement === false && !values.justifyNoGeren && !isExclient) {
-        errors.justifyNoGeren = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.justifyNoGeren = null;
-    }
-
-    if ((values.centroDecision === null || values.centroDecision === undefined || values.centroDecision === '') && !isExclient) {
-        errors.centroDecision = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.centroDecision = null;
-    }
-
-    if ((values.necesitaLME === null || values.necesitaLME === undefined || values.necesitaLME === '') && !isExclient) {
-        errors.necesitaLME = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.necesitaLME = null;
-    }
-
-    if (values.necesitaLME === 'false' && !values.justifyNoLME && !isExclient) {
-        errors.justifyNoLME = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.justifyNoLME = null;
-    }
-
-    if (!values.justifyExClient && isExclient) {
-        errors.justifyExClient = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.justifyExClient = null;
-    }
-
-    return errors;
-}
-
 //Componente genérico para cargar los selects de justificación
 function SelectsJustificacion(props) {
     if (props.visible !== undefined && props.visible !== null && props.visible.toString() === "false") {
@@ -164,11 +87,11 @@ function SelectsJustificacion(props) {
             </dt>
             <dt>
                 <ComboBox
+                    {...props.justify}
                     labelInput={props.labelInput}
                     onBlur={props.onBlur}
                     valueProp={props.valueProp}
                     textProp={props.textProp}
-                    {...props.justify}
                     data={props.data}
                     touched={true}
                     parentId="dashboardComponentScroll"
@@ -182,7 +105,7 @@ function SelectsJustificacion(props) {
     }
 }
 
-class clientCertify extends React.Component {
+export class ClientCertify extends React.Component {
     constructor(props) {
         super(props)
 
@@ -748,7 +671,7 @@ class clientCertify extends React.Component {
             justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient, idCIIU, idSubCIIU,
             annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, dateSalesAnnuals,
             addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber,}, 
-            handleSubmit, clientInformacion, selectsReducer, tabReducer, isPersonaNatural } = this.props;
+            handleSubmit, clientInformacion, selectsReducer, tabReducer } = this.props;
 
         var infoClient = clientInformacion.get('responseClientInfo');
 
@@ -766,14 +689,7 @@ class clientCertify extends React.Component {
 
                     {/* Inicio Informacion financiera  */}
 
-                    {
-                        isPersonaNatural ?
-                            <InfoFinancieraPN isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />
-                            :
-                            <InfoFinanciera isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />
-                    }
-
-
+                    <InfoFinanciera isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />
 
                     {/*  Fin Informacion financiera   */}
 
@@ -941,8 +857,8 @@ class clientCertify extends React.Component {
                         </Col>
                     </Row>
 
-                    <div  >
-                        <NotesClient />
+                    <div>
+                        <NotesClient className= "NotesCertify"/>
                     </div>
 
                     <div style={{ height: "100px" }}>
@@ -960,14 +876,13 @@ class clientCertify extends React.Component {
                         background: "rgba(255,255,255,0.75)"
                     }}>
                         <div style={{ width: "400px", height: "100%", position: "fixed", right: "0px" }}>
-
-                            <button className="btn"
+                            <button  id="btnGuardar" className="btn"
                                 style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
                                 onClick={this.clickButtonScrollTop} type="submit">
                                 <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
                             </button>
 
-                            <button className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
+                            <button id="btnCancelar" className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
                                 float: "right",
                                 margin: "8px 0px 0px 250px",
                                 position: "fixed",
@@ -1102,5 +1017,8 @@ function mapDispatchToProps(dispatch) {
 export default reduxForm({
     form: 'clientCertify',
     fields,
-    validate
-}, mapStateToProps, mapDispatchToProps)(clientCertify)
+    validate,
+    onSubmitFail: () => {
+        document.getElementById('dashboardComponentScroll').scrollTop = 0;
+    },
+}, mapStateToProps, mapDispatchToProps)(ClientCertify)

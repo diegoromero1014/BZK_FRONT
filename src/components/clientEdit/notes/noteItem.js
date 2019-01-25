@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
@@ -7,20 +7,8 @@ import { deleteNote, updateNote } from './actions';
 import { updateErrorsNotes } from '../../clientDetailsInfo/actions';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-
-import {
-    EDITAR,
-    MESSAGE_ERROR_SWEET_ALERT,
-    MESSAGE_LOAD_DATA,
-    OPTION_REQUIRED,
-    TITLE_ERROR_SWEET_ALERT,
-    VALUE_REQUIERED,
-    REGEX_SIMPLE_XSS,
-    REGEX_SIMPLE_XSS_STRING,
-    VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS_MESAGE
-} from "../../../constantsGlobal";
-import { xssValidation } from "../../../actionsGlobal";
+import {patternNotesClient, patternOfForbiddenCharacter} from '../../../validationsFields/patternsToValidateField';
+import {MESSAGE_WARNING_NOTES_CLIENT, MESSAGE_WARNING_FORBIDDEN_CHARACTER} from '../../../validationsFields/validationsMessages';
 
 class NoteItem extends Component {
     constructor(props) {
@@ -48,44 +36,42 @@ class NoteItem extends Component {
         });
         updateErrorsNotes(false, "");
 
-        
-            notesArray.forEach(function (note) {
-                if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
-                    updateErrorsNotes(true, "Debe ingresar todos los campos");
-                } else if (xssValidation(note.note)) {
-                    updateErrorsNotes(true, VALUE_XSS_INVALID);
-                }
-            });
-        
 
-        
+        notesArray.forEach(function (note) {
+            let message = null;
+            if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
+                updateErrorsNotes(true, "Debe ingresar todos los campos");
+            } else if (!_.isUndefined(note.note) && !_.isNull(note.note) && !_.isEmpty(note.note) && !patternNotesClient.test(note.note)) {
+                message = MESSAGE_WARNING_NOTES_CLIENT;
+                updateErrorsNotes(true, message);
+            } else if (!_.isNil(note.note) && patternOfForbiddenCharacter.test(note.note)) {
+                message = MESSAGE_WARNING_FORBIDDEN_CHARACTER;
+                updateErrorsNotes(true, message);
+            }
+        });
     }
 
     _deleteNote() {
-        const { index, deleteNote, updateErrorsNotes, onDeletedNote} = this.props;
-
+        const { index, deleteNote, onDeletedNote } = this.props;
         deleteNote(index);
         //Avisar al padre que una nota se elimino
         onDeletedNote();
-
-        
-
     }
 
     componentWillMount() {
         const { combo, body } = this.props;
         this.updateValue("combo", combo);
         this.updateValue("body", body);
-
-        
-            if (_.isEqual(body, "") || _.isEqual(body, null) || _.isEqual(combo, "") || _.isEqual(combo, null)) {
-                updateErrorsNotes(true, "Debe ingresar todos los campos");
-            } else if (xssValidation(body)) {
-                updateErrorsNotes(true, VALUE_XSS_INVALID);
-            }
-        
-
-        
+        let message = null;
+        if (_.isEqual(body, "") || _.isEqual(body, null) || _.isEqual(combo, "") || _.isEqual(combo, null)) {
+            updateErrorsNotes(true, "Debe ingresar todos los campos");
+        } else if (!_.isUndefined(body) && !_.isNull(body) && !_.isEmpty(body) && !patternNotesClient.test(body)) {
+            message = MESSAGE_WARNING_NOTES_CLIENT;
+            updateErrorsNotes(true, message);
+        } else if (!_.isNil(body) && patternOfForbiddenCharacter.test(body)) {
+            message = MESSAGE_WARNING_FORBIDDEN_CHARACTER;
+            updateErrorsNotes(true, message);
+        }
     }
 
     componentDidMount() {
@@ -95,7 +81,7 @@ class NoteItem extends Component {
     }
 
     render() {
-        const { combo, body, data, index, _onBlurField } = this.props;
+        const { data, index } = this.props;
         return (
             <div>
                 <Row>
@@ -121,14 +107,14 @@ class NoteItem extends Component {
                                 style={{ height: "22px !important", minHeight: "26px !important", width: "100%" }}
                                 value={this.state.body}
                                 max={600}
-                                onChange={this.updateValue.bind(this, 'body')}                                
+                                onChange={this.updateValue.bind(this, 'body')}
                             />
                         </div>
                     </Col>
                     <Col xs={1} md={1} lg={1} style={{ marginTop: "37px" }}>
-                        <button onClick={this._deleteNote}
+                        <button name={"trashNotes"} onClick={this._deleteNote}
                             className="btn btn-sm  btn-danger"
-                            type="button">
+                            type="button">                            
                             <i style={{ margin: '0em', fontSize: '1.2em' }} className="trash icon"></i>
                         </button>
                     </Col>

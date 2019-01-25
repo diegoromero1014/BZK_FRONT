@@ -16,7 +16,7 @@ import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 import {
-    checkRequired, processRules, checkClientDescription,
+    checkRequired, checkNumberLength, checkClientDescription,
     checkNumberInRange, checkMaxLength, checkFirstCharacter
 } from '../../../validationsFields/rulesField';
 
@@ -42,7 +42,7 @@ export class ComponentListMainSupplier extends Component {
 
         this.rulesNameSupplier = [checkRequired, checkClientDescription, checkMaxLength(50), checkFirstCharacter];
         this.rulesParticipation = [checkRequired, checkNumberInRange(0, 100)];
-        this.rulesTerm = [checkRequired];
+        this.rulesTerm = [checkRequired, checkNumberInRange(0, 9999), checkNumberLength(4)];
         this.relevantInformation = [checkClientDescription, checkFirstCharacter];
 
     }
@@ -201,7 +201,7 @@ export class ComponentListMainSupplier extends Component {
     render() {
         const { nameSupplier, participation, term, relevantInformation, showFormMainSupplier, fnShowForm,
             clientInformacion, changeValueListClient, valueCheckSectionMainSupplier, showCheckValidateSection,
-            functionChangeMainSupplier, registrationRequired, origin } = this.props;
+            functionChangeMainSupplier, registrationRequired, origin, className } = this.props;
         const listMainSupplier = clientInformacion.get(this.state.fieldReducerList);
         return (
             <div onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
@@ -242,7 +242,7 @@ export class ComponentListMainSupplier extends Component {
                 {!clientInformacion.get(this.state.fieldReducerNoApplied) &&
                     <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px' }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-70px", paddingRight: "16px", textAlign: "right" }}>
-                            <button className="btn" disabled={showFormMainSupplier} type="button"
+                            <button className="btn" name={className} disabled={showFormMainSupplier} type="button"
                                 onClick={() => fnShowForm(MAIN_SUPPLIER, true)} style={showFormMainSupplier ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
                                 <ToolTipComponent text="Agregar proveedor principal">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
