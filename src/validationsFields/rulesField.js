@@ -662,3 +662,17 @@ export const checkRequiredWhenFieldIsTrue = field => (value, fields, _) => {
     }
     return null;
 }
+
+export const checkRequiredWhenVarIsTrue = field => (value, fields, _) => {
+    if (fields[field] === true)  {
+        return checkRequired(value);
+    }
+    return null;
+}
+
+export const checkRequiredWhenVarIsFalse = field => (value, fields, _) => {
+    if (fields[field] === false)  {
+        return checkRequired(value);
+    }
+    return null;
+}

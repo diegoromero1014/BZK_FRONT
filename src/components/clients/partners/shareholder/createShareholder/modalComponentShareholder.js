@@ -3,6 +3,8 @@ import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import _ from 'lodash';
+import { fields, validations as validate, fieldsWithRules } from './filesAndRules';
+
 
 import SweetAlert from '../../../../sweetalertFocus';
 import ComboBox from '../../../../../ui/comboBox/comboBoxComponent';
@@ -14,7 +16,7 @@ import { redirectUrl } from '../../../../globalComponents/actions';
 import { toggleModalShareholder, clearSearchShareholder, searchShareholder, createShareholder } from './actions';
 import { shareholdersByClientFindServer, clearShareholderOrder, clearShareholderCreate } from '../actions';
 import { consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess } from '../../../../selectsComponent/actions';
-import { formValidateKeyEnter, nonValidateEnter, xssValidation } from '../../../../../actionsGlobal';
+import { formValidateKeyEnter, nonValidateEnter } from '../../../../../actionsGlobal';
 import { changeStateSaveData } from '../../../../dashboard/actions';
 
 import { NUMBER_RECORDS, NATURE_PERSON } from '../constants';
@@ -27,114 +29,15 @@ import {
   SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER, CLIENT_ID_TYPE, CLIENT_TYPE
 } from '../../../../selectsComponent/constants';
 
-const fields = ["tipoDocumento", "numeroDocumento", "tipoPersona",
-  "tipoAccionista", "paisResidencia", "primerNombre", "segundoNombre",
-  "primerApellido", "segundoApellido", "genero", "razonSocial", "direccion", "porcentajePart",
-  "pais", "departamento", "ciudad", "numeroIdTributaria", "observaciones"];
 const errors = {};
 
 var typeMessage = "error";
 var titleMessage = "Campos obligatorios";
 var message = "Señor usuario, debe seleccionar el tipo de documento e ingresar el documento del accionista.";
 
+let isNaturePerson = false;
+
 var valueTypeShareholder;
-
-const validate = (values) => {
-
-  if (!values.tipoDocumento) {
-    errors.tipoDocumento = "Debe seleccionar una opción";
-  } else {
-    errors.tipoDocumento = null;
-  }
-  if (!values.tipoPersona) {
-    errors.tipoPersona = "Debe seleccionar una opción";
-  } else {
-    errors.tipoPersona = null;
-  }
-  if (!values.tipoAccionista) {
-    errors.tipoAccionista = "Debe seleccionar una opción";
-  } else {
-    errors.tipoAccionista = null;
-  }
-
-  if (!values.numeroDocumento) {
-    errors.numeroDocumento = "Debe ingresar un valor";
-  } else if (xssValidation(values.numeroDocumento)) {
-    errors.numeroDocumento = VALUE_XSS_INVALID;
-  } else if (values.numeroDocumento.trim().length == 0) {
-    errors.numeroDocumento = "Debe ingresar un valor"
-  } else {
-    errors.numeroDocumento = null;
-  }
-
-  if (!values.primerNombre && valueTypeShareholder === NATURE_PERSON) {
-    errors.primerNombre = "Debe ingresar un valor";
-  } else if (xssValidation(values.primerNombre)) {
-    errors.primerNombre = VALUE_XSS_INVALID;
-  } else {
-    errors.primerNombre = null;
-  }
-
-  if (!values.primerApellido && valueTypeShareholder === NATURE_PERSON) {
-    errors.primerApellido = "Debe ingresar un valor";
-  } else if (xssValidation(values.primerApellido)) {
-    errors.primerApellido = VALUE_XSS_INVALID;
-  } else {
-    errors.primerApellido = null;
-  }
-
-  if (!values.razonSocial && valueTypeShareholder != NATURE_PERSON) {
-    errors.razonSocial = "Debe ingresar un valor";
-  } else if (xssValidation(values.razonSocial)) {
-    errors.razonSocial = VALUE_XSS_INVALID;
-  } else {
-    errors.razonSocial = null;
-  }
-
-  if (!values.porcentajePart) {
-    errors.porcentajePart = "Debe ingresar un valor";
-  } else if (xssValidation(values.porcentajePart)) {
-    errors.porcentajePart = VALUE_XSS_INVALID;
-  } else {
-    if (values.porcentajePart <= 0 || values.porcentajePart > 100) {
-      errors.porcentajePart = "Debe ingresar un valor mayor a 0 y menor o igual a 100";
-    } else {
-      errors.porcentajePart = null;
-    }
-  }
-
-  if (xssValidation(values.segundoNombre)) {
-    errors.segundoNombre = VALUE_XSS_INVALID;
-  } else {
-    errors.segundoNombre = null;
-  }
-
-  if (xssValidation(values.segundoApellido)) {
-    errors.segundoApellido = VALUE_XSS_INVALID;
-  } else {
-    errors.segundoApellido = null;
-  }
-
-  if (xssValidation(values.direccion)) {
-    errors.direccion = VALUE_XSS_INVALID;
-  } else {
-    errors.direccion = null;
-  }
-
-  if (xssValidation(values.numeroIdTributaria)) {
-    errors.numeroIdTributaria = VALUE_XSS_INVALID;
-  } else {
-    errors.numeroIdTributaria = null;
-  }
-
-  if (xssValidation(values.observaciones)) {
-    errors.observaciones = VALUE_XSS_INVALID;
-  } else {
-    errors.observaciones = null;
-  }
-
-  return errors;
-};
 
 class ModalComponentShareholder extends Component {
   constructor(props) {
@@ -158,8 +61,8 @@ class ModalComponentShareholder extends Component {
       personType: null,
       disabledPer: 'disabled',
       valueTypeShareholder: "",
-      showErrorXss: false,
-      validateTypePerson: false
+      validateTypePerson: false,
+      isNaturePerson: false,
     }
   }
 
@@ -209,18 +112,13 @@ class ModalComponentShareholder extends Component {
   }
 
   _searchShareholder() {
-    const { fields: { tipoDocumento, numeroDocumento },
+    const { errors, fields: { tipoDocumento, numeroDocumento },
 
       searchShareholder, clearSearchShareholder } = this.props;
     let numeroDocumentoTrimmed = numeroDocumento.value.trim();
     numeroDocumento.onChange(numeroDocumentoTrimmed);
-
-    if (tipoDocumento.value && numeroDocumentoTrimmed) {
-
-      if (xssValidation(numeroDocumentoTrimmed)) {
-        this.setState({ showErrorXss: true });
-        return;
-      }
+    console.log(errors);
+    if (tipoDocumento.value && numeroDocumentoTrimmed && !errors.numeroDocumento) {
 
       searchShareholder(tipoDocumento.value, numeroDocumentoTrimmed,
         window.sessionStorage.getItem('idClientSelected')).then((data) => {
@@ -293,12 +191,14 @@ class ModalComponentShareholder extends Component {
   }
 
   clientetypeChange(valor) {
-    const { fields: { tipoDocumento }, selectsReducer } = this.props;
+    const { fields: { tipoDocumento, isNaturePerson }, selectsReducer } = this.props;
     let clientTypes = selectsReducer.get(CLIENT_TYPE);
 
     if (clientTypes) {
       let clientType = clientTypes.find(type => type.id == valor);
       let idTypeMaster = "";
+      let newValue;
+      
       if (clientType != undefined) {
         if (clientType.key == NATURE_PERSON) {
           idTypeMaster = CONTACT_ID_TYPE;
@@ -306,10 +206,17 @@ class ModalComponentShareholder extends Component {
           idTypeMaster = CLIENT_ID_TYPE;
         }
         valueTypeShareholder = clientType.value;
-
+        
+        if (valueTypeShareholder != NATURE_PERSON) { 
+          newValue= false;
+        }else{
+          newValue= true;
+        }
+        isNaturePerson.onChange(newValue);
         this.setState({
           idTypeMaster: selectsReducer.get(idTypeMaster),
           valueTypeShareholder: clientType.key,
+          isNaturePerson: newValue,
           idTypeMasterSelector: idTypeMaster,
           personType: _.filter(selectsReducer.get(CLIENT_TYPE), ['id', parseInt(valor)]).pop()
         });
@@ -441,6 +348,7 @@ class ModalComponentShareholder extends Component {
                     max="25"
                     type="text"
                     disabled={this.state.disabled}
+                    touched={true}
                     {...numeroDocumento}
                   /></dd>
                 </dl>
@@ -470,9 +378,8 @@ class ModalComponentShareholder extends Component {
                   style={{ textAlign: "right" }}
                   type="text"
                   min={0}
-                  max="5"
-                  {...porcentajePart}
                   onBlur={val => this._handleBlurValueNumber(porcentajePart, val)}
+                  {...porcentajePart}
                 />
               </Col>
               <Col xs={12} md={12} lg={12} style={this.state.valueTypeShareholder != NATURE_PERSON ? { display: "block" } : { display: "none" }}>
@@ -480,7 +387,7 @@ class ModalComponentShareholder extends Component {
                 <InputComponent
                   name="razonSocial"
                   type="text"
-                  max="150"
+                  max="150"                  
                   {...razonSocial}
                 />
               </Col>
@@ -638,7 +545,6 @@ class ModalComponentShareholder extends Component {
           show={this.state.showErrorXss}
           title="Campos obligatorios"
           text={REGEX_SIMPLE_XSS_MESAGE}
-          onConfirm={() => this.setState({ showErrorXss: false })}
         />
       </form>
     );
