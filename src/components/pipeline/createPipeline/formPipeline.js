@@ -819,7 +819,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       {...commission}
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(1, commission, val, true)}
+                      onBlur={val => handleBlurValueNumber(2, commission, val, true)}
                       onFocus={val => handleFocusValueNumber(commission, commission.value)}
                     />
                   </div>
