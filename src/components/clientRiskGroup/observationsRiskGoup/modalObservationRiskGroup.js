@@ -27,35 +27,28 @@ class modalObservationRiskGroup extends Component {
 
     _saveObservation(e) {
         e.preventDefault();
-        const { saveObservationsRiskGroup, riskGroupReducer, infoRiskGroup, changeStateSaveData,
+        const { fields: { observation }, saveObservationsRiskGroup, riskGroupReducer, infoRiskGroup, changeStateSaveData,
             swtShowMessage, isOpen } = this.props;
         const observations = riskGroupReducer.get("observtionsRiskGroup");
         var arr_ob = Object.assign([], observations);
         var ob = Object.assign({}, arr_ob.pop());
-        if (stringValidate(this.state.observation)) {
-            if (xssValidation(this.state.observation)) {
-                swtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
+        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+        saveObservationsRiskGroup(ob.codeEntity, infoRiskGroup.entity, observation.value).then((data) => {
+            changeStateSaveData(false, "");
+            if (validateResponse(data)) {
+                isOpen();
+                swtShowMessage(MESSAGE_SUCCESS, 'Observaciones', 'Señor usuario, las observaciones se han guardado exitosamente');
+            } else {
+                swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             }
-            else {
-                changeStateSaveData(true, MESSAGE_SAVE_DATA);
-                saveObservationsRiskGroup(ob.codeEntity, infoRiskGroup.entity, this.state.observation).then((data) => {
-                    changeStateSaveData(false, "");
-                    if (validateResponse(data)) {
-                        isOpen();
-                        swtShowMessage(MESSAGE_SUCCESS, 'Observaciones', 'Señor usuario, las observaciones se han guardado exitosamente');
-                    } else {
-                        swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-                    }
-                }, (reason) => {
-                    changeStateSaveData(false, "");
-                    swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-                });
-            }
-        }
-        else {
-            swtShowMessage(MESSAGE_ERROR, 'Información faltante', 'Señor usuario, debe ingresar la observación');
-        }
+        }, (reason) => {
+            changeStateSaveData(false, "");
+            swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+        });
+
     }
+
+
 
 
 
