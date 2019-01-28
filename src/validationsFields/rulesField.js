@@ -18,7 +18,7 @@ import {
     patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant, 
     patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
     patternOfInventoryPolice, patternOfControlLinkedPayments, patternOfNameEntity, patternOfNoOperatingInCome,
-    patternOfOnlyAlphabeticalAndSlash
+    patternOfOnlyAlphabeticalAndSlash, patternOfTask
 } from './patternsToValidateField';
 
 import {
@@ -30,7 +30,7 @@ import {
     MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT, MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT,
     MESSAGE_WARNING_PLACE_OF_PREVISIT, MESSAGE_WARNING_RANGE, MESSAGE_WARNING_FORBIDDEN_CHARACTER,
     MESSAGE_WARNING_NUMBER_LENGTH, MESSAGE_WARNING_OTHER_REASON, MESSAGE_WARNING_NAME_ENTITY,
-    MESSAGE_WARNING_NO_OPERATING_IN_COME, MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH
+    MESSAGE_WARNING_NO_OPERATING_IN_COME, MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH, MESSAGE_REQUIRED_EMPLOYEE
 } from './validationsMessages';
 
 import {
@@ -532,6 +532,7 @@ export const checkClientNeighborhood = value => {
     return message;
 }
 
+
 export const checkNumbers = value => {
     let message = null;
 
@@ -659,6 +660,13 @@ export const checkNumberLength = length => value => {
 export const checkRequiredWhenFieldIsTrue = field => (value, fields, _) => {
     if (fields[field])  {
         return checkRequired(value);
+    }
+    return null;
+}
+export const checkRequiredEmployee = value => {
+    let message = null;
+    if((_.isNull(value))){ 
+        return MESSAGE_REQUIRED_EMPLOYEE
     }
     return null;
 }
