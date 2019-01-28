@@ -20,7 +20,8 @@ import {
     patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant,
     patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
     patternOfInventoryPolice, patternOfControlLinkedPayments, patternOfNameEntity, patternOfNoOperatingInCome,
-    patternOfOnlyAlphabeticalAndSlash, patternOfRiskGroupName,patternOfObservationRiskGroup,patternOfJustificationsRiskGroup
+    patternOfOnlyAlphabeticalAndSlash, patternOfRiskGroupName,patternOfObservationRiskGroup,patternOfJustificationsRiskGroup,
+    patternOfRiskExternalClientName,patternOfExternalClientNumberDocument
 } from './patternsToValidateField';
 
 import {
@@ -33,7 +34,8 @@ import {
     MESSAGE_WARNING_PLACE_OF_PREVISIT, MESSAGE_WARNING_RANGE, MESSAGE_WARNING_FORBIDDEN_CHARACTER,
     MESSAGE_WARNING_NUMBER_LENGTH, MESSAGE_WARNING_OTHER_REASON, MESSAGE_WARNING_NAME_ENTITY,
     MESSAGE_WARNING_NO_OPERATING_IN_COME, MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH, MESSAGE_WARNING_GROUP_NAME,
-    MESSAGE_WARNING_OBSERVATIONS_RISK_GROUP, MESSAGE_WARNING_JUSTIFICATIONS_RISK_GROUP
+    MESSAGE_WARNING_OBSERVATIONS_RISK_GROUP, MESSAGE_WARNING_JUSTIFICATIONS_RISK_GROUP,MESSAGE_WARNING_EXTERNAL_CLIENT_NAME,
+    MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT
 } from './validationsMessages';
 
 import {
@@ -688,6 +690,25 @@ export const checkJustificationsRiskGroup = value => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfJustificationsRiskGroup.test(value)) {
         message = MESSAGE_WARNING_JUSTIFICATIONS_RISK_GROUP;
+    }
+
+    return message;
+}
+
+export const checkGroupExternalClientName = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfRiskExternalClientName.test(value)) {
+        message = MESSAGE_WARNING_EXTERNAL_CLIENT_NAME;
+    }
+
+    return message;
+}
+export const checkGroupExternalClientNumberDocument = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && patternOfExternalClientNumberDocument.test(value)) {
+        message = MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT;
     }
 
     return message;

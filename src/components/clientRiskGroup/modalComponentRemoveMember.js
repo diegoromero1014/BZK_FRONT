@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid';
-import { redirectUrl } from '../globalComponents/actions';
 import { reduxForm } from 'redux-form';
-import Input from '../../ui/input/inputComponent';
 import Textarea from '../../ui/textarea/textareaComponent';
 
 import SweetAlert from '../sweetalertFocus';
@@ -13,16 +10,13 @@ import {
     VALUE_XSS_INVALID
 } from '../../constantsGlobal';
 import {
-    stringValidate, validateValueExist, validateResponse, formValidateKeyEnter, nonValidateEnter,
-    xssValidation
+    validateResponse, formValidateKeyEnter, nonValidateEnter
 } from '../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import { getClientsRiskGroup, removeClientRiskGroup } from './actions';
-import ClientsRiskGroup from './clientsRiskGroup';
 import { showLoading } from '../loading/actions';
 
 import _ from 'lodash';
-import $ from 'jquery';
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 
 

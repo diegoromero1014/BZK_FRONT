@@ -17,12 +17,12 @@ import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { editNameRiskGroup, getClientsRiskGroup, updateValuesRiskGroup, getAllNoveltiesRiskGroup } from "./actions";
 import { showLoading } from "../loading/actions";
 
-import { MESSAGE_LOAD_DATA, MODULE_RISK_GROUP, VALUE_REQUIERED, VALUE_XSS_INVALID } from "../../constantsGlobal";
+import { MESSAGE_LOAD_DATA, MODULE_RISK_GROUP } from "../../constantsGlobal";
 import {
     formValidateKeyEnter,
     nonValidateEnter,
     validatePermissionsByModule,
-    validateResponse, xssValidation
+    validateResponse
 } from "../../actionsGlobal";
 import { OPTION_RISK_GROUP, OPTION_NOVELTY } from './constants';
 

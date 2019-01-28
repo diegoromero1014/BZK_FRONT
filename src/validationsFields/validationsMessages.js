@@ -33,3 +33,5 @@ export const MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH = "Solo se permiten car
 export const MESSAGE_WARNING_GROUP_NAME = "Solo se permiten valores alfanuméricos y & /\\,;.#\"\"°()'-+´:";
 export const MESSAGE_WARNING_OBSERVATIONS_RISK_GROUP = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
 export const MESSAGE_WARNING_JUSTIFICATIONS_RISK_GROUP = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
+export const MESSAGE_WARNING_EXTERNAL_CLIENT_NAME = "Solo se permiten valores alfanuméricos y & /\\,;.#\"\"°()'-+´:";
+export const MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT = "Solo se permiten valores alfanuméricos y & /\\,;.#\"\"°()'-+´:";
