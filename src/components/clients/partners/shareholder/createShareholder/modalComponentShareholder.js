@@ -385,7 +385,7 @@ class ModalComponentShareholder extends Component {
                 <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <InputComponent
                   name="razonSocial"
-                  type="text"
+                  type={this.state.valueTypeShareholder != NATURE_PERSON ? 'text' : 'hidden' }
                   max="150"                  
                   {...razonSocial}
                 />
@@ -394,7 +394,7 @@ class ModalComponentShareholder extends Component {
                 <dt><span>Primer nombre (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <InputComponent
                   name="primerNombre"
-                  type="text"
+                  type={this.state.valueTypeShareholder === NATURE_PERSON ? 'text' : 'hidden' }
                   max="60"
                   {...primerNombre}
                 />
@@ -403,7 +403,7 @@ class ModalComponentShareholder extends Component {
                 <dt><span>Segundo nombre</span></dt>
                 <InputComponent
                   name="segundoNombre"
-                  type="text"
+                  type={this.state.valueTypeShareholder === NATURE_PERSON ? 'text' : 'hidden' }
                   max="60"
                   {...segundoNombre}
                 />
@@ -412,7 +412,7 @@ class ModalComponentShareholder extends Component {
                 <dt><span>Primer apellido (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <InputComponent
                   name="primerApellido"
-                  type="text"
+                  type={this.state.valueTypeShareholder === NATURE_PERSON ? 'text' : 'hidden' }
                   max="60"
                   {...primerApellido}
                 />
@@ -421,7 +421,7 @@ class ModalComponentShareholder extends Component {
                 <dt><span>Segundo apellido</span></dt>
                 <InputComponent
                   name="segundoApellido"
-                  type="text"
+                  type={this.state.valueTypeShareholder === NATURE_PERSON ? 'text' : 'hidden' }
                   max="60"
                   {...segundoApellido}
                 />
@@ -433,6 +433,7 @@ class ModalComponentShareholder extends Component {
                   valueProp={'id'}
                   textProp={'value'}
                   labelInput="Seleccione"
+                  disabled={this.state.valueTypeShareholder === NATURE_PERSON ? '' : 'disabled' }
                   data={selectsReducer.get(GENDER) || []}
                 />
               </Col>
