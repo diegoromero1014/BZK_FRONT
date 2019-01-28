@@ -12,7 +12,7 @@ import Textarea from "../../../ui/textarea/textareaComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { NUMBER_RECORDS } from "../constants";
-import { MESSAGE_SAVE_DATA, VALUE_XSS_INVALID, REQUEST_SUCCESS, REQUEST_INVALID_INPUT } from "../../../constantsGlobal";
+import { MESSAGE_SAVE_DATA, REQUEST_SUCCESS, REQUEST_INVALID_INPUT } from "../../../constantsGlobal";
 import { TASK_STATUS } from "../../selectsComponent/constants";
 import { redirectUrl } from "../../globalComponents/actions";
 import { htmlToText, xssValidation } from '../../../actionsGlobal';
