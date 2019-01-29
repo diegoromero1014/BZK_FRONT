@@ -12,59 +12,21 @@ import Textarea from "../../../ui/textarea/textareaComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { NUMBER_RECORDS } from "../constants";
-import { MESSAGE_SAVE_DATA, VALUE_XSS_INVALID } from "../../../constantsGlobal";
+import { MESSAGE_SAVE_DATA, REQUEST_SUCCESS, REQUEST_INVALID_INPUT } from "../../../constantsGlobal";
 import { TASK_STATUS } from "../../selectsComponent/constants";
 import { redirectUrl } from "../../globalComponents/actions";
 import { htmlToText, xssValidation } from '../../../actionsGlobal';
 import RichText from '../../richText/richTextComponent';
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
+import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 
 import _ from "lodash";
 import $ from "jquery";
 import moment from "moment";
 
-const fields = ["idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance"];
 var usersBanco = [];
 var idUsuario, nameUsuario;
 
-const validate = values => {
-    const errors = {};
-    if (!values.responsable) {
-        errors.responsable = "Debe ingresar un valor";
-    } else if (!values.idEmployee) {
-        errors.responsable = "Debe seleccionar un empleado";
-    } else {
-        errors.responsable = null;
-    }
-    if (!values.fecha) {
-        errors.fecha = "Debe seleccionar una opción";
-    } else {
-        errors.fecha = null;
-    }
-    
-    if (!values.tarea || _.isEmpty(htmlToText(values.tarea))) {
-        errors.tarea = "Debe ingresar un valor";
-    } else if (xssValidation(values.tarea, true)) {
-        errors.tarea = VALUE_XSS_INVALID;
-    } else {
-        errors.tarea = null;
-    }
-
-    if (!values.idEstado) {
-        errors.idEstado = "Debe ingresar un valor";
-    } else {
-        errors.idEstado = null;
-    }
-
-    if (xssValidation(values.advance)) {
-        errors.advance = VALUE_XSS_INVALID;
-    } else {
-        errors.advance = null;
-    }
-
-
-    return errors;
-};
 
 class ModalComponentPendingTask extends Component {
 
@@ -74,9 +36,11 @@ class ModalComponentPendingTask extends Component {
         this._updateValue = this._updateValue.bind(this);
         this._closeCreate = this._closeCreate.bind(this);
         this._handleCreatePendingTask = this._handleCreatePendingTask.bind(this);
+        this.processValidation =this.processValidation.bind(this);
         this.state = {
             showEx: false,
-            showEr: false
+            showEr: false,
+            tareaError: null
         }
     }
 
@@ -156,12 +120,23 @@ class ModalComponentPendingTask extends Component {
                 changeStateSaveData(false, "");
                 if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                     redirectUrl("/login");
-                } else {
-                    if ((_.get(data, 'payload.data.status') === 200)) {
+                } else { 
+                    
+                    if ((_.get(data, 'payload.data.status') === REQUEST_SUCCESS)) {
                         swtShowMessage('success','Creación de tarea','Señor usuario, la tarea se creó exitosamente.',{onConfirmCallback: this._closeCreate})
                         tasksByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
-                    } else {                       
-                        swtShowMessage('error','Error creando la tarea',"Señor usuario, ocurrió un error creando la tarea.");
+                    } else { 
+                        
+                        if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
+                            
+                            const validationsErrorFromServer = _.get(data, 'payload.data.data');
+                                _.forEach(validationsErrorFromServer, (field) => {
+                                this.processValidation(field);
+                            });
+                        } else {
+                                         
+                            swtShowMessage('error','Error creando la tarea',"Señor usuario, ocurrió un error creando la tarea.");
+                        }
                     }
                 }
             }, (reason) => {
@@ -172,7 +147,17 @@ class ModalComponentPendingTask extends Component {
             fecha.onChange('');
         }
     }
-
+    processValidation(field) {
+        if (field) {
+            switch (field.fieldName) {
+                case "task":
+                    this.setState({ tareaError: field.message });
+                    break;   
+                default:
+                    break;
+            }
+        }
+    }
     render() {
         const { fields: { responsable, fecha, idEstado, tarea, advance, idEmployee }, taskEdit, selectsReducer, handleSubmit } = this.props;
         return (
@@ -223,6 +208,7 @@ class ModalComponentPendingTask extends Component {
                                     value={responsable.value}
                                     onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                                     onSelect={val => this._updateValue(val)}
+                                    error={responsable.error || idEmployee.error}
                                     max="255"
                                 />
                             </Col>
@@ -238,6 +224,7 @@ class ModalComponentPendingTask extends Component {
                                     {...tarea}
                                     name="createTask"
                                     placeholder="Ingrese una tarea"
+                                    error={this.state.tareaError||tarea.error}
                                     style={{ width: '100%', height: '120px' }}
                                 />
                             </Col>

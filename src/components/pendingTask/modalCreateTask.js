@@ -12,7 +12,7 @@ import { getMasterDataFields } from '../selectsComponent/actions';
 import { TASK_STATUS } from '../selectsComponent/constants';
 import { createPendingTaskNew } from './createPendingTask/actions'
 import { clearUserTask, tasksByClientFindServer } from './actions';
-import { MESSAGE_SAVE_DATA, EDITAR, VALUE_XSS_INVALID } from '../../constantsGlobal';
+import { MESSAGE_SAVE_DATA, EDITAR, REQUEST_SUCCESS, REQUEST_INVALID_INPUT } from '../../constantsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { NUMBER_RECORDS } from './constants';
 import { changeStateSaveData } from '../dashboard/actions';
@@ -23,47 +23,12 @@ import moment from 'moment';
 import { htmlToText, validateValue, validateValueExist, formatLongDateToDateWithNameMonth, xssValidation } from '../../actionsGlobal';
 import RichText from '../richText/richTextComponent';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
+import { fields, validations as validate } from './createPendingTask/fieldsAndRulesForReduxForm';
 
-const fields = ["id", "idEmployee", "responsable", "fecha", "tarea", "idEstado", "advance", "visit", "dateEntity"];
 var usersBanco = [];
 var idUsuario, nameUsuario;
 let nameEntity;
 
-const validate = values => {
-  const errors = {};
-  if (!values.responsable) {
-    errors.responsable = "Debe ingresar un valor";
-  } else if (!values.idEmployee) {
-    errors.responsable = "Debe seleccionar un empleado";
-  } else {
-    errors.responsable = null;
-  }
-  if (!values.fecha) {
-    errors.fecha = "Debe seleccionar una opción";
-  } else {
-    errors.fecha = null;
-  }
-  if (!values.tarea || _.isEmpty(htmlToText(values.tarea))) {
-    errors.tarea = "Debe ingresar un valor";
-  } else if (xssValidation(values.tarea, true)) {
-    errors.tarea = VALUE_XSS_INVALID;
-  } else {
-    errors.tarea = null;
-  }
-  if (!values.idEstado) {
-    errors.idEstado = "Debe ingresar un valor";
-  } else {
-    errors.idEstado = null;
-  }
-
-  if (xssValidation(values.advance)) {
-    errors.advance = VALUE_XSS_INVALID;
-  } else {
-    errors.advance = null;
-  }
-
-  return errors;
-};
 
 class ModalCreateTask extends Component {
   constructor(props) {
@@ -71,13 +36,15 @@ class ModalCreateTask extends Component {
     this.state = {
       isEditable: false,
       taskEdited: false,
-      showErrtask: false
+      showErrtask: false,
+      tareaError: null
     };
     this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
     this._closeViewOrEditTask = this._closeViewOrEditTask.bind(this);
     this._handleEditTask = this._handleEditTask.bind(this);
     this._updateValue = this._updateValue.bind(this);
     this._editTask = this._editTask.bind(this);
+    this.processValidation =this.processValidation.bind(this);
   }
 
   _updateValue(value) {
@@ -189,14 +156,22 @@ class ModalCreateTask extends Component {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
         } else {
-          if (_.get(data, 'payload.data.status') === 200) {
+          if (_.get(data, 'payload.data.status') === REQUEST_SUCCESS) {
          
             swtShowMessage('success',"Edición de tarea","Señor usuario, la tarea se editó exitosamente.",{onConfirmCallback: this._closeViewOrEditTask});
 
           } else {
             
-            swtShowMessage('error',"Error editando tarea","Señor usuario, ocurrió un error editando la tarea.");
-
+              if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
+                              
+                const validationsErrorFromServer = _.get(data, 'payload.data.data');
+                    _.forEach(validationsErrorFromServer, (field) => {
+                    this.processValidation(field);
+                });
+                
+            } else {                
+                swtShowMessage('error','Error editando la tarea',"Señor usuario, ocurrió un error editando la tarea.");
+            }
           }
         }
       }, (reason) => {
@@ -207,7 +182,17 @@ class ModalCreateTask extends Component {
       fecha.onChange('');
     }
   }
-
+  processValidation(field) {
+    if (field) {
+        switch (field.fieldName) {
+            case "task":
+                this.setState({ tareaError: field.message });
+                break;   
+            default:
+                break;
+        }
+    }
+}
   render() {
     
     const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit, dateEntity, idEmployee },
@@ -279,7 +264,8 @@ class ModalCreateTask extends Component {
                   onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                   onSelect={val => this._updateValue(val)}
                   disabled={this.state.isEditable ? '' : 'disabled'}
-                  max="255"
+                  error={responsable.error || idEmployee.error}
+                  max="255" 
                 />
               </Col>
             </Row>
@@ -297,6 +283,7 @@ class ModalCreateTask extends Component {
                   style={{ width: '100%', height: '120px' }}
                   readOnly={!this.state.isEditable}
                   disabled={this.state.isEditable ? '' : 'disabled'}
+                  error= {this.state.tareaError||tarea.error}
                 />
               </Col>
             </Row>
