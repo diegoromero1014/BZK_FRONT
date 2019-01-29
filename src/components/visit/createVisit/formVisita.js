@@ -279,24 +279,25 @@ class FormVisita extends Component {
               message = "Señor usuario, la visita se creó de forma exitosa.";
               this.setState({ showMessageCreateVisit: true });
             } else if ((_.get(data, 'payload.data.status') === 500)) {
-            const validationFromServer = _.get(data, 'payload.data.data');
-            
-            _.forEach(validationFromServer, function (field) {
-              that.processValidation(field);
-            });
+              const validationFromServer = _.get(data, 'payload.data.data');
 
-            typeMessage = "error";
-            swtShowMessage('error', "Creación previsita", "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.", { onConfirmCallback: this._closeMessageCreateVisit });
-          } else {
-            typeMessage = "error";
-            titleMessage = "Creación visita";
-            message = "Señor usuario, ocurrió un error creando la visita.";
-            this.setState({ showMessageCreateVisit: true });
-            idPrevisitSeleted = null;
-            clearIdPrevisit();
-            clearParticipants();
+              _.forEach(validationFromServer, function (field) {
+                that.processValidation(field);
+              });
+
+              typeMessage = "error";
+              swtShowMessage('error', "Creación previsita", "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.", { onConfirmCallback: this._closeMessageCreateVisit });
+            } else {
+              typeMessage = "error";
+              titleMessage = "Creación visita";
+              message = "Señor usuario, ocurrió un error creando la visita.";
+              this.setState({ showMessageCreateVisit: true });
+              idPrevisitSeleted = null;
+              clearIdPrevisit();
+              clearParticipants();
+            }
           }
-        }}, () => {
+        }, () => {
           changeStateSaveData(false, "");
           typeMessage = "error";
           titleMessage = "Creación visita";
@@ -316,15 +317,11 @@ class FormVisita extends Component {
 
   processValidation(field) {
     if (field && field.fieldName) {
-        switch (field.fieldName) {
-            case 'comments':
-                this.setState({ conclusionsVisitError: field.message });
-                break;            
-            default:
-                break;
-        }
+      if (_.isEqual(field.fieldName, 'comments')) {
+        this.setState({ conclusionsVisitError: field.message });
+      }
     }
-}
+  }
 
   _onCloseButton() {
     message = "¿Está seguro que desea salir de la pantalla de creación de visita?";
