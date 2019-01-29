@@ -29,10 +29,8 @@ import { showLoading } from "../../loading/actions";
 import { detailPrevisit } from "../../previsita/actions";
 import {
     formValidateKeyEnter,
-    htmlToText,
     nonValidateEnter,
-    shorterStringValue,
-    validateValueExist, xssValidation
+    validateValueExist
 } from "../../../actionsGlobal";
 
 import { VISIT_TYPE } from "../../selectsComponent/constants";
@@ -40,17 +38,13 @@ import {
     AEC_NO_APLIED,
     EDITAR,
     FILE_OPTION_SHOPPING_MAP,
-    getTitleConclusionsVisit,
     MESSAGE_SAVE_DATA,
     SAVE_DRAFT,
     SAVE_PUBLISHED,
     TITLE_BANC_PARTICIPANTS,
     TITLE_CLIENT_PARTICIPANTS,
     TITLE_CONCLUSIONS_VISIT,
-    TITLE_OTHERS_PARTICIPANTS,
-    VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS_MESAGE,
-    REGEX_SIMPLE_XSS_TITLE
+    TITLE_OTHERS_PARTICIPANTS
 } from "../../../constantsGlobal";
 import {
     KEY_PARTICIPANT_CLIENT,
@@ -58,6 +52,10 @@ import {
     KEY_PARTICIPANT_OTHER
 } from "../../participantsVisitPre/constants";
 import { KEY_TYPE_VISIT } from "../constants";
+
+import {
+    checkRequired, checkRichTextRequired
+} from './../../../validationsFields/rulesField';
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral", "participantesCliente", "participantesBanco", "participantesOtros", "pendientes"];
 let dateVisitLastReview;
@@ -162,8 +160,7 @@ class FormEdit extends Component {
     }
 
     _submitCreateVisita() {
-        const {
-            fields: { tipoVisita, fechaVisita, desarrolloGeneral }, participants, visitReducer, tasks,
+        const { participants, visitReducer, tasks,
             changeStateSaveData, clearIdPrevisit
         } = this.props;
         const detailVisit = visitReducer.get('detailVisit');
@@ -171,35 +168,35 @@ class FormEdit extends Component {
         let errorMessageTitle = "Campos obligatorios";
         let errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
 
-        if (this.state.typeVisit === null || this.state.typeVisit === undefined || this.state.typeVisit === "") {
+        const messageRequiredTypePrevisit = checkRequired(this.state.typeVisit);
+        if (!_.isNull(messageRequiredTypePrevisit)) {
             errorInForm = true;
             this.setState({
-                typeVisitError: "Debe seleccionar una opción"
+                typeVisitError: messageRequiredTypePrevisit
             });
         }
-        if (this.state.dateVisit === null || this.state.dateVisit === undefined || this.state.dateVisit === "") {
+
+        const messageRequiredDatePrevisit = checkRequired(this.state.dateVisit);
+        if (!_.isNull(messageRequiredDatePrevisit)) {
             errorInForm = true;
             this.setState({
-                dateVisitError: "Debe seleccionar una opción"
+                dateVisitError: messageRequiredDatePrevisit
             });
         }
-        if ((_.isEmpty(htmlToText(this.state.conclusionsVisit)) || this.state.conclusionsVisit === null || this.state.conclusionsVisit === undefined || this.state.conclusionsVisit === "") && typeButtonClick === SAVE_PUBLISHED) {
-            errorInForm = true;
-            this.setState({
-                conclusionsVisitError: "Debe ingresar la conclusión de la visita"
-            });
-        } else if (xssValidation(this.state.conclusionsVisit, true)) {
-            errorInForm = true;
-            this.setState({
-                conclusionsVisitError: VALUE_XSS_INVALID
-            });
-            errorMessageTitle = REGEX_SIMPLE_XSS_TITLE;
-            errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+
+        if (typeButtonClick === SAVE_PUBLISHED) {
+            const messageRequiredTargetPrevisit = checkRichTextRequired(this.state.conclusionsVisit);
+            if (!_.isNull(messageRequiredTargetPrevisit)) {
+                errorInForm = true;
+                this.setState({
+                    conclusionsVisitError: messageRequiredTargetPrevisit
+                });
+            }
         }
 
         if (!errorInForm) {
             let dataClient = [], dataBanco = [], dataOthers = [];
-            _.forEach(participants.toArray(), function (value, key) {
+            _.forEach(participants.toArray(), function (value) {
                 if (_.isEqual(value.tipoParticipante, KEY_PARTICIPANT_CLIENT)) {
                     let contactParticipantCliente = null;
                     if (value.idParticipante !== null && value.idParticipante !== '' && value.idParticipante !== undefined) {
@@ -264,6 +261,7 @@ class FormEdit extends Component {
                     "preVisitId": idPrevisitSeleted
                 }
                 const { createVisti } = this.props;
+                const that = this;
                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
                 clearIdPrevisit();
                 createVisti(visitJson).then((data) => {
@@ -276,6 +274,15 @@ class FormEdit extends Component {
                             titleMessage = "Edición visita";
                             message = "Señor usuario, la visita se editó de forma exitosa.";
                             this.setState({ showMessageCreateVisit: true });
+                        } else if ((_.get(data, 'payload.data.status') === 500)) {
+                            const validationFromServer = _.get(data, 'payload.data.data');
+
+                            _.forEach(validationFromServer, function (field) {
+                                that.processValidation(field);
+                            });
+
+                            typeMessage = "error";
+                            swtShowMessage('error', "Creación previsita", "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.", { onConfirmCallback: this._closeMessageCreateVisit });
                         } else {
                             typeMessage = "error";
                             titleMessage = "Edición visita";
@@ -283,7 +290,7 @@ class FormEdit extends Component {
                             this.setState({ showMessageCreateVisit: true });
                         }
                     }
-                }, (reason) => {
+                }, () => {
                     changeStateSaveData(false, "");
                     typeMessage = "error";
                     titleMessage = "Edición visita";
@@ -298,6 +305,18 @@ class FormEdit extends Component {
             titleMessage = errorMessageTitle;
             message = errorMessage;
             this.setState({ showMessageCreateVisit: true });
+        }
+    }
+
+    processValidation(field) {
+        if (field && field.fieldName) {
+            switch (field.fieldName) {
+                case 'comments':
+                    this.setState({ conclusionsVisitError: field.message });
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -353,14 +372,14 @@ class FormEdit extends Component {
     }
 
     componentWillMount() {
-        const { nonValidateEnter, getMasterDataFields, visitReducer, id, detailVisit, filterUsersBanco, changeIdPrevisit, addTask, showLoading } = this.props;
+        const { nonValidateEnter, getMasterDataFields, id, detailVisit, changeIdPrevisit, addTask, showLoading } = this.props;
         nonValidateEnter(true);
         idPrevisitSeleted = null;
         this.setState({ idVisit: id });
         getMasterDataFields([VISIT_TYPE]);
         showLoading(true, 'Cargando...');
         detailVisit(id).then((result) => {
-            const { fields: { participantesCliente }, addListParticipant, visitReducer, contactsByClient } = this.props;
+            const {  addListParticipant } = this.props;
             let part = result.payload.data.data;
             let listParticipants = [];
             dateVisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
@@ -376,17 +395,19 @@ class FormEdit extends Component {
             _.forIn(part.participatingContacts, function (value, key) {
                 const uuid = _.uniqueId('participanClient_');
                 let clientParticipant = {
-                    tipoParticipante: KEY_PARTICIPANT_CLIENT,
-                    idParticipante: value.id,
+                    tipoParticipante: 'client',
+                    idParticipante: value.contact,
                     nombreParticipante: value.contactName,
-                    cargo: !validateValueExist(value.contactPositionName) ? '' : ' - ' + value.contactPositionName,
+                    cargo: value.contactPositionName === null || value.contactPositionName === undefined || value.contactPositionName === '' ? ''
+                        : ' - ' + value.contactPositionName,
                     empresa: '',
-                    estiloSocial: !validateValueExist(value.socialStyleName) ? '' : ' - ' + value.socialStyleName,
-                    actitudBanco: !validateValueExist(value.attitudeOverGroupName) ? '' : ' - ' + value.attitudeOverGroupName,
+                    estiloSocial: value.socialStyleName === null || value.socialStyleName === undefined || value.socialStyleName === '' ? ''
+                        : ' - ' + value.socialStyleName,
+                    actitudBanco: value.attitudeOverGroupName === null || value.attitudeOverGroupName === undefined || value.attitudeOverGroupName === '' ? ''
+                        : ' - ' + value.attitudeOverGroupName,
                     fecha: Date.now(),
                     uuid,
                     order: _.isNull(value.order) ? 0 : value.order
-
                 }
                 listParticipants.push(clientParticipant);
             });
@@ -395,11 +416,13 @@ class FormEdit extends Component {
             _.forIn(part.participatingEmployees, function (value, key) {
                 const uuid = _.uniqueId('participanBanco_');
                 let clientParticipant = {
-                    tipoParticipante: KEY_PARTICIPANT_BANCO,
-                    idParticipante: value.id,
+                    tipoParticipante: 'banco',
+                    idParticipante: value.employee,
                     nombreParticipante: value.employeeName,
-                    cargo: !validateValueExist(value.positionName) ? '' : ' - ' + value.positionName,
-                    empresa: !validateValueExist(value.lineBusinessName) ? '' : ' - ' + value.lineBusinessName,
+                    cargo: value.positionName === null || value.positionName === undefined || value.positionName === '' ? ''
+                        : ' - ' + value.positionName,
+                    empresa: value.lineBusinessName === null || value.lineBusinessName === undefined || value.lineBusinessName === '' ? ''
+                        : ' - ' + value.lineBusinessName,
                     estiloSocial: '',
                     actitudBanco: '',
                     fecha: Date.now(),
@@ -413,22 +436,26 @@ class FormEdit extends Component {
             _.forIn(part.relatedEmployees, function (value, key) {
                 const uuid = _.uniqueId('participanOther_');
                 let otherParticipant = {
-                    tipoParticipante: KEY_PARTICIPANT_OTHER,
+                    tipoParticipante: 'other',
                     idParticipante: value.id,
                     nombreParticipante: value.name,
-                    cargo: !validateValueExist(value.position) ? '' : ' - ' + value.position,
-                    empresa: !validateValueExist(value.company) ? '' : ' - ' + value.company,
+                    cargo: value.position === null || value.position === undefined || value.position === '' ? ''
+                        : ' - ' + value.position,
+                    empresa: value.company === null || value.company === undefined || value.company === '' ? ''
+                        : ' - ' + value.company,
                     estiloSocial: '',
                     actitudBanco: '',
                     fecha: Date.now(),
                     uuid,
                     order: _.isNull(value.order) ? 0 : value.order
                 }
+
                 listParticipants.push(otherParticipant);
             });
+
             addListParticipant(listParticipants);
             //Adicionar tareas
-            _.forIn(part.userTasks, function (value, key) {
+            _.forIn(part.userTasks, function (value) {
                 const uuid = _.uniqueId('task_');
                 let task = {
                     uuid,
@@ -471,7 +498,7 @@ class FormEdit extends Component {
             //Solo agrego los participantes de la previsita si no se han adicionado ningúno en la visita
             if (_.isNull(valuesClient) || _.size(valuesClient) <= 0) {
                 //Adicionar participantes por parte del cliente
-                _.forIn(previsitConsult.participatingContacts, function (value, key) {
+                _.forIn(previsitConsult.participatingContacts, function (value) {
                     const uuid = _.uniqueId('participanClient_');
                     var clientParticipant = {
                         tipoParticipante: KEY_PARTICIPANT_CLIENT,
@@ -492,7 +519,7 @@ class FormEdit extends Component {
 
             if (_.isNull(valuesBanco) || _.size(valuesBanco) <= 0) {
                 //Adicionar participantes por parte de bancolombia
-                _.forIn(previsitConsult.participatingEmployees, function (value, key) {
+                _.forIn(previsitConsult.participatingEmployees, function (value) {
                     const uuid = _.uniqueId('participanBanco_');
                     var clientParticipant = {
                         tipoParticipante: KEY_PARTICIPANT_BANCO,
@@ -513,7 +540,7 @@ class FormEdit extends Component {
 
             if (_.isNull(valuesOthers) || _.size(valuesOthers) <= 0) {
                 //Adicionar otros participantes
-                _.forIn(previsitConsult.relatedEmployees, function (value, key) {
+                _.forIn(previsitConsult.relatedEmployees, function (value) {
                     const uuid = _.uniqueId('participanOther_');
                     var otherParticipant = {
                         tipoParticipante: KEY_PARTICIPANT_OTHER,
@@ -546,8 +573,7 @@ class FormEdit extends Component {
 
     render() {
         const {
-            fields: { tipoVisita, fechaVisita, desarrolloGeneral, participantesCliente, participantesBanco, participantesOtros, pendientes },
-            selectsReducer, handleSubmit, visitReducer, clientInformacion, reducerGlobal, navBar
+            selectsReducer, handleSubmit, visitReducer, clientInformacion, reducerGlobal
         } = this.props;
         const ownerDraft = visitReducer.get('ownerDraft');
         const detailVisit = visitReducer.get('detailVisit');
@@ -946,7 +972,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion, reducerGlobal, navBar }, ownerProps) {
+function mapStateToProps({ selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion, reducerGlobal, navBar }) {
     const detailVisit = visitReducer.get('detailVisit');
     if (detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)) {
         let visitTime = detailVisit.data.visitTime;

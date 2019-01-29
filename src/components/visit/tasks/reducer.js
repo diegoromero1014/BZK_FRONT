@@ -39,6 +39,8 @@ export default (state = initialState, action) => {
           return item;
         }
       );
+    case constants.VALIDATE_TASK:
+      return state;
     default:
       return state;
   }

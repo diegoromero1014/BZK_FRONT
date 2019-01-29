@@ -35,7 +35,9 @@ import {
     MESSAGE_WARNING_NUMBER_LENGTH, MESSAGE_WARNING_OTHER_REASON, MESSAGE_WARNING_NAME_ENTITY,
     MESSAGE_WARNING_NO_OPERATING_IN_COME, MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH, MESSAGE_WARNING_GROUP_NAME,
     MESSAGE_WARNING_OBSERVATIONS_RISK_GROUP, MESSAGE_WARNING_JUSTIFICATIONS_RISK_GROUP, MESSAGE_WARNING_EXTERNAL_CLIENT_NAME,
-    MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT
+    MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT,
+    MESSAGE_WARNING_NO_OPERATING_IN_COME, MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH, MESSAGE_REQUIRED_EMPLOYEE
+
 } from './validationsMessages';
 
 import {
@@ -91,6 +93,15 @@ export const checkForValueSubSegment = (value, fields, props) => {
         }
     }
 
+    return message;
+}
+
+export const checkRequiredResponsible = (value, fields) => {
+    let message = null;
+    let valueIdEmployee = fields.idEmployee;
+    if(_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value) || _.toString(valueIdEmployee).length < 1) {
+        message = MESSAGE_REQUIRED_VALUE;
+    }
     return message;
 }
 
@@ -669,6 +680,7 @@ export const checkRequiredWhenFieldIsTrue = field => (value, fields, _) => {
 }
 
 
+
 export const checkGroupName = value => {
     let message = null;
 
@@ -714,6 +726,14 @@ export const checkGroupExternalClientNumberDocument = value => {
 
     return message;
 }
+export const checkRequiredEmployee = value => {
+    let message = null;
+    if(_.isNull(value)||_.isUndefined(value)){ 
+        return MESSAGE_REQUIRED_EMPLOYEE
+    }
+    return null;
+
+}
 export const checkRequiredWhenVarIsTrue = field => (value, fields, _) => {
     if (fields[field] === true) {
         return checkRequired(value);
@@ -728,3 +748,4 @@ export const checkRequiredWhenVarIsFalse = field => (value, fields, _) => {
     return null;
 
 }
+
