@@ -50,7 +50,7 @@ class ModalTask extends Component {
             tarea.onChange(taskEdit.tarea);
             fecha.onChange(moment(taskEdit.fechaForm, 'DD/MM/YYYY'));
         }
-    }    
+    }
 
     _closeCreate() {
         const { isOpen, taskEdit } = this.props;
@@ -74,7 +74,6 @@ class ModalTask extends Component {
         const selector = $('.ui.search.responsable');
 
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
-            //e.preventDefault();
             if (responsable.value !== "" && responsable.value !== null && responsable.value !== undefined) {
                 if (responsable.value.length < 3) {
                     swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
@@ -130,12 +129,8 @@ class ModalTask extends Component {
                 const error = errors[index];
                 const field = error.fieldName;
 
-                switch (field) {
-                    case "task":
-                        this.errorTask = error.message;
-                        break;
-                    default:
-                        break;
+                if (_.isEqual(field, 'task')) {
+                    this.errorTask = error.message;
                 }
             }
 

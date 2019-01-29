@@ -310,12 +310,8 @@ class FormEdit extends Component {
 
     processValidation(field) {
         if (field && field.fieldName) {
-            switch (field.fieldName) {
-                case 'comments':
-                    this.setState({ conclusionsVisitError: field.message });
-                    break;
-                default:
-                    break;
+            if (_.isEqual(field.fieldName, 'comments')) {
+                this.setState({ conclusionsVisitError: field.message });
             }
         }
     }
