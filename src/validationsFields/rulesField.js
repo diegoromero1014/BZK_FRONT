@@ -662,7 +662,6 @@ export const checkRequiredWhenFieldIsTrue = field => (value, fields, _) => {
     }
     return null;
 }
-<<<<<<< HEAD
 export const checkRequiredEmployee = value => {
     let message = null;
     if(_.isNull(value)||_.isUndefined(value)){ 
@@ -670,8 +669,6 @@ export const checkRequiredEmployee = value => {
     }
     return null;
 }
-=======
-
 export const checkRequiredWhenVarIsTrue = field => (value, fields, _) => {
     if (fields[field] === true)  {
         return checkRequired(value);
@@ -685,4 +682,4 @@ export const checkRequiredWhenVarIsFalse = field => (value, fields, _) => {
     }
     return null;
 }
->>>>>>> 3411f5f79efd555d034f51a48adbbfc60c3a86e6
+
