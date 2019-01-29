@@ -89,6 +89,15 @@ export const checkForValueSubSegment = (value, fields, props) => {
     return message;
 }
 
+export const checkRequiredResponsible = (value, fields) => {
+    let message = null;
+    let valueIdEmployee = fields.idEmployee;
+    if(_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value) || _.toString(valueIdEmployee).length < 1) {
+        message = MESSAGE_REQUIRED_VALUE;
+    }
+    return message;
+}
+
 export const checkForValueSubSegmentEditClient = (value, fields, props) => {
     let message = null;
     let segmentValue = _.get(_.find(props.selectsReducer.get(SEGMENTS), ['id', parseInt(fields.segment)]), 'value');

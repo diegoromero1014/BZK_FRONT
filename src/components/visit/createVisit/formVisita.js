@@ -20,7 +20,7 @@ import { redirectUrl } from "../../globalComponents/actions";
 import { consultDataSelect, consultList, getMasterDataFields } from "../../selectsComponent/actions";
 import { clearIdPrevisit, createVisti } from "../actions";
 import { downloadFilePdf } from "../../clientInformation/actions";
-import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, htmlToText, validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from "../../../actionsGlobal";
+import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateValueExist, validateIsNullOrUndefined } from "../../../actionsGlobal";
 import { detailPrevisit } from "../../previsita/actions";
 import { addParticipant, clearParticipants } from "../../participantsVisitPre/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
@@ -36,14 +36,14 @@ import {
   TITLE_BANC_PARTICIPANTS,
   TITLE_CLIENT_PARTICIPANTS,
   TITLE_CONCLUSIONS_VISIT,
-  TITLE_OTHERS_PARTICIPANTS,
-  VALUE_XSS_INVALID,
-  REGEX_SIMPLE_XSS_MESAGE,
-  REGEX_SIMPLE_XSS_TITLE
+  TITLE_OTHERS_PARTICIPANTS
 } from "../../../constantsGlobal";
 import { LAST_VISIT_REVIEW } from "../../../constantsParameters";
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from "../../participantsVisitPre/constants";
-import { MENU_CLOSED } from "../../navBar/constants";
+
+import {
+  checkRequired, checkRichTextRequired
+} from './../../../validationsFields/rulesField';
 
 import _ from "lodash";
 import moment from "moment";
@@ -149,37 +149,36 @@ class FormVisita extends Component {
   }
 
   _submitCreateVisita() {
-    const { fields: { tipoVisita, fechaVisita, desarrolloGeneral },
+    const {
       participants, tasks, createVisti, clearIdPrevisit, clearParticipants, changeStateSaveData } = this.props;
     var errorInForm = false;
     let errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
     let errorMessageTitle = "Campos obligatorios";
 
-    if (this.state.typeVisit === null || this.state.typeVisit === undefined || this.state.typeVisit === "") {
+    const messageRequiredTypePrevisit = checkRequired(this.state.typeVisit);
+    if (!_.isNull(messageRequiredTypePrevisit)) {
       errorInForm = true;
       this.setState({
-        typeVisitError: "Debe seleccionar una opción"
-      });
-    }
-    if (this.state.dateVisit === null || this.state.dateVisit === undefined || this.state.dateVisit === "") {
-      errorInForm = true;
-      this.setState({
-        dateVisitError: "Debe seleccionar una opción"
+        typeVisitError: messageRequiredTypePrevisit
       });
     }
 
-    if ((_.isEmpty(htmlToText(this.state.conclusionsVisit)) || this.state.conclusionsVisit === null || this.state.conclusionsVisit === undefined || this.state.conclusionsVisit === "") && typeButtonClick === SAVE_PUBLISHED) {
+    const messageRequiredDatePrevisit = checkRequired(this.state.dateVisit);
+    if (!_.isNull(messageRequiredDatePrevisit)) {
       errorInForm = true;
       this.setState({
-        conclusionsVisitError: "Debe ingresar la conclusión de la visita"
+        dateVisitError: messageRequiredDatePrevisit
       });
-    } else if (xssValidation(this.state.conclusionsVisit, true)) {
-      errorInForm = true;
-      this.setState({
-        conclusionsVisitError: VALUE_XSS_INVALID
-      });
-      errorMessageTitle = REGEX_SIMPLE_XSS_TITLE;
-      errorMessage = REGEX_SIMPLE_XSS_MESAGE;
+    }
+
+    if (typeButtonClick === SAVE_PUBLISHED) {
+      const messageRequiredTargetPrevisit = checkRichTextRequired(this.state.conclusionsVisit);
+      if (!_.isNull(messageRequiredTargetPrevisit)) {
+        errorInForm = true;
+        this.setState({
+          conclusionsVisitError: messageRequiredTargetPrevisit
+        });
+      }
     }
 
     if (!errorInForm) {
@@ -266,7 +265,7 @@ class FormVisita extends Component {
           "documentStatus": typeButtonClick,
           "preVisitId": idPrevisitSeleted === null || idPrevisitSeleted === undefined || idPrevisitSeleted === "" ? null : idPrevisitSeleted
         }
-
+        const that = this;
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
 
         createVisti(visitJson).then((data) => {
@@ -279,17 +278,25 @@ class FormVisita extends Component {
               titleMessage = "Creación visita";
               message = "Señor usuario, la visita se creó de forma exitosa.";
               this.setState({ showMessageCreateVisit: true });
-            } else {
-              typeMessage = "error";
-              titleMessage = "Creación visita";
-              message = "Señor usuario, ocurrió un error creando la visita.";
-              this.setState({ showMessageCreateVisit: true });
-              idPrevisitSeleted = null;
-              clearIdPrevisit();
-              clearParticipants();
-            }
+            } else if ((_.get(data, 'payload.data.status') === 500)) {
+            const validationFromServer = _.get(data, 'payload.data.data');
+            
+            _.forEach(validationFromServer, function (field) {
+              that.processValidation(field);
+            });
+
+            typeMessage = "error";
+            swtShowMessage('error', "Creación previsita", "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.", { onConfirmCallback: this._closeMessageCreateVisit });
+          } else {
+            typeMessage = "error";
+            titleMessage = "Creación visita";
+            message = "Señor usuario, ocurrió un error creando la visita.";
+            this.setState({ showMessageCreateVisit: true });
+            idPrevisitSeleted = null;
+            clearIdPrevisit();
+            clearParticipants();
           }
-        }, (reason) => {
+        }}, () => {
           changeStateSaveData(false, "");
           typeMessage = "error";
           titleMessage = "Creación visita";
@@ -306,6 +313,18 @@ class FormVisita extends Component {
       this.setState({ showMessageCreateVisit: true });
     }
   }
+
+  processValidation(field) {
+    if (field && field.fieldName) {
+        switch (field.fieldName) {
+            case 'comments':
+                this.setState({ conclusionsVisitError: field.message });
+                break;            
+            default:
+                break;
+        }
+    }
+}
 
   _onCloseButton() {
     message = "¿Está seguro que desea salir de la pantalla de creación de visita?";
@@ -428,7 +447,7 @@ class FormVisita extends Component {
       //Solo agrego los participantes de la previsita si no se han adicionado ningúno en la visita
       if (_.isNull(valuesClient) || _.size(valuesClient) <= 0) {
         //Adicionar participantes por parte del cliente
-        _.forIn(previsitConsult.participatingContacts, function (value, key) {
+        _.forIn(previsitConsult.participatingContacts, function (value) {
           const uuid = _.uniqueId('participanClient_');
           var clientParticipant = {
             tipoParticipante: KEY_PARTICIPANT_CLIENT,
@@ -449,7 +468,7 @@ class FormVisita extends Component {
 
       if (_.isNull(valuesBanco) || _.size(valuesBanco) <= 0) {
         //Adicionar participantes por parte de bancolombia
-        _.forIn(previsitConsult.participatingEmployees, function (value, key) {
+        _.forIn(previsitConsult.participatingEmployees, function (value) {
           const uuid = _.uniqueId('participanBanco_');
           var clientParticipant = {
             tipoParticipante: KEY_PARTICIPANT_BANCO,
@@ -470,7 +489,7 @@ class FormVisita extends Component {
 
       if (_.isNull(valuesOthers) || _.size(valuesOthers) <= 0) {
         //Adicionar otros participantes
-        _.forIn(previsitConsult.relatedEmployees, function (value, key) {
+        _.forIn(previsitConsult.relatedEmployees, function (value) {
           const uuid = _.uniqueId('participanOther_');
           var otherParticipant = {
             tipoParticipante: KEY_PARTICIPANT_OTHER,
@@ -512,8 +531,8 @@ class FormVisita extends Component {
   }
 
   render() {
-    const { fields: { tipoVisita, fechaVisita, desarrolloGeneral },
-      clientInformacion, selectsReducer, handleSubmit, visitReducer, reducerGlobal, navBar } = this.props;
+    const {
+      clientInformacion, selectsReducer, handleSubmit, reducerGlobal } = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     const { aecStatus } = infoClient;
     var showAECNoAplica = false;
@@ -526,7 +545,7 @@ class FormVisita extends Component {
       <form onSubmit={handleSubmit(this._submitCreateVisita)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))} className="my-custom-tab"
         style={{ backgroundColor: "#FFFFFF", marginTop: "0px", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
         <SecurityMessageComponent />
-        <header className="header-client-detail"  style={{ paddingTop: '10px' }}>
+        <header className="header-client-detail" style={{ paddingTop: '10px' }}>
           <div className="company-detail" style={{ marginLeft: "20px", marginRight: "20px" }}>
             <div>
               <h3 style={{ wordBreak: 'keep-all' }} className="inline title-head">
@@ -750,7 +769,7 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, visitReducer, participants, tasks, reducerGlobal, navBar }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, visitReducer, participants, tasks, reducerGlobal, navBar }) {
   return {
     clientInformacion,
     selectsReducer,
