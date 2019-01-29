@@ -33,3 +33,8 @@ export const patternNotesClient = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°
 export const patternOfNameEntity = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
 export const patternOfNoOperatingInCome = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
 export const patternOfOnlyAlphabeticalAndSlash = /^[a-zA-Z\sÁ-Úá-úÑñÜü\\\]/]+$/;
+export const patternOfRiskGroupName = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s&/\\,;.#"°()'\-+´:]+$/;
+export const patternOfObservationRiskGroup = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
+export const patternOfJustificationsRiskGroup = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
+export const patternOfRiskExternalClientName = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s&/\\,;.#"°()'\-+´:]+$/;
+export const patternOfExternalClientNumberDocument = /^[^a-zA-Z0-9\-Á-Úá-úÑñÜü]+$/;

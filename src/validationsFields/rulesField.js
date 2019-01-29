@@ -3,22 +3,25 @@ import _ from "lodash";
 import numeral from "numeral";
 
 import { htmlToText } from './../actionsGlobal';
-import {OTHER, EXCLIENT, RESPONSE_INFO, MARK_GEREN, BUTTON_EDIT,
+import {
+    OTHER, EXCLIENT, RESPONSE_INFO, MARK_GEREN, BUTTON_EDIT,
     PERMISSIONSCLIENTS,
     INFO_CREDIT_STUDY,
     CLIENT_OPERATION_FOREIGN_CURRENCY,
     OTHERS_OPERATIONS,
     DATA_CIUU, CLIENT_ORIGIN_RESOURCES,
-    CLIENT_ORIGIN_GOODS} from './../constantsGlobal';
+    CLIENT_ORIGIN_GOODS
+} from './../constantsGlobal';
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
     patternOfStructureEmail, patternOfEmail, patternOfHistory, patternOfClientName, patternOfDescription,
     patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
-    patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant, 
+    patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant,
     patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
     patternOfInventoryPolice, patternOfControlLinkedPayments, patternOfNameEntity, patternOfNoOperatingInCome,
-    patternOfOnlyAlphabeticalAndSlash
+    patternOfOnlyAlphabeticalAndSlash, patternOfRiskGroupName, patternOfObservationRiskGroup, patternOfJustificationsRiskGroup,
+    patternOfRiskExternalClientName, patternOfExternalClientNumberDocument
 } from './patternsToValidateField';
 
 import {
@@ -30,7 +33,11 @@ import {
     MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT, MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT,
     MESSAGE_WARNING_PLACE_OF_PREVISIT, MESSAGE_WARNING_RANGE, MESSAGE_WARNING_FORBIDDEN_CHARACTER,
     MESSAGE_WARNING_NUMBER_LENGTH, MESSAGE_WARNING_OTHER_REASON, MESSAGE_WARNING_NAME_ENTITY,
-    MESSAGE_WARNING_NO_OPERATING_IN_COME, MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH, MESSAGE_REQUIRED_EMPLOYEE
+    MESSAGE_WARNING_NO_OPERATING_IN_COME, MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH, MESSAGE_WARNING_GROUP_NAME,
+    MESSAGE_WARNING_OBSERVATIONS_RISK_GROUP, MESSAGE_WARNING_JUSTIFICATIONS_RISK_GROUP, MESSAGE_WARNING_EXTERNAL_CLIENT_NAME,
+    MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT,
+     MESSAGE_REQUIRED_EMPLOYEE
+
 } from './validationsMessages';
 
 import {
@@ -128,8 +135,8 @@ export const checkForValueIdSubCiiuEditClient = (value, fields, props) => {
 export const checkForValueReasonTransfer = (value, fields, props) => {
     let message = null;
     let reasonTransferValue = _.get(_.find(props.selectsReducer.get(REASON_TRANFER), ['id', parseInt(fields.reasonTranfer)]), 'value');
-    if(_.isEqual(OTHER, reasonTransferValue)) {
-        if(_.isNull(value) || _.isEmpty(value)) {
+    if (_.isEqual(OTHER, reasonTransferValue)) {
+        if (_.isNull(value) || _.isEmpty(value)) {
             message = MESSAGE_REQUIRED_VALUE;
         }
     }
@@ -139,9 +146,9 @@ export const checkForValueReasonTransfer = (value, fields, props) => {
 export const checkForValueJustifyNoGeren = (value, fields, props) => {
     let message = null;
     let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
-    let justifyNoGerenValue = _.get(_.find(props.selectsReducer.get(MANAGEMENT_BRAND), ['id', parseInt(fields.marcGeren)]), 'value');    
-    if(!_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName) && _.isEqual(MARK_GEREN, justifyNoGerenValue)) {
-        if(_.isNull(value) || _.isEmpty(String(value))) {
+    let justifyNoGerenValue = _.get(_.find(props.selectsReducer.get(MANAGEMENT_BRAND), ['id', parseInt(fields.marcGeren)]), 'value');
+    if (!_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName) && _.isEqual(MARK_GEREN, justifyNoGerenValue)) {
+        if (_.isNull(value) || _.isEmpty(String(value))) {
             message = MESSAGE_REQUIRED_VALUE;
         }
     }
@@ -151,9 +158,9 @@ export const checkForValueJustifyNoGeren = (value, fields, props) => {
 export const checkForValueJustifyNoGerenEditClient = (value, fields, props) => {
     let message = null;
     let isEditButton = props.idButton;
-    let justifyNoGerenValue = _.get(_.find(props.selectsReducer.get(MANAGEMENT_BRAND), ['id', parseInt(fields.marcGeren)]), 'value');    
-    if(isEditButton !== BUTTON_EDIT && _.isEqual(MARK_GEREN, justifyNoGerenValue)) {
-        if(_.isNull(value) || _.isEmpty(String(value))) {
+    let justifyNoGerenValue = _.get(_.find(props.selectsReducer.get(MANAGEMENT_BRAND), ['id', parseInt(fields.marcGeren)]), 'value');
+    if (isEditButton !== BUTTON_EDIT && _.isEqual(MARK_GEREN, justifyNoGerenValue)) {
+        if (_.isNull(value) || _.isEmpty(String(value))) {
             message = MESSAGE_REQUIRED_VALUE;
         }
     }
@@ -164,8 +171,8 @@ export const checkForValueJustifyNoLMEEditClient = (value, fields, props) => {
     let message = null;
     let isEditButton = props.idButton;
     let justifyNoLMEValue = fields.necesitaLME;
-    if(!(justifyNoLMEValue === "true") && isEditButton !== BUTTON_EDIT) {
-        if(_.isNull(value) || _.isEmpty(String(value))) {
+    if (!(justifyNoLMEValue === "true") && isEditButton !== BUTTON_EDIT) {
+        if (_.isNull(value) || _.isEmpty(String(value))) {
             message = MESSAGE_REQUIRED_VALUE;
         }
     }
@@ -176,8 +183,8 @@ export const checkForValueJustifyNoLME = (value, fields, props) => {
     let message = null;
     let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
     let justifyNoLMEValue = fields.necesitaLME;
-    if(!(justifyNoLMEValue === "true") && !_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName)) {
-        if(_.isNull(value) || _.isEmpty(String(value))) {
+    if (!(justifyNoLMEValue === "true") && !_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName)) {
+        if (_.isNull(value) || _.isEmpty(String(value))) {
             message = MESSAGE_REQUIRED_VALUE;
         }
     }
@@ -188,8 +195,8 @@ export const checkForValueOperationsForeigns = (value, fields, props) => {
     let message = null;
     let operationsForeigns = fields.operationsForeignCurrency;
     let isEditButton = props.idButton;
-    if((operationsForeigns === "true") && isEditButton !== BUTTON_EDIT) {
-        if(_.isNull(value) || _.isEmpty(String(value))) {
+    if ((operationsForeigns === "true") && isEditButton !== BUTTON_EDIT) {
+        if (_.isNull(value) || _.isEmpty(String(value))) {
             message = MESSAGE_REQUIRED_VALUE;
         }
     }
@@ -222,8 +229,8 @@ export const checkOthersEnabledOriginResources = (value, fields, props) => {
     let dataOriginResource = props.selectsReducer.get(CLIENT_ORIGIN_RESOURCES);
     let idOptionOther = _.get(_.filter(dataOriginResource, ['key', OTHERS_OPERATIONS]), '[0].id');
     let originField = _.split(fields.originResource, ',');
-    if(_.includes(originField, String(idOptionOther))) {
-        if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT) {        
+    if (_.includes(originField, String(idOptionOther))) {
+        if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT) {
             message = MESSAGE_REQUIRED_VALUE;
         }
     }
@@ -237,8 +244,8 @@ export const checkOthersEnabledOriginGoods = (value, fields, props) => {
     let dataOriginResource = props.selectsReducer.get(CLIENT_ORIGIN_GOODS);
     let idOptionOther = _.get(_.filter(dataOriginResource, ['key', OTHERS_OPERATIONS]), '[0].id');
     let originField = _.split(fields.originGoods, ',');
-    if(_.includes(originField, String(idOptionOther))) {
-        if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT) {        
+    if (_.includes(originField, String(idOptionOther))) {
+        if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT) {
             message = MESSAGE_REQUIRED_VALUE;
         }
     }
@@ -252,8 +259,8 @@ export const checkOthersEnabledclientOperationsForeignCurrency = (value, fields,
     let dataOriginResource = props.selectsReducer.get(CLIENT_OPERATION_FOREIGN_CURRENCY);
     let idOptionOther = _.get(_.filter(dataOriginResource, ['key', OTHERS_OPERATIONS]), '[0].id');
     let originField = _.split(fields.operationsForeigns, ',');
-    if(_.includes(originField, String(idOptionOther))) {
-        if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT) {        
+    if (_.includes(originField, String(idOptionOther))) {
+        if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT) {
             message = MESSAGE_REQUIRED_VALUE;
         }
     }
@@ -264,7 +271,7 @@ export const checkOthersEnabledclientOperationsForeignCurrency = (value, fields,
 export const checkdetailNonOperatingIncome = (value, fields, props) => {
     let message = null;
     let isEditButton = props.idButton;
-    
+
     if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT && numeral(fields.nonOperatingIncome).format('0') > 0) {
         message = MESSAGE_REQUIRED_VALUE;
     }
@@ -286,8 +293,8 @@ export const checkControlLinkedPaymentsRequired = (value, fields, props) => {
 export const checkForValueIsExClient = (value, fields, props) => {
     let message = null;
     let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
-    if(!_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName)) {
-        if(_.isNull(value) || _.isEmpty(String(value))) {
+    if (!_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName)) {
+        if (_.isNull(value) || _.isEmpty(String(value))) {
             message = MESSAGE_REQUIRED_VALUE;
         }
     }
@@ -297,8 +304,8 @@ export const checkForValueIsExClient = (value, fields, props) => {
 export const checkForValueIsNotExClient = (value, fields, props) => {
     let message = null;
     let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
-    if(_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName)) {
-        if(_.isNull(value) || _.isEmpty(String(value))) {
+    if (_.isEqual(EXCLIENT, isExClientValue.relationshipStatusName)) {
+        if (_.isNull(value) || _.isEmpty(String(value))) {
             message = MESSAGE_REQUIRED_VALUE;
         }
     }
@@ -361,7 +368,7 @@ export const checkNeighborhood = value => {
 
 export const checkPostalCode = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) &&  !patternOfPostalCode.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfPostalCode.test(value)) {
         message = MESSAGE_WARNING_POSTAL_CODE;
     }
 
@@ -666,10 +673,58 @@ export const checkNumberLength = length => value => {
 }
 
 export const checkRequiredWhenFieldIsTrue = field => (value, fields, _) => {
-    if (fields[field])  {
+    if (fields[field]) {
         return checkRequired(value);
     }
     return null;
+}
+
+
+
+export const checkGroupName = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfRiskGroupName.test(value)) {
+        message = MESSAGE_WARNING_GROUP_NAME;
+    }
+
+    return message;
+}
+
+export const checkObservationsRiskGroup = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfObservationRiskGroup.test(value)) {
+        message = MESSAGE_WARNING_OBSERVATIONS_RISK_GROUP;
+    }
+
+    return message;
+}
+export const checkJustificationsRiskGroup = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfJustificationsRiskGroup.test(value)) {
+        message = MESSAGE_WARNING_JUSTIFICATIONS_RISK_GROUP;
+    }
+
+    return message;
+}
+
+export const checkGroupExternalClientName = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfRiskExternalClientName.test(value)) {
+        message = MESSAGE_WARNING_EXTERNAL_CLIENT_NAME;
+    }
+
+    return message;
+}
+export const checkGroupExternalClientNumberDocument = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && patternOfExternalClientNumberDocument.test(value)) {
+        message = MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT;
+    }
+
+    return message;
 }
 export const checkRequiredEmployee = value => {
     let message = null;
@@ -677,18 +732,20 @@ export const checkRequiredEmployee = value => {
         return MESSAGE_REQUIRED_EMPLOYEE
     }
     return null;
+
 }
 export const checkRequiredWhenVarIsTrue = field => (value, fields, _) => {
-    if (fields[field] === true)  {
+    if (fields[field] === true) {
         return checkRequired(value);
     }
     return null;
 }
 
 export const checkRequiredWhenVarIsFalse = field => (value, fields, _) => {
-    if (fields[field] === false)  {
+    if (fields[field] === false) {
         return checkRequired(value);
     }
     return null;
+
 }
 
