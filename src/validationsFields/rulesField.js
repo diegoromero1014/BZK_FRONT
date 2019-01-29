@@ -18,7 +18,7 @@ import {
     patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant, 
     patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
     patternOfInventoryPolice, patternOfControlLinkedPayments, patternOfNameEntity, patternOfNoOperatingInCome,
-    patternOfOnlyAlphabeticalAndSlash, patternOfTask
+    patternOfOnlyAlphabeticalAndSlash
 } from './patternsToValidateField';
 
 import {
@@ -532,7 +532,6 @@ export const checkClientNeighborhood = value => {
     return message;
 }
 
-
 export const checkNumbers = value => {
     let message = null;
 
@@ -666,9 +665,7 @@ export const checkRequiredWhenFieldIsTrue = field => (value, fields, _) => {
 export const checkRequiredEmployee = value => {
     let message = null;
     if(_.isNull(value)||_.isUndefined(value)){ 
-        console.log(value);
         return MESSAGE_REQUIRED_EMPLOYEE
     }
-    console.log(value);
     return null;
 }
