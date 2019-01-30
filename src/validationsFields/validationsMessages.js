@@ -30,3 +30,9 @@ export const MESSAGE_WARNING_NOTES_CLIENT = "Solo se permiten valores alfanumér
 export const MESSAGE_WARNING_NAME_ENTITY = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
 export const MESSAGE_WARNING_NO_OPERATING_IN_COME = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
 export const MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH = "Solo se permiten caracteres alfabéticos y \\ /";
+export const MESSAGE_WARNING_GROUP_NAME = "Solo se permiten valores alfanuméricos y & /\\,;.#\"\"°()'-+´:";
+export const MESSAGE_WARNING_OBSERVATIONS_RISK_GROUP = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
+export const MESSAGE_WARNING_JUSTIFICATIONS_RISK_GROUP = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
+export const MESSAGE_WARNING_EXTERNAL_CLIENT_NAME = "Solo se permiten valores alfanuméricos y & /\\,;.#\"\"°()'-+´:";
+export const MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT = "Solo se permiten valores alfanuméricos y & /\\,;.#\"\"°()'-+´:";
+export const MESSAGE_REQUIRED_EMPLOYEE="Debe seleccionar un empleado";

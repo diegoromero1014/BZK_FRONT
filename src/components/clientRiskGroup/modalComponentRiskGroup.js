@@ -17,45 +17,23 @@ import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { editNameRiskGroup, getClientsRiskGroup, updateValuesRiskGroup, getAllNoveltiesRiskGroup } from "./actions";
 import { showLoading } from "../loading/actions";
 
-import { MESSAGE_LOAD_DATA, MODULE_RISK_GROUP, VALUE_REQUIERED, VALUE_XSS_INVALID } from "../../constantsGlobal";
+import { MESSAGE_LOAD_DATA, MODULE_RISK_GROUP } from "../../constantsGlobal";
 import {
     formValidateKeyEnter,
     nonValidateEnter,
     validatePermissionsByModule,
-    validateResponse, xssValidation
+    validateResponse
 } from "../../actionsGlobal";
 import { OPTION_RISK_GROUP, OPTION_NOVELTY } from './constants';
 
 import _ from "lodash";
+import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 
 export const EDITAR = "Editar";
 export const ELIMINAR = "Eliminar";
 
-const fields = ["groupName", "groupObservations"]
 
 const numberThumbsRow = 3;
-
-const validate = values => {
-    const errors = {};
-
-    if (!values.groupName) {
-        errors.groupName = VALUE_REQUIERED;
-    } else if (xssValidation(values.groupName)) {
-        errors.groupName = VALUE_XSS_INVALID;
-    } else {
-        errors.groupName = null;
-    }
-
-    if (!values.groupObservations) {
-        errors.groupObservations = VALUE_REQUIERED;
-    } else if (xssValidation(values.groupObservations)) {
-        errors.groupObservations = VALUE_XSS_INVALID;
-    } else {
-        errors.groupObservations = null;
-    }
-
-    return errors;
-};
 
 let thisForm;
 class ModalComponentRiskGroup extends Component {
