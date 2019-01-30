@@ -14,7 +14,7 @@ import ItemObservationRiskGroup from "./itemObservationRiskGroup";
 import { saveObservationsRiskGroup, getListObservationsRiskGroupById } from '../actions';
 import { fields, validations as validate } from './../fieldsAndRulesForReduxForm';
 
-class modalObservationRiskGroup extends Component {
+export class modalObservationRiskGroup extends Component {
     constructor(props) {
         super(props);
         this._mapItemObservation = this._mapItemObservation.bind(this);
