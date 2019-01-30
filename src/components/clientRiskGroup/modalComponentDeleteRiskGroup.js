@@ -10,7 +10,7 @@ import {deleteRiskGroup, getClientsRiskGroup, updateIsPendingRiskGroup} from "./
 import {showLoading} from "../loading/actions";
 
 import _ from "lodash";
-import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
+import { fields, validations as validate } from './fieldsAndRulesForDeleteRiskGroup';
 
 
 

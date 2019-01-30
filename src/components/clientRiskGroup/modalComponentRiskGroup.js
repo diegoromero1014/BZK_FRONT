@@ -27,7 +27,7 @@ import {
 import { OPTION_RISK_GROUP, OPTION_NOVELTY } from './constants';
 
 import _ from "lodash";
-import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
+import { fields, validations as validate } from './fieldsAndRulesForEditRiskGroup';
 
 export const EDITAR = "Editar";
 export const ELIMINAR = "Eliminar";
