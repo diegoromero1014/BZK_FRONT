@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {
-    processRules, checkRequired, checkMaxLength, checkFirstCharacter, checkGroupName,
-    checkJustificationsRiskGroup, checkObservationsRiskGroup, checkGroupExternalClientNumberDocument
+    processRules, checkRequired, checkMaxLength, checkFirstCharacter,
+    checkJustificationsRiskGroup
 } from './../../validationsFields/rulesField';
 
 const fieldsWithRules = {
