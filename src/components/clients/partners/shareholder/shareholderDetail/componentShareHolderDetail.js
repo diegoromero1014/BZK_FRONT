@@ -554,7 +554,7 @@ function mapStateToProps({ editShareholderReducer, selectsReducer, createShareho
         shareHolderKindId: shareHolderEdit.shareHolderKindId,
         shareHolderName: shareHolderEdit.shareHolderName,
         shareHolderType: shareHolderEdit.shareHolderType,
-        sharePercentage: shareHolderEdit.sharePercentage,
+        sharePercentage: String(shareHolderEdit.sharePercentage),
         tributaryNumber: shareHolderEdit.tributaryNumber
       }
     };
