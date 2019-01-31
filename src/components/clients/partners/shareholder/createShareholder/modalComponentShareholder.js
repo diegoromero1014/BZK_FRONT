@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import _ from 'lodash';
-import { fields, validations as validate, fieldsWithRules } from './filesAndRules';
+import { fields, validations as validate } from './filesAndRules';
 
 
 import SweetAlert from '../../../../sweetalertFocus';
@@ -376,7 +376,7 @@ class ModalComponentShareholder extends Component {
                   name="porcentajePart"
                   style={{ textAlign: "right" }}
                   type="text"
-                  min={0}
+                  max="5"
                   onBlur={val => this._handleBlurValueNumber(porcentajePart, val)}
                   {...porcentajePart}
                 />
