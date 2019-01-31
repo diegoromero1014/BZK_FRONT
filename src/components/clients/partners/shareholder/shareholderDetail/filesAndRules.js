@@ -25,8 +25,8 @@ export const fieldsWithRules = {
     shareHolderKindId: { rules: [checkRequired] },
     shareHolderName: { rules: [checkRequiredWhenVarIsFalse('isNaturePerson'), checkFirstCharacter, checkClientName, checkMaxLength(50)] },
     shareHolderType: { rules: [] },
-    sharePercentage: { rules: [checkOnlyNumbers, checkRequired, checkNumberInRange(0, 100)] },
-    tributaryNumber: { rules: [checkFirstCharacter, checkNumberDocument, checkMinLength(1), checkMaxLength(20)] },
+    sharePercentage: { rules: [checkFirstCharacter, checkOnlyNumbers, checkRequired, checkNumberInRange(0, 100)] },
+    tributaryNumber: { rules: [checkFirstCharacter, checkOnlyNumbers, checkMinLength(1), checkMaxLength(20)] },
     isNaturePerson: { rules: [] }
 }
 
