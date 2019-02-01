@@ -192,6 +192,7 @@ class ModalTask extends Component {
                                 <dt><span>Responsable (<span style={{ color: "red" }}>*</span>)</span></dt>
                                 <dt style={{ paddingTop: "0px" }}>
                                     <ComboBoxFilter
+                                        id="PendingResponsible"
                                         name="responsableTask"
                                         labelInput="Ingrese un criterio de búsqueda..."
                                         {...responsable}
