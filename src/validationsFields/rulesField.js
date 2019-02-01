@@ -386,7 +386,7 @@ export const checkPhone = value => {
 
 export const checkOnlyNumbers = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && patternOfOnlyNumbers.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfOnlyNumbers.test(value)) {
         message = MESSAGE_WARNING_ONLY_NUMBERS;
     }
 
@@ -405,7 +405,7 @@ export const checkEmail = value => {
 
 export const checkContactRelevantFeatures = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && patternOfContactRelevantFeatures.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfContactRelevantFeatures.test(value)) {
         message = MESSAGE_WARNING_RELEVANT_FEATURES;
     }
 
@@ -414,7 +414,7 @@ export const checkContactRelevantFeatures = value => {
 
 export const checkPipeLineOpportunityName = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && patternOfOpportunityName.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfOpportunityName.test(value)) {
         message = MESSAGE_WARNING_OPPORTUNITY_NAME;
     }
 
