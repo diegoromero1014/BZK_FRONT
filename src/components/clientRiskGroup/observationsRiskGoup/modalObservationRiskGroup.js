@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid';
-import { validateResponse, stringValidate, xssValidation } from '../../../actionsGlobal';
+import { validateResponse } from '../../../actionsGlobal';
 import Textarea from "../../../ui/textarea/textareaComponent";
 import { changeStateSaveData } from '../../dashboard/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';

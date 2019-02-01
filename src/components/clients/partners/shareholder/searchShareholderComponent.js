@@ -54,21 +54,7 @@ class SearchShareholderComponent extends Component {
     clearShareholderOrder();
 
     let _keywordShareholder = this.state.keywordShareholder ? this.state.keywordShareholder : "";
-    let reg_test = eval(constants.REGEX_SIMPLE_XSS_STRING).test(this.state.keywordShareholder);
-
-    if (!reg_test) {
-      this.setState({
-        errorKeyword: null
-      });
-
-      shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "sh.sharePercentage", 1, _keywordShareholder, v1, v2);
-
-    } else {
-      this.setState({
-        errorKeyword: constants.VALUE_XSS_INVALID
-      });
-    }
-
+    shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "sh.sharePercentage", 1, _keywordShareholder, v1, v2);
   }
 
   render() {

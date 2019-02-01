@@ -16,7 +16,7 @@ import BlockingComponent from '../../blockingComponent/blockingComponent';
 
 import { redirectUrl } from "../../globalComponents/actions";
 import { getMasterDataFields } from "../../selectsComponent/actions";
-import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, xssValidation, onSessionExpire } from "../../../actionsGlobal";
+import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, onSessionExpire } from "../../../actionsGlobal";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { createBusiness, detailBusiness, pdfDescarga, validateRangeDates } from "../actions";
 import { addNeed } from "../need/actions";
@@ -159,13 +159,6 @@ class FormEdit extends Component {
                         errorInForm = true;
                         this.setState({ showErrorSaveBusiness: true });
                     }
-                }
-
-                if (xssValidation(this.state.opportunities, true)) {
-                    errorInForm = true;
-                    this.setState({
-                        opportunitiesError: VALUE_XSS_INVALID
-                    });
                 }
 
                 if (!errorInForm) {

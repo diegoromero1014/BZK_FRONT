@@ -1347,10 +1347,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         fields,
         validate,
         touchOnChange: true,
-        overwriteOnInitialValuesChange: false,
-        onSubmitFail: errors => {
-
-            let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
-        }
+        overwriteOnInitialValuesChange: false
     }, mapStateToProps, mapDispatchToProps)(FormEditPipeline);
 }

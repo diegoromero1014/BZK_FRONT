@@ -20,7 +20,7 @@ import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator, updateUserNameTa
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
-import { htmlToText, validateValue, validateValueExist, formatLongDateToDateWithNameMonth, xssValidation } from '../../actionsGlobal';
+import { htmlToText, validateValue, validateValueExist, formatLongDateToDateWithNameMonth } from '../../actionsGlobal';
 import RichText from '../richText/richTextComponent';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import { fields, validations as validate } from './createPendingTask/fieldsAndRulesForReduxForm';
