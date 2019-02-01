@@ -53,7 +53,7 @@ class SearchContactComponent extends Component {
 
     let _keywordContact = this.state.keywordContact ? this.state.keywordContact : "";
 
-    if (!eval(constants.REGEX_SIMPLE_XSS_STRING).test(this.state.keywordContact)) {
+    if (!constants.REGEX_SIMPLE_XSS_STRING.test(this.state.keywordContact)) {
       this.setState({
         errorKeyword: null
       });

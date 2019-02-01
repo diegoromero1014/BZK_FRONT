@@ -19,7 +19,7 @@ import RichText from '../../richText/richTextComponent';
 import ToolTip from '../../toolTip/toolTipComponent';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import {
-    checkRequired, checkPlaceOfPrevisit, checkDecimalNumbers, checkRichTextRequired
+    checkRequired, checkPlaceOfPrevisit, checkDecimalNumbers, checkRichTextRequired, checkNumberLength
 } from './../../../validationsFields/rulesField';
 
 import { redirectUrl } from '../../globalComponents/actions';
@@ -169,10 +169,6 @@ class FormPrevisita extends Component {
         }
 
         if (typeValidation === ALLOWS_NEGATIVE_INTEGER) { //Realizo simplemente el formateo
-            var pattern = /(-?\d+)(\d{2})/;
-            while (pattern.test(val)) {
-                val = val.replace(pattern, "$1.$2");
-            }
             if (_.isNil(this.state.durationPreVisit)) {
                 return (val + decimal);
             } else {
@@ -183,10 +179,6 @@ class FormPrevisita extends Component {
         } else { //Valido si el valor es negativo o positivo
             var value = _.isNil(val) ? -1 : numeral(val).format('0');
             if (value >= 0) {
-                pattern = /(-?\d+)(\d{2})/;
-                while (pattern.test(val)) {
-                    val = val.replace(pattern, "$1.$2");
-                }
                 if (_.isNil(this.state.durationPreVisit)) {
                     return (val + decimal);
                 } else {
@@ -405,20 +397,17 @@ class FormPrevisita extends Component {
             }
         }
 
-        const messageRequiredDuration = checkRequired(this.state.durationPreVisit);
+        let messageRequiredDuration = checkRequired(this.state.durationPreVisit);
+
+        messageRequiredDuration = messageRequiredDuration || checkDecimalNumbers(this.state.durationPreVisit);
+
+        messageRequiredDuration = messageRequiredDuration || checkNumberLength(4)(this.state.durationPreVisit);
+
         if (!_.isNull(messageRequiredDuration)) {
             errorInForm = true;
             this.setState({
                 durationPreVisitError: messageRequiredDuration
             });
-        } else {
-            const messageWarningDuration = checkDecimalNumbers(this.state.durationPreVisit);
-            if (!_.isNull(messageWarningDuration)) {
-                errorInForm = true;
-                this.setState({
-                    durationPreVisitError: messageWarningDuration
-                });
-            }
         }
 
         if (typeButtonClick === SAVE_PUBLISHED) {
@@ -729,7 +718,7 @@ class FormPrevisita extends Component {
                                 name="txtDuracion"
                                 value={this.state.durationPreVisit}
                                 min={1}
-                                max="4"
+                                
                                 touched={true}
                                 placeholder="Duración previsita"
                                 error={this.state.durationPreVisitError}

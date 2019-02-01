@@ -16,8 +16,8 @@ import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 import {
-    checkRequired, processRules, checkClientDescription,
-    checkNumberInRange, checkMaxLength, checkFirstCharacter
+    checkRequired, checkClientDescription,
+    checkNumberInRange, checkMaxLength, checkFirstCharacter, checkNumberLength
 } from '../../../validationsFields/rulesField';
 
 export class ComponentListMainClients extends Component {
@@ -42,7 +42,7 @@ export class ComponentListMainClients extends Component {
 
         this.rulesNameClient = [checkRequired, checkClientDescription, checkMaxLength(50), checkFirstCharacter];
         this.rulesParticipation = [checkRequired, checkNumberInRange(0, 100)];
-        this.rulesTerm = [checkRequired, checkNumberInRange(0, 9999)];
+        this.rulesTerm = [checkRequired, checkNumberInRange(0, 9999), checkNumberLength(4)];
         this.rulesRelevantInformation = [checkClientDescription, checkFirstCharacter];
 
     }
@@ -209,7 +209,7 @@ export class ComponentListMainClients extends Component {
         const { nameClient, participation, term, relevantInformation, showFormMainClients, fnShowForm,
             clientInformacion, showCheckValidateSection, valueCheckSectionMainClients,
             functionChangeCheckSectionMainClients, changeValueListClient, registrationRequired,
-            origin } = this.props;
+            origin, className } = this.props;
         const listMainCustomer = clientInformacion.get(this.state.fieldReducerList);
         return (
             <div onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
@@ -251,7 +251,7 @@ export class ComponentListMainClients extends Component {
                 {!clientInformacion.get(this.state.fieldReducerNoApplied) &&
                     <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px' }}>
                         <Col xs={12} md={12} lg={12} style={{ marginTop: "-70px", paddingRight: "16px", textAlign: "right" }}>
-                            <button className="btn" disabled={showFormMainClients} type="button"
+                            <button className="btn" name={className} disabled={showFormMainClients} type="button"
                                 onClick={() => fnShowForm(MAIN_CLIENTS, true)} style={showFormMainClients ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
                                 <ToolTipComponent text="Agregar cliente principal">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>

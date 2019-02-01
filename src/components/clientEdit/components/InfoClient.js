@@ -7,13 +7,13 @@ import { Col, Row } from "react-flexbox-grid";
 import Input from "../../../ui/input/inputComponent";
 import Textarea from "../../../ui/textarea/textareaComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
-import ClientTypology from "../../contextClient/ClientTypology";
+import ClientTypology from "../../contextClient/clientTypology";
 import * as constants from "../../selectsComponent/constants";
 
 import { getMasterDataFields, consultListWithParameterUbication } from '../../selectsComponent/actions';
 
 import { TITLE_DESCRIPTION, CONSTRUCT_PYME, GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../constants';
-import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../../clientDetailsInfo/constants";
+import { BUTTON_EDIT } from "../../clientDetailsInfo/constants";
 
 
 export class InfoClient extends React.Component {
@@ -118,7 +118,7 @@ export class InfoClient extends React.Component {
                         <Input
                             name="documento"
                             type="text"
-                            max="20"
+                            max="30"
                             placeholder="Número de documento del cliente"
                             {...idNumber}
                             touched={true}
@@ -195,36 +195,6 @@ export class InfoClient extends React.Component {
     }
 
 }
-
-var validations = [
-    {
-        validation: 'required',
-        fields: ['razonSocial', 'idTypeClient', 'idNumber']
-    },
-    {
-        validation: 'xss',
-        fields: ['razonSocial', 'idNumber']
-    }
-]
-
-var validationsEditClient = [
-    {
-        validation: 'required',
-        fields: ['razonSocial', 'idTypeClient', 'idNumber']
-    },
-    {
-        validation: 'xss',
-        fields: ['razonSocial', 'idNumber']
-    }
-]
-
-export function validationRules(props) {
-    if (props.idButton === BUTTON_EDIT) {
-        return validationsEditClient;
-    } else {
-        return validations;
-    }
-};
 
 function mapStateToProps({ selectsReducer, clientInformacion }) {
     return {

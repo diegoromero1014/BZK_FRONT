@@ -3,21 +3,25 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Menu, Segment } from 'semantic-ui-react';
+import _ from 'lodash';
+
+import ListCovenant from './covenants/listCovenants';
+import ListAEC from './AEC/listAEC';
+import ComponentSurvey from './qualitativeVariable/componentSurvey';
+
+import { validateResponse, validatePermissionsByModule } from '../../actionsGlobal';
+import { consultModulesAccess } from '../navBar/actions';
+import { updateTabSeletedRisksManagment } from './actions';
+import { getAllowSurveyQualitativeVarible } from './qualitativeVariable/actions';
+import { showLoading } from '../loading/actions';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
+
+import { TAB_COVENANTS, TAB_AEC, TAB_QUALITATIVE_VARIABLE } from './constants';
 import {
     MODULE_COVENANTS, MODULE_AEC, MODULE_QUALITATIVE_VARIABLES, MESSAGE_LOAD_DATA,
     TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
 } from '../../constantsGlobal';
-import { validateResponse,validatePermissionsByModule } from '../../actionsGlobal';
-import { consultModulesAccess } from '../navBar/actions';
-import ListCovenant from './covenants/listCovenants';
-import ListAEC from './AEC/listAEC';
-import { TAB_COVENANTS, TAB_AEC, TAB_QUALITATIVE_VARIABLE } from './constants';
-import { updateTabSeletedRisksManagment } from './actions';
-import ComponentSurvey from './qualitativeVariable/componentSurvey';
-import { getAllowSurveyQualitativeVarible } from './qualitativeVariable/actions';
-import _ from 'lodash';
-import { showLoading } from '../loading/actions';
-import { swtShowMessage } from '../sweetAlertMessages/actions';
+
 
 class RisksManagementComponent extends Component {
     constructor(props) {
@@ -113,7 +117,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ navBar, tabRisksManagment, qualitativeVariableReducer, clientInformacion,reducerGlobal }, ownerProps) {
+function mapStateToProps({ navBar, tabRisksManagment, qualitativeVariableReducer, clientInformacion, reducerGlobal }, ownerProps) {
     return {
         navBar,
         tabRisksManagment,

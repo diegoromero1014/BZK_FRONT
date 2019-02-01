@@ -12,7 +12,7 @@ import HeaderPipeline from "../headerPipeline";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import RichText from '../../richText/richTextComponent';
 import ToolTip from '../../toolTip/toolTipComponent';
-import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
+import ComponentDisbursementPlan from '../disbursementPlan/componentDisbursementPlan';
 import { setGlobalCondition } from './../../../validationsFields/rulesField';
 
 import { redirectUrl } from "../../globalComponents/actions";

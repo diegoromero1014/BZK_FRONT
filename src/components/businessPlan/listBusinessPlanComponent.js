@@ -2,11 +2,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { businessPlanByClientFindServer, orderColumnBusinessPlan, clearBusinessPlanOrder, clearBusinessPlanPaginator } from './actions';
-import GridComponent from '../grid/component';
-import { NUMBER_RECORDS, DELETE_TYPE_BUSINESS_PLAN } from './constants';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
+
+import GridComponent from '../grid/component';
+
+import { businessPlanByClientFindServer, orderColumnBusinessPlan, clearBusinessPlanOrder, clearBusinessPlanPaginator } from './actions';
+
+import { NUMBER_RECORDS, DELETE_TYPE_BUSINESS_PLAN } from './constants';
 import { ELIMINAR } from '../../constantsGlobal';
 import { MODULE_BUSINESS_PLAN } from '../grid/constants';
 
@@ -55,6 +58,7 @@ class ListBusinessPlanComponent extends Component {
     orderColumnBusinessPlan(orderBusinessPlan, columnBusinessPlan);
     businessPlanByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, columnBusinessPlan, orderBusinessPlan, v1, "");
   }
+
   _renderHeaders() {
     return [
       {

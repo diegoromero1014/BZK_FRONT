@@ -2,8 +2,17 @@ import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { size, filter, get, indexOf, concat, isEqual } from 'lodash';
+import moment from 'moment';
+
 import ComponentFactor from './componentFactor';
 import ModalViewSimulation from './modalViewSimulation';
+import ComponentAccordion from '../../accordion/componentAccordion';
+import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
+
+import { validatePermissionsByModule, validateValueExist, validateResponse } from '../../../actionsGlobal';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import { changeStateSaveData } from '../../dashboard/actions';
 import {
     getSurveyQualitativeVarible,
     changeFieldsEditables,
@@ -11,7 +20,9 @@ import {
     saveResponseQualitativeSurvey,
     changeValueModalIsOpen
 } from './actions';
-import { validatePermissionsByModule, validateValueExist, validateResponse } from '../../../actionsGlobal';
+
+import { COMMERCIAL_SECTION, ANALYST_SECTION } from './constants';
+import { OPEN_TAB, CLOSE_TAB } from '../../clientDetailsInfo/constants';
 import {
     STYLE_BUTTON_BOTTOM,
     MODULE_QUALITATIVE_VARIABLES,
@@ -21,14 +32,6 @@ import {
     MESSAGE_SAVE_DATA,
     MESSAGE_LOAD_DATA
 } from '../../../constantsGlobal';
-import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { size, filter, get, indexOf, concat, isEqual } from 'lodash';
-import ComponentAccordion from '../../accordion/componentAccordion';
-import { OPEN_TAB, CLOSE_TAB } from '../../clientDetailsInfo/constants';
-import { COMMERCIAL_SECTION, ANALYST_SECTION } from './constants';
-import { changeStateSaveData } from '../../dashboard/actions';
-
-import moment from 'moment';
 
 class ComponentSurvey extends Component {
     constructor(props) {
@@ -47,7 +50,7 @@ class ComponentSurvey extends Component {
 
     _reloadSurvey() {
         const { clearSurvey, validatePermissionsByModule, getSurveyQualitativeVarible, swtShowMessage, changeStateSaveData } = this.props;
-        
+
         clearSurvey();
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
 
@@ -98,6 +101,7 @@ class ComponentSurvey extends Component {
             reducerGlobal, qualitativeVariableReducer, saveResponseQualitativeSurvey, swtShowMessage,
             changeFieldsEditables, changeStateSaveData, getSurveyQualitativeVarible, clearSurvey
         } = this.props;
+
         let filters = null;
         const analyst = get(reducerGlobal.get('permissionsQualitativeV'), indexOf(reducerGlobal.get('permissionsQualitativeV'), ANALYST), false);
         if (isEqual(analyst, ANALYST)) {
@@ -105,6 +109,7 @@ class ComponentSurvey extends Component {
         } else {
             filters = { 'idAnswer': null, 'analyst': false };
         }
+
         const listquestions = concat(qualitativeVariableReducer.get('listQuestionsCommercial'), qualitativeVariableReducer.get('listQuestionsAnalyst'));
         const listQuestionsWithoutAnswer = filter(listquestions, filters);
         if (size(listQuestionsWithoutAnswer) > 0) {
@@ -119,17 +124,13 @@ class ComponentSurvey extends Component {
                 "analyst": isEqual(analyst, ANALYST) ? true : false,
                 "listQuestions": filterQuestions
             };
+
             changeFieldsEditables(false);
             saveResponseQualitativeSurvey(jsonSave).then((data) => {
-
-
-
                 if (!validateResponse(data)) {
                     changeStateSaveData(false);
                     swtShowMessage('error', 'Error guardando encuesta', 'Señor usuario, Ocurrió un error tratando de guardar la encuesta');
                 } else {
-
-              
                     clearSurvey();
 
                     getSurveyQualitativeVarible().then((data) => {
@@ -164,7 +165,7 @@ class ComponentSurvey extends Component {
 
         if (survey.latestUpdated == null) {
             fechaActualizacion = "";
-        }else {
+        } else {
             fechaActualizacion = moment(survey.latestUpdated).locale('es').format("DD MMM YYYY");
         }
 
@@ -176,8 +177,9 @@ class ComponentSurvey extends Component {
             <Row>
                 {size(listFactorCommercial) > 0 || size(listFactorAnalyst) > 0 ?
                     <Col xs={12} md={12} lg={12}>
-                        <div style={{ }} >
-                            <span>Última fecha de diligenciamiento: </span><span>{fechaActualizacion}</span> 
+                        <SecurityMessageComponent />
+                        <div style={{}} >
+                            <span>Última fecha de diligenciamiento: </span><span>{fechaActualizacion}</span>
                         </div>
                         <div>
                             <span>Estado: {survey.estado}</span>
@@ -192,8 +194,6 @@ class ComponentSurvey extends Component {
                                 </button>
                             }
                         </div>
-
-                        
 
                         <ComponentAccordion functionChange={() => this._changeOpenSection(COMMERCIAL_SECTION)}
                             codSection={this.state.openCommercial} title="Comercial"
@@ -220,7 +220,7 @@ class ComponentSurvey extends Component {
                                         <span style={{ color: '#FFFFFF', padding: '10px' }}>Guardar</span>
                                     </button>
                                     <button className="btn" type="buttom" onClick={this._reloadSurvey}
-                                        style={{ float: 'right', margin: '8px 0px 0px 450px', position: 'fixed', backgroundColor: '#c1c1c1'}}>
+                                        style={{ float: 'right', margin: '8px 0px 0px 450px', position: 'fixed', backgroundColor: '#c1c1c1' }}>
                                         <span style={{ color: 'white', padding: '10px' }}>Cancelar</span>
                                     </button>
                                 </div>

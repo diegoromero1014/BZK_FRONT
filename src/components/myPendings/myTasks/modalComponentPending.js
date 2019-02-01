@@ -8,7 +8,7 @@ import $ from 'jquery';
 import { Col, Grid, Row } from "react-flexbox-grid";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import ListPendingTaskComponent from "./listMyPendingComponent";
-import ListMyPendingTeamComponent from "./ListMyPendingTeamComponent";
+import ListMyPendingTeamComponent from "./listMyPendingTeamComponent";
 import PaginationPendingTask from "./paginationPendingTask";
 import PaginationPendingTeamTask from "./paginationPendingTeamTask";
 import Tooltip from "../../toolTip/toolTipComponent";

@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid';
-import { redirectUrl } from '../globalComponents/actions';
 import { reduxForm } from 'redux-form';
-import Input from '../../ui/input/inputComponent';
 import Textarea from '../../ui/textarea/textareaComponent';
 
 import SweetAlert from '../sweetalertFocus';
@@ -13,32 +10,16 @@ import {
     VALUE_XSS_INVALID
 } from '../../constantsGlobal';
 import {
-    stringValidate, validateValueExist, validateResponse, formValidateKeyEnter, nonValidateEnter,
-    xssValidation
+    validateResponse, formValidateKeyEnter, nonValidateEnter
 } from '../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import { getClientsRiskGroup, removeClientRiskGroup } from './actions';
-import ClientsRiskGroup from './clientsRiskGroup';
 import { showLoading } from '../loading/actions';
 
 import _ from 'lodash';
-import $ from 'jquery';
+import { fields, validations as validate } from './fieldsAndRulesForRemoveMember';
 
 
-const fields = ["justification"]
-const validate = values => {
-  const errors = {};
-
-  if (!values.justification) {
-    errors.justification = VALUE_REQUIERED;
-  } else if (xssValidation(values.justification)) {
-      errors.justification = VALUE_XSS_INVALID;
-  } else {
-    errors.justification = null;
-  }
-
-  return errors;
-};
 
 var thisForm;
 class modalComponentRemoveMember extends Component {
@@ -89,10 +70,6 @@ class modalComponentRemoveMember extends Component {
             'Señor usuario, para retirar el cliente debe ser aprobado por el analista de riesgos.');
           getClientsRiskGroup(infoClient.id);
 
-          // self.setState({
-          //   showError: false,
-          //   showErrorForm: false
-          // });
         } else {
           swtShowMessage('error', 'Error retirando el cliente', 'Señor usuario, ocurrió un error tratando de retirar el cliente.');
         }

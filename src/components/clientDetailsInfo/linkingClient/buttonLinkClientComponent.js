@@ -5,11 +5,11 @@ import { Row, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import { isEmpty, isEqual, get, isNil } from 'lodash';
 
-import LinkEntities from './linkEntitiesComponent/linkEntities';
+import LinkEntities from './LinkEntitiesComponent/linkEntities';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 
-import { setEntities, clearEntities, saveLinkClient } from './linkEntitiesComponent/actions';
+import { setEntities, clearEntities, saveLinkClient } from './LinkEntitiesComponent/actions';
 import { updateErrorsLinkEntities } from '../../clientDetailsInfo/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { getMasterDataFields } from '../../selectsComponent/actions';
@@ -18,7 +18,7 @@ import { consultStateBlackListClient, updateValuesBlackList } from './actions';
 import { showLoading } from '../../loading/actions';
 import { consultInfoClient } from '../../clientInformation/actions';
 
-import { ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, START_STATUS, HELP_LINK_MESSAGE } from './linkEntitiesComponent/constants';
+import { ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, START_STATUS, HELP_LINK_MESSAGE } from './LinkEntitiesComponent/constants';
 import { FILTER_TYPE_LBO_ID } from '../../selectsComponent/constants';
 import { consultParameterServer } from "../../../actionsGlobal";
 import { MAX_LENGTH_LINK_CLIENT_TRACER_CODE} from "../../../constantsGlobal";
@@ -126,7 +126,7 @@ class ButtonLinkClientComponent extends Component {
                         updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
                          isValidLinkEntities = false;
                      } 
-                    else  if  (!_.isUndefined(linkEntity.traderCode)  &&  !_.isNull(linkEntity.traderCode) && eval(patternOfOnlyNumbersLinkClient).test(linkEntity.traderCode)) {
+                    else  if  (!_.isUndefined(linkEntity.traderCode)  &&  !_.isNull(linkEntity.traderCode) && !patternOfOnlyNumbersLinkClient.test(linkEntity.traderCode)) {
                         messageWhiteList  = MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT;
                         updateErrorsLinkEntities(true, messageWhiteList);
                         isValidLinkEntities = false;
@@ -160,7 +160,7 @@ class ButtonLinkClientComponent extends Component {
             }
         });
 
-        if  (!_.isUndefined(observationTrader.value)  &&  !_.isNull(observationTrader.value) && eval(patternOfObservationLinkClient).test(observationTrader.value)) {
+        if  (!_.isUndefined(observationTrader.value)  &&  !_.isNull(observationTrader.value) && !patternOfObservationLinkClient.test(observationTrader.value)) {
             messageWhiteList  =  MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
             isValidLinkEntities = false;
         }  else if(!_.isNil(observationTrader.value) && patternOfForbiddenCharacter.test(observationTrader.value)) {                                       

@@ -4,6 +4,7 @@ import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { fields, validations as validate } from './filesAndRules';
 
 import SweetAlert from '../../../../sweetalertFocus';
 import ComboBox from '../../../../../ui/comboBox/comboBoxComponent';
@@ -26,7 +27,8 @@ import { NUMBER_RECORDS } from '../constants';
 import {
   CONTACT_ID_TYPE, CLIENT_TYPE, CLIENT_ID_TYPE, FILTER_COUNTRY,
   FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND,
-  SHAREHOLDER_ID_TYPE, GENDER } from '../../../../selectsComponent/constants';
+  SHAREHOLDER_ID_TYPE, GENDER
+} from '../../../../selectsComponent/constants';
 import {
   NATURAL_PERSON, JURIDICAL_PERSON, MESSAGE_SAVE_DATA, EDITAR,
   MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
@@ -36,10 +38,6 @@ import {
   REGEX_SIMPLE_XSS_STRING
 } from '../../../../../constantsGlobal';
 
-const fields = ["id", "address", "cityId", "clientId", "comment", "countryId", "firstLastName", "firstName",
-  "fiscalCountryId", "genderId", "middleName", "provinceId", "secondLastName", "shareHolderIdNumber",
-  "shareHolderIdType", "shareHolderKindId", "shareHolderName", "shareHolderType", "sharePercentage",
-  "tributaryNumber"];
 const errors = {}
 
 var typeMessage = "error";
@@ -47,73 +45,6 @@ var titleMessage = "Campos obligatorios";
 var message = "Señor usuario, debe ingresar los campos marcados con asterisco.";
 var valueTypeShareholder;
 
-const validate = values => {
-  if (!values.shareHolderKindId) {
-    errors.shareHolderKindId = "Debe seleccionar una opción";
-  } else {
-    errors.shareHolderKindId = null;
-  }
-  if (!values.firstName && valueTypeShareholder === NATURAL_PERSON) {
-    errors.firstName = "Debe ingresar un valor";
-  } else if (xssValidation(values.firstName)) {
-    errors.firstName = VALUE_XSS_INVALID;
-  } else {
-    errors.firstName = null;
-  }
-  if (!values.firstLastName && valueTypeShareholder === NATURAL_PERSON) {
-    errors.firstLastName = "Debe ingresar un valor";
-  } else if (xssValidation(values.firstLastName)) {
-    errors.firstLastName = VALUE_XSS_INVALID;
-  } else {
-    errors.firstLastName = null;
-  }
-  if (!values.shareHolderName && valueTypeShareholder === JURIDICAL_PERSON) {
-    errors.shareHolderName = "Debe ingresar un valor";
-  } else if (xssValidation(values.shareHolderName)) {
-    errors.shareHolderName = VALUE_XSS_INVALID;
-  } else {
-    errors.shareHolderName = null;
-  }
-  if (!values.sharePercentage) {
-    errors.sharePercentage = "Debe ingresar un valor";
-  } else if (xssValidation(values.sharePercentage)) {
-    errors.sharePercentage = VALUE_XSS_INVALID;
-  } else {
-    if (values.sharePercentage <= 0 || values.sharePercentage > 100) {
-      errors.sharePercentage = "Debe ingresar un valor mayor a 0 y menor o igual a 100";
-    } else {
-      errors.sharePercentage = null;
-    }
-  }
-
-  if (xssValidation(values.address)) {
-    errors.address = VALUE_XSS_INVALID;
-  } else {
-    errors.address = null;
-  }
-  if (xssValidation(values.comment)) {
-    errors.comment = VALUE_XSS_INVALID;
-  } else {
-    errors.comment = null;
-  }
-  if (xssValidation(values.middleName)) {
-    errors.middleName = VALUE_XSS_INVALID;
-  } else {
-    errors.middleName = null;
-  }
-  if (xssValidation(values.secondLastName)) {
-    errors.secondLastName = VALUE_XSS_INVALID;
-  } else {
-    errors.secondLastName = null;
-  }
-  if (xssValidation(values.tributaryNumber)) {
-    errors.tributaryNumber = VALUE_XSS_INVALID;
-  } else {
-    errors.tributaryNumber = null;
-  }
-
-  return errors;
-};
 
 class ComponentShareHolderDetail extends Component {
 
@@ -121,7 +52,8 @@ class ComponentShareHolderDetail extends Component {
     super(props);
     this.state = {
       showMessage: false,
-      isEditable: false
+      isEditable: false,
+      isNaturePerson: false
     };
     this._closeCreate = this._closeCreate.bind(this);
     this._editShareHolder = this._editShareHolder.bind(this);
@@ -174,9 +106,26 @@ class ComponentShareHolderDetail extends Component {
   }
 
   _editShareHolder() {
+    const { fields: { isNaturePerson }, editShareholderReducer } = this.props;
+
+    const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
+    if (shareHolderEdit !== null && shareHolderEdit !== '' && shareHolderEdit !== undefined) {
+      valueTypeShareholder = shareHolderEdit.shareHolderTypeStr;
+    }
+
+    let newValue;
+    if (valueTypeShareholder != NATURAL_PERSON) { 
+      newValue= false;
+    }else{
+      newValue= true;
+    }
+    
+    isNaturePerson.onChange(newValue);
+
     this.setState({
       showMessage: false,
-      isEditable: !this.state.isEditable
+      isEditable: !this.state.isEditable, 
+      isNaturePerson: newValue
     });
   }
 
@@ -341,25 +290,24 @@ class ComponentShareHolderDetail extends Component {
                 <dt><span>Tipo de accionista (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <ComboBox
                   name="tipoAccionista"
-                  labelInput="Seleccione"
-                  {...shareHolderKindId}
+                  labelInput="Seleccione"   
                   valueProp={'id'}
                   textProp={'value'}
                   data={shareHolderEdit === null ? [] : selectsReducer.get(SHAREHOLDER_KIND)}
                   disabled={this.state.isEditable ? '' : 'disabled'}
+                  {...shareHolderKindId}
                 />
               </Col>
               <Col xs={12} md={4} lg={4}>
                 <dt><span>Porcentaje de participación (</span><span style={{ color: "red" }}>*</span>)</dt>
-                <InputComponent
-                  {...sharePercentage}
+                <InputComponent        
                   name="porcentajePart"
                   style={{ textAlign: "right" }}
                   type="text"
-                  min={0}
                   max="5"
                   onBlur={val => this._handleBlurValueNumber(sharePercentage, val)}
                   disabled={this.state.isEditable ? '' : 'disabled'}
+                  {...sharePercentage}
                 />
               </Col>
               <Col xs={12} sm={12} md={6} lg={4}>
@@ -372,11 +320,11 @@ class ComponentShareHolderDetail extends Component {
               <Col xs={12} md={12} lg={12} style={valueTypeShareholder === JURIDICAL_PERSON ? { display: "block" } : { display: "none" }}>
                 <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
                 <InputComponent
-                  {...shareHolderName}
                   name="razonSocial"
-                  type="text"
+                  type={valueTypeShareholder === JURIDICAL_PERSON ? 'text' : 'hidden' }
                   max="150"
                   disabled={this.state.isEditable ? '' : 'disabled'}
+                  {...shareHolderName}
                 />
               </Col>
               <Col xs={12} md={4} lg={4} style={valueTypeShareholder === NATURAL_PERSON ? { display: "block" } : { display: "none" }}>
@@ -384,7 +332,7 @@ class ComponentShareHolderDetail extends Component {
                 <InputComponent
                   {...firstName}
                   name="primerNombre"
-                  type="text"
+                  type={valueTypeShareholder === NATURAL_PERSON ? 'text' : 'hidden' }
                   max="60"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
@@ -394,7 +342,7 @@ class ComponentShareHolderDetail extends Component {
                 <InputComponent
                   {...middleName}
                   name="segundoNombre"
-                  type="text"
+                  type={valueTypeShareholder === NATURAL_PERSON ? 'text' : 'hidden' }
                   max="60"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
@@ -404,7 +352,7 @@ class ComponentShareHolderDetail extends Component {
                 <InputComponent
                   {...firstLastName}
                   name="primerApellido"
-                  type="text"
+                  type={valueTypeShareholder === NATURAL_PERSON ? 'text' : 'hidden' }
                   max="60"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
@@ -414,7 +362,7 @@ class ComponentShareHolderDetail extends Component {
                 <InputComponent
                   {...secondLastName}
                   name="segundoApellido"
-                  type="text"
+                  type={valueTypeShareholder === NATURAL_PERSON ? 'text' : 'hidden' }
                   max="60"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                 />
@@ -426,7 +374,7 @@ class ComponentShareHolderDetail extends Component {
                   valueProp={'id'}
                   textProp={'value'}
                   data={shareHolderEdit === null ? [] : selectsReducer.get(GENDER)}
-                  disabled={this.state.isEditable ? '' : 'disabled'}
+                  disabled={this.state.isEditable && valueTypeShareholder === NATURAL_PERSON ? '' : 'disabled'}
                 />
               </Col>
             </Row>
@@ -606,7 +554,7 @@ function mapStateToProps({ editShareholderReducer, selectsReducer, createShareho
         shareHolderKindId: shareHolderEdit.shareHolderKindId,
         shareHolderName: shareHolderEdit.shareHolderName,
         shareHolderType: shareHolderEdit.shareHolderType,
-        sharePercentage: shareHolderEdit.sharePercentage,
+        sharePercentage: String(shareHolderEdit.sharePercentage),
         tributaryNumber: shareHolderEdit.tributaryNumber
       }
     };
