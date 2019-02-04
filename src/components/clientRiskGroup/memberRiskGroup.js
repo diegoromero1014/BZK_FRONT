@@ -8,7 +8,7 @@ import Textarea from "../../ui/textarea/textareaComponent";
 import SweetAlert from "../sweetalertFocus";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { SESSION_EXPIRED} from "../../constantsGlobal";
-import { formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation, onSessionExpire } from "../../actionsGlobal";
+import { formValidateKeyEnter, nonValidateEnter, validateResponse, onSessionExpire } from "../../actionsGlobal";
 import { bindActionCreators } from "redux";
 import { addClientRiskGroup, getClientsRiskGroup } from "./actions";
 import * as constants from "../selectsComponent/constants";

@@ -936,7 +936,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             {...commission}
                                             parentId="dashboardComponentScroll"
                                             disabled={this.state.isEditable ? '' : 'disabled'}
-                                            onBlur={val => handleBlurValueNumber(1, commission, val, true)}
+                                            onBlur={val => handleBlurValueNumber(2, commission, val, true)}
                                             onFocus={val => handleFocusValueNumber(commission, commission.value)}
                                         />
                                     </div>
@@ -1347,10 +1347,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         fields,
         validate,
         touchOnChange: true,
-        overwriteOnInitialValuesChange: false,
-        onSubmitFail: errors => {
-
-            let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
-        }
+        overwriteOnInitialValuesChange: false
     }, mapStateToProps, mapDispatchToProps)(FormEditPipeline);
 }

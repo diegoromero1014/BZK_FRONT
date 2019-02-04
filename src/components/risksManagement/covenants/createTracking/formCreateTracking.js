@@ -11,7 +11,7 @@ import InputComponent from "../../../../ui/input/inputComponent";
 import Textarea from "../../../../ui/textarea/textareaComponent";
 import DateTimePickerUi from "../../../../ui/dateTimePicker/dateTimePickerComponent";
 
-import { xssValidation, validateIsNullOrUndefined } from "../../../../actionsGlobal";
+import { validateIsNullOrUndefined } from "../../../../actionsGlobal";
 import { redirectUrl } from "../../../globalComponents/actions";
 import { changeStatusCreate, clientCovenants, createTrackingCovenant, getInfoCovenant } from "../actions";
 import { getMasterDataFields } from "../../../selectsComponent/actions";
@@ -19,12 +19,11 @@ import { changePage, covenantsFindServer } from "../../../alertCovenants/actions
 import { showLoading } from "../../../loading/actions";
 import { swtShowMessage } from "../../../sweetAlertMessages/actions";
 
-import { DATE_FORMAT, MESSAGE_SAVE_DATA, OPTION_REQUIRED, STR_YES, VALUE_REQUIERED, VALUE_XSS_INVALID } from "../../../../constantsGlobal";
+import { DATE_FORMAT, MESSAGE_SAVE_DATA, STR_YES } from "../../../../constantsGlobal";
 import { FULLFILLMENT_COVENANT, VALID_COVENANT } from "../../../selectsComponent/constants";
 import { TITLE_FIELD_OBSERVED_VALUE, CLASSIFICATION_SPECIFIC } from "../constants";
 import { NUMBER_RECORDS } from "../../../alertCovenants/constants";
 
-const errors = {};
 let isMandatoryObservations = false;
 let isFinancialStatements = false;
 

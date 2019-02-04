@@ -15,7 +15,6 @@ import { NUMBER_RECORDS } from "../constants";
 import { MESSAGE_SAVE_DATA, REQUEST_SUCCESS, REQUEST_INVALID_INPUT } from "../../../constantsGlobal";
 import { TASK_STATUS } from "../../selectsComponent/constants";
 import { redirectUrl } from "../../globalComponents/actions";
-import { htmlToText, xssValidation } from '../../../actionsGlobal';
 import RichText from '../../richText/richTextComponent';
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
