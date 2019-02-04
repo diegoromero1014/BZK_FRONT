@@ -720,7 +720,7 @@ export const checkGroupExternalClientName = value => {
 export const checkGroupExternalClientNumberDocument = value => {
     let message = null;
 
-    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && patternOfExternalClientNumberDocument.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfExternalClientNumberDocument.test(value)) {
         message = MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT;
     }
 
