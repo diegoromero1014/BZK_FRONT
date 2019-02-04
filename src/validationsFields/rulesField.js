@@ -266,13 +266,16 @@ export const checkdetailNonOperatingIncome = (value, fields, props) => {
 export const checkControlLinkedPaymentsRequired = (value, fields, props) => {
     let message = null;
     let isEditButton = props.idButton;
+    let noApplied = props.clientInformacion.get('noAppliedControlLinkedPayments');
     let allowRiskGroupEdit = _.get(props.reducerGlobal.get(PERMISSIONSCLIENTS), _.indexOf(props.reducerGlobal.get(PERMISSIONSCLIENTS), INFO_CREDIT_STUDY), false);
-    if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT && allowRiskGroupEdit) {
+    if ((_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value)) && isEditButton !== BUTTON_EDIT && allowRiskGroupEdit && !noApplied) {
         message = MESSAGE_REQUIRED_VALUE;
     }
 
     return message;
 }
+
+
 
 export const checkForValueIsExClient = (value, fields, props) => {
     let message = null;
