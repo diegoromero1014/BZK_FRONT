@@ -119,7 +119,7 @@ export class ModalObservationRiskGroup extends Component {
                                     name="observation"
                                     {...observation}
                                     title="Ingrese las observaciones"
-                                    style={{ width: '100%', height: '108px' }}
+                                    style={{ width: '100%', height: '90px' }}
                                     max={500}
                                 />
                             </Col>
