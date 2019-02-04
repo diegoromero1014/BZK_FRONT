@@ -361,7 +361,7 @@ export const checkPostalCode = value => {
 
 export const checkPhone = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfPhone.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfPhone.test(value)) {
         message = MESSAGE_WARNING_PHONE;
     }
 
@@ -379,7 +379,7 @@ export const checkOnlyNumbers = value => {
 
 export const checkEmail = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfStructureEmail.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfStructureEmail.test(value)) {
         message = MESSAGE_WARNING_INVALID_EMAIL;
     }
 
@@ -424,7 +424,7 @@ export const checkHistoryFields = value => {
 
 export const checkOtherReason = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && patternOtherReason.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOtherReason.test(value)) {
         message = MESSAGE_WARNING_OTHER_REASON;
     }
     return message;
