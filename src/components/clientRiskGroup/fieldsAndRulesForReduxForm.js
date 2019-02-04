@@ -8,7 +8,6 @@ const fieldsWithRules = {
     id: { rules: [] },
     clientName: { rules: [checkRequired, checkMaxLength(50), checkFirstCharacter, checkGroupName] },
     justification: { rules: [checkRequired, checkMaxLength(60), checkFirstCharacter, checkJustificationsRiskGroup] },
-    observation: { rules: [checkRequired, checkMaxLength(500), checkFirstCharacter, checkObservationsRiskGroup] },
     conformationReasonId: { rules: [checkRequired] },
 };
 

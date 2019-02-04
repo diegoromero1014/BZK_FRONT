@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
+import _ from 'lodash';
 import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid';
-import { validateResponse, stringValidate, xssValidation } from '../../../actionsGlobal';
+import { validateResponse } from '../../../actionsGlobal';
 import Textarea from "../../../ui/textarea/textareaComponent";
 import { changeStateSaveData } from '../../dashboard/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import {
     MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, TITLE_ERROR_SWEET_ALERT, MESSAGE_SAVE_DATA,
-    MESSAGE_SUCCESS, VALUE_XSS_INVALID
+    MESSAGE_SUCCESS
 } from '../../../constantsGlobal';
 import ItemObservationRiskGroup from "./itemObservationRiskGroup";
 import { saveObservationsRiskGroup, getListObservationsRiskGroupById } from '../actions';
-import { fields, validations as validate } from './../fieldsAndRulesForReduxForm';
+import { fields, validations as validate } from './fieldsAndRulesForNeedObservations';
 
-export class modalObservationRiskGroup extends Component {
+export class ModalObservationRiskGroup extends Component {
     constructor(props) {
         super(props);
         this._mapItemObservation = this._mapItemObservation.bind(this);
@@ -26,26 +27,24 @@ export class modalObservationRiskGroup extends Component {
     }
 
     _saveObservation(e) {
-        e.preventDefault();
         const { fields: { observation }, saveObservationsRiskGroup, riskGroupReducer, infoRiskGroup, changeStateSaveData,
             swtShowMessage, isOpen } = this.props;
-        const observations = riskGroupReducer.get("observtionsRiskGroup");
-        var arr_ob = Object.assign([], observations);
-        var ob = Object.assign({}, arr_ob.pop());
-        changeStateSaveData(true, MESSAGE_SAVE_DATA);
-        saveObservationsRiskGroup(ob.codeEntity, infoRiskGroup.entity, observation.value).then((data) => {
-            changeStateSaveData(false, "");
-            if (validateResponse(data)) {
-                isOpen();
-                swtShowMessage(MESSAGE_SUCCESS, 'Observaciones', 'Señor usuario, las observaciones se han guardado exitosamente');
-            } else {
+            const observations = riskGroupReducer.get("observtionsRiskGroup");
+            var arr_ob = Object.assign([], observations);
+            var ob = Object.assign({}, arr_ob.pop());
+            changeStateSaveData(true, MESSAGE_SAVE_DATA);
+            saveObservationsRiskGroup(ob.codeEntity, infoRiskGroup.entity, observation.value).then((data) => {
+                changeStateSaveData(false, "");
+                if (validateResponse(data)) {
+                    isOpen();
+                    swtShowMessage(MESSAGE_SUCCESS, 'Observaciones', 'Señor usuario, las observaciones se han guardado exitosamente');
+                } else {
+                    swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                }
+            }, (reason) => {
+                changeStateSaveData(false, "");
                 swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-            }
-        }, (reason) => {
-            changeStateSaveData(false, "");
-            swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-        });
-
+            });
     }
 
 
@@ -65,10 +64,10 @@ export class modalObservationRiskGroup extends Component {
     }
     render() {
         const { fields: { observation }, riskGroupReducer, infoRiskGroup, isOpen, handleSubmit } = this.props;
-        const listObservations = riskGroupReducer.get('observtionsRiskGroup');
+        const listObservations = Object.assign([], riskGroupReducer.get('observtionsRiskGroup'));
         return (
             <div>
-                <form >
+                <form onSubmit={handleSubmit(this._saveObservation)} >
                     <div style={{ overflow: 'hidden', maxHeight: '475px' }} className="modalBt4-body modal-body business-content editable-form-content clearfix"
                         id="modalCreateBoardMembers">
                         <Row style={{ margin: '15px 0px 0px 10px' }}>
@@ -127,8 +126,7 @@ export class modalObservationRiskGroup extends Component {
                         </Row>
                     </div>
                     <div className="modalBt4-footer modal-footer">
-                        <button type="submit" className="btn btn-primary modal-button-edit"
-                            onClick={(e) => this._saveObservation(e)}>
+                        <button type="submit" className="btn btn-primary modal-button-edit">
                             <span>Guardar</span>
                         </button>
                         <button className="modal-button-edit btn btn-default btnDefaultAyax"
@@ -162,4 +160,4 @@ export default reduxForm({
     form: 'modalObservationRisk',
     fields,
     validate
-}, mapStateToProps, mapDispatchToProps)(modalObservationRiskGroup);
+}, mapStateToProps, mapDispatchToProps)(ModalObservationRiskGroup);
