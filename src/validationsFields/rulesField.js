@@ -13,7 +13,7 @@ import {OTHER, EXCLIENT, RESPONSE_INFO, MARK_GEREN, BUTTON_EDIT,
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
-    patternOfStructureEmail, patternOfHistory, patternOfClientName, patternOfDescription,
+    patternOfStructureEmail, patternOfHistory, patternOfClientName, patternOfDescription, patternOfEmail,
     patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
     patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant, 
     patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
@@ -379,7 +379,9 @@ export const checkOnlyNumbers = value => {
 
 export const checkEmail = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfStructureEmail.test(value)) {
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) &&
+        (!patternOfStructureEmail.test(value) || !patternOfEmail.test(value))) {
         message = MESSAGE_WARNING_INVALID_EMAIL;
     }
 
