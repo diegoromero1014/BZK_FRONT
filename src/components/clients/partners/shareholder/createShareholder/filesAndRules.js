@@ -3,7 +3,7 @@ import _ from "lodash";
 import {
     checkRequired, processRules, checkRequiredWhenVarIsTrue, checkRequiredWhenVarIsFalse, 
     checkClientName, checkNumberInRange, checkNumberDocument, checkOnlyAlphabetical, checkMinLength, 
-    checkMaxLength, checkObservations, checkFirstCharacter, checkClientNeighborhood, checkOnlyNumbers
+    checkMaxLength, checkObservations, checkFirstCharacter, checkClientNeighborhood, checkOnlyNumbers, checkDecimalNumbers
 } from '../../../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -19,7 +19,7 @@ export const fieldsWithRules = {
     genero: { rules: [] },
     razonSocial: { rules: [checkRequiredWhenVarIsFalse('isNaturePerson'), checkFirstCharacter, checkClientName, checkMaxLength(50)] },
     direccion: { rules: [checkFirstCharacter, checkClientNeighborhood, checkMaxLength(60)] },
-    porcentajePart: { rules: [checkFirstCharacter, checkOnlyNumbers, checkRequired, checkNumberInRange(0, 100)] },
+    porcentajePart: { rules: [checkFirstCharacter, checkDecimalNumbers, checkRequired, checkNumberInRange(0, 100)] },
     pais: { rules: [] },
     departamento: { rules: [] },
     ciudad: { rules: [] },
