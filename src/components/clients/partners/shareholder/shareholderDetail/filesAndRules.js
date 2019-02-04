@@ -2,7 +2,7 @@ import _ from "lodash";
 
 import {
     checkRequired, processRules, checkRequiredWhenVarIsTrue, checkRequiredWhenVarIsFalse, 
-    checkClientName, checkNumberInRange, checkNumberDocument, checkOnlyAlphabetical, checkMinLength, 
+    checkClientName, checkNumberInRange, checkOnlyAlphabetical, checkMinLength, 
     checkMaxLength, checkObservations, checkFirstCharacter, checkClientNeighborhood, checkOnlyNumbers, checkDecimalNumbers
 } from '../../../../../validationsFields/rulesField';
 
