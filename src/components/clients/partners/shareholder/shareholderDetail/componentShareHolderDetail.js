@@ -18,7 +18,7 @@ import { getDetailShareHolder, toggleModalShareholder } from './actions';
 import { consultDataSelect, consultListWithParameterUbication, getMasterDataFields } from '../../../../selectsComponent/actions';
 import { createShareholder } from '../createShareholder/actions';
 import { changeStateSaveData } from '../../../../dashboard/actions';
-import { formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation } from '../../../../../actionsGlobal';
+import { formValidateKeyEnter, nonValidateEnter, validateResponse } from '../../../../../actionsGlobal';
 import { redirectUrl } from '../../../../globalComponents/actions';
 import { showLoading } from '../../../../loading/actions';
 import { swtShowMessage } from '../../../../sweetAlertMessages/actions';
@@ -31,11 +31,7 @@ import {
 } from '../../../../selectsComponent/constants';
 import {
   NATURAL_PERSON, JURIDICAL_PERSON, MESSAGE_SAVE_DATA, EDITAR,
-  MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
-  REGEX_SIMPLE_XSS,
-  VALUE_XSS_INVALID,
-  REGEX_SIMPLE_XSS_MESAGE,
-  REGEX_SIMPLE_XSS_STRING
+  MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
 } from '../../../../../constantsGlobal';
 
 const errors = {}
@@ -325,6 +321,7 @@ class ComponentShareHolderDetail extends Component {
                   max="150"
                   disabled={this.state.isEditable ? '' : 'disabled'}
                   {...shareHolderName}
+                  value={valueTypeShareholder === JURIDICAL_PERSON ? shareHolderName.value : ''}
                 />
               </Col>
               <Col xs={12} md={4} lg={4} style={valueTypeShareholder === NATURAL_PERSON ? { display: "block" } : { display: "none" }}>
