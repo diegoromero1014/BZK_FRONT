@@ -102,13 +102,13 @@ class ComponentShareHolderDetail extends Component {
   }
 
   _editShareHolder() {
-    const { fields: { isNaturePerson }, editShareholderReducer, errors } = this.props;
+    const { fields: { isNaturePerson }, editShareholderReducer } = this.props;
 
     const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
     if (shareHolderEdit !== null && shareHolderEdit !== '' && shareHolderEdit !== undefined) {
       valueTypeShareholder = shareHolderEdit.shareHolderTypeStr;
     }
-    console.log(errors);
+
     let newValue;
     if (valueTypeShareholder != NATURAL_PERSON) { 
       newValue= false;
