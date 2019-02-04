@@ -13,7 +13,7 @@ import {OTHER, EXCLIENT, RESPONSE_INFO, MARK_GEREN, BUTTON_EDIT,
 import {
     patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
     patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
-    patternOfStructureEmail, patternOfEmail, patternOfHistory, patternOfClientName, patternOfDescription,
+    patternOfStructureEmail, patternOfHistory, patternOfClientName, patternOfDescription,
     patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
     patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant, 
     patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
@@ -361,7 +361,7 @@ export const checkPostalCode = value => {
 
 export const checkPhone = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && patternOfPhone.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfPhone.test(value)) {
         message = MESSAGE_WARNING_PHONE;
     }
 
@@ -379,8 +379,7 @@ export const checkOnlyNumbers = value => {
 
 export const checkEmail = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) &&
-        (!patternOfStructureEmail.test(value) || patternOfEmail.test(value))) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfStructureEmail.test(value)) {
         message = MESSAGE_WARNING_INVALID_EMAIL;
     }
 
