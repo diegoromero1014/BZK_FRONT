@@ -21,8 +21,7 @@ import { changeStateSaveData } from '../../../../dashboard/actions';
 
 import { NUMBER_RECORDS, NATURE_PERSON } from '../constants';
 import {
-  MESSAGE_SAVE_DATA,
-  REGEX_SIMPLE_XSS_MESAGE
+  MESSAGE_SAVE_DATA
 } from '../../../../../constantsGlobal';
 import {
   CONTACT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE,
@@ -539,12 +538,6 @@ class ModalComponentShareholder extends Component {
           title={titleMessage}
           text={message}
           onConfirm={this._closeCreate}
-        />
-        <SweetAlert
-          type="error"
-          show={this.state.showErrorXss}
-          title="Campos obligatorios"
-          text={REGEX_SIMPLE_XSS_MESAGE}
         />
       </form>
     );

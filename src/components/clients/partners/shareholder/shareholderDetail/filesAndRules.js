@@ -2,8 +2,8 @@ import _ from "lodash";
 
 import {
     checkRequired, processRules, checkRequiredWhenVarIsTrue, checkRequiredWhenVarIsFalse, 
-    checkClientName, checkNumberInRange, checkNumberDocument, checkOnlyAlphabetical, checkMinLength, 
-    checkMaxLength, checkObservations, checkFirstCharacter, checkClientNeighborhood, checkOnlyNumbers
+    checkClientName, checkNumberInRange, checkOnlyAlphabetical, checkMinLength, 
+    checkMaxLength, checkObservations, checkFirstCharacter, checkClientNeighborhood, checkOnlyNumbers, checkDecimalNumbers
 } from '../../../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -25,7 +25,7 @@ export const fieldsWithRules = {
     shareHolderKindId: { rules: [checkRequired] },
     shareHolderName: { rules: [checkRequiredWhenVarIsFalse('isNaturePerson'), checkFirstCharacter, checkClientName, checkMaxLength(50)] },
     shareHolderType: { rules: [] },
-    sharePercentage: { rules: [checkFirstCharacter, checkOnlyNumbers, checkRequired, checkNumberInRange(0, 100)] },
+    sharePercentage: { rules: [checkFirstCharacter, checkDecimalNumbers, checkRequired, checkNumberInRange(0, 100)] },
     tributaryNumber: { rules: [checkFirstCharacter, checkOnlyNumbers, checkMinLength(1), checkMaxLength(20)] },
     isNaturePerson: { rules: [] }
 }
