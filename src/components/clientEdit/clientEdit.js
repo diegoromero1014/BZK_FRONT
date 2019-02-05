@@ -44,7 +44,7 @@ import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { showLoading } from "../loading/actions";
 import { saveCreditStudy } from "../clients/creditStudy/actions";
 import {
-    validateResponse, stringValidate, xssValidation, onSessionExpire, validateFields,
+    validateResponse, stringValidate, onSessionExpire, validateFields,
     validateWhileListResponse, replaceCommaInNumber
 } from "../../actionsGlobal";
 import { updateTitleNavBar } from "../navBar/actions";

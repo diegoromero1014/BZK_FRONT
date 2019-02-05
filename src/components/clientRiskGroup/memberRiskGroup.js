@@ -8,7 +8,7 @@ import Textarea from "../../ui/textarea/textareaComponent";
 import SweetAlert from "../sweetalertFocus";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { SESSION_EXPIRED} from "../../constantsGlobal";
-import { formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation, onSessionExpire } from "../../actionsGlobal";
+import { formValidateKeyEnter, nonValidateEnter, validateResponse, onSessionExpire } from "../../actionsGlobal";
 import { bindActionCreators } from "redux";
 import { addClientRiskGroup, getClientsRiskGroup } from "./actions";
 import * as constants from "../selectsComponent/constants";
@@ -124,7 +124,6 @@ class memberRiskGroup extends Component {
                         <Textarea className="form-control need-input"
                             {...justification}
                             name="justification"
-                            maxLength="250"
                             onChange={val => this._onchangeValue("justification", val)}
                         />
                     </Col>

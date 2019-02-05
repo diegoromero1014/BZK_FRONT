@@ -13,7 +13,7 @@ import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 
-import { MESSAGE_ERROR, MESSAGE_DOWNLOAD_DATA, DATE_FORMAT, DATETIME_FORMAT, APP_URL, VALUE_XSS_INVALID } from '../../../constantsGlobal';
+import { MESSAGE_ERROR, MESSAGE_DOWNLOAD_DATA, DATE_FORMAT, DATETIME_FORMAT, APP_URL } from '../../../constantsGlobal';
 import { TAB_TASKS } from '../../viewManagement/constants';
 import { TASK_STATUS } from '../../selectsComponent/constants';
 
@@ -250,14 +250,9 @@ export default reduxForm({
 	form: 'formBusinessPlanCreate',
 	fields,
 	validate,
-	onSubmitFail: errors => {
+	onSubmitFail: () => {
 		document.getElementById('modalComponentScroll').scrollTop = 0;
 		const { swtShowMessage } = thisForm.props;
-		let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
-		if (numXssValidation > 0) {
-			swtShowMessage(MESSAGE_ERROR, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE);
-		} else {
-			swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para descargar las tareas debe ingresar los campos obligatorios.");
-		}
+		swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para descargar las tareas debe ingresar los campos obligatorios.");
 	}
 }, mapStateToProps, mapDispatchToProps)(DownloadTask);

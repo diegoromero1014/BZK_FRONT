@@ -10,12 +10,12 @@ import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import { getClientNeeds, getMasterDataFields, consultListWithParameterUbication, consultDataSelect } from "../../selectsComponent/actions";
-import { IMPLEMENTATION_TIMELINE, PRODUCTS, STATUS_NEED, PRODUCT_FAMILY } from "./constants";
+import { IMPLEMENTATION_TIMELINE, PRODUCTS, PRODUCT_FAMILY } from "./constants";
 import { addNeed, editNeed, validateWhiteListOnNeed } from "./actions";
 import _ from "lodash";
 import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
-import { htmlToText, shorterStringValue, xssValidation } from "../../../actionsGlobal";
+import { htmlToText, shorterStringValue } from "../../../actionsGlobal";
 import { MESSAGE_ERROR, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE } from '../../../constantsGlobal';
 import { TASK_STATUS } from '../../selectsComponent/constants';
 
@@ -37,8 +37,6 @@ const validate = (values) => {
 
     if (!values.descriptionNeed || _.isEmpty(htmlToText(values.descriptionNeed))) {
         errors.descriptionNeed = "Debe ingresar un valor";
-    } else if (xssValidation(values.descriptionNeed, true)) {
-        errors.descriptionNeed = VALUE_XSS_INVALID;
     } else {
         errors.descriptionNeed = null;
     }
@@ -56,16 +54,12 @@ const validate = (values) => {
 
     if (!values.needTask || _.isEmpty(htmlToText(values.needTask))) {
         errors.needTask = "Debe ingresar un valor";
-    } else if (xssValidation(values.needTask, true)) {
-        errors.needTask = VALUE_XSS_INVALID;
     } else {
         errors.needTask = null;
     }
 
     if (!values.needBenefits || _.isEmpty(htmlToText(values.needBenefits))) {
         errors.needBenefits = "Debe ingresar un valor";
-    } else if (xssValidation(values.needBenefits, true)) {
-        errors.needBenefits = VALUE_XSS_INVALID;
     } else {
         errors.needBenefits = null;
     }
@@ -80,8 +74,6 @@ const validate = (values) => {
 
     if (!values.needDate) {
         errors.needDate = "Debe seleccionar una fecha";
-    } else if (xssValidation(values.needDate, true)) {
-        errors.needDate = VALUE_XSS_INVALID;
     } else if (!moment(values.needDate, 'DD/MM/YYYY').isValid()) {
         errors.needDate = "Debe seleccionar una fecha";
     } else {
@@ -594,18 +586,10 @@ export default reduxForm({
     form: 'submitValidationNeed',
     fields,
     validate,
-    onSubmitFail: errors => {
+    onSubmitFail: () => {
         document.getElementById('modalComponentScrollNeed').scrollTop = 0;
         const { swtShowMessage } = thisForm.props;
-
-        let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
-
-        if (numXssValidation > 0) {
-            swtShowMessage(MESSAGE_ERROR, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE);
-        } else {
-            swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para agregar una necesidad debe ingresar los campos obligatorios.");
-        }
-
+        swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para agregar una necesidad debe ingresar los campos obligatorios.");
     }
 }, mapStateToProps, mapDispatchToProps)(ModalNeed);
 

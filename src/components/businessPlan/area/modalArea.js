@@ -17,10 +17,10 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import { getMasterDataFields } from "../../selectsComponent/actions";
 import { addArea, editArea, validateWhiteListOnArea } from "./actions";
-import { htmlToText, xssValidation } from "../../../actionsGlobal";
+import { htmlToText } from "../../../actionsGlobal";
 
 import { STATUS_AREAS } from "./constants";
-import { MESSAGE_ERROR, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE } from '../../../constantsGlobal';
+import { MESSAGE_ERROR } from '../../../constantsGlobal';
 
 const fields = ["idEmployee", "areaDes", "actionArea", "areaResponsable", "areaDate", "statusArea"];
 const errors = {};
@@ -391,23 +391,13 @@ function mapStateToProps({ areas, selectsReducer }, { areaEdit }) {
   }
 }
 
-
 export default reduxForm({
   form: 'submitModalArea',
   fields,
   validate,
-  onSubmitFail: errors => {
+  onSubmitFail: () => {
     document.getElementById('modalComponentScrollArea').scrollTop = 0;
     const { swtShowMessage } = thisForm.props;
-
-
-    let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
-
-    if (numXssValidation > 0) {
-      swtShowMessage(MESSAGE_ERROR, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE);
-    } else {
       swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para agregar una área debe ingresar los campos obligatorios.");
-    }
-
   }
 }, mapStateToProps, mapDispatchToProps)(ModalArea);

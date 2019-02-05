@@ -36,7 +36,7 @@ import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_COMPETITOR, 
 import * as constantsSelects from '../../selectsComponent/constants';
 import { 
     validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport,
-    xssValidation, validateWhileListResponse, replaceCommaInNumber } from '../../../actionsGlobal';
+    validateWhileListResponse, replaceCommaInNumber } from '../../../actionsGlobal';
 import { GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../../clientEdit/constants';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_REPLACE_PDF,
@@ -457,13 +457,7 @@ export class ComponentStudyCredit extends Component {
                             this.setState({
                                 fieldContextRequired: true
                             });
-                        } else if (xssValidation(contextClientField.value)) {
-                            allowSave = false;
-                        }
-
-                        if (xssValidation(inventoryPolicy.value)) {
-                            allowSave = false;
-                        }
+                        } 
 
                         if (!stringValidate(customerTypology.value)) {
                             allowSave = false;
