@@ -362,7 +362,7 @@ export const checkAddress = value => {
 
 export const checkNeighborhood = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfNeighborhood.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfNeighborhood.test(value)) {
         message = MESSAGE_WARNING_NEIGHBORHOOD;
     }
 
@@ -427,7 +427,7 @@ export const checkPipeLineOpportunityName = value => {
 
 export const checkObservationsLinkClient = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfObservationLinkClient.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfObservationLinkClient.test(value)) {
         message = MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
     }
 
