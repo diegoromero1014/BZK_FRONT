@@ -5,7 +5,7 @@ import {
 } from './../../validationsFields/rulesField';
 
 const fieldsWithRules = {
-    justification: { rules: [checkRequired, checkMaxLength(60), checkFirstCharacter, checkJustificationsRiskGroup] }
+    justification: { rules: [checkRequired, checkMaxLength(1000), checkFirstCharacter, checkJustificationsRiskGroup] }
 };
 
 export const fields = _.keys(fieldsWithRules);

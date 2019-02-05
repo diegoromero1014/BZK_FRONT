@@ -97,7 +97,6 @@ class modalComponentDeleteRiskGroup extends Component {
                                 <Textarea className="form-control need-input"
                                           {...justification}
                                           name="justification"
-                                          maxLength="250"
                                           onChange={val => this._onchangeValue(val)}
                                 />
                             </div>
