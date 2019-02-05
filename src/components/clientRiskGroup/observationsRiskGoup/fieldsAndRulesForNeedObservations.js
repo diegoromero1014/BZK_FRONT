@@ -5,7 +5,7 @@ import {
 } from './../../../validationsFields/rulesField';
 
 const fieldsWithRules = {
-    observation: { rules: [checkRequired, checkMaxLength(500), checkFirstCharacter, checkObservationsRiskGroup] }
+    observation: { rules: [checkRequired, checkMaxLength(1000), checkFirstCharacter, checkObservationsRiskGroup] }
 };
 
 export const fields = _.keys(fieldsWithRules);

@@ -237,7 +237,6 @@ class ModalComponentRiskGroup extends Component {
                                                             {this.state.allowEditGroup &&
                                                                 <Input name="groupName"
                                                                     type="text"
-                                                                    max="60"
                                                                     {...groupName}
                                                                 />
                                                             }
@@ -254,7 +253,6 @@ class ModalComponentRiskGroup extends Component {
                                                                 <Textarea className="form-control need-input"
                                                                     {...groupObservations}
                                                                     name="groupObservations"
-                                                                    maxLength="250"
                                                                 />
                                                             </div>
                                                         </Col>

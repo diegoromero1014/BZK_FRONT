@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import {
     processRules, checkRequired, checkMaxLength, checkFirstCharacter, checkGroupName,
-    checkJustificationsRiskGroup, checkObservationsRiskGroup, checkGroupExternalClientNumberDocument
+    checkJustificationsRiskGroup, checkGroupExternalClientNumberDocument
 } from './../../validationsFields/rulesField';
 
 const fieldsWithRules = {
     id: { rules: [] },
     clientName: { rules: [checkRequired, checkMaxLength(50), checkFirstCharacter, checkGroupName] },
-    justification: { rules: [checkRequired, checkMaxLength(60), checkFirstCharacter, checkJustificationsRiskGroup] },
+    justification: { rules: [checkRequired, checkMaxLength(1000), checkFirstCharacter, checkJustificationsRiskGroup] },
     conformationReasonId: { rules: [checkRequired] },
 };
 
