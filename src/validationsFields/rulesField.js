@@ -353,7 +353,7 @@ export const checkObservations = value => {
 
 export const checkAddress = value => {
     let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && !patternOfAddress.test(value)) {
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfAddress.test(value)) {
         message = MESSAGE_WARNING_ADDRESS;
     }
 
