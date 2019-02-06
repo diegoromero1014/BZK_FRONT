@@ -11,10 +11,8 @@ import Textarea from '../../ui/textarea/textareaComponent';
 import _ from 'lodash';
 import {showLoading} from '../loading/actions';
 import {swtShowMessage} from '../sweetAlertMessages/actions';
-import {xssValidation} from "../../actionsGlobal";
-import {VALUE_XSS_INVALID,MESSAGE_ERROR} from "../../constantsGlobal";
+import {fields, validations as validate} from "./fieldsAndRulesForReduxForm";
 
-const fields = ["observations"];
 
 class ModalObservation extends Component {
 
@@ -29,12 +27,6 @@ class ModalObservation extends Component {
         showLoading(true, 'Guardando...');
         
         if (!_.isEqual(observations.value.trim(), '')) {
-
-            if (xssValidation(observations.value)){
-                swtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
-                showLoading(false, '');
-            }
-            else{
                 saveObservationPortfolioExp(alertPortfolioExpId, observations.value)
                 .then((data) => {
                     showLoading(false, null);
@@ -57,7 +49,6 @@ class ModalObservation extends Component {
                     showLoading(false, '');
                     swtShowMessage('error', 'Edición observaciones', 'Señor usuario, ocurrió un error guardando las observaciones.');
                 });
-            }
         }
         else {
             showLoading(false, '');
@@ -69,35 +60,37 @@ class ModalObservation extends Component {
     }
 
     render() {
-        const {fields:{observations}} = this.props;
+        const {fields:{observations}, handleSubmit} = this.props;
         return (
-            <div>
-                <div className="modalBt4-body modal-body clearfix"
-                     style={{overflowX: 'hidden', maxHeight: '490px !important'}}>
-                    <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
-                        <Row style={{paddingTop: '10px'}}>
-                            <Col xs={12} md={12} lg={12}>
-                                <h4>Observaciones</h4>
-                                <div>
-                                            <Textarea
-                                                name="actionArea"
-                                                type="text"
-                                                style={{width: '100%', height: '100%', textAlign: 'justify'}}
-                                                max="1000"
-                                                rows={5}
-                                                {...observations}
-                                            />
-                                </div>
-                            </Col>
-                        </Row>
+            <form onSubmit={handleSubmit(this._handleSaveObservation)}>
+                <div>
+                    <div className="modalBt4-body modal-body clearfix"
+                        style={{ overflowX: 'hidden', maxHeight: '490px !important' }}>
+                        <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                            <Row style={{ paddingTop: '10px' }}>
+                                <Col xs={12} md={12} lg={12}>
+                                    <h4>Observaciones</h4>
+                                    <div>
+                                        <Textarea
+                                            name="actionArea"
+                                            type="text"
+                                            style={{ width: '100%', height: '100%', textAlign: 'justify' }}
+                                            max="1000"
+                                            rows={5}
+                                            {...observations}
+                                        />
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
                     </div>
-                </div>
-                <div className="modalBt4-footer modal-footer">
-                    <button type="button" onClick={this._handleSaveObservation}
+                    <div className="modalBt4-footer modal-footer">
+                        <button type="submit"
                             className="btn btn-primary modal-button-edit">Guardar
                     </button>
+                    </div>
                 </div>
-            </div>
+            </form>
         );
     }
 }
@@ -127,5 +120,6 @@ function mapStateToProps({reducerGlobal, alertPortfolioExpiration}, {alertPortfo
 
 export default reduxForm({
     form: 'submitModalObservationAlertPortfolioExp',
-    fields
+    fields,
+    validate
 }, mapStateToProps, mapDispatchToProps)(ModalObservation);
