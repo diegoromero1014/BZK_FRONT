@@ -2,7 +2,6 @@
  * Created by Andres Hurtado on 25/04/2017.
  */
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {reduxForm} from 'redux-form';
 import {Row, Col} from 'react-flexbox-grid';
