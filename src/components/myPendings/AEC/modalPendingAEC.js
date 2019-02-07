@@ -1,30 +1,15 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import SweetAlert from '../../sweetalertFocus';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import { nonValidateEnter, formValidateKeyEnter, validateResponse } from '../../../actionsGlobal';
-import * as constants from './constants';
-import { changeStateSaveData } from '../../dashboard/actions';
-import numeral from 'numeral';
 import _ from 'lodash';
 import { saveCommercialObservations, getDetailAEC, clearDetailAEC } from './actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT } from '../../../constantsGlobal';
-
-const fields = ["commercialObservations"];
-const errors = {};
-
-const validate = (values) => {
-    if (!values.commercialObservations) {
-        errors.commercialObservations = "Debe ingresar un valor";
-    } else {
-        errors.commercialObservations = null;
-    }
-    return errors;
-};
+import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 
 class ModalPendingAEC extends Component {
     constructor(props) {
