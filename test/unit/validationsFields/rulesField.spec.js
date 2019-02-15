@@ -1,12 +1,15 @@
 import { checkFirstCharacter, checkObservations, checkRequired, checkOnlyAlphabetical,
     checkIsUpdateClient, checkMinLength, checkMaxLength, checkNumberDocument, checkAddress,
     checkNeighborhood, checkPostalCode, checkPhone, checkOnlyNumbers, checkEmail, checkContactRelevantFeatures,
-    checkPipeLineOpportunityName, checkObservationsLinkClient, checkHistoryFields, checkOtherReason} from '../../../src/validationsFields/rulesField';
+    checkPipeLineOpportunityName, checkObservationsLinkClient, checkHistoryFields, checkOtherReason, checkClientName,
+    checkClientContext, checkInventoryPolicy, checkControlLinkedPayments, checkClientDescription, checkClientAddress,
+    checkNameEntityProduct, checkdetailNonOperatingIncomePrincipal, checkOttherOperationsForeign, checkClientNeighborhood} from '../../../src/validationsFields/rulesField';
 import { MESSAGE_WARNING_FORBIDDEN_CHARACTER, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_REQUIRED_VALUE,
     MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH, MESSAGE_WARNING_MAX_LENGTH,
     MESSAGE_WARNING_NUMBER_DOCUMENT, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE,
     MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS, MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES,
-    MESSAGE_WARNING_OPPORTUNITY_NAME, MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_WARNING_HISTORY, MESSAGE_WARNING_OTHER_REASON} from '../../../src/validationsFields/validationsMessages';
+    MESSAGE_WARNING_OPPORTUNITY_NAME, MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_WARNING_HISTORY, MESSAGE_WARNING_OTHER_REASON,
+    MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_NAME_ENTITY, MESSAGE_WARNING_NO_OPERATING_IN_COME, MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH} from '../../../src/validationsFields/validationsMessages';
 
 describe('Test checkRequired white list validation', () => {
     it('should throw error if the text is empty', () => {
@@ -494,8 +497,287 @@ describe('Test checkHistoryFields white list validation', () => {
 
 describe('Test checkOtherReason white list validation', () => {
     it('should throw error when value has special characters', () => {
-        const value = 'CMD@_COMMAND';
+        const value = 'this text contains $#!"&%@ especial characters in the middle';
         const expectedMessage = MESSAGE_WARNING_OTHER_REASON;
         expect(checkOtherReason(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is empty', () => {
+        const value = '';
+        const expectedMessage = null;
+        expect(checkOtherReason(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is correct', () => {
+        const value = 'this value doesnt contains special characters?¿';
+        const expectedMessage = null;
+        expect(checkOtherReason(value)).equal(expectedMessage);
+    });
+});
+
+describe('Test checkClientName white list validation', () => {
+    it('should throw error when value has special characters', () => {
+        const value = 'this text contains $#!"&%@ especial characters in the middle';
+        const expectedMessage = MESSAGE_WARNING_CLIENT_NAME;
+        expect(checkClientName(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is empty', () => {
+        const value = '';
+        const expectedMessage = null;
+        expect(checkClientName(value)).equal(expectedMessage);
+    });
+
+    it('should throw error when value has interrogation characters', () => {
+        const value = 'this value doesnt contains special characters?¿';
+        const expectedMessage = MESSAGE_WARNING_CLIENT_NAME;
+        expect(checkClientName(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is correct', () => {
+        const value = 'Carlos Sanchez Restrepo.';
+        const expectedMessage = null;
+        expect(checkClientName(value)).equal(expectedMessage);
+    });
+});
+
+describe('Test checkClientContext white list validation', () => {
+    it('should throw error when value has special characters', () => {
+        const value = 'this text contains $#!"&%@ especial characters in the middle';
+        const expectedMessage = MESSAGE_WARNING_OBSERVATIONS;
+        expect(checkClientContext(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is empty', () => {
+        const value = '';
+        const expectedMessage = null;
+        expect(checkClientContext(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value has interrogation characters', () => {
+        const value = 'this value doesnt contains special characters?¿';
+        const expectedMessage = null;
+        expect(checkClientContext(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is correct', () => {
+        const value = 'this value doesnt contains special characters';
+        const expectedMessage = null;
+        expect(checkClientContext(value)).equal(expectedMessage);
+    });
+});
+
+describe('Test checkInventoryPolicy white list validation', () => {
+    it('should throw error when value has special characters', () => {
+        const value = 'this text contains $#!"&%@ especial characters in the middle';
+        const expectedMessage = MESSAGE_WARNING_OBSERVATIONS;
+        expect(checkInventoryPolicy(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is empty', () => {
+        const value = '';
+        const expectedMessage = null;
+        expect(checkInventoryPolicy(value)).equal(expectedMessage);
+    });
+
+    it('should  throw null when value has interrogation characters', () => {
+        const value = 'this value doesnt contains special characters?¿';
+        const expectedMessage = null;
+        expect(checkInventoryPolicy(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is correct', () => {
+        const value = 'this value doesnt contains special characters';
+        const expectedMessage = null;
+        expect(checkInventoryPolicy(value)).equal(expectedMessage);
+    });
+});
+
+describe('Test checkControlLinkedPayments white list validation', () => {
+    it('should throw error when value has special characters', () => {
+        const value = 'this text contains $#!"&%@ especial characters in the middle';
+        const expectedMessage = MESSAGE_WARNING_OBSERVATIONS;
+        expect(checkControlLinkedPayments(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is empty', () => {
+        const value = '';
+        const expectedMessage = null;
+        expect(checkControlLinkedPayments(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value has interrogation characters', () => {
+        const value = 'this value doesnt contains special characters?¿';
+        const expectedMessage = null;
+        expect(checkInventoryPolicy(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is correct', () => {
+        const value = 'this value doesnt contains special characters';
+        const expectedMessage = null;
+        expect(checkInventoryPolicy(value)).equal(expectedMessage);
+    });
+});
+
+describe('Test checkClientDescription white list validation', () => {
+    it('should throw error when value has special characters', () => {
+        const value = 'this text contains $#!"&%@ especial characters in the middle';
+        const expectedMessage = MESSAGE_WARNING_OBSERVATIONS;
+        expect(checkClientDescription(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is empty', () => {
+        const value = '';
+        const expectedMessage = null;
+        expect(checkControlLinkedPayments(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value has interrogation characters', () => {
+        const value = 'this value doesnt contains special characters?¿';
+        const expectedMessage = null;
+        expect(checkControlLinkedPayments(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is correct', () => {
+        const value = 'this value doesnt contains special characters';
+        const expectedMessage = null;
+        expect(checkControlLinkedPayments(value)).equal(expectedMessage);
+    });
+});
+
+describe('Test checkClientAddress white list validation', () => {
+    it('should throw error when value has special characters', () => {
+        const value = '@#$!"#$ Cra 26A #30-86';
+        const expectedMessage = MESSAGE_WARNING_ADDRESS;
+        expect(checkClientAddress(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value has only # and - as a special character', () => {
+        const value = 'Cra 26A #30-86';
+        const expectedMessage = null;
+        expect(checkClientAddress(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value has accent mark in any vocal', () => {
+        const value = 'Cra 26A #30-86 Barrio Colón';
+        const expectedMessage = null;
+        expect(checkClientAddress(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value has () ; , . as a special character', () => {
+        const value = 'Cra 26A #(30-86). Barrio Colón, Medellín; Antioquia';
+        const expectedMessage = null;
+        expect(checkClientAddress(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is empty', () => {
+        const value = '';
+        const expectedMessage = null;
+        expect(checkClientAddress(value)).equal(expectedMessage);
+    });
+});
+
+describe('Test checkNameEntityProduct white list validation', () => {
+    it('should throw error when value has special characters', () => {
+        const value = 'any $#!"&%@ name entity';
+        const expectedMessage = MESSAGE_WARNING_NAME_ENTITY;
+        expect(checkNameEntityProduct(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is empty', () => {
+        const value = '';
+        const expectedMessage = null;
+        expect(checkNameEntityProduct(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is correct', () => {
+        const value = 'any name entity';
+        const expectedMessage = null;
+        expect(checkNameEntityProduct(value)).equal(expectedMessage);
+    });
+
+});
+
+describe('Test checkdetailNonOperatingIncomePrincipal white list validation', () => {
+    it('should throw error when value has special characters', () => {
+        const value = 'this text contains $#!"&%@ especial characters in the middle';
+        const expectedMessage = MESSAGE_WARNING_NO_OPERATING_IN_COME;
+        expect(checkdetailNonOperatingIncomePrincipal(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is empty', () => {
+        const value = '';
+        const expectedMessage = null;
+        expect(checkdetailNonOperatingIncomePrincipal(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value has interrogation characters', () => {
+        const value = 'this value doesnt contains special characters?¿';
+        const expectedMessage = null;
+        expect(checkdetailNonOperatingIncomePrincipal(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is correct', () => {
+        const value = 'this value doesnt contains special characters';
+        const expectedMessage = null;
+        expect(checkdetailNonOperatingIncomePrincipal(value)).equal(expectedMessage);
+    });
+});
+
+describe('Test checkOttherOperationsForeign white list validation', () => {
+    it('should throw error when value has special characters', () => {
+        const value = 'this text contains $#!"&%@ especial characters in the middle';
+        const expectedMessage = MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH;
+        expect(checkOttherOperationsForeign(value)).equal(expectedMessage);
+    });
+
+    it('should throw error when value has interrogation characters', () => {
+        const value = 'this value doesnt contains special characters?¿';
+        const expectedMessage = MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH;
+        expect(checkOttherOperationsForeign(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is empty', () => {
+        const value = '';
+        const expectedMessage = null;
+        expect(checkOttherOperationsForeign(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value has slash', () => {
+        const value = '//this value doesnt // contains special characters //\\';
+        const expectedMessage = null;
+        expect(checkOttherOperationsForeign(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is correct', () => {
+        const value = 'this value doesnt contains special characters';
+        const expectedMessage = null;
+        expect(checkOttherOperationsForeign(value)).equal(expectedMessage);
+    });
+});
+
+describe('Test checkClientNeighborhood white list validation', () => {
+    it('should throw error when value has special characters', () => {
+        const value = '=@#$!"#$ Barrio El Salvador';
+        const expectedMessage = MESSAGE_WARNING_NEIGHBORHOOD;
+        expect(checkClientNeighborhood(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value has only has () ; , . as a special character', () => {
+        const value = 'Barrio (El Salvador), Medellin; Antioquia.';
+        const expectedMessage = null;
+        expect(checkClientNeighborhood(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value has accent mark in any vocal', () => {
+        const value = 'Barrio Colón';
+        const expectedMessage = null;
+        expect(checkClientNeighborhood(value)).equal(expectedMessage);
+    });
+
+    it('should throw null when value is empty', () => {
+        const value = '';
+        const expectedMessage = null;
+        expect(checkClientNeighborhood(value)).equal(expectedMessage);
     });
 });
