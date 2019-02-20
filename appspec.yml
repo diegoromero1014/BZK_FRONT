@@ -1,0 +1,33 @@
+version: 0.0
+os: linux
+files:
+  - source: dist
+    destination: /IHS/IBM/HTTPServer/htdocs/biztrack
+permissions:
+  - object: /IHS/IBM/HTTPServer/htdocs/biztrack
+    pattern: "**"
+    owner: wassvc
+    group: wasgrp
+    mode: 644
+    type:
+      - file
+  - object: /IHS/IBM/HTTPServer/htdocs/biztrack
+    pattern: "**"
+    owner: wassvc
+    group: wasgrp
+    mode: 755
+    type:
+      - directory
+hooks:
+  ApplicationStop:
+    - location: scripts/stop_server.sh
+      timeout: 300
+      runas: root
+  BeforeInstall:
+    - location: scripts/permissions.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: scripts/start_server.sh
+      timeout: 300
+      runas: root
