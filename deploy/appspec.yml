@@ -8,14 +8,14 @@ permissions:
     pattern: "**"
     owner: wassvc
     group: wasgrp
-    mode: 644
+    mode: 660
     type:
       - file
-  - object: /IBM/IHS/HTTPServer/htdocs/biztrack
-    pattern: "**"
+  - object: /IBM/IHS/HTTPServer/htdocs
+    pattern: "biztrack"
     owner: wassvc
     group: wasgrp
-    mode: 755
+    mode: 770
     type:
       - directory
 hooks:
