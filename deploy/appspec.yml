@@ -2,16 +2,16 @@ version: 0.0
 os: linux
 files:
   - source: dist
-    destination: /IHS/IBM/HTTPServer/htdocs/biztrack
+    destination: /IBM/IHS/HTTPServer/htdocs/biztrack
 permissions:
-  - object: /IHS/IBM/HTTPServer/htdocs/biztrack
+  - object: /IBM/IHS/HTTPServer/htdocs/biztrack
     pattern: "**"
     owner: wassvc
     group: wasgrp
     mode: 644
     type:
       - file
-  - object: /IHS/IBM/HTTPServer/htdocs/biztrack
+  - object: /IBM/IHS/HTTPServer/htdocs/biztrack
     pattern: "**"
     owner: wassvc
     group: wasgrp
