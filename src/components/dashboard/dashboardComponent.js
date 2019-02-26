@@ -17,9 +17,6 @@ import { RANGO_PASO_PRODUCCION } from '../../constantsParameters'
 
 moment.tz.setDefault('America/Bogota');
 
-let initialDate;
-let finalDate;
-
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -27,7 +24,9 @@ class Dashboard extends Component {
     this.state = {
       showMessageNotification: false,
       messageTitle: "",
-      messageNotification: ""
+      messageNotification: "",
+      initialDate: null,
+      finalDate: null
     }
   }
 
@@ -50,7 +49,7 @@ class Dashboard extends Component {
       if (resolve && resolve.payload && resolve.payload.data) {
         this.initializeRanges(resolve.payload.data);
 
-        if (new Date() <= finalDate && new Date() >= initialDate) {
+        if (new Date() <= this.state.finalDate && new Date() >= this.state.initialDate) {
           this.setState({
             showMessageNotification: false
           })
@@ -70,8 +69,10 @@ class Dashboard extends Component {
     if (data.parameter !== null && data.parameter !== "" && data.parameter !== undefined) {
       let value = (JSON.parse(data.parameter).value).split(" | ");
 
-      initialDate = new Date(value[0]);
-      finalDate = new Date(value[1]);
+      this.setState({
+        initialDate: new Date(value[0]),
+        finalDate: new Date(value[1])
+      })
     }
   }
 
@@ -79,14 +80,7 @@ class Dashboard extends Component {
     const { notifiedProductionUpgrade, validateUpgrateProductionActive } = this.props;
 
     let token = window.localStorage.getItem('sessionTokenFront');
-
-    /**
-     * Leave this empty or 
-     * add code to handle
-     * the event.
-     */
-    window.onstorage = function (e) { };
-
+    
     if (token == null || token === "" || document.cookie.indexOf('estadoconexion=') == -1) {
       window.localStorage.setItem('sessionTokenFront', '');
       document.cookie = 'estadoconexion=activa;path=/';
