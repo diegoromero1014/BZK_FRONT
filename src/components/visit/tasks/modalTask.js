@@ -11,48 +11,21 @@ import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import RichText from "../../richText/richTextComponent";
 
-import { addTask, editTask } from "./actions";
+import { addTask, editTask, validateWhiteListOnTask } from "./actions";
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
-import { htmlToText, xssValidation } from "../../../actionsGlobal";
+import { htmlToText } from "../../../actionsGlobal";
 import { swtShowMessage } from "../../sweetAlertMessages/actions";
 
-import { VALUE_XSS_INVALID } from "../../../constantsGlobal";
+import { fields, validations as validate } from './rulesAndFieldsTaskVisit';
 
-const fields = ["idEmployee", "responsable", "fecha", "tarea", "id"];
-const errors = {};
+
 var usersBanco = [];
 var idUsuario, nameUsuario;
-
-const validate = (values) => {
-    if (!values.responsable) {
-        errors.responsable = "Debe ingresar un valor";
-    } else if (!values.idEmployee) {
-        errors.responsable = "Debe seleccionar un empleado";
-    } else {
-        errors.responsable = null;
-    }
-    if (!values.fecha) {
-        errors.fecha = "Debe seleccionar una opción";
-    } else {
-        errors.fecha = null;
-    }
-    if (!values.tarea || _.isEmpty(htmlToText(values.tarea))) {
-        errors.tarea = "Debe ingresar un valor";
-    } else if (xssValidation(values.tarea, true)) {
-        errors.tarea = VALUE_XSS_INVALID;
-    } else {
-        errors.tarea = null;
-    }
-
-
-    return errors;
-};
 
 class ModalTask extends Component {
 
     constructor(props) {
         super(props);
-        this._close = this._close.bind(this);
         this._closeCreate = this._closeCreate.bind(this);
         this._updateValue = this._updateValue.bind(this);
         this._handleCreateTask = this._handleCreateTask.bind(this);
@@ -64,6 +37,7 @@ class ModalTask extends Component {
             prueba: [],
             showErrorYa: false
         }
+        this.errorTask = null;
         momentLocalizer(moment);
     }
 
@@ -78,22 +52,15 @@ class ModalTask extends Component {
         }
     }
 
-    _close() {
-    }
-
     _closeCreate() {
         const { isOpen, taskEdit } = this.props;
         if (taskEdit !== undefined) {
-
             // Esto se puede borrar
-
             this.setState({
                 showSuccessEdit: false
             });
         } else {
-
             // Esto se puede borrar
-
             this.setState({
                 showSuccessAdd: false
             });
@@ -107,7 +74,6 @@ class ModalTask extends Component {
         const selector = $('.ui.search.responsable');
 
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
-            e.preventDefault();
             if (responsable.value !== "" && responsable.value !== null && responsable.value !== undefined) {
                 if (responsable.value.length < 3) {
                     swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
@@ -139,57 +105,78 @@ class ModalTask extends Component {
     }
 
     _updateValue(value) {
-        const { fields: { responsable }, contactsByClient } = this.props;
+        const { fields: { responsable } } = this.props;
         responsable.onChange(value);
     }
 
-
     _handleCreateTask() {
-        const { fields: { responsable, fecha, tarea, idEmployee, id }, handleSubmit, error, addTask, editTask, taskEdit, swtShowMessage } = this.props;
+        const { fields: { responsable, fecha, tarea, idEmployee, id }, validateWhiteListOnTask, addTask, editTask, taskEdit, swtShowMessage } = this.props;
         if (responsable.value !== nameUsuario) {
             nameUsuario = responsable.value;
             idUsuario = null;
         }
-        if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
-            if (taskEdit !== undefined) {
-                taskEdit.tarea = tarea.value;
-                taskEdit.textTarea = htmlToText(tarea.value);
-                taskEdit.idResponsable = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
-                taskEdit.responsable = nameUsuario;
-                taskEdit.fecha = fecha.value;
-                taskEdit.fechaForm = fecha.value;
-                taskEdit.id = id.value;
-                editTask(taskEdit);
 
-                swtShowMessage('success', 'Tarea editada', 'Señor usuario, la tarea fue editada exitosamente', { onConfirmCallback: this._closeCreate })
+        let jsonValidate = {
+            task: tarea.value
+        };
 
-            } else {
-                const uuid = _.uniqueId('task_');
-                var task = {
-                    uuid,
-                    id: null,
-                    tarea: tarea.value,
-                    textTarea: htmlToText(tarea.value),
-                    idResponsable: idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
-                    responsable: nameUsuario,
-                    fecha: fecha.value,
-                    fechaForm: fecha.value
+        validateWhiteListOnTask(jsonValidate).then((data) => {
+            let errors = data.payload.data.data;
+
+            this.errorTask = null;
+
+            for (let index = 0; index < errors.length; index++) {
+                const error = errors[index];
+                const field = error.fieldName;
+
+                if (_.isEqual(field, 'task')) {
+                    this.errorTask = error.message;
                 }
-                addTask(task);
-
-                // Aqui hay que llamar la accion
-
-                swtShowMessage('success', 'Tarea agregada', 'Señor usuario, la tarea fue agregada exitosamente', { onConfirmCallback: this._closeCreate })
-
             }
-        } else {
-            fecha.onChange('');
-        }
+
+            if (errors.length > 0) {
+                this.forceUpdate();
+                return;
+            }
+
+            if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
+                if (taskEdit !== undefined) {
+                    taskEdit.tarea = tarea.value;
+                    taskEdit.textTarea = htmlToText(tarea.value);
+                    taskEdit.idResponsable = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
+                    taskEdit.responsable = nameUsuario;
+                    taskEdit.fecha = fecha.value;
+                    taskEdit.fechaForm = fecha.value;
+                    taskEdit.id = id.value;
+                    editTask(taskEdit);
+
+                    swtShowMessage('success', 'Tarea editada', 'Señor usuario, la tarea fue editada exitosamente', { onConfirmCallback: this._closeCreate })
+
+                } else {
+                    const uuid = _.uniqueId('task_');
+                    var task = {
+                        uuid,
+                        id: null,
+                        tarea: tarea.value,
+                        textTarea: htmlToText(tarea.value),
+                        idResponsable: idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
+                        responsable: nameUsuario,
+                        fecha: fecha.value,
+                        fechaForm: fecha.value
+                    }
+                    addTask(task);
+
+                    // Aqui hay que llamar la accion
+                    swtShowMessage('success', 'Tarea agregada', 'Señor usuario, la tarea fue agregada exitosamente', { onConfirmCallback: this._closeCreate })
+                }
+            } else {
+                fecha.onChange('');
+            }
+        });
     }
 
     render() {
-        const { modalStatus, selectsReducer } = this.props;
-        const { initialValues, fields: { responsable, fecha, tarea, idEmployee }, handleSubmit, error } = this.props;
+        const { fields: { responsable, fecha, tarea, idEmployee }, handleSubmit } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateTask)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -205,6 +192,7 @@ class ModalTask extends Component {
                                 <dt><span>Responsable (<span style={{ color: "red" }}>*</span>)</span></dt>
                                 <dt style={{ paddingTop: "0px" }}>
                                     <ComboBoxFilter
+                                        id="PendingResponsible"
                                         name="responsableTask"
                                         labelInput="Ingrese un criterio de búsqueda..."
                                         {...responsable}
@@ -239,6 +227,7 @@ class ModalTask extends Component {
                                     style={{ width: '100%', height: '150pt' }}
                                     {...tarea}
                                     touched={true}
+                                    error={this.errorTask}
                                     placeholder="Ingrese la descripción"
                                 />
                             </Col>
@@ -262,7 +251,8 @@ function mapDispatchToProps(dispatch) {
         addTask,
         editTask,
         filterUsersBanco,
-        swtShowMessage
+        swtShowMessage,
+        validateWhiteListOnTask
     }, dispatch);
 }
 

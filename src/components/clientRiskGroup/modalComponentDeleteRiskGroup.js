@@ -4,29 +4,15 @@ import {reduxForm} from "redux-form";
 import Textarea from "../../ui/textarea/textareaComponent";
 import SweetAlert from "../sweetalertFocus";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
-import {VALUE_REQUIERED, VALUE_XSS_INVALID} from "../../constantsGlobal";
-import {formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation} from "../../actionsGlobal";
+import {formValidateKeyEnter, nonValidateEnter, validateResponse} from "../../actionsGlobal";
 import {bindActionCreators} from "redux";
 import {deleteRiskGroup, getClientsRiskGroup, updateIsPendingRiskGroup} from "./actions";
 import {showLoading} from "../loading/actions";
 
 import _ from "lodash";
+import { fields, validations as validate } from './fieldsAndRulesForDeleteRiskGroup';
 
 
-const fields = ["justification"]
-const validate = values => {
-    const errors = {};
-
-    if (!values.justification) {
-        errors.justification = VALUE_REQUIERED;
-    } else if (xssValidation(values.justification)) {
-        errors.justification = VALUE_XSS_INVALID;
-    } else {
-        errors.justification = null;
-    }
-
-    return errors;
-};
 
 let thisForm;
 class modalComponentDeleteRiskGroup extends Component {
@@ -111,7 +97,6 @@ class modalComponentDeleteRiskGroup extends Component {
                                 <Textarea className="form-control need-input"
                                           {...justification}
                                           name="justification"
-                                          maxLength="250"
                                           onChange={val => this._onchangeValue(val)}
                                 />
                             </div>

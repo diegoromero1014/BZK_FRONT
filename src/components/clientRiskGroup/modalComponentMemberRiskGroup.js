@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
-import { redirectUrl } from '../globalComponents/actions';
 import { reduxForm } from 'redux-form';
 import _ from 'lodash';
 import { bindActionCreators } from 'redux';
@@ -9,39 +8,17 @@ import Input from '../../ui/input/inputComponent';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import SweetAlert from '../sweetalertFocus';
 import MemberRiskGroup from './memberRiskGroup';
-import SecurityMessageComponent from './../globalComponents/securityMessageComponent';
 
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import { validateResponse, formValidateKeyEnter, nonValidateEnter, xssValidation, onSessionExpire } from '../../actionsGlobal';
+import { validateResponse, formValidateKeyEnter, nonValidateEnter,onSessionExpire } from '../../actionsGlobal';
 import { findClientByStrTypeIdAndNumber } from '../clients/actions';
 import { getMasterDataFields } from '../selectsComponent/actions';
 import { showLoading } from '../loading/actions';
 
-import { VALUE_REQUIERED, SESSION_EXPIRED, VALUE_XSS_INVALID, NATURAL_PERSON } from '../../constantsGlobal';
+import { SESSION_EXPIRED, NATURAL_PERSON } from '../../constantsGlobal';
 import * as constants from '../selectsComponent/constants';
+import { fieldsSearch as fields, validationsSearch as validate } from './fieldsAndRulesForReduxForm';
 
-const fields = [
-    "idType", "idNumber", "clientType"
-];
-
-let isPersonaNatural = false;
-const validate = values => {
-    const errors = {};
-
-    if (!values.idType) {
-        errors.idType = VALUE_REQUIERED;
-    } else {
-        errors.idType = null;
-    }
-    if (!values.idNumber) {
-        errors.idNumber = VALUE_REQUIERED;
-    } else if (xssValidation(values.idNumber)) {
-        errors.idNumber = VALUE_XSS_INVALID;
-    } else {
-        errors.idNumber = null;
-    }
-    return errors;
-};
 
 let thisForm;
 let myForm = null;
@@ -171,7 +148,7 @@ class modalComponentMemberRiskGroup extends Component {
 
         return (
             <div>
-                <SecurityMessageComponent />
+
                 <div id="content-modal-rosk-group"
                     className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     style={{ overflowX: "hidden" }}>
@@ -211,7 +188,6 @@ class modalComponentMemberRiskGroup extends Component {
                                 <Input
                                     name="documento"
                                     type="text"
-                                    max="20"
                                     disabled={this.state.disabledPrimaryFields}
                                     placeholder="Número de documento"
                                     {...idNumber}

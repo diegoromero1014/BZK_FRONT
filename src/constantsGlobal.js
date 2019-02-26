@@ -1,4 +1,4 @@
-export const VERSION_DATE = "28/01/2019";
+export const VERSION_DATE = "01/03/2019";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const NATURAL_PERSON = "Persona natural";
@@ -165,11 +165,11 @@ if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
     API_URL = "http://localhost:8084/Centricity";
 } else {
     if (WP_VAR_ENVIRONMENT === "production") {
-        API_URL = "https://biztrackback.bancolombia.corp/Centricity";
+        API_URL = "https://biztrack.apps.bancolombia.com/Centricity";
     } else if (WP_VAR_ENVIRONMENT === 'development') {
-        API_URL = "https://biztrackdesarrollo.bancolombia.corp/Biztrack";
+        API_URL = "https://biztrackdev.apps.ambientesbc.com/Centricity";
     } else if (WP_VAR_ENVIRONMENT === 'quality') {
-        API_URL = "https://biztrackcertificacion.bancolombia.corp/Biztrack";
+        API_URL = "https://biztrackqa.apps.ambientesbc.com/Centricity";
     }
 }
 

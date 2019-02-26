@@ -17,7 +17,7 @@ import { checkNumberDocument, checkFirstCharacter } from './../../../../../valid
 import { getClientNeeds, getMasterDataFields } from "../../../../selectsComponent/actions";
 import { changeKeyword, clearFilters, getBoardMembers, saveBoardMember, validateExistsBoardMember } from "../actions";
 import { changeStateSaveData } from "../../../../dashboard/actions";
-import { stringValidate, validateResponse, xssValidation } from "../../../../../actionsGlobal";
+import { stringValidate, validateResponse } from "../../../../../actionsGlobal";
 import { swtShowMessage } from "../../../../sweetAlertMessages/actions";
 
 import { CONTACT_ID_TYPE } from "../../../../selectsComponent/constants";
@@ -184,11 +184,6 @@ class ModalCreateBoardMembers extends Component {
             if (!_.isNull(checkNumberDocument(numberDocument.value)) ||
                 !_.isNull(checkFirstCharacter(numberDocument.value))) {
 
-                return;
-            }
-
-            if (xssValidation(numberDocument.value)) {
-                this.setState({ showErrorXss: true });
                 return;
             }
 
