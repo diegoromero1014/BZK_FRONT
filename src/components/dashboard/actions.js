@@ -16,7 +16,6 @@ export function changeStateSaveData(value, message) {
   }
 }
 
-
 export function validateUpgrateProductionActive() {
   const json = {
     "messageHeader": {
