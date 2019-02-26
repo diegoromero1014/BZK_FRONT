@@ -165,7 +165,7 @@ if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
     API_URL = "http://localhost:8084/Centricity";
 } else {
     if (WP_VAR_ENVIRONMENT === "production") {
-        API_URL = "https://biztrackback.bancolombia.corp/Centricity";
+        API_URL = "https://biztrack.apps.bancolombia.com/Centricity";
     } else if (WP_VAR_ENVIRONMENT === 'development') {
         API_URL = "https://biztrackdev.apps.ambientesbc.com/Centricity";
     } else if (WP_VAR_ENVIRONMENT === 'quality') {
