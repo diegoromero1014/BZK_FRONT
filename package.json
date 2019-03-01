@@ -14,7 +14,8 @@
     "start": "node server.js",
     "develop": "better-npm-run develop",
     "release": "better-npm-run release",
-    "master": "better-npm-run master"
+    "master": "better-npm-run master",
+    "origin": "better-npm-run origin"
   },
   "betterScripts": {
     "develop": {
