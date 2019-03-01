@@ -40,6 +40,12 @@
       "env": {
         "NODE_ENV": "production"
       }
+    },
+    "origin": {
+      "command": "webpack --verbose --colors --display-error-details --display-modules --config webpack/webpack.config.origin.js",
+      "env": {
+        "NODE_ENV": "production"
+      }
     }
   },
   "keywords": [],
