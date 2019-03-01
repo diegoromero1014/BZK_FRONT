@@ -34,6 +34,12 @@
       "env": {
         "NODE_ENV": "production"
       }
+    },
+    "aws": {
+      "command": "webpack --verbose --colors --display-error-details --display-modules --config webpack/webpack.config.aws.js",
+      "env": {
+        "NODE_ENV": "production"
+      }
     }
   },
   "keywords": [],
