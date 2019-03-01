@@ -162,14 +162,18 @@ export const MAX_LENGTH_LINK_CLIENT_TRACER_CODE = 255;
 let API_URL;
 
 if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
-    API_URL = "http://localhost:8084/Centricity";
+    API_URL = window.location.origin + "/Centricity";
 } else {
     if (WP_VAR_ENVIRONMENT === "production") {
-        API_URL = "https://biztrack.apps.bancolombia.com/Centricity";
+        API_URL = "https://biztrack.bancolombia.corp/Centricity";
     } else if (WP_VAR_ENVIRONMENT === 'development') {
         API_URL = "https://biztrackdev.apps.ambientesbc.com/Centricity";
     } else if (WP_VAR_ENVIRONMENT === 'quality') {
         API_URL = "https://biztrackqa.apps.ambientesbc.com/Centricity";
+    } else if (WP_VAR_ENVIRONMENT === 'aws') {
+        API_URL = "https://biztrack.apps.bancolombia.com/Centricity";
+    } else if (WP_VAR_ENVIRONMENT === 'sameorigin') {
+        API_URL = window.location.origin + "/Centricity";
     }
 }
 

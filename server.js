@@ -5,7 +5,8 @@ const IP_ENVIRONMENT = 'localhost';
 new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
     hot: true,
-    historyApiFallback: true
+    historyApiFallback: true,
+    disableHostCheck: true
 })
     .listen(3000, IP_ENVIRONMENT, function (err, result) {
         if (err) {
