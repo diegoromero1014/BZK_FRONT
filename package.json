@@ -14,7 +14,8 @@
     "start": "node server.js",
     "develop": "better-npm-run develop",
     "release": "better-npm-run release",
-    "master": "better-npm-run master"
+    "master": "better-npm-run master",
+    "origin": "better-npm-run origin"
   },
   "betterScripts": {
     "develop": {
@@ -31,6 +32,18 @@
     },
     "master": {
       "command": "webpack --verbose --colors --display-error-details --display-modules --config webpack/webpack.config.prod.js",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "aws": {
+      "command": "webpack --verbose --colors --display-error-details --display-modules --config webpack/webpack.config.aws.js",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "origin": {
+      "command": "webpack --verbose --colors --display-error-details --display-modules --config webpack/webpack.config.origin.js",
       "env": {
         "NODE_ENV": "production"
       }
