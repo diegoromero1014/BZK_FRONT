@@ -129,7 +129,8 @@ export class ComponentStudyCredit extends Component {
             userEditingPrevisita: '',
             isComponentMounted: true,
             showButtonPDF: false,
-            isPDFGenerated: false
+            isPDFGenerated: false,
+            isDraft: false
 
         }
     }
@@ -311,7 +312,7 @@ export class ComponentStudyCredit extends Component {
                 noAppliedMainCompetitors,
                 noAppliedIntOperations,
                 noAppliedControlLinkedPayments,
-
+            
                 isDraft
             };
         } else {
@@ -487,8 +488,8 @@ export class ComponentStudyCredit extends Component {
         return allowSave;
     }
 
-    _submitSaveContextClient(tipoGuardado) {
-        
+     _submitSaveContextClient(tipoGuardado) {
+
         showLoading(true, "Cargando...");
 
         let username = window.localStorage.getItem('userNameFront');
@@ -524,8 +525,11 @@ export class ComponentStudyCredit extends Component {
                     }
 
                      else {
+                        const showButtonPDF = !isAvance;
                         this.setState({
-                            showSuccessMessage: true
+                            showSuccessMessage: true,
+                            showButtonPDF,
+                            isDraft : isAvance
                         });
                     }
                 }, (reason) => {
@@ -544,7 +548,9 @@ export class ComponentStudyCredit extends Component {
         this.setState({
             showSuccessMessage: false
         });
-        globalActions.redirectUrl("/dashboard/clientInformation");
+        if(this.state.isDraft){
+            globalActions.redirectUrl("/dashboard/clientInformation");
+        }
     }
 
     _validateInfoStudyCredit() {
@@ -571,7 +577,8 @@ export class ComponentStudyCredit extends Component {
             window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
 
             showLoading(false, null);
-            this.setState({ isPDFGenerated: true });
+            const showButtonPDF = false;
+            this.setState({ isPDFGenerated: true, showButtonPDF });
         }).catch((error) => {
             showLoading(false, null);
             swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, ocurrió un error generando el PDF.');
@@ -718,9 +725,6 @@ export class ComponentStudyCredit extends Component {
                     inventoryPolicy.onChange(contextClientInfo.inventoryPolicy);
                     controlLinkedPayments.onChange(contextClientInfo.controlLinkedPayments);
                 }
-
-                const showButtonPDF = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GENERAR_PDF_ESTUDIO_CREDITO), false) && data.payload.data.data.id != null;
-                this.setState({ isPDFGenerated: data.payload.data.data.isPDFGenerated, showButtonPDF });
 
             }, () => {
                 changeStateSaveData(false, "");
