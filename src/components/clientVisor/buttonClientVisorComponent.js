@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import { consultParameterServer } from '../../actionsGlobal';
 import { GREEN_COLOR, MESSAGE_LOAD_DATA } from "../../constantsGlobal";
-import { URL_VISOR_PARAMETER, URL_VISOR_DOCUMENT_PARAMETER } from "./constants";
+import { URL_VISOR_PARAMETER, URL_VISOR_DOCUMENT_PARAMETER, URL_VISOR_DOCUMENT_TYPE_PARAMETER } from "./constants";
 
 class buttonClientVisorComponent extends Component {
 
@@ -50,7 +50,7 @@ class buttonClientVisorComponent extends Component {
 
 
     render() {
-        const { clientdIdNumber } = this.props;
+        const { clientdIdNumber, clientNameType } = this.props;
 
         return (
             <div>
@@ -69,7 +69,7 @@ class buttonClientVisorComponent extends Component {
                             </div>
                             {this.state.modalIsOpen &&
                                 <iframe style={{ width: "100%", border: "0", flexGrow: "1" }} src={
-                                    this.state.visor_url.replace(URL_VISOR_DOCUMENT_PARAMETER, clientdIdNumber)
+                                    this.state.visor_url.replace(URL_VISOR_DOCUMENT_PARAMETER, clientdIdNumber).replace(URL_VISOR_DOCUMENT_TYPE_PARAMETER, clientNameType)
                                 }></iframe>
                             }
                         </div>
