@@ -217,7 +217,7 @@ class ComponentClientInformation extends Component {
                                     {this.state.allow_visor_cliente && infoClient.clientIdNumber &&
                                         <tr>
                                             <td style={{ marginTop: "0px", backgroundColor: GREEN_COLOR, borderRadius: "0px" }}>
-                                                <ButtonClientVisorComponent clientdIdNumber={infoClient.clientIdNumber} />
+                                                <ButtonClientVisorComponent clientNameType={infoClient.clientNameType} clientdIdNumber={infoClient.clientIdNumber} />
                                             </td>
                                         </tr>
                                     }
