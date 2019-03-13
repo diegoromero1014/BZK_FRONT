@@ -420,6 +420,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
                     
                     let errorResponse = _.get(data, 'payload.data.data');
+                    console.log(errorResponse);
                     errorResponse.forEach(function(element) {
                       if(element.fieldName == "observations"){
                         observations.error = element.message;
@@ -819,6 +820,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       {...commission}
                       parentId="dashboardComponentScroll"
+                      placeholder="Separador de miles ' , ' y decimales ' . '"
                       onBlur={val => handleBlurValueNumber(2, commission, val, true)}
                       onFocus={val => handleFocusValueNumber(commission, commission.value)}
                     />
@@ -867,6 +869,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...value}
                       name="valueMillions"
                       type="text"
+                      placeholder="Separador de miles ' , ' y decimales ' . '"
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
                       onFocus={val => handleFocusValueNumber(value, value.value)}
