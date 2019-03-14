@@ -496,7 +496,6 @@ export class ComponentStudyCredit extends Component {
 
         this.canUserEditBlockedReport(username).then((success) => {
             showLoading(false, "Cargando...");
-            console.log(this.canUserEditBlockedReport(username));
             let isAvance;
 
             if (typeof tipoGuardado == 'undefined') {
