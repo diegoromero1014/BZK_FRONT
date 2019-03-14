@@ -538,7 +538,6 @@ export class ComponentStudyCredit extends Component {
             }
 
         }).catch((error) => {
-            console.log(this.canUserEditBlockedReport(username));
             showLoading(false, "Cargando...");
         })
 
