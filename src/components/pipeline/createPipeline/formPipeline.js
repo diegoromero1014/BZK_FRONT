@@ -420,7 +420,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     message = "Señor usuario, ocurrió un error creando el informe de pipeline.";
                     
                     let errorResponse = _.get(data, 'payload.data.data');
-                    console.log(errorResponse);
                     errorResponse.forEach(function(element) {
                       if(element.fieldName == "observations"){
                         observations.error = element.message;
