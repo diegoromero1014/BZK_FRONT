@@ -488,7 +488,7 @@ export class ComponentStudyCredit extends Component {
         return allowSave;
     }
 
-     _submitSaveContextClient(tipoGuardado) {
+    _submitSaveContextClient(tipoGuardado) {
 
         showLoading(true, "Cargando...");
 
@@ -496,7 +496,7 @@ export class ComponentStudyCredit extends Component {
 
         this.canUserEditBlockedReport(username).then((success) => {
             showLoading(false, "Cargando...");
-
+            console.log(this.canUserEditBlockedReport(username));
             let isAvance;
 
             if (typeof tipoGuardado == 'undefined') {
@@ -539,6 +539,7 @@ export class ComponentStudyCredit extends Component {
             }
 
         }).catch((error) => {
+            console.log(this.canUserEditBlockedReport(username));
             showLoading(false, "Cargando...");
         })
 
@@ -962,21 +963,21 @@ export class ComponentStudyCredit extends Component {
                         <Row style={{ paddingTop: '8px' }}>
 
                             <Col style={paddingButtons} onClick={() => this._submitSaveContextClient("Avance")} >
-                                <button className="btn" type="button" style={{ backgroundColor: "#00B5AD" }} ><span >Guardar Avance</span></button>
+                                <button className="btn" type="button" style={{ backgroundColor: "#00B5AD" }} id="btn-guardar-avance"><span >Guardar Avance</span></button>
                             </Col>
 
                             <Col style={paddingButtons} >
-                                <button className="btn" type="submit"><span>Guardar Definitivo</span></button>
+                                <button className="btn" type="submit" id="btn-guardar-definitivo"><span>Guardar Definitivo</span></button>
                             </Col>
 
                             {this.state.showButtonPDF &&
                                 <Col style={paddingButtons} onClick={() => this.handleClickButtonPDF()} >
-                                    <button className="btn" type="button" style={{ backgroundColor: "#eb984e" }}><span>Generar PDF</span></button>
+                                    <button className="btn" type="button" style={{ backgroundColor: "#eb984e" }} id="btn-generar-pdf"><span>Generar PDF</span></button>
                                 </Col>
                             }
 
                             <Col style={paddingButtons} onClick={this._closeWindow} >
-                                <button className="btn btn-secondary modal-button-edit" type="button"><span >Cancelar</span></button>
+                                <button className="btn btn-secondary modal-button-edit" type="button" id="btn-cancelar"><span >Cancelar</span></button>
                             </Col>
 
                         </Row>
