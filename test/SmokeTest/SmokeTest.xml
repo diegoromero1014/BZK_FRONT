@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="ff12f800-d32f-4be4-b828-1d79a5932ad6" activeEnvironment="Default" name="SmokeTestBiztrack" soapui-version="5.4.0" abortOnError="false" runType="SEQUENTIAL" resourceRoot="" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestRunnerAction@values-local"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="Report Format(s)" value=""/>
+  <con:entry key="Host:Port" value=""/>
+  <con:entry key="Export JUnit Results" value="false"/>
+  <con:entry key="Export All" value="false"/>
+  <con:entry key="Save After" value="false"/>
+  <con:entry key="Add Settings" value="false"/>
+  <con:entry key="WSS Password Type" value=""/>
+  <con:entry key="TestSuite" value="&lt;all>"/>
+  <con:entry key="Endpoint" value="http://localhost:8084/Centricity"/>
+  <con:entry key="Select Report Type" value=""/>
+  <con:entry key="System Properties" value=""/>
+  <con:entry key="Password" value=""/>
+  <con:entry key="Print Report" value="false"/>
+  <con:entry key="Open Report" value="false"/>
+  <con:entry key="Export JUnit Results with test properties" value="false"/>
+  <con:entry key="Global Properties" value=""/>
+  <con:entry key="Project Properties" value=""/>
+  <con:entry key="Project Password" value=""/>
+  <con:entry key="TestCase" value="&lt;all>"/>
+  <con:entry key="Username" value=""/>
+  <con:entry key="user-settings.xml Password" value=""/>
+  <con:entry key="TestRunner Path" value=""/>
+  <con:entry key="Environment" value="Default"/>
+  <con:entry key="Coverage Report" value="false"/>
+  <con:entry key="Enable UI" value="false"/>
+  <con:entry key="Root Folder" value=""/>
+  <con:entry key="Ignore Errors" value="false"/>
+  <con:entry key="Domain" value=""/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="Save Project" value="false"/>
+</xml-fragment>]]></con:setting></con:settings><con:interface xsi:type="con:RestService" id="b77b3499-c46f-486e-86e3-f3f026b5ddf5" wadlVersion="http://wadl.dev.java.net/2009/02" name="http://localhost:8084" type="rest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart=""/><con:endpoints><con:endpoint>${#Project#servicesEndpoint}</con:endpoint></con:endpoints><con:resource name="biztrack" path="/biztrack" id="333e10c4-5451-43f6-92fb-aba18209e6cb"><con:settings/><con:parameters/><con:method name="Method 1" id="b8963bb1-c1bc-43df-8810-d013e2317513" method="GET"><con:settings/><con:parameters/><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="effa11ef-220a-4472-b48f-fe1be91db495" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>${#Project#servicesEndpoint}</con:endpoint><con:request/><con:originalUri>https://biztrackcertificacion.bancolombia.corp/Biztrack/biztrack</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource></con:interface><con:testSuite id="d2195fc4-ada7-4b8d-bdff-24630062216f" name="SmokeTestFront"><con:description>TestSuite generated for REST Service [http://localhost:8084]</con:description><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="38538581-d34b-44c1-be4d-05c0e757dd50" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="biztrack TestCase" searchProperties="true"><con:description>TestCase generated for REST Resource [biztrack] located at [/biztrack]</con:description><con:settings/><con:testStep type="restrequest" name="Request 1" id="15526137-56d1-4af6-8bc0-64425f175733"><con:settings/><con:config service="http://localhost:8084" resourcePath="/biztrack" methodName="Method 1" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="Request 1" id="effa11ef-220a-4472-b48f-fe1be91db495" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>${#Project#servicesEndpoint}</con:endpoint><con:request/><con:originalUri>https://biztrackcertificacion.bancolombia.corp/Biztrack/biztrack</con:originalUri><con:assertion type="Valid HTTP Status Codes" id="4c7383f3-69fd-4112-8301-f3cff0274e7a" name="Valid HTTP Status Codes"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:restRequest></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:endpointStrategy xsi:type="con:DefaultEndpointStrategy" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:endpoint mode="OVERRIDE">${#Project#servicesEndpoint}</con:endpoint></con:endpointStrategy><con:properties><con:property><con:name>servicesEndpoint</con:name><con:value>https:/biztrack.bancolombia.corp</con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>
