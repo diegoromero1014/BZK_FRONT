@@ -935,6 +935,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             type="text"
                                             {...commission}
                                             parentId="dashboardComponentScroll"
+                                            placeholder="Separador de miles ' , ' y decimales ' . '"
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                             onBlur={val => handleBlurValueNumber(2, commission, val, true)}
                                             onFocus={val => handleFocusValueNumber(commission, commission.value)}
@@ -987,11 +988,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             {...value}
                                             name="valueMillions"
                                             type="text"
+                                            placeholder="Separador de miles ' , ' y decimales ' . '"
                                             parentId="dashboardComponentScroll"
                                             onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
                                             onFocus={val => handleFocusValueNumber(value, value.value)}
                                             disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
-                                            onChange={val => this._changeValue(val)}
+                                            onChange={val => this._changeValue(val)
+                                            }
                                         />
                                     </div>
                                 </Col>
