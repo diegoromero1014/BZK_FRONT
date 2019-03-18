@@ -819,7 +819,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       {...commission}
                       parentId="dashboardComponentScroll"
-                      placeholder="Separador de miles ' , ' y decimales ' . '"
+                      placeholder="Miles ' , ' y decimales ' . '"
                       onBlur={val => handleBlurValueNumber(2, commission, val, true)}
                       onFocus={val => handleFocusValueNumber(commission, commission.value)}
                     />
@@ -868,7 +868,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...value}
                       name="valueMillions"
                       type="text"
-                      placeholder="Separador de miles ' , ' y decimales ' . '"
+                      placeholder="Miles ' , ' y decimales ' . '"
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
                       onFocus={val => handleFocusValueNumber(value, value.value)}
