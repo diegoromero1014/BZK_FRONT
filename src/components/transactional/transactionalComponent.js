@@ -45,16 +45,19 @@ class Transactional extends Component {
         }
     }
 
-    downLoadFileUrl(url) {
-        window.open(url, "_blank");
-    }
-
-    openWalletShare() {
-        redirectUrl("/dashboard/walletShare");
-    }
-
-    openControlDashboard() {
-        redirectUrl("/dashboard/controlDashboard");
+    renderCategories() {
+        if (this.state.categories) {
+            return this.state.categories.map((category, index) => {
+                return (
+                    <CategoryComponent
+                        key={index + category.id}
+                        title={category.name}
+                        iconName={category.icon}
+                        content={category.reports}
+                    />
+                )
+            })
+        }
     }
 
     render() {
