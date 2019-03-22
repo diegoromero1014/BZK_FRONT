@@ -12,6 +12,8 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case actions.SET_URL_PARAMETER:
       return state.set(action.parameter, action.url);
+    case actions.GET_ALL_CATEGORIES:
+      return state.set("categories", action.payload.data.data);
     default:
       return state;
   }
