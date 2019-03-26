@@ -129,8 +129,7 @@ export class ComponentStudyCredit extends Component {
             userEditingPrevisita: '',
             isComponentMounted: true,
             showButtonPDF: false,
-            isPDFGenerated: false,
-            isDraft: false
+            isPDFGenerated: false
 
         }
     }
@@ -312,7 +311,7 @@ export class ComponentStudyCredit extends Component {
                 noAppliedMainCompetitors,
                 noAppliedIntOperations,
                 noAppliedControlLinkedPayments,
-            
+
                 isDraft
             };
         } else {
@@ -489,13 +488,14 @@ export class ComponentStudyCredit extends Component {
     }
 
     _submitSaveContextClient(tipoGuardado) {
-
+        
         showLoading(true, "Cargando...");
 
         let username = window.localStorage.getItem('userNameFront');
 
         this.canUserEditBlockedReport(username).then((success) => {
             showLoading(false, "Cargando...");
+
             let isAvance;
 
             if (typeof tipoGuardado == 'undefined') {
@@ -524,11 +524,8 @@ export class ComponentStudyCredit extends Component {
                     }
 
                      else {
-                        const showButtonPDF = !isAvance;
                         this.setState({
-                            showSuccessMessage: true,
-                            showButtonPDF,
-                            isDraft : isAvance
+                            showSuccessMessage: true
                         });
                     }
                 }, (reason) => {
@@ -547,9 +544,7 @@ export class ComponentStudyCredit extends Component {
         this.setState({
             showSuccessMessage: false
         });
-        if(this.state.isDraft){
-            globalActions.redirectUrl("/dashboard/clientInformation");
-        }
+        globalActions.redirectUrl("/dashboard/clientInformation");
     }
 
     _validateInfoStudyCredit() {
@@ -576,7 +571,7 @@ export class ComponentStudyCredit extends Component {
             window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
 
             showLoading(false, null);
-            this.setState({ isPDFGenerated: true, showButtonPDF: false });
+            this.setState({ isPDFGenerated: true });
         }).catch((error) => {
             showLoading(false, null);
             swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, ocurrió un error generando el PDF.');
@@ -723,6 +718,9 @@ export class ComponentStudyCredit extends Component {
                     inventoryPolicy.onChange(contextClientInfo.inventoryPolicy);
                     controlLinkedPayments.onChange(contextClientInfo.controlLinkedPayments);
                 }
+
+                const showButtonPDF = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GENERAR_PDF_ESTUDIO_CREDITO), false) && data.payload.data.data.id != null;
+                this.setState({ isPDFGenerated: data.payload.data.data.isPDFGenerated, showButtonPDF });
 
             }, () => {
                 changeStateSaveData(false, "");
@@ -961,21 +959,21 @@ export class ComponentStudyCredit extends Component {
                         <Row style={{ paddingTop: '8px' }}>
 
                             <Col style={paddingButtons} onClick={() => this._submitSaveContextClient("Avance")} >
-                                <button className="btn" type="button" style={{ backgroundColor: "#00B5AD" }} id="btn-guardar-avance"><span >Guardar Avance</span></button>
+                                <button className="btn" type="button" style={{ backgroundColor: "#00B5AD" }} ><span >Guardar Avance</span></button>
                             </Col>
 
                             <Col style={paddingButtons} >
-                                <button className="btn" type="submit" id="btn-guardar-definitivo"><span>Guardar Definitivo</span></button>
+                                <button className="btn" type="submit"><span>Guardar Definitivo</span></button>
                             </Col>
 
                             {this.state.showButtonPDF &&
                                 <Col style={paddingButtons} onClick={() => this.handleClickButtonPDF()} >
-                                    <button className="btn" type="button" style={{ backgroundColor: "#eb984e" }} id="btn-generar-pdf"><span>Generar PDF</span></button>
+                                    <button className="btn" type="button" style={{ backgroundColor: "#eb984e" }}><span>Generar PDF</span></button>
                                 </Col>
                             }
 
                             <Col style={paddingButtons} onClick={this._closeWindow} >
-                                <button className="btn btn-secondary modal-button-edit" type="button" id="btn-cancelar"><span >Cancelar</span></button>
+                                <button className="btn btn-secondary modal-button-edit" type="button"><span >Cancelar</span></button>
                             </Col>
 
                         </Row>
