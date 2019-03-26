@@ -3,7 +3,7 @@ export const MESSAGE_REQUIRED_VALUE = "Requiere que especifique un valor";
 export const MESSAGE_WARNING_MIN_LENGTH = minLength => "Requiere " + minLength + " o más caracteres";
 export const MESSAGE_WARNING_MAX_LENGTH = maxLength => "Solo se permiten " + maxLength + " caracteres";
 export const MESSAGE_WARNING_NUMBER_DOCUMENT = "Solo se permiten valores alfanuméricos y -";
-export const MESSAGE_WARNING_OBSERVATIONS = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
+export const MESSAGE_WARNING_OBSERVATIONS = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_<>*@";
 export const MESSAGE_WARNING_ADDRESS = "Solo se permiten valores alfanuméricos y -#();,.-\"\"/_´'";
 export const MESSAGE_WARNING_NEIGHBORHOOD = "Solo se permiten valores alfanuméricos y -#();,.\"\"/";
 export const MESSAGE_WARNING_INVALID_EMAIL = "No cumple con la estructura de correo. Por favor verifique su dirección de correo electrónico";
