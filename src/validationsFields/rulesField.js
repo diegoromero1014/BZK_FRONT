@@ -21,7 +21,7 @@ import {
     patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
     patternOfInventoryPolice, patternOfControlLinkedPayments, patternOfNameEntity, patternOfNoOperatingInCome,
     patternOfOnlyAlphabeticalAndSlash, patternOfRiskGroupName, patternOfObservationRiskGroup, patternOfJustificationsRiskGroup,
-    patternOfRiskExternalClientName, patternOfExternalClientNumberDocument
+    patternOfRiskExternalClientName, patternOfExternalClientNumberDocument, patternOfTaskObservation
 } from './patternsToValidateField';
 
 import {
@@ -35,8 +35,7 @@ import {
     MESSAGE_WARNING_NUMBER_LENGTH, MESSAGE_WARNING_OTHER_REASON, MESSAGE_WARNING_NAME_ENTITY,
     MESSAGE_WARNING_NO_OPERATING_IN_COME, MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH, MESSAGE_WARNING_GROUP_NAME,
     MESSAGE_WARNING_OBSERVATIONS_RISK_GROUP, MESSAGE_WARNING_JUSTIFICATIONS_RISK_GROUP, MESSAGE_WARNING_EXTERNAL_CLIENT_NAME,
-    MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT,
-     MESSAGE_REQUIRED_EMPLOYEE
+    MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT, MESSAGE_REQUIRED_EMPLOYEE, MESSAGE_WARNING_TASK_OBSERVATIONS
 
 } from './validationsMessages';
 
@@ -348,6 +347,14 @@ export const checkObservations = value => {
         message = MESSAGE_WARNING_OBSERVATIONS;
     }
 
+    return message;
+}
+
+export const checkTaskObservation = value => {
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfTaskObservation.test(value)) {
+        message = MESSAGE_WARNING_TASK_OBSERVATIONS;
+    }
     return message;
 }
 
