@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import {
-    checkRequiredEmployee, processRules, checkRequired, checkMinLength, checkOnlyAlphabetical, checkFirstCharacter, checkObservations, checkRichTextRequired
+    checkRequiredEmployee, processRules, checkRequired, checkMinLength, checkOnlyAlphabetical, checkFirstCharacter, checkTaskObservation, checkRichTextRequired
 }from './../../../validationsFields/rulesField';
 
 
@@ -11,7 +11,7 @@ const fieldsWithRules = {
     idEstado: { rules: [checkRequired] },
     responsable: { rules: [checkRequired, checkMinLength(2), checkOnlyAlphabetical] },
     tarea: { rules: [ checkRichTextRequired ]},
-    advance: { rules: [checkFirstCharacter, checkObservations] },
+    advance: { rules: [checkFirstCharacter, checkTaskObservation] },
     idEmployee: { rules: [checkRequiredEmployee] },
     visit: { rules: [] },
     dateEntity: { rules: [] }
