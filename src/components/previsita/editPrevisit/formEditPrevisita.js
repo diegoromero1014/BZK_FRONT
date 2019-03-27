@@ -12,6 +12,9 @@ import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import ParticipantesCliente from "../../participantsVisitPre/participantesCliente";
 import ParticipantesBancolombia from "../../participantsVisitPre/participantesBancolombia";
+
+
+
 import ParticipantesOtros from "../../participantsVisitPre/participantesOtros";
 import Challenger from "../../methodologyChallenger/component";
 import SweetAlert from "../../sweetalertFocus";
@@ -1042,6 +1045,7 @@ class FormEditPrevisita extends Component {
                         }
                     </Col>
                 </Row>
+                
                 <Row style={{ padding: "10px 10px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -1131,7 +1135,7 @@ class FormEditPrevisita extends Component {
                             />
                         </dt>
                     </Col>
-                </Row>
+                </Row>                
 
                 <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs>

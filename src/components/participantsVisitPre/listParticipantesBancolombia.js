@@ -45,6 +45,7 @@ class ListParticipantesBancolombia extends Component {
 
   _mapValuesData(userData, idx) {
     var { disabled } = this.props;
+    console.log(userData);
     return <div className="item" key={idx}>
       <span style={{ paddingRight: '10px', fontWeight: 'bold', color: 'black' }} >{userData.name}</span>
       {userData.cargo} {userData.empresa}

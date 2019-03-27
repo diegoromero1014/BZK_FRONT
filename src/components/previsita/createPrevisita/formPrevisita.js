@@ -38,6 +38,8 @@ import {
     MESSAGE_SAVE_DATA, MESSAGE_ERROR, ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, REGEX_SIMPLE_XSS_MESAGE,
 } from '../../../constantsGlobal';
 
+import PermissionUserReports from "../../globalComponents/permissionsUserReports"
+
 
 var datePrevisitLastReview;
 var titleMethodologyChallenger = "Enseñanza (Oportunidades – Retos): Diligencie de manera resumida los siguientes " +
@@ -658,6 +660,11 @@ class FormPrevisita extends Component {
                 style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
                 <span style={{ marginLeft: "20px" }}>Los campos marcados con asterisco (<span
                     style={{ color: "red" }}>*</span>) son obligatorios.</span>
+                <Row>
+                    <Col xs={12} md={12} lg={12}>
+                        <PermissionUserReports />
+                    </Col>
+                </Row>
                 <Row style={{ padding: "10px 10px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -718,7 +725,7 @@ class FormPrevisita extends Component {
                                 name="txtDuracion"
                                 value={this.state.durationPreVisit}
                                 min={1}
-                                
+
                                 touched={true}
                                 placeholder="Duración previsita"
                                 error={this.state.durationPreVisitError}
