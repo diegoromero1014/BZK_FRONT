@@ -53,61 +53,6 @@ export function consultInformationPipeline(idStatusPipeline, idCurrency){
   }
 }
 
-/**
- * Action para llamar al servicio de cantidad de previsitas.
- */
-export function consultInformationPrevisit() {
-  const json = {
-    "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "timestamp": new Date().getTime(),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
-    },
-    "messageBody": {
-      "startDate": null,
-      "endDate": null
-    }
-  };
-  let request = axios.post(APP_URL + "/portfolioPrevisit", json);
-  return {
-    type: CONSULT_PREVISIT,
-    payload: request
-  };
-};
-
-export function consultInformationVisit() {
-  const json = {
-    "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "timestamp": new Date().getTime(),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
-    },
-    "messageBody": {
-      "startDate": null,
-      "endDate": null
-    }
-  };
-  let request = axios.post(APP_URL + "/portfolioVisit", json);
-  return {
-    type: CONSULT_VISIT,
-    payload: request
-  };
-};
-
 export function getCsv(year,url, hasParticipatingContacts, hasParticipatingEmployees, hasRelatedEmployees) {
   const json = {
     "messageHeader": {
@@ -160,27 +105,5 @@ export function consultCurrencys(){
   }
 }
 
-export function consultInformationBusinessPlans(year) {
-  const json = {
-    "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "timestamp": new Date().getTime(),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
-    },
-    "messageBody": {
-      "year": year
-    }
-  };
-  let request = axios.post(APP_URL + "/businessPlanManagement", json);
-  return {
-    type: CONSULT_BUSINESS_PLANS,
-    payload: request
-  };
-}
+
+
