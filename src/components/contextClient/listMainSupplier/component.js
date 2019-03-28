@@ -240,15 +240,15 @@ export class ComponentListMainSupplier extends Component {
                     </Col>
                 </Row>
                 {!clientInformacion.get(this.state.fieldReducerNoApplied) &&
-                    <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px' }}>
-                        <Col xs={12} md={12} lg={12} style={{ marginTop: "-70px", paddingRight: "16px", textAlign: "right" }}>
+                    <Row style={{ position:"relative", border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px' }}>
+                        <div style={{ position:"absolute", right:0, marginTop: "-70px", paddingRight: "16px", textAlign: "right" }}>
                             <button className="btn" name={className} disabled={showFormMainSupplier} type="button"
                                 onClick={() => fnShowForm(MAIN_SUPPLIER, true)} style={showFormMainSupplier ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
                                 <ToolTipComponent text="Agregar proveedor principal">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                                 </ToolTipComponent>
                             </button>
-                        </Col>
+                        </div>
                         {showFormMainSupplier &&
                             <Col xs={12} md={4} lg={3}>
                                 <div>

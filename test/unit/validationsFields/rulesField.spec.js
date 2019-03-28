@@ -109,8 +109,8 @@ describe('Test checkFirstCharacter white list validation', () => {
 });
 
 describe('Test checkObservations white list validation', () => {
-    it('should throw error when character @ is not valid', () => {
-        const text = 'this text is not valid because has a @';
+    it('should throw error when character } is not valid', () => {
+        const text = 'this text is not valid because has a }';
         const expectedMessage = MESSAGE_WARNING_OBSERVATIONS;
         expect(checkObservations(text)).equal(expectedMessage);
     });

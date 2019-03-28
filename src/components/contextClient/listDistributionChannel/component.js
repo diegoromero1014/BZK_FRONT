@@ -213,15 +213,15 @@ export class ComponentListDistributionChannel extends Component {
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedDistributionChannel') &&
-                    <Row style={{ padding: "0px 10px 10px 20px" }}>
-                        <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "15px", textAlign: "right" }}>
+                    <Row style={{ position:"relative", padding: "0px 10px 10px 20px" }}>
+                        <div style={{ position:"absolute", right:0, marginTop: "-42px", paddingRight: "15px", textAlign: "right" }}>
                             <button className="btn btn-secondary" name={className} disabled={showFormDistribution} type="button"
                                 onClick={() => fnShowForm(DISTRIBUTION_CHANNEL, true)} style={showFormDistribution ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
                                 <ToolTipComponent text="Agregar canal de distribución">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                                 </ToolTipComponent>
                             </button>
-                        </Col>
+                        </div>
                         {showFormDistribution &&
                             <Col xs={12} md={4} lg={3}>
                                 <div>
