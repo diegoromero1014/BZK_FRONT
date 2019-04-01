@@ -357,15 +357,15 @@ export class ComponentListIntOperations extends Component {
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedIntOperations') &&
-                    <Row style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 20px 0 24px', padding: '15px 0 0 7px' } : {}}>
-                        <Col xs={12} md={12} lg={12} style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { marginTop: "-70px", paddingRight: "16px", textAlign: "right" } : { marginTop: "-45px", paddingRight: "25px", textAlign: "right" }}>
+                    <Row style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 20px 0 24px', padding: '15px 0 0 7px', position: "relative" } : {position: "relative"}}>
+                        <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { marginTop: "-70px", paddingRight: "16px", textAlign: "right", position: "absolute", right: 0 } : { marginTop: "-45px", paddingRight: "25px", textAlign: "right", position: "absolute", right: 0 }}>
                             <button className="btn" disabled={showFormIntOperations} type="button"
                                 onClick={() => fnShowForm(INT_OPERATIONS, true)} style={showFormIntOperations ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
                                 <ToolTipComponent text="Agregar operación internacional">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                                 </ToolTipComponent>
                             </button>
-                        </Col>
+                        </div>
                         {showFormIntOperations &&
                             <Row style={{ width: '100%', marginLeft: '0px' }}>
                                 <Col xs={12} md={3} lg={3}>

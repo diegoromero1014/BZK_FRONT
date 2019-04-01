@@ -13,7 +13,7 @@ import { contactsByClientFindServer } from '../contact/actions';
 import { validateValue, validateValueExist, validateIsNullOrUndefined } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
-import { NUMBER_CONTACTS, KEY_PARTICIPANT_BANCO } from './constants';
+import { NUMBER_CONTACTS } from './constants';
 
 var self;
 const validate = values => {
@@ -33,7 +33,8 @@ class PermissionUserReports extends Component {
             showEmptyParticipantBanco: false,
             showParticipantExistBanco: false,
             validateConsultParticipants: false,
-            showInvalidCharacter: false
+            showInvalidCharacter: false,
+            prueba: ""
         }
 
         this._addUser = this._addUser.bind(this);
@@ -46,18 +47,15 @@ class PermissionUserReports extends Component {
         const { fields: { idUser, nameUser, cargoUsuario, empresaUsuario }, usersPermission, addUsers, swtShowMessage } = this.props;
         if (validateValue(nameUser.value) && !(validateIsNullOrUndefined(idUser.value) || idUser.value <= 0)) {
             var userTODO = usersPermission.find(function (item) {
-                if (item.tipoParticipante === KEY_PARTICIPANT_BANCO) {
-                    return item.idParticipante === idUser.value;
+                if (item.idParticipante === idUser.value) {
+                    return item.idParticipante;
                 }
             });
-
             if (userTODO === undefined) {
-                //const uuid = _.uniqueId('participanBanco_');
                 var user = {
                     idParticipante: idUser.value,
                     nombreParticipante: nameUser.value
                 }
-                console.log(user);
                 addUsers(user);
                 idUser.onChange('');
                 nameUser.onChange('');
@@ -69,7 +67,7 @@ class PermissionUserReports extends Component {
         }
     }
 
-    _handleChangeUserPermission(event) {
+    _handleChangeUserPermission() {
         this.setState({ isConfidencial: true });
         var isConf = this.state.isConfidencial;
         if (isConf !== false) {
@@ -79,25 +77,9 @@ class PermissionUserReports extends Component {
 
     _updateValue(value) {
         const { fields: { idUser, nameUser, cargoUsuario }, contactsByClient } = this.props;
-        var contactClient = contactsByClient.get('contacts');
-        var userSelected;
-
-        _.map(contactClient, contact => {
-            if (contact.id.toString() === value) {
-                userSelected = contact;
-                return contact;
-            }
-        });
-
-        if (validateValue(userSelected)) {
-            idUser.onChange(userSelected.id);
-            nameUser.onChange(userSelected.nameComplet);
-            cargoUsuario.onChange(userSelected.contactPosition);
-        } else {
-            if (idUser.value > 0) {
-                idUser.onChange('');
-            }
-        }
+        console.log(value);
+        idUser.onChange(value);
+        nameUser.onChange(value)
     }
 
     componentWillMount() {
@@ -107,7 +89,7 @@ class PermissionUserReports extends Component {
         const valuesContactsClient = contactsByClient.get('contacts');
         if (_.isEmpty(valuesContactsClient) || valuesContactsClient === null || valuesContactsClient === undefined) {
             contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_CONTACTS, "", 0, "", "", "", "");
-        }
+        } 
     }
 
     componentDidMount() {
@@ -127,8 +109,8 @@ class PermissionUserReports extends Component {
     }
 
     updateKeyValueUsers(e) {
-        const { fields: { nameUser, idUser, cargoUsuario }, filterUsers, swtShowMessage } = this.props;
-
+        const { fields: { userObject, nameUser, idUser, cargoUsuario }, filterUsers, swtShowMessage } = this.props;
+        
         if (e.keyCode === 13 || e.which === 13) {
             e.consultclick ? "" : e.preventDefault();
             if (nameUser.value !== "" && nameUser.value.length >= 3 && nameUser.value !== null && nameUser.value !== undefined) {
@@ -147,6 +129,7 @@ class PermissionUserReports extends Component {
                                 'cargo'
                             ],
                             onSelect: function (event) {
+                                userObject.onChange(event);
                                 nameUser.onChange(event.title);
                                 idUser.onChange(event.idUsuario);
                                 cargoUsuario.onChange(event.cargo);
@@ -154,21 +137,31 @@ class PermissionUserReports extends Component {
                             }
                         });
                     $('.ui.search.userPermissions').toggleClass('loading');
-                    // setTimeout(function () {
-                    //     $('#inputUserPermissions').focus();
-                    // }, 150);
+
+                    $('#inputUserPermissions').focus();
+                    this.setState({prueba: "asdsd"})
                 });
-            } else {
-                if (nameUser.value.length <= 3) {
-                    swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
-                }
+            } else if (nameUser.value.length <= 3) {
+                swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
             }
         }
     }
 
     render() {
-        const { fields: { nameUser }, disabled } = this.props;
+        const { fields: { nameUser }, usersPermission, disabled } = this.props;
         var numColumnList = 6;
+        var data = _.chain(usersPermission.toArray()).map(usersPermission => {
+            return usersPermission;
+        }).value();
+
+        if (data.length === 10) {
+            disabledButtonCreate = 'disabled';
+        } else {
+            disabledButtonCreate = '';
+        }
+        if (disabled === "disabled") {
+            numColumnList = 12;
+        }
 
         return (
             <div>
@@ -178,11 +171,11 @@ class PermissionUserReports extends Component {
                             <Checkbox
                                 onClick={this._handleChangeUserPermission}
                                 label={<label>Marcar como confidencial</label>}
-                                style={{ padding: "15px 10px 0px 20px" }} slider />
+                                style={{ padding: "15px 10px 0px 20px" }} toggle />
                         </Tooltip>
                     </Col>
                 </div>
-                {this.state.isConfidencial ?
+                {this.state.isConfidencial  ?
                     <div>
                         <Row style={{ padding: "10px 10px 20px 20px" }}>
                             <Col xs={12} md={12} lg={12}>
@@ -195,36 +188,47 @@ class PermissionUserReports extends Component {
                             </Col>
                         </Row>
                         <Row style={{ padding: "0px 10px 0px 20px" }}>
-                            <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
-                                <Col xs={12} md={12} lg={12}>
-                                    <dt><span>Nombre: </span></dt>
-                                    <dt>
-                                        <div className="ui dropdown search userPermissions fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
-                                            <ComboBoxFilter
-                                                name='inputUserPermissions'
-                                                placeholder='Ingrese un criterio de busqueda...'
-                                                {...nameUser}
-                                                parentId='dashboardComponentScroll'
-                                                value={nameUser.value}
-                                                onChange={nameUser.onChange}
-                                                onKeyPress={this.updateKeyValueUsers}
-                                                onSelect={val => this._updateValue(val)}
-                                                max="30"
-                                            />
-                                        </div>
-                                    </dt>
-                                </Col>
-                                <Row style={{ paddingLeft: "10px" }}>
-                                    <Col xs={12} md={5} lg={5}>
-                                        <button className='btn btn-primary' onClick={this._addUser}
-                                            type='button' title='Adicionar participantes, maximo 10' style={{ marginTop: "20px" }}>
-                                            <i className="white plus icon" />Agregar Usuario</button>
+                            {disabled === '' || disabled === undefined ?
+                                <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
+                                    <Col xs={12} md={12} lg={12}>
+                                        <dt><span>Nombre del usuario: </span></dt>
+                                        <dt>
+                                            <div className="ui dropdown search userPermissions fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
+                                                <ComboBoxFilter
+                                                    name='inputUserPermissions'
+                                                    placeholder='Ingrese un criterio de busqueda...'
+                                                    {...nameUser}
+                                                    parentId='dashboardComponentScroll'
+                                                    value={nameUser.value}
+                                                    onChange={nameUser.onChange}
+                                                    onKeyPress={this.updateKeyValueUsers}
+                                                    onSelect={val => this._updateValue(val)}
+                                                    max="30"
+                                                    id="inputUserPermissions"
+                                                />
+                                            </div>
+                                        </dt>
                                     </Col>
-                                </Row>
-                            </Col>
-                            <Col xs={12} md={numColumnList} lg={numColumnList} style={{ paddingLeft: "5px", paddingTop: "10px" }}>
-                                <ListUserPermissions disabled={disabled} />
-                            </Col>
+                                    <Row style={{ paddingLeft: "10px" }}>
+                                        <Col xs={12} md={5} lg={5}>
+                                            <button className='btn btn-primary' onClick={this._addUser}
+                                                type='button' title='Adicionar participantes, maximo 10' style={{ marginTop: "20px" }}>
+                                                <i className="white plus icon" />Agregar Usuario</button>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                                : ''}
+                            {data.length > 0 ?
+                                <Col xs={12} md={numColumnList} lg={numColumnList}>
+                                    <ListUserPermissions disabled={disabled} />
+                                </Col>
+                                :
+                                <Col xs={12} md={numColumnList} lg={numColumnList}>
+                                    <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                                        <span className="form-item">Aún no se han adicionado usuarios</span>
+                                    </div>
+                                </Col>
+                            }
                         </Row>
                     </div>
                     : <div></div>}
@@ -253,6 +257,6 @@ function mapStateToProps({ selectsReducer, usersPermission, contactsByClient }) 
 
 export default reduxForm({
     form: 'submitValidation',
-    fields: ["idUser", "nameUser", "cargoUsuario"],
+    fields: ["idUser", "nameUser", "cargoUsuario", "userObject"],
     validate
 }, mapStateToProps, mapDispatchToProps)(PermissionUserReports);

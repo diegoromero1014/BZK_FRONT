@@ -29,7 +29,7 @@ class ListUserPermissions extends Component {
         });
     }
 
-    _clickButtonDelete(idData) {
+    _clickButtonDelete() {
         const { usersPermission, deleteUser } = this.props;
         var indexDelete = usersPermission.findIndex(item => {
             return item.idParticipante === this.state.idUserSelect;
@@ -44,14 +44,13 @@ class ListUserPermissions extends Component {
     }
 
     _mapValuesData(userData, idx) {
-        console.log('Data: ', userData);
         var { disabled } = this.props;
         return <div className="item" key={idx}>
             <span style={{ paddingRight: '10px', fontWeight: 'bold', color: 'black' }} >{userData.name}</span>
             <i className="remove icon"
                 onClick={this._confirmDeleteUser.bind(this, userData.id)}
                 style={disabled === 'disabled' ? { display: 'none' } : { float: 'right', margin: '0em', fontSize: '1.2em' }}
-                title="Eliminar participante"
+                title="Eliminar usuario"
             ></i>
         </div>
     }
@@ -61,8 +60,6 @@ class ListUserPermissions extends Component {
     render() {
 
         let renderUsuarios = this.props.arrayUsersPermission.map(this._mapValuesData);
-        console.log("usuarios", renderUsuarios);
-        console.log("arrayUsers", this.props.arrayUsersPermission)
 
         return (
             <div className="ui divided selection list" style={{ paddingRight: '23px', height: "160px", overflow: 'scroll' }}>
@@ -70,8 +67,8 @@ class ListUserPermissions extends Component {
                 <SweetAlert
                     type="warning"
                     show={this.state.showConfirmDeleteUser}
-                    title="Eliminación participante"
-                    text="¿Señor usuario, está seguro que desea eliminar el participante?"
+                    title="Eliminación usuario"
+                    text="¿Señor usuario, está seguro que desea eliminar el usuario?"
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='Sí, estoy seguro!'
                     cancelButtonText="Cancelar"
@@ -83,14 +80,10 @@ class ListUserPermissions extends Component {
     }
 }
 
-function orderListParticipantBank(usersPermission, disabled) {
-    /* usersPermission = usersPermission.sort((valueA, valueB) => {
-        return valueA.fecha > valueB.fecha;
-    }) */
+function orderListUsers(usersPermission, disabled) {
 
     if (usersPermission.size > 0) {
         var data = _.chain(usersPermission.toArray()).map(participant => {
-            console.log('Participante: ', participant);
             const { idParticipante, nombreParticipante } = participant;
             if (disabled === 'disabled') {
                 return _.assign({}, {
@@ -102,11 +95,12 @@ function orderListParticipantBank(usersPermission, disabled) {
                     'delete': {
                         typeDelete: DELETE_PARTICIPANT_VIEW,
                         id: idParticipante,
-                        mensaje: "¿Señor usuario, está seguro que desea eliminar el participante?"
+                        mensaje: "¿Señor usuario, está seguro que desea eliminar el usuario?"
                     }
                 });
             }
         }).value();
+
         if (data != null) {
             return data;
         }
@@ -122,11 +116,10 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps({ usersPermission }, ownerProps) {
     const disabled = _.get(ownerProps, 'disabled', '');
-    console.log('Map: ', ownerProps);
     return {
         usersPermission,
         disabled,
-        arrayUsersPermission: orderListParticipantBank(usersPermission, disabled)
+        arrayUsersPermission: orderListUsers(usersPermission, disabled)
     };
 }
 

@@ -24,6 +24,7 @@ import Tooltip from "../../toolTip/toolTipComponent";
 import { redirectUrl } from "../../globalComponents/actions";
 import { getMasterDataFields } from "../../selectsComponent/actions";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
+import {addListUser} from "../../globalComponents/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { showLoading } from "../../loading/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -45,6 +46,8 @@ import {
     TITLE_OTHERS_PARTICIPANTS, MESSAGE_ERROR, ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, MESSAGE_ERROR_SWEET_ALERT,
     TIME_REQUEST_BLOCK_REPORT, REGEX_SIMPLE_XSS_MESAGE
 } from "../../../constantsGlobal";
+
+import PermissionUserReports from "../../globalComponents/permissionsUserReports";
 
 const fields = [];
 var datePrevisitLastReview;
@@ -342,7 +345,7 @@ class FormEditPrevisita extends Component {
     }
 
     _handleBlurValueNumber(typeValidation, val, allowsDecimal, lengthDecimal) {
-             //Elimino los caracteres no validos
+        //Elimino los caracteres no validos
         for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
             if (validos.indexOf(val.toString().charAt(i)) !== -1) {
                 output += val.toString().charAt(i)
@@ -367,7 +370,7 @@ class FormEditPrevisita extends Component {
         }
 
         if (typeValidation === ALLOWS_NEGATIVE_INTEGER) { //Realizo simplemente el formateo
-            
+
             if (_.isNil(this.state.durationPreVisit)) {
                 return (val + decimal);
             } else {
@@ -378,7 +381,7 @@ class FormEditPrevisita extends Component {
         } else { //Valido si el valor es negativo o positivo
             var value = _.isNil(val) ? -1 : numeral(val).format('0');
             if (value >= 0) {
-                
+
                 if (_.isNil(this.state.durationPreVisit)) {
                     return (val + decimal);
                 } else {
@@ -866,7 +869,7 @@ class FormEditPrevisita extends Component {
             getMasterDataFields([PREVISIT_TYPE]);
             showLoading(true, 'Cargando...');
             detailPrevisit(id).then((result) => {
-                const { addListParticipant, selectsReducer } = this.props;
+                const { addListParticipant, addListUser, selectsReducer } = this.props;
                 let part = result.payload.data.data;
                 let listParticipants = [];
                 datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
@@ -1045,7 +1048,13 @@ class FormEditPrevisita extends Component {
                         }
                     </Col>
                 </Row>
-                
+
+                <Row>
+                    <Col xs={12} md={12} lg={12}>
+                        <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'} />
+                    </Col>
+                </Row>
+
                 <Row style={{ padding: "10px 10px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -1135,7 +1144,7 @@ class FormEditPrevisita extends Component {
                             />
                         </dt>
                     </Col>
-                </Row>                
+                </Row>
 
                 <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs>
@@ -1426,6 +1435,7 @@ function mapDispatchToProps(dispatch) {
         nonValidateEnter,
         showLoading,
         addListParticipant,
+        addListUser,
         swtShowMessage,
         canEditPrevisita,
         disableBlockedReport,

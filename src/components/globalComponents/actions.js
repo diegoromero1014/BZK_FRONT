@@ -73,3 +73,10 @@ export function deleteUser(index, tab) {
     tab
   };
 }
+
+export function addListUser(listUser) {
+  return {
+    type: constants.ADD_LIST_USER,
+    listUser
+  };
+}
