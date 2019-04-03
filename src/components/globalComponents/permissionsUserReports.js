@@ -77,7 +77,6 @@ class PermissionUserReports extends Component {
 
     _updateValue(value) {
         const { fields: { idUser, nameUser, cargoUsuario }, contactsByClient } = this.props;
-        console.log(value);
         idUser.onChange(value);
         nameUser.onChange(value)
     }
@@ -169,6 +168,7 @@ class PermissionUserReports extends Component {
                     <Col xs={12} sm={12} md={3} lg={3}>
                         <Tooltip text="Marcar este informe como confidencial">
                             <Checkbox
+                                readOnly={disabled}
                                 onClick={this._handleChangeUserPermission}
                                 label={<label>Marcar como confidencial</label>}
                                 style={{ padding: "15px 10px 0px 20px" }} toggle />
@@ -191,7 +191,7 @@ class PermissionUserReports extends Component {
                             {disabled === '' || disabled === undefined ?
                                 <Col xs={12} md={6} lg={6} style={{ paddingRight: "20px" }}>
                                     <Col xs={12} md={12} lg={12}>
-                                        <dt><span>Nombre del usuario: </span></dt>
+                                        <dt><span>Usuario: </span></dt>
                                         <dt>
                                             <div className="ui dropdown search userPermissions fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
                                                 <ComboBoxFilter
