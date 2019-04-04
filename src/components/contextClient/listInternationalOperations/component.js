@@ -357,8 +357,8 @@ export class ComponentListIntOperations extends Component {
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedIntOperations') &&
-                    <Row style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { position:"relative", border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 20px 0 24px', padding: '15px 0 0 7px' } : {}}>
-                        <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { position:"absolute", right:0, marginTop: "-70px", paddingRight: "16px", textAlign: "right" } : { marginTop: "-45px", paddingRight: "25px", textAlign: "right" }}>
+                    <Row style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { position:"relative", border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 20px 0 24px', padding: '15px 0 0 7px' } : {position:"relative"}}>
+                        <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { position:"absolute", right:0, marginTop: "-70px", paddingRight: "16px", textAlign: "right" } : { marginTop: "-45px", paddingRight: "25px", textAlign: "right", position:"absolute", right:0 }}>
                             <button className="btn" disabled={showFormIntOperations} type="button"
                                 onClick={() => fnShowForm(INT_OPERATIONS, true)} style={showFormIntOperations ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
                                 <ToolTipComponent text="Agregar operación internacional">
