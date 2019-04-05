@@ -545,7 +545,13 @@ class FormPrevisita extends Component {
                     "controlConversation": this.state.controlConversation,
                     "constructiveTension": this.state.constructiveTension,
                     "documentStatus": typeButtonClick,
-                    "endTime": this.state.durationPreVisit
+                    "endTime": this.state.durationPreVisit,
+                    "commercialReport": {
+                        "id": 5840679,
+                        "isConfidential": true,
+                        "permissions": [4999795],
+                        "status": 1
+                    }
                 }
 
                 validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit).then((data) => {
