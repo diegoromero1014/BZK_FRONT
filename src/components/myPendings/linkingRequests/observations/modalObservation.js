@@ -38,9 +38,7 @@ class ModalObservation extends Component {
     _validatewhiteList(e) {
         this.setState({ observation: e });
         let error = checkRequired(e) || checkFirstCharacter(e) || checkObservations(e);
-        if (error) {
-            this.setState({ errors: error });
-        }        
+        this.setState({ errors: error });
     }
 
     _saveObservation() {
