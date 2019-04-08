@@ -16,6 +16,7 @@ import ItemObservation from './itemObservation';
 import Textarea from "../../../../ui/textarea/textareaComponent";
 import { changeStateSaveData } from '../../../dashboard/actions';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
+import { checkRequired, checkFirstCharacter, checkObservations } from '../../../../validationsFields/rulesField';
 
 class ModalObservation extends Component {
 
@@ -23,13 +24,23 @@ class ModalObservation extends Component {
         super(props);
         this._mapItemObservation = this._mapItemObservation.bind(this);
         this._saveObservation = this._saveObservation.bind(this);
+        this._validatewhiteList = this._validatewhiteList.bind(this);
         this.state = {
-            observation: ''
+            observation: '',
+            errors: ''
         }
     }
 
     _mapItemObservation(item, idx) {
         return <ItemObservation key={idx} item={item} />
+    }
+
+    _validatewhiteList(e) {
+        this.setState({ observation: e });
+        let error = checkRequired(e) || checkFirstCharacter(e) || checkObservations(e);
+        if (error) {
+            this.setState({ errors: error });
+        }        
     }
 
     _saveObservation() {
@@ -76,7 +87,7 @@ class ModalObservation extends Component {
         const listObservations = linkRequestsReducer.get('observationsByLinkingRequests');
         return (
             <div>
-                <div style={{ overflow: 'hidden' }} className="modalBt4-body modal-body business-content editable-form-content clearfix"
+                <div style={{ overflow: 'hidden', maxHeight: '500px' }} className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalCreateBoardMembers">
                     <Row style={{ margin: '15px 0px 0px 10px' }}>
                         <Col xs={6} md={3} lg={3}>
@@ -127,10 +138,11 @@ class ModalObservation extends Component {
                                 name="txtArea"
                                 value={this.state.observation}
                                 touched={true}
-                                onChange={(e) => this.setState({ observation: e })}
+                                onChange={this._validatewhiteList}
                                 title="Ingrese las observaciones"
                                 style={{ width: '100%', height: '108px' }}
-                                max={500}
+                                error={this.state.errors}
+                                max={1000}
                             />
                         </Col>
                     </Row>
