@@ -546,10 +546,11 @@ class FormPrevisita extends Component {
                     "constructiveTension": this.state.constructiveTension,
                     "documentStatus": typeButtonClick,
                     "endTime": this.state.durationPreVisit,
-                    "commercialReport": {
-                        "id": 5840679,
+                    "commercialReport": {                        
                         "isConfidential": true,
-                        "permissions": [4999795],
+                        "usersWithPermission": [{
+                            "id": 4998695
+                        }],
                         "status": 1
                     }
                 }
