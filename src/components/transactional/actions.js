@@ -28,7 +28,7 @@ export const getAllCategories = () => {
     "messageBody": ""
   };
 
-  var request = axios.post(APP_URL + "/getAllCategories", json);
+  var request = axios.post(APP_URL + "/getCategoriesByRegion", json);
 
   return {
     type: GET_ALL_CATEGORIES,
