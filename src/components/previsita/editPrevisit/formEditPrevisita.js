@@ -767,7 +767,13 @@ class FormEditPrevisita extends Component {
                     "controlConversation": this.state.controlConversation,
                     "constructiveTension": this.state.constructiveTension,
                     "documentStatus": typeButtonClick,
-                    "endTime": this.state.durationPreVisit
+                    "endTime": this.state.durationPreVisit,
+                    "commercialReport": {
+                        "id": id,
+                        "isConfidential": true,
+                        "permissions": [],
+                        "status": 0
+                    }
                 };
 
                 validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit, id).then((data) => {
@@ -886,7 +892,8 @@ class FormEditPrevisita extends Component {
                     adaptMessage: part.adaptMessage === null ? "" : part.adaptMessage,
                     controlConversation: part.controlConversation === null ? "" : part.controlConversation,
                     constructiveTension: part.constructiveTension === null ? "" : part.constructiveTension,
-                    durationPreVisit: part.endTime === null ? "" : part.endTime
+                    durationPreVisit: part.endTime === null ? "" : part.endTime,
+                    commercialReport: part.commercialReport
                 });
 
                 //Adicionar participantes por parte del cliente

@@ -14,6 +14,7 @@ import { validateValue, validateValueExist, validateIsNullOrUndefined } from '..
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 import { NUMBER_CONTACTS } from './constants';
+import { detailPrevisit } from '../previsita/actions';
 
 var self;
 const validate = values => {
@@ -29,7 +30,7 @@ class PermissionUserReports extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isConfidencial: false,
+            isConfidencial: null,
             showEmptyParticipantBanco: false,
             showParticipantExistBanco: false,
             validateConsultParticipants: false,
@@ -41,6 +42,7 @@ class PermissionUserReports extends Component {
         this._updateValue = this._updateValue.bind(this);
         this.updateKeyValueUsers = this.updateKeyValueUsers.bind(this);
         this._handleChangeUserPermission = this._handleChangeUserPermission.bind(this);
+        this.getIsConfidential = this.getIsConfidential.bind(this);
     }
 
     _addUser() {
@@ -68,7 +70,7 @@ class PermissionUserReports extends Component {
     }
 
     _handleChangeUserPermission() {
-        this.setState({ isConfidencial: true });
+        this.setState({ isConfidencial: !this.state.isConfidencial });
         var isConf = this.state.isConfidencial;
         if (isConf !== false) {
             this.setState({ isConfidencial: false });
@@ -146,8 +148,35 @@ class PermissionUserReports extends Component {
         }
     }
 
+    getIsConfidential() {
+
+        const { previsitReducer } = this.props;
+        const previsitDetail = previsitReducer.get("detailPrevisit");
+
+        if (this.state.isConfidencial !== null) {
+            return this.state.isConfidencial;
+        }
+
+        if (!previsitDetail) {
+            return false;
+        }
+
+        if (!previsitDetail.data) {
+            return false;
+        }
+
+        if (!previsitDetail.data.commercialReport) {
+            return false;
+        }
+
+        return previsitDetail.data.commercialReport.isConfidential;
+    }
+
     render() {
         const { fields: { nameUser }, usersPermission, disabled } = this.props;
+
+        const isConfidential = this.getIsConfidential();
+
         var numColumnList = 6;
         var data = _.chain(usersPermission.toArray()).map(usersPermission => {
             return usersPermission;
@@ -171,11 +200,14 @@ class PermissionUserReports extends Component {
                                 readOnly={disabled}
                                 onClick={this._handleChangeUserPermission}
                                 label={<label>Marcar como confidencial</label>}
-                                style={{ padding: "15px 10px 0px 20px" }} toggle />
+                                style={{ padding: "15px 10px 0px 20px" }}
+                                checked={isConfidential}
+                                toggle
+                            />
                         </Tooltip>
                     </Col>
                 </div>
-                {this.state.isConfidencial  ?
+                {isConfidential  ?
                     <div>
                         <Row style={{ padding: "10px 10px 20px 20px" }}>
                             <Col xs={12} md={12} lg={12}>
@@ -247,11 +279,12 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ selectsReducer, usersPermission, contactsByClient }) {
+function mapStateToProps({ selectsReducer, usersPermission, contactsByClient, previsitReducer }) {
     return {
         usersPermission,
         selectsReducer,
-        contactsByClient
+        contactsByClient,
+        previsitReducer
     };
 }
 
