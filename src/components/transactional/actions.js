@@ -1,6 +1,4 @@
-import axios from 'axios';
-import { SET_URL_PARAMETER, GET_ALL_CATEGORIES } from './constants';
-import { APP_URL } from '../../constantsGlobal';
+import { SET_URL_PARAMETER } from './constants';
 
 export function setUrlParameter(parameter, url) {
 

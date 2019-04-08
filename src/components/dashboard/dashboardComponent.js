@@ -25,7 +25,9 @@ class Dashboard extends Component {
   }
 
   componentWillMount() {
-    const { notifiedProductionUpgrade, validateUpgrateProductionActive } = this.props;
+
+    const { notifiedProductionUpgrade,
+      validateUpgrateProductionActive } = this.props;
 
     let token = window.localStorage.getItem('sessionTokenFront');
 
@@ -75,7 +77,7 @@ class Dashboard extends Component {
           <NavBarComponent />
           <div
             id="dashboardComponentScroll"
-            style={{ backgroundColor: "#ECECEC", width: "100%", height: "94%", float: "left", top: "60px", overflowY: "auto", overflowX: "hidden" }}>
+            style={{ backgroundColor: "#ECECEC", width: "100%", height: "91%", float: "left", top: "60px", overflowY: "auto", overflowX: "hidden" }}>
             {this.props.children}
             <LoadingComponent />
             {dashboardReducer.get('showSaveData') &&

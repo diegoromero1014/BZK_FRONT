@@ -15,12 +15,17 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="PATH" elementType="Argument">
             <stringProp name="Argument.name">PATH</stringProp>
-            <stringProp name="Argument.value">/Biztrack</stringProp>
+            <stringProp name="Argument.value">/Centricity</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="PATHFILE" elementType="Argument">
             <stringProp name="Argument.name">PATHFILE</stringProp>
-            <stringProp name="Argument.value">D:\users.csv</stringProp>
+            <stringProp name="Argument.value">C:\users.csv</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="URL" elementType="Argument">
+            <stringProp name="Argument.name">URL</stringProp>
+            <stringProp name="Argument.value">https://biztrackqa.apps.ambientesbc.com/Centricity/</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -30,7 +35,7 @@
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">${__P(SERVER,biztrackcertificacion.bancolombia.corp)}</stringProp>
+        <stringProp name="HTTPSampler.domain">${__P(SERVER,biztrackqa.apps.ambientesbc.com)}</stringProp>
         <stringProp name="HTTPSampler.port"></stringProp>
         <stringProp name="HTTPSampler.protocol">https</stringProp>
         <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -75,7 +80,7 @@
               <stringProp name="HTTPSampler.port"></stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-              <stringProp name="HTTPSampler.path">${PATH}/login</stringProp>
+              <stringProp name="HTTPSampler.path">https://biztrackqa.apps.ambientesbc.com/biztrack/login</stringProp>
               <stringProp name="HTTPSampler.method">POST</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -145,7 +150,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Access-Control-Request-Headers" elementType="Header">
                     <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
@@ -201,7 +206,7 @@
                 <collectionProp name="HeaderManager.headers">
                   <elementProp name="Referer" elementType="Header">
                     <stringProp name="Header.name">Referer</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/login</stringProp>
+                    <stringProp name="Header.value">https://biztrackqa.apps.ambientesbc.com/Centricity/login</stringProp>
                   </elementProp>
                   <elementProp name="Accept-Language" elementType="Header">
                     <stringProp name="Header.name">Accept-Language</stringProp>
@@ -209,7 +214,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Content-Type" elementType="Header">
                     <stringProp name="Header.name">Content-Type</stringProp>
@@ -273,7 +278,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Access-Control-Request-Headers" elementType="Header">
                     <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
@@ -326,7 +331,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Access-Control-Request-Headers" elementType="Header">
                     <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
@@ -379,7 +384,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Access-Control-Request-Headers" elementType="Header">
                     <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
@@ -432,7 +437,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Access-Control-Request-Headers" elementType="Header">
                     <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
@@ -485,7 +490,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Access-Control-Request-Headers" elementType="Header">
                     <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
@@ -538,7 +543,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Access-Control-Request-Headers" elementType="Header">
                     <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
@@ -591,7 +596,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Access-Control-Request-Headers" elementType="Header">
                     <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
@@ -655,7 +660,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Content-Type" elementType="Header">
                     <stringProp name="Header.name">Content-Type</stringProp>
@@ -715,7 +720,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Content-Type" elementType="Header">
                     <stringProp name="Header.name">Content-Type</stringProp>
@@ -764,7 +769,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Access-Control-Request-Headers" elementType="Header">
                     <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
@@ -828,7 +833,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Content-Type" elementType="Header">
                     <stringProp name="Header.name">Content-Type</stringProp>
@@ -888,7 +893,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Content-Type" elementType="Header">
                     <stringProp name="Header.name">Content-Type</stringProp>
@@ -948,7 +953,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Content-Type" elementType="Header">
                     <stringProp name="Header.name">Content-Type</stringProp>
@@ -1008,7 +1013,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Content-Type" elementType="Header">
                     <stringProp name="Header.name">Content-Type</stringProp>
@@ -1068,7 +1073,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Content-Type" elementType="Header">
                     <stringProp name="Header.name">Content-Type</stringProp>
@@ -1128,7 +1133,7 @@
                   </elementProp>
                   <elementProp name="Origin" elementType="Header">
                     <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                    <stringProp name="Header.value">${URL}</stringProp>
                   </elementProp>
                   <elementProp name="Content-Type" elementType="Header">
                     <stringProp name="Header.name">Content-Type</stringProp>
@@ -1195,7 +1200,7 @@
                 </elementProp>
                 <elementProp name="Origin" elementType="Header">
                   <stringProp name="Header.name">Origin</stringProp>
-                  <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                  <stringProp name="Header.value">${URL}</stringProp>
                 </elementProp>
                 <elementProp name="Content-Type" elementType="Header">
                   <stringProp name="Header.name">Content-Type</stringProp>
@@ -1244,7 +1249,7 @@
                 </elementProp>
                 <elementProp name="Origin" elementType="Header">
                   <stringProp name="Header.name">Origin</stringProp>
-                  <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                  <stringProp name="Header.value">${URL}</stringProp>
                 </elementProp>
                 <elementProp name="Access-Control-Request-Headers" elementType="Header">
                   <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
@@ -1308,7 +1313,7 @@
                 </elementProp>
                 <elementProp name="Origin" elementType="Header">
                   <stringProp name="Header.name">Origin</stringProp>
-                  <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                  <stringProp name="Header.value">${URL}</stringProp>
                 </elementProp>
                 <elementProp name="Content-Type" elementType="Header">
                   <stringProp name="Header.name">Content-Type</stringProp>
@@ -1368,7 +1373,7 @@
                 </elementProp>
                 <elementProp name="Origin" elementType="Header">
                   <stringProp name="Header.name">Origin</stringProp>
-                  <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                  <stringProp name="Header.value">${URL}</stringProp>
                 </elementProp>
                 <elementProp name="Content-Type" elementType="Header">
                   <stringProp name="Header.name">Content-Type</stringProp>
@@ -1417,7 +1422,7 @@
                 </elementProp>
                 <elementProp name="Origin" elementType="Header">
                   <stringProp name="Header.name">Origin</stringProp>
-                  <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                  <stringProp name="Header.value">${URL}</stringProp>
                 </elementProp>
                 <elementProp name="Access-Control-Request-Headers" elementType="Header">
                   <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
@@ -1481,7 +1486,7 @@
                 </elementProp>
                 <elementProp name="Origin" elementType="Header">
                   <stringProp name="Header.name">Origin</stringProp>
-                  <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                  <stringProp name="Header.value">${URL}</stringProp>
                 </elementProp>
                 <elementProp name="Content-Type" elementType="Header">
                   <stringProp name="Header.name">Content-Type</stringProp>
@@ -1541,7 +1546,7 @@
                 </elementProp>
                 <elementProp name="Origin" elementType="Header">
                   <stringProp name="Header.name">Origin</stringProp>
-                  <stringProp name="Header.value">https://biztrackcertificacion.bancolombia.corp/biztrack/</stringProp>
+                  <stringProp name="Header.value">${URL}</stringProp>
                 </elementProp>
                 <elementProp name="Content-Type" elementType="Header">
                   <stringProp name="Header.name">Content-Type</stringProp>
@@ -1601,7 +1606,7 @@
       </ResultCollector>
       <hashTree/>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
-        <stringProp name="filename">${__P(PATHFILE,D:\users.csv)}</stringProp>
+        <stringProp name="filename">${__P(PATHFILE,C:\users.csv)}</stringProp>
         <stringProp name="fileEncoding"></stringProp>
         <stringProp name="variableNames">username,password</stringProp>
         <boolProp name="ignoreFirstLine">false</boolProp>

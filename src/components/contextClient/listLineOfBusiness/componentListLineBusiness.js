@@ -229,15 +229,15 @@ export class ComponentListLineBusiness extends Component {
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedLineOfBusiness') &&
-                    <Row style={{ padding: "0px 10px 10px 20px" }}>
-                        <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "15px", textAlign: "right" }}>
+                    <Row style={{ position:"relative", padding: "0px 10px 10px 20px" }}>
+                        <div style={{ position:"absolute", right:0, marginTop: "-42px", paddingRight: "15px", textAlign: "right" }}>
                             <button className="btn btn-secondary" name={className} disabled={showFormLinebusiness} type="button"
                                 onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
                                 <ToolTipComponent text="Agregar línea de negocio">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                                 </ToolTipComponent>
                             </button>
-                        </Col>
+                        </div>
                         {showFormLinebusiness &&
                             <Col xs={12} md={2} lg={2}>
                                 <div>
