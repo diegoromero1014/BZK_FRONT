@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ListUserPermissions from './ListUserPermissions';
+import ListUserPermissions from './listUserPermissions';
 import { Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
@@ -10,11 +10,10 @@ import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import { Checkbox } from 'semantic-ui-react';
 import { addUsers, clearUsers, filterUsers } from './actions';
 import { contactsByClientFindServer } from '../contact/actions';
-import { validateValue, validateValueExist, validateIsNullOrUndefined } from '../../actionsGlobal';
+import { validateValue, validateIsNullOrUndefined } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 import { NUMBER_CONTACTS } from './constants';
-import { detailPrevisit } from '../previsita/actions';
 
 var self;
 const validate = values => {
