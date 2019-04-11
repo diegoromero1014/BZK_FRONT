@@ -1,4 +1,6 @@
-import { SET_URL_PARAMETER } from './constants';
+import axios from 'axios';
+import { SET_URL_PARAMETER, GET_ALL_CATEGORIES } from './constants';
+import { APP_URL } from '../../constantsGlobal';
 
 export function setUrlParameter(parameter, url) {
 
@@ -27,7 +29,7 @@ export const getAllCategories = () => {
   };
 
   var request = axios.post(APP_URL + "/getCategoriesByRegion", json);
-
+  
   return {
     type: GET_ALL_CATEGORIES,
     payload: request
