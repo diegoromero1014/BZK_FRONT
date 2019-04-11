@@ -77,12 +77,12 @@ export default (state = initialState, action) => {
             return state.set('dataTypeSocialStyle', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_COUNTRY:
             return state.set('dataTypeCountry', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
-        
+
         case constants.FILTER_PROVINCE:
             return state.set('dataTypeProvince', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_CITY:
             return state.set('dataTypeCity', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
-        
+
         case constants.FILTER_PROVINCE_CLIENT:
             return state.set('dataTypeProvinceClient', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_CITY_CLIENT:
@@ -108,6 +108,8 @@ export default (state = initialState, action) => {
             return state.set('dataTypeShareholdersKind', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.SHAREHOLDER_TYPE:
             return state.set('dataTypeShareholdersType', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.CLIENT_TYPE:
+            return state.set('dataTypeClientType', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.CERTIFICATION_STATUS:
             return state.set('dataTypeCertificationStatus', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.TASK_STATUS:
@@ -169,7 +171,7 @@ export default (state = initialState, action) => {
                     map.set(item, []);
                 });
             });
-        case constants.MANAGEMENTS_OF_SECTOR_STRATEGY :
+        case constants.MANAGEMENTS_OF_SECTOR_STRATEGY:
             return state.set('managementsOfsectorStrategy', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         default:
             return state;
