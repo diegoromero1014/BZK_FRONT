@@ -32,7 +32,7 @@ class ListUserPermissions extends Component {
     _clickButtonDelete() {
         const { usersPermission, deleteUser } = this.props;
         var indexDelete = usersPermission.findIndex(item => {
-            return item.idParticipante === this.state.idUserSelect;
+            return item.id === this.state.idUserSelect;
         });
 
         this.setState({
@@ -46,7 +46,7 @@ class ListUserPermissions extends Component {
     _mapValuesData(userData, idx) {
         var { disabled } = this.props;
         return <div className="item" key={idx}>
-            <span style={{ paddingRight: '10px', fontWeight: 'bold', color: 'black' }} >{userData.name}</span>
+            <span style={{ paddingRight: '10px', fontWeight: 'bold', color: 'black' }} >{userData.username}</span>
             {userData.cargo}
             <i className="remove icon"
                 onClick={this._confirmDeleteUser.bind(this, userData.id)}
@@ -85,17 +85,18 @@ function orderListUsers(usersPermission, disabled) {
 
     if (usersPermission.size > 0) {
         var data = _.chain(usersPermission.toArray()).map(usersPermission => {
-            const { idParticipante, nombreParticipante } = usersPermission;
+            
+            const { id, username } = usersPermission.user;
             if (disabled === 'disabled') {
                 return _.assign({}, {
-                    name: nombreParticipante, id: idParticipante
+                    username: username, id: id
                 });
             } else {
                 return _.assign({}, {
-                    name: nombreParticipante, id: idParticipante,
+                    username: username, id: id,
                     'delete': {
                         typeDelete: DELETE_PARTICIPANT_VIEW,
-                        id: idParticipante,
+                        id: id,
                         mensaje: "¿Señor usuario, está seguro que desea eliminar el usuario?"
                     }
                 });
