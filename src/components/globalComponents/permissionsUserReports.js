@@ -30,7 +30,7 @@ class PermissionUserReports extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isConfidencial: false,
+            isConfidencial: null,
             showEmptyParticipantBanco: false,
             showParticipantExistBanco: false,
             validateConsultParticipants: false,
@@ -166,6 +166,8 @@ class PermissionUserReports extends Component {
         if (this.state.isConfidencial !== null) {
             return this.state.isConfidencial;
         }
+
+
 
         if (!previsitDetail) {
             return false;
