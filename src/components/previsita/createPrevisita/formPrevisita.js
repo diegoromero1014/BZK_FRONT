@@ -552,12 +552,7 @@ class FormPrevisita extends Component {
                         "usersWithPermission": [
                             {
                                 "user":{
-                                    "id": 1
-                                }                                                                
-                            },
-                            {
-                                "user":{
-                                    "id": 5084816
+                                    "id": 102
                                 }                                
                             }
                         ],                        
