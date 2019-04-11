@@ -35,7 +35,6 @@ class Transactional extends Component {
     renderCategories() {
         if (this.state.categories) {
             return this.state.categories.map((category, index) => {
-                debugger;
                 return (
                     <CategoryComponent
                         key={index + category.id}
