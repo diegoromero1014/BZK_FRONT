@@ -21,7 +21,7 @@ import SweetAlert from "../../sweetalertFocus";
 import RichText from "../../richText/richTextComponent";
 import Tooltip from "../../toolTip/toolTipComponent";
 
-import { redirectUrl } from "../../globalComponents/actions";
+import { redirectUrl, addUsers } from "../../globalComponents/actions";
 import { getMasterDataFields } from "../../selectsComponent/actions";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
 import {addListUser} from "../../globalComponents/actions";
@@ -33,7 +33,7 @@ import {
 } from './../../../validationsFields/rulesField';
 import {
     createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit, canEditPrevisita, disableBlockedReport,
-    changeOwnerDraftPrevisit
+    changeOwnerDraftPrevisit, setConfidential
 } from "../actions";
 import {
     consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateResponse
@@ -219,7 +219,8 @@ class FormEditPrevisita extends Component {
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
         this._validateBlockOnSave = this._validateBlockOnSave.bind(this);
         this.processValidation = this.processValidation.bind(this);
-
+        this.fillUsersPermission = this.fillUsersPermission.bind(this);
+        this.buildJsoncommercialReport = this.buildJsoncommercialReport.bind(this);
         this._ismounted = false;
     }
 
@@ -750,7 +751,7 @@ class FormEditPrevisita extends Component {
                 if (dataOthers.length > 0 && dataOthers[0] === undefined) {
                     dataOthers = [];
                 }
-
+            
                 const previsitJson = {
                     "id": id,
                     "client": window.sessionStorage.getItem('idClientSelected'),
@@ -768,12 +769,7 @@ class FormEditPrevisita extends Component {
                     "constructiveTension": this.state.constructiveTension,
                     "documentStatus": typeButtonClick,
                     "endTime": this.state.durationPreVisit,
-                    "commercialReport": {
-                        "id": id,
-                        "isConfidential": true,
-                        "permissions": [],
-                        "status": 0
-                    }
+                    "commercialReport": this.buildJsoncommercialReport(this.state.commercialReport)
                 };
 
                 validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit, id).then((data) => {
@@ -863,7 +859,7 @@ class FormEditPrevisita extends Component {
         contollerErrorChangeType = false;
         const {
             nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, showLoading,
-            changeOwnerDraftPrevisit
+            changeOwnerDraftPrevisit, setConfidential
         } = this.props;
 
         nonValidateEnter(true);
@@ -895,6 +891,12 @@ class FormEditPrevisita extends Component {
                     durationPreVisit: part.endTime === null ? "" : part.endTime,
                     commercialReport: part.commercialReport
                 });
+
+                if (part.commercialReport) {
+                    setConfidential(part.commercialReport.isConfidential);
+                }
+
+                this.fillUsersPermission(part);
 
                 //Adicionar participantes por parte del cliente
                 _.forIn(part.participatingContacts, function (value, key) {
@@ -1008,6 +1010,45 @@ class FormEditPrevisita extends Component {
 
             })
         }
+    }
+
+    fillUsersPermission(previsitDetail) {
+        const { addUsers } = this.props;
+
+        if (previsitDetail && previsitDetail.commercialReport) {
+            const commercialReport = previsitDetail.commercialReport;
+
+            if (Array.isArray(commercialReport.usersWithPermission) && commercialReport.usersWithPermission.length) {
+                commercialReport.usersWithPermission.forEach(userWithPermission => {
+                    let newUser = {
+                        id: userWithPermission.id,
+                        commercialReport: userWithPermission.commercialReport,
+                        user: {
+                            id: userWithPermission.user.id,
+                            username: userWithPermission.user.username,
+                        }
+                    }
+                    
+                    addUsers(newUser);
+                }); 
+            }
+        }
+    }
+
+    buildJsoncommercialReport(commercialReport) {
+        const { usersPermission, previsitReducer } = this.props;
+
+        let json = {
+            "id": null,
+            "isConfidential": previsitReducer.get('confidential'),
+            "usersWithPermission": usersPermission.toArray()
+        }
+
+        if (commercialReport) {
+            json.id = commercialReport.id;
+        }
+
+        return json;
     }
 
     render() {
@@ -1446,14 +1487,17 @@ function mapDispatchToProps(dispatch) {
         swtShowMessage,
         canEditPrevisita,
         disableBlockedReport,
-        changeOwnerDraftPrevisit
+        changeOwnerDraftPrevisit,
+        addUsers,
+        setConfidential
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, participants, previsitReducer, reducerGlobal, navBar }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, participants, previsitReducer, reducerGlobal, navBar }, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,
+        usersPermission,
         participants,
         previsitReducer,
         reducerGlobal,

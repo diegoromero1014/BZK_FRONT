@@ -14,7 +14,7 @@ import { validateValue, validateValueExist, validateIsNullOrUndefined } from '..
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 import { NUMBER_CONTACTS } from './constants';
-import { detailPrevisit } from '../previsita/actions';
+import { setConfidential } from '../previsita/actions';
 
 var self;
 const validate = values => {
@@ -55,8 +55,12 @@ class PermissionUserReports extends Component {
             });
             if (userTODO === undefined) {
                 var user = {
-                    idParticipante: idUser.value,
-                    nombreParticipante: nameUser.value
+                    id: null,
+                    commercialReport: null,
+                    user: {
+                        id: idUser.value,
+                        username: nameUser.value
+                    }
                 }
                 addUsers(user);
                 idUser.onChange('');
@@ -69,12 +73,16 @@ class PermissionUserReports extends Component {
         }
     }
 
-    _handleChangeUserPermission() {
+    _handleChangeUserPermission() { 
+        const { clearUsers, setConfidential } = this.props;
+
         this.setState({ isConfidencial: !this.state.isConfidencial });
-        var isConf = this.state.isConfidencial;
-        if (isConf !== false) {
-            this.setState({ isConfidencial: false });
+
+        if (this.state.isConfidencial) {
+            clearUsers();
         }
+
+        setConfidential(    !this.state.isConfidencial);
     }
 
     _updateValue(value) {
@@ -84,8 +92,10 @@ class PermissionUserReports extends Component {
     }
 
     componentWillMount() {
-        const { clearUsers, contactsByClient, contactsByClientFindServer } = this.props;
+        const { clearUsers, contactsByClient, contactsByClientFindServer, previsitReducer } = this.props;
+
         clearUsers();
+
         this.props.resetForm();
         const valuesContactsClient = contactsByClient.get('contacts');
         if (_.isEmpty(valuesContactsClient) || valuesContactsClient === null || valuesContactsClient === undefined) {
@@ -156,6 +166,8 @@ class PermissionUserReports extends Component {
         if (this.state.isConfidencial !== null) {
             return this.state.isConfidencial;
         }
+
+
 
         if (!previsitDetail) {
             return false;
@@ -275,7 +287,8 @@ function mapDispatchToProps(dispatch) {
         clearUsers,
         contactsByClientFindServer,
         filterUsers,
-        swtShowMessage
+        swtShowMessage,
+        setConfidential
     }, dispatch);
 }
 
