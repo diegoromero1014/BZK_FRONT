@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid';
 import _ from 'lodash';
 import { validateResponse, stringValidate } from '../../../../actionsGlobal';
@@ -44,7 +43,7 @@ class ModalObservation extends Component {
     _saveObservation() {
         const { saveObservationLinkingRequest, idLinkingRequests, changeStateSaveData,
             swtShowMessage, isOpen } = this.props;
-        if (stringValidate(this.state.observation)) {
+        if (!this.state.errors) {
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             saveObservationLinkingRequest(idLinkingRequests, this.state.observation).then((data) => {
                 changeStateSaveData(false, "");
@@ -58,8 +57,6 @@ class ModalObservation extends Component {
                 changeStateSaveData(false, "");
                 swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             });
-        } else {
-            swtShowMessage(MESSAGE_ERROR, 'Información faltante', 'Señor usuario, debe ingresar la observación');
         }
     }
 
