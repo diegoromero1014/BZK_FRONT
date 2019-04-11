@@ -8,10 +8,14 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case contants.ADD_USER:
             const user = action.data;
+
             const newUser = _.assign({}, {
-                tipoParticipante: user.tipoParticipante,
-                idParticipante: user.idParticipante,
-                nombreParticipante: user.nombreParticipante
+                id: user.id,
+                commercialReport: user.commercialReport,
+                user: {
+                    id: user.user.id,
+                    username: user.user.username,
+                }
             });
             return state.push(newUser);
         case contants.DELETE_USER:

@@ -129,6 +129,7 @@ class FormPrevisita extends Component {
         this._changeDurationPreVisit = this._changeDurationPreVisit.bind(this);
         this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
         this.processValidation = this.processValidation.bind(this);
+        this.buildJsoncommercialReport = this.buildJsoncommercialReport.bind(this);
     }
 
     _closeMessageCreatePreVisit() {
@@ -546,13 +547,7 @@ class FormPrevisita extends Component {
                     "constructiveTension": this.state.constructiveTension,
                     "documentStatus": typeButtonClick,
                     "endTime": this.state.durationPreVisit,
-                    "commercialReport": {                        
-                        "isConfidential": true,
-                        "usersWithPermission": [{
-                            "id": 4998695
-                        }],
-                        "status": 1
-                    }
+                    "commercialReport": this.buildJsoncommercialReport()
                 }
 
                 validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit).then((data) => {
@@ -655,6 +650,18 @@ class FormPrevisita extends Component {
                 }
             });
         }
+    }
+
+    buildJsoncommercialReport() {
+        const { usersPermission, previsitReducer } = this.props;
+
+        let json = {
+            "id": null,
+            "isConfidential": previsitReducer.get('confidential'),
+            "usersWithPermission": usersPermission.toArray()
+        }
+
+        return json;
     }
 
     render() {
@@ -990,13 +997,15 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, participants, reducerGlobal, navBar }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, participants, reducerGlobal, navBar, usersPermission, previsitReducer}, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,
         participants,
         reducerGlobal,
-        navBar
+        navBar,
+        usersPermission,
+        previsitReducer
     };
 }
 
