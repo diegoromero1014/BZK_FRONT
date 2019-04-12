@@ -218,7 +218,7 @@ class PermissionUserReports extends Component {
                             <Checkbox
                                 readOnly={disabled}
                                 onClick={this._handleChangeUserPermission}
-                                label={<label>Marcar como confidencial</label>}
+                                label={'Marcar como confidencial'}
                                 style={{ padding: "15px 10px 0px 20px" }}
                                 checked={isConfidential}
                                 toggle
