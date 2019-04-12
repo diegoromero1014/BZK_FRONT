@@ -12,8 +12,10 @@ import { addUsers, clearUsers, filterUsers } from './actions';
 import { contactsByClientFindServer } from '../contact/actions';
 import { validateValue, validateValueExist, validateIsNullOrUndefined } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
+import SweetAlert from '../sweetalertFocus';
 
-import { NUMBER_CONTACTS } from './constants';
+
+import { NUMBER_CONTACTS, MESSAGE_CONFIDENTIAL } from './constants';
 import { setConfidential } from '../previsita/actions';
 
 var self;
@@ -35,7 +37,7 @@ class PermissionUserReports extends Component {
             showParticipantExistBanco: false,
             validateConsultParticipants: false,
             showInvalidCharacter: false,
-            prueba: ""
+            showMessage: null
         }
 
         this._addUser = this._addUser.bind(this);
@@ -43,6 +45,7 @@ class PermissionUserReports extends Component {
         this.updateKeyValueUsers = this.updateKeyValueUsers.bind(this);
         this._handleChangeUserPermission = this._handleChangeUserPermission.bind(this);
         this.getIsConfidential = this.getIsConfidential.bind(this);
+        this.cancelAlert = this.cancelAlert.bind(this);
     }
 
     _addUser() {
@@ -57,7 +60,7 @@ class PermissionUserReports extends Component {
             if (description.value === window.localStorage.getItem('userNameFront')) {
                 userTODO = idUser.value;
             }
-            
+
             if (userTODO === undefined) {
                 var user = {
                     id: null,
@@ -80,16 +83,19 @@ class PermissionUserReports extends Component {
         }
     }
 
-    _handleChangeUserPermission() { 
+    _handleChangeUserPermission() {
         const { clearUsers, setConfidential } = this.props;
 
-        this.setState({ isConfidencial: !this.state.isConfidencial });
+        this.setState({
+            isConfidencial: !this.state.isConfidencial,
+            showMessage: true
+        });
 
         if (this.state.isConfidencial) {
             clearUsers();
         }
 
-        setConfidential(    !this.state.isConfidencial);
+        setConfidential(!this.state.isConfidencial);
     }
 
     _updateValue(value) {
@@ -108,7 +114,7 @@ class PermissionUserReports extends Component {
         const valuesContactsClient = contactsByClient.get('contacts');
         if (_.isEmpty(valuesContactsClient) || valuesContactsClient === null || valuesContactsClient === undefined) {
             contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_CONTACTS, "", 0, "", "", "", "");
-        } 
+        }
     }
 
     componentDidMount() {
@@ -129,7 +135,7 @@ class PermissionUserReports extends Component {
 
     updateKeyValueUsers(e) {
         const { fields: { userObject, nameUser, idUser, cargoUsuario, description }, filterUsers, swtShowMessage } = this.props;
-        
+
         if (e.keyCode === 13 || e.which === 13) {
             e.consultclick ? "" : e.preventDefault();
             if (nameUser.value !== "" && nameUser.value.length >= 3 && nameUser.value !== null && nameUser.value !== undefined) {
@@ -147,7 +153,7 @@ class PermissionUserReports extends Component {
                                 'idUsuario',
                                 'cargo'
                             ],
-                            onSelect: function (event) {                                 
+                            onSelect: function (event) {
                                 description.onChange(event.description);
                                 userObject.onChange(event);
                                 nameUser.onChange(event.title);
@@ -159,7 +165,6 @@ class PermissionUserReports extends Component {
                     $('.ui.search.userPermissions').toggleClass('loading');
 
                     $('#inputUserPermissions').focus();
-                    this.setState({prueba: "asdsd"})
                 });
             } else if (nameUser.value.length <= 3) {
                 swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
@@ -188,6 +193,13 @@ class PermissionUserReports extends Component {
         }
 
         return previsitDetail.data.commercialReport.isConfidential;
+    }
+
+    cancelAlert() {
+        this.setState({
+            showMessage: false,
+            isConfidencial: false
+        });
     }
 
     render() {
@@ -225,7 +237,7 @@ class PermissionUserReports extends Component {
                         </Tooltip>
                     </Col>
                 </div>
-                {isConfidential  ?
+                {isConfidential ?
                     <div>
                         <Row style={{ padding: "10px 10px 20px 20px" }}>
                             <Col xs={12} md={12} lg={12}>
@@ -281,7 +293,21 @@ class PermissionUserReports extends Component {
                             }
                         </Row>
                     </div>
-                    : <div></div>}
+                    : <div></div>
+                }
+
+                <SweetAlert
+                    type="warning"
+                    show={this.state.showMessage}
+                    title="¡Advertencia!"
+                    text={MESSAGE_CONFIDENTIAL}
+                    confirmButtonColor='#DD6B55'
+                    confirmButtonText='¡Sí, estoy seguro!'
+                    cancelButtonText="Cancelar"
+                    showCancelButton={true}
+                    onCancel={this.cancelAlert}
+                    onConfirm={() => this.setState({ showMessage: false })}
+                />
             </div>
         );
     }

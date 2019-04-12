@@ -4,3 +4,4 @@ export const FILTER_USER = "FILTER_USER";
 export const ADD_USER = "ADD_USER";
 export const DELETE_USER = "DELETE_USER";
 export const DELETE_PARTICIPANT_VIEW = "DELETE_USER_VIEW";
+export const MESSAGE_CONFIDENTIAL = "Señor usuario acaba de habilitar la opción de confidencial, recuerde que este informe solo podrá ser visto por usted y los usuarios seleccionados.";
