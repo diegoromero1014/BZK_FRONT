@@ -147,8 +147,7 @@ class PermissionUserReports extends Component {
                                 'idUsuario',
                                 'cargo'
                             ],
-                            onSelect: function (event) {
-                                debugger;
+                            onSelect: function (event) {                                 
                                 description.onChange(event.description);
                                 userObject.onChange(event);
                                 nameUser.onChange(event.title);
