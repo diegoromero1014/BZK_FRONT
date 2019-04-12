@@ -1026,6 +1026,7 @@ class FormEditPrevisita extends Component {
                         user: {
                             id: userWithPermission.user.id,
                             username: userWithPermission.user.username,
+                            name: userWithPermission.user.name
                         }
                     }
                     
@@ -1041,11 +1042,17 @@ class FormEditPrevisita extends Component {
         let json = {
             "id": null,
             "isConfidential": previsitReducer.get('confidential'),
-            "usersWithPermission": usersPermission.toArray()
+            "usersWithPermission": usersPermission.toArray(),
+            "status": null,
+            "createdBy": null,
+            "createdTimestamp": null
         }
 
         if (commercialReport) {
             json.id = commercialReport.id;
+            json.status = commercialReport.status;
+            json.createdBy = commercialReport.createdBy;
+            json.createdTimestamp = commercialReport.createdTimestamp;
         }
 
         return json;

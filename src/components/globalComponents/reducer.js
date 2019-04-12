@@ -15,6 +15,7 @@ export default (state = initialState, action) => {
                 user: {
                     id: user.user.id,
                     username: user.user.username,
+                    name: user.user.name
                 }
             });
             return state.push(newUser);
