@@ -46,27 +46,34 @@ class PermissionUserReports extends Component {
     }
 
     _addUser() {
-        const { fields: { idUser, nameUser, cargoUsuario, empresaUsuario }, usersPermission, addUsers, swtShowMessage } = this.props;
-        if (validateValue(nameUser.value) && !(validateIsNullOrUndefined(idUser.value) || idUser.value <= 0)) {
+        const { fields: { idUser, nameUser, description, cargoUsuario, empresaUsuario }, usersPermission, addUsers, swtShowMessage } = this.props;
+        if (validateValue(description.value) && validateValue(nameUser.value) && !(validateIsNullOrUndefined(idUser.value) || idUser.value <= 0)) {
             var userTODO = usersPermission.find(function (item) {
-                if (item.idParticipante === idUser.value) {
-                    return item.idParticipante;
+                if (item.user.id === idUser.value) {
+                    return item.user.id;
                 }
             });
+
+            if (description.value === window.localStorage.getItem('userNameFront')) {
+                userTODO = idUser.value;
+            }
+            
             if (userTODO === undefined) {
                 var user = {
                     id: null,
                     commercialReport: null,
                     user: {
                         id: idUser.value,
-                        username: nameUser.value
+                        username: description.value,
+                        name: nameUser.value
                     }
                 }
                 addUsers(user);
                 idUser.onChange('');
                 nameUser.onChange('');
+                description.onChange('');
             } else {
-                swtShowMessage('error', "Usuario existente", "Señor usuario, el usuario que desea agregar ya se encuentra en la lista");
+                swtShowMessage('error', "Usuario existente", "Señor usuario, el usuario que desea agregar ya se encuentra en la lista o es el creador de este documento comercial.");
             }
         } else {
             swtShowMessage('error', "Error usuario", "Señor usuario, para agregar un participante debe seleccionar un usuario");
@@ -86,9 +93,10 @@ class PermissionUserReports extends Component {
     }
 
     _updateValue(value) {
-        const { fields: { idUser, nameUser, cargoUsuario }, contactsByClient } = this.props;
+        const { fields: { idUser, nameUser, description, cargoUsuario }, contactsByClient } = this.props;
         idUser.onChange(value);
         nameUser.onChange(value)
+        description.onChange(value)
     }
 
     componentWillMount() {
@@ -120,7 +128,7 @@ class PermissionUserReports extends Component {
     }
 
     updateKeyValueUsers(e) {
-        const { fields: { userObject, nameUser, idUser, cargoUsuario }, filterUsers, swtShowMessage } = this.props;
+        const { fields: { userObject, nameUser, idUser, cargoUsuario, description }, filterUsers, swtShowMessage } = this.props;
         
         if (e.keyCode === 13 || e.which === 13) {
             e.consultclick ? "" : e.preventDefault();
@@ -140,6 +148,8 @@ class PermissionUserReports extends Component {
                                 'cargo'
                             ],
                             onSelect: function (event) {
+                                debugger;
+                                description.onChange(event.description);
                                 userObject.onChange(event);
                                 nameUser.onChange(event.title);
                                 idUser.onChange(event.idUsuario);
@@ -159,15 +169,12 @@ class PermissionUserReports extends Component {
     }
 
     getIsConfidential() {
-
         const { previsitReducer } = this.props;
         const previsitDetail = previsitReducer.get("detailPrevisit");
 
         if (this.state.isConfidencial !== null) {
             return this.state.isConfidencial;
         }
-
-
 
         if (!previsitDetail) {
             return false;
@@ -303,6 +310,6 @@ function mapStateToProps({ selectsReducer, usersPermission, contactsByClient, pr
 
 export default reduxForm({
     form: 'submitValidation',
-    fields: ["idUser", "nameUser", "cargoUsuario", "userObject"],
+    fields: ["idUser", "nameUser", "cargoUsuario", "userObject", "description"],
     validate
 }, mapStateToProps, mapDispatchToProps)(PermissionUserReports);

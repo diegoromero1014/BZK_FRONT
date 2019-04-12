@@ -46,7 +46,7 @@ class ListUserPermissions extends Component {
     _mapValuesData(userData, idx) {
         var { disabled } = this.props;
         return <div className="item" key={idx}>
-            <span style={{ paddingRight: '10px', fontWeight: 'bold', color: 'black' }} >{userData.username}</span>
+            <span style={{ paddingRight: '10px', fontWeight: 'bold', color: 'black' }} >{userData.name}</span>
             {userData.cargo}
             <i className="remove icon"
                 onClick={this._confirmDeleteUser.bind(this, userData.id)}
@@ -86,14 +86,14 @@ function orderListUsers(usersPermission, disabled) {
     if (usersPermission.size > 0) {
         var data = _.chain(usersPermission.toArray()).map(usersPermission => {
             
-            const { id, username } = usersPermission.user;
+            const { id, name } = usersPermission.user;
             if (disabled === 'disabled') {
                 return _.assign({}, {
-                    username: username, id: id
+                    name: name, id: id
                 });
             } else {
                 return _.assign({}, {
-                    username: username, id: id,
+                    name: name, id: id,
                     'delete': {
                         typeDelete: DELETE_PARTICIPANT_VIEW,
                         id: id,
