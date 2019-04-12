@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import _ from 'lodash';
 import { fields, validations as validate } from './filesAndRules';
 
@@ -11,7 +10,6 @@ import ComboBox from '../../../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../../../ui/input/inputComponent';
 import Textarea from '../../../../../ui/textarea/textareaComponent';
 import AuditFiles from '../../../../globalComponents/auditFiles';
-import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
 
 import { shareholdersByClientFindServer, clearShareholderCreate, clearShareholderOrder } from '../actions';
 import { getDetailShareHolder, toggleModalShareholder } from './actions';
@@ -25,13 +23,12 @@ import { swtShowMessage } from '../../../../sweetAlertMessages/actions';
 
 import { NUMBER_RECORDS } from '../constants';
 import {
-  CONTACT_ID_TYPE, CLIENT_TYPE, CLIENT_ID_TYPE, FILTER_COUNTRY,
-  FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE, SHAREHOLDER_KIND,
-  SHAREHOLDER_ID_TYPE, GENDER
+  CONTACT_ID_TYPE, CLIENT_TYPE, CLIENT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE,
+  SHAREHOLDER_KIND, SHAREHOLDER_ID_TYPE, GENDER
 } from '../../../../selectsComponent/constants';
 import {
-  NATURAL_PERSON, JURIDICAL_PERSON, MESSAGE_SAVE_DATA, EDITAR,
-  MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
+  NATURAL_PERSON, JURIDICAL_PERSON, MESSAGE_SAVE_DATA, EDITAR, MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT,
+  MESSAGE_ERROR_SWEET_ALERT
 } from '../../../../../constantsGlobal';
 
 const errors = {}
@@ -91,7 +88,7 @@ class ComponentShareHolderDetail extends Component {
   }
 
   _onChangeProvince(val) {
-    const { fields: { countryId, provinceId, cityId }, editShareholderReducer } = this.props;
+    const { fields: { provinceId, cityId }, editShareholderReducer } = this.props;
     provinceId.onChange(val);
     const { consultListWithParameterUbication } = this.props;
     consultListWithParameterUbication(FILTER_CITY, provinceId.value);
@@ -126,10 +123,13 @@ class ComponentShareHolderDetail extends Component {
   }
 
   _submitEditShareHolderDetail() {
-    const { fields: { id, address, cityId, clientId, comment, countryId, firstLastName, firstName,
-      fiscalCountryId, genderId, middleName, provinceId, secondLastName, shareHolderIdNumber,
-      shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
-      tributaryNumber }, shareHolderId, createShareholder, shareholdersByClientFindServer, changeStateSaveData } = this.props;
+    const {
+      fields: {
+        address, cityId, clientId, comment, countryId, firstLastName, firstName, fiscalCountryId, genderId, middleName,
+        provinceId, secondLastName, shareHolderIdNumber, shareHolderIdType, shareHolderKindId, shareHolderName,
+        shareHolderType, sharePercentage, tributaryNumber
+      }, shareHolderId, createShareholder, shareholdersByClientFindServer, changeStateSaveData
+    } = this.props;
 
     var messageBody = {
       "clientId": clientId.value,
@@ -203,8 +203,14 @@ class ComponentShareHolderDetail extends Component {
   }
 
   componentWillMount() {
-    const { shareHolderId, getDetailShareHolder, getMasterDataFields, consultDataSelect,
-      nonValidateEnter, showLoading, swtShowMessage } = this.props;
+    const {
+      fields: {
+        shareHolderIdType, shareHolderIdNumber
+      },
+      shareHolderId, getDetailShareHolder, getMasterDataFields, consultDataSelect, nonValidateEnter, showLoading,
+      swtShowMessage
+    } = this.props;
+
     showLoading(true, MESSAGE_LOAD_DATA);
     nonValidateEnter(true);
     this.props.resetForm();
@@ -217,6 +223,10 @@ class ComponentShareHolderDetail extends Component {
       } else {
         const { editShareholderReducer, consultListWithParameterUbication } = this.props;
         const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
+
+        shareHolderIdType.onChange(shareHolderEdit.shareholderIdType);
+        shareHolderIdNumber.onChange(shareHolderEdit.shareholderIdNumber);
+
         if (shareHolderEdit.countryId !== null && shareHolderEdit.countryId !== '' && shareHolderEdit.countryId !== undefined) {
           consultListWithParameterUbication(FILTER_PROVINCE, shareHolderEdit.countryId);
           if (shareHolderEdit.provinceId !== null && shareHolderEdit.provinceId !== '' && shareHolderEdit.provinceId !== undefined) {
@@ -231,12 +241,18 @@ class ComponentShareHolderDetail extends Component {
   }
 
   render() {
-    const { fields: { id, address, cityId, clientId, comment, countryId, firstLastName, firstName,
-      fiscalCountryId, genderId, middleName, provinceId, secondLastName, shareHolderIdNumber,
-      shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType, sharePercentage,
-      tributaryNumber }, handleSubmit, editShareholderReducer, selectsReducer, shareHolderId, reducerGlobal } = this.props;
+    const {
+      fields: {
+        address, cityId, comment, countryId, firstLastName, firstName, fiscalCountryId, genderId, middleName, provinceId,
+        secondLastName, shareHolderIdNumber, shareHolderIdType, shareHolderKindId, shareHolderName, shareHolderType,
+        sharePercentage, tributaryNumber
+      }, handleSubmit, editShareholderReducer, selectsReducer, reducerGlobal
+    } = this.props;
+
     const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
+
     var typeClient;
+    debugger;
     if (shareHolderEdit !== null && shareHolderEdit !== '' && shareHolderEdit !== undefined) {
       valueTypeShareholder = shareHolderEdit.shareHolderTypeStr;
       var valueSh = _.get(_.filter(selectsReducer.get(CLIENT_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value');
@@ -246,6 +262,7 @@ class ComponentShareHolderDetail extends Component {
         typeClient = CONTACT_ID_TYPE;
       }
     }
+
     return (
       <form onSubmit={handleSubmit(this._submitEditShareHolderDetail)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
