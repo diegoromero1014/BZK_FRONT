@@ -48,6 +48,7 @@ class PermissionUserReports extends Component {
         this.getIsConfidential = this.getIsConfidential.bind(this);
         this.cancelAlert = this.cancelAlert.bind(this);
         this.validateUser = this.validateUser.bind(this);
+        this.handleOnSelect = this.handleOnSelect.bind(this);
     }
 
     _addUser() {
@@ -146,8 +147,23 @@ class PermissionUserReports extends Component {
         });
     }
 
+    handleOnSelect(event) {
+        this.setState({userSelected: true});
+
+        const { fields: { userObject, nameUser, idUser, cargoUsuario, description } } = this.props;
+
+        description.onChange(event.description);
+        userObject.onChange(event);
+        nameUser.onChange(event.title);
+        idUser.onChange(event.idUsuario);
+        cargoUsuario.onChange(event.cargo);
+        return 'default';
+    }
+
     updateKeyValueUsers(e) {
-        const { fields: { userObject, nameUser, idUser, cargoUsuario, description }, filterUsers, swtShowMessage } = this.props;
+        self = this;
+
+        const { fields: { nameUser }, filterUsers, swtShowMessage } = this.props;
 
         if (e.keyCode === 13 || e.which === 13) {
             e.consultclick ? "" : e.preventDefault();
@@ -166,16 +182,7 @@ class PermissionUserReports extends Component {
                                 'idUsuario',
                                 'cargo'
                             ],
-                            onSelect: function (event) {
-                                description.onChange(event.description);
-                                userObject.onChange(event);
-                                nameUser.onChange(event.title);
-                                idUser.onChange(event.idUsuario);
-                                cargoUsuario.onChange(event.cargo);
-
-                                this.setState({userSelected: true});
-                                return 'default';
-                            }
+                            onSelect: self.handleOnSelect
                         });
                     $('.ui.search.userPermissions').toggleClass('loading');
 
