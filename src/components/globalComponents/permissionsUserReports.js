@@ -15,7 +15,7 @@ import { swtShowMessage } from '../sweetAlertMessages/actions';
 import SweetAlert from '../sweetalertFocus';
 
 
-import { NUMBER_CONTACTS, MESSAGE_CONFIDENTIAL } from './constants';
+import { NUMBER_CONTACTS, MESSAGE_CONFIDENTIAL, TITLE_MESSAGE_ERR_USER_INVALID, MESSAGE_ERR_USER_INVALID } from './constants';
 import { setConfidential } from '../previsita/actions';
 
 var self;
@@ -37,7 +37,7 @@ class PermissionUserReports extends Component {
             showParticipantExistBanco: false,
             validateConsultParticipants: false,
             showInvalidCharacter: false,
-            showMessage: null
+            showMessage: null,
         }
 
         this._addUser = this._addUser.bind(this);
@@ -46,38 +46,44 @@ class PermissionUserReports extends Component {
         this._handleChangeUserPermission = this._handleChangeUserPermission.bind(this);
         this.getIsConfidential = this.getIsConfidential.bind(this);
         this.cancelAlert = this.cancelAlert.bind(this);
+        this.validateUser = this.validateUser.bind(this);
     }
 
     _addUser() {
         const { fields: { idUser, nameUser, description, cargoUsuario, empresaUsuario }, usersPermission, addUsers, swtShowMessage } = this.props;
         if (validateValue(description.value) && validateValue(nameUser.value) && !(validateIsNullOrUndefined(idUser.value) || idUser.value <= 0)) {
-            var userTODO = usersPermission.find(function (item) {
-                if (item.user.id === idUser.value) {
-                    return item.user.id;
-                }
-            });
-
-            if (description.value === window.localStorage.getItem('userNameFront')) {
-                userTODO = idUser.value;
-            }
-
-            if (userTODO === undefined) {
-                var user = {
-                    id: null,
-                    commercialReport: null,
-                    user: {
-                        id: idUser.value,
-                        username: description.value,
-                        name: nameUser.value
+            this.validateUser(nameUser.value).then(() => {
+                let userTODO = usersPermission.find(function (item) {
+                    if (item.user.id === idUser.value) {
+                        return item.user.id;
                     }
+                });
+
+                if (description.value === window.localStorage.getItem('userNameFront')) {
+                    userTODO = idUser.value;
                 }
-                addUsers(user);
-                idUser.onChange('');
-                nameUser.onChange('');
-                description.onChange('');
-            } else {
-                swtShowMessage('error', "Usuario existente", "Señor usuario, el usuario que desea agregar ya se encuentra en la lista o es el creador de este documento comercial.");
-            }
+
+                if (userTODO === undefined) {
+                    let user = {
+                        id: null,
+                        commercialReport: null,
+                        user: {
+                            id: idUser.value,
+                            username: description.value,
+                            name: nameUser.value
+                        }
+                    }
+
+                    addUsers(user);
+                    idUser.onChange('');
+                    nameUser.onChange('');
+                    description.onChange('');
+                } else {
+                    swtShowMessage('error', "Usuario existente", "Señor usuario, el usuario que desea agregar ya se encuentra en la lista o es el creador de este documento comercial.");
+                }
+            }).catch(() => {
+                swtShowMessage('error', TITLE_MESSAGE_ERR_USER_INVALID, MESSAGE_ERR_USER_INVALID);
+            });
         } else {
             swtShowMessage('error', "Error usuario", "Señor usuario, para agregar un participante debe seleccionar un usuario");
         }
@@ -200,6 +206,24 @@ class PermissionUserReports extends Component {
             showMessage: false,
             isConfidencial: false
         });
+    }
+
+    validateUser(name) {
+        const { filterUsers } = this.props;
+
+        return new Promise((resolve, reject) => {
+            if (name) {
+                filterUsers(name).then(data => {
+                    const user = _.get(data, 'payload.data.data');
+    
+                    if (Array.isArray(user) && !user.length) {
+                        reject();
+                    } else {
+                        resolve();
+                    }
+                });
+            }
+        })
     }
 
     render() {
