@@ -38,6 +38,7 @@ class PermissionUserReports extends Component {
             validateConsultParticipants: false,
             showInvalidCharacter: false,
             showMessage: null,
+            userSelected: false
         }
 
         this._addUser = this._addUser.bind(this);
@@ -53,33 +54,39 @@ class PermissionUserReports extends Component {
         const { fields: { idUser, nameUser, description, cargoUsuario, empresaUsuario }, usersPermission, addUsers, swtShowMessage } = this.props;
         if (validateValue(description.value) && validateValue(nameUser.value) && !(validateIsNullOrUndefined(idUser.value) || idUser.value <= 0)) {
             this.validateUser(nameUser.value).then(() => {
-                let userTODO = usersPermission.find(function (item) {
-                    if (item.user.id === idUser.value) {
-                        return item.user.id;
-                    }
-                });
-
-                if (description.value === window.localStorage.getItem('userNameFront')) {
-                    userTODO = idUser.value;
-                }
-
-                if (userTODO === undefined) {
-                    let user = {
-                        id: null,
-                        commercialReport: null,
-                        user: {
-                            id: idUser.value,
-                            username: description.value,
-                            name: nameUser.value
+                if (this.state.userSelected) {
+                    let userTODO = usersPermission.find(function (item) {
+                        if (item.user.id === idUser.value) {
+                            return item.user.id;
                         }
+                    });
+    
+                    if (description.value === window.localStorage.getItem('userNameFront')) {
+                        userTODO = idUser.value;
+                    }
+    
+                    if (userTODO === undefined) {
+                        let user = {
+                            id: null,
+                            commercialReport: null,
+                            user: {
+                                id: idUser.value,
+                                username: description.value,
+                                name: nameUser.value
+                            }
+                        }
+    
+                        addUsers(user);
+                        idUser.onChange('');
+                        nameUser.onChange('');
+                        description.onChange('');
+                    } else {
+                        swtShowMessage('error', "Usuario existente", "Señor usuario, el usuario que desea agregar ya se encuentra en la lista o es el creador de este documento comercial.");
                     }
 
-                    addUsers(user);
-                    idUser.onChange('');
-                    nameUser.onChange('');
-                    description.onChange('');
+                    this.setState({userSelected: false });
                 } else {
-                    swtShowMessage('error', "Usuario existente", "Señor usuario, el usuario que desea agregar ya se encuentra en la lista o es el creador de este documento comercial.");
+                    swtShowMessage('error', TITLE_MESSAGE_ERR_USER_INVALID, MESSAGE_ERR_USER_INVALID);
                 }
             }).catch(() => {
                 swtShowMessage('error', TITLE_MESSAGE_ERR_USER_INVALID, MESSAGE_ERR_USER_INVALID);
@@ -165,6 +172,8 @@ class PermissionUserReports extends Component {
                                 nameUser.onChange(event.title);
                                 idUser.onChange(event.idUsuario);
                                 cargoUsuario.onChange(event.cargo);
+
+                                this.setState({userSelected: true});
                                 return 'default';
                             }
                         });
