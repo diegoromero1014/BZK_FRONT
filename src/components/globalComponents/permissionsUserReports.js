@@ -49,6 +49,7 @@ class PermissionUserReports extends Component {
         this.cancelAlert = this.cancelAlert.bind(this);
         this.validateUser = this.validateUser.bind(this);
         this.handleOnSelect = this.handleOnSelect.bind(this);
+        this.handleOnChange = this.handleOnChange.bind(this);
     }
 
     _addUser() {
@@ -242,6 +243,13 @@ class PermissionUserReports extends Component {
         })
     }
 
+    handleOnChange(value) {
+        const { fields: { nameUser } } = this.props;
+        nameUser.onChange(value);
+
+        this.setState({ userSelected: false });
+    }
+
     render() {
         const { fields: { nameUser }, usersPermission, disabled } = this.props;
 
@@ -302,7 +310,7 @@ class PermissionUserReports extends Component {
                                                     {...nameUser}
                                                     parentId='dashboardComponentScroll'
                                                     value={nameUser.value}
-                                                    onChange={nameUser.onChange}
+                                                    onChange={value => this.handleOnChange(value)}
                                                     onKeyPress={this.updateKeyValueUsers}
                                                     onSelect={val => this._updateValue(val)}
                                                     max="30"
