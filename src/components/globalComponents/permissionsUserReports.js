@@ -14,9 +14,11 @@ import { validateValue, validateIsNullOrUndefined } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import SweetAlert from '../sweetalertFocus';
 
-
 import { NUMBER_CONTACTS, MESSAGE_CONFIDENTIAL, TITLE_MESSAGE_ERR_USER_INVALID, MESSAGE_ERR_USER_INVALID } from './constants';
 import { setConfidential } from '../previsita/actions';
+
+import '../../../styles/modules/UserPermissions/Checkbox.scss'
+
 
 var self;
 const validate = values => {
@@ -102,12 +104,19 @@ class PermissionUserReports extends Component {
         const { clearUsers, setConfidential } = this.props;
 
         this.setState({
-            isConfidencial: !this.state.isConfidencial,
-            showMessage: true
+            isConfidencial: !this.state.isConfidencial
         });
 
         if (this.state.isConfidencial) {
+            this.setState({
+                showMessage: false
+            });
+
             clearUsers();
+        } else {
+            this.setState({
+                showMessage: true
+            });
         }
 
         setConfidential(!this.state.isConfidencial);
@@ -275,11 +284,13 @@ class PermissionUserReports extends Component {
                     <Col xs={12} sm={12} md={3} lg={3}>
                         <Tooltip text="Marcar este informe como confidencial">
                             <Checkbox
+                                className="checkbox-permmissions"
                                 readOnly={disabled}
                                 onClick={this._handleChangeUserPermission}
                                 label={'Marcar como confidencial'}
-                                style={{ padding: "15px 10px 0px 20px" }}
+                                style={{ padding: "15px 10px 0px 20px", "background-color": "transparent !important" }}
                                 checked={isConfidential}
+                                disabled={disabled}
                                 toggle
                             />
                         </Tooltip>
