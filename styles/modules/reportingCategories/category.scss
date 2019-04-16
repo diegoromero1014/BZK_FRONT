@@ -92,7 +92,6 @@
         transition: all ease-in-out .2s;
         display: flex;
         flex-flow: row wrap;
-        justify-content: space-between;
         -webkit-box-shadow: 7px 7px 3px -3px rgba(0, 0, 0, 0.1);
         -moz-box-shadow: 7px 7px 3px -3px rgba(0, 0, 0, 0.1);
         box-shadow: 7px 7px 3px -3px rgba(0, 0, 0, 0.1);
@@ -133,7 +132,6 @@
         align-items: center;
         h3 {
             color: #00448c;
-            text-transform: uppercase;
             font-weight: bold;
             font-size: 14px;
         }

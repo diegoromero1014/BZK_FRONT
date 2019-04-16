@@ -4,6 +4,9 @@ import { bindActionCreators } from 'redux';
 import { getAllCategories } from './actions'
 import { redirectUrl } from '../globalComponents/actions';
 import CategoryComponent from './CategoryComponent';
+import { updateTitleNavBar } from '../navBar/actions';
+
+import { MODULE_TRANSACTIONAL } from '../../constantsGlobal';
 
 import '../../../styles/modules/reportingCategories/category.scss';
 
@@ -20,7 +23,7 @@ class Transactional extends Component {
         if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
-            const { getAllCategories } = this.props;
+            const { getAllCategories, updateTitleNavBar } = this.props;
 
             getAllCategories().then(resolve => {
                 if (resolve && resolve.payload && resolve.payload.data) {
@@ -29,16 +32,17 @@ class Transactional extends Component {
                     })
                 }
             });
+
+            updateTitleNavBar(MODULE_TRANSACTIONAL);
         }
     }
 
     renderCategories() {
         if (this.state.categories) {
             return this.state.categories.map((category, index) => {
-                debugger;
                 return (
                     <CategoryComponent
-                        key={index + category.id}
+                        key={index + category.id + category.name}
                         title={category.name}
                         iconName={category.icon}
                         content={category.reports}
@@ -59,7 +63,8 @@ class Transactional extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getAllCategories
+        getAllCategories,
+        updateTitleNavBar
     }, dispatch);
 }
 
