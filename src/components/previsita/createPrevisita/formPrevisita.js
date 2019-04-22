@@ -653,11 +653,11 @@ class FormPrevisita extends Component {
     }
 
     buildJsoncommercialReport() {
-        const { usersPermission, previsitReducer } = this.props;
+        const { usersPermission, confidentialReducer } = this.props;
 
         let json = {
             "id": null,
-            "isConfidential": previsitReducer.get('confidential'),
+            "isConfidential": confidentialReducer.get('confidential'),
             "usersWithPermission": usersPermission.toArray()
         }
 
@@ -997,7 +997,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, participants, reducerGlobal, navBar, usersPermission, previsitReducer}, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, participants, reducerGlobal, navBar, usersPermission, previsitReducer, confidentialReducer }, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,
@@ -1005,7 +1005,8 @@ function mapStateToProps({ clientInformacion, selectsReducer, participants, redu
         reducerGlobal,
         navBar,
         usersPermission,
-        previsitReducer
+        previsitReducer,
+        confidentialReducer
     };
 }
 

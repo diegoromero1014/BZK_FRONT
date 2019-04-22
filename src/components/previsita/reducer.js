@@ -16,8 +16,7 @@ const initialState = Immutable.Map({
     orderPrevisit: 1,
     detailPrevisit: {},
     ownerDraft: 0,
-    isBlocked: {},
-    confidential: false
+    isBlocked: {}
 });
 
 export default (state = initialState, action) => {
@@ -68,8 +67,8 @@ export default (state = initialState, action) => {
         case DELETE_BLOCKED_PREVISITA:
             return state.set('isBlocked', action.payload.data)
 
-        case IS_CONFIDENTIAL:
-            return state.set('confidential', action.payload);
+        /* case IS_CONFIDENTIAL:
+            return state.set('confidential', action.payload); */
         default:
             return state;
     }

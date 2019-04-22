@@ -13,15 +13,13 @@ import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent
 import ParticipantesCliente from "../../participantsVisitPre/participantesCliente";
 import ParticipantesBancolombia from "../../participantsVisitPre/participantesBancolombia";
 
-
-
 import ParticipantesOtros from "../../participantsVisitPre/participantesOtros";
 import Challenger from "../../methodologyChallenger/component";
 import SweetAlert from "../../sweetalertFocus";
 import RichText from "../../richText/richTextComponent";
 import Tooltip from "../../toolTip/toolTipComponent";
 
-import { redirectUrl, addUsers } from "../../globalComponents/actions";
+import { redirectUrl, addUsers, setConfidential } from "../../globalComponents/actions";
 import { getMasterDataFields } from "../../selectsComponent/actions";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
 import {addListUser} from "../../globalComponents/actions";
@@ -33,7 +31,7 @@ import {
 } from './../../../validationsFields/rulesField';
 import {
     createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit, canEditPrevisita, disableBlockedReport,
-    changeOwnerDraftPrevisit, setConfidential
+    changeOwnerDraftPrevisit
 } from "../actions";
 import {
     consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateResponse
@@ -1037,11 +1035,11 @@ class FormEditPrevisita extends Component {
     }
 
     buildJsoncommercialReport(commercialReport) {
-        const { usersPermission, previsitReducer } = this.props;
+        const { usersPermission, confidentialReducer } = this.props;
 
         let json = {
             "id": null,
-            "isConfidential": previsitReducer.get('confidential'),
+            "isConfidential": confidentialReducer.get('confidential'),
             "usersWithPermission": usersPermission.toArray(),
             "status": null,
             "createdBy": null,
@@ -1500,7 +1498,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, participants, previsitReducer, reducerGlobal, navBar }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, participants, previsitReducer, reducerGlobal, navBar, confidentialReducer }, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,
@@ -1508,7 +1506,8 @@ function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, p
         participants,
         previsitReducer,
         reducerGlobal,
-        navBar
+        navBar, 
+        confidentialReducer
     };
 }
 

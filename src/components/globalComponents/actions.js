@@ -81,3 +81,10 @@ export function addListUser(listUser) {
   };
 }
 
+export function setConfidential(confidential) {
+  return {
+    type: constants.IS_CONFIDENTIAL,
+    payload: confidential
+  }
+}
+
