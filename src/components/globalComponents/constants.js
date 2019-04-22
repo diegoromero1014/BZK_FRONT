@@ -8,3 +8,4 @@ export const MESSAGE_CONFIDENTIAL = "Señor usuario acaba de habilitar la opci�
 export const TITLE_MESSAGE_ERR_USER_INVALID = "Usuario inválido";
 export const MESSAGE_ERR_USER_INVALID = "Señor usuario, el usuario al que intenta asignarle permisos no es es válido.";
 export const IS_CONFIDENTIAL = "IS_CONFIDENTIAL";
+export const BRAND_CONFIDENTIAL = "Confidential";

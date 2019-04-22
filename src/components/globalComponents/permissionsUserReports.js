@@ -13,6 +13,8 @@ import { contactsByClientFindServer } from '../contact/actions';
 import { validateValue, validateIsNullOrUndefined } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import SweetAlert from '../sweetalertFocus';
+import { showBrandConfidential } from '../navBar/actions';
+
 
 import { NUMBER_CONTACTS, MESSAGE_CONFIDENTIAL, TITLE_MESSAGE_ERR_USER_INVALID, MESSAGE_ERR_USER_INVALID } from './constants';
 
@@ -51,6 +53,7 @@ class PermissionUserReports extends Component {
         this.validateUser = this.validateUser.bind(this);
         this.handleOnSelect = this.handleOnSelect.bind(this);
         this.handleOnChange = this.handleOnChange.bind(this);
+        this.confidentialBrand = this.confidentialBrand.bind(this);
     }
 
     _addUser() {
@@ -100,19 +103,19 @@ class PermissionUserReports extends Component {
     }
 
     _handleChangeUserPermission() {
-        const { clearUsers, setConfidential } = this.props;
+        const { clearUsers, setConfidential, showBrandConfidential } = this.props;
+        const isConfidencial = !this.getIsConfidential();
 
-        this.setState({
-            isConfidencial: !this.state.isConfidencial
-        });
+        this.setState({ isConfidencial: isConfidencial });
 
-        if (this.state.isConfidencial) {
+        if (!isConfidencial) {
             this.setState({
                 showMessage: false
             });
 
             clearUsers();
             setConfidential(false);
+            showBrandConfidential(false);
         } else {
             this.setState({
                 showMessage: true
@@ -203,35 +206,36 @@ class PermissionUserReports extends Component {
     }
 
     getIsConfidential() {
-        const { previsitReducer } = this.props;
-        const previsitDetail = previsitReducer.get("detailPrevisit");
+        const { confidentialReducer } = this.props;
+        const confidential = confidentialReducer.get("confidential");
 
         if (this.state.isConfidencial !== null) {
             return this.state.isConfidencial;
         }
 
-        if (!previsitDetail) {
-            return false;
-        }
+        return confidential;
+    }
 
-        if (!previsitDetail.data) {
-            return false;
-        }
+    confidentialBrand() {
+        const { confidentialReducer, showBrandConfidential } = this.props;
 
-        if (!previsitDetail.data.commercialReport) {
-            return false;
-        }
+        let confidential = confidentialReducer.get('confidential');
 
-        return previsitDetail.data.commercialReport.isConfidential;
+        if (confidential) {
+            showBrandConfidential(confidential);
+        }
     }
 
     cancelAlert() {
+        const { setConfidential, showBrandConfidential } = this.props;
+
         this.setState({
             showMessage: false,
             isConfidencial: false
         });
 
         setConfidential(false);
+        showBrandConfidential(false);
     }
 
     validateUser(name) {
@@ -260,9 +264,10 @@ class PermissionUserReports extends Component {
     }
 
     render() {
-        const { fields: { nameUser }, usersPermission, disabled, setConfidential } = this.props;
+        const { fields: { nameUser }, usersPermission, disabled, setConfidential, showBrandConfidential } = this.props;
 
         const isConfidential = this.getIsConfidential();
+        this.confidentialBrand();
 
         var numColumnList = 6;
         var data = _.chain(usersPermission.toArray()).map(usersPermission => {
@@ -369,6 +374,7 @@ class PermissionUserReports extends Component {
                     onConfirm={() => {
                             this.setState({ showMessage: false });
                             setConfidential(true);
+                            showBrandConfidential(true);
                         }
                     }
                 />
@@ -384,16 +390,18 @@ function mapDispatchToProps(dispatch) {
         contactsByClientFindServer,
         filterUsers,
         swtShowMessage,
-        setConfidential
+        setConfidential,
+        showBrandConfidential
     }, dispatch);
 }
 
-function mapStateToProps({ selectsReducer, usersPermission, contactsByClient, previsitReducer }) {
+function mapStateToProps({ selectsReducer, usersPermission, contactsByClient, previsitReducer, confidentialReducer }) {
     return {
         usersPermission,
         selectsReducer,
         contactsByClient,
-        previsitReducer
+        previsitReducer,
+        confidentialReducer
     };
 }
 
