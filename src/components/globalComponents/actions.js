@@ -88,7 +88,7 @@ export function setConfidential(confidential) {
   }
 }
 
-export function buildJsoncommercialReport(commercialReport, usersPermission, confidential) {
+export const buildJsoncommercialReport = (commercialReport, usersPermission, confidential) => {
   let json = {
       "id": null,
       "isConfidential": confidential,
