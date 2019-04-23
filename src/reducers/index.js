@@ -22,6 +22,7 @@ import visitReducer from '../components/visit/reducer';
 import pipelineReducer from '../components/pipeline/reducer';
 import participantsReducer from '../components/participantsVisitPre/reducer';
 import usersGlobalReducer from '../components/globalComponents/reducer';
+import confidentialReducer from '../components/globalComponents/confidentialReducer';
 import taskReducer from '../components/visit/tasks/reducer';
 import needReducer from '../components/businessPlan/need/reducer';
 import areaReducer from '../components/businessPlan/area/reducer';
@@ -138,5 +139,6 @@ export default combineReducers({
     menu: menuReducer,
     transactional: transactionalReducer,
     linkRequestsReducer,
-    schedulerPrevisitReduser
+    schedulerPrevisitReduser,
+    confidentialReducer
 });

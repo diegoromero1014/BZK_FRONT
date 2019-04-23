@@ -13,15 +13,13 @@ import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent
 import ParticipantesCliente from "../../participantsVisitPre/participantesCliente";
 import ParticipantesBancolombia from "../../participantsVisitPre/participantesBancolombia";
 
-
-
 import ParticipantesOtros from "../../participantsVisitPre/participantesOtros";
 import Challenger from "../../methodologyChallenger/component";
 import SweetAlert from "../../sweetalertFocus";
 import RichText from "../../richText/richTextComponent";
 import Tooltip from "../../toolTip/toolTipComponent";
 
-import { redirectUrl, addUsers } from "../../globalComponents/actions";
+import { redirectUrl, addUsers, setConfidential, buildJsoncommercialReport } from "../../globalComponents/actions";
 import { getMasterDataFields } from "../../selectsComponent/actions";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
 import {addListUser} from "../../globalComponents/actions";
@@ -33,7 +31,7 @@ import {
 } from './../../../validationsFields/rulesField';
 import {
     createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit, canEditPrevisita, disableBlockedReport,
-    changeOwnerDraftPrevisit, setConfidential
+    changeOwnerDraftPrevisit
 } from "../actions";
 import {
     consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateResponse
@@ -220,7 +218,6 @@ class FormEditPrevisita extends Component {
         this._validateBlockOnSave = this._validateBlockOnSave.bind(this);
         this.processValidation = this.processValidation.bind(this);
         this.fillUsersPermission = this.fillUsersPermission.bind(this);
-        this.buildJsoncommercialReport = this.buildJsoncommercialReport.bind(this);
         this._ismounted = false;
     }
 
@@ -581,7 +578,7 @@ class FormEditPrevisita extends Component {
 
     _submitCreatePrevisita() {
         const {
-            participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage
+            participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage, usersPermission, confidentialReducer
         } = this.props;
 
         let errorInForm = false;
@@ -769,7 +766,7 @@ class FormEditPrevisita extends Component {
                     "constructiveTension": this.state.constructiveTension,
                     "documentStatus": typeButtonClick,
                     "endTime": this.state.durationPreVisit,
-                    "commercialReport": this.buildJsoncommercialReport(this.state.commercialReport)
+                    "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
                 };
 
                 validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit, id).then((data) => {
@@ -1034,28 +1031,6 @@ class FormEditPrevisita extends Component {
                 }); 
             }
         }
-    }
-
-    buildJsoncommercialReport(commercialReport) {
-        const { usersPermission, previsitReducer } = this.props;
-
-        let json = {
-            "id": null,
-            "isConfidential": previsitReducer.get('confidential'),
-            "usersWithPermission": usersPermission.toArray(),
-            "status": null,
-            "createdBy": null,
-            "createdTimestamp": null
-        }
-
-        if (commercialReport) {
-            json.id = commercialReport.id;
-            json.status = commercialReport.status;
-            json.createdBy = commercialReport.createdBy;
-            json.createdTimestamp = commercialReport.createdTimestamp;
-        }
-
-        return json;
     }
 
     render() {
@@ -1500,7 +1475,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, participants, previsitReducer, reducerGlobal, navBar }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, participants, previsitReducer, reducerGlobal, navBar, confidentialReducer }, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,
@@ -1508,7 +1483,8 @@ function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, p
         participants,
         previsitReducer,
         reducerGlobal,
-        navBar
+        navBar, 
+        confidentialReducer
     };
 }
 

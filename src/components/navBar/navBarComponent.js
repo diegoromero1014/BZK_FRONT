@@ -5,6 +5,9 @@ import { updateTitleNavBar, consultModulesAccess, viewAlertClient } from './acti
 import { backButtonFilter } from '../clients/actions';
 import BellAlert from '../alerts/bellClientAlertComponent';
 import { redirectUrl } from '../globalComponents/actions';
+import { BRAND_CONFIDENTIAL } from '../globalComponents/constants';
+
+import '../../../styles/modules/UserPermissions/Confidential.scss';
 
 
 class NavBarComponent extends Component {
@@ -34,12 +37,17 @@ class NavBarComponent extends Component {
         const { navBar } = this.props;
         const titleNavBar = navBar.get('titleNavBar');
         const viewAlertClient = navBar.get('viewAlertClient');
+        const confidential = navBar.get('confidential');
+
         return (
             <div className="header-quick-nav" style={{ height: "60px", width: "100%" }}>
                 <div className="pull-left" style={{ paddingLeft: "5px !important" }}>
                     <ul className="nav" style={{ paddingLeft: "0px", paddingTop: '10pt' }}>
                         <li style={{ fontSize: "30px" }}>
                             {titleNavBar}
+                            {confidential &&
+                                <span className="brand-confidential">{" " + BRAND_CONFIDENTIAL}</span>
+                            }
                         </li>
                     </ul>
                 </div>
