@@ -5,9 +5,7 @@ import { updateTitleNavBar, consultModulesAccess, viewAlertClient } from './acti
 import { backButtonFilter } from '../clients/actions';
 import BellAlert from '../alerts/bellClientAlertComponent';
 import { redirectUrl } from '../globalComponents/actions';
-import { BRAND_CONFIDENTIAL } from '../globalComponents/constants';
-
-import '../../../styles/modules/UserPermissions/Confidential.scss';
+import ConfidentialBrandComponent from '../globalComponents/ConfidentialBrandComponent';
 
 
 class NavBarComponent extends Component {
@@ -46,7 +44,7 @@ class NavBarComponent extends Component {
                         <li style={{ fontSize: "30px" }}>
                             {titleNavBar}
                             {confidential &&
-                                <span className="brand-confidential">{" " + BRAND_CONFIDENTIAL}</span>
+                                <ConfidentialBrandComponent />
                             }
                         </li>
                     </ul>
