@@ -111,9 +111,7 @@ class ModalComponentShareholder extends Component {
   }
 
   _searchShareholder() {
-    const { errors, fields: { tipoDocumento, numeroDocumento },
-
-      searchShareholder, clearSearchShareholder } = this.props;
+    const { errors, fields: { tipoDocumento, numeroDocumento }, searchShareholder} = this.props;
     let numeroDocumentoTrimmed = numeroDocumento.value.trim();
     numeroDocumento.onChange(numeroDocumentoTrimmed);
     if (tipoDocumento.value && numeroDocumentoTrimmed && !errors.numeroDocumento) {
@@ -148,7 +146,7 @@ class ModalComponentShareholder extends Component {
   }
 
   _selectTypeOfPerson(val) {
-    const { fields: { tipoDocumento, tipoPersona }, selectsReducer } = this.props;
+    const { fields: { tipoPersona }, selectsReducer } = this.props;
 
     let pj_options = ['ID Extranjero PJ no residente en Colombia', 'NIT'];
     let pn_options = ['ID Extranjero PN no residente en Colombia', 'Carné diplomático', 'Cédula de ciudadanía', 'Cédula de extranjeria', 'Pasaporte', 'Registro civil', 'Tarjeta de identidad'];
@@ -299,11 +297,15 @@ class ModalComponentShareholder extends Component {
   }
 
   render() {
-    const { fields: { tipoDocumento, numeroDocumento, tipoPersona, tipoAccionista,
-      paisResidencia, primerNombre, segundoNombre, primerApellido, segundoApellido,
-      genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
-      numeroIdTributaria, observaciones },
-      selectsReducer, createShareholder, handleSubmit, error, reducerGlobal } = this.props;
+    const {
+      fields: {
+        tipoDocumento, numeroDocumento, tipoPersona, tipoAccionista, paisResidencia, primerNombre, segundoNombre,
+        primerApellido, segundoApellido, genero, razonSocial, direccion, porcentajePart, pais, departamento, ciudad,
+        numeroIdTributaria, observaciones
+      },
+      selectsReducer, handleSubmit, reducerGlobal
+    } = this.props;
+    
     return (
       <form onSubmit={handleSubmit(this._handleCreateShareholder)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
         <SecurityMessageComponent />
