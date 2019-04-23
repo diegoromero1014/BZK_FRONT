@@ -18,6 +18,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from "../../dashboard/actions";
 import $ from 'jquery';
 import _ from 'lodash';
+import ConfidentialBrandComponent from '../../commercialReport/ConfidentialBrandComponent';
 
 var labelPrevistVist = "En esta sección podrá asociar un informe de previsita (registrado previamente) "
     + "al informe de visita que se esté realizando.\n Asociar una previsita a la visita te permitirá llevar "
@@ -56,7 +57,7 @@ class ButtonAssociateComponent extends Component {
 
     componentWillMount() {
         const { clearIdPrevisit, edit } = this.props;
-        if( _.isUndefined(edit) || _.isNull(edit) || !edit ){
+        if (_.isUndefined(edit) || _.isNull(edit) || !edit) {
             clearIdPrevisit();
         }
     }
@@ -88,6 +89,7 @@ class ButtonAssociateComponent extends Component {
                                 <Icon name='linkify' />
                             </Button>
                             <span style={{ marginLeft: '5pt' }}>{label}</span>
+                            {!_.isNull(value.commercialReport) && value.commercialReport.isConfidential ? <ConfidentialBrandComponent /> : ""}
                         </a>
                     </ToolTipComponent>
                 );
@@ -117,7 +119,7 @@ class ButtonAssociateComponent extends Component {
         return (
             <Col xs={4} sm={3} md={2} lg={2}>
                 <button type="button" onClick={this.openModal} className={'btn btn-primary modal-button-edit'}
-                    style={ !_.isUndefined(printMarginRigth) &&  !_.isNull(printMarginRigth) && printMarginRigth ? { marginRight: '15px', float: 'right', marginTop: '-15px' } : { float: 'right', marginTop: '-15px' }}>Asociar previsita
+                    style={!_.isUndefined(printMarginRigth) && !_.isNull(printMarginRigth) && printMarginRigth ? { marginRight: '15px', float: 'right', marginTop: '-15px' } : { float: 'right', marginTop: '-15px' }}>Asociar previsita
                 </button>
                 <Modal
                     isOpen={this.state.modalIsOpen}
