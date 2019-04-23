@@ -47,6 +47,8 @@ import {
 
 import _ from "lodash";
 import moment from "moment";
+import { buildJsoncommercialReport } from "../../commercialReport/functionsGenerics";
+import { setConfidential } from "../../commercialReport/actions";
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral"];
 var dateVisitLastReview;
@@ -150,7 +152,7 @@ class FormVisita extends Component {
 
   _submitCreateVisita() {
     const {
-      participants, tasks, createVisti, clearIdPrevisit, clearParticipants, changeStateSaveData } = this.props;
+      participants, tasks, createVisti, clearIdPrevisit, clearParticipants, changeStateSaveData, usersPermission, confidentialReducer } = this.props;
     var errorInForm = false;
     let errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
     let errorMessageTitle = "Campos obligatorios";
@@ -243,6 +245,7 @@ class FormVisita extends Component {
               "employee": task.idResponsable,
               "employeeName": task.responsable,
               "closingDate": moment(task.fecha, "DD/MM/YYYY").format('x'),
+              "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
             }
             tareas.push(data);
           }
@@ -263,7 +266,8 @@ class FormVisita extends Component {
           "comments": this.state.conclusionsVisit,
           "visitType": this.state.typeVisit,
           "documentStatus": typeButtonClick,
-          "preVisitId": idPrevisitSeleted === null || idPrevisitSeleted === undefined || idPrevisitSeleted === "" ? null : idPrevisitSeleted
+          "preVisitId": idPrevisitSeleted === null || idPrevisitSeleted === undefined || idPrevisitSeleted === "" ? null : idPrevisitSeleted,
+          "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
         }
         const that = this;
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -398,7 +402,8 @@ class FormVisita extends Component {
   }
 
   componentWillMount() {
-    const { nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer, clearIdPrevisit, clearParticipants } = this.props;
+    const { nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer, clearIdPrevisit, clearParticipants, setConfidential } = this.props;
+    setConfidential(false);
     nonValidateEnter(true);
     const infoClient = clientInformacion.get('responseClientInfo');
     clearParticipants();
@@ -762,11 +767,12 @@ function mapDispatchToProps(dispatch) {
     clearIdPrevisit,
     clearParticipants,
     changeStateSaveData,
-    nonValidateEnter
+    nonValidateEnter,
+    setConfidential
   }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, visitReducer, participants, tasks, reducerGlobal, navBar }) {
+function mapStateToProps({ clientInformacion, selectsReducer, visitReducer, participants, tasks, reducerGlobal, navBar, usersPermission, confidentialReducer }) {
   return {
     clientInformacion,
     selectsReducer,
@@ -774,7 +780,9 @@ function mapStateToProps({ clientInformacion, selectsReducer, visitReducer, part
     participants,
     tasks,
     reducerGlobal,
-    navBar
+    navBar,
+    usersPermission,
+    confidentialReducer
   };
 }
 

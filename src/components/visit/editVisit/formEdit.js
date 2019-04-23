@@ -56,6 +56,7 @@ import { KEY_TYPE_VISIT } from "../constants";
 import {
     checkRequired, checkRichTextRequired
 } from './../../../validationsFields/rulesField';
+import { buildJsoncommercialReport } from "../../commercialReport/functionsGenerics";
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral", "participantesCliente", "participantesBanco", "participantesOtros", "pendientes"];
 let dateVisitLastReview;
@@ -161,7 +162,8 @@ class FormEdit extends Component {
 
     _submitCreateVisita() {
         const { participants, visitReducer, tasks,
-            changeStateSaveData, clearIdPrevisit
+            changeStateSaveData, clearIdPrevisit, usersPermission,
+            confidentialReducer
         } = this.props;
         const detailVisit = visitReducer.get('detailVisit');
         let errorInForm = false;
@@ -242,6 +244,7 @@ class FormEdit extends Component {
                             "employee": task.idResponsable,
                             "employeeName": task.responsable,
                             "closingDate": moment(task.fecha, "DD/MM/YYYY").format('x'),
+                            "commercialReport": buildJsoncommercialReport(task.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
                         }
                         tareas.push(data);
                     }
@@ -258,7 +261,8 @@ class FormEdit extends Component {
                     "visitType": this.state.typeVisit,
                     "userTasks": tareas,
                     "documentStatus": typeButtonClick,
-                    "preVisitId": idPrevisitSeleted
+                    "preVisitId": idPrevisitSeleted,
+                    "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
                 }
                 const { createVisti } = this.props;
                 const that = this;
@@ -384,7 +388,8 @@ class FormEdit extends Component {
             this.setState({
                 typeVisit: part.visitType,
                 dateVisit: new Date(moment(part.visitTime, "x")),
-                conclusionsVisit: part.comments
+                conclusionsVisit: part.comments,
+                commercialReport: part.commercialReport
             });
 
             //Adicionar participantes por parte del cliente
@@ -461,7 +466,8 @@ class FormEdit extends Component {
                     idResponsable: value.employee,
                     responsable: value.employeeName,
                     fecha: moment(value.closingDate).format('DD/MM/YYYY'),
-                    fechaForm: moment(value.closingDate).format('DD/MM/YYYY')
+                    fechaForm: moment(value.closingDate).format('DD/MM/YYYY'),
+                    commercialReport: value.commercialReport
                 };
                 addTask(task);
             });
@@ -968,7 +974,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion, reducerGlobal, navBar }) {
+function mapStateToProps({ selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion, reducerGlobal, navBar, usersPermission, confidentialReducer }) {
     const detailVisit = visitReducer.get('detailVisit');
     if (detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)) {
         let visitTime = detailVisit.data.visitTime;
@@ -988,7 +994,9 @@ function mapStateToProps({ selectsReducer, visitReducer, participants, contactsB
             tasks,
             clientInformacion,
             reducerGlobal,
-            navBar
+            navBar,
+            usersPermission,
+            confidentialReducer
         };
     } else {
         return {
@@ -1008,7 +1016,9 @@ function mapStateToProps({ selectsReducer, visitReducer, participants, contactsB
             tasks,
             clientInformacion,
             reducerGlobal,
-            navBar
+            navBar,
+            usersPermission,
+            confidentialReducer
         };
     }
 }
