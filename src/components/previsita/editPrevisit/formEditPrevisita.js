@@ -19,7 +19,7 @@ import SweetAlert from "../../sweetalertFocus";
 import RichText from "../../richText/richTextComponent";
 import Tooltip from "../../toolTip/toolTipComponent";
 
-import { redirectUrl, addUsers, setConfidential } from "../../globalComponents/actions";
+import { redirectUrl, addUsers, setConfidential, buildJsoncommercialReport } from "../../globalComponents/actions";
 import { getMasterDataFields } from "../../selectsComponent/actions";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
 import {addListUser} from "../../globalComponents/actions";
@@ -218,7 +218,6 @@ class FormEditPrevisita extends Component {
         this._validateBlockOnSave = this._validateBlockOnSave.bind(this);
         this.processValidation = this.processValidation.bind(this);
         this.fillUsersPermission = this.fillUsersPermission.bind(this);
-        this.buildJsoncommercialReport = this.buildJsoncommercialReport.bind(this);
         this._ismounted = false;
     }
 
@@ -579,7 +578,7 @@ class FormEditPrevisita extends Component {
 
     _submitCreatePrevisita() {
         const {
-            participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage
+            participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage, usersPermission, confidentialReducer
         } = this.props;
 
         let errorInForm = false;
@@ -767,7 +766,7 @@ class FormEditPrevisita extends Component {
                     "constructiveTension": this.state.constructiveTension,
                     "documentStatus": typeButtonClick,
                     "endTime": this.state.durationPreVisit,
-                    "commercialReport": this.buildJsoncommercialReport(this.state.commercialReport)
+                    "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
                 };
 
                 validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit, id).then((data) => {
@@ -1032,28 +1031,6 @@ class FormEditPrevisita extends Component {
                 }); 
             }
         }
-    }
-
-    buildJsoncommercialReport(commercialReport) {
-        const { usersPermission, confidentialReducer } = this.props;
-
-        let json = {
-            "id": null,
-            "isConfidential": confidentialReducer.get('confidential'),
-            "usersWithPermission": usersPermission.toArray(),
-            "status": null,
-            "createdBy": null,
-            "createdTimestamp": null
-        }
-
-        if (commercialReport) {
-            json.id = commercialReport.id;
-            json.status = commercialReport.status;
-            json.createdBy = commercialReport.createdBy;
-            json.createdTimestamp = commercialReport.createdTimestamp;
-        }
-
-        return json;
     }
 
     render() {
