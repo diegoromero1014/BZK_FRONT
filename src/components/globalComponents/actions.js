@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import Router from '../../historyRouter';
-import axios from 'axios';
+/* import axios from 'axios';
 import { APP_URL } from '../../constantsGlobal';
-import * as constants from './constants';
+import * as constants from './constants'; */
 
 const productionUse = process.env.NODE_ENV === 'production';
 
@@ -30,7 +30,7 @@ export function mapDateValueFromTask(date) {
   }
 }
 
-export function filterUsers(filterUser) {
+/* export function filterUsers(filterUser) {
   const json = {
     messageHeader: {
       "sessionToken": window.localStorage.getItem('sessionTokenFront'),
@@ -86,9 +86,9 @@ export function setConfidential(confidential) {
     type: constants.IS_CONFIDENTIAL,
     payload: confidential
   }
-}
+} */
 
-export const buildJsoncommercialReport = (commercialReport, usersPermission, confidential) => {
+/* export const buildJsoncommercialReport = (commercialReport, usersPermission, confidential) => {
   let json = {
       "id": null,
       "isConfidential": confidential,
@@ -106,5 +106,5 @@ export const buildJsoncommercialReport = (commercialReport, usersPermission, con
   }
 
   return json;
-}
+} */
 

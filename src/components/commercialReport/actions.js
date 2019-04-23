@@ -1,5 +1,5 @@
-import _ from 'lodash';
-import axios from 'axios';
+import _ from './node_modules/lodash';
+import axios from './node_modules/axios';
 import { APP_URL } from '../../constantsGlobal';
 import * as constants from './constants';
 
