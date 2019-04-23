@@ -23,6 +23,8 @@ import {
 } from './../../../validationsFields/rulesField';
 
 import { redirectUrl } from '../../globalComponents/actions';
+import { setConfidential } from '../../commercialReport/actions';
+import { buildJsoncommercialReport } from '../../commercialReport/functionsGenerics';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import { createPrevisit, validateDatePreVisit } from '../actions';
 import { changeStateSaveData } from '../../dashboard/actions';
@@ -38,7 +40,7 @@ import {
     MESSAGE_SAVE_DATA, MESSAGE_ERROR, ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, REGEX_SIMPLE_XSS_MESAGE,
 } from '../../../constantsGlobal';
 
-import PermissionUserReports from "../../globalComponents/permissionsUserReports"
+import PermissionUserReports from "../../commercialReport/permissionsUserReports"
 
 
 var datePrevisitLastReview;
@@ -129,7 +131,6 @@ class FormPrevisita extends Component {
         this._changeDurationPreVisit = this._changeDurationPreVisit.bind(this);
         this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
         this.processValidation = this.processValidation.bind(this);
-        this.buildJsoncommercialReport = this.buildJsoncommercialReport.bind(this);
     }
 
     _closeMessageCreatePreVisit() {
@@ -363,7 +364,7 @@ class FormPrevisita extends Component {
     }
 
     _submitCreatePrevisita() {
-        const { participants, createPrevisit, changeStateSaveData, validateDatePreVisit, swtShowMessage } = this.props;
+        const { participants, createPrevisit, changeStateSaveData, validateDatePreVisit, swtShowMessage, usersPermission, confidentialReducer } = this.props;
         var errorInForm = false;
         var errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
 
@@ -547,7 +548,7 @@ class FormPrevisita extends Component {
                     "constructiveTension": this.state.constructiveTension,
                     "documentStatus": typeButtonClick,
                     "endTime": this.state.durationPreVisit,
-                    "commercialReport": this.buildJsoncommercialReport()
+                    "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
                 }
 
                 validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit).then((data) => {
@@ -634,7 +635,8 @@ class FormPrevisita extends Component {
         idTypeVisitAux = null;
         idTypeVisitAuxTwo = null;
         contollerErrorChangeType = false;
-        const { nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer } = this.props;
+        const { nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer, setConfidential } = this.props;
+        setConfidential(false);
         nonValidateEnter(true);
         const infoClient = clientInformacion.get('responseClientInfo');
         valueTypePrevisit = null;
@@ -650,18 +652,6 @@ class FormPrevisita extends Component {
                 }
             });
         }
-    }
-
-    buildJsoncommercialReport() {
-        const { usersPermission, previsitReducer } = this.props;
-
-        let json = {
-            "id": null,
-            "isConfidential": previsitReducer.get('confidential'),
-            "usersWithPermission": usersPermission.toArray()
-        }
-
-        return json;
     }
 
     render() {
@@ -993,11 +983,12 @@ function mapDispatchToProps(dispatch) {
         consultParameterServer,
         changeStateSaveData,
         nonValidateEnter,
-        swtShowMessage
+        swtShowMessage,
+        setConfidential
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, participants, reducerGlobal, navBar, usersPermission, previsitReducer}, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, participants, reducerGlobal, navBar, usersPermission, previsitReducer, confidentialReducer }, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,
@@ -1005,7 +996,8 @@ function mapStateToProps({ clientInformacion, selectsReducer, participants, redu
         reducerGlobal,
         navBar,
         usersPermission,
-        previsitReducer
+        previsitReducer,
+        confidentialReducer
     };
 }
 

@@ -8,15 +8,18 @@ import $ from 'jquery';
 import Tooltip from '../toolTip/toolTipComponent';
 import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import { Checkbox } from 'semantic-ui-react';
-import { addUsers, clearUsers, filterUsers } from './actions';
+import { addUsers, clearUsers, filterUsers, setConfidential } from './actions';
 import { contactsByClientFindServer } from '../contact/actions';
 import { validateValue, validateIsNullOrUndefined } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import SweetAlert from '../sweetalertFocus';
+import { showBrandConfidential } from '../navBar/actions';
 
 
 import { NUMBER_CONTACTS, MESSAGE_CONFIDENTIAL, TITLE_MESSAGE_ERR_USER_INVALID, MESSAGE_ERR_USER_INVALID } from './constants';
-import { setConfidential } from '../previsita/actions';
+
+import '../../../styles/modules/UserPermissions/Checkbox.scss'
+
 
 var self;
 const validate = values => {
@@ -50,6 +53,7 @@ class PermissionUserReports extends Component {
         this.validateUser = this.validateUser.bind(this);
         this.handleOnSelect = this.handleOnSelect.bind(this);
         this.handleOnChange = this.handleOnChange.bind(this);
+        this.confidentialBrand = this.confidentialBrand.bind(this);
     }
 
     _addUser() {
@@ -99,18 +103,24 @@ class PermissionUserReports extends Component {
     }
 
     _handleChangeUserPermission() {
-        const { clearUsers, setConfidential } = this.props;
+        const { clearUsers, setConfidential, showBrandConfidential } = this.props;
+        const isConfidencial = !this.getIsConfidential();
 
-        this.setState({
-            isConfidencial: !this.state.isConfidencial,
-            showMessage: true
-        });
+        this.setState({ isConfidencial: isConfidencial });
 
-        if (this.state.isConfidencial) {
+        if (!isConfidencial) {
+            this.setState({
+                showMessage: false
+            });
+
             clearUsers();
+            setConfidential(false);
+            showBrandConfidential(false);
+        } else {
+            this.setState({
+                showMessage: true
+            });
         }
-
-        setConfidential(!this.state.isConfidencial);
     }
 
     _updateValue(value) {
@@ -121,7 +131,7 @@ class PermissionUserReports extends Component {
     }
 
     componentWillMount() {
-        const { clearUsers, contactsByClient, contactsByClientFindServer, previsitReducer } = this.props;
+        const { clearUsers, contactsByClient, contactsByClientFindServer } = this.props;
 
         clearUsers();
 
@@ -196,33 +206,36 @@ class PermissionUserReports extends Component {
     }
 
     getIsConfidential() {
-        const { previsitReducer } = this.props;
-        const previsitDetail = previsitReducer.get("detailPrevisit");
+        const { confidentialReducer } = this.props;
+        const confidential = confidentialReducer.get("confidential");
 
         if (this.state.isConfidencial !== null) {
             return this.state.isConfidencial;
         }
 
-        if (!previsitDetail) {
-            return false;
-        }
+        return confidential;
+    }
 
-        if (!previsitDetail.data) {
-            return false;
-        }
+    confidentialBrand() {
+        const { confidentialReducer, showBrandConfidential } = this.props;
 
-        if (!previsitDetail.data.commercialReport) {
-            return false;
-        }
+        let confidential = confidentialReducer.get('confidential');
 
-        return previsitDetail.data.commercialReport.isConfidential;
+        if (confidential) {
+            showBrandConfidential(confidential);
+        }
     }
 
     cancelAlert() {
+        const { setConfidential, showBrandConfidential } = this.props;
+
         this.setState({
             showMessage: false,
             isConfidencial: false
         });
+
+        setConfidential(false);
+        showBrandConfidential(false);
     }
 
     validateUser(name) {
@@ -251,9 +264,10 @@ class PermissionUserReports extends Component {
     }
 
     render() {
-        const { fields: { nameUser }, usersPermission, disabled } = this.props;
+        const { fields: { nameUser }, usersPermission, disabled, setConfidential, showBrandConfidential } = this.props;
 
         const isConfidential = this.getIsConfidential();
+        this.confidentialBrand();
 
         var numColumnList = 6;
         var data = _.chain(usersPermission.toArray()).map(usersPermission => {
@@ -275,11 +289,14 @@ class PermissionUserReports extends Component {
                     <Col xs={12} sm={12} md={3} lg={3}>
                         <Tooltip text="Marcar este informe como confidencial">
                             <Checkbox
+                                id="checkbox-permmissions"
+                                className="checkbox-permmissions"
                                 readOnly={disabled}
                                 onClick={this._handleChangeUserPermission}
                                 label={'Marcar como confidencial'}
                                 style={{ padding: "15px 10px 0px 20px" }}
                                 checked={isConfidential}
+                                disabled={disabled}
                                 toggle
                             />
                         </Tooltip>
@@ -354,7 +371,12 @@ class PermissionUserReports extends Component {
                     cancelButtonText="Cancelar"
                     showCancelButton={true}
                     onCancel={this.cancelAlert}
-                    onConfirm={() => this.setState({ showMessage: false })}
+                    onConfirm={() => {
+                            this.setState({ showMessage: false });
+                            setConfidential(true);
+                            showBrandConfidential(true);
+                        }
+                    }
                 />
             </div>
         );
@@ -368,16 +390,18 @@ function mapDispatchToProps(dispatch) {
         contactsByClientFindServer,
         filterUsers,
         swtShowMessage,
-        setConfidential
+        setConfidential,
+        showBrandConfidential
     }, dispatch);
 }
 
-function mapStateToProps({ selectsReducer, usersPermission, contactsByClient, previsitReducer }) {
+function mapStateToProps({ selectsReducer, usersPermission, contactsByClient, previsitReducer, confidentialReducer }) {
     return {
         usersPermission,
         selectsReducer,
         contactsByClient,
-        previsitReducer
+        previsitReducer,
+        confidentialReducer
     };
 }
 

@@ -264,12 +264,6 @@ export function disableBlockedReport (idPrevisit) {
 
 }
 
-export function setConfidential(confidential) {
-  return {
-    type: constants.IS_CONFIDENTIAL,
-    payload: confidential
-  }
-}
 
 
 

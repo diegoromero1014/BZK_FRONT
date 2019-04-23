@@ -13,18 +13,18 @@ import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent
 import ParticipantesCliente from "../../participantsVisitPre/participantesCliente";
 import ParticipantesBancolombia from "../../participantsVisitPre/participantesBancolombia";
 
-
-
 import ParticipantesOtros from "../../participantsVisitPre/participantesOtros";
 import Challenger from "../../methodologyChallenger/component";
 import SweetAlert from "../../sweetalertFocus";
 import RichText from "../../richText/richTextComponent";
 import Tooltip from "../../toolTip/toolTipComponent";
 
-import { redirectUrl, addUsers } from "../../globalComponents/actions";
+import { redirectUrl } from "../../globalComponents/actions";
+import { addUsers, setConfidential } from "../../commercialReport/actions";
+import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
 import { getMasterDataFields } from "../../selectsComponent/actions";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
-import {addListUser} from "../../globalComponents/actions";
+import { addListUser } from "../../commercialReport/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { showLoading } from "../../loading/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -33,7 +33,7 @@ import {
 } from './../../../validationsFields/rulesField';
 import {
     createPrevisit, detailPrevisit, pdfDescarga, validateDatePreVisit, canEditPrevisita, disableBlockedReport,
-    changeOwnerDraftPrevisit, setConfidential
+    changeOwnerDraftPrevisit
 } from "../actions";
 import {
     consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateResponse
@@ -47,7 +47,7 @@ import {
     TIME_REQUEST_BLOCK_REPORT, REGEX_SIMPLE_XSS_MESAGE
 } from "../../../constantsGlobal";
 
-import PermissionUserReports from "../../globalComponents/permissionsUserReports";
+import PermissionUserReports from "../../commercialReport/permissionsUserReports";
 
 const fields = [];
 var datePrevisitLastReview;
@@ -219,8 +219,6 @@ class FormEditPrevisita extends Component {
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
         this._validateBlockOnSave = this._validateBlockOnSave.bind(this);
         this.processValidation = this.processValidation.bind(this);
-        this.fillUsersPermission = this.fillUsersPermission.bind(this);
-        this.buildJsoncommercialReport = this.buildJsoncommercialReport.bind(this);
         this._ismounted = false;
     }
 
@@ -581,7 +579,7 @@ class FormEditPrevisita extends Component {
 
     _submitCreatePrevisita() {
         const {
-            participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage
+            participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage, usersPermission, confidentialReducer
         } = this.props;
 
         let errorInForm = false;
@@ -769,7 +767,7 @@ class FormEditPrevisita extends Component {
                     "constructiveTension": this.state.constructiveTension,
                     "documentStatus": typeButtonClick,
                     "endTime": this.state.durationPreVisit,
-                    "commercialReport": this.buildJsoncommercialReport(this.state.commercialReport)
+                    "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
                 };
 
                 validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit, id).then((data) => {
@@ -859,7 +857,7 @@ class FormEditPrevisita extends Component {
         contollerErrorChangeType = false;
         const {
             nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, showLoading,
-            changeOwnerDraftPrevisit, setConfidential
+            changeOwnerDraftPrevisit, setConfidential, addUsers
         } = this.props;
 
         nonValidateEnter(true);
@@ -896,7 +894,7 @@ class FormEditPrevisita extends Component {
                     setConfidential(part.commercialReport.isConfidential);
                 }
 
-                this.fillUsersPermission(part);
+                fillUsersPermissions(part.commercialReport.usersWithPermission, addUsers);
 
                 //Adicionar participantes por parte del cliente
                 _.forIn(part.participatingContacts, function (value, key) {
@@ -1012,51 +1010,6 @@ class FormEditPrevisita extends Component {
         }
     }
 
-    fillUsersPermission(previsitDetail) {
-        const { addUsers } = this.props;
-
-        if (previsitDetail && previsitDetail.commercialReport) {
-            const commercialReport = previsitDetail.commercialReport;
-
-            if (Array.isArray(commercialReport.usersWithPermission) && commercialReport.usersWithPermission.length) {
-                commercialReport.usersWithPermission.forEach(userWithPermission => {
-                    let newUser = {
-                        id: userWithPermission.id,
-                        commercialReport: userWithPermission.commercialReport,
-                        user: {
-                            id: userWithPermission.user.id,
-                            username: userWithPermission.user.username,
-                            name: userWithPermission.user.name
-                        }
-                    }
-                    
-                    addUsers(newUser);
-                }); 
-            }
-        }
-    }
-
-    buildJsoncommercialReport(commercialReport) {
-        const { usersPermission, previsitReducer } = this.props;
-
-        let json = {
-            "id": null,
-            "isConfidential": previsitReducer.get('confidential'),
-            "usersWithPermission": usersPermission.toArray(),
-            "status": null,
-            "createdBy": null,
-            "createdTimestamp": null
-        }
-
-        if (commercialReport) {
-            json.id = commercialReport.id;
-            json.status = commercialReport.status;
-            json.createdBy = commercialReport.createdBy;
-            json.createdTimestamp = commercialReport.createdTimestamp;
-        }
-
-        return json;
-    }
 
     render() {
         const {
@@ -1500,7 +1453,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, participants, previsitReducer, reducerGlobal, navBar }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, participants, previsitReducer, reducerGlobal, navBar, confidentialReducer }, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,
@@ -1508,7 +1461,8 @@ function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, p
         participants,
         previsitReducer,
         reducerGlobal,
-        navBar
+        navBar, 
+        confidentialReducer
     };
 }
 
