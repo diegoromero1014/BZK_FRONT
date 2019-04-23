@@ -169,7 +169,7 @@ if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
     } else if (WP_VAR_ENVIRONMENT === 'development') {
         API_URL = "https://biztrackdev.apps.ambientesbc.com/Centricity";
     } else if (WP_VAR_ENVIRONMENT === 'quality') {
-        API_URL = "https://biztrackqa.apps.ambientesbc.com/Centricity";
+        API_URL = "https://was-biztrackqa.apps.ambientesbc.com/Centricity";
     } else if (WP_VAR_ENVIRONMENT === 'aws') {
         API_URL = "https://biztrack.apps.bancolombia.com/Centricity";
     } else if (WP_VAR_ENVIRONMENT === 'sameorigin') {
