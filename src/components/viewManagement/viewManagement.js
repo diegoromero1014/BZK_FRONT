@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Row } from 'react-flexbox-grid';
 import { redirectUrl } from '../globalComponents/actions';
 import { updateTitleNavBar } from '../navBar/actions';
 import ItemChart from './itemChart';
@@ -10,10 +10,10 @@ import { changeTabSeletedChartView, changeErrorYearSeleted } from './actions';
 import { TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS, TAB_TASKS } from './constants';
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
-import AlertErrorYearNoSeleted from '../globalComponents/alertErrorYearNoSeleted';
-import { MODULE_MANAGERIAL_VIEW, LightSkyBlue, BLUE_COLOR, GREEN_COLOR, ORANGE_COLOR, RED_COLOR, GRAY_COLOR, DOWNLOAD_TASK } from '../../constantsGlobal';
+import { MODULE_MANAGERIAL_VIEW, BLUE_COLOR, GREEN_COLOR, ORANGE_COLOR, RED_COLOR, DOWNLOAD_TASK } from '../../constantsGlobal';
 import SweetAlert from '../sweetalertFocus';
 import _ from 'lodash';
+import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
 
 const itemsChart = [
   {
@@ -99,12 +99,11 @@ class ViewManagement extends Component {
   }
 
   render() {
-    const {viewManagementReducer, reducerGlobal} = this.props;
-    const tabSeletedReducer = viewManagementReducer.get('tabSeleted');
-    const isLoadChart = viewManagementReducer.get('loadChart');
-    return (
-      <div className="ui segment" style={{ marginTop: '-2px' }}>
-        <div style={{ backgroundColor: "white" }}>
+    const {viewManagementReducer} = this.props;
+    return (      
+      <div className="ui segment" style={{ marginTop: '-2px' }}>   
+        <SecurityMessageComponent/>
+        <div style={{ backgroundColor: "white" }}>          
           <Row xs={12} md={12} lg={12} style={{ padding: '15px 20px 10px 20px' }}>
             {itemsChart.map(this._mapChartItems)}
           </Row>
@@ -118,11 +117,6 @@ class ViewManagement extends Component {
             />
           </Row>}
         </div>
-        {tabSeletedReducer === TAB_PIPELINE && <div />}
-        {tabSeletedReducer === TAB_TASKS && <div />}
-        {tabSeletedReducer === TAB_PREVISIT && <div/>}
-        {tabSeletedReducer === TAB_VISIT && <div/>}
-        {tabSeletedReducer === TAB_BUSINESS && <div/>}
 
         <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />
         <SweetAlert
