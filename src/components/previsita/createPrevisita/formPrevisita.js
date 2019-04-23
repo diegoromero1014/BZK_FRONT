@@ -22,7 +22,9 @@ import {
     checkRequired, checkPlaceOfPrevisit, checkDecimalNumbers, checkRichTextRequired, checkNumberLength
 } from './../../../validationsFields/rulesField';
 
-import { redirectUrl, setConfidential, buildJsoncommercialReport } from '../../globalComponents/actions';
+import { redirectUrl } from '../../globalComponents/actions';
+import { setConfidential } from '../../commercialReport/actions';
+import { buildJsoncommercialReport } from '../../commercialReport/functionsGenerics';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import { createPrevisit, validateDatePreVisit } from '../actions';
 import { changeStateSaveData } from '../../dashboard/actions';
@@ -38,7 +40,7 @@ import {
     MESSAGE_SAVE_DATA, MESSAGE_ERROR, ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, REGEX_SIMPLE_XSS_MESAGE,
 } from '../../../constantsGlobal';
 
-import PermissionUserReports from "../../globalComponents/permissionsUserReports"
+import PermissionUserReports from "../../commercialReport/permissionsUserReports"
 
 
 var datePrevisitLastReview;

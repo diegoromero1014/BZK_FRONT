@@ -5,7 +5,7 @@ import { updateTitleNavBar, consultModulesAccess, viewAlertClient } from './acti
 import { backButtonFilter } from '../clients/actions';
 import BellAlert from '../alerts/bellClientAlertComponent';
 import { redirectUrl } from '../globalComponents/actions';
-import ConfidentialBrandComponent from '../globalComponents/ConfidentialBrandComponent';
+import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
 
 
 class NavBarComponent extends Component {
