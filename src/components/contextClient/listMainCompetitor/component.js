@@ -3,7 +3,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue, validateValueExist } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue, validateValueExist, checkRules } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
     ONLY_POSITIVE_INTEGER
@@ -15,6 +15,10 @@ import { MAIN_COMPETITOR, MESSAGE_MAIN_COMPETITOR } from '../constants';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
+import {
+    checkRequired, processRules, checkClientDescription,
+    checkNumberInRange, checkMaxLength, checkFirstCharacter
+} from '../../../validationsFields/rulesField';
 
 export class ComponentListMainCompetitor extends Component {
     constructor(props) {
@@ -34,6 +38,11 @@ export class ComponentListMainCompetitor extends Component {
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteMainCompetitor = this._deleteMainCompetitor.bind(this);
         this.hasErrors = this.hasErrors.bind(this);
+
+        this.rulesMainCompetitor = [checkRequired, checkClientDescription, checkMaxLength(50), checkFirstCharacter];
+        this.rulesParticipation = [checkRequired, checkNumberInRange(0, 100)];
+        this.rulesObservation = [checkClientDescription, checkFirstCharacter];
+
     }
 
     hasErrors(fields) {
@@ -125,14 +134,46 @@ export class ComponentListMainCompetitor extends Component {
     }
 
     _mapValuesMainCompetitor(entity, idx) {
+
+        const errorNameCompetitor = checkRules(this.rulesMainCompetitor, entity.nameCompetitor);
+        const errorParticipation = checkRules(this.rulesParticipation, entity.participation);
+        const errorObservation = checkRules(this.rulesObservation, entity.observations);
+
         return <tr key={idx}>
             <td className="collapsing">
                 <i className="zoom icon" title="Editar competidor principal" style={{ cursor: "pointer" }}
                     onClick={() => this._viewInformationCompetitor(entity)} />
             </td>
-            <td>{entity.nameCompetitor}</td>
-            <td>{entity.participation} %</td>
-            <td>{shorterStringValue(entity.observations, 100)}</td>
+            <td>{entity.nameCompetitor}
+            {
+                errorNameCompetitor &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorNameCompetitor}
+                    </div>
+                </div>
+            }
+            </td>
+            <td>{entity.participation} %
+            {
+                errorParticipation &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorParticipation}
+                    </div>
+                </div>
+            }
+            </td>
+            <td>{shorterStringValue(entity.observations, 100)}
+            {
+                errorObservation &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorObservation}
+                    </div>
+                </div>
+            }
+            </td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar competidor principal" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />
@@ -143,7 +184,7 @@ export class ComponentListMainCompetitor extends Component {
     render() {
         const { nameCompetitor, participation, observations, showFormMainCompetitor, fnShowForm,
             clientInformacion, changeValueListClient, valueCheckSectionMainCompetitor, showCheckValidateSection,
-            functionChangeMainCompetitor, registrationRequired, origin } = this.props;
+            functionChangeMainCompetitor, registrationRequired, origin, className } = this.props;
         const listMainCompetitor = clientInformacion.get('listMainCompetitor');
         return (
             <div onBlur={() => this.setState({ shouldUpdate: !this.state.shouldUpdate })}>
@@ -182,16 +223,15 @@ export class ComponentListMainCompetitor extends Component {
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedMainCompetitors') &&
-                    <Row style={{ border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px' }}>
-                        <Col xs={12} md={12} lg={12} style={{ marginTop: "-70px", paddingRight: "16px", textAlign: "right" }}>
-                            <button className="btn" disabled={showFormMainCompetitor} type="button"
+                    <Row style={{ position:"relative", border: "1px solid #ECECEC", borderRadius: "5px", margin: '10px 24px 0px 20px', padding: '15px 0 10px 7px' }}>
+                        <div style={{ position:"absolute", right:0, marginTop: "-70px", paddingRight: "16px", textAlign: "right" }}>
+                            <button className="btn" name={className} disabled={showFormMainCompetitor} type="button"
                                 onClick={() => fnShowForm(MAIN_COMPETITOR, true)} style={showFormMainCompetitor ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
                                 <ToolTipComponent text="Agregar competidor principal">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                                 </ToolTipComponent>
                             </button>
-                        </Col>
-                        {showFormMainCompetitor &&
+                        </div> {showFormMainCompetitor &&
                             <Col xs={12} md={4} lg={3}>
                                 <div>
                                     <dt><span>Nombre del competidor (<span style={{ color: "red" }}>*</span>)</span></dt>

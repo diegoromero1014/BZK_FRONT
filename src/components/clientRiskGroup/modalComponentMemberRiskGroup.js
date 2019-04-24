@@ -1,47 +1,28 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
-import { redirectUrl } from '../globalComponents/actions';
 import { reduxForm } from 'redux-form';
+import _ from 'lodash';
+import { bindActionCreators } from 'redux';
 
 import Input from '../../ui/input/inputComponent';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import SweetAlert from '../sweetalertFocus';
+import MemberRiskGroup from './memberRiskGroup';
+
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import { VALUE_REQUIERED, SESSION_EXPIRED, VALUE_XSS_INVALID, NATURAL_PERSON } from '../../constantsGlobal';
-import { validateResponse, formValidateKeyEnter, nonValidateEnter, xssValidation, onSessionExpire } from '../../actionsGlobal';
-import { bindActionCreators } from 'redux';
-import * as constants from '../selectsComponent/constants';
+import { validateResponse, formValidateKeyEnter, nonValidateEnter,onSessionExpire } from '../../actionsGlobal';
 import { findClientByStrTypeIdAndNumber } from '../clients/actions';
 import { getMasterDataFields } from '../selectsComponent/actions';
 import { showLoading } from '../loading/actions';
-import MemberRiskGroup from './memberRiskGroup'
-import _ from 'lodash';
 
-const fields = [
-    "idType", "idNumber", "clientType"
-];
+import { SESSION_EXPIRED, NATURAL_PERSON } from '../../constantsGlobal';
+import * as constants from '../selectsComponent/constants';
+import { fieldsSearch as fields, validationsSearch as validate } from './fieldsAndRulesForReduxForm';
 
-let isPersonaNatural = false;
-const validate = values => {
-    const errors = {};
-
-    if (!values.idType) {
-        errors.idType = VALUE_REQUIERED;
-    } else {
-        errors.idType = null;
-    }
-    if (!values.idNumber) {
-        errors.idNumber = VALUE_REQUIERED;
-    } else if (xssValidation(values.idNumber)) {
-        errors.idNumber = VALUE_XSS_INVALID;
-    } else {
-        errors.idNumber = null;
-    }
-    return errors;
-};
 
 let thisForm;
 let myForm = null;
+
 class modalComponentMemberRiskGroup extends Component {
     constructor(props) {
         super(props);
@@ -72,19 +53,16 @@ class modalComponentMemberRiskGroup extends Component {
         this.setState({ showForm: false });
         this.props.getMasterDataFields([constants.CLIENT_TYPE]).then((data) => {
             if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
-                //selectTypeReducer = constants.CONTACT_ID_TYPE;
                 onSessionExpire();
             }
         });
         this.props.getMasterDataFields([constants.CONTACT_ID_TYPE]).then((data) => {
             if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
-                //selectTypeReducer = constants.CLIENT_ID_TYPE;
                 onSessionExpire();
             }
         });
         this.props.getMasterDataFields([constants.CLIENT_ID_TYPE]).then((data) => {
             if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
-                //selectTypeReducer = constants.CONTACT_ID_TYPE;
                 onSessionExpire();
             }
         });
@@ -120,15 +98,16 @@ class modalComponentMemberRiskGroup extends Component {
 
     _handlerSubmitGroup() {
         const { fields: { idType, idNumber, clientType }, swtShowMessage, findClientByStrTypeIdAndNumber, selectsReducer } = this.props;
-        const strTypeDocument = _.get(_.find(selectsReducer.get(constants.CLIENT_ID_TYPE), (item) => _.isEqual(item.id, parseInt(idType.value))), 'value', '');
-        const strClientType = _.get(_.find(selectsReducer.get(constants.CLIENT_TYPE), (item) => _.isEqual(item.id, parseInt(clientType.value))), 'key', '');
-        
+        const strTypeDocument = _.get(_.find(selectsReducer.get(this.state.selectTypeReducer), (item) => _.isEqual(item.id, parseInt(idType.value))), 'value', '');
+        const strClientType = _.get(_.find(selectsReducer.get(constants.CLIENT_TYPE), (item) => _.isEqual(item.id, parseInt(clientType.value))), 'value', '');
+
         const jsonFindClient = {
             strTypeDocument: strTypeDocument,
             typeDocument: idType.value !== undefined ? idType.value : null,
             numberDocument: idNumber.value !== undefined ? idNumber.value : null,
             strClientType: strClientType
         };
+
         findClientByStrTypeIdAndNumber(jsonFindClient).then((data) => {
             if (validateResponse(data)) {
                 this.setState({
@@ -164,12 +143,12 @@ class modalComponentMemberRiskGroup extends Component {
     }
 
     render() {
-
         const { fields: { clientType, idType, idNumber }, handleSubmit, isOpen, riskGroup, validateHasRiskGroup } = this.props;
         const { selectsReducer } = this.props;
-        // onClick={() => dispatch(submit('submitMemberForm'))}
+
         return (
             <div>
+
                 <div id="content-modal-rosk-group"
                     className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     style={{ overflowX: "hidden" }}>
@@ -191,7 +170,6 @@ class modalComponentMemberRiskGroup extends Component {
                             </Col>
                         </Row>
                         <Row style={{ padding: "10px 20px 0px" }}>
-
                             <Col xs={12} md={!this.state.disabledPrimaryFields ? 5 : 6}>
                                 <dt><span>Tipo de documento (</span><span style={{ color: "red" }}>*</span>)</dt>
                                 <ComboBox
@@ -210,7 +188,6 @@ class modalComponentMemberRiskGroup extends Component {
                                 <Input
                                     name="documento"
                                     type="text"
-                                    max="20"
                                     disabled={this.state.disabledPrimaryFields}
                                     placeholder="Número de documento"
                                     {...idNumber}
@@ -275,7 +252,6 @@ class modalComponentMemberRiskGroup extends Component {
         )
     };
 }
-// {/*form={"submitMemberForm"}  */}
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({

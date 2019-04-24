@@ -21,6 +21,8 @@ import previsitReducer from '../components/previsita/reducer';
 import visitReducer from '../components/visit/reducer';
 import pipelineReducer from '../components/pipeline/reducer';
 import participantsReducer from '../components/participantsVisitPre/reducer';
+import usersGlobalReducer from '../components/commercialReport/reducer';
+import confidentialReducer from '../components/commercialReport/confidentialReducer';
 import taskReducer from '../components/visit/tasks/reducer';
 import needReducer from '../components/businessPlan/need/reducer';
 import areaReducer from '../components/businessPlan/area/reducer';
@@ -45,7 +47,7 @@ import alertCovenantReducer from '../components/alertCovenants/reducer';
 import pipelineBusinessReducer from '../components/pipeline/business/ducks';
 import alertBlackListReducer from '../components/alertBlackList/reducer';
 import leftTimer from '../components/timeout/timeoutDucks';
-import linkEntitiesClientReducer from '../components/clientDetailsInfo/linkingClient/linkEntitiesComponent/reducer';
+import linkEntitiesClientReducer from '../components/clientDetailsInfo/linkingClient/LinkEntitiesComponent/reducer';
 import swtAlertMessagesReducer from '../components/sweetAlertMessages/reducer';
 import blackListClientReducer from '../components/clientDetailsInfo/linkingClient/reducer';
 import filterContactsReducer from '../components/filterContact/reducer';
@@ -90,6 +92,7 @@ export default combineReducers({
     previsitReducer: previsitReducer,
     visitReducer: visitReducer,
     participants: participantsReducer,
+    usersPermission: usersGlobalReducer,
     tasks: taskReducer,
     needs: needReducer,
     areas: areaReducer,
@@ -136,5 +139,6 @@ export default combineReducers({
     menu: menuReducer,
     transactional: transactionalReducer,
     linkRequestsReducer,
-    schedulerPrevisitReduser
+    schedulerPrevisitReduser,
+    confidentialReducer
 });

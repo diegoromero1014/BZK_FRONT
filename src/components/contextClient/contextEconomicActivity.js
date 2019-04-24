@@ -5,7 +5,7 @@ import Textarea from '../../ui/textarea/textareaComponent';
 import _ from 'lodash';
 import ToolTipComponent from '../toolTip/toolTipComponent';
 import {
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE
 } from '../../constantsGlobal';
 import { ORIGIN_CREDIT_STUDY } from '../clients/creditStudy/constants';
 import { MESSAGE_CONTEXT } from './constants';
@@ -56,7 +56,7 @@ class ContextEconomicActivity extends Component {
                                 validateEnter={true}
                                 type="text"
                                 style={{ width: '100%' }}
-                                max="5"
+                                max="1000"
                                 rows={7}
                                 placeholder="Ingrese el contexto del cliente"
                                 {...contextClientField}

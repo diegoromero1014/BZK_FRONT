@@ -1,41 +1,41 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-import {redirectUrl} from '../../globalComponents/actions';
+import { redirectUrl } from '../../globalComponents/actions';
 import HeaderBusinessPlan from '../headerBusinessPlan';
 import FormEdit from './formEdit';
 
-class EditBusinessPlan extends Component{
+class EditBusinessPlan extends Component {
 
-  componentWillMount(){
-    const {clientInformacion} = this.props;
+  componentWillMount() {
+    const { clientInformacion } = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
-    if(_.isEmpty(infoClient)){
-        redirectUrl("/dashboard/clientInformation");
+    if (_.isEmpty(infoClient)) {
+      redirectUrl("/dashboard/clientInformation");
     }
   }
 
-  render(){
-    const {params: {id}} = this.props;
-    return(
+  render() {
+    const { params: { id } } = this.props;
+    return (
       <div>
         <HeaderBusinessPlan />
-        <FormEdit id={id}/>
+        <FormEdit id={id} />
       </div>
     );
   }
 }
 
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(dispatch) {
   return bindActionCreators({
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion}, ownerProps){
-    return {
-      clientInformacion
-    };
+function mapStateToProps({ clientInformacion }, ownerProps) {
+  return {
+    clientInformacion
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditBusinessPlan);

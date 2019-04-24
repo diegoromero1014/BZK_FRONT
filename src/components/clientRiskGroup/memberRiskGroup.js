@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Col, Row } from "react-flexbox-grid";
-import { redirectUrl } from "../globalComponents/actions";
 import { reduxForm } from "redux-form";
 import Input from "../../ui/input/inputComponent";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
@@ -8,47 +7,18 @@ import Textarea from "../../ui/textarea/textareaComponent";
 
 import SweetAlert from "../sweetalertFocus";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
-import {SESSION_EXPIRED, VALUE_REQUIERED, VALUE_XSS_INVALID} from "../../constantsGlobal";
-import { formValidateKeyEnter, nonValidateEnter, validateResponse, xssValidation, onSessionExpire } from "../../actionsGlobal";
+import { SESSION_EXPIRED} from "../../constantsGlobal";
+import { formValidateKeyEnter, nonValidateEnter, validateResponse, onSessionExpire } from "../../actionsGlobal";
 import { bindActionCreators } from "redux";
 import { addClientRiskGroup, getClientsRiskGroup } from "./actions";
 import * as constants from "../selectsComponent/constants";
 import { consultDataSelect } from "../selectsComponent/actions";
 import { showLoading } from "../loading/actions";
 import _ from "lodash";
-
-const fields = [
-    "clientName", "conformationReasonId", "segmentClient", "justification"
-];
-const validate = values => {
-    const errors = {};
-
-    if (!values.clientName) {
-        errors.clientName = VALUE_REQUIERED;
-    } else if (xssValidation(values.clientName)) {
-        errors.clientName = VALUE_XSS_INVALID;
-    } else {
-        errors.clientName = null;
-    }
+import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 
 
-    if (!values.conformationReasonId) {
-        errors.conformationReasonId = VALUE_REQUIERED;
-    } else {
-        errors.conformationReasonId = null;
-    }
 
-    if (!values.justification) {
-        errors.justification = VALUE_REQUIERED;
-    } else if (xssValidation(values.justification)) {
-        errors.justification = VALUE_XSS_INVALID;
-    } else {
-        errors.justification = null;
-    }
-
-
-    return errors;
-};
 
 let thisForm;
 class memberRiskGroup extends Component {
@@ -58,10 +28,8 @@ class memberRiskGroup extends Component {
             showError: false,
             showErrorForm: false
         };
-        // this._handlerSubmitGroup = this._handlerSubmitGroup.bind(this);
         this._closeError = this._closeError.bind(this);
         this._onchangeValue = this._onchangeValue.bind(this);
-        // this.requestAddMemberRiskGroup = this.requestAddMemberRiskGroup.bind(this);
         thisForm = this;
     }
 
@@ -106,7 +74,7 @@ class memberRiskGroup extends Component {
     render() {
         const { fields: { clientName, conformationReasonId, segmentClient, justification }, handleSubmit, clientsBasicInfo } = this.props;
         const { selectsReducer } = this.props;
-        return <form id={"submitMemberForm"} 
+        return <form id={"submitMemberForm"}
             onKeyPress={val => formValidateKeyEnter(val, true)} style={{ width: "100%" }}>
             <div id="content-modal-rosk-group"
                 className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -156,7 +124,6 @@ class memberRiskGroup extends Component {
                         <Textarea className="form-control need-input"
                             {...justification}
                             name="justification"
-                            maxLength="250"
                             onChange={val => this._onchangeValue("justification", val)}
                         />
                     </Col>

@@ -20,7 +20,7 @@ import ProductsClient from "./products/productList";
 import BottonContactAdmin from "../clientDetailsInfo/bottonContactAdmin";
 import BottonShareholderAdmin from "../clientDetailsInfo/bottonShareholderAdmin";
 import ModalErrorsUpdateClient from "./modalErrorsUpdateClient";
-import ClientTypology from "../contextClient/ClientTypology";
+import ClientTypology from "../contextClient/clientTypology";
 import ContextEconomicActivity from "../contextClient/contextEconomicActivity";
 import ComponentListLineBusiness from "../contextClient/listLineOfBusiness/whiteListLineBusiness";
 import ComponentListDistributionChannel from "../contextClient/listDistributionChannel/componentListDistributionChannel";
@@ -31,13 +31,9 @@ import ComponentListMainSupplier from "../contextClient/listMainSupplier/compone
 import ComponentListMainCompetitor from "../contextClient/listMainCompetitor/componentListMainCompetitor";
 import ComponentListIntOperations from "../contextClient/listInternationalOperations/componentListIntOperations";
 import ComponentInfoClient from './components/InfoClient';
-import ComponentInfoClientPN from './components/InfoClientPN';
 import { validationRules as rulesInfoClient } from './components/InfoClient.js';
-import { validationRules as rulesInfoClientPN } from './components/InfoClientPN.js';
-import ActividadEconomicaPN from './components/ActividadEconomicaPN';
 import ActividadEconomica from './components/ActividadEconomica';
 import { validationRules as rulesActividadEconomica } from './components/ActividadEconomica';
-import { validationRules as rulesActividadEconomicaPN } from './components/ActividadEconomicaPN';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
 
 import { clearProducts, setProducts } from "./products/actions";
@@ -48,8 +44,9 @@ import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { showLoading } from "../loading/actions";
 import { saveCreditStudy } from "../clients/creditStudy/actions";
 import {
-    validateResponse, stringValidate, xssValidation, onSessionExpire, validateFields,
-    validateWhileListResponse, replaceCommaInNumber } from "../../actionsGlobal";
+    validateResponse, stringValidate, onSessionExpire, validateFields,
+    validateWhileListResponse, replaceCommaInNumber
+} from "../../actionsGlobal";
 import { updateTitleNavBar } from "../navBar/actions";
 import {
     seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
@@ -67,7 +64,8 @@ import {
     CONSTRUCT_PYME, KEY_DESMONTE,
     KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME,
     KEY_OPTION_OTHER_OPERATIONS_FOREIGNS, KEY_OPTION_OTHER_ORIGIN_GOODS,
-    KEY_OPTION_OTHER_ORIGIN_RESOURCE, MAXIMUM_OPERATIONS_FOREIGNS
+    KEY_OPTION_OTHER_ORIGIN_RESOURCE, MAXIMUM_OPERATIONS_FOREIGNS, UPDATE_METHOD,
+    EDIT_METHOD
 } from "./constants";
 import {
     ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA,
@@ -78,6 +76,8 @@ import {
     DISTRIBUTION_CHANNEL, INT_OPERATIONS, LINE_OF_BUSINESS, MAIN_CLIENTS,
     MAIN_COMPETITOR, MAIN_SUPPLIER
 } from "../contextClient/constants";
+
+import { fields, validations as validate } from './fieldsAndRulesClientEditUpdate';
 
 
 let idButton;
@@ -99,19 +99,6 @@ const valuesYesNo = [
     { 'id': false, 'value': "No" }
 ];
 
-const fields = ["razonSocial", "idTypeClient", "idNumber", "description", "idCIIU", "idSubCIIU", "addressClient", "country", "city",
-    "province", "neighborhood", "district", "telephone", "reportVirtual", "extractsVirtual", "annualSales", "dateSalesAnnuals",
-    "liabilities", "assets", "operatingIncome", "nonOperatingIncome", "expenses", "marcGeren", "operationsForeigns",
-    "centroDecision", "necesitaLME", "groupEconomic", "nitPrincipal", "economicGroupName", "justifyNoGeren", "justifyNoLME",
-    "justifyExClient", "taxNature", "detailNonOperatingIncome", "otherOriginGoods", "originGoods", "originResource",
-    "otherOriginResource", "countryOrigin", "originCityResource", "operationsForeignCurrency", "otherOperationsForeign",
-    "segment", "subSegment", "customerTypology", "contextClientField", "experience",
-    "inventoryPolicy",
-    "nameMainSupplier", "participationMS", "termMainSupplier", "relevantInformationMainSupplier",
-    "typeOperationIntOpera", "participationIntOpe",
-    "idCountryIntOpe", "participationIntOpeCountry", "customerCoverageIntOpe", "descriptionCoverageIntOpe",
-    "controlLinkedPayments", "firstName", "middleName", "lastName", "middleLastName", "occupation"];
-
 //Establece si el cliente a editar es prospecto o no para controlar las validaciones de campos
 let isProspect = false;
 //Guarda el anterior valor de la justificación no gerenciamiento para saber cuándo cambia de desmonte a otro
@@ -129,13 +116,15 @@ var clickButttonSave = false;
 //Valida si es necesario la justificacion para la marca de gerenciamiento
 let validateMarcManagement = true;
 
-let isPersonaNatural = false;
+
 //Controla las validaciones cuando se esta en edicion de clientes
 let isMethodEditClient = false;
 
 let otherOperationsForeignEnable = 'disabled';
 let otherOriginGoodsEnable = 'disabled';
 let otherOriginResourceEnable = 'disabled';
+
+let isPersonaNatural = false;
 
 const EDIT_STYLE = {
     border: '1px solid #e5e9ec',
@@ -160,379 +149,6 @@ const drawRequiredField = (condition) => {
         return requiredField;
     }
 }
-
-const validate = (values, props) => {
-    const { reducerGlobal, tabReducer } = props;
-    const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
-
-    const errors = {}
-    let errorScrollTop = false;
-
-    if (props.isPersonaNatural) {
-        validateFields(values, rulesInfoClientPN(props), errors);
-        validateFields(values, rulesActividadEconomicaPN(props), errors);
-    } else {
-        validateFields(values, rulesInfoClient(props), errors);
-        validateFields(values, rulesActividadEconomica(props), errors);
-    }
-
-    if (!values.addressClient && idButton !== BUTTON_EDIT) {
-        errors.addressClient = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.addressClient)) {
-        errors.addressClient = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.addressClient = null;
-    }
-
-    if (!values.telephone && idButton !== BUTTON_EDIT) {
-        errors.telephone = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.telephone)) {
-        errors.telephone = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.telephone = null;
-    }
-
-    if (!values.annualSales && idButton !== BUTTON_EDIT && !isPersonaNatural) {
-        errors.annualSales = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.annualSales)) {
-        errors.annualSales = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.annualSales = null;
-    }
-
-    if (!values.country && idButton !== BUTTON_EDIT) {
-        errors.country = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.country = null;
-    }
-
-    if (!values.province && idButton !== BUTTON_EDIT) {
-        errors.province = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.province = null;
-    }
-
-    if (!values.city && idButton !== BUTTON_EDIT) {
-        errors.city = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.city = null;
-    }
-
-    if ((!values.dateSalesAnnuals || values.dateSalesAnnuals === '') && (idButton !== BUTTON_EDIT && !isPersonaNatural)) {
-        errors.dateSalesAnnuals = DATE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.dateSalesAnnuals)) {
-        errors.dateSalesAnnuals = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.dateSalesAnnuals = null;
-    }
-
-    if (!values.liabilities && idButton !== BUTTON_EDIT) {
-        errors.liabilities = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.liabilities)) {
-        errors.liabilities = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.liabilities = null;
-    }
-
-    if (!values.assets && idButton !== BUTTON_EDIT) {
-        errors.assets = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.assets)) {
-        errors.assets = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.assets = null;
-    }
-
-    if (!values.operatingIncome && idButton !== BUTTON_EDIT) {
-        errors.operatingIncome = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.operatingIncome)) {
-        errors.operatingIncome = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.operatingIncome = null;
-    }
-
-    if (!values.nonOperatingIncome && idButton !== BUTTON_EDIT) {
-        errors.nonOperatingIncome = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.nonOperatingIncome)) {
-        errors.nonOperatingIncome = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.nonOperatingIncome = null;
-    }
-
-    if (!values.expenses && idButton !== BUTTON_EDIT) {
-        errors.expenses = VALUE_REQUIERED;
-        errorScrollTop = true;
-    } else if (xssValidation(values.expenses)) {
-        errors.expenses = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.expenses = null;
-    }
-
-    if ((values.marcGeren === null || values.marcGeren === undefined || values.marcGeren === '') && !isProspect && idButton !== BUTTON_EDIT) {
-        errors.marcGeren = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.marcGeren = null;
-    }
-
-    if (validateMarcManagement === false && !values.justifyNoGeren && idButton !== BUTTON_EDIT) {
-        errors.justifyNoGeren = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.justifyNoGeren = null;
-    }
-
-    if ((values.centroDecision === null || values.centroDecision === undefined || values.centroDecision === '') && !isProspect && idButton !== BUTTON_EDIT) {
-        errors.centroDecision = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.centroDecision = null;
-    }
-
-    if ((values.necesitaLME === null || values.necesitaLME === undefined || values.necesitaLME === '') && !isProspect && idButton !== BUTTON_EDIT) {
-        errors.necesitaLME = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.necesitaLME = null;
-    }
-
-    if (values.necesitaLME === 'false' && !values.justifyNoLME && idButton !== BUTTON_EDIT) {
-        errors.justifyNoLME = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.justifyNoLME = null;
-    }
-
-    if ((values.reportVirtual === null || values.reportVirtual === undefined || values.reportVirtual === '') && idButton !== BUTTON_EDIT) {
-        errors.reportVirtual = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.reportVirtual = null;
-    }
-    if ((values.extractsVirtual === null || values.extractsVirtual === undefined || values.extractsVirtual === '') && idButton !== BUTTON_EDIT) {
-        errors.extractsVirtual = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.extractsVirtual = null;
-    }
-
-    if (otherOriginGoodsEnable !== 'disabled') {
-        if ((values.otherOriginGoods === null || values.otherOriginGoods === undefined || values.otherOriginGoods === '') && idButton !== BUTTON_EDIT) {
-            errors.otherOriginGoods = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else if (xssValidation(values.otherOriginGoods)) {
-            errors.otherOriginGoods = VALUE_XSS_INVALID;
-            errorScrollTop = true;
-        } else {
-            errors.otherOriginGoods = null;
-        }
-    }
-    if (otherOriginResourceEnable !== 'disabled') {
-        if ((values.otherOriginResource === null || values.otherOriginResource === undefined || values.otherOriginResource === '') && idButton !== BUTTON_EDIT) {
-            errors.otherOriginResource = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else if (xssValidation(values.otherOriginResource)) {
-            errors.otherOriginResource = VALUE_XSS_INVALID;
-            errorScrollTop = true;
-        } else {
-            errors.otherOriginResource = null;
-        }
-    }
-
-    if (otherOperationsForeignEnable !== 'disabled') {
-        if ((values.otherOperationsForeign === null || values.otherOperationsForeign === undefined || values.otherOperationsForeign === '') && idButton !== BUTTON_EDIT) {
-            errors.otherOperationsForeign = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else if (xssValidation(values.otherOperationsForeign)) {
-            errors.otherOperationsForeign = VALUE_XSS_INVALID;
-            errorScrollTop = true;
-        } else {
-            errors.otherOperationsForeign = null;
-        }
-    }
-
-    //Valido que el cliente tenga ciudad de origen de los recursos
-    if (values.originCityResource) {
-        if (xssValidation(values.originCityResource)) {
-            errors.originCityResource = VALUE_XSS_INVALID;
-            errorScrollTop = true;
-        } else {
-            errors.originCityResource = null;
-        }
-    }
-
-    if (values.detailNonOperatingIncome) {
-        if (xssValidation(values.detailNonOperatingIncome)) {
-            errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
-            errorScrollTop = true;
-        } else {
-            errors.detailNonOperatingIncome = null;
-        }
-    }
-
-    //Valido los campos que son necesarios para actualizar un cliente
-    if (idButton === BUTTON_UPDATE) {
-        //Valido si el cliente tiene ingresos no operaciones
-        if ((values.nonOperatingIncome === null || values.nonOperatingIncome === undefined || values.nonOperatingIncome === '') && idButton !== BUTTON_EDIT) {
-            errors.nonOperatingIncome = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            errors.nonOperatingIncome = null;
-            //En caso tal de que los ingresos operacionales sean mayor a 0, se debe de validar el de
-            if (numeral(values.nonOperatingIncome).format('0') > 0) {
-                if ((values.detailNonOperatingIncome === null || values.detailNonOperatingIncome === undefined || values.detailNonOperatingIncome === '') && idButton !== BUTTON_EDIT) {
-                    errors.detailNonOperatingIncome = OPTION_REQUIRED;
-                    errorScrollTop = true;
-                } else if (xssValidation(values.detailNonOperatingIncome)) {
-                    errors.detailNonOperatingIncome = VALUE_XSS_INVALID;
-                    errorScrollTop = true;
-                } else {
-                    errors.detailNonOperatingIncome = null;
-                }
-            }
-        }
-
-        //Valido que el cliente tenga asociado el origen de los bienes
-        if ((values.originGoods === null || values.originGoods === undefined || values.originGoods === '' || values.originGoods[0] === '') && idButton !== BUTTON_EDIT) {
-            errors.originGoods = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            errors.originGoods = null;
-        }
-
-        //Valido que el cliente tenga asociado el origen de los recursos
-        if ((values.originResource === null || values.originResource === undefined || values.originResource === '' || values.originResource[0] === '') && idButton !== BUTTON_EDIT) {
-            errors.originResource = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            errors.originResource = null;
-        }
-
-        //Valido que el cliente tenga asociado el país de origen
-        if ((values.countryOrigin === null || values.countryOrigin === undefined || values.countryOrigin === '') && idButton !== BUTTON_EDIT) {
-            errors.countryOrigin = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            errors.countryOrigin = null;
-        }
-
-        //Valido que el cliente tenga ciudad de origen de los recursos
-        if ((values.originCityResource === null || values.originCityResource === undefined || values.originCityResource === '') && idButton !== BUTTON_EDIT) {
-            errors.originCityResource = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else if (xssValidation(values.originCityResource)) {
-            errors.originCityResource = VALUE_XSS_INVALID;
-            errorScrollTop = true;
-        } else {
-            errors.originCityResource = null;
-        }
-
-        //Valido si el cliente realiza operaciones en moneda extranjera
-        if ((values.operationsForeignCurrency === null || values.operationsForeignCurrency === undefined || values.operationsForeignCurrency === '') && idButton !== BUTTON_EDIT) {
-            errors.operationsForeignCurrency = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            //En caso de que si realice operaciones, obligo a que me indique cuales
-            errors.operationsForeignCurrency = null;
-            if (values.operationsForeignCurrency.toString() === 'true') {
-                if ((values.operationsForeigns === null || values.operationsForeigns === undefined || values.operationsForeigns === '' || values.operationsForeigns[0] === '') && idButton !== BUTTON_EDIT) {
-
-                    errors.operationsForeigns = OPTION_REQUIRED;
-                    errorScrollTop = true;
-                } else {
-                    errors.operationsForeigns = null;
-                }
-            } else {
-                values.operationsForeigns = null;
-                errors.operationsForeigns = null;
-            }
-        }
-
-        if ((!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) && idButton !== BUTTON_EDIT) {
-            errors.economicGroupName = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            errors.economicGroupName = null;
-        }
-
-        if ((!props.clientInformacion.get('noAppliedControlLinkedPayments') && !values.controlLinkedPayments) && idButton !== BUTTON_EDIT && allowRiskGroupEdit) {
-
-            errors.controlLinkedPayments = OPTION_REQUIRED;
-            errorScrollTop = true;
-        } else {
-            errors.controlLinkedPayments = null;
-        }
-
-    }
-
-    if (!values.segment) {
-        errors.segment = OPTION_REQUIRED;
-    } else {
-        const value = _.get(_.find(props.selectsReducer.get(constants.SEGMENTS), ['id', parseInt(values.segment)]), 'value');
-        if (_.isEqual(CONSTRUCT_PYME, value) && idButton !== BUTTON_EDIT) {
-            if (!values.subSegment) {
-                errors.subSegment = OPTION_REQUIRED;
-            } else {
-                errors.subSegment = null;
-            }
-        }
-        errors.segment = null;
-    }
-
-    if (xssValidation(values.description)) {
-        errors.description = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.description = null;
-    }
-
-    if (xssValidation(values.neighborhood)) {
-        errors.neighborhood = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.neighborhood = null;
-    }
-
-    if (xssValidation(values.contextClientField)) {
-        errors.contextClientField = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.contextClientField = null;
-    }
-
-    if (xssValidation(values.inventoryPolicy)) {
-        errors.inventoryPolicy = VALUE_XSS_INVALID;
-        errorScrollTop = true;
-    } else {
-        errors.inventoryPolicy = null;
-    }
-
-    if (errorScrollTop && clickButttonSave) {
-        clickButttonSave = false;
-        document.getElementById('dashboardComponentScroll').scrollTop = 0;
-    }
-
-    return errors;
-};
 
 //Componente genérico para cargar los selects de justificación
 function SelectsJustificacion(props) {
@@ -970,7 +586,7 @@ class clientEdit extends Component {
     _handleBlurValueNumber(typeValidation, valuReduxForm, val) {
         var pattern;
         //Elimino los caracteres no validos
-        for (var i = 0, output = '', validos = "-0123456789"; i < (val + "").length; i++) {
+        for (var i = 0, output = '', validos = "0123456789"; i < (val + "").length; i++) {
             if (validos.indexOf(val.toString().charAt(i)) !== -1) {
                 output += val.toString().charAt(i)
             }
@@ -1033,12 +649,14 @@ class clientEdit extends Component {
         var infoClient = clientInformacion.get('responseClientInfo');
         var originGoodsSelected = [];
         var originGoodsClient = _.isEmpty(infoClient.originGoods) ? [] : _.split(infoClient.originGoods, ',');
+        
         if (countOriginGoods < originGoodsClient.length) {
             originGoodsSelected = originGoodsClient;
             countOriginGoods = countOriginGoods + 1;
         } else {
             originGoodsSelected = _.split(val, ',');
         }
+        
         if (idOptionOther === undefined || _.indexOf(originGoodsSelected, idOptionOther.toString()) === -1) {
             otherOriginGoods.onChange('');
             otherOriginGoodsEnable = 'disabled';
@@ -1130,13 +748,11 @@ class clientEdit extends Component {
         const {
             fields: {
                 idTypeClient, idNumber, razonSocial, description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, addressClient,
-                country, city, province, neighborhood, district, telephone, reportVirtual, extractsVirtual, annualSales,
-                dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods,
-                originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
-                detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
-                originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology,
-                firstName, middleName, lastName, middleLastName, occupation
-            },
+            country, city, province, neighborhood, district, telephone, reportVirtual, extractsVirtual, annualSales,
+            dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods,
+            originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
+            detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
+            originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology },
             error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer
         } = this.props;
         const productsArray = [];
@@ -1145,17 +761,12 @@ class clientEdit extends Component {
         });
         const infoClient = clientInformacion.get('responseClientInfo');
 
-        let razonSocialPN = "";
-
-        if (isPersonaNatural) {
-            razonSocialPN = firstName.value + (middleName.value ? " " + middleName.value : "") + " " + lastName.value + (middleLastName.value ? " " + middleLastName.value : "");
-        }
 
         const jsonCreateProspect = {
             "id": infoClient.id,
             "clientIdType": idTypeClient.value,
             "clientIdNumber": idNumber.value,
-            "clientName": isPersonaNatural ? razonSocialPN : razonSocial.value,
+            "clientName": razonSocial.value,
             "clientStatus": infoClient.clientStatus,
             "riskRating": infoClient.riskRating,
             "isProspect": infoClient.isProspect,
@@ -1225,26 +836,26 @@ class clientEdit extends Component {
             "otherOperationsForeign": otherOperationsForeign.value,
             "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
             "idCustomerTypology": customerTypology.value,
-
-            "firstName": firstName.value,
-            "middleName": middleName.value,
-            "lastName": lastName.value,
-            "middleLastName": middleLastName.value,
-            "occupation": occupation.value,
             "clientType": infoClient.clientType,
+            "saveMethod": BUTTON_EDIT  === typeSave ? EDIT_METHOD : UPDATE_METHOD
         };
-
+                
         const { createProspect, updateClient, saveCreditStudy, swtShowMessage } = this.props;
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         createProspect(jsonCreateProspect).then((data) => {
+
+            if (!validateWhileListResponse(data)) {
+                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_INVALID_INPUT);
+                changeStateSaveData(false, "");
+                return;
+            }
             if (_.get(data, 'payload.data.status', 500) === 200) {
                 saveCreditStudy(this._createJsonSaveContextClient()).then((response) => {
-
                     if (!validateResponse(response)) {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                         changeStateSaveData(false, "");
                         return;
-                    }   
+                    }
 
                     if (!validateWhileListResponse(response)) {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_INVALID_INPUT);
@@ -1252,9 +863,10 @@ class clientEdit extends Component {
                         return;
                     }
 
-
+                    
                     if (validateResponse(response)) {
                         if (_.get(data, 'payload.data.status') === 200) {
+                            
                             if (typeSave === BUTTON_EDIT) {
                                 changeStateSaveData(false, "");
                                 messageAlertSuccess = "Señor usuario, el cliente ha sido modificado exitosamente, pero la fecha de actualización no ha sido cambiada.";
@@ -1295,7 +907,7 @@ class clientEdit extends Component {
         const {
             fields: {
                 contextClientField, inventoryPolicy, customerTypology,
-                controlLinkedPayments
+            controlLinkedPayments
             }, clientInformacion
         } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
@@ -1303,7 +915,7 @@ class clientEdit extends Component {
         const listLineOfBusiness = clientInformacion.get('listParticipation');
         _.map(listLineOfBusiness, (item) => {
             item.id = item.id.toString().includes('line_') ? null : item.id;
-            item.experience = replaceCommaInNumber(item.experience); 
+            item.experience = replaceCommaInNumber(item.experience);
             return item;
         });
         const listDistribution = clientInformacion.get('listDistribution');
@@ -1419,6 +1031,7 @@ class clientEdit extends Component {
         const idJustifyNoNeedLME = _.get(_.filter(dataJustifyNoNeedLME, ['key', KEY_EXCEPCION]), '[0].id');
         const addNoteNoGeren = (this.state.showJustifyNoGeren === false && idJustify === parseInt(justifyNoGeren.value) && !existNoteExceptionNoGeren);
         const addNoteNoNeedLME = (necesitaLME.value === 'false' && idJustifyNoNeedLME === parseInt(justifyNoLME.value) && !existNoteExceptionNoNeedLME);
+        let errorInNotes = tabReducer.get('errorNotesEditClient');
         if (addNoteNoGeren && addNoteNoNeedLME) {
 
             setNotes([{
@@ -1447,11 +1060,15 @@ class clientEdit extends Component {
                 note: ''
             }]);
             swtShowMessage('error', 'Edición de cliente', `Señor usuario, debe crear al menos una nota de tipo "${KEY_EXCEPCION_NO_NECESITA_LME}"`);
+        } else if(errorInNotes){
+            document.getElementById('dashboardComponentScroll').scrollTop = 0;
+
+            return;
         } else {
 
             errorContact = tabReducer.get('errorConstact');
             errorShareholder = tabReducer.get('errorShareholder');
-            if ((errorContact || errorShareholder) && idButton !== BUTTON_EDIT && !isPersonaNatural) {
+            if ((errorContact || errorShareholder) && idButton !== BUTTON_EDIT) {
                 updateErrorsNotes(false);
                 document.getElementById('dashboardComponentScroll').scrollTop = 0;
 
@@ -1464,7 +1081,6 @@ class clientEdit extends Component {
 
                     swtShowMessage('error', 'Error actualización cliente', 'Señor usuario, esta creando o editando un registro en alguna sección, debe terminarlo o cancelarlo para poder guardar.');
                 } else {
-
                     if (idButton === BUTTON_UPDATE) {
                         this.setState({
                             showConfirmSave: true
@@ -1504,9 +1120,8 @@ class clientEdit extends Component {
         if (otherOperationsForeignEnable == 'disabled') {
             errors = _.omit(errors, 'otherOperationsForeign');
         }
-
+        
         const errorsArray = _.toArray(errors);
-
         this.setState({
             sumErrorsForm: errorsArray.length
         });
@@ -1556,7 +1171,7 @@ class clientEdit extends Component {
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
                 constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS, constants.CUSTOMER_TYPOLOGY,
                 constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE,
-                constants.MANAGEMENT_BRAND, constants.CONTACT_ID_TYPE, constants.OCCUPATION, constants.NATURAL_PERSON_ORIGIN_RESOURCE, constants.NATURAL_PERSON_ORIGIN_GOODS])
+                constants.MANAGEMENT_BRAND, constants.CONTACT_ID_TYPE])
                     .then((data) => {
                         if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
@@ -1598,16 +1213,15 @@ class clientEdit extends Component {
         const {
             fields: {
                 razonSocial, idTypeClient, idNumber, description, idCIIU, idSubCIIU, addressClient, country, city, province, neighborhood,
-                district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
-                liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
-                centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
-                detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
-                otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, inventoryPolicy, 
-                nameMainSupplier, participationMS, termMainSupplier,
-                relevantInformationMainSupplier, typeOperationIntOpera,
-                participationIntOpe, descriptionCoverageIntOpe, idCountryIntOpe,
-                participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments, firstName, middleName, lastName, middleLastName, occupation
-            }, handleSubmit,
+            district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
+            liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
+            centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
+            detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
+            otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, inventoryPolicy,
+            nameMainSupplier, participationMS, termMainSupplier,
+            relevantInformationMainSupplier, typeOperationIntOpera,
+            participationIntOpe, descriptionCoverageIntOpe, idCountryIntOpe,
+            participationIntOpeCountry, customerCoverageIntOpe, controlLinkedPayments }, handleSubmit,
             tabReducer, selectsReducer, clientInformacion, validateContactShareholder, reducerGlobal, isPersonaNatural
         } = this.props;
         errorContact = tabReducer.get('errorConstact');
@@ -1655,15 +1269,11 @@ class clientEdit extends Component {
                             }
                             {idButton === BUTTON_UPDATE ?
                                 <div>
-                                    {!isPersonaNatural &&
-                                        <BottonContactAdmin errorContact={errorContact} message={messageContact}
-                                            functionToExecute={validateContactShareholder} />
-                                    }
-                                    {!isPersonaNatural &&
-                                        <BottonShareholderAdmin errorShareholder={errorShareholder}
-                                            message={messageShareholder}
-                                            functionToExecute={validateContactShareholder} />
-                                    }
+                                    <BottonContactAdmin errorContact={errorContact} message={messageContact}
+                                        functionToExecute={validateContactShareholder} />
+                                    <BottonShareholderAdmin errorShareholder={errorShareholder}
+                                        message={messageShareholder}
+                                        functionToExecute={validateContactShareholder} />
                                 </div>
                                 :
                                 <div></div>
@@ -1671,27 +1281,13 @@ class clientEdit extends Component {
                         </Col>
                     </Row>
                 </div>
-                {
-                    isPersonaNatural
-                        ?
-                        <ComponentInfoClientPN firstName={firstName} middleName={middleName} lastName={lastName} middleLastName={middleLastName} idTypeClient={idTypeClient} idNumber={idNumber}
-                            segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
-                            idButton={idButton} isMethodEditClient={isMethodEditClient}
-                        />
-                        :
-                        <ComponentInfoClient razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber}
-                            segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
-                            idButton={idButton} isMethodEditClient={isMethodEditClient}
-                        />
-                }
 
-                {
-                    isPersonaNatural
+                <ComponentInfoClient razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber}
+                    segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
+                    idButton={idButton} isMethodEditClient={isMethodEditClient} isPersonaNatural={isPersonaNatural}
+                />
 
-                        ? <ActividadEconomicaPN idSubCIIU={idSubCIIU} idCIIU={idCIIU} occupation={occupation} isMethodEditClient={isMethodEditClient} />
-                        : <ActividadEconomica idSubCIIU={idSubCIIU} idCIIU={idCIIU} taxNature={taxNature} isMethodEditClient={isMethodEditClient} />
-
-                }
+                <ActividadEconomica idSubCIIU={idSubCIIU} idCIIU={idCIIU} taxNature={taxNature} isMethodEditClient={isMethodEditClient} />
 
                 <Row>
 
@@ -1699,12 +1295,14 @@ class clientEdit extends Component {
                         <ContextEconomicActivity contextClientField={contextClientField} />
                     }
                     {allowRiskGroupEdit &&
-                        <ComponentListLineBusiness 
+                        <ComponentListLineBusiness
+                            className={"listaLineasDeNegocios"}
                             showFormLinebusiness={this.state.showFormAddLineOfBusiness}
                             fnShowForm={this.showFormOut} />
                     }
                     {allowRiskGroupEdit &&
                         <ComponentListDistributionChannel
+                            className={"canalesDeDistribucuion"}
                             showFormDistribution={this.state.showFormAddDistribution}
                             fnShowForm={this.showFormOut} />
                     }
@@ -1834,7 +1432,7 @@ class clientEdit extends Component {
                             <Input
                                 name="txtBarrio"
                                 type="text"
-                                max="120"
+                                max="40"
                                 placeholder="Ingrese el barrio"
                                 {...neighborhood}
                                 touched={true}
@@ -1906,14 +1504,13 @@ class clientEdit extends Component {
                 <Row style={{ padding: "0px 10px 20px 20px" }}>
                     <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Ventas anuales {drawRequiredField(!isMethodEditClient && !isPersonaNatural)}</span>
+                            <span>Ventas anuales {drawRequiredField(!isMethodEditClient)}</span>
                         </dt>
                         <dt>
                             <Input
                                 style={{ width: "100%", textAlign: "right" }}
                                 type="text"
                                 min={0}
-                                max="16"
                                 onChange={val => this._onChangeValue("annualSales", val)}
                                 placeholder="Ingrese las ventas anuales"
                                 {...annualSales}
@@ -1925,7 +1522,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs={12} md={4} lg={4} style={{ paddingRight: "20px" }}>
                         <dt>
-                            <span>Fecha de ventas anuales - DD/MM/YYYY {drawRequiredField(!isMethodEditClient && !isPersonaNatural)}</span>
+                            <span>Fecha de ventas anuales - DD/MM/YYYY {drawRequiredField(!isMethodEditClient)}</span>
                         </dt>
                         <dt>
                             <DateTimePickerUi culture='es' format={"DD/MM/YYYY"} time={false} {...dateSalesAnnuals}
@@ -1942,7 +1539,6 @@ class clientEdit extends Component {
                                 format="0,000"
                                 min={0}
                                 type="text"
-                                max="16"
                                 onChange={val => this._onChangeValue("assets", val)}
                                 placeholder="Ingrese los activos"
                                 {...assets}
@@ -1963,7 +1559,6 @@ class clientEdit extends Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
-                                max="16"
                                 type="text"
                                 onChange={val => this._onChangeValue("liabilities", val)}
                                 placeholder="Ingrese los pasivos"
@@ -1984,7 +1579,6 @@ class clientEdit extends Component {
                                 format="0,000"
                                 onChange={val => this._onChangeValue("operatingIncome", val)}
                                 min={0}
-                                max="16"
                                 type="text"
                                 placeholder="Ingrese los ingresos operacionales mensuales"
                                 {...operatingIncome}
@@ -2003,7 +1597,6 @@ class clientEdit extends Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
-                                max="16"
                                 type="text"
                                 onChange={val => this._onChangeValue("expenses", val)}
                                 placeholder="Ingrese los egresos mensuales"
@@ -2025,7 +1618,6 @@ class clientEdit extends Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 format="0,000"
                                 min={0}
-                                max="16"
                                 type="text"
                                 onChange={val => this._onChangeValue("nonOperatingIncome", val)}
                                 placeholder="Ingrese los ingresos no operacionales mensuales"
@@ -2055,16 +1647,19 @@ class clientEdit extends Component {
                 {allowRiskGroupEdit &&
                     <ComponentListMainClients
                         showFormMainClients={this.state.showFormAddMainClient}
+                        className={"principalesClientes"}
                         fnShowForm={this.showFormOut} />
                 }
                 {allowRiskGroupEdit &&
                     <ComponentListMainSupplier nameSupplier={nameMainSupplier} participation={participationMS}
                         term={termMainSupplier} relevantInformation={relevantInformationMainSupplier}
                         showFormMainSupplier={this.state.showFormAddMainSupplier}
+                        className={"principalesProveedores"}
                         fnShowForm={this.showFormOut} />
                 }
                 {allowRiskGroupEdit &&
                     <ComponentListMainCompetitor
+                        className={"principalesCompetidores"}
                         showFormMainCompetitor={this.state.showFormAddMainCompetitor}
                         fnShowForm={this.showFormOut} />
                 }
@@ -2228,7 +1823,7 @@ class clientEdit extends Component {
                         </div>
                     </Col>
                 </Row>
-                <NotesClient />
+                <NotesClient className={"notasEditClient"} />
                 <Row style={{ padding: "0px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -2252,7 +1847,7 @@ class clientEdit extends Component {
                                         valueProp={'id'}
                                         textProp={'value'}
                                         parentId="dashboardComponentScroll"
-                                        data={isPersonaNatural ? selectsReducer.get(constants.NATURAL_PERSON_ORIGIN_GOODS) : selectsReducer.get(constants.CLIENT_ORIGIN_GOODS)}
+                                        data={selectsReducer.get(constants.CLIENT_ORIGIN_GOODS)}
                                         onChange={val => this._onChangeOriginGoods(val)}
                                         touched={true}
                                         maxSelections={MAXIMUM_OPERATIONS_FOREIGNS}
@@ -2292,7 +1887,7 @@ class clientEdit extends Component {
                                         valueProp={'id'}
                                         textProp={'value'}
                                         parentId="dashboardComponentScroll"
-                                        data={isPersonaNatural ? selectsReducer.get(constants.NATURAL_PERSON_ORIGIN_RESOURCE) : selectsReducer.get(constants.CLIENT_ORIGIN_RESOURCE)}
+                                        data={selectsReducer.get(constants.CLIENT_ORIGIN_RESOURCE)}
                                         onChange={val => this._onChangeOriginResource(val)}
                                         touched={true}
                                         maxSelections={MAXIMUM_OPERATIONS_FOREIGNS}
@@ -2445,7 +2040,7 @@ class clientEdit extends Component {
                     </Col>
                 </Row>
                 <div style={{ marginBottom: "50px" }}>
-                    <ProductsClient />
+                    <ProductsClient className={"productsClients"}/>
                 </div>
                 <div className="" style={{
                     marginTop: "50px",
@@ -2572,6 +2167,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
 
     isPersonaNatural = infoClient.clientTypeKey === 'Persona natural';
 
+
     idButton = tabReducer.get('seletedButton');
 
     isMethodEditClient = idButton === BUTTON_EDIT;
@@ -2632,14 +2228,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
             customerTypology: _.isUndefined(infoClient.idCustomerTypology) ? null : infoClient.idCustomerTypology,
             contextClientField: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.context,
             inventoryPolicy: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.inventoryPolicy,
-            controlLinkedPayments: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.controlLinkedPayments,
-
-            occupation: infoClient.occupation,
-            firstName: infoClient.firstName,
-            middleName: infoClient.middleName,
-            lastName: infoClient.lastName,
-            middleLastName: infoClient.middleLastName
-
+            controlLinkedPayments: _.isUndefined(contextClient) || _.isNull(contextClient) ? null : contextClient.controlLinkedPayments
         }
     };
 }
@@ -2655,5 +2244,8 @@ function fomatInitialStateNumber(val) {
 export default reduxForm({
     form: 'formClientEdit',
     fields,
-    validate
+    validate,
+    onSubmitFail: () => {
+        document.getElementById('dashboardComponentScroll').scrollTop = 0;
+    },
 }, mapStateToProps, mapDispatchToProps)(clientEdit);

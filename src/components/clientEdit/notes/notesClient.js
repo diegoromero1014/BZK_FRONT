@@ -8,6 +8,8 @@ import { updateErrorsNotes } from '../../clientDetailsInfo/actions';
 import { CLIENT_ID_TYPE, TYPE_NOTES } from '../../selectsComponent/constants';
 import Note from './noteItem';
 import _ from 'lodash';
+import {patternNotesClient, patternOfForbiddenCharacter} from '../../../validationsFields/patternsToValidateField';
+import {MESSAGE_WARNING_NOTES_CLIENT, MESSAGE_WARNING_FORBIDDEN_CHARACTER} from '../../../validationsFields/validationsMessages';
 
 class NotesClient extends Component {
   constructor(props) {
@@ -55,12 +57,19 @@ class NotesClient extends Component {
 
         
             notesArray.forEach(function (note) {
+                let message = null;
                 if (_.isEqual(note.note, "") || _.isEqual(note.typeOfNote, "") || _.isEqual(note.note, null) || _.isEqual(note.typeOfNote, null)) {
-                    updateErrorsNotes(true, "Debe ingresar todos los campos");
+                  updateErrorsNotes(true, "Debe ingresar todos los campos");
                 } 
+                if (!_.isUndefined(note.note) && !_.isNull(note.note) && !_.isEmpty(note.note) && !patternNotesClient.test(note.note)) {
+                  message = MESSAGE_WARNING_NOTES_CLIENT;
+                  updateErrorsNotes(true, message);
+                }
+                if (!_.isNil(note.note) && patternOfForbiddenCharacter.test(note.note)) {
+                  message = MESSAGE_WARNING_FORBIDDEN_CHARACTER;
+                  updateErrorsNotes(true, message);
+                }
             });
-
-
             this.setState({shouldValidateNotes: false})
   }
 
@@ -89,12 +98,12 @@ class NotesClient extends Component {
   }
 
   render() {
-    const { notes, tabReducer } = this.props;
+    const { notes, tabReducer, className } = this.props;
     
     return (
       <Row style={{ padding: "0px 10px 20px 20px" }}>
         <Col xs={12} md={12} lg={12} style={{ marginTop: "-46px", paddingRight: "35px", textAlign: "right" }}>
-          <button className="btn" type="button" onClick={this._addNote} >
+          <button className="btn" name={className} type="button" onClick={this._addNote} >
             <i className="plus white icon"/>
           </button>
         </Col>

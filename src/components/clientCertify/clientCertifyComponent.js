@@ -7,30 +7,19 @@ import numeral from "numeral";
 import { Col, Row } from "react-flexbox-grid";
 
 import * as constants from "../selectsComponent/constants";
+import _ from 'lodash';
 
-import Textarea from "../../ui/textarea/textareaComponent";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
-import Input from "../../ui/input/inputComponent";
-import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import ModalErrorsUpdateClient from "../clientEdit/modalErrorsUpdateClient";
 import NotesClient from "../clientEdit/notes/notesClient";
 import SweetAlert from "../sweetalertFocus";
 import Errores from './components/Errores';
 import InfoCliente from './components/InfoCliente';
-import InfoClientePN from './components/InfoClientePN';
 import ActividadEconomica from './components/ActividadEconomica';
-import { validationRules as rulesActividadEconomica } from './components/ActividadEconomica';
-import ActividadEconomicaPN from './components/ActividadEconomicaPN';
-import { validationRules as rulesActividadEconomicaPN } from './components/ActividadEconomicaPN';
 import Ubicacion from './components/Ubicacion';
-import { validationsRules as rulesUbicacion } from './components/Ubicacion';
 import InfoFinanciera from './components/InfoFinanciera';
-import { validate as validateInfoFinanciera } from './components/InfoFinanciera';
-import InfoFinancieraPN from './components/InfoFinancieraPN';
-import { validate as validateInfoFinancieraPN } from './components/InfoFinancieraPN';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
-
 
 import { goBack, redirectUrl } from "../globalComponents/actions";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
@@ -40,35 +29,22 @@ import { updateTitleNavBar } from "../navBar/actions";
 import { clearNotes, deleteNote, setNotes } from "../clientEdit/notes/actions";
 import { showLoading } from "../loading/actions";
 import {
-    clearValuesAdressess, consultDataSelect, consultList, consultListWithParameter,
+    clearValuesAdressess, consultList,
     consultListWithParameterUbication, economicGroupsByKeyword, getMasterDataFields
 } from "../selectsComponent/actions";
 import {
-    seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
-    validateContactShareholder
+    sendErrorsUpdate, updateErrorsNotes
 } from "../clientDetailsInfo/actions";
-
-import { xssValidation, validateFields } from '../../actionsGlobal';
-import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
 import {
-    ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA,
-    ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, VALUE_REQUIERED, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
+    MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA
 } from '../../constantsGlobal';
 import {
-    GOVERNMENT, FINANCIAL_INSTITUTIONS, CONSTRUCT_PYME, KEY_DESMONTE,
-    KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME,
-    KEY_OPTION_OTHER_OPERATIONS_FOREIGNS, KEY_OPTION_OTHER_ORIGIN_GOODS,
-    KEY_OPTION_OTHER_ORIGIN_RESOURCE, MAXIMUM_OPERATIONS_FOREIGNS, TITLE_DESCRIPTION
+    KEY_DESMONTE,
+    KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME
 } from "../clientEdit/constants";
 
-const fields = [
-    'economicGroupName', 'nitPrincipal', 'groupEconomic', 'marcGeren', 'justifyNoGeren',
-    'centroDecision', 'necesitaLME', 'justifyNoLME', 'justifyExClient', 'taxNature', 'idCIIU', 'idSubCIIU',
-    'annualSales', 'assets', 'liabilities', 'operatingIncome', 'expenses', 'nonOperatingIncome', 'detailNonOperatingIncome',
-    'dateSalesAnnuals', 'addressClient', 'country', 'province', 'city', 'telephone', 'razonSocial', 'idTypeClient', 'idNumber', 'occupation',
-    'firstName', 'middleName', 'lastName', 'middleLastName'
-]
+import { fields, validations as validate } from './fieldsAndRulesCertifyClient';
+
 //Data para los select de respuesta "Si" - "No"
 const valuesYesNo = [
     { 'id': '', 'value': "Seleccione..." },
@@ -76,20 +52,10 @@ const valuesYesNo = [
     { 'id': false, 'value': "No" }
 ];
 
-const EDIT_STYLE = {
-    border: '1px solid #e5e9ec',
-    backgroundColor: '#F8F8F8',
-    borderRadius: '2px',
-    margin: '0px 28px 0 20px',
-    height: '60px'
-};
-
 var initValueJustifyNonGeren = false;
 var initValueJustifyNonLME = false;
 var notesArray = [];
 
-let errorShareholder;
-let errorContact;
 let messageAlertSuccess;
 
 //Guarda el anterior valor de la justificación no gerenciamiento para saber cuándo cambia de desmonte a otro
@@ -112,73 +78,6 @@ let isExclient = false;
 let validateMarcManagement = true;
 //Establece si el ciente a editar es persona natural para controlar las validaciones
 
-const validate = (values, props) => {
-    let errors = {}
-    let errorScrollTop = false;
-
-    let isExclient = props.isExclient;
-
-    validateFields(values, rulesUbicacion(props), errors);
-    if (props.isPersonaNatural) {
-        validateFields(values, rulesActividadEconomicaPN(props), errors);
-        validateInfoFinancieraPN(values, props, errors);
-    } else {
-        validateInfoFinanciera(values, props, errors);
-        validateFields(values, rulesActividadEconomica(props), errors);
-    }
-
-    if ((!values.economicGroupName || !values.groupEconomic || !values.nitPrincipal) && !props.isExclient) {
-        errors.economicGroupName = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.economicGroupName = null;
-    }
-
-    if ((values.marcGeren === null || values.marcGeren === undefined || values.marcGeren === '') && !isExclient) {
-        errors.marcGeren = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.marcGeren = null;
-    }
-
-    if (validateMarcManagement === false && !values.justifyNoGeren && !isExclient) {
-        errors.justifyNoGeren = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.justifyNoGeren = null;
-    }
-
-    if ((values.centroDecision === null || values.centroDecision === undefined || values.centroDecision === '') && !isExclient) {
-        errors.centroDecision = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.centroDecision = null;
-    }
-
-    if ((values.necesitaLME === null || values.necesitaLME === undefined || values.necesitaLME === '') && !isExclient) {
-        errors.necesitaLME = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.necesitaLME = null;
-    }
-
-    if (values.necesitaLME === 'false' && !values.justifyNoLME && !isExclient) {
-        errors.justifyNoLME = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.justifyNoLME = null;
-    }
-
-    if (!values.justifyExClient && isExclient) {
-        errors.justifyExClient = OPTION_REQUIRED;
-        errorScrollTop = true;
-    } else {
-        errors.justifyExClient = null;
-    }
-
-    return errors;
-}
-
 //Componente genérico para cargar los selects de justificación
 function SelectsJustificacion(props) {
     if (props.visible !== undefined && props.visible !== null && props.visible.toString() === "false") {
@@ -188,11 +87,11 @@ function SelectsJustificacion(props) {
             </dt>
             <dt>
                 <ComboBox
+                    {...props.justify}
                     labelInput={props.labelInput}
                     onBlur={props.onBlur}
                     valueProp={props.valueProp}
                     textProp={props.textProp}
-                    {...props.justify}
                     data={props.data}
                     touched={true}
                     parentId="dashboardComponentScroll"
@@ -206,7 +105,7 @@ function SelectsJustificacion(props) {
     }
 }
 
-class clientCertify extends React.Component {
+export class ClientCertify extends React.Component {
     constructor(props) {
         super(props)
 
@@ -275,15 +174,15 @@ class clientCertify extends React.Component {
                 showLoading(true, MESSAGE_LOAD_DATA);
                 getMasterDataFields([constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.JUSTIFICATION_LOST_CLIENT,
                 constants.JUSTIFICATION_CREDIT_NEED, constants.CLIENT_TAX_NATURA, constants.CLIENT_ID_TYPE, constants.FILTER_COUNTRY,
-                constants.MANAGEMENT_BRAND, constants.MANAGEMENT_BRAND_KEY, constants.OCCUPATION])
-                    .then((data) => {
+                constants.MANAGEMENT_BRAND, constants.MANAGEMENT_BRAND_KEY])
+                    .then(() => {
                         if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
                             consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
                         }
 
                         showLoading(false, '');
-                    }, (reason) => {
+                    }, () => {
                         showLoading(false, '');
                         this.setState({ showEx: true });
                     })
@@ -330,17 +229,15 @@ class clientCertify extends React.Component {
     _saveClient() {
         const {
             fields: {
-                nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren,
-                justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient, taxNature, idCIIU, idSubCIIU,
-                annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,
-                addressClient, country, province, city, telephone, groupEconomic, occupation
+                marcGeren,
+                justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient, idCIIU, idSubCIIU,
+                annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, dateSalesAnnuals,
+                addressClient, country, province, city, telephone, groupEconomic
             },
-            error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData
+            selectsReducer, clientInformacion, changeStateSaveData
         } = this.props;
 
-        const infoClient = clientInformacion.get('responseClientInfo');
-      
-            
+            const infoClient = clientInformacion.get('responseClientInfo');
 
             const jsonCreateProspect = {
                 "id": infoClient.id,
@@ -387,7 +284,6 @@ class clientCertify extends React.Component {
                 "isVirtualStatement": infoClient.isVirtualStatement,
                 "lineOfBusiness": infoClient.lineOfBusiness,
                 "isManagedByRm": marcGeren.value,
-                "occupation" : occupation.value,
                 "addresses": [
                     {
                         "typeOfAddress": 41,
@@ -417,11 +313,7 @@ class clientCertify extends React.Component {
                 "otherOperationsForeign": infoClient.otherOperationsForeign,
                 "operationsForeigns": infoClient.operationsForeigns,
                 "idCustomerTypology": infoClient.idCustomerTypology,
-                "clientType" : infoClient.clientType,
-                "firstName" : infoClient.firstName,
-                "middleName" : infoClient.middleName,
-                "lastName" : infoClient.lastName,
-                "middleLastName" : infoClient.middleLastName               
+                "clientType" : infoClient.clientType                               
             };
             const { createProspect } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -436,14 +328,14 @@ class clientCertify extends React.Component {
                     changeStateSaveData(false, "");
                     this.setState({ showEr: true });
                 }
-        }, (reason) => {
+        }, () => {
             changeStateSaveData(false, "");
             this.setState({ showEr: true });
         });
     }
 
     _submitCertifyClient() {
-        const { fields: { justifyNoGeren, marcGeren, necesitaLME, justifyNoLME }, notes, setNotes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage } = this.props;
+        const { fields: { justifyNoGeren, necesitaLME, justifyNoLME }, notes, setNotes, tabReducer, selectsReducer, swtShowMessage } = this.props;
         notesArray = [];
         const dataTypeNote = selectsReducer.get(constants.TYPE_NOTES);
         const idExcepcionNoGerenciado = String(_.get(_.filter(dataTypeNote, ['key', KEY_EXCEPCION_NO_GERENCIADO]), '[0].id'));
@@ -775,11 +667,11 @@ class clientCertify extends React.Component {
     }
 
     render() {
-        const { fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns, marcGeren,
-            justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient, taxNature, idCIIU, idSubCIIU,
-            annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, detailNonOperatingIncome, dateSalesAnnuals,
-            addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber, occupation,
-            firstName, middleName, lastName, middleLastName }, handleSubmit, clientInformacion, selectsReducer, groupEconomic, tabReducer, isPersonaNatural } = this.props;
+        const { fields: { nitPrincipal, economicGroupName, marcGeren,
+            justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient, idCIIU, idSubCIIU,
+            annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, dateSalesAnnuals,
+            addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber,}, 
+            handleSubmit, clientInformacion, selectsReducer, tabReducer } = this.props;
 
         var infoClient = clientInformacion.get('responseClientInfo');
 
@@ -790,34 +682,14 @@ class clientCertify extends React.Component {
             <form onSubmit={handleSubmit(this._submitCertifyClient)} style={{ backgroundColor: "#FFFFFF" }}>
                 <SecurityMessageComponent />
                 <Errores sumErrorsForm={this.state.sumErrorsForm} />
-
-                {
-                    isPersonaNatural ?
-                        <InfoClientePN razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} firstName={firstName} middleName={middleName} lastName={lastName} middleLastName={middleLastName} />
-                        :
-                        <InfoCliente razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} />
-                }
-
-                <div>
-                    {
-                        isPersonaNatural ?
-                            <ActividadEconomicaPN clientInformacion={clientInformacion} idCIIU={idCIIU} idSubCIIU={idSubCIIU} isExclient={isExclient} occupation={occupation} />
-                            :
-                            <ActividadEconomica clientInformacion={clientInformacion} idCIIU={idCIIU} idSubCIIU={idSubCIIU} isExclient={isExclient} />
-                    }
-
+                <InfoCliente razonSocial={razonSocial} idTypeClient={idTypeClient} idNumber={idNumber} />
+                <div>                    
+                    <ActividadEconomica clientInformacion={clientInformacion} idCIIU={idCIIU} idSubCIIU={idSubCIIU} isExclient={isExclient} />
                     <Ubicacion isExclient={isExclient} addressClient={addressClient} city={city} country={country} province={province} telephone={telephone} />
 
                     {/* Inicio Informacion financiera  */}
 
-                    {
-                        isPersonaNatural ?
-                            <InfoFinancieraPN isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />
-                            :
-                            <InfoFinanciera isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />
-                    }
-
-
+                    <InfoFinanciera isExclient={isExclient} annualSales={annualSales} dateSalesAnnuals={dateSalesAnnuals} assets={assets} liabilities={liabilities} operatingIncome={operatingIncome} expenses={expenses} nonOperatingIncome={nonOperatingIncome} />
 
                     {/*  Fin Informacion financiera   */}
 
@@ -985,8 +857,8 @@ class clientCertify extends React.Component {
                         </Col>
                     </Row>
 
-                    <div  >
-                        <NotesClient />
+                    <div>
+                        <NotesClient className= "NotesCertify"/>
                     </div>
 
                     <div style={{ height: "100px" }}>
@@ -1004,14 +876,13 @@ class clientCertify extends React.Component {
                         background: "rgba(255,255,255,0.75)"
                     }}>
                         <div style={{ width: "400px", height: "100%", position: "fixed", right: "0px" }}>
-
-                            <button className="btn"
+                            <button  id="btnGuardar" className="btn"
                                 style={{ float: "right", margin: "8px 0px 0px 120px", position: "fixed" }}
                                 onClick={this.clickButtonScrollTop} type="submit">
                                 <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar</span>
                             </button>
 
-                            <button className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
+                            <button id="btnCancelar" className="btn btn-secondary modal-button-edit" onClick={this._closeWindow} style={{
                                 float: "right",
                                 margin: "8px 0px 0px 250px",
                                 position: "fixed",
@@ -1081,7 +952,6 @@ function fomatInitialStateNumber(val) {
 
 function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes }, ownProps) {
     const infoClient = clientInformacion.get('responseClientInfo');
-    const { contextClient } = infoClient;
 
     isExclient = infoClient.relationshipStatusName === "Excliente";
 
@@ -1120,13 +990,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, tabReducer, notes 
             province: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].province : '',
             neighborhood: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].neighborhood : '',
             city: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].city : '',
-            telephone: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].phoneNumber : '',
-
-            occupation: infoClient.occupation,
-            firstName: infoClient.firstName,
-            middleName: infoClient.middleName,
-            lastName: infoClient.lastName,
-            middleLastName: infoClient.middleLastName
+            telephone: infoClient.addresses !== null && infoClient.addresses !== undefined && infoClient.addresses !== '' ? infoClient.addresses[0].phoneNumber : ''                        
         }
     }
 }
@@ -1153,5 +1017,8 @@ function mapDispatchToProps(dispatch) {
 export default reduxForm({
     form: 'clientCertify',
     fields,
-    validate
-}, mapStateToProps, mapDispatchToProps)(clientCertify)
+    validate,
+    onSubmitFail: () => {
+        document.getElementById('dashboardComponentScroll').scrollTop = 0;
+    },
+}, mapStateToProps, mapDispatchToProps)(ClientCertify)

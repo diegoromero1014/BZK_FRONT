@@ -3,7 +3,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import Input from '../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, stringValidate } from '../../../actionsGlobal';
+import { handleBlurValueNumber, stringValidate, checkRules } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
     ONLY_POSITIVE_INTEGER,
@@ -15,6 +15,10 @@ import ToolTipComponent from '../../toolTip/toolTipComponent';
 import { LINE_OF_BUSINESS, MESSAGE_LINE_OF_BUSINESS } from '../constants';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
+import {
+    checkNumberLength, checkClientDescription, checkMaxLength,
+    checkValueClientInformacion, checkNumberInRange, checkFirstCharacter
+} from '../../../validationsFields/rulesField';
 
 
 export class ComponentListLineBusiness extends Component {
@@ -34,6 +38,12 @@ export class ComponentListLineBusiness extends Component {
         this._openConfirmDelete = this._openConfirmDelete.bind(this);
         this._deleteLineOfBusiness = this._deleteLineOfBusiness.bind(this);
         this.hasErrors = this.hasErrors.bind(this);
+
+        this.rulesLineOfBusiness = [checkClientDescription, checkMaxLength(50), checkFirstCharacter];
+        this.rulesParticipation = [checkNumberInRange(0,100)];
+        this.rulesExperience = [checkNumberLength(4)];
+        this.rulesContribution = [checkNumberInRange(0,100)];
+
     }
 
     hasErrors(fields) {
@@ -130,15 +140,57 @@ export class ComponentListLineBusiness extends Component {
     }
 
     _mapValuesParitipation(entity, idx) {
+
+        const errorLineOfBusiness = checkRules(this.rulesLineOfBusiness, entity.lineOfBusiness);
+        const errorParticipation = checkRules(this.rulesParticipation, entity.participation);
+        const errorExperience = checkRules(this.rulesExperience, entity.experience);
+        const errorContribution = checkRules(this.rulesContribution, entity.contribution);
+
         return <tr key={idx}>
             <td className="collapsing">
                 <i className="zoom icon" title="Editar línea de negocio" style={{ cursor: "pointer" }}
                     onClick={() => this._viewInformationLineBusiness(entity)} />
             </td>
-            <td>{entity.lineOfBusiness}</td>
-            <td>{entity.participation} %</td>
-            <td>{entity.experience}</td>
-            <td>{stringValidate(entity.contribution) ? entity.contribution + "%" : entity.contribution}</td>
+            <td>{entity.lineOfBusiness}
+            {
+                errorLineOfBusiness &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorLineOfBusiness}
+                    </div>
+                </div>
+            }
+            </td>
+            <td>{entity.participation} %
+            {
+                errorParticipation &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorParticipation}
+                    </div>
+                </div>
+            }
+            </td>
+            <td>{entity.experience}
+            {
+                errorExperience &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorExperience}
+                    </div>
+                </div>
+            }
+            </td>
+            <td>{stringValidate(entity.contribution) ? entity.contribution + "%" : entity.contribution}
+            {
+                errorContribution &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorContribution}
+                    </div>
+                </div>
+            }
+            </td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar línea de negocio" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />
@@ -149,7 +201,7 @@ export class ComponentListLineBusiness extends Component {
     render() {
         const { contextLineBusiness, participation, experience, showFormLinebusiness,
             fnShowForm, contribution, clientInformacion, changeValueListClient,
-            registrationRequired, origin } = this.props;
+            registrationRequired, origin, className } = this.props;
         const listParticipation = clientInformacion.get('listParticipation');
         return (
             <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 29px 0 25px' } : { width: '100%', border: "1px solid #ECECEC", borderRadius: "5px", margin: '15px 25px 0 29px' }}
@@ -177,15 +229,15 @@ export class ComponentListLineBusiness extends Component {
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedLineOfBusiness') &&
-                    <Row style={{ padding: "0px 10px 10px 20px" }}>
-                        <Col xs={12} md={12} lg={12} style={{ marginTop: "-42px", paddingRight: "15px", textAlign: "right" }}>
-                            <button className="btn btn-secondary" disabled={showFormLinebusiness} type="button"
+                    <Row style={{ position:"relative", padding: "0px 10px 10px 20px" }}>
+                        <div style={{ position:"absolute", right:0, marginTop: "-42px", paddingRight: "15px", textAlign: "right" }}>
+                            <button className="btn btn-secondary" name={className} disabled={showFormLinebusiness} type="button"
                                 onClick={() => fnShowForm(LINE_OF_BUSINESS, true)} style={showFormLinebusiness ? { marginLeft: '5px', cursor: 'not-allowed' } : { marginLeft: '5px' }}>
                                 <ToolTipComponent text="Agregar línea de negocio">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                                 </ToolTipComponent>
                             </button>
-                        </Col>
+                        </div>
                         {showFormLinebusiness &&
                             <Col xs={12} md={2} lg={2}>
                                 <div>

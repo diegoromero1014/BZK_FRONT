@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid';
 import _ from 'lodash';
 import { validateResponse, stringValidate } from '../../../../actionsGlobal';
@@ -16,6 +15,7 @@ import ItemObservation from './itemObservation';
 import Textarea from "../../../../ui/textarea/textareaComponent";
 import { changeStateSaveData } from '../../../dashboard/actions';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
+import { checkRequired, checkFirstCharacter, checkObservations } from '../../../../validationsFields/rulesField';
 
 class ModalObservation extends Component {
 
@@ -23,8 +23,10 @@ class ModalObservation extends Component {
         super(props);
         this._mapItemObservation = this._mapItemObservation.bind(this);
         this._saveObservation = this._saveObservation.bind(this);
+        this._validatewhiteList = this._validatewhiteList.bind(this);
         this.state = {
-            observation: ''
+            observation: '',
+            errors: ''
         }
     }
 
@@ -32,10 +34,16 @@ class ModalObservation extends Component {
         return <ItemObservation key={idx} item={item} />
     }
 
+    _validatewhiteList(e) {
+        this.setState({ observation: e });
+        let error = checkRequired(e) || checkFirstCharacter(e) || checkObservations(e);
+        this.setState({ errors: error });
+    }
+
     _saveObservation() {
         const { saveObservationLinkingRequest, idLinkingRequests, changeStateSaveData,
             swtShowMessage, isOpen } = this.props;
-        if (stringValidate(this.state.observation)) {
+        if (!this.state.errors) {
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             saveObservationLinkingRequest(idLinkingRequests, this.state.observation).then((data) => {
                 changeStateSaveData(false, "");
@@ -49,8 +57,6 @@ class ModalObservation extends Component {
                 changeStateSaveData(false, "");
                 swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             });
-        } else {
-            swtShowMessage(MESSAGE_ERROR, 'Información faltante', 'Señor usuario, debe ingresar la observación');
         }
     }
 
@@ -76,7 +82,7 @@ class ModalObservation extends Component {
         const listObservations = linkRequestsReducer.get('observationsByLinkingRequests');
         return (
             <div>
-                <div style={{ overflow: 'hidden' }} className="modalBt4-body modal-body business-content editable-form-content clearfix"
+                <div style={{ overflow: 'hidden', maxHeight: '500px' }} className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalCreateBoardMembers">
                     <Row style={{ margin: '15px 0px 0px 10px' }}>
                         <Col xs={6} md={3} lg={3}>
@@ -127,10 +133,11 @@ class ModalObservation extends Component {
                                 name="txtArea"
                                 value={this.state.observation}
                                 touched={true}
-                                onChange={(e) => this.setState({ observation: e })}
+                                onChange={this._validatewhiteList}
                                 title="Ingrese las observaciones"
                                 style={{ width: '100%', height: '108px' }}
-                                max={500}
+                                error={this.state.errors}
+                                max={1000}
                             />
                         </Col>
                     </Row>
