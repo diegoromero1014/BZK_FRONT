@@ -1,4 +1,4 @@
-export const VERSION_DATE = "26/11/2018";
+export const VERSION_DATE = "27/03/2019";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const NATURAL_PERSON = "Persona natural";
@@ -36,6 +36,19 @@ export const APP_NAME = "FRONT_OFFICE";
 export const YES = 1;
 export const NO = 0;
 export const MAX_LENGTH_EVENT_NAME = 50;
+export const MAX_LENGTH_NAME_ENTITY_PRODUCT = 50;
+export const MAX_LENGTH_PRODUCT_NUMBER = 30;
+export const MAX_LENGTH_PRODUCT_COIN = 100;
+export const MAX_LENGTH_PRODUCT_CITY = 20
+
+export const BUTTON_EDIT = "BUTTON_EDIT";
+export const PERMISSIONSCLIENTS = "permissionsClients";
+export const INFO_CREDIT_STUDY = "Info Estudio de Crédito";
+export const CLIENT_OPERATION_FOREIGN_CURRENCY = "clientOperationsForeignCurrency";
+export const OTHERS_OPERATIONS = "Otro";
+export const DATA_CIUU = "dataCIIU";
+export const CLIENT_ORIGIN_RESOURCES = "clientOriginResources";
+export const CLIENT_ORIGIN_GOODS = "clientOriginGoods";
 
 export const TITLE_CONCLUSIONS_VISIT = "En este campo se podrán ingresar los aspectos más relevantes, los acuerdos " +
     " y compromisos que se dieron en la reunión. Además, registrar los comentarios del estado de servicio.\n\n" +
@@ -80,6 +93,9 @@ export const MESSAGE_WARNING = "warning";
 export const MESSAGE_SUCCESS = "success";
 
 export const OTHER = "Otro";
+export const EXCLIENT = "Excliente";
+export const RESPONSE_INFO = "responseClientInfo";
+export const MARK_GEREN = "Gerenciamiento a Demanda";
 
 //Variable de tipo de aplicacion
 export const FRONT_APP = "Front";
@@ -129,6 +145,7 @@ export const MODULE_TRANSACTIONAL = "Mis Informes";
 export const MODULE_RISK_GROUP = "Grupos de riesgo";
 export const MODULE_LINKING_REQUESTS = "Solicitudes de vinculación";
 export const MODULE_SHEDULER = "Scheduler";
+export const MODULE_STUDY_CREDIT = "Estudio de crédito";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;
@@ -149,11 +166,15 @@ if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
     API_URL = "http://localhost:8084/Centricity";
 } else {
     if (WP_VAR_ENVIRONMENT === "production") {
-        API_URL = "https://biztrackback.bancolombia.corp/Centricity";
+        API_URL = "https://biztrack.bancolombia.corp/Centricity";
     } else if (WP_VAR_ENVIRONMENT === 'development') {
-        API_URL = "https://biztrackdesarrollo.bancolombia.corp/Biztrack";
+        API_URL = "https://biztrackdev.apps.ambientesbc.com/Centricity";
     } else if (WP_VAR_ENVIRONMENT === 'quality') {
-        API_URL = "https://biztrackcertificacion.bancolombia.corp/Biztrack";
+        API_URL = "https://biztrackqa.apps.ambientesbc.com/Centricity";
+    } else if (WP_VAR_ENVIRONMENT === 'aws') {
+        API_URL = "https://biztrack.apps.bancolombia.com/Centricity";
+    } else if (WP_VAR_ENVIRONMENT === 'sameorigin') {
+        API_URL = window.location.origin + "/Centricity";
     }
 }
 

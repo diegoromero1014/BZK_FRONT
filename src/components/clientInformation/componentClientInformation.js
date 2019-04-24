@@ -20,7 +20,7 @@ import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
 import { updateTabSeletedCS } from '../customerStory/actions';
 
-import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
+import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS,MODULE_STUDY_CREDIT, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
 import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
 import { TAB_STORY } from '../customerStory/constants';
 
@@ -53,6 +53,7 @@ class ComponentClientInformation extends Component {
                 })
 
             });
+            validatePermissionsByModule(MODULE_STUDY_CREDIT);
 
             consultInfoClient().then((data) => {
                 if (!_.get(data, 'payload.data.validateLogin')) {
