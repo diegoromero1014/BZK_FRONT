@@ -15,7 +15,6 @@ import { Button, Icon } from 'semantic-ui-react'
 import moment from 'moment';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from "../../dashboard/actions";
-import $ from 'jquery';
 import _ from 'lodash';
 import ConfidentialBrandComponent from '../../commercialReport/ConfidentialBrandComponent';
 
@@ -75,6 +74,7 @@ class ButtonAssociateComponent extends Component {
     _renderRow() {
         const { previsitReducer, visitReducer } = this.props;
         const data = previsitReducer.get('previsitList');
+        console.log("data",data);
         const pageAssociateVisit = visitReducer.get('pageAssociateVisit') - 1;
         return _.slice(data, pageAssociateVisit * NUMBER_RECORDS, (pageAssociateVisit * NUMBER_RECORDS) + NUMBER_RECORDS)
             .map((value, index) => {
