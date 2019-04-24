@@ -23,7 +23,6 @@ class ListUserPermissions extends Component {
     }
 
     _confirmDeleteUser(idData) {
-        debugger;
         this.setState({
             showConfirmDeleteUser: true,
             idUserSelect: idData
@@ -31,8 +30,6 @@ class ListUserPermissions extends Component {
     }
 
     _clickButtonDelete() {
-        debugger;
-
         const { usersPermission, deleteUser } = this.props;
         var indexDelete = usersPermission.findIndex(item => {
             return item.user.id === this.state.idUserSelect;
@@ -47,7 +44,6 @@ class ListUserPermissions extends Component {
     }
 
     _mapValuesData(userData, idx) {
-        debugger;
         var { disabled } = this.props;
         return <div className="item" key={idx}>
             <span style={{ paddingRight: '10px', fontWeight: 'bold', color: 'black' }} >{userData.name}</span>
@@ -89,16 +85,13 @@ function orderListUsers(usersPermission, disabled) {
 
     if (usersPermission.size > 0) {
         var data = _.chain(usersPermission.toArray()).map(usersPermission => {
-debugger;
             const { id, name } = usersPermission.user;
 
-            debugger;
             if (disabled === 'disabled') {
                 return _.assign({}, {
                     name: name, id: id
                 });
             } else {
-                debugger;
                 return _.assign({}, {
                     name: name, id: id,
                     'delete': {
