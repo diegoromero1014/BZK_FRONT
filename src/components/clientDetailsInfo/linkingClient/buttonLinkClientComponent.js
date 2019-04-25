@@ -18,23 +18,20 @@ import { consultStateBlackListClient, updateValuesBlackList } from './actions';
 import { showLoading } from '../../loading/actions';
 import { consultInfoClient } from '../../clientInformation/actions';
 
-import { ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, START_STATUS, HELP_LINK_MESSAGE } from './LinkEntitiesComponent/constants';
+import { ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, HELP_LINK_MESSAGE } from './LinkEntitiesComponent/constants';
 import { FILTER_TYPE_LBO_ID } from '../../selectsComponent/constants';
 import { consultParameterServer } from "../../../actionsGlobal";
-import { MAX_LENGTH_LINK_CLIENT_TRACER_CODE} from "../../../constantsGlobal";
+import { MAX_LENGTH_LINK_CLIENT_TRACER_CODE } from "../../../constantsGlobal";
+
+import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
+import {
+    patternOfOnlyNumbersLinkClient, patternOfObservationLinkClient, patternOfForbiddenCharacter
+} from './../../../validationsFields/patternsToValidateField';
 
 import {
-    VALUE_REQUIERED, VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT
-} from '../../../constantsGlobal';
-import {fields, validations as validate} from './fieldsAndRulesForReduxForm';
-import {
-    patternOfOnlyNumbersLinkClient,patternOfObservationLinkClient, patternOfForbiddenCharacter
-    } from './../../../validationsFields/patternsToValidateField';
-    
-    import {
-    MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT, MESSAGE_WARNING_MAX_LENGTH,MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_FORBIDDEN_CHARACTER
-    } from './../../../validationsFields/validationsMessages'; 
+    MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT, MESSAGE_WARNING_MAX_LENGTH, MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT,
+    MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_FORBIDDEN_CHARACTER
+} from './../../../validationsFields/validationsMessages';
 
 let helpLinksMessage = "";
 
@@ -86,27 +83,26 @@ class ButtonLinkClientComponent extends Component {
         this.setState({ modalIsOpen: false });
         this.props.updateValuesBlackList(null, null);
         this.props.updateErrorsLinkEntities(false);
-        
+
         observationTrader.onChange('');
     }
 
     _handleSaveLinkingClient() {
         const {
-            fields: { observationTrader }, infoClient,
-            linkEntitiesClient, updateErrorsLinkEntities,
-            swtShowMessage, saveLinkClient, showLoading, updateFieldInfoClient,
-            message, level, consultInfoClient
+            fields: { observationTrader }, infoClient, linkEntitiesClient, updateErrorsLinkEntities, swtShowMessage,
+            saveLinkClient, showLoading, message, level, consultInfoClient
         } = this.props;
+
         let messageWhiteList = null;
         updateErrorsLinkEntities(false);
         let isValidLinkEntities = true;
-        
+
         let listOfEntities = [];
 
         let inValidMessageLinkEntities = "Señor usuario, por favor ingrese todos los campos obligatorios.";
         const newListEntities = linkEntitiesClient.map(linkEntity => {
 
-            if (listOfEntities.indexOf(linkEntity.entity) == -1 ) {
+            if (listOfEntities.indexOf(linkEntity.entity) == -1) {
                 listOfEntities.push(linkEntity.entity);
             } else {
                 updateErrorsLinkEntities(true, "Error: Entidad/Linea de negocio duplicada");
@@ -118,28 +114,28 @@ class ButtonLinkClientComponent extends Component {
                 updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
                 isValidLinkEntities = false;
             }
-            
+
             if (isValidLinkEntities) {
                 if (isEqual(ENTITY_BANCOLOMBIA.toLowerCase(), linkEntity.entityText.toLowerCase())
                     || isEqual(ENTITY_VALORES_BANCOLOMBIA.toLowerCase(), linkEntity.entityText.toLowerCase())) {
                     if (isEmpty(linkEntity.traderCode)) {
                         updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
-                         isValidLinkEntities = false;
-                     } 
-                    else  if  (!_.isUndefined(linkEntity.traderCode)  &&  !_.isNull(linkEntity.traderCode) && !patternOfOnlyNumbersLinkClient.test(linkEntity.traderCode)) {
-                        messageWhiteList  = MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT;
+                        isValidLinkEntities = false;
+                    }
+                    else if (!_.isUndefined(linkEntity.traderCode) && !_.isNull(linkEntity.traderCode) && !patternOfOnlyNumbersLinkClient.test(linkEntity.traderCode)) {
+                        messageWhiteList = MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT;
                         updateErrorsLinkEntities(true, messageWhiteList);
                         isValidLinkEntities = false;
-                    }  else  if (!_.isUndefined(linkEntity.traderCode)  &&  !_.isNull(linkEntity.traderCode) && linkEntity.traderCode.length > MAX_LENGTH_LINK_CLIENT_TRACER_CODE) {
-                        messageWhiteList  =  MESSAGE_WARNING_MAX_LENGTH(MAX_LENGTH_LINK_CLIENT_TRACER_CODE);
+                    } else if (!_.isUndefined(linkEntity.traderCode) && !_.isNull(linkEntity.traderCode) && linkEntity.traderCode.length > MAX_LENGTH_LINK_CLIENT_TRACER_CODE) {
+                        messageWhiteList = MESSAGE_WARNING_MAX_LENGTH(MAX_LENGTH_LINK_CLIENT_TRACER_CODE);
                         updateErrorsLinkEntities(true, messageWhiteList);
                         isValidLinkEntities = false;
-                    } else if(!_.isNull(linkEntity.traderCode) && _.isEmpty(linkEntity.traderCode)){
-                        messageWhiteList  =  MESSAGE_REQUIRED_VALUE;
+                    } else if (!_.isNull(linkEntity.traderCode) && _.isEmpty(linkEntity.traderCode)) {
+                        messageWhiteList = MESSAGE_REQUIRED_VALUE;
                         updateErrorsLinkEntities(true, messageWhiteList);
                         isValidLinkEntities = false;
                     }
-                    
+
                     return {
                         id: linkEntity.idEntity,
                         entity: linkEntity.entity,
@@ -160,20 +156,20 @@ class ButtonLinkClientComponent extends Component {
             }
         });
 
-        if  (!_.isUndefined(observationTrader.value)  &&  !_.isNull(observationTrader.value) && !patternOfObservationLinkClient.test(observationTrader.value)) {
-            messageWhiteList  =  MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
+        if (!_.isUndefined(observationTrader.value) && !_.isNull(observationTrader.value) && !patternOfObservationLinkClient.test(observationTrader.value)) {
+            messageWhiteList = MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
             isValidLinkEntities = false;
-        }  else if(!_.isNil(observationTrader.value) && patternOfForbiddenCharacter.test(observationTrader.value)) {                                       
-            messageWhiteList = MESSAGE_WARNING_FORBIDDEN_CHARACTER;                    
+        } else if (!_.isNil(observationTrader.value) && patternOfForbiddenCharacter.test(observationTrader.value)) {
+            messageWhiteList = MESSAGE_WARNING_FORBIDDEN_CHARACTER;
             updateEventErrors(true, message);
             isValidLinkEntities = false;
         }
-  
+
 
         if (linkEntitiesClient.size == 0) {
             swtShowMessage('error', 'Vinculación', 'Señor usuario, debe ingresar por lo menos una entidad a vincular.');
         } else if (!isValidLinkEntities) {
-            swtShowMessage('error', 'Vinculación', inValidMessageLinkEntities );
+            swtShowMessage('error', 'Vinculación', inValidMessageLinkEntities);
         } else {
             const jsonLinkEntityClient = {
                 "idClient": infoClient.id,
@@ -185,7 +181,7 @@ class ButtonLinkClientComponent extends Component {
             };
             showLoading(true, 'Guardando..');
             saveLinkClient(jsonLinkEntityClient)
-                .then((data) => {                   
+                .then((data) => {
                     if ((_.get(data, 'payload.data.status') === 200)) {
                         consultInfoClient();
                         showLoading(false, '');
@@ -227,7 +223,7 @@ class ButtonLinkClientComponent extends Component {
     }
 
     render() {
-        const { infoClient, fields: { observationTrader }, handleSubmit, message, level } = this.props;
+        const { infoClient, fields: { observationTrader }, message, level } = this.props;
         const paddingButtons = { paddingRight: '7px', paddingLeft: '7px' };
         return (
             <Col style={paddingButtons}>

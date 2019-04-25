@@ -16,8 +16,9 @@ import { changeCheckInfoClient } from '../../../clientInformation/actions';
 import { redirectUrl } from '../../../globalComponents/actions';
 import { validatePermissionsByModule, onSessionExpire } from '../../../../actionsGlobal';
 
-import { NUMBER_RECORDS, SHAREHOLDER_KIND, SHAREHOLDER_TYPE } from './constants';
+import { NUMBER_RECORDS, SHAREHOLDER_KIND } from './constants';
 import { MODULE_SHAREHOLDERS, CREAR, EDITAR } from '../../../../constantsGlobal';
+import { CLIENT_TYPE } from '../../../selectsComponent/constants';
 
 var enableClickCertificationShareholder = "";
 
@@ -151,7 +152,7 @@ class ShareholderComponent extends Component {
                   onChange: (value) => this.setState({ value2: value.id })
                 }}
                   disabled={this.state.disabledComponents}
-                  idTypeFilter={SHAREHOLDER_TYPE} />
+                  idTypeFilter={CLIENT_TYPE} />
               </Col>
             </Row>
           </Grid>
