@@ -52,21 +52,10 @@ class SearchContactComponent extends Component {
     clearContactOrder();
 
     let _keywordContact = this.state.keywordContact ? this.state.keywordContact : "";
-
-    if (!constants.REGEX_SIMPLE_XSS_STRING.test(this.state.keywordContact)) {
-      this.setState({
-        errorKeyword: null
-      });
-
-      contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, _keywordContact,
-        v1,
-        v2,
-        v3);
-    } else {
-      this.setState({
-        errorKeyword: constants.VALUE_XSS_INVALID
-      });
-    }
+    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, _keywordContact,
+      v1,
+      v2,
+      v3);
   }
 
   render() {
@@ -74,7 +63,7 @@ class SearchContactComponent extends Component {
       <div>
         <div className="InputAddOn">
           <input style={{ padding: '0px 11px !important' }} id="searchExpression" type="text" onKeyPress={this._handleChangeKeyword} className="input InputAddOn-field" placeholder="Búsqueda por número, nombre, cargo" value={this.state.keywordContact} onChange={this._handleChangeKeyword} />
-          <button onClick={this._handleContactsByClientsFind} className="button InputAddOn-item">
+          <button onClick={this._handleContactsByClientsFind} className="button InputAddOn-item" title="Buscar contacto">
             <i className="search icon" />
           </button>
         </div>
