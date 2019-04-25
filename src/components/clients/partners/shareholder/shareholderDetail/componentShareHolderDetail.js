@@ -252,7 +252,6 @@ class ComponentShareHolderDetail extends Component {
     const shareHolderEdit = editShareholderReducer.get('shareHolderEdit');
 
     var typeClient;
-    debugger;
     if (shareHolderEdit !== null && shareHolderEdit !== '' && shareHolderEdit !== undefined) {
       valueTypeShareholder = shareHolderEdit.shareHolderTypeStr;
       var valueSh = _.get(_.filter(selectsReducer.get(CLIENT_ID_TYPE), ['id', parseInt(shareHolderIdType.value)]), '[0].value');
