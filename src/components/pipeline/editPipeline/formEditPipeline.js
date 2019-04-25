@@ -1076,7 +1076,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             type="text"
                                             max="15"
                                             parentId="dashboardComponentScroll"
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
+                                            onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, value, val, true, 2)}
                                             onFocus={val => handleFocusValueNumber(value, value.value)}
                                             disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
                                             onChange={val => this._changeValue(val)}
