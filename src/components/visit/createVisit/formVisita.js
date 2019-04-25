@@ -15,6 +15,7 @@ import ButtonAssociateComponent from "./associateVisit";
 import ToolTip from "../../toolTip/toolTipComponent";
 import RichText from "../../richText/richTextComponent";
 import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
+import PermissionUserReports from "../../commercialReport/permissionsUserReports"
 
 import { redirectUrl } from "../../globalComponents/actions";
 import { consultDataSelect, consultList, getMasterDataFields } from "../../selectsComponent/actions";
@@ -571,6 +572,11 @@ class FormVisita extends Component {
             </div>
           </div>
         </header>
+        <Row  style={{ padding: "5px 10px 20px 20px" }}>
+            <Col xs={12} md={12} lg={12}>
+                <PermissionUserReports />
+            </Col>
+        </Row>
         <Row style={{ padding: "5px 10px 0px 20px" }}>
           <Col xs={10} sm={10} md={10} lg={10}>
             <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>

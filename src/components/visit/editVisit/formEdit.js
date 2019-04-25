@@ -17,6 +17,7 @@ import RichText from "../../richText/richTextComponent";
 import ToolTip from "../../toolTip/toolTipComponent";
 import ButtonAssociateComponent from "../createVisit/associateVisit";
 import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
+import PermissionUserReports from "../../commercialReport/permissionsUserReports"
 
 import { redirectUrl } from "../../globalComponents/actions";
 import { createVisti, detailVisit, pdfDescarga, clearIdPrevisit, changeIdPrevisit } from "../actions";
@@ -27,6 +28,7 @@ import { changeStateSaveData } from "../../dashboard/actions";
 import { addTask } from "../tasks/actions";
 import { showLoading } from "../../loading/actions";
 import { detailPrevisit } from "../../previsita/actions";
+import { addUsers, setConfidential } from "../../commercialReport/actions";
 import {
     formValidateKeyEnter,
     nonValidateEnter,
@@ -53,10 +55,10 @@ import {
 } from "../../participantsVisitPre/constants";
 import { KEY_TYPE_VISIT } from "../constants";
 
+import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
 import {
     checkRequired, checkRichTextRequired
 } from './../../../validationsFields/rulesField';
-import { buildJsoncommercialReport } from "../../commercialReport/functionsGenerics";
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral", "participantesCliente", "participantesBanco", "participantesOtros", "pendientes"];
 let dateVisitLastReview;
@@ -372,7 +374,11 @@ class FormEdit extends Component {
     }
 
     componentWillMount() {
-        const { nonValidateEnter, getMasterDataFields, id, detailVisit, changeIdPrevisit, addTask, showLoading } = this.props;
+        const {
+            nonValidateEnter, getMasterDataFields, id, detailVisit, changeIdPrevisit, addTask, showLoading, 
+            setConfidential, addUsers
+        } = this.props;
+
         nonValidateEnter(true);
         idPrevisitSeleted = null;
         this.setState({ idVisit: id });
@@ -385,12 +391,19 @@ class FormEdit extends Component {
             dateVisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
             idPrevisitSeleted = part.preVisitId;
             changeIdPrevisit(part.preVisitId);
+
             this.setState({
                 typeVisit: part.visitType,
                 dateVisit: new Date(moment(part.visitTime, "x")),
                 conclusionsVisit: part.comments,
                 commercialReport: part.commercialReport
             });
+
+            if (part.commercialReport) {
+                setConfidential(part.commercialReport.isConfidential);
+            }
+
+            fillUsersPermissions(part.commercialReport.usersWithPermission, addUsers);
 
             //Adicionar participantes por parte del cliente
             _.forIn(part.participatingContacts, function (value, key) {
@@ -668,6 +681,11 @@ class FormEdit extends Component {
                         </div>
                     </div>
                 </header>
+                <Row style={{ padding: "5px 10px 20px 20px" }}>
+                    <Col xs={12} md={12} lg={12}>
+                        <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'} />
+                    </Col>
+                </Row>
                 <Row style={{ padding: "5px 10px 0px 20px" }}>
                     <Col xs={12} sm={8} md={this.state.isEditable ? 8 : 10} lg={this.state.isEditable ? 8 : 10}>
                         <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
@@ -970,7 +988,9 @@ function mapDispatchToProps(dispatch) {
         addListParticipant,
         clearIdPrevisit,
         detailPrevisit,
-        changeIdPrevisit
+        changeIdPrevisit,
+        addUsers,
+        setConfidential
     }, dispatch);
 }
 
