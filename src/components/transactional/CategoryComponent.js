@@ -25,9 +25,9 @@ class CategoryComponent extends Component {
 
                     currentArrow[0].className = currentArrow[0].className.replace("arrow-active", "");
                 } else {
-                    content.style.height = (content.scrollHeight + 50) + "px";
-                    content.style.paddingTop = "20px";
-                    content.style.paddingBottom = "30px";
+                    content.style.height = (0) + "px";
+                    content.style.paddingTop = "0px";
+                    content.style.paddingBottom = "0px";
 
                     this.children[2].className += " arrow-active";
                 }

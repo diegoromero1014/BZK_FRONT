@@ -5,6 +5,8 @@ import { Row, Col } from 'react-flexbox-grid';
 import _ from "lodash";
 import moment from 'moment';
 
+import {TooltipGeneratePDF} from './../tooltipGeneratePDF/tooltipGeneratePDF';
+
 import SweetAlert from '../../sweetalertFocus';
 import ClientTypology from '../../contextClient/clientTypology';
 import ContextEconomicActivity from '../../contextClient/contextEconomicActivity';
@@ -36,13 +38,12 @@ import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_COMPETITOR, 
 import * as constantsSelects from '../../selectsComponent/constants';
 import {
     validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport,
-    validateWhileListResponse, replaceCommaInNumber
-} from '../../../actionsGlobal';
+    validateWhileListResponse, replaceCommaInNumber, consultParameterServer } from '../../../actionsGlobal';
 import { GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../../clientEdit/constants';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_REPLACE_PDF,
     YES, APP_URL, MESSAGE_ERROR_INVALID_INPUT,
-    BLOCK_CREDIT_STUDY, TIME_REQUEST_BLOCK_REPORT, GENERAR_PDF_ESTUDIO_CREDITO, EDITAR
+    BLOCK_CREDIT_STUDY, TIME_REQUEST_BLOCK_REPORT, GENERAR_PDF_ESTUDIO_CREDITO, DIAS_HABILITADOS_PARA_GENERAR_PDF,EDITAR
 } from '../../../constantsGlobal';
 import {
     A_WITH_OBSERVATION, ALL_WITH_COMMENTS, ORIGIN_CREDIT_STUDY,
@@ -95,6 +96,7 @@ export class ComponentStudyCredit extends Component {
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
         this.handleClickButtonPDF = this.handleClickButtonPDF.bind(this);
         this.callGeneratePDF = this.callGeneratePDF.bind(this);
+        this._validatePDFStatus = this._validatePDFStatus.bind(this);
 
         this._ismounted = false;
 
@@ -130,8 +132,13 @@ export class ComponentStudyCredit extends Component {
             userEditingPrevisita: '',
             isComponentMounted: true,
             showButtonPDF: false,
+            isPDFGenerated: false,
+            permissionToGeneratePDF: false,
+            isDefinitive: false,
+            isEnabled: false,
+            daysParameter: 0,
+            isDraft: false,
             showButtonSaveAdvance: false,
-            isPDFGenerated: false
 
         }
     }
@@ -529,6 +536,7 @@ export class ComponentStudyCredit extends Component {
                         this.setState({
                             showSuccessMessage: true
                         });
+                        this._validatePDFStatus();
                     }
                 }, (reason) => {
                     changeStateSaveData(false, "");
@@ -574,6 +582,7 @@ export class ComponentStudyCredit extends Component {
 
             showLoading(false, null);
             this.setState({ isPDFGenerated: true });
+            this._validatePDFStatus();
         }).catch((error) => {
             showLoading(false, null);
             swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, ocurrió un error generando el PDF.');
@@ -655,7 +664,36 @@ export class ComponentStudyCredit extends Component {
             return success
         })
     }
-
+    _validatePDFStatus(){
+        const {consultParameterServer, getContextClient, reducerGlobal} = this.props;
+        let daysParameter;
+        var idClient = window.sessionStorage.getItem('idClientSelected');
+        //Obtiene el parametro de dias habilitados para generar pdf en la BD
+        consultParameterServer(DIAS_HABILITADOS_PARA_GENERAR_PDF).then((data) => {
+            var response = JSON.parse(data.payload.data.parameter);
+            daysParameter = !_.isUndefined(response.value) ? response.value : '';
+        }, () => {
+            changeStateSaveData(false, "");
+            swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+        });
+        //Obtiene el dia de guardado de estudio de crédito y si está guardado como definitivo
+        getContextClient(idClient).then((data) => {
+            let initialDate = _.isNull(data.payload.data.data.updatedTimestamp)||_.isUndefined(data.payload.data.data.updatedTimestamp)||data.payload.data.data.updatedTimestamp==0 ? data.payload.data.data.createdTimestamp : data.payload.data.data.updatedTimestamp;
+            let finalDate = moment(new Date());
+            let diffDays = finalDate.diff(moment(initialDate), 'days');
+            let isDefinitive = _.isNull(data.payload.data.data.id) ? false: !data.payload.data.data.isDraft;
+            let permissionToGeneratePDF = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), GENERAR_PDF_ESTUDIO_CREDITO), false);
+            this.setState({
+                permissionToGeneratePDF,
+                isDefinitive,
+                isEnabled : diffDays <= daysParameter,
+                daysParameter
+            });
+        }, () => {
+            changeStateSaveData(false, "");
+            swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+        });
+    }  
     _closeShowErrorBlockedPrevisit() {
         this.setState({ showErrorBlockedPreVisit: false })
         globalActions.redirectUrl("/dashboard/clientInformation")
@@ -731,6 +769,7 @@ export class ComponentStudyCredit extends Component {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             });
             this._validateInfoStudyCredit();
+            this._validatePDFStatus();
         }
     }
 
@@ -961,7 +1000,7 @@ export class ComponentStudyCredit extends Component {
                         paddingRight: '15px'
                     }}>
                         <Row style={{ paddingTop: '8px' }}>
-                            {this.state.showButtonSaveAdvance &&
+                             {this.state.showButtonSaveAdvance &&
                                 <Col style={paddingButtons} onClick={() => this._submitSaveContextClient("Avance")} >
                                     <button className="btn" type="button" style={{ backgroundColor: "#00B5AD" }} ><span >Guardar Avance</span></button>
                                 </Col>
@@ -970,13 +1009,14 @@ export class ComponentStudyCredit extends Component {
                                 <Col style={paddingButtons} >
                                     <button className="btn" type="submit"><span>Guardar Definitivo</span></button>
                                 </Col>
-                            }
-                            {this.state.showButtonPDF &&
-                                <Col style={paddingButtons} onClick={() => this.handleClickButtonPDF()} >
-                                    <button className="btn" type="button" style={{ backgroundColor: "#eb984e" }}><span>Generar PDF</span></button>
-                                </Col>
-                            }
-
+                            }           
+                            <Col style={paddingButtons}>
+                                <TooltipGeneratePDF days = {this.state.daysParameter} 
+                                    isDefinitive={this.state.isDefinitive} 
+                                    permissionToGeneratePDF={this.state.permissionToGeneratePDF} 
+                                    isEnabled={this.state.isEnabled} 
+                                    action ={this.handleClickButtonPDF}/>
+                            </Col>                         
                             <Col style={paddingButtons} onClick={this._closeWindow} >
                                 <button className="btn btn-secondary modal-button-edit" type="button"><span >Cancelar</span></button>
                             </Col>
@@ -1031,7 +1071,8 @@ function mapDispatchToProps(dispatch) {
         updateNotApplyCreditContact,
         getUserBlockingReport,
         stopBlockToReport,
-        showLoading
+        showLoading,
+        consultParameterServer
     }, dispatch);
 }
 
