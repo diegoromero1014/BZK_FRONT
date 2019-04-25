@@ -12,6 +12,7 @@ import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import ParticipantesCliente from "../../participantsVisitPre/participantesCliente";
 import ParticipantesBancolombia from "../../participantsVisitPre/participantesBancolombia";
+
 import ParticipantesOtros from "../../participantsVisitPre/participantesOtros";
 import Challenger from "../../methodologyChallenger/component";
 import SweetAlert from "../../sweetalertFocus";
@@ -19,8 +20,11 @@ import RichText from "../../richText/richTextComponent";
 import Tooltip from "../../toolTip/toolTipComponent";
 
 import { redirectUrl } from "../../globalComponents/actions";
+import { addUsers, setConfidential } from "../../commercialReport/actions";
+import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
 import { getMasterDataFields } from "../../selectsComponent/actions";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
+import { addListUser } from "../../commercialReport/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { showLoading } from "../../loading/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -42,6 +46,8 @@ import {
     TITLE_OTHERS_PARTICIPANTS, MESSAGE_ERROR, ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, MESSAGE_ERROR_SWEET_ALERT,
     TIME_REQUEST_BLOCK_REPORT, REGEX_SIMPLE_XSS_MESAGE
 } from "../../../constantsGlobal";
+
+import PermissionUserReports from "../../commercialReport/permissionsUserReports";
 
 const fields = [];
 var datePrevisitLastReview;
@@ -213,7 +219,6 @@ class FormEditPrevisita extends Component {
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
         this._validateBlockOnSave = this._validateBlockOnSave.bind(this);
         this.processValidation = this.processValidation.bind(this);
-
         this._ismounted = false;
     }
 
@@ -339,7 +344,7 @@ class FormEditPrevisita extends Component {
     }
 
     _handleBlurValueNumber(typeValidation, val, allowsDecimal, lengthDecimal) {
-             //Elimino los caracteres no validos
+        //Elimino los caracteres no validos
         for (var i = 0, output = '', validos = "-0123456789."; i < (val + "").length; i++) {
             if (validos.indexOf(val.toString().charAt(i)) !== -1) {
                 output += val.toString().charAt(i)
@@ -364,7 +369,7 @@ class FormEditPrevisita extends Component {
         }
 
         if (typeValidation === ALLOWS_NEGATIVE_INTEGER) { //Realizo simplemente el formateo
-            
+
             if (_.isNil(this.state.durationPreVisit)) {
                 return (val + decimal);
             } else {
@@ -375,7 +380,7 @@ class FormEditPrevisita extends Component {
         } else { //Valido si el valor es negativo o positivo
             var value = _.isNil(val) ? -1 : numeral(val).format('0');
             if (value >= 0) {
-                
+
                 if (_.isNil(this.state.durationPreVisit)) {
                     return (val + decimal);
                 } else {
@@ -574,7 +579,7 @@ class FormEditPrevisita extends Component {
 
     _submitCreatePrevisita() {
         const {
-            participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage
+            participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage, usersPermission, confidentialReducer
         } = this.props;
 
         let errorInForm = false;
@@ -744,7 +749,7 @@ class FormEditPrevisita extends Component {
                 if (dataOthers.length > 0 && dataOthers[0] === undefined) {
                     dataOthers = [];
                 }
-
+            
                 const previsitJson = {
                     "id": id,
                     "client": window.sessionStorage.getItem('idClientSelected'),
@@ -761,7 +766,8 @@ class FormEditPrevisita extends Component {
                     "controlConversation": this.state.controlConversation,
                     "constructiveTension": this.state.constructiveTension,
                     "documentStatus": typeButtonClick,
-                    "endTime": this.state.durationPreVisit
+                    "endTime": this.state.durationPreVisit,
+                    "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
                 };
 
                 validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit, id).then((data) => {
@@ -851,7 +857,7 @@ class FormEditPrevisita extends Component {
         contollerErrorChangeType = false;
         const {
             nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, showLoading,
-            changeOwnerDraftPrevisit
+            changeOwnerDraftPrevisit, setConfidential, addUsers
         } = this.props;
 
         nonValidateEnter(true);
@@ -863,7 +869,7 @@ class FormEditPrevisita extends Component {
             getMasterDataFields([PREVISIT_TYPE]);
             showLoading(true, 'Cargando...');
             detailPrevisit(id).then((result) => {
-                const { addListParticipant, selectsReducer } = this.props;
+                const { addListParticipant, addListUser, selectsReducer } = this.props;
                 let part = result.payload.data.data;
                 let listParticipants = [];
                 datePrevisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
@@ -880,8 +886,15 @@ class FormEditPrevisita extends Component {
                     adaptMessage: part.adaptMessage === null ? "" : part.adaptMessage,
                     controlConversation: part.controlConversation === null ? "" : part.controlConversation,
                     constructiveTension: part.constructiveTension === null ? "" : part.constructiveTension,
-                    durationPreVisit: part.endTime === null ? "" : part.endTime
+                    durationPreVisit: part.endTime === null ? "" : part.endTime,
+                    commercialReport: part.commercialReport
                 });
+
+                if (part.commercialReport) {
+                    setConfidential(part.commercialReport.isConfidential);
+                }
+
+                fillUsersPermissions(part.commercialReport.usersWithPermission, addUsers);
 
                 //Adicionar participantes por parte del cliente
                 _.forIn(part.participatingContacts, function (value, key) {
@@ -997,6 +1010,7 @@ class FormEditPrevisita extends Component {
         }
     }
 
+
     render() {
         const {
             selectsReducer, handleSubmit, previsitReducer, reducerGlobal, viewBottons
@@ -1042,6 +1056,13 @@ class FormEditPrevisita extends Component {
                         }
                     </Col>
                 </Row>
+
+                <Row>
+                    <Col xs={12} md={12} lg={12}>
+                        <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'} />
+                    </Col>
+                </Row>
+
                 <Row style={{ padding: "10px 10px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -1422,21 +1443,26 @@ function mapDispatchToProps(dispatch) {
         nonValidateEnter,
         showLoading,
         addListParticipant,
+        addListUser,
         swtShowMessage,
         canEditPrevisita,
         disableBlockedReport,
-        changeOwnerDraftPrevisit
+        changeOwnerDraftPrevisit,
+        addUsers,
+        setConfidential
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, participants, previsitReducer, reducerGlobal, navBar }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, participants, previsitReducer, reducerGlobal, navBar, confidentialReducer }, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,
+        usersPermission,
         participants,
         previsitReducer,
         reducerGlobal,
-        navBar
+        navBar, 
+        confidentialReducer
     };
 }
 

@@ -36,14 +36,14 @@ import {
 
 import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_COMPETITOR, MAIN_SUPPLIER, INT_OPERATIONS } from '../../contextClient/constants';
 import * as constantsSelects from '../../selectsComponent/constants';
-import { 
+import {
     validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport,
     validateWhileListResponse, replaceCommaInNumber, consultParameterServer } from '../../../actionsGlobal';
 import { GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../../clientEdit/constants';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_REPLACE_PDF,
     YES, APP_URL, MESSAGE_ERROR_INVALID_INPUT,
-    BLOCK_CREDIT_STUDY, TIME_REQUEST_BLOCK_REPORT, GENERAR_PDF_ESTUDIO_CREDITO, DIAS_HABILITADOS_PARA_GENERAR_PDF
+    BLOCK_CREDIT_STUDY, TIME_REQUEST_BLOCK_REPORT, GENERAR_PDF_ESTUDIO_CREDITO, DIAS_HABILITADOS_PARA_GENERAR_PDF,EDITAR
 } from '../../../constantsGlobal';
 import {
     A_WITH_OBSERVATION, ALL_WITH_COMMENTS, ORIGIN_CREDIT_STUDY,
@@ -137,7 +137,8 @@ export class ComponentStudyCredit extends Component {
             isDefinitive: false,
             isEnabled: false,
             daysParameter: 0,
-            isDraft: false
+            isDraft: false,
+            showButtonSaveAdvance: false,
 
         }
     }
@@ -256,7 +257,7 @@ export class ComponentStudyCredit extends Component {
         const listLineOfBusiness = clientInformacion.get('listParticipation');
         _.map(listLineOfBusiness, (item) => {
             item.id = item.id.toString().includes('line_') ? null : item.id;
-            item.experience = replaceCommaInNumber(item.experience); 
+            item.experience = replaceCommaInNumber(item.experience);
             return item;
         });
         const listDistribution = clientInformacion.get('listDistribution');
@@ -465,7 +466,7 @@ export class ComponentStudyCredit extends Component {
                             this.setState({
                                 fieldContextRequired: true
                             });
-                        } 
+                        }
 
                         if (!stringValidate(customerTypology.value)) {
                             allowSave = false;
@@ -496,7 +497,7 @@ export class ComponentStudyCredit extends Component {
     }
 
     _submitSaveContextClient(tipoGuardado) {
-        
+
         showLoading(true, "Cargando...");
 
         let username = window.localStorage.getItem('userNameFront');
@@ -518,20 +519,20 @@ export class ComponentStudyCredit extends Component {
                 const { saveCreditStudy, swtShowMessage, changeStateSaveData } = this.props;
                 changeStateSaveData(true, MESSAGE_LOAD_DATA);
                 saveCreditStudy(this._createJsonSaveContextClient(isAvance)).then((data) => {
-        
+
                     changeStateSaveData(false, "");
 
                     if (!validateResponse(data)) {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                         return;
-                    }   
+                    }
 
                     if (!validateWhileListResponse(data)) {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_INVALID_INPUT);
                         return;
                     }
 
-                     else {
+                    else {
                         this.setState({
                             showSuccessMessage: true
                         });
@@ -680,9 +681,8 @@ export class ComponentStudyCredit extends Component {
             let initialDate = _.isNull(data.payload.data.data.updatedTimestamp)||_.isUndefined(data.payload.data.data.updatedTimestamp)||data.payload.data.data.updatedTimestamp==0 ? data.payload.data.data.createdTimestamp : data.payload.data.data.updatedTimestamp;
             let finalDate = moment(new Date());
             let diffDays = finalDate.diff(moment(initialDate), 'days');
-            console.log(data.payload.data.data.isDraft);
-            let isDefinitive = !data.payload.data.data.isDraft;
-            let permissionToGeneratePDF = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GENERAR_PDF_ESTUDIO_CREDITO), false);
+            let isDefinitive = _.isNull(data.payload.data.data.id) ? false: !data.payload.data.data.isDraft;
+            let permissionToGeneratePDF = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), GENERAR_PDF_ESTUDIO_CREDITO), false);
             this.setState({
                 permissionToGeneratePDF,
                 isDefinitive,
@@ -700,7 +700,7 @@ export class ComponentStudyCredit extends Component {
     }
 
     componentWillUnmount() {
-        const { stopBlockToReport} = this.props;
+        const { stopBlockToReport } = this.props;
         let idClient = window.sessionStorage.getItem('idClientSelected');
         this._ismounted = false;
 
@@ -759,8 +759,10 @@ export class ComponentStudyCredit extends Component {
                     controlLinkedPayments.onChange(contextClientInfo.controlLinkedPayments);
                 }
 
-                const showButtonPDF = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GENERAR_PDF_ESTUDIO_CREDITO), false) && data.payload.data.data.id != null;
-                this.setState({ isPDFGenerated: data.payload.data.data.isPDFGenerated, showButtonPDF });
+                const showButtonPDF = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), GENERAR_PDF_ESTUDIO_CREDITO), false) && data.payload.data.data.id != null;
+                const showButtonSaveAdvance = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), EDITAR), false) && data.payload.data.data.id != null;
+
+                this.setState({ isPDFGenerated: data.payload.data.data.isPDFGenerated, showButtonPDF, showButtonSaveAdvance });
 
             }, () => {
                 changeStateSaveData(false, "");
@@ -919,7 +921,7 @@ export class ComponentStudyCredit extends Component {
                 <ComponentListDistributionChannel
                     showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut}
                     registrationRequired={this.state.distributionRequired} origin={ORIGIN_CREDIT_STUDY}
-                 />
+                />
                 <InventorPolicy inventoryPolicy={inventoryPolicy} showCheckValidateSection={overdueCreditStudy}
                     valueCheckSectionInventoryPolicy={this.state.valueCheckSectionInventoryPolicy}
                     functionChangeInventoryPolicy={this._handleChangeValueInventoryPolicy}
@@ -998,23 +1000,23 @@ export class ComponentStudyCredit extends Component {
                         paddingRight: '15px'
                     }}>
                         <Row style={{ paddingTop: '8px' }}>
-
-                            <Col style={paddingButtons} onClick={() => this._submitSaveContextClient("Avance")} >
-                                <button className="btn" type="button" style={{ backgroundColor: "#00B5AD" }} ><span >Guardar Avance</span></button>
-                            </Col>
-
-                            <Col style={paddingButtons} >
-                                <button className="btn" type="submit"><span>Guardar Definitivo</span></button>
-                            </Col>
-
-                            <Col style={paddingButtons} >
-                                   <TooltipGeneratePDF days = {this.state.daysParameter} 
-                                        isDefinitive={this.state.isDefinitive} 
-                                        permissionToGeneratePDF={this.state.permissionToGeneratePDF} 
-                                        isEnabled={this.state.isEnabled} 
-                                        action ={this.handleClickButtonPDF}/>                         
-                            </Col>
-
+                             {this.state.showButtonSaveAdvance &&
+                                <Col style={paddingButtons} onClick={() => this._submitSaveContextClient("Avance")} >
+                                    <button className="btn" type="button" style={{ backgroundColor: "#00B5AD" }} ><span >Guardar Avance</span></button>
+                                </Col>
+                            }
+                            {this.state.showButtonSaveAdvance &&
+                                <Col style={paddingButtons} >
+                                    <button className="btn" type="submit"><span>Guardar Definitivo</span></button>
+                                </Col>
+                            }           
+                            <Col style={paddingButtons}>
+                                <TooltipGeneratePDF days = {this.state.daysParameter} 
+                                    isDefinitive={this.state.isDefinitive} 
+                                    permissionToGeneratePDF={this.state.permissionToGeneratePDF} 
+                                    isEnabled={this.state.isEnabled} 
+                                    action ={this.handleClickButtonPDF}/>
+                            </Col>                         
                             <Col style={paddingButtons} onClick={this._closeWindow} >
                                 <button className="btn btn-secondary modal-button-edit" type="button"><span >Cancelar</span></button>
                             </Col>

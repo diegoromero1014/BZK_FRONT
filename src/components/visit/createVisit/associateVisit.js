@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { previsitByClientFindServer, clearPrevisit } from '../../previsita/actions';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import ToolTipComponent from '../../toolTip/toolTipComponent';
 import { changeIdPrevisit, clearIdPrevisit, changePageAssociateVisit } from '../actions';
 import { htmlToText, shorterStringValue, validateResponse } from '../../../actionsGlobal';
@@ -18,6 +17,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from "../../dashboard/actions";
 import $ from 'jquery';
 import _ from 'lodash';
+import ConfidentialBrandComponent from '../../commercialReport/ConfidentialBrandComponent';
 
 var labelPrevistVist = "En esta sección podrá asociar un informe de previsita (registrado previamente) "
     + "al informe de visita que se esté realizando.\n Asociar una previsita a la visita te permitirá llevar "
@@ -43,7 +43,7 @@ class ButtonAssociateComponent extends Component {
 
     openModal() {
         this.setState({ modalIsOpen: true });
-        const { visitReducer, previsitByClientFindServer, clearPrevisit, changePageAssociateVisit, previsitReducer, changeStateSaveData } = this.props;
+        const { previsitByClientFindServer, clearPrevisit, changePageAssociateVisit, changeStateSaveData } = this.props;
         clearPrevisit();
         changePageAssociateVisit(1);
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
@@ -56,7 +56,7 @@ class ButtonAssociateComponent extends Component {
 
     componentWillMount() {
         const { clearIdPrevisit, edit } = this.props;
-        if( _.isUndefined(edit) || _.isNull(edit) || !edit ){
+        if (_.isUndefined(edit) || _.isNull(edit) || !edit) {
             clearIdPrevisit();
         }
     }
@@ -73,7 +73,7 @@ class ButtonAssociateComponent extends Component {
     }
 
     _renderRow() {
-        const { previsitReducer, visitReducer, changeIdPrevisit } = this.props;
+        const { previsitReducer, visitReducer } = this.props;
         const data = previsitReducer.get('previsitList');
         const pageAssociateVisit = visitReducer.get('pageAssociateVisit') - 1;
         return _.slice(data, pageAssociateVisit * NUMBER_RECORDS, (pageAssociateVisit * NUMBER_RECORDS) + NUMBER_RECORDS)
@@ -88,6 +88,7 @@ class ButtonAssociateComponent extends Component {
                                 <Icon name='linkify' />
                             </Button>
                             <span style={{ marginLeft: '5pt' }}>{label}</span>
+                            {!_.isNull(value.commercialReport) && value.commercialReport.isConfidential ? <ConfidentialBrandComponent /> : ""}
                         </a>
                     </ToolTipComponent>
                 );
@@ -99,7 +100,7 @@ class ButtonAssociateComponent extends Component {
     }
 
     _associtate() {
-        const { changeIdPrevisit, visitReducer, fnExecute, swtShowMessage } = this.props;
+        const { changeIdPrevisit, fnExecute, swtShowMessage } = this.props;
         changeIdPrevisit(this.state.idPrevisitSeleted);
         if (!_.isUndefined(fnExecute) && !_.isNull(fnExecute)) {
             fnExecute();
@@ -113,11 +114,11 @@ class ButtonAssociateComponent extends Component {
     }
 
     render() {
-        const { changeIdPrevisit, visitReducer, previsitReducer, printMarginRigth } = this.props;
+        const { previsitReducer, printMarginRigth } = this.props;
         return (
             <Col xs={4} sm={3} md={2} lg={2}>
                 <button type="button" onClick={this.openModal} className={'btn btn-primary modal-button-edit'}
-                    style={ !_.isUndefined(printMarginRigth) &&  !_.isNull(printMarginRigth) && printMarginRigth ? { marginRight: '15px', float: 'right', marginTop: '-15px' } : { float: 'right', marginTop: '-15px' }}>Asociar previsita
+                    style={!_.isUndefined(printMarginRigth) && !_.isNull(printMarginRigth) && printMarginRigth ? { marginRight: '15px', float: 'right', marginTop: '-15px' } : { float: 'right', marginTop: '-15px' }}>Asociar previsita
                 </button>
                 <Modal
                     isOpen={this.state.modalIsOpen}
