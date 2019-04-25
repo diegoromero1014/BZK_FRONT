@@ -88,7 +88,8 @@
         border-right: 1px solid whitesmoke;
         max-height: 310px;
         height: 374px;
-        overflow: auto;
+        overflow: hidden;
+        overflow-y: scroll;
         transition: all ease-in-out .2s;
         display: flex;
         flex-flow: row wrap;
@@ -99,7 +100,7 @@
 }
 
 .container-report-card {
-    width: 31%;
+    width: 29%;
     max-width: 377.063px;
     height: 260px;
     border: 1px solid #00448c;
