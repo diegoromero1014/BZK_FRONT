@@ -10,7 +10,7 @@ import { FILTER_STATUS_BUSINESS_PLAN_ID } from '../../businessPlan/constants';
 import {
   TASK_STATUS, FILTER_STATUS_VISIT_ID, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, CLIENT_ID_TYPE, FILTER_FUNCTION_ID,
   FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_GENDER, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY,
-  FILTER_SOCIAL_STYLE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, PIPELINE_STATUS, FILTER_STATUS_PIPELINE_ID
+  FILTER_SOCIAL_STYLE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, PIPELINE_STATUS, FILTER_STATUS_PIPELINE_ID, CLIENT_TYPE
 } from '../constants';
 
 const defaultData = [{ id: '0', value: 'Guardado como borrador' }, { id: '1', value: 'Guardado como definitivo' }];
@@ -24,7 +24,6 @@ class SelectFilterComponent extends Component {
   componentWillMount() {
     const { consultDataSelect, idTypeFilter } = this.props;
     consultDataSelect(idTypeFilter);
-
   }
 
   messages() {
@@ -80,6 +79,8 @@ class SelectFilterComponent extends Component {
       data = defaultData;
     } else if (idTypeFilter === TASK_STATUS) {
       data = selectsReducer.get('dataTypeTaskType');
+    } else if (idTypeFilter === CLIENT_TYPE) {
+      data = selectsReducer.get('dataTypeClientType');
     }
 
     return (

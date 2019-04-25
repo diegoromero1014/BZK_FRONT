@@ -7,7 +7,7 @@ import { Col, Row } from "react-flexbox-grid";
 import Input from "../../../ui/input/inputComponent";
 import Textarea from "../../../ui/textarea/textareaComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
-import ClientTypology from "../../contextClient/ClientTypology";
+import ClientTypology from "../../contextClient/clientTypology";
 import * as constants from "../../selectsComponent/constants";
 
 import { getMasterDataFields, consultListWithParameterUbication } from '../../selectsComponent/actions';

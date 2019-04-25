@@ -5,13 +5,13 @@ import {mapDispatchToProps, mapStateToProps} from './component';
 import Wrapper from './wrapper';
 import {
     checkRequired, processRules, checkClientDescription,
-    checkNumberInRange, checkMaxLength, checkFirstCharacter
+    checkNumberInRange, checkMaxLength, checkFirstCharacter, checkNumberLength
 } from '../../../validationsFields/rulesField';
 
 const fieldsWithRules = {
     nameSupplier: { rules: [checkRequired, checkClientDescription, checkMaxLength(50), checkFirstCharacter] },
     participation: { rules: [checkRequired, checkNumberInRange(0, 100)] },
-    term: { rules: [checkRequired] },
+    term: { rules: [checkRequired, checkNumberInRange(0, 9999), checkNumberLength(4)] },
     relevantInformation: { rules: [checkClientDescription, checkFirstCharacter] }
 }
 

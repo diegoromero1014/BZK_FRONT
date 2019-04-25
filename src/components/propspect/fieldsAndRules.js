@@ -3,12 +3,11 @@ import _ from "lodash";
 import {
     checkRequired, checkClientName, checkFirstCharacter,
     checkMaxLength, processRules, checkForValueSubSegment, checkNumbers,
-    checkClientDescription, checkClientAddress, checkClientNeighborhood
+    checkClientDescription, checkClientAddress, checkClientNeighborhood, checkNumberLength
 } from '../../validationsFields/rulesField';
 
 const fieldsWithRules = {
     razonSocial: { rules: [checkRequired, checkFirstCharacter, checkClientName, checkMaxLength(50)] },
-    occupation: { rules: [] },      
     descriptionCompany: { rules: [checkFirstCharacter, checkClientDescription] },
     reportVirtual: { rules: [] },
     extractsVirtual: { rules: [] },
@@ -22,14 +21,14 @@ const fieldsWithRules = {
     city: { rules: [] },
     telephone: { rules: [checkNumbers] },
     district: { rules: [checkFirstCharacter, checkClientNeighborhood] },
-    annualSales: { rules: [] },
-    assets: { rules: [] },
+    annualSales: { rules: [checkNumberLength(15)] },
+    assets: { rules: [checkNumberLength(15)] },
     centroDecision: { rules: [] },
     idCelula: { rules: [checkRequired] },
-    liabilities: { rules: [] },
-    operatingIncome: { rules: [] },
-    nonOperatingIncome: { rules: [] },
-    expenses: { rules: [] },
+    liabilities: { rules: [checkNumberLength(15)] },
+    operatingIncome: { rules: [checkNumberLength(15)] },
+    nonOperatingIncome: { rules: [checkNumberLength(15)] },
+    expenses: { rules: [checkNumberLength(15)]  },
     dateSalesAnnuals: { rules: [] },
     segment: { rules: [checkRequired] },
     subSegment: { rules: [checkForValueSubSegment] }

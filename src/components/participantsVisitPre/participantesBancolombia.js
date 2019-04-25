@@ -11,11 +11,10 @@ import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 
 import { addParticipant, clearParticipants, filterUsersBanco } from './actions';
 import { contactsByClientFindServer } from '../contact/actions';
-import { validateValue, validateValueExist, validateIsNullOrUndefined, xssValidation } from '../../actionsGlobal';
+import { validateValue, validateValueExist, validateIsNullOrUndefined } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 import { NUMBER_CONTACTS, KEY_PARTICIPANT_BANCO } from './constants';
-import { REGEX_SIMPLE_XSS_MESAGE } from '../../constantsGlobal';
 
 var self;
 const validate = values => {
@@ -49,11 +48,6 @@ class ParticipantesBancolombia extends Component {
           return item.idParticipante === objetoUsuario.value.idUsuario;
         }
       });
-
-      if (xssValidation(nameUsuario.value)) {
-        swtShowMessage('error', "Error participante", REGEX_SIMPLE_XSS_MESAGE);
-        return;
-      }
 
       if (particip === undefined) {
         const uuid = _.uniqueId('participanBanco_');

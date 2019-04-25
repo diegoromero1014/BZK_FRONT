@@ -4,11 +4,9 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../globalComponents/actions';
 import { updateTitleNavBar } from '../navBar/actions';
-import ItemChart from './ItemChart';
+import ItemChart from './itemChart';
 import { changeTabSeletedChartView, changeErrorYearSeleted } from './actions';
-import ViewChartPrevisit from './chartPrevisit/viewChartPrevisit';
-import ViewChartVisit from './chartVisit/viewChartVisit';
-import ViewChartBusinessPlan from './chartBusinessPlan/viewChartBusinessPlan';
+
 import { TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS, TAB_TASKS } from './constants';
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
@@ -122,14 +120,10 @@ class ViewManagement extends Component {
         </div>
         {tabSeletedReducer === TAB_PIPELINE && <div />}
         {tabSeletedReducer === TAB_TASKS && <div />}
-        {tabSeletedReducer === TAB_PREVISIT && <ViewChartPrevisit />}
-        {tabSeletedReducer === TAB_VISIT && <ViewChartVisit />}
-        {tabSeletedReducer === TAB_BUSINESS && <ViewChartBusinessPlan />}
-        {isLoadChart && tabSeletedReducer !== 0 &&
-          <div className="ui active inverted dimmer">
-            <div className="ui text loader">Cargando gráfica</div>
-          </div>
-        }
+        {tabSeletedReducer === TAB_PREVISIT && <div/>}
+        {tabSeletedReducer === TAB_VISIT && <div/>}
+        {tabSeletedReducer === TAB_BUSINESS && <div/>}
+
         <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions} />
         <SweetAlert
           type="error"

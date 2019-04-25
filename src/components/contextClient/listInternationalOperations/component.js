@@ -4,7 +4,7 @@ import Input from '../../../ui/input/inputComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { handleBlurValueNumber, shorterStringValue } from '../../../actionsGlobal';
+import { handleBlurValueNumber, shorterStringValue, checkRules } from '../../../actionsGlobal';
 import { changeValueListClient } from '../../clientInformation/actions';
 import {
     ONLY_POSITIVE_INTEGER,
@@ -19,6 +19,11 @@ import ToolTipComponent from '../../toolTip/toolTipComponent';
 import { IMPORT } from '../../clientDetailsInfo/constants';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
+import {
+    checkRequired, processRules, checkClientDescription,
+    checkNumberInRange, checkFirstCharacter
+} from '../../../validationsFields/rulesField';
+
 
 export const TYPE_OPERATION = [
     { 'id': 0, 'value': "Importación" },
@@ -61,6 +66,13 @@ export class ComponentListIntOperations extends Component {
         this._deleteCountry = this._deleteCountry.bind(this);
         this._getTitleSection = this._getTitleSection.bind(this);
         this.hasErrors = this.hasErrors.bind(this);
+
+        this.rulesTypeOperation = [checkRequired];
+        this.rulesParticipation = [checkRequired, checkNumberInRange(0, 100)];
+        this.rulesDescriptionCoverage = [checkClientDescription, checkFirstCharacter];
+        this.rulesIdCountry = [checkRequired];
+        this.rulesParticipationCountry = [checkRequired, checkNumberInRange(0, 100)];
+
     }
 
     hasErrors(fields) {
@@ -207,19 +219,64 @@ export class ComponentListIntOperations extends Component {
     }
 
     _mapValuesIntOperations(entity, idx) {
+
+        let errorParticipationCountry = null;
+
         const countrysValues = _.join(_.map(entity.listCountryOperations, (item) => {
+            errorParticipationCountry = errorParticipationCountry || checkRules(this.rulesParticipationCountry, item.participation);
             return item.nameCountry + " (" + item.participation + "%)";
         }), ' - ');
+
+        const errorTypeOperation = checkRules(this.rulesTypeOperation, entity.typeOperation);
+        const errorParticipation = checkRules(this.rulesParticipation, entity.participation);
+        const errorDescriptionCoverage = checkRules(this.rulesDescriptionCoverage, entity.descriptionCoverage);
+
         return <tr key={idx}>
             <td className="collapsing">
                 <i className="zoom icon" title="Editar operación internacional" style={{ cursor: "pointer" }}
                     onClick={() => this._viewInformationIntOperations(entity)} />
             </td>
-            <td>{_.isEqual(parseInt(entity.typeOperation), IMPORT) ? "Importación" : "Exportación"}</td>
-            <td>{entity.participation} %</td>
-            <td>{countrysValues}</td>
+            <td>{_.isEqual(parseInt(entity.typeOperation), IMPORT) ? "Importación" : "Exportación"}
+            {
+                errorTypeOperation &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorTypeOperation}
+                    </div>
+                </div>
+            }
+            </td>
+            <td>{entity.participation} %
+            {
+                errorParticipation &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorParticipation}
+                    </div>
+                </div>
+            }
+            </td>
+            <td>{countrysValues}
+            {
+                errorParticipationCountry &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorParticipationCountry}
+                    </div>
+                </div>
+            }
+            </td>
             <td>{entity.customerCoverage ? "Si" : "No"}</td>
-            <td>{shorterStringValue(entity.descriptionCoverage, 80)}</td>
+            <td>{shorterStringValue(entity.descriptionCoverage, 80)}
+            {
+                errorDescriptionCoverage &&
+                <div>
+                    <div className="ui pointing red basic label">
+                        {errorDescriptionCoverage}
+                    </div>
+                </div>
+            }
+            </td>
             <td className="collapsing">
                 <i className="trash icon" title="Eliminar operación internacional" style={{ cursor: "pointer" }}
                     onClick={() => this._openConfirmDelete(entity)} />
@@ -300,15 +357,15 @@ export class ComponentListIntOperations extends Component {
                     </Col>
                 </Row>
                 {!clientInformacion.get('noAppliedIntOperations') &&
-                    <Row style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 20px 0 24px', padding: '15px 0 0 7px' } : {}}>
-                        <Col xs={12} md={12} lg={12} style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { marginTop: "-70px", paddingRight: "16px", textAlign: "right" } : { marginTop: "-45px", paddingRight: "25px", textAlign: "right" }}>
+                    <Row style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { position:"relative", border: "1px solid #ECECEC", borderRadius: "5px", margin: '0 20px 0 24px', padding: '15px 0 0 7px' } : {position:"relative"}}>
+                        <div style={_.isEqual(origin, ORIGIN_CREDIT_STUDY) ? { position:"absolute", right:0, marginTop: "-70px", paddingRight: "16px", textAlign: "right" } : { marginTop: "-45px", paddingRight: "25px", textAlign: "right", position:"absolute", right:0 }}>
                             <button className="btn" disabled={showFormIntOperations} type="button"
                                 onClick={() => fnShowForm(INT_OPERATIONS, true)} style={showFormIntOperations ? { marginLeft: '10px', cursor: 'not-allowed' } : { marginLeft: '10px' }}>
                                 <ToolTipComponent text="Agregar operación internacional">
                                     <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                                 </ToolTipComponent>
                             </button>
-                        </Col>
+                        </div>
                         {showFormIntOperations &&
                             <Row style={{ width: '100%', marginLeft: '0px' }}>
                                 <Col xs={12} md={3} lg={3}>

@@ -25,7 +25,7 @@ import {
 } from '../selectsComponent/actions';
 
 import * as constants from '../selectsComponent/constants';
-import { SEGMENTS, SUBSEGMENTS, OCCUPATION } from '../selectsComponent/constants';
+import { SEGMENTS, SUBSEGMENTS } from '../selectsComponent/constants';
 import {
     MESSAGE_SAVE_DATA, OPTION_REQUIRED, VALUE_REQUIERED,
     VALUE_XSS_INVALID
@@ -81,7 +81,7 @@ class FormCreateProspect extends Component {
 
     _redirectClients() {
         redirectUrl("/dashboard/clients");
-    }
+}
 
     _closeError() {
         this.setState({ show: false, showEx: false, showEr: false });
@@ -197,7 +197,6 @@ class FormCreateProspect extends Component {
                 "description": descriptionCompany.value,
                 "clientIdType": idTupeDocument,
                 "clientType": clientType.id,
-                "occupation": isNature ? occupation.value : null,
                 "saveMethod": "prospecto"
             };
             const { createProspect } = this.props;
@@ -240,7 +239,7 @@ class FormCreateProspect extends Component {
 
     componentWillMount() {
         const { consultList, consultDataSelect, getMasterDataFields } = this.props;
-        getMasterDataFields([SEGMENTS, SUBSEGMENTS, OCCUPATION]);
+        getMasterDataFields([SEGMENTS, SUBSEGMENTS]);
         consultList(constants.TEAM_FOR_EMPLOYEE);
         consultList(constants.CIIU);
         consultDataSelect(constants.FILTER_COUNTRY);
@@ -304,7 +303,7 @@ class FormCreateProspect extends Component {
                     marginBottom: "100px",
                     backgroundColor: "#F0F0F0"
                 }}>
-                        <Col xs={12} md={8} lg={8} style={{ marginTop: "20px", paddingRight: "35px" }}>
+                        <Col xs={12} md={12} lg={6} style={{ marginTop: "20px", paddingRight: "35px" }}>
                             <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                                 <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
                                 <Input
@@ -318,25 +317,7 @@ class FormCreateProspect extends Component {
                         </Col>
                 
                 
-                    {isNature &&
-
-                        <Col xs={12} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Ocupación </span></dt>
-                                <ComboBox
-                                    name="occupation"
-                                    labelInput="Ocupación"
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    style={{ marginBottom: '0px !important' }}
-                                    data={selectsReducer.get("occupation")}
-                                    {...occupation}
-                                />
-                            </div>
-                        </Col>
-                    }
-
-                    <Col xs={10} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
+                    <Col xs={8} md={6} lg={6} style={{ marginTop: "20px", paddingRight: "35px" }}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>Célula (</span><span style={{ color: "red" }}>*</span>)</dt>
                             <ComboBox
@@ -351,7 +332,7 @@ class FormCreateProspect extends Component {
                         </div>
                     </Col>
 
-                    <Col xs={12} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
+                    <Col xs={12} md={6} lg={6} style={{ marginTop: "20px", paddingRight: "35px" }}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>Segmento (</span><span style={{ color: "red" }}>*</span>)</dt>
                             <ComboBox
@@ -621,9 +602,9 @@ class FormCreateProspect extends Component {
                                 placeholder="Ingrese las ventas anuales"
                                 type="text"
                                 min={0}
-                                max="15"
                                 {...annualSales}
                                 onBlur={val => this._handleBlurValueNumber(1, annualSales, val)}
+                                touched={true}
                             />
                         </div>
                     </Col>
@@ -635,9 +616,9 @@ class FormCreateProspect extends Component {
                                 placeholder="Ingrese los activos"
                                 type="text"
                                 min={0}
-                                max="15"
                                 {...assets}
                                 onBlur={val => this._handleBlurValueNumber(1, assets, val)}
+                                touched={true}
                             />
                         </div>
                     </Col>
@@ -649,9 +630,9 @@ class FormCreateProspect extends Component {
                                 placeholder="Ingrese los pasivos"
                                 type="text"
                                 min={0}
-                                max="15"
                                 {...liabilities}
                                 onBlur={val => this._handleBlurValueNumber(1, liabilities, val)}
+                                touched={true}
                             />
                         </div>
                     </Col>
@@ -662,9 +643,9 @@ class FormCreateProspect extends Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese los ingresos operacionales"
                                 type="text"
-                                max="15"
                                 {...operatingIncome}
                                 onBlur={val => this._handleBlurValueNumber(1, operatingIncome, val)}
+                                touched={true}
                             />
                         </div>
                     </Col>
@@ -675,9 +656,9 @@ class FormCreateProspect extends Component {
                                 style={{ width: "100%", textAlign: "right" }}
                                 placeholder="Ingrese los ingresos no operacionales"
                                 type="text"
-                                max="15"
                                 {...nonOperatingIncome}
                                 onBlur={val => this._handleBlurValueNumber(1, nonOperatingIncome, val)}
+                                touched={true}
                             />
                         </div>
                     </Col>
@@ -689,9 +670,9 @@ class FormCreateProspect extends Component {
                                 placeholder="Ingrese los egresos"
                                 name="expenses"
                                 type="text"
-                                max="15"
                                 {...expenses}
                                 onBlur={val => this._handleBlurValueNumber(1, expenses, val)}
+                                touched={true}
                             />
                         </div>
                     </Col>

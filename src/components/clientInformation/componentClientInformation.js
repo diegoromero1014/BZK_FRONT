@@ -15,7 +15,7 @@ import ButtonClientVisorComponent from '../clientVisor/buttonClientVisorComponen
 import { consultInfoClient } from './actions';
 import { updateTitleNavBar, viewAlertClient } from '../navBar/actions';
 import { redirectUrl } from '../globalComponents/actions';
-import { clearEntities } from '../clientDetailsInfo/linkingClient/linkEntitiesComponent/actions';
+import { clearEntities } from '../clientDetailsInfo/linkingClient/LinkEntitiesComponent/actions';
 import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
 import { updateTabSeletedCS } from '../customerStory/actions';
@@ -217,7 +217,7 @@ class ComponentClientInformation extends Component {
                                     {this.state.allow_visor_cliente && infoClient.clientIdNumber &&
                                         <tr>
                                             <td style={{ marginTop: "0px", backgroundColor: GREEN_COLOR, borderRadius: "0px" }}>
-                                                <ButtonClientVisorComponent clientdIdNumber={infoClient.clientIdNumber} />
+                                                <ButtonClientVisorComponent clientNameType={infoClient.clientNameType} clientdIdNumber={infoClient.clientIdNumber} />
                                             </td>
                                         </tr>
                                     }

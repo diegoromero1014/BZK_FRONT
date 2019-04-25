@@ -45,7 +45,7 @@ import alertCovenantReducer from '../components/alertCovenants/reducer';
 import pipelineBusinessReducer from '../components/pipeline/business/ducks';
 import alertBlackListReducer from '../components/alertBlackList/reducer';
 import leftTimer from '../components/timeout/timeoutDucks';
-import linkEntitiesClientReducer from '../components/clientDetailsInfo/linkingClient/linkEntitiesComponent/reducer';
+import linkEntitiesClientReducer from '../components/clientDetailsInfo/linkingClient/LinkEntitiesComponent/reducer';
 import swtAlertMessagesReducer from '../components/sweetAlertMessages/reducer';
 import blackListClientReducer from '../components/clientDetailsInfo/linkingClient/reducer';
 import filterContactsReducer from '../components/filterContact/reducer';

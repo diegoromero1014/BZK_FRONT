@@ -5,6 +5,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
 
 import createFormPipeline from './createPipeline/formPipeline';
+import SecurityMessageComponent from './../globalComponents/securityMessageComponent';
 
 import { toggleModalContact } from './actions';
 
@@ -51,6 +52,7 @@ class BotonCreateComponent extends Component {
                     <span className="sr-only">Close</span>
                   </button>
                 </div>
+                <SecurityMessageComponent />
                 <PipelineComponent />
               </div>
             </div>

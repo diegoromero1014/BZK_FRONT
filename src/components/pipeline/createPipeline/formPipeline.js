@@ -12,7 +12,7 @@ import HeaderPipeline from "../headerPipeline";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import RichText from '../../richText/richTextComponent';
 import ToolTip from '../../toolTip/toolTipComponent';
-import ComponentDisbursementPlan from '../disbursementPlan/ComponentDisbursementPlan';
+import ComponentDisbursementPlan from '../disbursementPlan/componentDisbursementPlan';
 import { setGlobalCondition } from './../../../validationsFields/rulesField';
 
 import { redirectUrl } from "../../globalComponents/actions";
@@ -44,8 +44,7 @@ import {
 } from "../constants";
 import {
   MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER,
-  OPTION_REQUIRED, SAVE_DRAFT, SAVE_PUBLISHED,
-  VALUE_REQUIERED,
+  SAVE_DRAFT, SAVE_PUBLISHED,
   MESSAGE_ERROR,
   VALUE_XSS_INVALID,
   REGEX_SIMPLE_XSS_TITLE,
@@ -113,12 +112,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       };
 
       isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
-      if (isChildren) {
-        fieldsWithRules.opportunityName.rules = [];
-      }
 
       if (origin === ORIGIN_PIPELIN_BUSINESS) {
         nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
+        fieldsWithRules.opportunityName.rules = [];
       } else {
         nameDisbursementPlansInReducer = "disbursementPlans";
       }
@@ -270,7 +267,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           )
         }).length > 0
       });
-
+      
       consultListWithParameterUbication("", currencyValue).then((data) => {
         this.setState({
           products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
@@ -393,7 +390,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               });
             } else {
               pipelineJson.disbursementPlans = _.map(listDisburmentPlans, (item) => {
-                item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
+                if (item.id != null) {           
+                  item.id = item.id.toString().includes('disburPlan_') ? null : item.id;
+                }
                 return item;
               });
 
@@ -820,9 +819,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name={_.uniqueId('commission_')}
                       type="text"
                       {...commission}
-                      max="10"
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(1, commission, val, true)}
+                      placeholder="Miles ' , ' y decimales ' . '"
+                      onBlur={val => handleBlurValueNumber(2, commission, val, true)}
                       onFocus={val => handleFocusValueNumber(commission, commission.value)}
                     />
                   </div>
@@ -836,7 +835,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name="roe"
                       type="text"
                       {...roe}
-                      max="10"
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(1, roe, val, true)}
                       onFocus={val => handleFocusValueNumber(roe, roe.value)}
@@ -871,7 +869,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...value}
                       name="valueMillions"
                       type="text"
-                      max="15"
+                      placeholder="Miles ' , ' y decimales ' . '"
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
                       onFocus={val => handleFocusValueNumber(value, value.value)}
@@ -889,7 +887,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...pendingDisbursementAmount}
                       name="pendingDisbursementAmount"
                       type="text"
-                      max="15"
                       parentId="dashboardComponentScroll"
                       onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, val, false)}
                       onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, pendingDisbursementAmount.value)}
@@ -912,7 +909,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                           name="termInMonths"
                           type="text"
                           {...termInMonths}
-                          max="3"
                           parentId="dashboardComponentScroll"
                           onBlur={val => this._handleTermInMonths(termInMonths, val)}
                         />
@@ -940,7 +936,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       labelInput="Seleccione..."
                       valueProp={'id'}
                       textProp={'value'}
-                      max="15"
+                      max="29"
                       {...areaAssets}
                       name={nameAreaAssets}
                       parentId="dashboardComponentScroll"
@@ -1119,9 +1115,5 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     form: name || _.uniqueId('business_'),
     validate,
     touchOnChange: true,
-    onSubmitFail: errors => {
-      let numXssValidation = Object.keys(errors).filter(item => errors[item] == VALUE_XSS_INVALID).length;
-
-    }
   }, mapStateToProps, mapDispatchToProps)(FormPipeline);
 }

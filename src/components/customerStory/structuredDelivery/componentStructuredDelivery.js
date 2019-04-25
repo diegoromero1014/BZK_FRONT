@@ -91,7 +91,7 @@ class componentStructuredDelivery extends Component {
                 if (!stringValidate(event.name) || !stringValidate(event.date)) {
                     updateEventErrors(true, "Debe ingresar todos los campos")
                     allowSave = false;
-                } else if (!_.isUndefined(event.name) && !_.isNull(event.name) && eval(patternOfHistoryEvent).test(event.name)) {                                    
+                } else if (!_.isUndefined(event.name) && !_.isNull(event.name) && !patternOfHistoryEvent.test(event.name)) {                                    
                     message = MESSAGE_WARNING_HISTORY_EVENT;
                     updateEventErrors(true, message);
                     allowSave = false;
