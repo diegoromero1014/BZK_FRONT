@@ -74,7 +74,6 @@ class ButtonAssociateComponent extends Component {
     _renderRow() {
         const { previsitReducer, visitReducer } = this.props;
         const data = previsitReducer.get('previsitList');
-        console.log("data",data);
         const pageAssociateVisit = visitReducer.get('pageAssociateVisit') - 1;
         return _.slice(data, pageAssociateVisit * NUMBER_RECORDS, (pageAssociateVisit * NUMBER_RECORDS) + NUMBER_RECORDS)
             .map((value, index) => {
@@ -115,6 +114,7 @@ class ButtonAssociateComponent extends Component {
 
     render() {
         const { previsitReducer, printMarginRigth } = this.props;
+        
         return (
             <Col xs={4} sm={3} md={2} lg={2}>
                 <button type="button" onClick={this.openModal} className={'btn btn-primary modal-button-edit'}

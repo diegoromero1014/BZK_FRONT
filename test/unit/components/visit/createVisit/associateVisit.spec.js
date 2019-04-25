@@ -10,20 +10,40 @@ import PaginationAssociateVisit from '../../../../../src/components/visit/create
 const middleWares = [thunk];
 const mockStore = configureStore(middleWares);
 
-const previsit = {
-    objetive: "<p>ag</p>",
-    statusDocument: "Guardado como definitivo",
-    typePrevisit: "Seguimiento"
-}
+const initialState = Immutable.Map({
+    status: "processed",
+    visitList: [],
+    rowCount: 0,
+    limInf: 0,
+    idPrevisit: 0,
+    page: 1,
+    columnVisit: 'vd.visitTime',
+    orderVisit: 1,
+    detailVisit: {},
+    ownerDraft: 0,
+    pageAssociateVisit: 1
+  });
 
 
 describe('Test CreateVisit/AsociatePreVisit', () => {
 
     let store;
+    let stubVisitByClientFindServer;
     beforeEach(() => {
-        const previsitReducer = Immutable.Map({ previsit });
+        const previsitReducer = Immutable.Map({ rowCount: 10 });
         store = mockStore({ previsitReducer });
-    })
+        const success = { payload: { data: { parameter: JSON.stringify({ value: rowCount }) } } };
+        stubVisitByClientFindServer = sinon.stub(actions, 'stubVisitByClientFindServer').returns(()=>{
+            return new Promise(
+                (resolve, reject) => resolve(success)
+            )
+        });
+    });
+
+    afterEach(function () {
+        // runs after each test in this block
+        stubVisitByClientFindServer.restore();
+    });
 
     it('should associateVisit list', () => {
         itRenders(<ButtonAssociateComponent store={store} />);
@@ -34,8 +54,8 @@ describe('Test CreateVisit/AsociatePreVisit', () => {
         expect(wrapper.find(Modal)).to.have.length(1);
     })
 
-    it('should render ToolTipComponent', () => {
-        const wrapper = shallow(<ButtonAssociateComponent store={store} />).dive();
+    it('should render PaginationAssociateVisit', () => {
+        const wrapper = shallow(<ButtonAssociateComponent store={store} />);
         expect(wrapper.find(PaginationAssociateVisit)).to.have.length(1);
     })
 })
