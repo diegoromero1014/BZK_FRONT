@@ -105,7 +105,7 @@ class ModalDraftDocuments extends Component {
                                 <button id="searchClients" className="btn"
                                         title="Búsqueda por informe, tipo de documento, número de documento y nombre del cliente"
                                         type="button"
-                                        onClick={this._findForKeyword} style={{backgroundColor: "#E0E2E2"}}>
+                                        onClick={this.consultInfoDraftDocuments} style={{backgroundColor: "#E0E2E2"}}>
                                     <i className="search icon" style={{margin: '0em', fontSize: '1.2em'}}/>
                                 </button>
                             </div>

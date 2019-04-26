@@ -48,7 +48,8 @@ import {
   MESSAGE_ERROR,
   VALUE_XSS_INVALID,
   REGEX_SIMPLE_XSS_TITLE,
-  REGEX_SIMPLE_XSS_MESAGE
+  REGEX_SIMPLE_XSS_MESAGE,
+  ALLOWS_NEGATIVE_INTEGER
 } from "../../../constantsGlobal";
 import { LAST_PIPELINE_REVIEW } from "../../../constantsParameters";
 
@@ -956,7 +957,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       {...areaAssetsValue}
                       parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(1, areaAssetsValue, val, true, 2)}
+                      onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, areaAssetsValue, val, true, 2)}
                       onFocus={val => handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
                     />
                   </div>

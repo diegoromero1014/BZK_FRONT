@@ -19,10 +19,12 @@ import SweetAlert from "../../sweetalertFocus";
 import RichText from "../../richText/richTextComponent";
 import Tooltip from "../../toolTip/toolTipComponent";
 
-import { redirectUrl, addUsers, setConfidential, buildJsoncommercialReport } from "../../globalComponents/actions";
+import { redirectUrl } from "../../globalComponents/actions";
+import { addUsers, setConfidential } from "../../commercialReport/actions";
+import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
 import { getMasterDataFields } from "../../selectsComponent/actions";
 import { addParticipant, addListParticipant } from "../../participantsVisitPre/actions";
-import {addListUser} from "../../globalComponents/actions";
+import { addListUser } from "../../commercialReport/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { showLoading } from "../../loading/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -45,7 +47,7 @@ import {
     TIME_REQUEST_BLOCK_REPORT, REGEX_SIMPLE_XSS_MESAGE
 } from "../../../constantsGlobal";
 
-import PermissionUserReports from "../../globalComponents/permissionsUserReports";
+import PermissionUserReports from "../../commercialReport/permissionsUserReports";
 
 const fields = [];
 var datePrevisitLastReview;
@@ -217,7 +219,6 @@ class FormEditPrevisita extends Component {
         this._closeShowErrorBlockedPrevisit = this._closeShowErrorBlockedPrevisit.bind(this);
         this._validateBlockOnSave = this._validateBlockOnSave.bind(this);
         this.processValidation = this.processValidation.bind(this);
-        this.fillUsersPermission = this.fillUsersPermission.bind(this);
         this._ismounted = false;
     }
 
@@ -856,10 +857,11 @@ class FormEditPrevisita extends Component {
         contollerErrorChangeType = false;
         const {
             nonValidateEnter, clientInformacion, getMasterDataFields, id, detailPrevisit, showLoading,
-            changeOwnerDraftPrevisit, setConfidential
+            changeOwnerDraftPrevisit, setConfidential, addUsers
         } = this.props;
 
         nonValidateEnter(true);
+        setConfidential(false);
         const infoClient = clientInformacion.get('responseClientInfo');
 
         if (_.isEmpty(infoClient)) {
@@ -891,9 +893,8 @@ class FormEditPrevisita extends Component {
 
                 if (part.commercialReport) {
                     setConfidential(part.commercialReport.isConfidential);
-                }
-
-                this.fillUsersPermission(part);
+                    fillUsersPermissions(part.commercialReport.usersWithPermission, addUsers);
+                }                
 
                 //Adicionar participantes por parte del cliente
                 _.forIn(part.participatingContacts, function (value, key) {
@@ -1009,29 +1010,6 @@ class FormEditPrevisita extends Component {
         }
     }
 
-    fillUsersPermission(previsitDetail) {
-        const { addUsers } = this.props;
-
-        if (previsitDetail && previsitDetail.commercialReport) {
-            const commercialReport = previsitDetail.commercialReport;
-
-            if (Array.isArray(commercialReport.usersWithPermission) && commercialReport.usersWithPermission.length) {
-                commercialReport.usersWithPermission.forEach(userWithPermission => {
-                    let newUser = {
-                        id: userWithPermission.id,
-                        commercialReport: userWithPermission.commercialReport,
-                        user: {
-                            id: userWithPermission.user.id,
-                            username: userWithPermission.user.username,
-                            name: userWithPermission.user.name
-                        }
-                    }
-                    
-                    addUsers(newUser);
-                }); 
-            }
-        }
-    }
 
     render() {
         const {

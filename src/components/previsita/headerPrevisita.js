@@ -11,7 +11,7 @@ import { AEC_NO_APLIED } from '../../constantsGlobal';
 class CreatePrevisita extends Component {
 
   render() {
-    const { clientInformacion } = this.props;
+    const { clientInformacion } = this.props;    
     const infoClient = clientInformacion.get('responseClientInfo');
     const { aecStatus } = infoClient;
     var showAECNoAplica = false;

@@ -32,7 +32,7 @@ class ListUserPermissions extends Component {
     _clickButtonDelete() {
         const { usersPermission, deleteUser } = this.props;
         var indexDelete = usersPermission.findIndex(item => {
-            return item.id === this.state.idUserSelect;
+            return item.user.id === this.state.idUserSelect;
         });
 
         this.setState({
@@ -56,7 +56,7 @@ class ListUserPermissions extends Component {
         </div>
     }
 
-    
+
 
     render() {
 
@@ -64,7 +64,7 @@ class ListUserPermissions extends Component {
 
         return (
             <div className="ui divided selection list" style={{ paddingRight: '23px', height: "160px", overflow: 'scroll' }}>
-                {renderUsuarios}                
+                {renderUsuarios}
                 <SweetAlert
                     type="warning"
                     show={this.state.showConfirmDeleteUser}
@@ -85,8 +85,8 @@ function orderListUsers(usersPermission, disabled) {
 
     if (usersPermission.size > 0) {
         var data = _.chain(usersPermission.toArray()).map(usersPermission => {
-            
             const { id, name } = usersPermission.user;
+
             if (disabled === 'disabled') {
                 return _.assign({}, {
                     name: name, id: id

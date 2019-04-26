@@ -15,6 +15,7 @@ const initialState = Immutable.Map({
     permissionsRiskGroup: [],
     permissionsBoardMembers: [],
     permissionsCovenants: [],
+    permissionsStudyCredit: [],
     securityMessage: ''
 });
 
@@ -72,6 +73,9 @@ export default (state = initialState, action) => {
             return state;
         case constants.MESSAGE_SECURITY_FORM:
             return state.set('securityMessage', action.message);
+        case constants.MODULE_STUDY_CREDIT:
+            const permissionsStudyCredit = action.payload.data.data.permissions;
+            return state.set('permissionsStudyCredit', permissionsStudyCredit);
         default:
             return state;
     }
