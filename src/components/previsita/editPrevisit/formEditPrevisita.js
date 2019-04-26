@@ -861,6 +861,7 @@ class FormEditPrevisita extends Component {
         } = this.props;
 
         nonValidateEnter(true);
+        setConfidential(false);
         const infoClient = clientInformacion.get('responseClientInfo');
 
         if (_.isEmpty(infoClient)) {
