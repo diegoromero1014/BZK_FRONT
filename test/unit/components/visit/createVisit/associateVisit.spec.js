@@ -10,40 +10,114 @@ import PaginationAssociateVisit from '../../../../../src/components/visit/create
 const middleWares = [thunk];
 const mockStore = configureStore(middleWares);
 
-const initialState = Immutable.Map({
-    status: "processed",
-    visitList: [],
-    rowCount: 0,
-    limInf: 0,
-    idPrevisit: 0,
-    page: 1,
-    columnVisit: 'vd.visitTime',
-    orderVisit: 1,
-    detailVisit: {},
-    ownerDraft: 0,
-    pageAssociateVisit: 1
-  });
+const rowCountValue = 10;
+const listVisit = [{
+    "id": 5842757,
+    "datePrevisit": "2019-04-20 08:21:06",
+    "dateCreate": null,
+    "createBy": null,
+    "createdByPosition": null,
+    "dateUpdate": null,
+    "updateBy": null,
+    "updatedByPosition": null,
+    "objetive": "<p>ag</p>",
+    "typePrevisit": "Seguimiento",
+    "keyTypePrevisit": null,
+    "statusDocument": "Guardado como definitivo",
+    "idStatusDocument": 1,
+    "description": null,
+    "location": null,
+    "dateReview": null,
+    "listPrevisitContacts": null,
+    "listPrevisitEmployees": null,
+    "listPrevisitOtherParticipants": null,
+    "clientTeach": null,
+    "adaptMessage": null,
+    "controlConversation": null,
+    "constructiveTension": null,
+    "commercialReport": null
+}, {
+    "id": 5842769,
+    "datePrevisit": "2019-04-10 08:49:06",
+    "dateCreate": null,
+    "createBy": null,
+    "createdByPosition": null,
+    "dateUpdate": null,
+    "updateBy": null,
+    "updatedByPosition": null,
+    "objetive": "<p>asdf</p>",
+    "typePrevisit": "Seguimiento",
+    "keyTypePrevisit": null,
+    "statusDocument": "Guardado como definitivo",
+    "idStatusDocument": 1,
+    "description": null,
+    "location": null,
+    "dateReview": null,
+    "listPrevisitContacts": null,
+    "listPrevisitEmployees": null,
+    "listPrevisitOtherParticipants": null,
+    "clientTeach": null,
+    "adaptMessage": null,
+    "controlConversation": null,
+    "constructiveTension": null,
+    "commercialReport": {
+        "id": 5842767,
+        "isConfidential": true,
+        "usersWithPermission": [{
+            "id": 5842768,
+            "commercialReport": 5842767,
+            "user": {
+                "id": 123,
+                "username": "cmaya",
+                "name": "Maya"
+            }
+        }],
+        "status": 0
+    }
+}, {
+    "id": 5842794,
+    "datePrevisit": "2019-04-10 11:15:20",
+    "dateCreate": null,
+    "createBy": null,
+    "createdByPosition": null,
+    "dateUpdate": null,
+    "updateBy": null,
+    "updatedByPosition": null,
+    "objetive": "<p>xvxfg</p>",
+    "typePrevisit": "Seguimiento",
+    "keyTypePrevisit": null,
+    "statusDocument": "Guardado como definitivo",
+    "idStatusDocument": 1,
+    "description": null,
+    "location": null,
+    "dateReview": null,
+    "listPrevisitContacts": null,
+    "listPrevisitEmployees": null,
+    "listPrevisitOtherParticipants": null,
+    "clientTeach": null,
+    "adaptMessage": null,
+    "controlConversation": null,
+    "constructiveTension": null,
+    "commercialReport": {
+        "id": 5842793,
+        "isConfidential": false,
+        "usersWithPermission": [],
+        "status": 0
+    }
+}]
+const page = 5;
+
 
 
 describe('Test CreateVisit/AsociatePreVisit', () => {
 
     let store;
-    let stubVisitByClientFindServer;
     beforeEach(() => {
-        const previsitReducer = Immutable.Map({ rowCount: 10 });
-        store = mockStore({ previsitReducer });
-        const success = { payload: { data: { parameter: JSON.stringify({ value: rowCount }) } } };
-        stubVisitByClientFindServer = sinon.stub(actions, 'stubVisitByClientFindServer').returns(()=>{
-            return new Promise(
-                (resolve, reject) => resolve(success)
-            )
-        });
+        const previsitReducer = Immutable.Map({ rowCount: rowCountValue, previsitList: listVisit });
+        const visitReducer = Immutable.Map({ pageAssociateVisit: page })
+        store = mockStore({ previsitReducer, visitReducer });
     });
 
-    afterEach(function () {
-        // runs after each test in this block
-        stubVisitByClientFindServer.restore();
-    });
 
     it('should associateVisit list', () => {
         itRenders(<ButtonAssociateComponent store={store} />);
@@ -55,7 +129,12 @@ describe('Test CreateVisit/AsociatePreVisit', () => {
     })
 
     it('should render PaginationAssociateVisit', () => {
-        const wrapper = shallow(<ButtonAssociateComponent store={store} />);
+        const wrapper = shallow(<ButtonAssociateComponent store={store} />).dive();
         expect(wrapper.find(PaginationAssociateVisit)).to.have.length(1);
+    })
+
+    it('should render ToolTipComponent', () => {
+        const wrapper = shallow(<ButtonAssociateComponent store={store} />).dive().dive();
+        expect(wrapper.find(ToolTipComponent)).to.have.length(1);
     })
 })
