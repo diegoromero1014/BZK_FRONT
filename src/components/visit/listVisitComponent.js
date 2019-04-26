@@ -79,6 +79,9 @@ class ListVisitComponent extends Component {
       {
         title: "Estado del documento",
         key:"statusDocument"
+      },{
+        title: "",
+        key: "commercialReport.isConfidential"
       },
       {
         title: "Previsita",

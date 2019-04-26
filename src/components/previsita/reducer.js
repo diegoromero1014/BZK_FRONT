@@ -2,7 +2,7 @@ import Immutable from 'immutable';
 import {
     GET_PREVISIT_LIST, CHANGE_PAGE, LIMITE_INF, ORDER_COLUMN_PREVISIT,
     CLEAR_PREVISIT, CLEAR_PREVISIT_PAGINATOR, CLEAR_PREVISIT_ORDER, GET_DETAIL_PREVISIT, OWNER_DRAFT,
-    ASK_EDIT_PREVISITA, DELETE_BLOCKED_PREVISITA
+    ASK_EDIT_PREVISITA, DELETE_BLOCKED_PREVISITA, IS_CONFIDENTIAL
 } from './constants';
 import {orderBy} from 'lodash';
 
@@ -67,6 +67,8 @@ export default (state = initialState, action) => {
         case DELETE_BLOCKED_PREVISITA:
             return state.set('isBlocked', action.payload.data)
 
+        /* case IS_CONFIDENTIAL:
+            return state.set('confidential', action.payload); */
         default:
             return state;
     }

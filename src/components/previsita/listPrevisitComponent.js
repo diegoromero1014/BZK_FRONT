@@ -72,6 +72,9 @@ class ListPrevisitComponent extends Component {
 			key: "statusDocument"
 		}, {
 			title: "",
+			key: "commercialReport.isConfidential"
+		}, {
+			title: "",
 			key: "delete"
 		}]
 	}

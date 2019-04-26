@@ -1,4 +1,4 @@
-export const VERSION_DATE = "27/03/2019";
+export const VERSION_DATE = "25/04/2019";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const NATURAL_PERSON = "Persona natural";
@@ -145,6 +145,7 @@ export const MODULE_TRANSACTIONAL = "Mis Informes";
 export const MODULE_RISK_GROUP = "Grupos de riesgo";
 export const MODULE_LINKING_REQUESTS = "Solicitudes de vinculación";
 export const MODULE_SHEDULER = "Scheduler";
+export const MODULE_STUDY_CREDIT = "Estudio de crédito";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;
@@ -296,3 +297,6 @@ export const MOST_ADD_AN_EVENT = "Señor usuario, para guardar debe agregar un e
 
 //MENSAJE DE SEGURIDAD
 export const MESSAGE_SECURITY_FORM = "MENSAJE_SEGURIDAD_FORMULARIOS";
+
+//PARAMETRO DE DIAS HABILITADO PARA GENERAR PDF ESTUDIO DE CRÉDITO
+export const DIAS_HABILITADOS_PARA_GENERAR_PDF ="DIAS_HABILITADOS_PARA_GENERAR_PDF";
