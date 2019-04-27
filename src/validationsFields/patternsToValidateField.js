@@ -5,7 +5,7 @@ export const patternOfPostalCode = /^[a-zA-Z0-9\-Á-Úá-úÑñÜü]+$/;
 export const patternOfAddress = /^[a-zA-Z0-9\s\-ÁÉÍÓÚáéíóúÑñ#();,."\/_´']+$/;
 export const patternOfNeighborhood = /^[a-zA-Z0-9\s\-ÁÉÍÓÚáéíóúÑñÜü#();,.\"\/]+$/;
 export const patternOfObservation = /^[a-zA-Z0-9\s()\[\];,."!¡$%&\/¿?°#=':´+_\-Á-Úá-úÑñÜü]+$/;
-export const patternOfPhone = /^[0-9]+$/;
+export const patternOfPhone = /^[^0-9]+$/;
 export const patternOfContactRelevantFeatures = /^[a-zA-Z0-9\s()\[\];,."!¡$%&\/¿?°#=':´+_\-ÁÉÍÓÚáéíóúÑñÜü]+$/;
 export const patternOfStructureEmail = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@([a-z0-9!#$%&'*+/=?^_`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])+$/;
 export const patternOfObservationLinkClient = /^[a-zA-Z0-9\s()\[\];,."!¡$%&/¿?°#=':´+_\-ÁÉÍÓÚáéíóúÑñÜü]*$/;
