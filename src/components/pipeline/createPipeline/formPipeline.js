@@ -33,7 +33,7 @@ import {
   BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
   MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS,
   PROBABILITY, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES,
-  PRODUCTS, PRODUCTS_MASK, CURRENCY
+  PRODUCTS, PRODUCTS_MASK
 } from "../../selectsComponent/constants";
 import {
   ORIGIN_PIPELIN_BUSINESS,
@@ -542,7 +542,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       } else {
         getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY,
           PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
-          FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY]);
+          FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES]);
 
         consultDataSelect(PRODUCTS, PRODUCTS_MASK);
 
@@ -849,11 +849,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     <ComboBox
                       labelInput="Seleccione..."
                       valueProp={'id'}
-                      textProp={'value'}
+                      textProp={'code'}
                       {...currency}
                       name={nameCurrency}
                       parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(CURRENCY) || []}
+                      data={selectsReducer.get('pipelineCurrencies') || []}
                       onChange={val => this._changeCurrency(val)}
                     />
                   </div>
