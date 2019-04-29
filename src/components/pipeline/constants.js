@@ -13,6 +13,7 @@ export const CREATE_EDIT_PIPELINE = "CREATE_EDIT_PIPELINE";
 export const GET_PIPELINE = "GET_PIPELINE";
 export const OWNER_DRAFT = "OWNER_DRAFT";
 export const PIPELINE_STATUS = "pipelineStatus";
+export const CURRENCY_COP = "COP";
 export const LINE_OF_BUSINESS_LEASING = "Leasing Bancolombia";
 export const ORIGIN_PIPELIN_BUSINESS = "pipelineBusiness";
 
