@@ -665,7 +665,6 @@ export class ComponentStudyCredit extends Component {
     _validatePDFStatus(){
         const {consultParameterServer, reducerGlobal, swtShowMessage, studyCreditReducer} = this.props;
         const contextClientData = studyCreditReducer.get("contextClient");
-        console.log(contextClientData);
         let initialDate = moment(contextClientData.updatedTimestamp);
         let finalDate = moment(new Date());
         let diffDays = finalDate.diff(initialDate, 'days');
@@ -673,7 +672,6 @@ export class ComponentStudyCredit extends Component {
         let permissionToGeneratePDF = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), GENERAR_PDF_ESTUDIO_CREDITO), false);
         //Obtiene el parametro de dias habilitados para generar pdf en la BD
         consultParameterServer(DIAS_HABILITADOS_PARA_GENERAR_PDF).then((data) => {
-            debugger;
             var response = JSON.parse(data.payload.data.parameter);
             const daysParameter = !_.isUndefined(response.value) ? response.value : '';
             this.setState({
