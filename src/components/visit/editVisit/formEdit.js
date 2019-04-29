@@ -401,9 +401,8 @@ class FormEdit extends Component {
 
             if (part.commercialReport) {
                 setConfidential(part.commercialReport.isConfidential);
+                fillUsersPermissions(part.commercialReport.usersWithPermission, addUsers);
             }
-
-            fillUsersPermissions(part.commercialReport.usersWithPermission, addUsers);
 
             //Adicionar participantes por parte del cliente
             _.forIn(part.participatingContacts, function (value, key) {
