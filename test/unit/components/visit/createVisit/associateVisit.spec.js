@@ -133,8 +133,4 @@ describe('Test CreateVisit/AsociatePreVisit', () => {
         expect(wrapper.find(PaginationAssociateVisit)).to.have.length(1);
     })
 
-    it('should render ToolTipComponent', () => {
-        const wrapper = shallow(<ButtonAssociateComponent store={store} />).dive().dive();
-        expect(wrapper.find(ToolTipComponent)).to.have.length(1);
-    })
 })

@@ -72,10 +72,14 @@ class ButtonAssociateComponent extends Component {
     }
 
     _renderRow() {
-        const { previsitReducer, visitReducer } = this.props;
+        const { previsitReducer, visitReducer, confidentialReducer } = this.props;
         const data = previsitReducer.get('previsitList');
         const pageAssociateVisit = visitReducer.get('pageAssociateVisit') - 1;
+        let isConfidential = confidentialReducer.get('confidential')
         return _.slice(data, pageAssociateVisit * NUMBER_RECORDS, (pageAssociateVisit * NUMBER_RECORDS) + NUMBER_RECORDS)
+            .filter((o) => {
+                return isConfidential == true ? o.commercialReport.isConfidential || !o.commercialReport.isConfidential : !o.commercialReport.isConfidential;
+            })
             .map((value, index) => {
                 var dateVisitFormat = moment(value.datePrevisit).locale('es');
                 const label = `${dateVisitFormat.format("DD")}  ${dateVisitFormat.format("MMM")}  ${dateVisitFormat.format("YYYY")} ${dateVisitFormat.format("hh:mm a")} ${(_.isEqual(visitReducer.get('idPrevisit'), value.id) ? "- (Asociada)" : "")}`;
@@ -114,7 +118,7 @@ class ButtonAssociateComponent extends Component {
 
     render() {
         const { previsitReducer, printMarginRigth } = this.props;
-        
+
         return (
             <Col xs={4} sm={3} md={2} lg={2}>
                 <button type="button" onClick={this.openModal} className={'btn btn-primary modal-button-edit'}
@@ -188,9 +192,9 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ previsitReducer, visitReducer }, ownerProps) {
+function mapStateToProps({ previsitReducer, visitReducer, confidentialReducer }, ownerProps) {
     return {
-        previsitReducer, visitReducer
+        previsitReducer, visitReducer, confidentialReducer
     };
 }
 
