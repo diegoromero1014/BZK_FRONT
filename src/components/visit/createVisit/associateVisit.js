@@ -78,7 +78,7 @@ class ButtonAssociateComponent extends Component {
         let isConfidential = confidentialReducer.get('confidential')
         return _.slice(data, pageAssociateVisit * NUMBER_RECORDS, (pageAssociateVisit * NUMBER_RECORDS) + NUMBER_RECORDS)
             .filter((o) => {
-                return isConfidential == true ? o.commercialReport.isConfidential || !o.commercialReport.isConfidential : !o.commercialReport.isConfidential;
+                return isConfidential == true && !_.isNull(o.commercialReport) ? o.commercialReport.isConfidential || !o.commercialReport.isConfidential : !o.commercialReport.isConfidential;
             })
             .map((value, index) => {
                 var dateVisitFormat = moment(value.datePrevisit).locale('es');
