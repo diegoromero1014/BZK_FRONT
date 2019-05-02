@@ -34,14 +34,15 @@ import {
 
 import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_COMPETITOR, MAIN_SUPPLIER, INT_OPERATIONS } from '../../contextClient/constants';
 import * as constantsSelects from '../../selectsComponent/constants';
-import { 
+import {
     validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport,
-    validateWhileListResponse, replaceCommaInNumber } from '../../../actionsGlobal';
+    validateWhileListResponse, replaceCommaInNumber
+} from '../../../actionsGlobal';
 import { GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../../clientEdit/constants';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_REPLACE_PDF,
     YES, APP_URL, MESSAGE_ERROR_INVALID_INPUT,
-    BLOCK_CREDIT_STUDY, TIME_REQUEST_BLOCK_REPORT, GENERAR_PDF_ESTUDIO_CREDITO
+    BLOCK_CREDIT_STUDY, TIME_REQUEST_BLOCK_REPORT, GENERAR_PDF_ESTUDIO_CREDITO, EDITAR
 } from '../../../constantsGlobal';
 import {
     A_WITH_OBSERVATION, ALL_WITH_COMMENTS, ORIGIN_CREDIT_STUDY,
@@ -129,6 +130,7 @@ export class ComponentStudyCredit extends Component {
             userEditingPrevisita: '',
             isComponentMounted: true,
             showButtonPDF: false,
+            showButtonSaveAdvance: false,
             isPDFGenerated: false
 
         }
@@ -248,7 +250,7 @@ export class ComponentStudyCredit extends Component {
         const listLineOfBusiness = clientInformacion.get('listParticipation');
         _.map(listLineOfBusiness, (item) => {
             item.id = item.id.toString().includes('line_') ? null : item.id;
-            item.experience = replaceCommaInNumber(item.experience); 
+            item.experience = replaceCommaInNumber(item.experience);
             return item;
         });
         const listDistribution = clientInformacion.get('listDistribution');
@@ -488,7 +490,7 @@ export class ComponentStudyCredit extends Component {
     }
 
     _submitSaveContextClient(tipoGuardado) {
-        
+
         showLoading(true, "Cargando...");
 
         let username = window.localStorage.getItem('userNameFront');
@@ -510,20 +512,20 @@ export class ComponentStudyCredit extends Component {
                 const { saveCreditStudy, swtShowMessage, changeStateSaveData } = this.props;
                 changeStateSaveData(true, MESSAGE_LOAD_DATA);
                 saveCreditStudy(this._createJsonSaveContextClient(isAvance)).then((data) => {
-        
+
                     changeStateSaveData(false, "");
 
                     if (!validateResponse(data)) {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                         return;
-                    }   
+                    }
 
                     if (!validateWhileListResponse(data)) {
                         swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_INVALID_INPUT);
                         return;
                     }
 
-                     else {
+                    else {
                         this.setState({
                             showSuccessMessage: true
                         });
@@ -653,14 +655,36 @@ export class ComponentStudyCredit extends Component {
             return success
         })
     }
-
+    _validatePDFStatus(){
+        const {consultParameterServer, reducerGlobal, swtShowMessage, studyCreditReducer} = this.props;
+        const contextClientData = studyCreditReducer.get("contextClient");
+        let initialDate = moment(contextClientData.updatedTimestamp);
+        let finalDate = moment(new Date());
+        let diffDays = finalDate.diff(initialDate, 'days');
+        let isDefinitive = _.isNull(contextClientData.id) ? false: !contextClientData.isDraft;
+        let permissionToGeneratePDF = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), GENERAR_PDF_ESTUDIO_CREDITO), false);
+        //Obtiene el parametro de dias habilitados para generar pdf en la BD
+        consultParameterServer(DIAS_HABILITADOS_PARA_GENERAR_PDF).then((data) => {
+            var response = JSON.parse(data.payload.data.parameter);
+            const daysParameter = !_.isUndefined(response.value) ? response.value : '';
+            this.setState({
+                permissionToGeneratePDF,
+                isDefinitive,
+                isEnabled : isDefinitive && diffDays <= daysParameter,
+                daysParameter
+            });
+        }, () => {
+            changeStateSaveData(false, "");
+            swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+        });
+    }  
     _closeShowErrorBlockedPrevisit() {
         this.setState({ showErrorBlockedPreVisit: false })
         globalActions.redirectUrl("/dashboard/clientInformation")
     }
 
     componentWillUnmount() {
-        const { stopBlockToReport} = this.props;
+        const { stopBlockToReport } = this.props;
         let idClient = window.sessionStorage.getItem('idClientSelected');
         this._ismounted = false;
 
@@ -719,8 +743,10 @@ export class ComponentStudyCredit extends Component {
                     controlLinkedPayments.onChange(contextClientInfo.controlLinkedPayments);
                 }
 
-                const showButtonPDF = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GENERAR_PDF_ESTUDIO_CREDITO), false) && data.payload.data.data.id != null;
-                this.setState({ isPDFGenerated: data.payload.data.data.isPDFGenerated, showButtonPDF });
+                const showButtonPDF = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), GENERAR_PDF_ESTUDIO_CREDITO), false) && data.payload.data.data.id != null;
+                const showButtonSaveAdvance = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), EDITAR), false) && data.payload.data.data.id != null;
+                this._validatePDFStatus();
+                this.setState({ isPDFGenerated: data.payload.data.data.isPDFGenerated, showButtonPDF, showButtonSaveAdvance });
 
             }, () => {
                 changeStateSaveData(false, "");
@@ -878,7 +904,7 @@ export class ComponentStudyCredit extends Component {
                 <ComponentListDistributionChannel
                     showFormDistribution={this.state.showFormAddDistribution} fnShowForm={this.showFormOut}
                     registrationRequired={this.state.distributionRequired} origin={ORIGIN_CREDIT_STUDY}
-                 />
+                />
                 <InventorPolicy inventoryPolicy={inventoryPolicy} showCheckValidateSection={overdueCreditStudy}
                     valueCheckSectionInventoryPolicy={this.state.valueCheckSectionInventoryPolicy}
                     functionChangeInventoryPolicy={this._handleChangeValueInventoryPolicy}
@@ -957,15 +983,16 @@ export class ComponentStudyCredit extends Component {
                         paddingRight: '15px'
                     }}>
                         <Row style={{ paddingTop: '8px' }}>
-
-                            <Col style={paddingButtons} onClick={() => this._submitSaveContextClient("Avance")} >
-                                <button className="btn" type="button" style={{ backgroundColor: "#00B5AD" }} ><span >Guardar Avance</span></button>
-                            </Col>
-
-                            <Col style={paddingButtons} >
-                                <button className="btn" type="submit"><span>Guardar Definitivo</span></button>
-                            </Col>
-
+                            {this.state.showButtonSaveAdvance &&
+                                <Col style={paddingButtons} onClick={() => this._submitSaveContextClient("Avance")} >
+                                    <button className="btn" type="button" style={{ backgroundColor: "#00B5AD" }} ><span >Guardar Avance</span></button>
+                                </Col>
+                            }
+                            {this.state.showButtonSaveAdvance &&
+                                <Col style={paddingButtons} >
+                                    <button className="btn" type="submit"><span>Guardar Definitivo</span></button>
+                                </Col>
+                            }
                             {this.state.showButtonPDF &&
                                 <Col style={paddingButtons} onClick={() => this.handleClickButtonPDF()} >
                                     <button className="btn" type="button" style={{ backgroundColor: "#eb984e" }}><span>Generar PDF</span></button>
