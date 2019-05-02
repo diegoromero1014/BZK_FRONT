@@ -145,7 +145,6 @@ export const MODULE_TRANSACTIONAL = "Mis Informes";
 export const MODULE_RISK_GROUP = "Grupos de riesgo";
 export const MODULE_LINKING_REQUESTS = "Solicitudes de vinculación";
 export const MODULE_SHEDULER = "Scheduler";
-export const MODULE_STUDY_CREDIT = "Estudio de crédito";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;

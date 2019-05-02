@@ -43,7 +43,6 @@ const changeStateSaveData = () => {};
 const showLoading = () => {};
 const swtShowMessage = () => {};
 let getContextClient = () => new Promise((resolve, reject) => {});
-let consultParameterServer = () => new Promise((resolve, reject) => {});
 const validateInfoCreditStudy = () => new Promise((resolve, reject) => {});
 const defaultProps = { 
     fields: fields, clientInformacion, 
@@ -51,7 +50,7 @@ const defaultProps = {
     getUserBlockingReport, getMasterDataFields,
     updateTitleNavBar, changeStateSaveData,
     getContextClient, validateInfoCreditStudy,
-    showLoading, swtShowMessage, reducerGlobal, consultParameterServer
+    showLoading, swtShowMessage, reducerGlobal
 };
 
 describe("componentCreditStudy", () => {
