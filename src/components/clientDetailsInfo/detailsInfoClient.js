@@ -30,7 +30,7 @@ import { showModalRiskGroup } from "../clientRiskGroup/actions";
 import { BUTTON_EDIT, BUTTON_UPDATE, CLOSE_TAB, OPEN_TAB } from "./constants";
 import {
     EDITAR, ESTUDIO_DE_CREDITO, MODULE_CLIENTS, VINCULAR, INFO_ESTUDIO_CREDITO,
-    GRUPO_RIESGO, GESTION_DOCUMENTAL, MODULE_STUDY_CREDIT,VISUALIZAR
+    GRUPO_RIESGO, GESTION_DOCUMENTAL
 } from "../../constantsGlobal";
 
 class DetailsInfoClient extends Component {
@@ -59,7 +59,6 @@ class DetailsInfoClient extends Component {
                 }
             }
         });
-        
     }
 
     _mapNoteItems(item, idx) {
@@ -155,7 +154,7 @@ class DetailsInfoClient extends Component {
 
         const allowEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), EDITAR), false);
         const allowLinked = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), VINCULAR), false);
-        const allowCreditStudy = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), VISUALIZAR), false);
+        const allowCreditStudy = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), ESTUDIO_DE_CREDITO), false);
 
         const allowAccessAndEdit = infoClient.haveAccessEdit && allowEdit;
         const showFooterButtons = allowAccessAndEdit || allowLinked || allowCreditStudy;

@@ -977,8 +977,7 @@ class clientEdit extends Component {
                 noAppliedMainSuppliers,
                 noAppliedMainCompetitors,
                 noAppliedIntOperations,
-                noAppliedControlLinkedPayments,
-                'isDraft': true
+                noAppliedControlLinkedPayments
             };
         } else {
             contextClient.controlLinkedPayments = noAppliedControlLinkedPayments ? null : controlLinkedPayments.value;
@@ -998,7 +997,6 @@ class clientEdit extends Component {
             contextClient.noAppliedMainCompetitors = noAppliedMainCompetitors;
             contextClient.noAppliedIntOperations = noAppliedIntOperations;
             contextClient.noAppliedControlLinkedPayments = noAppliedControlLinkedPayments;
-            contextClient.isDraft = contextClient.isDraft;
             return contextClient;
         }
     }
