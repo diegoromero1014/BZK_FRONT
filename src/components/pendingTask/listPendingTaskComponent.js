@@ -101,10 +101,6 @@ class ListPendingTaskComponent extends Component {
         key: "actions"
       },
       {
-        title: "Tarea",
-        key: "taskText"
-      },
-      {
         title: "Responsable",
         key: "responsable"
       },
@@ -120,6 +116,10 @@ class ListPendingTaskComponent extends Component {
       {
         title: "Estado",
         key: "status"
+      },
+      {
+        title: "",
+        key: "commercialReport.isConfidential"
       }
     ]
   }

@@ -30,7 +30,7 @@ export const mapDataGrid = (data = [], permissionsEdit) => {
         return {
             actions: {
                 actionView: true,
-                id: item.id,
+                id: item,
                 idClient: item.idClient,
                 urlServer: "./component",
                 component: VIEW_TASK_ADMIN,
@@ -54,7 +54,8 @@ export const mapDataGrid = (data = [], permissionsEdit) => {
                 color: mapDateColor(item.closeDate),
                 title: "",
                 key: "trafficLight"
-            }
+            },
+            commercialReport: item.commercialReport
         };
     });
 };
