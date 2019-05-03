@@ -436,7 +436,7 @@ class FormEdit extends Component {
                 </Row>
                 <Row>
                     <Col xs={12} md={12} lg={12}>
-                        <PermissionUserReports />
+                        <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'}/>
                     </Col>
                 </Row>
                 <Row style={{ padding: "10px 10px 10px 20px" }}>
