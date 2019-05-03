@@ -4,8 +4,6 @@ import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import moment from 'moment';
 import _ from 'lodash';
-import $ from 'jquery';
-import numeral from 'numeral';
 
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
@@ -14,8 +12,11 @@ import AreaBusiness from '../area/areaBusiness';
 import SweetAlertFocus from '../../sweetalertFocus';
 import Tooltip from "../../toolTip/toolTipComponent";
 import RichText from "../../richText/richTextComponent";
+import PermissionUserReports from "../../commercialReport/permissionsUserReports";
 
 import { redirectUrl } from '../../globalComponents/actions';
+import { setConfidential } from '../../commercialReport/actions';
+import { buildJsoncommercialReport } from '../../commercialReport/functionsGenerics';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
@@ -29,14 +30,12 @@ import { LAST_BUSINESS_REVIEW } from '../../../constantsParameters';
 import { OBJECTIVE_BUSINESS } from '../constants';
 import {
     TITLE_OPPORTUNITY_BUSINESS, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA,
-    MESSAGE_ERROR, DATE_FORMAT, VALUE_XSS_INVALID,REQUEST_SUCCESS,REQUEST_INVALID_INPUT
+    MESSAGE_ERROR, DATE_FORMAT,REQUEST_SUCCESS,REQUEST_INVALID_INPUT
 } from '../../../constantsGlobal';
-
 
 const fields = ["initialValidityDate", "finalValidityDate", "dateBusiness", "objectiveBusiness", "opportunities"];
 
 var dateBusinessLastReview;
-var showMessageCreateBusiness = false;
 var typeMessage = "success";
 var titleMessage = "";
 var message = "";
@@ -183,8 +182,8 @@ class FormBusinessPlan extends Component {
                 "objective": this.state.objectiveBusiness,
                 "documentStatus": typeButtonClick,
                 "clientNeedFulfillmentPlan": needsbB,
-                "relatedInternalParties": areasB
-            }
+                "relatedInternalParties": areasB,
+            };
 
             //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
             this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
@@ -237,6 +236,7 @@ class FormBusinessPlan extends Component {
     componentWillMount() {
         const { clientInformacion, getMasterDataFields, consultParameterServer } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
+        setConfidential(false);
         if (_.isEmpty(infoClient)) {
             redirectUrl("/dashboard/clientInformation");
         } else {
@@ -344,6 +344,11 @@ class FormBusinessPlan extends Component {
                 style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
                 <span style={{ marginLeft: "20px" }}>Los campos marcados con asterisco (<span
                     style={{ color: "red" }}>*</span>) son obligatorios.</span>
+                <Row>
+                    <Col xs={12} md={12} lg={12}>
+                        <PermissionUserReports />
+                    </Col>
+                </Row>
                 <Row style={{ padding: "10px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
