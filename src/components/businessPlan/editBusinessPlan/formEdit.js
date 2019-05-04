@@ -13,9 +13,12 @@ import SweetAlert from "../../sweetalertFocus";
 import Tooltip from "../../toolTip/toolTipComponent";
 import RichText from "../../richText/richTextComponent";
 import BlockingComponent from '../../blockingComponent/blockingComponent';
+import PermissionUserReports from "../../commercialReport/permissionsUserReports";
 
 import { redirectUrl } from "../../globalComponents/actions";
 import { getMasterDataFields } from "../../selectsComponent/actions";
+import { setConfidential } from '../../commercialReport/actions';
+import { buildJsoncommercialReport, fillUsersPermissions } from '../../commercialReport/functionsGenerics';
 import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, onSessionExpire } from "../../../actionsGlobal";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { createBusiness, detailBusiness, pdfDescarga, validateRangeDates } from "../actions";
@@ -26,7 +29,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
 import { EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR, VALUE_XSS_INVALID, REQUEST_INVALID_INPUT, REQUEST_SUCCESS } from "../../../constantsGlobal";
 import { OBJECTIVE_BUSINESS } from "../constants";
-import { BLOCK_BUSINESS_PLAN } from '../../../constantsGlobal'
+import { BLOCK_BUSINESS_PLAN } from '../../../constantsGlobal';
 
 const fields = ["initialValidityDate", "finalValidityDate", "objectiveBusiness", "opportunities"];
 let dateBusinessLastReview;
@@ -290,6 +293,11 @@ class FormEdit extends Component {
                     };
                     addArea(area);
                 });
+
+                if(part.commercialReport){
+                    setConfidential(part.commercialReport.isConfidential);
+                    fillUsersPermissions(part.commercialReport.usersWithPermission, addUsers);
+                }
                 showLoading(false, null);
             });
 
@@ -424,6 +432,11 @@ class FormEdit extends Component {
                                 style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>Editar <i
                                     className={'icon edit'}></i></button>
                         }
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={12} md={12} lg={12}>
+                        <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'}/>
                     </Col>
                 </Row>
                 <Row style={{ padding: "10px 10px 10px 20px" }}>
