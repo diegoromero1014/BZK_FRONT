@@ -58,6 +58,8 @@ import _ from "lodash";
 import $ from "jquery";
 import numeral from "numeral";
 import { fields, validations as validate, fieldsWithRules } from './filesAndRules';
+import PermissionUserReports from "../../commercialReport/permissionsUserReports";
+import { buildJsoncommercialReport } from "../../commercialReport/functionsGenerics";
 
 let typeMessage = "success";
 let titleMessage = "";
@@ -330,7 +332,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         probability, nameUsuario, opportunityName,
         productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue,
         termInMonthsValues, pendingDisbursementAmount }, createEditPipeline, swtShowMessage,
-        changeStateSaveData, pipelineBusinessReducer, pipelineReducer } = this.props;
+        changeStateSaveData, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer } = this.props;
 
       if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
         this.setState({
@@ -374,7 +376,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "moneyDistribitionMarket": moneyDistribitionMarket.value ? moneyDistribitionMarket.value : "",
               "areaAssets": areaAssets.value ? areaAssets.value : "",
               "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.00'),
-              "disbursementPlans": listDisburmentPlans
+              "disbursementPlans": listDisburmentPlans,
+              "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -579,7 +582,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               <span style={{ marginLeft: "20px" }} >
                 Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.
               </span>
-
+              <Row  style={{ padding: "5px 10px 20px 20px" }}>
+                <Col xs={12} md={12} lg={12}>
+                    <PermissionUserReports />
+                </Col>
+              </Row>
               <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
                   <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -1097,7 +1104,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   }
 
   function mapStateToProps({ pipelineReducer, clientInformacion, selectsReducer, contactsByClient,
-    reducerGlobal, navBar, pipelineBusinessReducer }, ownerProps) {
+    reducerGlobal, navBar, pipelineBusinessReducer, usersPermission, confidentialReducer }, ownerProps) {
 
     return {
       pipelineReducer,
@@ -1106,7 +1113,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       contactsByClient,
       reducerGlobal,
       navBar,
-      pipelineBusinessReducer
+      pipelineBusinessReducer,      
+      usersPermission,
+      confidentialReducer
     };
   }
 
