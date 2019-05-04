@@ -106,6 +106,7 @@ const listVisit = [{
     }
 }]
 const page = 5;
+const confidential = true;
 
 
 
@@ -114,8 +115,9 @@ describe('Test CreateVisit/AsociatePreVisit', () => {
     let store;
     beforeEach(() => {
         const previsitReducer = Immutable.Map({ rowCount: rowCountValue, previsitList: listVisit });
-        const visitReducer = Immutable.Map({ pageAssociateVisit: page })
-        store = mockStore({ previsitReducer, visitReducer });
+        const visitReducer = Immutable.Map({ pageAssociateVisit: page });
+        const confidentialReducer = Immutable.Map({confidential: confidential});
+        store = mockStore({ previsitReducer, visitReducer, confidentialReducer });
     });
 
 
