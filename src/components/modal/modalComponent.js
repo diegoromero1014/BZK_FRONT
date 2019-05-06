@@ -33,6 +33,7 @@ class ModalComponentDialog extends Component {
         this.closeModal = this.closeModal.bind(this);
         this.openModal = this.openModal.bind(this);
         this.renderTitle = this.renderTitle.bind(this);
+        this.renderConfidentialBrand = this.renderConfidentialBrand.bind(this);
         
         this.state = {
             modalIsOpen: false
@@ -117,16 +118,27 @@ class ModalComponentDialog extends Component {
                 return (
                         <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">
                             {modalTitle}
-
-                            { actions.id.commercialReport && actions.id.commercialReport.isConfidential && 
-                                <ConfidentialBrandComponent />
-                            }
+                            {this.renderConfidentialBrand()}
                         </h4>
                 )
             default:
                     return (
                         <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">{modalTitle}</h4>
                     )
+        }
+    }
+
+    renderConfidentialBrand() {
+        const actions = this.props.actions;
+
+        if (typeof actions.id == 'number') {
+            if (actions.object.commercialReport && actions.object.commercialReport.isConfidential) {
+                return <ConfidentialBrandComponent /> 
+            }
+        } else {
+            if (actions.id.commercialReport && actions.id.commercialReport.isConfidential) {
+                return <ConfidentialBrandComponent />
+            }
         }
     }
 
