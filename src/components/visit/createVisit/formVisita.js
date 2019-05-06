@@ -755,7 +755,6 @@ class FormVisita extends Component {
           showCancelButton={true}
           onCancel={() => this.setState({ showAlertDate: false })}
           onConfirm={this._redirectToVisit} />
-        />
       </form>
     );
   }
