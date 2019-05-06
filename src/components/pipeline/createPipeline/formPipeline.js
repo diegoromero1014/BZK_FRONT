@@ -60,6 +60,7 @@ import numeral from "numeral";
 import { fields, validations as validate, fieldsWithRules } from './filesAndRules';
 import PermissionUserReports from "../../commercialReport/permissionsUserReports";
 import { buildJsoncommercialReport } from "../../commercialReport/functionsGenerics";
+import { setConfidential } from "../../commercialReport/actions";
 
 let typeMessage = "success";
 let titleMessage = "";
@@ -525,8 +526,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     componentWillMount() {
       const { nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-        consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists, consultDataSelect } = this.props;
+        consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists, consultDataSelect,setConfidential } = this.props;
 
+      setConfidential(false);
       nonValidateEnter(true);
       updateDisbursementPlans([], origin);
       clearLists([PRODUCTS]);
@@ -1099,7 +1101,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       swtShowMessage,
       consultListWithParameterUbication,
       clearLists,
-      consultDataSelect
+      consultDataSelect,
+      setConfidential
     }, dispatch);
   }
 
