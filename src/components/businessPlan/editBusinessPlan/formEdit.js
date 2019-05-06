@@ -17,7 +17,7 @@ import PermissionUserReports from "../../commercialReport/permissionsUserReports
 
 import { redirectUrl } from "../../globalComponents/actions";
 import { getMasterDataFields } from "../../selectsComponent/actions";
-import { setConfidential } from '../../commercialReport/actions';
+import { addUsers, setConfidential } from "../../commercialReport/actions";
 import { buildJsoncommercialReport, fillUsersPermissions } from '../../commercialReport/functionsGenerics';
 import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, onSessionExpire } from "../../../actionsGlobal";
 import { changeStateSaveData } from "../../dashboard/actions";
@@ -121,15 +121,13 @@ class FormEdit extends Component {
     }
 
     _submitCreateBusiness() {
-        const { fields: { initialValidityDate, finalValidityDate }, needs, areas, createBusiness, businessPlanReducer, changeStateSaveData,
-            validateRangeDates, swtShowMessage, canUserEditBlockedReport } = this.props;
+        const { fields: { initialValidityDate, finalValidityDate }, needs, areas, businessPlanReducer, usersPermission, canUserEditBlockedReport, confidentialReducer } = this.props;
 
         let errorInForm = false;
         const detailBusiness = businessPlanReducer.get('detailBusiness');
 
         canUserEditBlockedReport()
             .then(() => {
-
 
                 if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid())) {
                     errorInForm = true;
@@ -209,8 +207,9 @@ class FormEdit extends Component {
                         "objective": this.state.objectiveBusiness,
                         "documentStatus": typeButtonClick,
                         "clientNeedFulfillmentPlan": needsbB.length === 0 ? null : needsbB,
-                        "relatedInternalParties": areasB.length === 0 ? null : areasB
-                    }
+                        "relatedInternalParties": areasB.length === 0 ? null : areasB,
+                        "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
+                    };                    
                     //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
                     this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
 
@@ -229,8 +228,9 @@ class FormEdit extends Component {
     }
 
     componentWillMount() {
-        const { fields: { initialValidityDate, finalValidityDate }, nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer, businessPlanReducer, detailBusiness, id, addNeed, addArea, showLoading } = this.props;
-        nonValidateEnter(true);
+        const { fields: { initialValidityDate, finalValidityDate }, nonValidateEnter, clientInformacion, getMasterDataFields, detailBusiness, id, addNeed, addArea, showLoading, setConfidential, addUsers } = this.props;
+        nonValidateEnter(true);        
+        setConfidential(false);
         const infoClient = clientInformacion.get('responseClientInfo');
         if (_.isEmpty(infoClient)) {
             redirectUrl("/dashboard/clientInformation");
@@ -241,7 +241,8 @@ class FormEdit extends Component {
                 let part = result.payload.data.data;
                 this.setState({
                     objectiveBusiness: part.objective,
-                    opportunities: part.opportunitiesAndThreats
+                    opportunities: part.opportunitiesAndThreats,
+                    commercialReport: part.commercialReport
                 });
 
                 if (!_.isNil(part.initialValidityDate)) {
@@ -309,7 +310,7 @@ class FormEdit extends Component {
     _onSelectFieldDate(valueInitialDate, valueFinalDate, fieldDate, makeSaveBusiness, businessJson) {
         const { fields: { initialValidityDate, finalValidityDate }, swtShowMessage, validateRangeDates, businessPlanReducer, changeStateSaveData, createBusiness } = this.props;
         const initialDate = _.isNil(valueInitialDate) || _.isEmpty(valueInitialDate) ? null : valueInitialDate;
-        const finalDate = _.isNil(valueFinalDate) || _.isEmpty(valueFinalDate) ? null : valueFinalDate;
+        const finalDate = _.isNil(valueFinalDate) || _.isEmpty(valueFinalDate) ? null : valueFinalDate;        
         if (!_.isNull(initialDate) && !_.isNull(finalDate)) {
             this.setState({
                 initialDateError: false,
@@ -679,19 +680,23 @@ function mapDispatchToProps(dispatch) {
         nonValidateEnter,
         showLoading,
         validateRangeDates,
-        swtShowMessage
+        swtShowMessage,
+        addUsers,        
+        setConfidential
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, needs, businessPlanReducer, reducerGlobal, areas, navBar }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, needs, businessPlanReducer, reducerGlobal, areas, navBar, confidentialReducer }, ownerProps) {
     return {
         clientInformacion,
-        selectsReducer,
+        selectsReducer,        
         businessPlanReducer,
         reducerGlobal,
         needs,
         areas,
-        navBar
+        navBar,
+        usersPermission,
+        confidentialReducer
     };
 }
 const FormEditRedux = reduxForm({
