@@ -6,24 +6,22 @@ import { reduxForm } from 'redux-form';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import { showLoading } from '../loading/actions';
-import { updateTitleNavBar } from '../navBar/actions';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import { goBack, redirectUrl } from "../globalComponents/actions";
+import { updateTitleNavBar, showBrandConfidential } from '../navBar/actions';
+import { Row, Col } from 'react-flexbox-grid';
+import { redirectUrl } from "../globalComponents/actions";
 import { getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter } from './actions';
 import { consultInfoClient } from "../clientInformation/actions";
 import { consultList, consultDataSelect, consultListWithParameterUbication, clearConsultListWithParameterUbication, consultListWithParameter, clrearConsultListWithParameter, clearLists, getRegionsByEmployee } from "../selectsComponent/actions";
 import { validatePermissionsByModule, validateValue, clearPrevisitPermissions } from "../../actionsGlobal";
 import { MODULE_PREVISITS } from "../../constantsGlobal";
-import { SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR, GRAY_COLOR } from "./constants";
+import { SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR } from "./constants";
 import { TEAM_FOR_EMPLOYEE, LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE_REGION_ZONE, TEAM_VALUE_OBJECTS } from "../selectsComponent/constants";
-import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import _ from 'lodash';
 import $ from 'jquery';
-import { filter } from 'rxjs/operator/filter';
 import EditPrevisit from '../previsita/editPrevisit/editPrevisit';
 import { filterUsersBanco } from '../participantsVisitPre/actions';
-import { limitiInf } from '../myPendings/myTasks/actions';
+import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
 
 
 BigCalendar.momentLocalizer(moment);
@@ -91,8 +89,12 @@ class Sheduler extends Component {
     }
 
     closeModal() {
+        const { showBrandConfidential } = this.props;
+        
         this._handlePrevisitsFind();
         this.setState({ modalIsOpen: false });
+        
+        showBrandConfidential(false);
     }
 
     _onChangeRegionStatus(val) {
@@ -250,9 +252,10 @@ class Sheduler extends Component {
     }
 
     render() {
-        const { fields: { team, region, zone, nameUsuario }, schedulerPrevisitReduser, selectsReducer } = this.props;
+        const { fields: { team, region, zone, nameUsuario }, schedulerPrevisitReduser, selectsReducer, navBar } = this.props;
         const data = schedulerPrevisitReduser.get('schedulerPrevisitList');
         const userName = localStorage.getItem('userNameFront');
+        const confidential = navBar.get('confidential');
 
         return (
             <div>
@@ -371,7 +374,12 @@ class Sheduler extends Component {
                     <div className="modalBt4-dialog modalBt4-lg">
                         <div className="modalBt4-content modal-content">
                             <div className="modalBt4-header modal-header">
-                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Previsita</h4>
+                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">
+                                    Previsita 
+                                    {confidential &&
+                                        <ConfidentialBrandComponent />
+                                    }
+                                </h4>
                                 <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
                                     <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                                     <span className="sr-only">Close</span>
@@ -407,15 +415,17 @@ function mapDispatchToProps(dispatch) {
         clrearConsultListWithParameter,
         filterUsersBanco,
         clearPrevisitPermissions,
-        clearLists
+        clearLists,
+        showBrandConfidential
     }, dispatch);
 }
-function mapStateToProps({ schedulerPrevisitReduser, selectsReducer, contactsByClient }, ownerProps) {
+function mapStateToProps({ schedulerPrevisitReduser, selectsReducer, contactsByClient, navBar }, ownerProps) {
     return {
         schedulerPrevisitReduser,
         selectsReducer,
         contactsByClient,
-        fields
+        fields,
+        navBar
     };
 }
 

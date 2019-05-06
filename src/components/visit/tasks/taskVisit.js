@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 
@@ -24,7 +23,7 @@ class TaskVisit extends Component {
   }
 
   render() {
-    const { tasks, disabled } = this.props;
+    const { disabled } = this.props;
     return (
       <div className="my-custom-tab"
         style={{ backgroundColor: "#FFFFFF", width: "100%" }}>
