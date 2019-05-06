@@ -87,9 +87,8 @@ class FormBusinessPlan extends Component {
 
 
     _submitCreateBusiness() {
-        const { fields: { initialValidityDate, finalValidityDate }, needs, areas } = this.props;
+        const { fields: { initialValidityDate, finalValidityDate }, needs, areas, usersPermission, confidentialReducer } = this.props;
         var errorInForm = false;
-
         if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value) || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid()) {
             errorInForm = true;
             this.setState({
@@ -183,8 +182,8 @@ class FormBusinessPlan extends Component {
                 "documentStatus": typeButtonClick,
                 "clientNeedFulfillmentPlan": needsbB,
                 "relatedInternalParties": areasB,
-            };
-
+                "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
+            };            
             //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
             this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
         }
@@ -525,15 +524,18 @@ function mapDispatchToProps(dispatch) {
         createBusiness,
         changeStateSaveData,
         swtShowMessage,
-        validateRangeDates
+        validateRangeDates,
+        setConfidential
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, reducerGlobal, needs, areas, navBar }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, reducerGlobal, confidentialReducer, usersPermission, needs, areas, navBar }, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,
         reducerGlobal,
+        confidentialReducer,
+        usersPermission,
         needs,
         areas,
         navBar
