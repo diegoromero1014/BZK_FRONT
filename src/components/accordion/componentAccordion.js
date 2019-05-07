@@ -11,7 +11,7 @@ class ComponentAccordion extends Component {
         const { functionChange, codSection, title, componentView, icon } = this.props;
         return (
             <div>
-                <div style={{ borderTop: "1px dotted #cea70b", marginTop: "15px" }} ></div>
+                <div style={ { borderTop: "1px dotted #cea70b", marginTop: "15px" } } ></div>
                 <Accordion activeIndex={codSection}>
                     <Accordion.Title onClick={functionChange}>
                         <TitleSectionComponent iconClass={icon} fontSize="25px" typeTitle={true}>
