@@ -178,6 +178,7 @@ export function searchContactForGroup(typeDocument, numberDocument, clientId) {
         }
     }
     var request = axios.post(APP_URL + "/getContactByDocument", json);
+
     return {
         type: constant.SEARCH_CONTACT_FOR_GROUP,
         payload: request
