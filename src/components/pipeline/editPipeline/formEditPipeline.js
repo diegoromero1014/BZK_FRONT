@@ -51,6 +51,9 @@ import {
     ORIGIN_PIPELIN_BUSINESS, BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, PRODUCT_FAMILY_LEASING,
     HELP_PROBABILITY
 } from "../constants";
+import { addUsers, setConfidential } from "../../commercialReport/actions";
+import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
+import PermissionUserReports from "../../commercialReport/permissionsUserReports";
 
 /*const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
     "businessCategory", "currency", "indexing", "need", "observations", "product",
@@ -307,7 +310,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
                 termInMonthsValues, pendingDisbursementAmount }, createEditPipeline,
                 changeStateSaveData, swtShowMessage, pipelineBusinessReducer,
-                pipelineReducer } = this.props;
+                pipelineReducer, usersPermission, confidentialReducer } = this.props;
             const idPipeline = origin === ORIGIN_PIPELIN_BUSINESS ? pipelineBusiness.id : this.props.params.id;
             if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
                 this.setState({
@@ -350,7 +353,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "mellowingPeriod": mellowingPeriod.value ? mellowingPeriod.value : "",
                             "areaAssets": areaAssets.value ? areaAssets.value : "",
                             "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.00'),
-                            "disbursementPlans": listDisburmentPlans
+                            "disbursementPlans": listDisburmentPlans,
+                            "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
                         };
                         if (origin === ORIGIN_PIPELIN_BUSINESS) {
                             typeMessage = "success";
@@ -490,9 +494,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 updatedTimestamp, createdByName, updatedByName, positionCreatedBy, positionUpdatedBy,
                 reviewedDate, probability, businessCategory, opportunityName, productFamily,
                 mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues,
-                pendingDisbursementAmount }, updateDisbursementPlans } = this.props;
+                pendingDisbursementAmount, setConfidential, addUsers }, updateDisbursementPlans } = this.props;
             updateDisbursementPlans(data.disbursementPlans, origin);
-            this.setState({ flagInitLoadAssests: true });
+            this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport});
             productFamily.onChange(data.productFamily);
             opportunityName.onChange(data.opportunityName);
             businessStatus.onChange(data.businessStatus);
@@ -534,7 +538,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     termInMonths, businessStatus, currency, indexing, need, observations,
                     business, product, moneyDistribitionMarket, client, documentStatus, areaAssets,
                     areaAssetsValue, termInMonthsValues }, addBusiness, clearBusiness,
-                showLoading, swtShowMessage, consultDataSelect } = this.props;
+                showLoading, swtShowMessage, consultDataSelect, setConfidential } = this.props;
             const infoClient = clientInformacion.get('responseClientInfo'); typeButtonClick = null;
             if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                 clearBusiness();
@@ -575,6 +579,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         pipeline.uuid = uuid;
                                         addBusiness(pipeline);
                                     });
+                                    setConfidential(false);
+                                    if(data.commercialReport){
+                                        setConfidential(data.commercialReport.isConfidential);
+                                        fillUsersPermissions(data.commercialReport.usersWithPermission, addUsers);
+                                    }
                                     this._consultInfoPipeline(data);
                                 }
                             });
@@ -663,6 +672,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     }
                                 </Col>
                             </Row>
+                            <Row  style={{ padding: "5px 10px 20px 20px" }}>
+                                <Col xs={12} md={12} lg={12}>
+                                    <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'}/>
+                                </Col>
+                            </Row>    
                             <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
                                     <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -1306,11 +1320,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             swtShowMessage,
             updateDisbursementPlans,
             consultListWithParameterUbication,
-            consultDataSelect
+            consultDataSelect,
+            addUsers,
+            setConfidential
         }, dispatch);
     }
 
-    function mapStateToProps({ clientInformacion, selectsReducer, contactsByClient, pipelineReducer, reducerGlobal, navBar, pipelineBusinessReducer }, pathParameter) {
+    function mapStateToProps({ clientInformacion, selectsReducer, contactsByClient, pipelineReducer, reducerGlobal, navBar, pipelineBusinessReducer, usersPermission, confidentialReducer }, pathParameter) {
         return {
             clientInformacion,
             selectsReducer,
@@ -1320,7 +1336,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             consultParameterServer,
             reducerGlobal,
             navBar,
-            pipelineBusinessReducer
+            pipelineBusinessReducer,
+            usersPermission,
+            confidentialReducer
         };
     }
 
