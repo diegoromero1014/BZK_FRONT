@@ -29,19 +29,18 @@ import {
 import { LAST_BUSINESS_REVIEW } from '../../../constantsParameters';
 import { OBJECTIVE_BUSINESS } from '../constants';
 import {
-    TITLE_OPPORTUNITY_BUSINESS, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA,
-    MESSAGE_ERROR, DATE_FORMAT,REQUEST_SUCCESS,REQUEST_INVALID_INPUT
+    TITLE_OPPORTUNITY_BUSINESS, SAVE_DRAFT, SAVE_PUBLISHED, MESSAGE_SAVE_DATA, MESSAGE_ERROR, DATE_FORMAT,REQUEST_SUCCESS,REQUEST_INVALID_INPUT
 } from '../../../constantsGlobal';
 
 const fields = ["initialValidityDate", "finalValidityDate", "dateBusiness", "objectiveBusiness", "opportunities"];
 
-var dateBusinessLastReview;
-var typeMessage = "success";
-var titleMessage = "";
-var message = "";
-var typeButtonClick;
+let dateBusinessLastReview;
+let typeMessage = "success";
+let titleMessage = "";
+let message = "";
+let typeButtonClick;
 const validate = values => {
-    var errors = {};
+    let errors = {};
     return errors;
 };
 class FormBusinessPlan extends Component {
@@ -88,7 +87,7 @@ class FormBusinessPlan extends Component {
 
     _submitCreateBusiness() {
         const { fields: { initialValidityDate, finalValidityDate }, needs, areas, usersPermission, confidentialReducer } = this.props;
-        var errorInForm = false;
+        let errorInForm = false;
         if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value) || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid()) {
             errorInForm = true;
             this.setState({
@@ -104,7 +103,6 @@ class FormBusinessPlan extends Component {
         }
 
         if (typeButtonClick === SAVE_PUBLISHED) {
-            var needsBusiness = [];
             if (this.state.dateBusiness === null || this.state.dateBusiness === undefined || this.state.dateBusiness === "") {
                 errorInForm = true;
                 this.setState({
@@ -126,7 +124,7 @@ class FormBusinessPlan extends Component {
                 });
             }
 
-            needsBusiness = needs.toArray();
+            let needsBusiness = needs.toArray();
             if (needsBusiness.length === 0) {
                 errorInForm = true;
                 this.setState({ showErrorSaveBusiness: true });
@@ -135,10 +133,10 @@ class FormBusinessPlan extends Component {
 
 
         if (!errorInForm) {
-            var needsbB = [];
+            let needsbB = [];
             _.map(needs.toArray(),
                 function (need) {
-                    var data = {
+                    let data = {
                         "id": null,
                         "clientNeed": need.needIdType,
                         "clientNeedDescription": need.descriptionNeed,
@@ -155,10 +153,10 @@ class FormBusinessPlan extends Component {
                 }
             );
 
-            var areasB = [];
+            let areasB = [];
             _.map(areas.toArray(),
                 function (area) {
-                    var data = {
+                    let data = {
                         "id": null,
                         "relatedInternalParty": area.areaDes,
                         "actionNeeded": area.actionArea,
@@ -172,7 +170,7 @@ class FormBusinessPlan extends Component {
                 }
             );
 
-            var businessJson = {
+            let businessJson = {
                 "id": null,
                 "client": window.sessionStorage.getItem('idClientSelected'),
                 "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
@@ -211,7 +209,7 @@ class FormBusinessPlan extends Component {
     }
 
     _changeDateBusinessOnBlur(value) {
-        var date = value.target.value;
+        let date = value.target.value;
         if (date === '' || date === undefined || date === null) {
             this.setState({
                 dateBusinessError: "Debe seleccionar una fecha"
@@ -253,7 +251,7 @@ class FormBusinessPlan extends Component {
     //Método que valida las fechas ingresadas, que la inicial no sea mayor que la final y que el rango no se encuentre registrado ya
     //Además realiza la acción de guardado si el parámetro makeSaveBusiness llega en true
     _onSelectFieldDate(valueInitialDate, valueFinalDate, fieldDate, makeSaveBusiness, businessJson) {
-        const { fields: { initialValidityDate, finalValidityDate }, swtShowMessage, validateRangeDates, changeStateSaveData, createBusiness } = this.props;
+        const { swtShowMessage, validateRangeDates, changeStateSaveData, createBusiness } = this.props;
         const initialDate = _.isNil(valueInitialDate) || _.isEmpty(valueInitialDate) ? null : valueInitialDate;
         const finalDate = _.isNil(valueFinalDate) || _.isEmpty(valueFinalDate) ? null : valueFinalDate;
         if (!_.isNull(initialDate) && !_.isNull(finalDate)) {
@@ -335,7 +333,7 @@ class FormBusinessPlan extends Component {
     }
 
     render() {
-        const { fields: { initialValidityDate, finalValidityDate, dateBusiness, objectiveBusiness, opportunities }, selectsReducer, handleSubmit, reducerGlobal, navBar } = this.props;
+        const { fields: { initialValidityDate, finalValidityDate }, selectsReducer, handleSubmit, reducerGlobal } = this.props;
         return (
             <form onSubmit={handleSubmit(this._submitCreateBusiness)}
                 onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
