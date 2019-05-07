@@ -12,7 +12,7 @@ class ComponentAccordion extends Component {
         return (
             <div>
                 <div style={{ borderTop: "1px dotted #cea70b", marginTop: "15px" }} ></div>
-                <Accordion defaultActiveIndex={codSection}>
+                <Accordion activeIndex={codSection}>
                     <Accordion.Title onClick={functionChange}>
                         <TitleSectionComponent iconClass={icon} fontSize="25px" typeTitle={true}>
                             {title}
