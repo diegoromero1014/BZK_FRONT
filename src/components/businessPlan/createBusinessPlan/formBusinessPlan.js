@@ -233,7 +233,7 @@ class FormBusinessPlan extends Component {
     }
 
     componentWillMount() {
-        const { clientInformacion, getMasterDataFields, consultParameterServer } = this.props;
+        const { clientInformacion, getMasterDataFields, consultParameterServer, setConfidential } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         setConfidential(false);
         if (_.isEmpty(infoClient)) {
