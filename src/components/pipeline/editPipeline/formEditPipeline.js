@@ -40,7 +40,7 @@ import {
 import {
     BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
     MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS, PROBABILITY,
-    PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, PRODUCTS_MASK
+    PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, PRODUCTS_MASK, CURRENCY
 } from "../../selectsComponent/constants";
 import {
     EDITAR, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER, REVIEWED_DATE_FORMAT, SAVE_DRAFT,
@@ -966,11 +966,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         <ComboBox
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
-                                            textProp={'code'}
+                                            textProp={'value'}
                                             {...currency}
                                             name={nameCurrency}
                                             parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get('pipelineCurrencies') || []}
+                                            data={selectsReducer.get(CURRENCY) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                             onChange={val => this._changeCurrency(val)}
                                         />
