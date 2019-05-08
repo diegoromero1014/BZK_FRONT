@@ -579,7 +579,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         pipeline.uuid = uuid;
                                         addBusiness(pipeline);
                                     });
-                                    setConfidential(false);
                                     if(data.commercialReport){
                                         setConfidential(data.commercialReport.isConfidential);
                                         fillUsersPermissions(data.commercialReport.usersWithPermission, addUsers);
@@ -672,11 +671,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     }
                                 </Col>
                             </Row>
-                            <Row  style={{ padding: "5px 10px 20px 20px" }}>
+                            {origin !== ORIGIN_PIPELIN_BUSINESS && <Row  style={{ padding: "5px 10px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
                                     <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'}/>
                                 </Col>
-                            </Row>    
+                            </Row>}  
                             <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
                                     <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>

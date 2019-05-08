@@ -583,12 +583,12 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
               <span style={{ marginLeft: "20px" }} >
                 Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.
-              </span>
-              <Row  style={{ padding: "5px 10px 20px 20px" }}>
+              </span>              
+              {origin !== ORIGIN_PIPELIN_BUSINESS && <Row  style={{ padding: "5px 10px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
                     <PermissionUserReports />
                 </Col>
-              </Row>
+              </Row>}
               <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 20px 20px" }}>
                 <Col xs={12} md={12} lg={12}>
                   <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
