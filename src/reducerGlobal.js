@@ -67,15 +67,15 @@ export default (state = initialState, action) => {
         case constants.MODULE_COVENANTS:
             const permissionsCovenants = action.payload.data.data.permissions;
             return state.set('permissionsCovenants', permissionsCovenants);
+        case constants.MODULE_STUDY_CREDIT:
+            const permissionsStudyCredit = action.payload.data.data.permissions;
+            return state.set('permissionsStudyCredit', permissionsStudyCredit);
         case constants.BLOCK_REPORT_CONSTANT:
             return state;
         case constants.STOP_BLOCK_REPORT:
             return state;
         case constants.MESSAGE_SECURITY_FORM:
             return state.set('securityMessage', action.message);
-        case constants.MODULE_STUDY_CREDIT:
-            const permissionsStudyCredit = action.payload.data.data.permissions;
-            return state.set('permissionsStudyCredit', permissionsStudyCredit);
         default:
             return state;
     }

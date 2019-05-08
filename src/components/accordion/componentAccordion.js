@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Accordion, Icon } from 'semantic-ui-react';
+import { Accordion } from 'semantic-ui-react';
 import TitleSectionComponent from '../titleSection/titleSection';
 
 class ComponentAccordion extends Component {

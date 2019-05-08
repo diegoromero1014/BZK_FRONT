@@ -25,12 +25,16 @@ import { clearValuesAdressessKeys } from '../selectsComponent/actions';
 import * as views from './constants';
 
 import { get } from 'lodash';
+import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
 
 class ModalComponentDialog extends Component {
     constructor(props) {
         super(props);
         this.closeModal = this.closeModal.bind(this);
         this.openModal = this.openModal.bind(this);
+        this.renderTitle = this.renderTitle.bind(this);
+        this.renderConfidentialBrand = this.renderConfidentialBrand.bind(this);
+        
         this.state = {
             modalIsOpen: false
         };
@@ -45,6 +49,7 @@ class ModalComponentDialog extends Component {
                 clearSearchShareholder();
                 break;
         }
+
         this.setState({ modalIsOpen: true });
     }
 
@@ -52,6 +57,7 @@ class ModalComponentDialog extends Component {
         const { clearClienEdit } = this.props;
         const actions = this.props.actions;
         this.setState({ modalIsOpen: false });
+
         if (actions.component === views.VIEW_CONTACT) {
             clearClienEdit();
         }
@@ -103,11 +109,44 @@ class ModalComponentDialog extends Component {
         return (cell);
     }
 
+    renderTitle() {
+        const actions = this.props.actions;
+        const modalTitle = this.props.modalTitle;
+
+        switch (actions.component) {
+            case views.VIEW_TASK_ADMIN:
+                return (
+                        <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">
+                            {modalTitle}
+                            {this.renderConfidentialBrand()}
+                        </h4>
+                )
+            default:
+                    return (
+                        <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">{modalTitle}</h4>
+                    )
+        }
+    }
+
+    renderConfidentialBrand() {
+        const actions = this.props.actions;
+
+        if (typeof actions.id == 'number') {
+            if (actions.object.commercialReport && actions.object.commercialReport.isConfidential) {
+                return <ConfidentialBrandComponent /> 
+            }
+        } else {
+            if (actions.id.commercialReport && actions.id.commercialReport.isConfidential) {
+                return <ConfidentialBrandComponent />
+            }
+        }
+    }
+
 
     render() {
-        const modalTitle = this.props.modalTitle;
         const actions = this.props.actions;
         const modalSize = get(actions, 'modalSize', 'lg');
+
         return (
             <td style={{ padding: '10px', textAlign: 'center' }}>
                 <button className="btn btn-primary btn-sm" onClick={this.openModal}>
@@ -120,8 +159,7 @@ class ModalComponentDialog extends Component {
                     <div className={`modalBt4-dialog modalBt4-${modalSize}`}>
                         <div className="modalBt4-content modal-content">
                             <div className="modalBt4-header modal-header">
-                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }}
-                                    id="myModalLabel">{modalTitle}</h4>
+                                {this.renderTitle()}
                                 <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal"
                                     role="close">
                                     <span className="modal-title" aria-hidden="true" role="close"><i
