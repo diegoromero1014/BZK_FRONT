@@ -46,7 +46,6 @@ import {
   MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER,
   SAVE_DRAFT, SAVE_PUBLISHED,
   MESSAGE_ERROR,
-  VALUE_XSS_INVALID,
   REGEX_SIMPLE_XSS_TITLE,
   REGEX_SIMPLE_XSS_MESAGE,
   ALLOWS_NEGATIVE_INTEGER
@@ -69,10 +68,8 @@ let typeButtonClick = null;
 let datePipelineLastReview;
 let idCurrencyAux = null;
 let contollerErrorChangeType = false;
-let errorBusinessCategory = false;
 var thisForm;
 
-var isChildren = false;
 var nameDisbursementPlansInReducer = "disbursementPlans";
 
 export default function createFormPipeline(name, origin, functionCloseModal) {
@@ -114,8 +111,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         products: []
       };
 
-      isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
-
+     
       if (origin === ORIGIN_PIPELIN_BUSINESS) {
         nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
         fieldsWithRules.opportunityName.rules = [];
@@ -141,9 +137,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     showFormDisbursementPlan(isOpen) {
-      const { pipelineReducer } = this.props;
-      const listDisbursementPlans = pipelineReducer.get(nameDisbursementPlansInReducer);
-      const detailPipeline = pipelineReducer.get('detailPipeline');
       this.setState({
         showFormAddDisbursementPlan: isOpen,
         disbursementPlanRequired: false
@@ -500,7 +493,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _updateValue(value) {
-      const { fields: { idUsuario, nameUsuario, cargoUsuario }, contactsByClient } = this.props;
+      const { fields: { idUsuario, nameUsuario}, contactsByClient } = this.props;
       var contactClient = contactsByClient.get('contacts');
       var userSelected;
       _.map(contactClient, contact => {
@@ -526,7 +519,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     componentWillMount() {
       const { nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-        consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists, consultDataSelect,setConfidential, confidentialReducer } = this.props;
+        consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists, consultDataSelect,setConfidential } = this.props;
 
      
       nonValidateEnter(true);

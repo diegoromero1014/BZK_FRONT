@@ -45,7 +45,7 @@ import {
 import {
     EDITAR, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER, REVIEWED_DATE_FORMAT, SAVE_DRAFT,
     SAVE_PUBLISHED, ALLOWS_NEGATIVE_INTEGER, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT,
-    TITLE_ERROR_SWEET_ALERT, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE
+    TITLE_ERROR_SWEET_ALERT, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE
 } from "../../../constantsGlobal";
 import {
     ORIGIN_PIPELIN_BUSINESS, BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, PRODUCT_FAMILY_LEASING,
@@ -55,19 +55,11 @@ import { addUsers, setConfidential } from "../../commercialReport/actions";
 import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
 import PermissionUserReports from "../../commercialReport/permissionsUserReports";
 
-/*const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
-    "businessCategory", "currency", "indexing", "need", "observations", "product",
-    "client", "documentStatus", "reviewedDate", "createdBy", "updatedBy", "createdTimestamp",
-    "updatedTimestamp", "createdByName", "updatedByName", "positionCreatedBy", "positionUpdatedBy",
-    "probability", "amountDisbursed", "estimatedDisburDate", "pendingDisbursementAmount",
-    "opportunityName", "productFamily", "mellowingPeriod", "moneyDistribitionMarket",
-    "areaAssets", "areaAssetsValue", "termInMonthsValues"]; */
 
 var thisForm;
 let typeButtonClick = null;
-let errorBusinessCategory = false;
 var nameDisbursementPlansInReducer = "disbursementPlans";
-var isChildren = false;
+
 
 export default function createFormPipeline(name, origin, pipelineBusiness, functionCloseModal, disabled) {
     var nameMellowingPeriod = _.uniqueId('mellowingPeriod_');
@@ -114,7 +106,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 products: []
             };
 
-            isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
                 nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
                 fieldsWithRules.opportunityName.rules = [];
@@ -304,9 +295,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _submitEditPipeline() {
-            const { initialValues, fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
+            const { fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
                 businessCategory, currency, indexing, need, observations, product,
-                moneyDistribitionMarket, client, documentStatus, nameUsuario, probability,
+                moneyDistribitionMarket, nameUsuario, probability,
                 opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
                 termInMonthsValues, pendingDisbursementAmount }, createEditPipeline,
                 changeStateSaveData, swtShowMessage, pipelineBusinessReducer,
@@ -423,7 +414,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         updateKeyValueUsersBanco(e) {
             const { fields: { nameUsuario, idUsuario }, filterUsersBanco, swtShowMessage } = this.props;
             var self = this;
-            // idUsuario.onChange('');
             if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
                 e.consultclick ? "" : e.preventDefault();
                 if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
@@ -466,7 +456,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _updateValue(value) {
-            const { fields: { idUsuario, nameUsuario, cargoUsuario }, contactsByClient } = this.props;
+            const { fields: { idUsuario, nameUsuario}, contactsByClient } = this.props;
             var contactClient = contactsByClient.get('contacts');
             var userSelected;
             _.map(contactClient, contact => {
@@ -534,10 +524,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         componentWillMount() {
             const { clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-                getPipelineById, nonValidateEnter, fields: { nameUsuario, idUsuario, value, commission, roe,
-                    termInMonths, businessStatus, currency, indexing, need, observations,
-                    business, product, moneyDistribitionMarket, client, documentStatus, areaAssets,
-                    areaAssetsValue, termInMonthsValues }, addBusiness, clearBusiness,
+                getPipelineById, nonValidateEnter, addBusiness, clearBusiness,
                 showLoading, swtShowMessage, consultDataSelect, setConfidential } = this.props;
             const infoClient = clientInformacion.get('responseClientInfo'); typeButtonClick = null;
             if (origin !== ORIGIN_PIPELIN_BUSINESS) {
@@ -594,15 +581,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         componentDidMount() {
-            const { clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-                getPipelineById, nonValidateEnter, addBusiness, clearBusiness } = this.props;
-
             if (pipelineBusiness !== null && pipelineBusiness !== undefined && pipelineBusiness !== '') {
                 this._consultInfoPipeline(pipelineBusiness);
             }
         }
 
-        componentDidUpdate(prevProps, prevState) {
+        componentDidUpdate() {
             if (origin === ORIGIN_PIPELIN_BUSINESS && this.state.firstTimeCharging === false) {
                 this.modalScrollArea.scrollTop = 0;
                 this.setState({
@@ -613,15 +597,15 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         render() {
             const {
-                initialValues, fields: { nameUsuario, idUsuario, value,
+                fields: { nameUsuario, idUsuario, value,
                     commission, roe, termInMonths, businessStatus, businessCategory, currency,
-                    indexing, need, observations, business, product, moneyDistribitionMarket, client,
-                    documentStatus, pendingDisbursementAmount, updatedBy, createdTimestamp,
+                    indexing, need, observations, product, moneyDistribitionMarket,
+                    pendingDisbursementAmount, updatedBy, createdTimestamp,
                     updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
                     positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate,
                     opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues
-                }, clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer,
-                reducerGlobal, navBar } = this.props;
+                },  selectsReducer, handleSubmit, pipelineReducer,
+                reducerGlobal } = this.props;
 
             const ownerDraft = pipelineReducer.get('ownerDraft');
             const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
