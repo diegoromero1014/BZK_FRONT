@@ -526,15 +526,16 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     componentWillMount() {
       const { nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-        consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists, consultDataSelect,setConfidential } = this.props;
+        consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists, consultDataSelect,setConfidential, confidentialReducer } = this.props;
 
-      setConfidential(false);
+     
       nonValidateEnter(true);
       updateDisbursementPlans([], origin);
       clearLists([PRODUCTS]);
 
-      if (origin !== ORIGIN_PIPELIN_BUSINESS) {
+      if (origin != ORIGIN_PIPELIN_BUSINESS) {
         clearBusiness();
+        setConfidential(false);
       }
 
       const infoClient = clientInformacion.get('responseClientInfo');
