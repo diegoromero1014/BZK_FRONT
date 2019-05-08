@@ -57,7 +57,7 @@ class PermissionUserReports extends Component {
     }
 
     _addUser() {
-        const { fields: { idUser, nameUser, description, cargoUsuario, empresaUsuario }, usersPermission, addUsers, swtShowMessage } = this.props;
+        const { fields: { idUser, nameUser, description }, usersPermission, addUsers, swtShowMessage } = this.props;
         if (validateValue(description.value) && validateValue(nameUser.value) && !(validateIsNullOrUndefined(idUser.value) || idUser.value <= 0)) {
             this.validateUser(nameUser.value).then(() => {
                 if (this.state.userSelected) {
@@ -124,7 +124,7 @@ class PermissionUserReports extends Component {
     }
 
     _updateValue(value) {
-        const { fields: { idUser, nameUser, description, cargoUsuario }, contactsByClient } = this.props;
+        const { fields: { idUser, nameUser, description } } = this.props;
         idUser.onChange(value);
         nameUser.onChange(value)
         description.onChange(value)
