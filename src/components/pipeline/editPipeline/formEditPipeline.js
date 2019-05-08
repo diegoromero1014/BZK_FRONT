@@ -38,37 +38,37 @@ import {
 } from "../../../actionsGlobal";
 
 import {
+<<<<<<< HEAD
     BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
     MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS, PROBABILITY,
     PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, PRODUCTS_MASK, CURRENCY
+=======
+    BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY, MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY,
+    PIPELINE_STATUS, PROBABILITY, PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, PRODUCTS_MASK
+>>>>>>> 89dda43b53469f8ccee92775a12ca273ce3901f5
 } from "../../selectsComponent/constants";
 import {
     EDITAR, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER, REVIEWED_DATE_FORMAT, SAVE_DRAFT,
     SAVE_PUBLISHED, ALLOWS_NEGATIVE_INTEGER, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT,
-    TITLE_ERROR_SWEET_ALERT, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE
+    TITLE_ERROR_SWEET_ALERT, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE
 } from "../../../constantsGlobal";
 import {
     ORIGIN_PIPELIN_BUSINESS, BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, PRODUCT_FAMILY_LEASING,
     HELP_PROBABILITY
 } from "../constants";
+import { addUsers, setConfidential } from "../../commercialReport/actions";
+import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
+import PermissionUserReports from "../../commercialReport/permissionsUserReports";
 
-/*const fields = ["id", "nameUsuario", "idUsuario", "value", "commission", "roe", "termInMonths", "businessStatus",
-    "businessCategory", "currency", "indexing", "need", "observations", "product",
-    "client", "documentStatus", "reviewedDate", "createdBy", "updatedBy", "createdTimestamp",
-    "updatedTimestamp", "createdByName", "updatedByName", "positionCreatedBy", "positionUpdatedBy",
-    "probability", "amountDisbursed", "estimatedDisburDate", "pendingDisbursementAmount",
-    "opportunityName", "productFamily", "mellowingPeriod", "moneyDistribitionMarket",
-    "areaAssets", "areaAssetsValue", "termInMonthsValues"]; */
 
-var thisForm;
+let thisForm;
 let typeButtonClick = null;
-let errorBusinessCategory = false;
-var nameDisbursementPlansInReducer = "disbursementPlans";
-var isChildren = false;
+let nameDisbursementPlansInReducer = "disbursementPlans";
+let isChildren = false;
 
 export default function createFormPipeline(name, origin, pipelineBusiness, functionCloseModal, disabled) {
-    var nameMellowingPeriod = _.uniqueId('mellowingPeriod_');
-    var nameProductFamily = _.uniqueId('productFamily_');
+    let nameMellowingPeriod = _.uniqueId('mellowingPeriod_');
+    let nameProductFamily = _.uniqueId('productFamily_');
     let nameProduct = _.uniqueId('product_');
     let nameIndexing = _.uniqueId('indexing_');
     let nameNeed = _.uniqueId('need_');
@@ -76,7 +76,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
     let nameMoneyDistribitionMarket = _.uniqueId('moneyDistribitionMarket_');
     let nameAreaAssets = _.uniqueId('areaAssets_');
     let nameTermInMonthsValues = _.uniqueId('termInMonthsValues_');
-    var nameBusinessCategory = _.uniqueId('businessCategory_');
+    let nameBusinessCategory = _.uniqueId('businessCategory_');
     let nameProbability = _.uniqueId('probability_');
     let nameCurrency = _.uniqueId('currency_');
     let participantBanc = _.uniqueId('participantBanc_');
@@ -197,14 +197,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 });
             }
 
-            var lugarSelector = $('.valueMillions');
-            var input = lugarSelector.find("input");
+            let lugarSelector = $('.valueMillions');
+            let input = lugarSelector.find("input");
             input.focus();
         }
 
         _handleTermInMonths(valuReduxForm, val) {
             //Elimino los caracteres no validos
-            for (var i = 0, output = '', validos = "0123456789"; i < (val + "").length; i++) {
+            for (let i = 0, output = '', validos = "0123456789"; i < (val + "").length; i++) {
                 if (validos.indexOf(val.toString().charAt(i)) !== -1) {
                     output += val.toString().charAt(i)
                 }
@@ -301,13 +301,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _submitEditPipeline() {
-            const { initialValues, fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
-                businessCategory, currency, indexing, need, observations, product,
-                moneyDistribitionMarket, client, documentStatus, nameUsuario, probability,
-                opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                termInMonthsValues, pendingDisbursementAmount }, createEditPipeline,
-                changeStateSaveData, swtShowMessage, pipelineBusinessReducer,
-                pipelineReducer } = this.props;
+            const { fields: {
+                idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
+                moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
+                termInMonthsValues, pendingDisbursementAmount
+            }, createEditPipeline, changeStateSaveData, swtShowMessage, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
+            } = this.props;
+
             const idPipeline = origin === ORIGIN_PIPELIN_BUSINESS ? pipelineBusiness.id : this.props.params.id;
             if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
                 this.setState({
@@ -350,7 +350,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "mellowingPeriod": mellowingPeriod.value ? mellowingPeriod.value : "",
                             "areaAssets": areaAssets.value ? areaAssets.value : "",
                             "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.00'),
-                            "disbursementPlans": listDisburmentPlans
+                            "disbursementPlans": listDisburmentPlans,
+                            "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
                         };
                         if (origin === ORIGIN_PIPELIN_BUSINESS) {
                             typeMessage = "success";
@@ -367,12 +368,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 return item;
                             });
                             pipelineJson.listPipelines = _.map(pipelineBusinessReducer.toArray(), (pipelineBusiness) => {
-                                pipelineBusiness.disbursementPlans = _.map(pipelineBusiness.disbursementPlans, (item) => {
-                                    item.id = item.id === null || item.id.toString().includes('disburPlan_') ? null : item.id;
-                                    return item;
-                                });
-                                return _.omit(pipelineBusiness, ['uuid']);
-                            }
+                                    pipelineBusiness.disbursementPlans = _.map(pipelineBusiness.disbursementPlans, (item) => {
+                                        item.id = item.id === null || item.id.toString().includes('disburPlan_') ? null : item.id;
+                                        return item;
+                                    });
+                                    return _.omit(pipelineBusiness, ['uuid']);
+                                }
                             );
                             changeStateSaveData(true, MESSAGE_SAVE_DATA);
                             createEditPipeline(pipelineJson).then((data) => {
@@ -392,12 +393,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
                                         let errorResponse = _.get(data, 'payload.data.data');
                                         errorResponse.forEach(function(element) {
-                                          if(element.fieldName == "observations"){
-                                            observations.error = element.message;
-                                            let oValue = observations.value;
-                                            observations.onChange(oValue);
-                                            message = "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.";
-                                          }
+                                            if(element.fieldName == "observations"){
+                                                observations.error = element.message;
+                                                let oValue = observations.value;
+                                                observations.onChange(oValue);
+                                                message = "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.";
+                                            }
                                         });
 
                                         this.setState({ showMessageEditPipeline: true });
@@ -418,8 +419,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         updateKeyValueUsersBanco(e) {
             const { fields: { nameUsuario, idUsuario }, filterUsersBanco, swtShowMessage } = this.props;
-            var self = this;
-            // idUsuario.onChange('');
+            let self = this;
+
             if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
                 e.consultclick ? "" : e.preventDefault();
                 if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
@@ -462,9 +463,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _updateValue(value) {
-            const { fields: { idUsuario, nameUsuario, cargoUsuario }, contactsByClient } = this.props;
-            var contactClient = contactsByClient.get('contacts');
-            var userSelected;
+            const { fields: { idUsuario, nameUsuario }, contactsByClient } = this.props;
+            let contactClient = contactsByClient.get('contacts');
+            let userSelected;
             _.map(contactClient, contact => {
                 if (contact.id.toString() === value) {
                     userSelected = contact;
@@ -484,15 +485,16 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _consultInfoPipeline(data) {
-            const { fields: { businessStatus, commission, currency, idUsuario, nameUsuario,
-                indexing, need, observations, product, roe, moneyDistribitionMarket,
-                termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp,
-                updatedTimestamp, createdByName, updatedByName, positionCreatedBy, positionUpdatedBy,
-                reviewedDate, probability, businessCategory, opportunityName, productFamily,
-                mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues,
-                pendingDisbursementAmount }, updateDisbursementPlans } = this.props;
+            const {
+                fields: { businessStatus, commission, currency, idUsuario, nameUsuario, indexing, need, observations, product, roe, moneyDistribitionMarket,
+                    termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, positionCreatedBy,
+                    positionUpdatedBy, reviewedDate, probability, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
+                    termInMonthsValues, pendingDisbursementAmount
+                }, updateDisbursementPlans
+            } = this.props;
+
             updateDisbursementPlans(data.disbursementPlans, origin);
-            this.setState({ flagInitLoadAssests: true });
+            this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport});
             productFamily.onChange(data.productFamily);
             opportunityName.onChange(data.opportunityName);
             businessStatus.onChange(data.businessStatus);
@@ -529,12 +531,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         componentWillMount() {
-            const { clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-                getPipelineById, nonValidateEnter, fields: { nameUsuario, idUsuario, value, commission, roe,
-                    termInMonths, businessStatus, currency, indexing, need, observations,
-                    business, product, moneyDistribitionMarket, client, documentStatus, areaAssets,
-                    areaAssetsValue, termInMonthsValues }, addBusiness, clearBusiness,
-                showLoading, swtShowMessage, consultDataSelect } = this.props;
+            const {
+                clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds, getPipelineById, nonValidateEnter, addBusiness, clearBusiness,
+                showLoading, swtShowMessage, consultDataSelect, setConfidential
+            } = this.props;
+
             const infoClient = clientInformacion.get('responseClientInfo'); typeButtonClick = null;
             if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                 clearBusiness();
@@ -569,12 +570,16 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 if (!validateResponse(result)) {
                                     swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                                 } else {
-                                    var data = result.payload.data.data;
+                                    let data = result.payload.data.data;
                                     _.forIn(data.listPipelines, function (pipeline, key) {
                                         const uuid = _.uniqueId('pipelineBusiness_');
                                         pipeline.uuid = uuid;
                                         addBusiness(pipeline);
                                     });
+                                    if(data.commercialReport){
+                                        setConfidential(data.commercialReport.isConfidential);
+                                        fillUsersPermissions(data.commercialReport.usersWithPermission, addUsers);
+                                    }
                                     this._consultInfoPipeline(data);
                                 }
                             });
@@ -586,9 +591,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         componentDidMount() {
-            const { clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-                getPipelineById, nonValidateEnter, addBusiness, clearBusiness } = this.props;
-
             if (pipelineBusiness !== null && pipelineBusiness !== undefined && pipelineBusiness !== '') {
                 this._consultInfoPipeline(pipelineBusiness);
             }
@@ -605,15 +607,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         render() {
             const {
-                initialValues, fields: { nameUsuario, idUsuario, value,
-                    commission, roe, termInMonths, businessStatus, businessCategory, currency,
-                    indexing, need, observations, business, product, moneyDistribitionMarket, client,
-                    documentStatus, pendingDisbursementAmount, updatedBy, createdTimestamp,
-                    updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
-                    positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate,
-                    opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues
-                }, clientInformacion, selectsReducer, handleSubmit, pipelineReducer, consultParameterServer,
-                reducerGlobal, navBar } = this.props;
+                fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
+                    moneyDistribitionMarket, pendingDisbursementAmount, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
+                    positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
+                    termInMonthsValues
+                }, selectsReducer, handleSubmit, pipelineReducer, reducerGlobal
+            } = this.props;
 
             const ownerDraft = pipelineReducer.get('ownerDraft');
             const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
@@ -663,6 +662,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     }
                                 </Col>
                             </Row>
+                            {origin !== ORIGIN_PIPELIN_BUSINESS && <Row  style={{ padding: "5px 10px 20px 20px" }}>
+                                <Col xs={12} md={12} lg={12}>
+                                    <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'}/>
+                                </Col>
+                            </Row>}  
                             <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
                                     <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -1306,11 +1310,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             swtShowMessage,
             updateDisbursementPlans,
             consultListWithParameterUbication,
-            consultDataSelect
+            consultDataSelect,
+            addUsers,
+            setConfidential
         }, dispatch);
     }
 
-    function mapStateToProps({ clientInformacion, selectsReducer, contactsByClient, pipelineReducer, reducerGlobal, navBar, pipelineBusinessReducer }, pathParameter) {
+    function mapStateToProps({ clientInformacion, selectsReducer, contactsByClient, pipelineReducer, reducerGlobal, navBar, pipelineBusinessReducer, usersPermission, confidentialReducer }, pathParameter) {
         return {
             clientInformacion,
             selectsReducer,
@@ -1320,23 +1326,25 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             consultParameterServer,
             reducerGlobal,
             navBar,
-            pipelineBusinessReducer
+            pipelineBusinessReducer,
+            usersPermission,
+            confidentialReducer
         };
     }
 
     function fomatInitialStateNumber(val, numDecimals) {
-        var decimal = '';
+        let decimal = '';
         if (val !== undefined && val !== null && val !== '') {
             val = val.toString();
             if (val.includes(".")) {
-                var vectorVal = val.split(".");
+                let vectorVal = val.split(".");
                 val = vectorVal[0] + '.';
                 if (vectorVal.length > 1) {
-                    var numDec = (numDecimals == undefined || numDecimals == null) ? 4 : numDecimals;
+                    let numDec = (numDecimals == undefined || numDecimals == null) ? 4 : numDecimals;
                     decimal = vectorVal[1].substring(0, numDec);
                 }
             }
-            var pattern = /(-?\d+)(\d{3})/;
+            let pattern = /(-?\d+)(\d{3})/;
             while (pattern.test(val + "")) {
                 val = val.toString().replace(pattern, "$1,$2");
             }

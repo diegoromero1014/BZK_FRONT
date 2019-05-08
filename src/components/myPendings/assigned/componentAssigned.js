@@ -216,7 +216,7 @@ class ComponentAssigned extends Component {
                             />
                         </Col>
                         <Col xs={5} sm={6} md={3} lg={1} style={{width: '100%'}}>
-                            <Tooltip text="Descargar tareas asignadas">
+                            <Tooltip text="Limpiar búsqueda">
                                 <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
                                         style={{marginLeft: "17px"}}>
                                     <i className="erase icon"

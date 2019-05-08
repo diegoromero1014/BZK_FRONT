@@ -293,6 +293,7 @@ class ModalComponentGroup extends Component {
                                 'description',
                                 'id',
                             ],
+
                             onSelect: function (event) {
                                 tipoDocumento.onChange(event.idTypeDocument);
                                 numeroDocumento.onChange(event.numberDocument);

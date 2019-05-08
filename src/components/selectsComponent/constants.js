@@ -88,5 +88,4 @@ export const MANAGEMENTS_OF_SECTOR_STRATEGY =  "managementsOfSectorStrategy"
 //INICIO prevent overwrite data reducer editclient
 export const FILTER_PROVINCE_CLIENT = 'provinceClient';
 export const FILTER_CITY_CLIENT = 'cityClient';
-export const CURRENCY = 'currency';
 //FIN

@@ -132,6 +132,12 @@ class listAssignedComponent extends Component {
         title: "Estado",
         key: "state",
         width: '80px'
+      }, 
+
+      {
+        title: "",
+        key: "commercialReport.isConfidential",
+        width: '80px'
       }
     ]
   }
@@ -144,6 +150,7 @@ class listAssignedComponent extends Component {
         id: item.idTask,
         urlServer: "./component",
         idClient: item.idClient,
+        object: item,
         functCloseModal: this._closeModalEditTask,
         component: VIEW_TASK_ADMIN
       },
@@ -156,7 +163,8 @@ class listAssignedComponent extends Component {
         key: "trafficLight"
       },
       closingDate: mapDateValueFromTask(item.closingDate),
-      state: item.state
+      state: item.state,
+      commercialReport: item.commercialReport
     }));
   }
 

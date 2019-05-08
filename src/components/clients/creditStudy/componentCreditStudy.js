@@ -536,7 +536,6 @@ export class ComponentStudyCredit extends Component {
                         this.setState({
                             showSuccessMessage: true
                         });
-                        this._validatePDFStatus();
                     }
                 }, (reason) => {
                     changeStateSaveData(false, "");
@@ -582,7 +581,6 @@ export class ComponentStudyCredit extends Component {
 
             showLoading(false, null);
             this.setState({ isPDFGenerated: true });
-            this._validatePDFStatus();
         }).catch((error) => {
             showLoading(false, null);
             swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, ocurrió un error generando el PDF.');
@@ -665,28 +663,21 @@ export class ComponentStudyCredit extends Component {
         })
     }
     _validatePDFStatus(){
-        const {consultParameterServer, getContextClient, reducerGlobal} = this.props;
-        let daysParameter;
-        var idClient = window.sessionStorage.getItem('idClientSelected');
+        const {consultParameterServer, reducerGlobal, swtShowMessage, studyCreditReducer} = this.props;
+        const contextClientData = studyCreditReducer.get("contextClient");
+        let initialDate = moment(contextClientData.updatedTimestamp);
+        let finalDate = moment(new Date());
+        let diffDays = finalDate.diff(initialDate, 'days');
+        let isDefinitive = _.isNull(contextClientData.id) ? false: !contextClientData.isDraft;
+        let permissionToGeneratePDF = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), GENERAR_PDF_ESTUDIO_CREDITO), false);
         //Obtiene el parametro de dias habilitados para generar pdf en la BD
         consultParameterServer(DIAS_HABILITADOS_PARA_GENERAR_PDF).then((data) => {
             var response = JSON.parse(data.payload.data.parameter);
-            daysParameter = !_.isUndefined(response.value) ? response.value : '';
-        }, () => {
-            changeStateSaveData(false, "");
-            swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-        });
-        //Obtiene el dia de guardado de estudio de crédito y si está guardado como definitivo
-        getContextClient(idClient).then((data) => {
-            let initialDate = _.isNull(data.payload.data.data.updatedTimestamp)||_.isUndefined(data.payload.data.data.updatedTimestamp)||data.payload.data.data.updatedTimestamp==0 ? data.payload.data.data.createdTimestamp : data.payload.data.data.updatedTimestamp;
-            let finalDate = moment(new Date());
-            let diffDays = finalDate.diff(moment(initialDate), 'days');
-            let isDefinitive = _.isNull(data.payload.data.data.id) ? false: !data.payload.data.data.isDraft;
-            let permissionToGeneratePDF = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), GENERAR_PDF_ESTUDIO_CREDITO), false);
+            const daysParameter = !_.isUndefined(response.value) ? response.value : '';
             this.setState({
                 permissionToGeneratePDF,
                 isDefinitive,
-                isEnabled : diffDays <= daysParameter,
+                isEnabled : isDefinitive && diffDays <= daysParameter,
                 daysParameter
             });
         }, () => {
@@ -761,7 +752,7 @@ export class ComponentStudyCredit extends Component {
 
                 const showButtonPDF = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), GENERAR_PDF_ESTUDIO_CREDITO), false) && data.payload.data.data.id != null;
                 const showButtonSaveAdvance = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), EDITAR), false) && data.payload.data.data.id != null;
-
+                this._validatePDFStatus();
                 this.setState({ isPDFGenerated: data.payload.data.data.isPDFGenerated, showButtonPDF, showButtonSaveAdvance });
 
             }, () => {
@@ -769,7 +760,7 @@ export class ComponentStudyCredit extends Component {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             });
             this._validateInfoStudyCredit();
-            this._validatePDFStatus();
+            
         }
     }
 
