@@ -44,12 +44,8 @@ import {BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILI
 import {
   ALLOWS_NEGATIVE_INTEGER,
   MESSAGE_ERROR,
-<<<<<<< HEAD
-  REGEX_SIMPLE_XSS_TITLE,
-=======
   MESSAGE_SAVE_DATA,
   ONLY_POSITIVE_INTEGER,
->>>>>>> ea4c3e9dbd951c95b338d36040a2d499dabdec7c
   REGEX_SIMPLE_XSS_MESAGE,
   REGEX_SIMPLE_XSS_TITLE,
   SAVE_DRAFT,
@@ -502,15 +498,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _updateValue(value) {
-<<<<<<< HEAD
-      const { fields: { idUsuario, nameUsuario}, contactsByClient } = this.props;
-      var contactClient = contactsByClient.get('contacts');
-      var userSelected;
-=======
       const { fields: { idUsuario, nameUsuario }, contactsByClient } = this.props;
       let contactClient = contactsByClient.get('contacts');
       let userSelected;
->>>>>>> ea4c3e9dbd951c95b338d36040a2d499dabdec7c
       _.map(contactClient, contact => {
         if (contact.id.toString() === value) {
           userSelected = contact;

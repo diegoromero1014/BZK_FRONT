@@ -57,13 +57,8 @@ import PermissionUserReports from "../../commercialReport/permissionsUserReports
 
 let thisForm;
 let typeButtonClick = null;
-<<<<<<< HEAD
-var nameDisbursementPlansInReducer = "disbursementPlans";
-
-=======
 let nameDisbursementPlansInReducer = "disbursementPlans";
-let isChildren = false;
->>>>>>> ea4c3e9dbd951c95b338d36040a2d499dabdec7c
+
 
 export default function createFormPipeline(name, origin, pipelineBusiness, functionCloseModal, disabled) {
     let nameMellowingPeriod = _.uniqueId('mellowingPeriod_');
@@ -299,15 +294,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _submitEditPipeline() {
-<<<<<<< HEAD
-            const { fields: { idUsuario, value, commission, roe, termInMonths, businessStatus,
-                businessCategory, currency, indexing, need, observations, product,
-                moneyDistribitionMarket, nameUsuario, probability,
-                opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                termInMonthsValues, pendingDisbursementAmount }, createEditPipeline,
-                changeStateSaveData, swtShowMessage, pipelineBusinessReducer,
-                pipelineReducer, usersPermission, confidentialReducer } = this.props;
-=======
             const { fields: {
                 idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                 moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
@@ -315,7 +301,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }, createEditPipeline, changeStateSaveData, swtShowMessage, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
             } = this.props;
 
->>>>>>> ea4c3e9dbd951c95b338d36040a2d499dabdec7c
             const idPipeline = origin === ORIGIN_PIPELIN_BUSINESS ? pipelineBusiness.id : this.props.params.id;
             if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
                 this.setState({
@@ -427,12 +412,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         updateKeyValueUsersBanco(e) {
             const { fields: { nameUsuario, idUsuario }, filterUsersBanco, swtShowMessage } = this.props;
-<<<<<<< HEAD
-            var self = this;
-=======
             let self = this;
 
->>>>>>> ea4c3e9dbd951c95b338d36040a2d499dabdec7c
             if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
                 e.consultclick ? "" : e.preventDefault();
                 if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
@@ -543,17 +524,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         componentWillMount() {
-<<<<<<< HEAD
-            const { clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-                getPipelineById, nonValidateEnter, addBusiness, clearBusiness,
-                showLoading, swtShowMessage, consultDataSelect, setConfidential, addUsers } = this.props;
-=======
             const {
                 clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds, getPipelineById, nonValidateEnter, addBusiness, clearBusiness,
-                showLoading, swtShowMessage, consultDataSelect, setConfidential
+                showLoading, swtShowMessage, consultDataSelect, setConfidential, addUsers
             } = this.props;
 
->>>>>>> ea4c3e9dbd951c95b338d36040a2d499dabdec7c
             const infoClient = clientInformacion.get('responseClientInfo'); typeButtonClick = null;
             if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                 clearBusiness();
@@ -625,24 +600,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         render() {
             const {
-<<<<<<< HEAD
-                fields: { nameUsuario, idUsuario, value,
-                    commission, roe, termInMonths, businessStatus, businessCategory, currency,
-                    indexing, need, observations, product, moneyDistribitionMarket,
-                    pendingDisbursementAmount, updatedBy, createdTimestamp,
-                    updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
-                    positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate,
-                    opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue, termInMonthsValues
-                },  selectsReducer, handleSubmit, pipelineReducer,
-                reducerGlobal } = this.props;
-=======
                 fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                     moneyDistribitionMarket, pendingDisbursementAmount, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
                     positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
                     termInMonthsValues
                 }, selectsReducer, handleSubmit, pipelineReducer, reducerGlobal
             } = this.props;
->>>>>>> ea4c3e9dbd951c95b338d36040a2d499dabdec7c
 
             const ownerDraft = pipelineReducer.get('ownerDraft');
             const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
