@@ -113,8 +113,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         products: []
       };
 
-      isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
-
+     
       if (origin === ORIGIN_PIPELIN_BUSINESS) {
         nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
         fieldsWithRules.opportunityName.rules = [];
@@ -525,7 +524,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     componentWillMount() {
       const { nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
-        consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists, consultDataSelect,setConfidential, confidentialReducer } = this.props;
+        consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists, consultDataSelect,setConfidential } = this.props;
 
      
       nonValidateEnter(true);

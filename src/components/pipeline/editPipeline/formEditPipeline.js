@@ -58,7 +58,7 @@ import PermissionUserReports from "../../commercialReport/permissionsUserReports
 let thisForm;
 let typeButtonClick = null;
 let nameDisbursementPlansInReducer = "disbursementPlans";
-let isChildren = false;
+
 
 export default function createFormPipeline(name, origin, pipelineBusiness, functionCloseModal, disabled) {
     let nameMellowingPeriod = _.uniqueId('mellowingPeriod_');
@@ -105,7 +105,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 products: []
             };
 
-            isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
                 nameDisbursementPlansInReducer = "childBusinessDisbursementPlans";
                 fieldsWithRules.opportunityName.rules = [];
@@ -527,7 +526,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         componentWillMount() {
             const {
                 clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds, getPipelineById, nonValidateEnter, addBusiness, clearBusiness,
-                showLoading, swtShowMessage, consultDataSelect, setConfidential
+                showLoading, swtShowMessage, consultDataSelect, setConfidential, addUsers
             } = this.props;
 
             const infoClient = clientInformacion.get('responseClientInfo'); typeButtonClick = null;
@@ -590,7 +589,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
         }
 
-        componentDidUpdate(prevProps, prevState) {
+        componentDidUpdate() {
             if (origin === ORIGIN_PIPELIN_BUSINESS && this.state.firstTimeCharging === false) {
                 this.modalScrollArea.scrollTop = 0;
                 this.setState({
