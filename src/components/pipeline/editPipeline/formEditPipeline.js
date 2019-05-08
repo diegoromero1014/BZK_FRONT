@@ -525,7 +525,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         componentWillMount() {
             const { clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
                 getPipelineById, nonValidateEnter, addBusiness, clearBusiness,
-                showLoading, swtShowMessage, consultDataSelect, setConfidential } = this.props;
+                showLoading, swtShowMessage, consultDataSelect, setConfidential, addUsers } = this.props;
             const infoClient = clientInformacion.get('responseClientInfo'); typeButtonClick = null;
             if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                 clearBusiness();
