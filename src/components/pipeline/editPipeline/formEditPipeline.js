@@ -38,8 +38,9 @@ import {
 } from "../../../actionsGlobal";
 
 import {
-    BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY, MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY,
-    PIPELINE_STATUS, PROBABILITY, PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, PRODUCTS_MASK
+    BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
+    MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS, PROBABILITY,
+    PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, PRODUCTS_MASK, CURRENCY
 } from "../../selectsComponent/constants";
 import {
     EDITAR, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER, REVIEWED_DATE_FORMAT, SAVE_DRAFT,
@@ -48,7 +49,8 @@ import {
 } from "../../../constantsGlobal";
 import {
     ORIGIN_PIPELIN_BUSINESS, BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, PRODUCT_FAMILY_LEASING,
-    HELP_PROBABILITY
+    HELP_PROBABILITY,
+    CURRENCY_MESSAGE
 } from "../constants";
 import { addUsers, setConfidential } from "../../commercialReport/actions";
 import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
@@ -102,7 +104,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 //Se utilizan para controlar el componente de planes de desembolso 
                 showFormAddDisbursementPlan: false,
                 disbursementPlanRequired: false,
-                products: []
+                products: [],
+                showAlertCurrency: false 
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -129,6 +132,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._changeProductFamily = this._changeProductFamily.bind(this);
             this.showFormDisbursementPlan = this.showFormDisbursementPlan.bind(this);
             this._changeValue = this._changeValue.bind(this);
+            this.showAlertDisabledCurrency = this.showAlertDisabledCurrency.bind(this);
         }
 
         showFormDisbursementPlan(isOpen) {
@@ -136,6 +140,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showFormAddDisbursementPlan: isOpen,
                 disbursementPlanRequired: false
             });
+        }
+
+        showAlertDisabledCurrency(isEditableValue) {
+            this.setState({showAlertCurrency: !isEditableValue});   
         }
 
         _closeMessageEditPipeline() {
@@ -555,7 +563,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
                 getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                     PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
-                    FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES]).then((result) => {
+                    FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY]).then((result) => {
                         if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                             const { params: { id } } = this.props;
                             getPipelineById(id).then((result) => {
@@ -960,17 +968,20 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         <dt>
                                             <span>Moneda (</span><span style={{ color: "red" }}>*</span>)
                                         </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'code'}
-                                            {...currency}
-                                            name={nameCurrency}
-                                            parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get('pipelineCurrencies') || []}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                            onChange={val => this._changeCurrency(val)}
-                                        />
+                                        <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
+                                            <ComboBox
+                                                labelInput="Seleccione..."
+                                                valueProp={'id'}
+                                                textProp={'value'}
+                                                {...currency}
+                                                name={nameCurrency}
+                                                parentId="dashboardComponentScroll"
+                                                data={selectsReducer.get(CURRENCY) || []}
+                                                disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
+                                                onChange={val => this._changeCurrency(val)}
+                                            />
+                                        </div>
+                                        
                                     </div>
                                 </Col>
                             </Row>
@@ -981,18 +992,20 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             <span>Valor nominal (</span>
                                             <span style={{ color: "red" }}>*</span>)
                                         </dt>
-                                        <Input
-                                            {...value}
-                                            name="valueMillions"
-                                            type="text"
-                                            placeholder="Miles ' , ' y decimales ' . '"
-                                            parentId="dashboardComponentScroll"
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
-                                            onFocus={val => handleFocusValueNumber(value, value.value)}
-                                            disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
-                                            onChange={val => this._changeValue(val)
-                                            }
-                                        />
+                                        <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
+                                            <Input
+                                                {...value}
+                                                name="valueMillions"
+                                                type="text"
+                                                placeholder="Miles ' , ' y decimales ' . '"
+                                                parentId="dashboardComponentScroll"
+                                                onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
+                                                onFocus={val => handleFocusValueNumber(value, value.value)}
+                                                disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
+                                                onChange={val => this._changeValue(val)
+                                                }
+                                            />
+                                        </div>
                                     </div>
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
@@ -1272,6 +1285,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             title={REGEX_SIMPLE_XSS_TITLE}
                             text={REGEX_SIMPLE_XSS_MESAGE}
                             onConfirm={() => this.setState({ errorValidateXss: false })}
+                        />
+                        <SweetAlert
+                            type="warning"
+                            show={this.state.showAlertCurrency}
+                            title='Advertencia'
+                            text={CURRENCY_MESSAGE}
+                            onConfirm={() => this.setState({ showAlertCurrency: false })}
                         />
                         <div className="modalBt4-footer modal-footer"
                             style={origin === ORIGIN_PIPELIN_BUSINESS ? { height: "76px" } : { display: "none" }}>
