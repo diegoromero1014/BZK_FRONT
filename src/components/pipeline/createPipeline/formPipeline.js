@@ -38,18 +38,19 @@ import {
   PRODUCT_FAMILY,
   PRODUCTS,
   PRODUCTS_MASK,
-  TERM_IN_MONTHS_VALUES
+  TERM_IN_MONTHS_VALUES,
+  CURRENCY
 } from "../../selectsComponent/constants";
-import {BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY, ORIGIN_PIPELIN_BUSINESS, PRODUCT_FAMILY_LEASING} from "../constants";
+import {BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY, ORIGIN_PIPELIN_BUSINESS, PRODUCT_FAMILY_LEASING, CURRENCY_MESSAGE} from "../constants";
 import {
   ALLOWS_NEGATIVE_INTEGER,
   MESSAGE_ERROR,
-  MESSAGE_SAVE_DATA,
-  ONLY_POSITIVE_INTEGER,
-  REGEX_SIMPLE_XSS_MESAGE,
   REGEX_SIMPLE_XSS_TITLE,
+  REGEX_SIMPLE_XSS_MESAGE,
   SAVE_DRAFT,
-  SAVE_PUBLISHED
+  SAVE_PUBLISHED,
+  ONLY_POSITIVE_INTEGER,
+  MESSAGE_SAVE_DATA
 } from "../../../constantsGlobal";
 import {LAST_PIPELINE_REVIEW} from "../../../constantsParameters";
 
@@ -110,7 +111,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         //Se utilizan para controlar el componente de planes de desembolso 
         showFormAddDisbursementPlan: false,
         disbursementPlanRequired: false,
-        products: []
+        products: [],
+        showAlertCurrency: false
       };
 
       isChildren = origin === ORIGIN_PIPELIN_BUSINESS;
@@ -137,6 +139,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._changeProductFamily = this._changeProductFamily.bind(this);
       this.showFormDisbursementPlan = this.showFormDisbursementPlan.bind(this);
       this._changeValue = this._changeValue.bind(this);
+      this.showAlertDisabledCurrency = this.showAlertDisabledCurrency.bind(this);
     }
 
     showFormDisbursementPlan(isOpen) {
@@ -146,6 +149,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       });
     }
 
+    showAlertDisabledCurrency(isEditableValue) {
+      this.setState({showAlertCurrency: !isEditableValue});   
+  }
     // Colcar aquí el limpiar el formulario
     _closeMessageCreatePipeline() {
       this.setState({
@@ -547,7 +553,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       } else {
         getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY,
           PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
-          FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES]);
+          FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY]);
 
         consultDataSelect(PRODUCTS, PRODUCTS_MASK);
 
@@ -855,16 +861,19 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     <dt>
                       <span>Moneda (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
-                    <ComboBox
-                      labelInput="Seleccione..."
-                      valueProp={'id'}
-                      textProp={'code'}
-                      {...currency}
-                      name={nameCurrency}
-                      parentId="dashboardComponentScroll"
-                      data={selectsReducer.get('pipelineCurrencies') || []}
-                      onChange={val => this._changeCurrency(val)}
-                    />
+                    <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
+                      <ComboBox
+                        labelInput="Seleccione..."
+                        valueProp={'id'}
+                        textProp={'value'}
+                        {...currency}
+                        name={nameCurrency}
+                        parentId="dashboardComponentScroll"
+                        data={selectsReducer.get(CURRENCY) || []}
+                        onChange={val => this._changeCurrency(val)}
+                        disabled={isEditableValue ? '' : 'disabled'}
+                      />
+                    </div>
                   </div>
                 </Col>
               </Row>
@@ -874,17 +883,19 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     <dt>
                       <span>Valor nominal (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
-                    <Input
-                      {...value}
-                      name="valueMillions"
-                      type="text"
-                      placeholder="Miles ' , ' y decimales ' . '"
-                      parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
-                      onFocus={val => handleFocusValueNumber(value, value.value)}
-                      disabled={isEditableValue ? '' : 'disabled'}
-                      onChange={val => this._changeValue(val)}
-                    />
+                    <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
+                      <Input
+                        {...value}
+                        name="valueMillions"
+                        type="text"
+                        placeholder="Miles ' , ' y decimales ' . '"
+                        parentId="dashboardComponentScroll"
+                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
+                        onFocus={val => handleFocusValueNumber(value, value.value)}
+                        disabled={isEditableValue ? '' : 'disabled'}
+                        onChange={val => this._changeValue(val)}
+                      />
+                    </div>
                   </div>
                 </Col>
                 <Col xs={6} md={3} lg={3}>
@@ -1071,6 +1082,13 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               title={REGEX_SIMPLE_XSS_TITLE}
               text={REGEX_SIMPLE_XSS_MESAGE}
               onConfirm={() => this.setState({ errorValidateXss: false })}
+            />
+            <SweetAlert
+              type="warning"
+              show={this.state.showAlertCurrency}
+              title='Advertencia'
+              text={CURRENCY_MESSAGE}
+              onConfirm={() => this.setState({ showAlertCurrency: false })}
             />
             <div style={origin === ORIGIN_PIPELIN_BUSINESS ? {} : { display: "none" }} className="modalBt4-footer modal-footer">
               <button type="submit" className="btn btn-primary modal-button-edit"

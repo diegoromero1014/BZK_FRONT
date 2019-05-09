@@ -23,36 +23,6 @@ export function changeErrorYearSeleted(value){
   }
 }
 
-
-export function consultInformationPipeline(idStatusPipeline, idCurrency){
-  const json = {
-    "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-          "timestamp": new Date().getTime(),
-          "service": "",
-          "status": "0",
-          "language": "es",
-          "displayErrorMessage": "",
-          "technicalErrorMessage": "",
-          "applicationVersion": "",
-          "debug": true,
-          "isSuccessful": true
-    },
-    "messageBody": {
-      "startDate": null,
-      "endDate": null,
-      "idStatusPipeline": idStatusPipeline === undefined || idStatusPipeline === '' ? null : idStatusPipeline,
-      "idCurrency": idCurrency === undefined || idCurrency === '' ? null : idCurrency
-    }
-  }
-
-  var request = axios.post(APP_URL + "/portfolioPipeline", json);
-  return{
-    type: CONSULT_PIPELINE,
-    payload: request
-  }
-}
-
 export function getCsv(year,url, hasParticipatingContacts, hasParticipatingEmployees, hasRelatedEmployees) {
   const json = {
     "messageHeader": {
