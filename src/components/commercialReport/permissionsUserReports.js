@@ -123,11 +123,11 @@ class PermissionUserReports extends Component {
         }
     }
 
-    _updateValue(value) {
+    _updateValue(value) {        
         const { fields: { idUser, nameUser, description } } = this.props;
         idUser.onChange(value);
-        nameUser.onChange(value)
-        description.onChange(value)
+        nameUser.onChange(value);
+        description.onChange(value);
     }
 
     componentWillMount() {
@@ -408,5 +408,6 @@ function mapStateToProps({ selectsReducer, usersPermission, contactsByClient, pr
 export default reduxForm({
     form: 'submitValidation',
     fields: ["idUser", "nameUser", "cargoUsuario", "userObject", "description"],
+    destroyOnUnmount: false,
     validate
 }, mapStateToProps, mapDispatchToProps)(PermissionUserReports);
