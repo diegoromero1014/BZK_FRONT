@@ -65,8 +65,7 @@ class PermissionUserReports extends Component {
                         if (item.user.id === idUser.value) {
                             return item.user.id;
                         }
-                    });
-    
+                    });                    
                     if (description.value === window.localStorage.getItem('userNameFront')) {
                         userTODO = idUser.value;
                     }
@@ -76,12 +75,11 @@ class PermissionUserReports extends Component {
                             id: null,
                             commercialReport: null,
                             user: {
-                                id: idUser.value,
-                                username: description.value,
-                                name: nameUser.value
+                                id: this.state.fields.idUser,
+                                username: this.state.fields.description,
+                                name: this.state.fields.nameUser
                             }
-                        }
-    
+                        }                        
                         addUsers(user);
                         idUser.onChange('');
                         nameUser.onChange('');
@@ -123,7 +121,7 @@ class PermissionUserReports extends Component {
         }
     }
 
-    _updateValue(value) {        
+    _updateValue(value) {
         const { fields: { idUser, nameUser, description } } = this.props;
         idUser.onChange(value);
         nameUser.onChange(value);
@@ -158,8 +156,7 @@ class PermissionUserReports extends Component {
         });
     }
 
-    handleOnSelect(event) {
-        this.setState({userSelected: true});
+    handleOnSelect(event) {       
 
         const { fields: { userObject, nameUser, idUser, cargoUsuario, description } } = this.props;
 
@@ -168,6 +165,15 @@ class PermissionUserReports extends Component {
         nameUser.onChange(event.title);
         idUser.onChange(event.idUsuario);
         cargoUsuario.onChange(event.cargo);
+
+        this.setState({
+            userSelected: true,
+            fields: { 
+                idUser: event.idUsuario, 
+                nameUser: event.title, 
+                description: event.description 
+            }
+        });        
         return 'default';
     }
 
@@ -408,6 +414,5 @@ function mapStateToProps({ selectsReducer, usersPermission, contactsByClient, pr
 export default reduxForm({
     form: 'submitValidation',
     fields: ["idUser", "nameUser", "cargoUsuario", "userObject", "description"],
-    destroyOnUnmount: false,
     validate
 }, mapStateToProps, mapDispatchToProps)(PermissionUserReports);
