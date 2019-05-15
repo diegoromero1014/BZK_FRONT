@@ -46,3 +46,11 @@ export function consultModulesAccess(){
     payload: request
   }
 }
+
+
+export function showBrandConfidential(confidential) {
+  return {
+    type: actions.SHOW_BRAND_CONFIDENTIAL,
+    payload: confidential
+  }
+}

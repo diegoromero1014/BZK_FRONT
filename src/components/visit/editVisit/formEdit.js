@@ -17,6 +17,7 @@ import RichText from "../../richText/richTextComponent";
 import ToolTip from "../../toolTip/toolTipComponent";
 import ButtonAssociateComponent from "../createVisit/associateVisit";
 import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
+import PermissionUserReports from "../../commercialReport/permissionsUserReports"
 
 import { redirectUrl } from "../../globalComponents/actions";
 import { createVisti, detailVisit, pdfDescarga, clearIdPrevisit, changeIdPrevisit } from "../actions";
@@ -27,6 +28,7 @@ import { changeStateSaveData } from "../../dashboard/actions";
 import { addTask } from "../tasks/actions";
 import { showLoading } from "../../loading/actions";
 import { detailPrevisit } from "../../previsita/actions";
+import { addUsers, setConfidential } from "../../commercialReport/actions";
 import {
     formValidateKeyEnter,
     nonValidateEnter,
@@ -53,6 +55,7 @@ import {
 } from "../../participantsVisitPre/constants";
 import { KEY_TYPE_VISIT } from "../constants";
 
+import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
 import {
     checkRequired, checkRichTextRequired
 } from './../../../validationsFields/rulesField';
@@ -63,7 +66,7 @@ let typeMessage = "success";
 let titleMessage = "";
 let message = "";
 let typeButtonClick;
-var idPrevisitSeleted = null;
+let idPrevisitSeleted = null;
 
 const validate = values => {
     let errors = {};
@@ -161,7 +164,8 @@ class FormEdit extends Component {
 
     _submitCreateVisita() {
         const { participants, visitReducer, tasks,
-            changeStateSaveData, clearIdPrevisit
+            changeStateSaveData, clearIdPrevisit, usersPermission,
+            confidentialReducer
         } = this.props;
         const detailVisit = visitReducer.get('detailVisit');
         let errorInForm = false;
@@ -242,6 +246,7 @@ class FormEdit extends Component {
                             "employee": task.idResponsable,
                             "employeeName": task.responsable,
                             "closingDate": moment(task.fecha, "DD/MM/YYYY").format('x'),
+                            "commercialReport": buildJsoncommercialReport(task.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
                         }
                         tareas.push(data);
                     }
@@ -258,7 +263,8 @@ class FormEdit extends Component {
                     "visitType": this.state.typeVisit,
                     "userTasks": tareas,
                     "documentStatus": typeButtonClick,
-                    "preVisitId": idPrevisitSeleted
+                    "preVisitId": idPrevisitSeleted,
+                    "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
                 }
                 const { createVisti } = this.props;
                 const that = this;
@@ -368,7 +374,11 @@ class FormEdit extends Component {
     }
 
     componentWillMount() {
-        const { nonValidateEnter, getMasterDataFields, id, detailVisit, changeIdPrevisit, addTask, showLoading } = this.props;
+        const {
+            nonValidateEnter, getMasterDataFields, id, detailVisit, changeIdPrevisit, addTask, showLoading, 
+            setConfidential, addUsers
+        } = this.props;
+
         nonValidateEnter(true);
         idPrevisitSeleted = null;
         this.setState({ idVisit: id });
@@ -381,11 +391,18 @@ class FormEdit extends Component {
             dateVisitLastReview = moment(part.reviewedDate, "x").locale('es').format("DD MMM YYYY");
             idPrevisitSeleted = part.preVisitId;
             changeIdPrevisit(part.preVisitId);
+
             this.setState({
                 typeVisit: part.visitType,
                 dateVisit: new Date(moment(part.visitTime, "x")),
-                conclusionsVisit: part.comments
+                conclusionsVisit: part.comments,
+                commercialReport: part.commercialReport
             });
+
+            if (part.commercialReport) {
+                setConfidential(part.commercialReport.isConfidential);
+                fillUsersPermissions(part.commercialReport.usersWithPermission, addUsers);
+            }
 
             //Adicionar participantes por parte del cliente
             _.forIn(part.participatingContacts, function (value, key) {
@@ -461,7 +478,8 @@ class FormEdit extends Component {
                     idResponsable: value.employee,
                     responsable: value.employeeName,
                     fecha: moment(value.closingDate).format('DD/MM/YYYY'),
-                    fechaForm: moment(value.closingDate).format('DD/MM/YYYY')
+                    fechaForm: moment(value.closingDate).format('DD/MM/YYYY'),
+                    commercialReport: value.commercialReport
                 };
                 addTask(task);
             });
@@ -681,6 +699,11 @@ class FormEdit extends Component {
                     {_.get(reducerGlobal.get('permissionsVisits'), _.indexOf(reducerGlobal.get('permissionsVisits'), EDITAR), false) && this.state.isEditable &&
                         <ButtonAssociateComponent fnExecute={this._executeFunctionFromAssociatePrevisit} edit={true} />
                     }
+                </Row>
+                <Row style={{ padding: "5px 10px 20px 20px" }}>
+                    <Col xs={12} md={12} lg={12}>
+                        <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'} />
+                    </Col>
                 </Row>
                 <Row style={{ padding: "10px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
@@ -964,11 +987,13 @@ function mapDispatchToProps(dispatch) {
         addListParticipant,
         clearIdPrevisit,
         detailPrevisit,
-        changeIdPrevisit
+        changeIdPrevisit,
+        addUsers,
+        setConfidential
     }, dispatch);
 }
 
-function mapStateToProps({ selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion, reducerGlobal, navBar }) {
+function mapStateToProps({ selectsReducer, visitReducer, participants, contactsByClient, tasks, clientInformacion, reducerGlobal, navBar, usersPermission, confidentialReducer }) {
     const detailVisit = visitReducer.get('detailVisit');
     if (detailVisit !== undefined && detailVisit !== null && detailVisit !== '' && !_.isEmpty(detailVisit)) {
         let visitTime = detailVisit.data.visitTime;
@@ -988,7 +1013,9 @@ function mapStateToProps({ selectsReducer, visitReducer, participants, contactsB
             tasks,
             clientInformacion,
             reducerGlobal,
-            navBar
+            navBar,
+            usersPermission,
+            confidentialReducer
         };
     } else {
         return {
@@ -1008,7 +1035,9 @@ function mapStateToProps({ selectsReducer, visitReducer, participants, contactsB
             tasks,
             clientInformacion,
             reducerGlobal,
-            navBar
+            navBar,
+            usersPermission,
+            confidentialReducer
         };
     }
 }

@@ -85,6 +85,10 @@ class ListBusinessPlanComponent extends Component {
       },
       {
         title: "",
+        key: "commercialReport.isConfidential"
+      },
+      {
+        title: "",
         key: "delete"
       },
     ]

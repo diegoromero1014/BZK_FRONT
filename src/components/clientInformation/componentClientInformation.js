@@ -1,7 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -20,7 +20,7 @@ import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
 import { updateTabSeletedCS } from '../customerStory/actions';
 
-import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, TAB_INFO, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS,MODULE_STUDY_CREDIT, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
+import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS,MODULE_STUDY_CREDIT, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
 import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
 import { TAB_STORY } from '../customerStory/constants';
 

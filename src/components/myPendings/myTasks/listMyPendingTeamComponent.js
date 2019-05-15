@@ -169,6 +169,11 @@ class ListMyPendingTeamComponent extends Component {
                 title: "Estado",
                 key: "changeStateTask",
                 width: '100px'
+            },
+
+            {
+                title: "",
+                key: "commercialReport.isConfidential"
             }
         ]
     }
