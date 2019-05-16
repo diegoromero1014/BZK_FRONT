@@ -31,7 +31,7 @@ import {
     EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR, REQUEST_INVALID_INPUT, REQUEST_SUCCESS
 } from "../../../constantsGlobal";
 import { OBJECTIVE_BUSINESS } from "../constants";
-import { BLOCK_BUSINESS_PLAN } from '../../../constantsGlobal';
+import { BLOCK_BUSINESS_PLAN, REQUEST_ERROR } from '../../../constantsGlobal';
 
 const fields = ["initialValidityDate", "finalValidityDate", "objectiveBusiness", "opportunities"];
 let dateBusinessLastReview;
@@ -208,14 +208,14 @@ class FormEdit extends Component {
                         "clientNeedFulfillmentPlan": needsbB.length === 0 ? null : needsbB,
                         "relatedInternalParties": areasB.length === 0 ? null : areasB,
                         "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
-                    };                    
+                    };
                     //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
                     this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
 
                 }
 
             })
-            .catch((reason) => {});
+            .catch((reason) => { });
 
     }
 
@@ -233,7 +233,7 @@ class FormEdit extends Component {
             }, nonValidateEnter, clientInformacion, getMasterDataFields, detailBusiness, id, addNeed, addArea, showLoading, setConfidential, addUsers
         } = this.props;
 
-        nonValidateEnter(true);        
+        nonValidateEnter(true);
         setConfidential(false);
         const infoClient = clientInformacion.get('responseClientInfo');
         if (_.isEmpty(infoClient)) {
@@ -299,7 +299,7 @@ class FormEdit extends Component {
                     addArea(area);
                 });
 
-                if(part.commercialReport){
+                if (part.commercialReport) {
                     setConfidential(part.commercialReport.isConfidential);
                     fillUsersPermissions(part.commercialReport.usersWithPermission, addUsers);
                 }
@@ -314,7 +314,7 @@ class FormEdit extends Component {
     _onSelectFieldDate(valueInitialDate, valueFinalDate, fieldDate, makeSaveBusiness, businessJson) {
         const { swtShowMessage, validateRangeDates, businessPlanReducer, changeStateSaveData, createBusiness } = this.props;
         const initialDate = _.isNil(valueInitialDate) || _.isEmpty(valueInitialDate) ? null : valueInitialDate;
-        const finalDate = _.isNil(valueFinalDate) || _.isEmpty(valueFinalDate) ? null : valueFinalDate;        
+        const finalDate = _.isNil(valueFinalDate) || _.isEmpty(valueFinalDate) ? null : valueFinalDate;
         if (!_.isNull(initialDate) && !_.isNull(finalDate)) {
             this.setState({
                 initialDateError: false,
@@ -328,45 +328,43 @@ class FormEdit extends Component {
             } else {
                 const detailBusiness = businessPlanReducer.get('detailBusiness');
                 validateRangeDates(moment(initialDate, DATE_FORMAT).format('x'), moment(finalDate, DATE_FORMAT).format('x'), detailBusiness.data.id).then((data) => {
-                    if (validateResponse(data)) {
-                        const response = _.get(data, 'payload.data.data', false);
-                        if (!response) {
-                            swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe un plan de negocio registrado en este rango de fechas, por favor complemente el informe ya creado o modifique las fechas.');
-                        } else if (makeSaveBusiness) {
-                            changeStateSaveData(true, MESSAGE_SAVE_DATA);
-                            createBusiness(businessJson).then((data) => {
-                                changeStateSaveData(false, "");
-                                if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
-                                    onSessionExpire();
+                    const response = _.get(data, 'payload.data', false);                    
+                    if (response.status === REQUEST_ERROR) {
+                        swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', response.data);
+                    } else if (makeSaveBusiness) {
+                        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+                        createBusiness(businessJson).then((data) => {
+                            changeStateSaveData(false, "");
+                            if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
+                                onSessionExpire();
+                            } else {
+                                if ((_.get(data, 'payload.data.status') === REQUEST_SUCCESS)) {
+                                    typeMessage = "success";
+                                    titleMessage = "Edición plan de negocio";
+                                    message = "Señor usuario, el plan de negocio se editó de forma exitosa.";
+                                    this.setState({ showMessageCreateBusiness: true });
                                 } else {
-                                    if ((_.get(data, 'payload.data.status') === REQUEST_SUCCESS)) {
-                                        typeMessage = "success";
-                                        titleMessage = "Edición plan de negocio";
-                                        message = "Señor usuario, el plan de negocio se editó de forma exitosa.";
-                                        this.setState({ showMessageCreateBusiness: true });
+                                    if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
+                                        const validationsErrorFromServer = _.get(data, 'payload.data.data');
+                                        _.forEach(validationsErrorFromServer, (field) => {
+                                            this.processValidation(field);
+                                        });
                                     } else {
-                                        if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
-                                            const validationsErrorFromServer = _.get(data, 'payload.data.data');
-                                            _.forEach(validationsErrorFromServer, (field)=> {
-                                                this.processValidation(field);
-                                            });
-                                        }else{
 
-                                            typeMessage = "error";
-                                            titleMessage = "Edición plan de negocio";
-                                            message = "Señor usuario, ocurrió un error editando el plan de negocio.";
-                                            this.setState({ showMessageCreateBusiness: true });
-                                        }
+                                        typeMessage = "error";
+                                        titleMessage = "Edición plan de negocio";
+                                        message = "Señor usuario, ocurrió un error editando el plan de negocio.";
+                                        this.setState({ showMessageCreateBusiness: true });
                                     }
                                 }
-                            }, (reason) => {
-                                changeStateSaveData(false, "");
-                                typeMessage = "error";
-                                titleMessage = "Edición plan de negocio";
-                                message = "Señor usuario, ocurrió un error editando el plan de negocio.";
-                                this.setState({ showMessageCreateBusiness: true });
-                            });
-                        }
+                            }
+                        }, (reason) => {
+                            changeStateSaveData(false, "");
+                            typeMessage = "error";
+                            titleMessage = "Edición plan de negocio";
+                            message = "Señor usuario, ocurrió un error editando el plan de negocio.";
+                            this.setState({ showMessageCreateBusiness: true });
+                        });
                     }
                 });
             }
@@ -437,7 +435,7 @@ class FormEdit extends Component {
                 </Row>
                 <Row>
                     <Col xs={12} md={12} lg={12}>
-                        <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'}/>
+                        <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'} />
                     </Col>
                 </Row>
                 <Row style={{ padding: "10px 10px 10px 20px" }}>
@@ -681,7 +679,7 @@ function mapDispatchToProps(dispatch) {
         showLoading,
         validateRangeDates,
         swtShowMessage,
-        addUsers,        
+        addUsers,
         setConfidential
     }, dispatch);
 }
@@ -689,7 +687,7 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, needs, businessPlanReducer, reducerGlobal, areas, navBar, confidentialReducer }, ownerProps) {
     return {
         clientInformacion,
-        selectsReducer,        
+        selectsReducer,
         businessPlanReducer,
         reducerGlobal,
         needs,
