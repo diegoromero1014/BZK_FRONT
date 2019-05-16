@@ -10,8 +10,7 @@ const initialState = Immutable.Map({
 export default (state = initialState, action) => {
     switch (action.type) {
         case GET_SCHEDULER_PREVISIT:
-            const response = action.payload.data;
-            let lista = JSON.parse(response.schedulerListPreviist);
+            let lista = JSON.parse(action.payload.data.data);
            return state.set('schedulerPrevisitList', lista.map((item) => {
                 item.title = item.clientName;
                 item.start = stringToDate(item.initialDatePrevisit);

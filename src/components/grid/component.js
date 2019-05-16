@@ -13,6 +13,7 @@ import LinkComponent from './linkComponent';
 import LinkModalComponent from './linkModalComponent';
 import BtnDeleteComponentNew from './buttonDeleteLocalComponent';
 import CheckComponent from './checkComponent';
+import TdConfidentialComponent from './tdConfidentialComponent';
 
 import { ACTION_CHECK } from './constants';
 
@@ -29,8 +30,8 @@ class GridComponent extends Component {
     return <HeaderComponent key={idx} titleColumn={header.title} orderColumn={header.orderColumn} width={header.width} />;
   }
 
-  _renderCell(row, headers, modalTitle) {
-    return headers.map((value, idx) => {
+  _renderCell(row, headers, modalTitle) {    
+    return headers.map((value, idx) => {      
       let cell;
       if (value.key === ACTION_CHECK) {
         const info = _.get(row, ACTION_CHECK, {});
@@ -72,6 +73,8 @@ class GridComponent extends Component {
         cell = <LinkModalComponent key={idx} showModal={_.get(value, 'showLink')} properties={_.get(row, 'modalNameLink')} />
       } else if (value.key === 'deleteLocal') {
         cell = _.get(row, 'deleteLocal.component');
+      } else if (value.key === 'commercialReport.isConfidential'){
+        cell = <TdConfidentialComponent key={idx} columnRow={_.get(row, value.key) ? 'Confidencial': ''} styles={value.style}/>
       } else {
         cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} toolTip={_.get(row, 'toolTip')} headerToolTip={_.get(row, 'headerTooltip')} styles={value.style} />
       }

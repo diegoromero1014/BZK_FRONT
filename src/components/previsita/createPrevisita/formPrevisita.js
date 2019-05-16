@@ -23,6 +23,8 @@ import {
 } from './../../../validationsFields/rulesField';
 
 import { redirectUrl } from '../../globalComponents/actions';
+import { setConfidential } from '../../commercialReport/actions';
+import { buildJsoncommercialReport } from '../../commercialReport/functionsGenerics';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import { createPrevisit, validateDatePreVisit } from '../actions';
 import { changeStateSaveData } from '../../dashboard/actions';
@@ -37,6 +39,8 @@ import {
     SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS,
     MESSAGE_SAVE_DATA, MESSAGE_ERROR, ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, REGEX_SIMPLE_XSS_MESAGE,
 } from '../../../constantsGlobal';
+
+import PermissionUserReports from "../../commercialReport/permissionsUserReports"
 
 
 var datePrevisitLastReview;
@@ -360,7 +364,7 @@ class FormPrevisita extends Component {
     }
 
     _submitCreatePrevisita() {
-        const { participants, createPrevisit, changeStateSaveData, validateDatePreVisit, swtShowMessage } = this.props;
+        const { participants, createPrevisit, changeStateSaveData, validateDatePreVisit, swtShowMessage, usersPermission, confidentialReducer } = this.props;
         var errorInForm = false;
         var errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
 
@@ -543,7 +547,8 @@ class FormPrevisita extends Component {
                     "controlConversation": this.state.controlConversation,
                     "constructiveTension": this.state.constructiveTension,
                     "documentStatus": typeButtonClick,
-                    "endTime": this.state.durationPreVisit
+                    "endTime": this.state.durationPreVisit,
+                    "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
                 }
 
                 validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit).then((data) => {
@@ -630,7 +635,8 @@ class FormPrevisita extends Component {
         idTypeVisitAux = null;
         idTypeVisitAuxTwo = null;
         contollerErrorChangeType = false;
-        const { nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer } = this.props;
+        const { nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer, setConfidential } = this.props;
+        setConfidential(false);
         nonValidateEnter(true);
         const infoClient = clientInformacion.get('responseClientInfo');
         valueTypePrevisit = null;
@@ -658,6 +664,11 @@ class FormPrevisita extends Component {
                 style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
                 <span style={{ marginLeft: "20px" }}>Los campos marcados con asterisco (<span
                     style={{ color: "red" }}>*</span>) son obligatorios.</span>
+                <Row>
+                    <Col xs={12} md={12} lg={12}>
+                        <PermissionUserReports />
+                    </Col>
+                </Row>
                 <Row style={{ padding: "10px 10px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -718,7 +729,7 @@ class FormPrevisita extends Component {
                                 name="txtDuracion"
                                 value={this.state.durationPreVisit}
                                 min={1}
-                                
+
                                 touched={true}
                                 placeholder="Duración previsita"
                                 error={this.state.durationPreVisitError}
@@ -972,17 +983,21 @@ function mapDispatchToProps(dispatch) {
         consultParameterServer,
         changeStateSaveData,
         nonValidateEnter,
-        swtShowMessage
+        swtShowMessage,
+        setConfidential
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, participants, reducerGlobal, navBar }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, participants, reducerGlobal, navBar, usersPermission, previsitReducer, confidentialReducer }, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,
         participants,
         reducerGlobal,
-        navBar
+        navBar,
+        usersPermission,
+        previsitReducer,
+        confidentialReducer
     };
 }
 

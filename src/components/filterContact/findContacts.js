@@ -153,7 +153,7 @@ class SearchContacts extends Component {
                             <Checkbox
                                 onClick={this._handleChangeSearchAllIntoContacts}
                                 checked={searchIntoAllContacts} style={{marginTop: '5pt'}}
-                                label={<label>Consultar en todo Biztrack</label>} toggle/>
+                                label={'Consultar en todo Biztrack'} toggle/>
                         </Tooltip>
                     </Col>
                     <Col xs={12} sm={12} md={1} lg={1}>
