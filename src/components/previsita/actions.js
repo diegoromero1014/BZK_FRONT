@@ -166,7 +166,8 @@ export function getCsvPreVisitsByClient(clientId, hasParticipatingContacts, hasP
   };
 }
 
-export function validateDatePreVisit(startDate,finalDate, id){
+export function validateDatePreVisit(startDate, finalDate, id){
+
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionTokenFront'),
@@ -184,7 +185,7 @@ export function validateDatePreVisit(startDate,finalDate, id){
       "idClient": window.sessionStorage.getItem('idClientSelected'),
       "userName": window.localStorage.getItem('userNameFront'),
       "initialDate": startDate,
-      "endTime": finalDate,
+      "endDate": finalDate,
       "idPreVisit": id
     }
   };
