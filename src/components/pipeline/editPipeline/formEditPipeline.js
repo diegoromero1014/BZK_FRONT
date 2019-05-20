@@ -26,7 +26,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from "../../dashboard/actions";
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import {
-    getClientNeeds, getMasterDataFields, getPipelineCurrencies, consultListWithParameterUbication,
+    getClientNeeds, getMasterDataFields, consultListWithParameterUbication,
     consultDataSelect
 } from "../../selectsComponent/actions";
 import {
@@ -533,7 +533,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         componentWillMount() {
             const {
-                clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds, getPipelineById, nonValidateEnter, addBusiness, clearBusiness,
+                clientInformacion, getMasterDataFields, getClientNeeds, getPipelineById, nonValidateEnter, addBusiness, clearBusiness,
                 showLoading, swtShowMessage, consultDataSelect, setConfidential, addUsers
             } = this.props;
 
@@ -548,7 +548,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 });
             }
             nonValidateEnter(true);
-            getPipelineCurrencies();
             getClientNeeds();
             if (_.isEmpty(infoClient)) {
                 redirectUrl("/dashboard/clientInformation");
@@ -1309,7 +1308,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
     function mapDispatchToProps(dispatch) {
         return bindActionCreators({
             getMasterDataFields,
-            getPipelineCurrencies,
             getClientNeeds,
             createEditPipeline,
             filterUsersBanco,
