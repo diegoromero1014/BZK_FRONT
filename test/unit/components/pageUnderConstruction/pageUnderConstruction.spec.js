@@ -1,4 +1,4 @@
-import React from './node_modules/react'
+import React from 'react';
 import pageUnderConstruction from '../../../../src/components/pageUnderConstruction/pageUnderConstruction';
 
 describe('Test PageUnderConstruction', () => {
