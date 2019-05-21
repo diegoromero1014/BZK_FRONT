@@ -531,8 +531,8 @@ class FormPrevisita extends Component {
                     dataOthers = [];
                 }
 
-                let visitTime = parseInt(moment(this.state.datePreVisit).milliseconds(0).format('x'));
-                let endVisitTime = parseInt(moment(visitTime).add(this.state.durationPreVisit, 'h').milliseconds(0).format('x'));
+                let visitTime = parseInt(moment(this.state.datePreVisit).startOf('minute').format('x'));
+                let endVisitTime = parseInt(moment(visitTime).add(this.state.durationPreVisit, 'h').startOf('minute').format('x'));
 
                 var previsitJson = {
                     "id": null,
