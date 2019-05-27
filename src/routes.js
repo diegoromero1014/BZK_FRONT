@@ -37,7 +37,6 @@ import WalletShare from "./components/transactional/walletShareComponent";
 import ControlDashboard from "./components/transactional/controlDashComponent";
 import LinkingRequests from "./components/myPendings/linkingRequests/componentLinkingRequests";
 import Sheduler from "./components/sheduler/shedulerComponent";
-import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderConstruction"; 
 
 class App extends Component {
     render() {
@@ -54,7 +53,6 @@ export default (
         <Redirect from="/" to="/login" />
         <Route path="/" component={App}>
             <Route path="login" component={LoginComponent}></Route>
-            <Route path="pageUnderConstruction" component={pageUnderConstructor} />
             <Route path="dashboard" component={DashboardComponent}>
                 <Route path="clients" component={ClientsFind}></Route>
                 <Route path="viewManagement" component={ViewManagement}></Route>
