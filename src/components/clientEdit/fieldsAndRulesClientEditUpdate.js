@@ -10,7 +10,7 @@ import {processRules, checkIsUpdateClient, checkClientName, checkMaxLength,
 } from './../../validationsFields/rulesField';
 
 const fieldsWithRules= {
-     addressClient:{rules: [checkFirstCharacter, checkIsUpdateClient, checkClientAddress, checkNumberLength(60)]},
+     addressClient:{rules: [checkFirstCharacter, checkIsUpdateClient, checkClientAddress, checkMinLength(5), checkNumberLength(60)]},
      telephone:{rules: [checkFirstCharacter, checkIsUpdateClient, checkNumbers, checkMinLength(7), checkMaxLength(30)]},
      annualSales:{rules: [checkFirstCharacter, checkIsUpdateClient, checkNumberLength(19)]},
      country:{rules: [checkIsUpdateClient]},
