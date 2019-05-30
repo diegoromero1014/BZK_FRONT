@@ -19,7 +19,7 @@ const fieldsWithRules= {
     idCIIU:{rules: [checkForValueIsExClient]},
     idSubCIIU:{rules: [checkForValueIsExClient]},
     annualSales:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(19)]},
-    addressClient:{rules: [checkFirstCharacter, checkMaxLength(60), checkForValueIsExClient, checkAddress]},
+    addressClient:{rules: [checkFirstCharacter, checkMinLength(5), checkMaxLength(60), checkForValueIsExClient, checkAddress]},
     country:{rules: [checkForValueIsExClient]},
     province:{rules: [checkForValueIsExClient]},
     city:{rules: [checkForValueIsExClient]},
