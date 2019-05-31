@@ -978,7 +978,7 @@ class clientEdit extends Component {
                 noAppliedMainCompetitors,
                 noAppliedIntOperations,
                 noAppliedControlLinkedPayments,
-                'isDraft': true 
+                'isDraft': false 
             };
         } else {
             contextClient.controlLinkedPayments = noAppliedControlLinkedPayments ? null : controlLinkedPayments.value;
