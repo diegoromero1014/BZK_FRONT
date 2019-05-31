@@ -3,7 +3,7 @@ import axios from 'axios';
 import {
   FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY, ECONOMIC_GROUPS,
   TEAM_FOR_REGION_EMPLOYEE, CLEAR_VALUES_COUNTRY_KEY, PIPELINE_PRODUCTS,
-  PIPELINE_CURRENCIES, PIPELINE_CLIENT_NEEDS, CLEAR_LISTS, LIST_REGIONS_BY_EMPLOYEE
+  PIPELINE_CLIENT_NEEDS, CLEAR_LISTS, LIST_REGIONS_BY_EMPLOYEE
 } from './constants';
 import { isUndefined, isNull } from 'lodash';
 
@@ -210,29 +210,6 @@ export function getPipelineProducts() {
   let request = axios.post(APP_URL + "/productList", json);
   return {
     type: PIPELINE_PRODUCTS,
-    payload: request
-  };
-}
-
-export function getPipelineCurrencies() {
-  const json = {
-    messageHeader: {
-      "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
-    },
-    messageBody: {}
-  };
-  let request = axios.post(APP_URL + "/currencyList", json);
-  return {
-    type: PIPELINE_CURRENCIES,
     payload: request
   };
 }

@@ -37,7 +37,7 @@ import { LAST_PREVISIT_REVIEW } from '../../../constantsParameters';
 import { PROPUEST_OF_BUSINESS } from '../constants';
 import {
     SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OTHERS_PARTICIPANTS, TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS,
-    MESSAGE_SAVE_DATA, MESSAGE_ERROR, ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, REGEX_SIMPLE_XSS_MESAGE,
+    MESSAGE_SAVE_DATA, MESSAGE_ERROR, ALLOWS_NEGATIVE_INTEGER, ONLY_POSITIVE_INTEGER, REGEX_SIMPLE_XSS_MESAGE, REQUEST_ERROR
 } from '../../../constantsGlobal';
 
 import PermissionUserReports from "../../commercialReport/permissionsUserReports"
@@ -531,6 +531,9 @@ class FormPrevisita extends Component {
                     dataOthers = [];
                 }
 
+                let visitTime = parseInt(moment(this.state.datePreVisit).startOf('minute').format('x'));
+                let endVisitTime = parseInt(moment(visitTime).add(this.state.durationPreVisit, 'h').startOf('minute').format('x'));
+
                 var previsitJson = {
                     "id": null,
                     "client": window.sessionStorage.getItem('idClientSelected'),
@@ -551,47 +554,41 @@ class FormPrevisita extends Component {
                     "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
                 }
 
-                validateDatePreVisit(parseInt(moment(this.state.datePreVisit).format('x')), this.state.durationPreVisit).then((data) => {
-                    if (validateResponse(data)) {
-                        const response = _.get(data, 'payload.data.data', false);
-                        if (!response.allowClientPreVisit) {
-                            swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha y hora para el mismo cliente.');
-                        } else {
-                            if (!response.allowUserPreVisit) {
-                                swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe una previsita registrada en esta fecha y hora para el mismo usuario.');
+                validateDatePreVisit(visitTime, endVisitTime).then((data) => {
+                    const response = _.get(data, 'payload.data', false);
+                    if (response.status === REQUEST_ERROR) {
+                        swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', response.data);
+                    } else {
+                        const that = this;
+                        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+                        createPrevisit(previsitJson).then((data) => {
+                            changeStateSaveData(false, "");
+                            if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+                                redirectUrl("/login");
                             } else {
-                                const that = this;
-                                changeStateSaveData(true, MESSAGE_SAVE_DATA);
-                                createPrevisit(previsitJson).then((data) => {
-                                    changeStateSaveData(false, "");
-                                    if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-                                        redirectUrl("/login");
-                                    } else {
-                                        if ((_.get(data, 'payload.data.status') === 200)) {
-                                            typeMessage = "success";
-                                            swtShowMessage('success', "Creación previsita", "Señor usuario, la previsita se creó de forma exitosa.", { onConfirmCallback: this._closeMessageCreatePreVisit });
-                                        } else {
-                                            if ((_.get(data, 'payload.data.status') === 500)) {
-                                                const validationFromServer = _.get(data, 'payload.data.data');
-                                                _.forEach(validationFromServer, function (field) {
-                                                    that.processValidation(field);
-                                                });
+                                if ((_.get(data, 'payload.data.status') === 200)) {
+                                    typeMessage = "success";
+                                    swtShowMessage('success', "Creación previsita", "Señor usuario, la previsita se creó de forma exitosa.", { onConfirmCallback: this._closeMessageCreatePreVisit });
+                                } else {
+                                    if ((_.get(data, 'payload.data.status') === 500)) {
+                                        const validationFromServer = _.get(data, 'payload.data.data');
+                                        _.forEach(validationFromServer, function (field) {
+                                            that.processValidation(field);
+                                        });
 
-                                                typeMessage = "error";
-                                                swtShowMessage('error', "Creación previsita", "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.", { onConfirmCallback: this._closeMessageCreatePreVisit });
-                                            } else {
-                                                typeMessage = "error";
-                                                swtShowMessage('error', "Creación previsita", "Señor usuario, ocurrió un error creando la previsita.", { onConfirmCallback: this._closeMessageCreatePreVisit });
-                                            }
-                                        }
+                                        typeMessage = "error";
+                                        swtShowMessage('error', "Creación previsita", "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.", { onConfirmCallback: this._closeMessageCreatePreVisit });
+                                    } else {
+                                        typeMessage = "error";
+                                        swtShowMessage('error', "Creación previsita", "Señor usuario, ocurrió un error creando la previsita.", { onConfirmCallback: this._closeMessageCreatePreVisit });
                                     }
-                                }, (reason) => {
-                                    changeStateSaveData(false, "");
-                                    typeMessage = "error";
-                                    swtShowMessage('error', "Creación previsita", "Señor usuario, ocurrió un error creando la previsita.", { onConfirmCallback: this._closeMessageCreatePreVisit });
-                                });
+                                }
                             }
-                        }
+                        }, (reason) => {
+                            changeStateSaveData(false, "");
+                            typeMessage = "error";
+                            swtShowMessage('error', "Creación previsita", "Señor usuario, ocurrió un error creando la previsita.", { onConfirmCallback: this._closeMessageCreatePreVisit });
+                        });
                     }
                 });
             } else {
