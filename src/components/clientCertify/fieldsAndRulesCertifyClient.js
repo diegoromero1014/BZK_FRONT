@@ -1,9 +1,7 @@
 import _ from 'lodash';
-import {
-    processRules, checkAddress, checkFirstCharacter, checkMaxLength, checkForValueIsExClient,
-    checkForValueIsNotExClient, checkForValueJustifyNoGeren, checkForValueJustifyNoLME, checkPhone,
-    checkNumberLength, checkNumbers, checkMinLength
-} from './../../validationsFields/rulesField';
+import {processRules, checkAddress, checkFirstCharacter, checkMaxLength, checkForValueIsExClient,
+     checkForValueIsNotExClient, checkForValueJustifyNoGeren, checkForValueJustifyNoLME, checkPhone,
+     checkNumberLength} from './../../validationsFields/rulesField';
 
 const fieldsWithRules= {
     economicGroupName:{rules: [checkFirstCharacter, checkForValueIsExClient]},
@@ -18,20 +16,20 @@ const fieldsWithRules= {
     taxNature:{rules: []},
     idCIIU:{rules: [checkForValueIsExClient]},
     idSubCIIU:{rules: [checkForValueIsExClient]},
-    annualSales:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(19)]},
-    addressClient:{rules: [checkFirstCharacter, checkMinLength(5), checkMaxLength(60), checkForValueIsExClient, checkAddress]},
+    annualSales:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(15)]},
+    addressClient:{rules: [checkFirstCharacter, checkMaxLength(60), checkForValueIsExClient, checkAddress]},
     country:{rules: [checkForValueIsExClient]},
     province:{rules: [checkForValueIsExClient]},
     city:{rules: [checkForValueIsExClient]},
-    telephone:{rules: [checkFirstCharacter, checkMinLength(7), checkMaxLength(30), checkForValueIsExClient, checkPhone]},
+    telephone:{rules: [checkFirstCharacter, checkMaxLength(30), checkForValueIsExClient, checkPhone]},
     razonSocial:{rules: []},
     idTypeClient:{rules: []},
     idNumber:{rules: []},
-    assets:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(19)]},
-    liabilities:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(19)]},
-    operatingIncome:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(19)]},
-    expenses:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(19)]},
-    nonOperatingIncome:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(19)]},
+    assets:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(15)]},
+    liabilities:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(15)]},
+    operatingIncome:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(15)]},
+    expenses:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(15)]},
+    nonOperatingIncome:{rules: [checkFirstCharacter, checkForValueIsExClient, checkNumberLength(15)]},
     dateSalesAnnuals:{rules: [checkForValueIsExClient]}
 };
 
