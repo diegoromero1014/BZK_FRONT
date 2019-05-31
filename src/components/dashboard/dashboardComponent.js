@@ -9,10 +9,6 @@ import LoadingComponent from '../loading/loadingComponent';
 import { loadObservablesLeftTimer } from '../login/actions';
 import SweetAlert from "../sweetalertFocus";
 import moment from 'moment';
-import Worker from '../../worker/Worker';
-import WorkerSetup from '../../worker/WorkerSetup';
-import { consultParameterServer } from '../../actionsGlobal';
-import { RANGO_PASO_PRODUCCION } from '../../constantsParameters';
 
 moment.tz.setDefault('America/Bogota');
 
@@ -23,56 +19,9 @@ class Dashboard extends Component {
     this.state = {
       showMessageNotification: false,
       messageTitle: "",
-      messageNotification: "",
-      initialDate: null,
-      finalDate: null
+      messageNotification: ""
     }
-  }
 
-  workerConfig = () => {
-    /**
-     * configuration of the method 
-     * that receives and broadcasts 
-     * the message.
-     */
-    this.worker = new WorkerSetup(Worker);
-
-    /** message sent. **/
-    this.worker.postMessage('start web worker');
-  }
-
-  startBlocking = () => {
-    const { consultParameterServer } = this.props;
-
-    consultParameterServer(RANGO_PASO_PRODUCCION).then(resolve => {
-      if (resolve && resolve.payload && resolve.payload.data) {
-        this.initializeRanges(resolve.payload.data);
-
-        if (new Date() <= this.state.finalDate && new Date() >= this.state.initialDate) {
-          this.setState({
-            showMessageNotification: false
-          });
-
-          redirectUrl('/pageUnderConstruction');
-        }
-      }
-    });
-  }
-
-  /**
-   * initialize the dates
-   *  
-   * @param { Object } data 
-   */
-  initializeRanges = (data) => {
-    if (data.parameter !== null && data.parameter !== "" && data.parameter !== undefined) {
-      let value = (JSON.parse(data.parameter).value).split(" | ");
-
-      this.setState({
-        initialDate: new Date(value[0]),
-        finalDate: new Date(value[1])
-      });
-    }
   }
 
   componentWillMount() {
@@ -80,40 +29,43 @@ class Dashboard extends Component {
 
     let token = window.localStorage.getItem('sessionTokenFront');
 
+    window.onstorage = function (e) {
+      //Leave this empty
+      //or add code to handle
+      //the event
+    };
+
     if (token == null || token === "" || document.cookie.indexOf('estadoconexion=') == -1) {
       window.localStorage.setItem('sessionTokenFront', '');
       document.cookie = 'estadoconexion=activa;path=/';
       redirectUrl("/login");
+
     } else {
       const { loadObservablesLeftTimer, dashboardReducer } = this.props;
 
       loadObservablesLeftTimer();
 
       let productionUpgradeNotified = dashboardReducer.get('productionUpgradeNotified');
-
       if (!productionUpgradeNotified) {
         notifiedProductionUpgrade();
 
-        validateUpgrateProductionActive().then(resolve => {
-          const { data } = resolve.payload.data;
-
-          if (data) {
-            this.setState({ showMessageNotification: true, messageNotification: data });
-
-            /** configuration method. **/
-            this.workerConfig();
-
-            /** valid initial block**/
-            this.startBlocking();
+        validateUpgrateProductionActive().then((data) => {
+          const { messageNotification } = data.payload.data.data;
+          if (messageNotification) {
+            this.setState({
+              showMessageNotification: true,
+              messageNotification: messageNotification
+            })
           }
-        });
+        })
+
       }
+
     }
   }
 
   render() {
     const { dashboardReducer } = this.props;
-
     return (
       <div style={{ width: "100%", height: "100%", position: "absolute", overflow: "hidden" }}>
         <div style={{ backgroundColor: '#00448c', float: "left", width: '190px', height: "100%", position: "absolute", transition: 'all 0.3s' }} >
@@ -133,7 +85,6 @@ class Dashboard extends Component {
             }
           </div>
         </div>
-
         <SweetAlert
           type="warning"
           show={this.state.showMessageNotification}
@@ -152,8 +103,7 @@ function mapDispatchToProps(dispatch) {
     changeStateSaveData,
     loadObservablesLeftTimer,
     notifiedProductionUpgrade,
-    validateUpgrateProductionActive,
-    consultParameterServer
+    validateUpgrateProductionActive
   }, dispatch);
 }
 
