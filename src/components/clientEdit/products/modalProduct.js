@@ -233,7 +233,7 @@ class ModalProduct extends Component {
       });
     } else if (!_.isNull(this.state.averageMontlyAmount) && !_.toString(this.state.averageMontlyAmount).length < 1 && !_.isUndefined(this.state.averageMontlyAmount)) {      
       let message = null;
-      let length = 30;
+      let length = 15;
       let number = this.state.averageMontlyAmount + "";
       let formatedNumber = number;
       formatedNumber = formatedNumber.replace(/,/g, "");
