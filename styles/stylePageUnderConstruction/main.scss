@@ -1,0 +1,44 @@
+.page-under-construction {
+    width: 100vw;
+    height: 100vh;
+    background: #fff;    
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        height: 90%;
+    }
+
+    .brand {
+        transform: rotate(45deg);
+        position: absolute;
+        top: 0;
+        right: -60px;
+        margin-top: 7%;
+
+        img {
+            width: 75%;
+            padding: 0;
+            
+            @media screen and (max-width: 1000px) {
+                width: 55%;
+            }
+
+            @media screen and (max-height: 600px) {
+                width: 55%;
+            }
+        }
+
+        @media screen and(max-width: 1000px) {
+            right: -120px;
+            margin-top: 12%;
+        }
+
+        @media screen and(max-height: 600px) {
+            right: -120px;
+            margin-top: 12%;
+        }
+    }
+}
