@@ -13,7 +13,7 @@ let initialDate;
 let finalDate;
 
 const store = configureStore();
-const timeInterval = 60000;
+const timeInterval = 10000;
 
 /**
  *  make the request 
