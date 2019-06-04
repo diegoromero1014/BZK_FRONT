@@ -998,7 +998,7 @@ class clientEdit extends Component {
             contextClient.noAppliedMainCompetitors = noAppliedMainCompetitors;
             contextClient.noAppliedIntOperations = noAppliedIntOperations;
             contextClient.noAppliedControlLinkedPayments = noAppliedControlLinkedPayments;
-            contextClient.isDraft: true;
+            contextClient.isDraft = true;
             return contextClient;
         }
     }
