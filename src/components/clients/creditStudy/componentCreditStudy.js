@@ -751,7 +751,7 @@ export class ComponentStudyCredit extends Component {
                 }
 
                 const showButtonPDF = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), GENERAR_PDF_ESTUDIO_CREDITO), false) && data.payload.data.data.id != null;
-                const showButtonSaveAdvance = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), EDITAR), false) && data.payload.data.data.id != null;
+                const showButtonSaveAdvance = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), EDITAR), false);
                 this._validatePDFStatus();
                 this.setState({ isPDFGenerated: data.payload.data.data.isPDFGenerated, showButtonPDF, showButtonSaveAdvance });
 
