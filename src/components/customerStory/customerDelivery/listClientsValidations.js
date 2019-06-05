@@ -14,7 +14,7 @@ class ListClientsValidations extends Component {
         super(props);
 
         this.state = {
-            statusClient: "",
+            clientStatus: "",
             managementBrand: ""
         }
         this._mapValuesDeliveryClients = this._mapValuesDeliveryClients.bind(this);
@@ -24,8 +24,14 @@ class ListClientsValidations extends Component {
         const { consultParameterServer } = this.props;
 
         consultParameterServer(CLIENT_STATUS).then(resolve => {
-            if (resolve && resolve.payload && resolve.payload.data) {
-                debugger;    
+            if (resolve && resolve.payload && resolve.payload.data && resolve.payload.data.parameter) {
+                this.setState({ clientStatus: JSON.parse(resolve.payload.data.parameter).value });
+            }
+        });
+
+        consultParameterServer(MANAGEMENT_BRAND).then(resolve => {
+            if (resolve && resolve.payload && resolve.payload.data && resolve.payload.data.parameter) {
+                this.setState({ managementBrand: JSON.parse(resolve.payload.data.parameter).value });
             }
         });
     }
@@ -33,14 +39,12 @@ class ListClientsValidations extends Component {
 
     _mapValuesDeliveryClients(deliveryClient, idx) {
         const { allowAccessContextClient } = this.props;
-
+        const { clientStatus, managementBrand } = this.state;
 
         const state = {
             stateClient: [
                 { message: 'Nit principal', isFulfilled: deliveryClient.mainNit },
                 { message: 'Centro de decisión', isFulfilled: deliveryClient.decisionCenter },
-                { message: 'Activo', isFulfilled: deliveryClient.clientStatus === "Activo" ? true : false },
-                { message: 'Gerenciamiento Continuo', isFulfilled: deliveryClient.managementBrand === "Gerenciamiento Continuo" ? true : false },
             ],
 
             stateClient2: [
@@ -48,6 +52,15 @@ class ListClientsValidations extends Component {
                 { message: 'Centro de decisión', isFulfilled: deliveryClient.decisionCenter },
             ]
         }
+
+        if (clientStatus) {
+            state.stateClient.push({ message: clientStatus, isFulfilled: (deliveryClient.clientStatus === clientStatus) ? true : false });
+        }
+
+        if (managementBrand) {
+            state.stateClient.push({ message: managementBrand, isFulfilled: deliveryClient.managementBrand === managementBrand ? true : false });
+        }
+        
 
         return (
 

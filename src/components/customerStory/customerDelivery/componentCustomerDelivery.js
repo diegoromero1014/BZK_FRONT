@@ -11,15 +11,16 @@ import {
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ListClientsValidations from './listClientsValidations';
 import { clientsByEconomicGroup, updateTeamClients, getAllteams, updateCheckEconomicGroup } from '../actions';
-import { validateResponse } from '../../../actionsGlobal';
+import { validateResponse, consultParameterServer } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { consultInfoClient } from '../../clientInformation/actions';
 import Input from '../../../ui/input/inputComponent';
 import SweetAlert from '../../sweetalertFocus';
 import _ from 'lodash';
-
 import { fields, validations as validate } from './fieldsAndRulesCustomerDelivery';
+
+import { CLIENT_STATUS, MANAGEMENT_BRAND } from '../structuredDelivery/constants';
 
 const meesageOneClient = "¿Señor usuario, certifica que el cliente y su información de historial se encuentra actualizada ?";
 const meesageMoreOneClient = "¿Señor usuario, certifica que los clientes y su información de historial se cuentra actualizada ?";
@@ -32,8 +33,11 @@ class ComponentCustomerDelivery extends Component {
         this.state = {
             checkEconomicGroup: false,
             errorValidateClients: false,
-            showConfirmUpdate: false
+            showConfirmUpdate: false,
+            clientStatus: "",
+            managementBrand: ""
         };
+
         this._handleChangeCheck = this._handleChangeCheck.bind(this);
         this._handleSubmitDelivery = this._handleSubmitDelivery.bind(this);
         this.consultClients = this.consultClients.bind(this);
@@ -71,13 +75,25 @@ class ComponentCustomerDelivery extends Component {
     }
 
     componentWillMount() {
-        const { getAllteams, getMasterDataFields, updateCheckEconomicGroup } = this.props;
+        const { getAllteams, getMasterDataFields, updateCheckEconomicGroup, consultParameterServer } = this.props;
         getAllteams();
         updateCheckEconomicGroup(false);
         getMasterDataFields([REASON_TRANFER]).then((data) => {
             valuesReasonTranfer = _.get(data, 'payload.data.messageBody.masterDataDetailEntries');
         });
         this.consultClients(window.sessionStorage.getItem('idClientSelected'), null);
+
+        consultParameterServer(CLIENT_STATUS).then(resolve => {
+            if (resolve && resolve.payload && resolve.payload.data && resolve.payload.data.parameter) {
+                this.setState({ clientStatus: JSON.parse(resolve.payload.data.parameter).value });
+            }
+        });
+
+        consultParameterServer(MANAGEMENT_BRAND).then(resolve => {
+            if (resolve && resolve.payload && resolve.payload.data && resolve.payload.data.parameter) {
+                this.setState({ managementBrand: JSON.parse(resolve.payload.data.parameter).value });
+            }
+        });
     }
 
     _onChangeReasonTransfer(valueReason) {
@@ -88,7 +104,8 @@ class ComponentCustomerDelivery extends Component {
 
     _handleSubmitDelivery() {
         const { fields: { idCelula }, customerStory, clientInformacion, swtShowMessage } = this.props;
-        
+        const { managementBrand, clientStatus } = this.state;
+
         if (_.isEqual(idCelula.value, clientInformacion.get("responseClientInfo").celulaId.toString())) {
             swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, la célula que seleccionó es a la que pertenece(n) actualmente.');
         } else {
@@ -98,12 +115,12 @@ class ComponentCustomerDelivery extends Component {
                 if (client.mainNit || client.decisionCenter) {
                     if (!client.updateClient || !client.deliveryComplete || !client.mainClientsComplete || !client.mainSuppliersComplete) {
                         swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, no ha completado los requisitos para realizar la entrega.');
-                        
+
                         allowedDelivery = false;
                     }
                 } else {
-                    if (client.managementBrand === "Gerenciamiento Continuo" && client.clientStatus === "Activo") {
-                        if(!client.updateClient) {
+                    if ((managementBrand && client.managementBrand === managementBrand) && (clientStatus && client.clientStatus === clientStatus)) {
+                        if (!client.updateClient) {
                             swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, no ha completado los requisitos para realizar la entrega.');
 
                             allowedDelivery = false;
@@ -238,7 +255,8 @@ function mapDispatchToProps(dispatch) {
         consultInfoClient,
         getAllteams,
         getMasterDataFields,
-        updateCheckEconomicGroup
+        updateCheckEconomicGroup,
+        consultParameterServer
     }, dispatch);
 }
 
