@@ -55,7 +55,6 @@ class FormLogin extends Component {
 
     _handleValidateLogin(e) {
         e.preventDefault();
-        debugger;
         
         const { usuario, password } = this.state;
         const { validateLogin, showLoading, changeActiveItemMenu } = this.props;

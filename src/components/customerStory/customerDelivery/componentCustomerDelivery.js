@@ -92,12 +92,6 @@ class ComponentCustomerDelivery extends Component {
         if (_.isEqual(idCelula.value, clientInformacion.get("responseClientInfo").celulaId.toString())) {
             swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, la célula que seleccionó es a la que pertenece(n) actualmente.');
         } else {
-            //Se valida si alguno de los clientes que se va a entregar tiene errores, ya sea actualización, historial, principales clientes o proveedores
-            const validateErrorsUpdateClient = _.filter(customerStory.get('listClientsDelivery'), ['updateClient', false]);
-            const validateErrorsDeliveryClient = _.filter(customerStory.get('listClientsDelivery'), ['deliveryComplete', false]);
-            const validateErrorsClients = _.filter(customerStory.get('listClientsDelivery'), ['mainClientsComplete', false]);
-            const validateErrorsSuppliers = _.filter(customerStory.get('listClientsDelivery'), ['mainSuppliersComplete', false]);
-
             let allowedDelivery = true;
 
             _.forEach(customerStory.get('listClientsDelivery'), client => {
@@ -108,7 +102,7 @@ class ComponentCustomerDelivery extends Component {
                         allowedDelivery = false;
                     }
                 } else {
-                    if (client.managementBrand === "Gerenciamiento a Demanda" && client.clientStatus === "Activo") {
+                    if (client.managementBrand === "Gerenciamiento Continuo" && client.clientStatus === "Activo") {
                         if(!client.updateClient) {
                             swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, no ha completado los requisitos para realizar la entrega.');
 
@@ -119,14 +113,6 @@ class ComponentCustomerDelivery extends Component {
             });
 
             allowedDelivery && this.setState({ showConfirmUpdate: true });
-
-            // Se tiene en cuenta el permiso de estudio de credito para validar obligatoriedad de clientes y proveedores principales
-            /* if (_.size(validateErrorsUpdateClient) > 0 || _.size(validateErrorsDeliveryClient) > 0 ||
-                (((_.size(validateErrorsClients) > 0) || (_.size(validateErrorsSuppliers) > 0)) && allowAccessContextClient)) {
-                swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, no ha completado los requisitos para realizar la entrega.');
-            } else {
-                this.setState({ showConfirmUpdate: true });
-            } */
         }
     }
 
