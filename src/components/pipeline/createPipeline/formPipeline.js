@@ -20,7 +20,7 @@ import {changeModalIsOpen, createEditPipeline, updateDisbursementPlans} from "..
 import {filterUsersBanco} from "../../participantsVisitPre/actions";
 import {changeStateSaveData} from "../../dashboard/actions";
 import {swtShowMessage} from '../../sweetAlertMessages/actions';
-import {clearLists, consultDataSelect, consultListWithParameterUbication, getClientNeeds, getMasterDataFields, getPipelineCurrencies} from "../../selectsComponent/actions";
+import {clearLists, consultDataSelect, consultListWithParameterUbication, getClientNeeds, getMasterDataFields} from "../../selectsComponent/actions";
 import {consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, handleFocusValueNumber, nonValidateEnter} from "../../../actionsGlobal";
 
 import {
@@ -529,7 +529,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     componentWillMount() {
-      const { nonValidateEnter, clientInformacion, getMasterDataFields, getPipelineCurrencies, getClientNeeds,
+      const { nonValidateEnter, clientInformacion, getMasterDataFields, getClientNeeds,
         consultParameterServer, clearBusiness, updateDisbursementPlans, clearLists, consultDataSelect,setConfidential } = this.props;
 
      
@@ -543,7 +543,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       }
 
       const infoClient = clientInformacion.get('responseClientInfo');
-      getPipelineCurrencies();
       getClientNeeds();
 
       typeButtonClick = null;
@@ -1104,7 +1103,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   function mapDispatchToProps(dispatch) {
     return bindActionCreators({
       getMasterDataFields,
-      getPipelineCurrencies,
       getClientNeeds,
       createEditPipeline,
       filterUsersBanco,
