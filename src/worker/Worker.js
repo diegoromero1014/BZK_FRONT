@@ -31,14 +31,14 @@ function requestStartSiteUnderConstruction() {
                 if (resolve && resolve.payload && resolve.payload.data) {
                     initializeRanges(resolve.payload.data);
 
-                    if (initialDate >= new Date()) {
+                    if (new Date() <= finalDate && new Date() >= initialDate) {
                         startBlocking(new Date(initialDate.getTime() - timeInterval));
                         endBlocking(finalDate);
                     }
                 }
             })
         }
-    }, 5000);
+    }, 10000);
 }
 
 /**
