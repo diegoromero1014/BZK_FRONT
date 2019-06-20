@@ -1,43 +1,133 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Col } from 'react-flexbox-grid';
-import { redirectUrl } from '../../globalComponents/actions';
+import { Col } from 'react-flexbox-grid';
 import ButtonOpenHistoricalClient from './buttonOpenHistoricalClient';
 import ButtonOpenMainClients from './buttonSaveListMainClients';
 import ButtonOpenMainSuppliers from './buttonSaveListMainSuppliers';
+import Tooltip from '../../globalComponents/ToolTip';
+import { consultParameterServer } from '../../../actionsGlobal';
+import { CLIENT_STATUS, MANAGEMENT_BRAND } from '../structuredDelivery/constants';
 
 class ListClientsValidations extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            clientStatus: "",
+            managementBrand: ""
+        }
         this._mapValuesDeliveryClients = this._mapValuesDeliveryClients.bind(this);
     }
 
+    componentWillMount() {
+        const { consultParameterServer } = this.props;
+
+        consultParameterServer(CLIENT_STATUS).then(resolve => {
+            if (resolve && resolve.payload && resolve.payload.data && resolve.payload.data.parameter) {
+                this.setState({ clientStatus: JSON.parse(resolve.payload.data.parameter).value });
+            }
+        });
+
+        consultParameterServer(MANAGEMENT_BRAND).then(resolve => {
+            if (resolve && resolve.payload && resolve.payload.data && resolve.payload.data.parameter) {
+                this.setState({ managementBrand: JSON.parse(resolve.payload.data.parameter).value });
+            }
+        });
+    }
+
+
     _mapValuesDeliveryClients(deliveryClient, idx) {
         const { allowAccessContextClient } = this.props;
-        return <tr key={idx}>
-            <td>{deliveryClient.clientNumber}</td>
-            <td>{deliveryClient.nameClient}</td>
-            <td>{deliveryClient.team}</td>
-            <td className="collapsing" style={{ textAlign: 'center' }}>
-                <ButtonOpenHistoricalClient deliveryComplete={deliveryClient.deliveryComplete} idClient={deliveryClient.idClient} />
-            </td>
-            <td className="collapsing" style={{ textAlign: 'center' }}>
-                {deliveryClient.updateClient ?
-                    <i className="green checkmark icon" title="Cliente actualizado" style={{ cursor: "pointer" }} />
-                    :
-                    <i className="red remove icon" title="El cliente no se encuentra actualizado" style={{ cursor: "pointer" }} />
+        const { clientStatus, managementBrand } = this.state;
+
+        const state = {
+            stateClient: [
+                { message: 'Nit principal', isFulfilled: deliveryClient.mainNit },
+                { message: 'Centro de decisión', isFulfilled: deliveryClient.decisionCenter },
+            ],
+
+            stateClient2: [
+                { message: 'Nit principal', isFulfilled: deliveryClient.mainNit },
+                { message: 'Centro de decisión', isFulfilled: deliveryClient.decisionCenter },
+            ]
+        }
+
+        if (clientStatus) {
+            state.stateClient.push({ message: clientStatus, isFulfilled: (deliveryClient.clientStatus === clientStatus) ? true : false });
+        }
+
+        if (managementBrand) {
+            state.stateClient.push({ message: managementBrand, isFulfilled: deliveryClient.managementBrand === managementBrand ? true : false });
+        }
+        
+
+        return (
+
+            <tr key={idx}>
+                <td>{deliveryClient.clientNumber}</td>
+                <td>{deliveryClient.nameClient}</td>
+                <td>{deliveryClient.team}</td>
+                <Tooltip options={state.stateClient2}>
+                    <td className="collapsing" style={{ textAlign: 'center' }}>
+                        <ButtonOpenHistoricalClient deliveryComplete={deliveryClient.deliveryComplete} idClient={deliveryClient.idClient} delivery={deliveryClient} />
+                    </td>
+                </Tooltip>
+                <Tooltip options={state.stateClient}>
+                    <td className="collapsing" style={{ textAlign: 'center' }}>
+                        {this.renderIcon(deliveryClient)}
+                    </td>
+                </Tooltip>
+
+                {allowAccessContextClient &&
+                    <Tooltip options={state.stateClient2}>
+                        <td className="collapsing" style={{ textAlign: 'center' }}>
+                            <ButtonOpenMainClients mainClientsComplete={deliveryClient.mainClientsComplete} idClient={deliveryClient.idClient} delivery={deliveryClient} />
+                        </td>
+                    </Tooltip>
                 }
-            </td>
-            {allowAccessContextClient && <td className="collapsing" style={{ textAlign: 'center' }}>
-                <ButtonOpenMainClients mainClientsComplete={deliveryClient.mainClientsComplete} idClient={deliveryClient.idClient} />
-            </td>}
-            {allowAccessContextClient &&
-                <td className="collapsing" style={{ textAlign: 'center' }}>
-                    <ButtonOpenMainSuppliers mainSuppliersComplete={deliveryClient.mainSuppliersComplete} idClient={deliveryClient.idClient} />
-                </td>
+                {allowAccessContextClient &&
+                    <Tooltip options={state.stateClient2}>
+                        <td className="collapsing" style={{ textAlign: 'center' }}>
+                            <ButtonOpenMainSuppliers mainSuppliersComplete={deliveryClient.mainSuppliersComplete} idClient={deliveryClient.idClient} delivery={deliveryClient} />
+                        </td>
+                    </Tooltip>
+                }
+            </tr>
+
+        )
+    }
+
+    renderIcon = deliveryClient => {
+        const { mainNit, decisionCenter, clientStatus, managementBrand, updateClient } = deliveryClient;
+
+        if (updateClient) {
+            return (
+                <i
+                    className="green checkmark icon"
+                    title="Cliente actualizado"
+                    style={{ cursor: "pointer" }}
+                />
+            );
+        } else {
+            if (!mainNit && !decisionCenter && !(clientStatus === "Activo") && !(managementBrand === "Gerenciamiento Continuo")) {
+                return (
+                    <i
+                        className="yellow warning icon"
+                        title="El cliente no se encuentra actualizado"
+                        style={{ cursor: "pointer" }}
+                    />
+                );
+            } else {
+                return (
+                    <i
+                        className="red remove icon"
+                        title="El cliente no se encuentra actualizado"
+                        style={{ cursor: "pointer" }}
+                    />
+                );
             }
-        </tr>
+        }
     }
 
     render() {
@@ -82,7 +172,7 @@ class ListClientsValidations extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-
+        consultParameterServer
     }, dispatch);
 }
 
