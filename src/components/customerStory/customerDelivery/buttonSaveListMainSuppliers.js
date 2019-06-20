@@ -109,18 +109,43 @@ class ButtonSaveListMainSuppliers extends Component {
         };
     }
 
+    renderIcon = delivery => {
+        const { mainNit, decisionCenter, mainSuppliersComplete } = delivery;
+
+        if (mainSuppliersComplete) {
+            return (
+                <i
+                    className="green checkmark icon"
+                    title="Los principales proveedores están completos"
+                    style={{ cursor: "pointer" }}
+                    onClick={this.openModal} />
+            );
+        } else {
+            if (!mainNit && !decisionCenter) {
+                return (
+                    <i
+                        className="yellow warning icon"
+                        title="Los principales proveedores están incompletos"
+                        style={{ cursor: "pointer" }}
+                        onClick={this.openModal} />
+                );
+            } else {
+                return (
+                    <i
+                        className="red remove icon"
+                        title="Los principales proveedores están incompletos"
+                        style={{ cursor: "pointer" }}
+                        onClick={this.openModal} />
+                );
+            }
+        }
+    }
+
     render() {
-        const { fields: { nameMainSupplier, participationMS, termMainSupplier, relevantInformationMainSupplier },
-            mainSuppliersComplete, idClient } = this.props;
+        const { fields: { nameMainSupplier, participationMS, termMainSupplier, relevantInformationMainSupplier }, delivery } = this.props;
         return (
-            <form style={{ backgroundColor: "#FFFFFF" }}>
-                {mainSuppliersComplete ?
-                    <i className="green checkmark icon" title="Los principales proveedores están completos"
-                        style={{ cursor: "pointer" }} onClick={this.openModal} />
-                    :
-                    <i className="red remove icon" title="Los principales proveedores están incompletos"
-                        style={{ cursor: "pointer" }} onClick={this.openModal} />
-                }
+            <form>
+                {this.renderIcon(delivery)}
                 <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
                     <div className="modalBt4-dialog modalBt4-lg">
                         <div className="modalBt4-content modal-content">

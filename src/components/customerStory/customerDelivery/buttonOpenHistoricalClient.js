@@ -39,17 +39,44 @@ class ButtonOpenHistoricalClient extends Component {
         });
     }
 
+    renderIcon = delivery => {
+        const { mainNit, decisionCenter, deliveryComplete } = delivery;
+
+
+        if (deliveryComplete) {
+            return (
+                <i
+                    className="green checkmark icon"
+                    title="Historial del cliente completo"
+                    style={{ cursor: "pointer" }}
+                    onClick={this.openModal} />
+            );
+        } else {
+            if (!mainNit && !decisionCenter) {
+                return (
+                    <i
+                        className="yellow warning icon"
+                        title="El historial del cliente está incompleto"
+                        style={{ cursor: "pointer" }}
+                        onClick={this.openModal} />
+                );
+            } else {
+                return (
+                    <i
+                        className="red remove icon"
+                        title="El historial del cliente está incompleto"
+                        style={{ cursor: "pointer" }}
+                        onClick={this.openModal} />
+                );
+            }
+        }
+    }
+
     render() {
-        const { deliveryComplete, idClient } = this.props;
+        const { idClient, delivery } = this.props;
         return (
             <div>
-                {deliveryComplete ?
-                    <i className="green checkmark icon" title="Historial del cliente completo"
-                        style={{ cursor: "pointer" }} onClick={this.openModal} />
-                    :
-                    <i className="red remove icon" title="El historial del cliente está incompleto"
-                        style={{ cursor: "pointer" }} onClick={this.openModal} />
-                }
+                {this.renderIcon(delivery)}
                 <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
                     <div className="modalBt4-dialog modalBt4-lg">
                         <div className="modalBt4-content modal-content">
