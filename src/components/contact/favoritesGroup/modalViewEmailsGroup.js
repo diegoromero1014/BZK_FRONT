@@ -4,14 +4,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid';
 import { getEmailsForGroup, clearEmails } from './actions';
 import AreaNueva from '../../../ui/textarea/textareaComponent';
 import _ from 'lodash';
-import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import $ from 'jquery';
 import { validateResponse } from '../../../actionsGlobal';
 import { MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, TITLE_ERROR_SWEET_ALERT } from '../../../constantsGlobal';
 

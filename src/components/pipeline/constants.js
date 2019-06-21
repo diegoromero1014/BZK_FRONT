@@ -13,7 +13,6 @@ export const CREATE_EDIT_PIPELINE = "CREATE_EDIT_PIPELINE";
 export const GET_PIPELINE = "GET_PIPELINE";
 export const OWNER_DRAFT = "OWNER_DRAFT";
 export const PIPELINE_STATUS = "pipelineStatus";
-export const CURRENCY_COP = "COP";
 export const LINE_OF_BUSINESS_LEASING = "Leasing Bancolombia";
 export const ORIGIN_PIPELIN_BUSINESS = "pipelineBusiness";
 
@@ -23,4 +22,5 @@ export const PRODUCT_FAMILY_LEASING = "Leasing";
 export const HELP_PROBABILITY = "Período en que se espera cerrar el negocio.";
 //manejo de los planes de desembolso
 export const UPDATE_DISBURSEMENT_PLANS = "UPDATE_DISBURSEMENT_PLANS";
+export const CURRENCY_MESSAGE = "Señor usuario, mientras exista un plan de desembolso, no se puede editar la moneda ni el valor nominal. Si requiere editarlos debe eliminar los desembolsos.";
 

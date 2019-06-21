@@ -73,6 +73,9 @@ class ListPipelineComponent extends Component {
       {
         title: "Necesidad",
         key: "need"
+      },{
+        title: "",
+        key: "commercialReport.isConfidential"
       },
       {
         title: "",

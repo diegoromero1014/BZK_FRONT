@@ -17,7 +17,7 @@ import PermissionUserReports from "../../commercialReport/permissionsUserReports
 
 import { redirectUrl } from "../../globalComponents/actions";
 import { getMasterDataFields } from "../../selectsComponent/actions";
-import { setConfidential } from '../../commercialReport/actions';
+import { addUsers, setConfidential } from "../../commercialReport/actions";
 import { buildJsoncommercialReport, fillUsersPermissions } from '../../commercialReport/functionsGenerics';
 import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, onSessionExpire } from "../../../actionsGlobal";
 import { changeStateSaveData } from "../../dashboard/actions";
@@ -27,13 +27,14 @@ import { addArea } from "../area/actions";
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
-import { EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR, VALUE_XSS_INVALID, REQUEST_INVALID_INPUT, REQUEST_SUCCESS } from "../../../constantsGlobal";
+import {
+    EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR, REQUEST_INVALID_INPUT, REQUEST_SUCCESS
+} from "../../../constantsGlobal";
 import { OBJECTIVE_BUSINESS } from "../constants";
-import { BLOCK_BUSINESS_PLAN } from '../../../constantsGlobal';
+import { BLOCK_BUSINESS_PLAN, REQUEST_ERROR } from '../../../constantsGlobal';
 
 const fields = ["initialValidityDate", "finalValidityDate", "objectiveBusiness", "opportunities"];
 let dateBusinessLastReview;
-let showMessageCreateBusiness = false;
 let typeMessage = "success";
 let titleMessage = "";
 let message = "";
@@ -42,6 +43,7 @@ const validate = values => {
     let errors = {};
     return errors;
 };
+
 class FormEdit extends Component {
 
     constructor(props) {
@@ -69,8 +71,6 @@ class FormEdit extends Component {
     }
 
     _editBusiness() {
-        const { hasAccess, swtShowMessage } = this.props;
-
         this.setState({
             showMessage: false,
             isEditable: !this.state.isEditable
@@ -121,15 +121,13 @@ class FormEdit extends Component {
     }
 
     _submitCreateBusiness() {
-        const { fields: { initialValidityDate, finalValidityDate }, needs, areas, createBusiness, businessPlanReducer, changeStateSaveData,
-            validateRangeDates, swtShowMessage, canUserEditBlockedReport } = this.props;
+        const { fields: { initialValidityDate, finalValidityDate }, needs, areas, businessPlanReducer, usersPermission, canUserEditBlockedReport, confidentialReducer } = this.props;
 
         let errorInForm = false;
         const detailBusiness = businessPlanReducer.get('detailBusiness');
 
         canUserEditBlockedReport()
             .then(() => {
-
 
                 if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid())) {
                     errorInForm = true;
@@ -144,7 +142,6 @@ class FormEdit extends Component {
                     });
                 }
                 if (typeButtonClick === SAVE_PUBLISHED) {
-                    let needsBusiness = [];
                     if (this.state.objectiveBusiness === null || this.state.objectiveBusiness === undefined || this.state.objectiveBusiness === "") {
                         errorInForm = true;
                         this.setState({
@@ -157,7 +154,7 @@ class FormEdit extends Component {
                             opportunitiesError: "Debe ingresar un valor"
                         });
                     }
-                    needsBusiness = needs.toArray();
+                    let needsBusiness = needs.toArray();
                     if (needsBusiness.length === 0) {
                         errorInForm = true;
                         this.setState({ showErrorSaveBusiness: true });
@@ -209,15 +206,16 @@ class FormEdit extends Component {
                         "objective": this.state.objectiveBusiness,
                         "documentStatus": typeButtonClick,
                         "clientNeedFulfillmentPlan": needsbB.length === 0 ? null : needsbB,
-                        "relatedInternalParties": areasB.length === 0 ? null : areasB
-                    }
+                        "relatedInternalParties": areasB.length === 0 ? null : areasB,
+                        "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
+                    };
                     //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
                     this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
 
                 }
 
             })
-            .catch((reason) => {});
+            .catch((reason) => { });
 
     }
 
@@ -229,8 +227,14 @@ class FormEdit extends Component {
     }
 
     componentWillMount() {
-        const { fields: { initialValidityDate, finalValidityDate }, nonValidateEnter, clientInformacion, getMasterDataFields, consultParameterServer, businessPlanReducer, detailBusiness, id, addNeed, addArea, showLoading } = this.props;
+        const {
+            fields: {
+                initialValidityDate, finalValidityDate
+            }, nonValidateEnter, clientInformacion, getMasterDataFields, detailBusiness, id, addNeed, addArea, showLoading, setConfidential, addUsers
+        } = this.props;
+
         nonValidateEnter(true);
+        setConfidential(false);
         const infoClient = clientInformacion.get('responseClientInfo');
         if (_.isEmpty(infoClient)) {
             redirectUrl("/dashboard/clientInformation");
@@ -241,7 +245,8 @@ class FormEdit extends Component {
                 let part = result.payload.data.data;
                 this.setState({
                     objectiveBusiness: part.objective,
-                    opportunities: part.opportunitiesAndThreats
+                    opportunities: part.opportunitiesAndThreats,
+                    commercialReport: part.commercialReport
                 });
 
                 if (!_.isNil(part.initialValidityDate)) {
@@ -294,7 +299,7 @@ class FormEdit extends Component {
                     addArea(area);
                 });
 
-                if(part.commercialReport){
+                if (part.commercialReport) {
                     setConfidential(part.commercialReport.isConfidential);
                     fillUsersPermissions(part.commercialReport.usersWithPermission, addUsers);
                 }
@@ -307,7 +312,7 @@ class FormEdit extends Component {
     //Método que valida las fechas ingresadas, que la inicial no sea mayor que la final y que el rango no se encuentre registrado ya
     //Además realiza la acción de guardado si el parámetro makeSaveBusiness llega en true
     _onSelectFieldDate(valueInitialDate, valueFinalDate, fieldDate, makeSaveBusiness, businessJson) {
-        const { fields: { initialValidityDate, finalValidityDate }, swtShowMessage, validateRangeDates, businessPlanReducer, changeStateSaveData, createBusiness } = this.props;
+        const { swtShowMessage, validateRangeDates, businessPlanReducer, changeStateSaveData, createBusiness } = this.props;
         const initialDate = _.isNil(valueInitialDate) || _.isEmpty(valueInitialDate) ? null : valueInitialDate;
         const finalDate = _.isNil(valueFinalDate) || _.isEmpty(valueFinalDate) ? null : valueFinalDate;
         if (!_.isNull(initialDate) && !_.isNull(finalDate)) {
@@ -323,45 +328,43 @@ class FormEdit extends Component {
             } else {
                 const detailBusiness = businessPlanReducer.get('detailBusiness');
                 validateRangeDates(moment(initialDate, DATE_FORMAT).format('x'), moment(finalDate, DATE_FORMAT).format('x'), detailBusiness.data.id).then((data) => {
-                    if (validateResponse(data)) {
-                        const response = _.get(data, 'payload.data.data', false);
-                        if (!response) {
-                            swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', 'Señor usuario, ya existe un plan de negocio registrado en este rango de fechas, por favor complemente el informe ya creado o modifique las fechas.');
-                        } else if (makeSaveBusiness) {
-                            changeStateSaveData(true, MESSAGE_SAVE_DATA);
-                            createBusiness(businessJson).then((data) => {
-                                changeStateSaveData(false, "");
-                                if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
-                                    onSessionExpire();
+                    const response = _.get(data, 'payload.data', false);                    
+                    if (response.status === REQUEST_ERROR) {
+                        swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', response.data);
+                    } else if (makeSaveBusiness) {
+                        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+                        createBusiness(businessJson).then((data) => {
+                            changeStateSaveData(false, "");
+                            if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
+                                onSessionExpire();
+                            } else {
+                                if ((_.get(data, 'payload.data.status') === REQUEST_SUCCESS)) {
+                                    typeMessage = "success";
+                                    titleMessage = "Edición plan de negocio";
+                                    message = "Señor usuario, el plan de negocio se editó de forma exitosa.";
+                                    this.setState({ showMessageCreateBusiness: true });
                                 } else {
-                                    if ((_.get(data, 'payload.data.status') === REQUEST_SUCCESS)) {
-                                        typeMessage = "success";
-                                        titleMessage = "Edición plan de negocio";
-                                        message = "Señor usuario, el plan de negocio se editó de forma exitosa.";
-                                        this.setState({ showMessageCreateBusiness: true });
+                                    if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
+                                        const validationsErrorFromServer = _.get(data, 'payload.data.data');
+                                        _.forEach(validationsErrorFromServer, (field) => {
+                                            this.processValidation(field);
+                                        });
                                     } else {
-                                        if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
-                                            const validationsErrorFromServer = _.get(data, 'payload.data.data');
-                                            _.forEach(validationsErrorFromServer, (field)=> {
-                                                this.processValidation(field);
-                                            });
-                                        }else{
 
-                                            typeMessage = "error";
-                                            titleMessage = "Edición plan de negocio";
-                                            message = "Señor usuario, ocurrió un error editando el plan de negocio.";
-                                            this.setState({ showMessageCreateBusiness: true });
-                                        }
+                                        typeMessage = "error";
+                                        titleMessage = "Edición plan de negocio";
+                                        message = "Señor usuario, ocurrió un error editando el plan de negocio.";
+                                        this.setState({ showMessageCreateBusiness: true });
                                     }
                                 }
-                            }, (reason) => {
-                                changeStateSaveData(false, "");
-                                typeMessage = "error";
-                                titleMessage = "Edición plan de negocio";
-                                message = "Señor usuario, ocurrió un error editando el plan de negocio.";
-                                this.setState({ showMessageCreateBusiness: true });
-                            });
-                        }
+                            }
+                        }, (reason) => {
+                            changeStateSaveData(false, "");
+                            typeMessage = "error";
+                            titleMessage = "Edición plan de negocio";
+                            message = "Señor usuario, ocurrió un error editando el plan de negocio.";
+                            this.setState({ showMessageCreateBusiness: true });
+                        });
                     }
                 });
             }
@@ -377,17 +380,13 @@ class FormEdit extends Component {
             }
         }
     }
+
     processValidation(field) {
-        if (field) {
-            switch (field.fieldName) {
-                case "opportunitiesAndThreats":
-                    this.setState({ opportunitiesError: field.message });
-                    break;
-                default:
-                    break;
-            }
+        if (field && field.fieldName && field.fieldName == "opportunitiesAndThreats") {
+            this.setState({ opportunitiesError: field.message });
         }
     }
+
     render() {
         let fechaModString = '';
         let fechaCreateString = '';
@@ -395,7 +394,7 @@ class FormEdit extends Component {
         let updatedBy = '';
         let positionCreatedBy = '';
         let positionUpdatedBy = '';
-        const { fields: { initialValidityDate, finalValidityDate, objectiveBusiness, opportunities }, selectsReducer, handleSubmit, businessPlanReducer, reducerGlobal, navBar } = this.props;
+        const { fields: { initialValidityDate, finalValidityDate }, selectsReducer, handleSubmit, businessPlanReducer, reducerGlobal } = this.props;
         const ownerDraft = businessPlanReducer.get('ownerDraft');
         const detailBusiness = businessPlanReducer.get('detailBusiness');
         if (detailBusiness !== undefined && detailBusiness !== null && detailBusiness !== '' && !_.isEmpty(detailBusiness)) {
@@ -436,7 +435,7 @@ class FormEdit extends Component {
                 </Row>
                 <Row>
                     <Col xs={12} md={12} lg={12}>
-                        <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'}/>
+                        <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'} />
                     </Col>
                 </Row>
                 <Row style={{ padding: "10px 10px 10px 20px" }}>
@@ -679,11 +678,13 @@ function mapDispatchToProps(dispatch) {
         nonValidateEnter,
         showLoading,
         validateRangeDates,
-        swtShowMessage
+        swtShowMessage,
+        addUsers,
+        setConfidential
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, needs, businessPlanReducer, reducerGlobal, areas, navBar }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, usersPermission, needs, businessPlanReducer, reducerGlobal, areas, navBar, confidentialReducer }, ownerProps) {
     return {
         clientInformacion,
         selectsReducer,
@@ -691,7 +692,9 @@ function mapStateToProps({ clientInformacion, selectsReducer, needs, businessPla
         reducerGlobal,
         needs,
         areas,
-        navBar
+        navBar,
+        usersPermission,
+        confidentialReducer
     };
 }
 const FormEditRedux = reduxForm({

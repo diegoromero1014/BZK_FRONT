@@ -47,7 +47,6 @@ export const PIPELINE_INDEXING = "indexing";
 export const PIPELINE_PRIORITY = "priority";
 export const FILTER_STATUS_TASK_ID ="FILTER_STATUS_TASK_ID";
 export const FILTER_STATUS_PIPELINE_ID = "FILTER_STATUS_PIPELINE_ID";
-export const PIPELINE_CURRENCIES = 'PIPELINE_CURRENCIES';
 export const PIPELINE_CLIENT_NEEDS = 'PIPELINE_CLIENT_NEEDS';
 export const TYPE_YEAR = "TYPE_YEAR";
 export const PIPELINE_BUSINESS = "businessPipeline";
@@ -88,4 +87,5 @@ export const MANAGEMENTS_OF_SECTOR_STRATEGY =  "managementsOfSectorStrategy"
 //INICIO prevent overwrite data reducer editclient
 export const FILTER_PROVINCE_CLIENT = 'provinceClient';
 export const FILTER_CITY_CLIENT = 'cityClient';
+export const CURRENCY = 'currency';
 //FIN

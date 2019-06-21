@@ -6,6 +6,7 @@ export const MESSAGE_WARNING_NUMBER_DOCUMENT = "Solo se permiten valores alfanum
 export const MESSAGE_WARNING_OBSERVATIONS = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
 export const MESSAGE_WARNING_TASK_OBSERVATIONS = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_<>*@";
 export const MESSAGE_WARNING_ADDRESS = "Solo se permiten valores alfanuméricos y -#();,.-\"\"/_´'";
+export const MESSAGE_WARNING_ORIGIN_CITY_RESOURCES = "Solo se permiten valores alfabéticos y -#();,.-\"\"/_´'";
 export const MESSAGE_WARNING_NEIGHBORHOOD = "Solo se permiten valores alfanuméricos y -#();,.\"\"/";
 export const MESSAGE_WARNING_INVALID_EMAIL = "No cumple con la estructura de correo. Por favor verifique su dirección de correo electrónico";
 export const MESSAGE_WARNING_POSTAL_CODE = "Solo se permiten valores alfanuméricos y -";

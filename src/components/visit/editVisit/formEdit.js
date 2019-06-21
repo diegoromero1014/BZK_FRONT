@@ -66,7 +66,7 @@ let typeMessage = "success";
 let titleMessage = "";
 let message = "";
 let typeButtonClick;
-var idPrevisitSeleted = null;
+let idPrevisitSeleted = null;
 
 const validate = values => {
     let errors = {};
@@ -680,7 +680,6 @@ class FormEdit extends Component {
                         </div>
                     </div>
                 </header>
-
                 <Row style={{ padding: "5px 10px 0px 20px" }}>
                     <Col xs={12} sm={8} md={this.state.isEditable ? 8 : 10} lg={this.state.isEditable ? 8 : 10}>
                         <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
@@ -701,13 +700,11 @@ class FormEdit extends Component {
                         <ButtonAssociateComponent fnExecute={this._executeFunctionFromAssociatePrevisit} edit={true} />
                     }
                 </Row>
-
                 <Row style={{ padding: "5px 10px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'} />
                     </Col>
                 </Row>
-
                 <Row style={{ padding: "10px 10px 10px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
