@@ -32,7 +32,7 @@ const fieldsWithRules= {
      otherOriginGoods:{rules: [checkFirstCharacter, checkOthersEnabledOriginGoods, checkOnlyAlphabetical, checkNumberLength(200)]},
      otherOriginResource:{rules: [checkFirstCharacter, checkOthersEnabledOriginResources, checkOnlyAlphabetical, checkNumberLength(200)]},
      otherOperationsForeign:{rules: [checkFirstCharacter, checkOthersEnabledclientOperationsForeignCurrency, checkOttherOperationsForeign, checkNumberLength(200)]},
-     originCityResource:{rules: [checkFirstCharacter, checkIsUpdateClient, checkOnlyAlphabetical, checkNumberLength(20)]},
+     originCityResource:{rules: [checkFirstCharacter, checkIsUpdateClient, checkClientAddress, checkNumberLength(20)]},
      detailNonOperatingIncome:{rules: [checkFirstCharacter, checkdetailNonOperatingIncome, checkdetailNonOperatingIncomePrincipal]},
      originResource:{rules: [checkIsUpdateClient]},
      countryOrigin:{rules: [checkIsUpdateClient]},
