@@ -21,7 +21,7 @@ import {
     patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
     patternOfInventoryPolice, patternOfControlLinkedPayments, patternOfNameEntity, patternOfNoOperatingInCome,
     patternOfOnlyAlphabeticalAndSlash, patternOfRiskGroupName, patternOfObservationRiskGroup, patternOfJustificationsRiskGroup,
-    patternOfRiskExternalClientName, patternOfExternalClientNumberDocument, patternOfTaskObservation
+    patternOfRiskExternalClientName, patternOfExternalClientNumberDocument, patternOfTaskObservation, patternOfOriginCityResources
 } from './patternsToValidateField';
 
 import {
