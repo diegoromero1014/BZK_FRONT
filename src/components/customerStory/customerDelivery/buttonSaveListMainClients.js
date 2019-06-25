@@ -108,18 +108,42 @@ class ButtonSaveListMainClients extends Component {
         };
     }
 
+    renderIcon = delivery => {
+        const { mainNit, decisionCenter, mainClientsComplete } = delivery;
+
+        if (mainClientsComplete) {
+            return (
+                <i
+                    className="green checkmark icon"
+                    title="Los principales clientes están completos"
+                    style={{ cursor: "pointer" }}
+                    onClick={this.openModal} />
+            );
+        } else {
+            if (!mainNit && !decisionCenter) {
+                return (
+                    <i
+                        className="yellow warning icon"
+                        title="Los principales clientes están incompletos"
+                        style={{ cursor: "pointer" }}
+                        onClick={this.openModal} />
+                );
+            } else {
+                return (
+                    <i
+                        className="red remove icon"
+                        title="Los principales clientes están incompletos"
+                        style={{ cursor: "pointer" }}
+                        onClick={this.openModal} />
+                );
+            }
+        }
+    }
+
     render() {
-        const {
-            mainClientsComplete, idClient } = this.props;
         return (
-            <form style={{ backgroundColor: "#FFFFFF" }}>
-                {mainClientsComplete ?
-                    <i className="green checkmark icon" title="Los principales clientes están completos"
-                        style={{ cursor: "pointer" }} onClick={this.openModal} />
-                    :
-                    <i className="red remove icon" title="Los principales clientes están incompletos"
-                        style={{ cursor: "pointer" }} onClick={this.openModal} />
-                }
+            <form>
+                {this.renderIcon(this.props.delivery)}
                 <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
                     <div className="modalBt4-dialog modalBt4-lg">
                         <div className="modalBt4-content modal-content">
