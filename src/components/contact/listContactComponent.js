@@ -113,10 +113,6 @@ class ListContactComponent extends Component {
         key: "actions"
       },
       {
-        title: "Tratamiento",
-        key: "title"
-      },
-      {
         title: "Nombre",
         orderColumn: <span><i className="caret down icon" style={{ cursor: 'pointer', display: this.state.orderD }} onClick={() => this._orderColumn(0, "D10_FIRST_NAME")}></i><i className="caret up icon" style={{ cursor: 'pointer', display: this.state.orderA }} onClick={() => this._orderColumn(1, "D10_FIRST_NAME")}></i></span>,
         key: "nameComplet"
@@ -132,10 +128,6 @@ class ListContactComponent extends Component {
       {
         title: "Correo",
         key: "emailAddress"
-      },
-      {
-        title: "Ciudad",
-        key: "city"
       },
       {
         title: "Tipo de contacto",
