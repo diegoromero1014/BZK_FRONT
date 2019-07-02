@@ -59,7 +59,7 @@ import {
     RED_COLOR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
 } from "../../../constantsGlobal";
 import {
-    nombreflujo,
+    nombreflujoAnalytics,
     BIZTRACK_MISTAREAS_CAMBIOFILTRO
 
 } from "../../../constantsAnalitycs";
@@ -199,9 +199,10 @@ class ModalComponentPending extends Component {
     }
 
     _changeViewModeTeamTask() {
+        
         window.dataLayer.push({
-            'nombreflujo':nombreflujo,
-          'event':BIZTRACK_MISTAREAS_CAMBIOFILTRO,
+            'nombreflujo': nombreflujoAnalytics,
+            'event':BIZTRACK_MISTAREAS_CAMBIOFILTRO,
         });
     
         const { fields: { region, zone, team }, clearMyPendingTeamPaginator, clearOnlyListPendingTaskTeam, clearPendingTaskTeam, updateTitleNavBar } = this.props;
