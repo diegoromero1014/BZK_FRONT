@@ -122,6 +122,10 @@ class ListContactComponent extends Component {
         key: "telephoneNumber"
       },
       {
+        title: "Ext",
+        key: "extension"
+      },
+      {
         title: "Celular",
         key: "mobileNumber"
       },
@@ -136,6 +140,10 @@ class ListContactComponent extends Component {
       {
         title: "Cargo",
         key: "contactPosition"
+      },
+      {
+        title: "Particularidad",
+        key: "contactRelevantFeatures"
       },
       {
         title: "",
