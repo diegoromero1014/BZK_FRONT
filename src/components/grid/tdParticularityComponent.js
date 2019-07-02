@@ -10,13 +10,18 @@ class TdParticularityComponent extends Component {
   render() {      
     const {columnRow, styles} = this.props; 
     return (
-        <td style={styles} className="text-center">
+        <td style={styles} className="text-center"
+        >
             {columnRow.length > 0 ?
                 <Popup style={styleTooltip} trigger={ <button className="btn btn-success btn-sm"><i className={"comment alternate icon"} /></button> } inverted position='left center' wide='very'>{columnRow}</Popup>
             : ''}            
         </td>
     );
   }
+}
+
+TdParticularityComponent.defaultProps = {
+  columnRow: []
 }
 
 export default TdParticularityComponent;
