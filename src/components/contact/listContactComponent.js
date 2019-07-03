@@ -146,6 +146,10 @@ class ListContactComponent extends Component {
         key: "contactRelevantFeatures"
       },
       {
+        title: "Desactualizado",
+        key: "updatedInfo"
+      },
+      {
         title: "",
         key: "delete"
       },
