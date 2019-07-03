@@ -6,6 +6,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import moment from 'moment';
 
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
+import { Checkbox, Icon, Message } from 'semantic-ui-react';
 import Input from '../../../ui/input/inputComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
@@ -13,13 +14,13 @@ import SweetAlert from '../../sweetalertFocus';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 import { setGlobalCondition } from './../../../validationsFields/rulesField';
-
+import { redirectUrl } from '../../globalComponents/actions';
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { downloadFilePDF } from '../actions';
-import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer } from './actions';
+import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer, saveUpdateInfoCheck} from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions';
 import {
     consultDataSelect,
@@ -51,7 +52,8 @@ import {
     EDITAR,
     MESSAGE_LOAD_DATA,
     VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS_MESAGE
+    REGEX_SIMPLE_XSS_MESAGE,
+    MARCAR_CONTACTO_DESACTUALIZADO
 } from '../../../constantsGlobal';
 import {
     MESSAGE_WARNING_FORBIDDEN_CHARACTER,
@@ -73,12 +75,18 @@ class ContactDetailsModalComponent extends Component {
         this._editContact = this._editContact.bind(this);
         this._closeViewOrEditContact = this._closeViewOrEditContact.bind(this);
         this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);
+        this._handleChangeUpdateCheck = this._handleChangeUpdateCheck.bind(this);
+        this._saveUpdateInfoCheck = this._saveUpdateInfoCheck.bind(this);
         this.state = {
             isEditable: false,
             generoData: [],
             showErrorForm: false,
             showErrorXss: false,
-            showErrorFormInvalidValue: false
+            showErrorFormInvalidValue: false,
+            updateCheck: false,
+            updateCheckDesc : '',
+            updateCheckPermission: false,
+            hasToUpdateInfo: false
         };
         momentLocalizer(moment);
         thisForm = this;
@@ -87,14 +95,15 @@ class ContactDetailsModalComponent extends Component {
     /* Carga la información del contacto */
     componentWillMount() {
         const {
-            nonValidateEnter, getMasterDataFields, getContactDetails, contactId, callFromModuleContact, showLoading
+            nonValidateEnter, getMasterDataFields, getContactDetails, contactId, callFromModuleContact, showLoading, reducerGlobal
         } = this.props;
-
+        let updateCheckPermission = _.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), MARCAR_CONTACTO_DESACTUALIZADO), false);
+        this.setState({ updateCheckPermission });
         setGlobalCondition(!callFromModuleContact);
-
+        
         nonValidateEnter(true);
         showLoading(true, MESSAGE_LOAD_DATA);
-
+        
         const that = this;
         const { fields: { contactFunctions, contactHobbies, contactSports, contactLineOfBusiness, contactCity } } = this.props;
         const idClient = callFromModuleContact ? null : window.sessionStorage.getItem('idClientSelected');
@@ -106,29 +115,30 @@ class ContactDetailsModalComponent extends Component {
 
         getMasterDataFields(masterData).then(function (data) {
             getContactDetails(contactId, idClient)
-                .then(function (data) {
-                    showLoading(false, "");
-                    const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
-
-                    if (contact.country !== undefined && contact.country !== null) {
-                        that._uploadProvincesByCountryId(contact.country);
-                    }
-
-                    if (contact.province !== undefined && contact.province !== null) {
-                        that._uploadCitiesByProvinceId(contact.province);
-                    }
-
-                    if (!callFromModuleContact) {
-                        contactLineOfBusiness.onChange(JSON.parse('["' + _.join(contact.lineOfBusiness, '","') + '"]'));
-                        contactFunctions.onChange(JSON.parse('["' + _.join(contact.function, '","') + '"]'));
-                    }
-
-                    contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
-                    contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
-
-                    // Se vuelve a setear la ciudad para evitar que el cambio en el departamento deje vacio el campo ciudad
-                    setTimeout(() => {
-                        contactCity.onChange(contact.city);
+            .then(function (data) {
+                showLoading(false, "");
+                const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
+                let hasToUpdateInfo = !that.state.updateCheckPermission && !contact.updatedInfo ;
+                that.setState({ updateCheck: !contact.updatedInfo, hasToUpdateInfo });
+                if (contact.country !== undefined && contact.country !== null) {
+                    that._uploadProvincesByCountryId(contact.country);
+                }
+                
+                if (contact.province !== undefined && contact.province !== null) {
+                    that._uploadCitiesByProvinceId(contact.province);
+                }
+                
+                if (!callFromModuleContact) {
+                    contactLineOfBusiness.onChange(JSON.parse('["' + _.join(contact.lineOfBusiness, '","') + '"]'));
+                    contactFunctions.onChange(JSON.parse('["' + _.join(contact.function, '","') + '"]'));
+                }
+                
+                contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
+                contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
+                
+                // Se vuelve a setear la ciudad para evitar que el cambio en el departamento deje vacio el campo ciudad
+                setTimeout(() => {
+                    contactCity.onChange(contact.city);
                     }, 1000);
 
                 });
@@ -222,6 +232,10 @@ class ContactDetailsModalComponent extends Component {
             case "contactDateOfBirth":
                 const { fields: { contactDateOfBirth } } = this.props;
                 contactDateOfBirth.onChange(val);
+                break;
+            case "updateCheckObservation":
+                const { fields: { updateCheckObservation } } = this.props;
+                updateCheckObservation.onChange(val);
                 break;
             default:
                 break;
@@ -360,7 +374,46 @@ class ContactDetailsModalComponent extends Component {
             swtShowMessage('error', 'Error editando contacto', 'Señor usuario, ocurrió un error editando el contacto.');
         });
     }
+    _handleChangeUpdateCheck(){
+        const updateCheck = !(this.state.updateCheck);
+        this.setState({ updateCheck }); 
+    }
+    _saveUpdateInfoCheck(){
+        const { fields: { updateCheckObservation }, redirectUrl, changeStateSaveData, callFromModuleContact, resetPage, swtShowMessage}= this.props;
+        const { saveUpdateInfoCheck} = this.props;
+        const { contactDetail, contactsByClientFindServer } = this.props;
 
+        const contact = contactDetail.get('contactDetailList');
+        const jsonContact = {
+            "updatedInfo": !this.state.updateCheck,
+            "updatedInfoDesc": updateCheckObservation.value !== undefined ? updateCheckObservation.value : null,
+            "contactType": contact.contactType,
+            "contactIdentityNumber": contact.contactIdentityNumber,
+        };
+        if (_.isEmpty(updateCheckObservation.value)) {
+            swtShowMessage('error', 'Error creando check', 'Señor usuario, ingrese una observación.');
+        }
+            saveUpdateInfoCheck(jsonContact).then((data) => {
+            changeStateSaveData(false, "");
+            if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
+               // redirectUrl("/login");
+            } else {
+                if (_.get(data, 'payload.data.status') === 200) {
+                    this._closeViewOrEditContact();
+                    swtShowMessage('success', 'Creación de check', 'Señor usuario, la información se guardó de forma exitosa.');
+                    if (!_.isUndefined(resetPage)) {
+                        resetPage();
+                    }
+                } else {
+                    swtShowMessage('error', 'Error creando check', 'Señor usuario, ocurrió un error creando el check.');
+                }
+            }
+        }, (reason) => {
+            changeStateSaveData(false, "");
+            swtShowMessage('error', 'Error creando check', 'Señor usuario, ocurrió un error creando el check.');
+        });
+
+    }
     render() {
         const { callFromModuleContact } = this.props;
         const {
@@ -370,7 +423,7 @@ class ContactDetailsModalComponent extends Component {
             contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
             contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress,
             contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies, contactSports,
-            contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
+                contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures, updateCheckObservation
             }, handleSubmit, selectsReducer, reducerGlobal
         } = this.props;
 
@@ -379,6 +432,64 @@ class ContactDetailsModalComponent extends Component {
                 onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalEditCotact" style={callFromModuleContact ? { backgroundColor: '#FFF' } : {}}>
+                    {this.state.updateCheckPermission &&
+                    <div>
+                    <dt className="business-title" style={{ fontSize: '17px' }}>
+                        <span style={{ paddingLeft: '20px' }}>Check de actualización de contacto.</span>
+                    </dt>
+                    <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                        <Row>
+                            <Col xs={12} sm={12} md={12} lg={12}>
+                                <div style={{ padding: '2.65em 0px 1em 0em' }} class="ui fitted toggle checkbox">
+                                    <Checkbox
+                                        toggle
+                                        label="La información del contacto no está actualizada"
+                                        checked={this.state.updateCheck}
+                                        onClick={this._handleChangeUpdateCheck}
+                                    />
+                                </div>
+                            </Col>
+                            <Col xs={12} sm={12} md={12} lg={12}>
+                                    {this.state.updateCheck &&
+                                    <div>
+                                    <dt><span>{'Observación ('}</span><span
+                                        style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
+                                        <dd>
+                                            <Textarea style ={{ height : '10em'}}
+                                            name="updateCheckObservation"
+                                                className="UpdateCheckObservation"
+                                                {...updateCheckObservation}
+                                            validateEnter={true}
+                                                type="text"
+                                                max="1000"
+                                                disabled={this.state.updateCheck ? '' : 'disabled'}
+                                            />
+                                        </dd>
+                                    <div style={{ padding: '1.5em 0em 1.5em 0em' }}>
+                                        <button
+                                            type="button" 
+                                            onClick={this._saveUpdateInfoCheck}
+                                            className="btn btn-primary modal-button-edit"
+                                            >{'Guardar'}</button>
+                                        </div>
+                                    </div> 
+                                }
+                            </Col>
+                        </Row>
+                    </div>
+                    </div>
+                    }
+                    {this.state.hasToUpdateInfo &&
+                        <div>
+                        <Message negative style={{margin:'1.5em'}}>
+                            <Message.Content style={{float: 'rigth'}}>
+                                <Message.Header style={{minHeight:'28px'}}>La información está desactualizada</Message.Header>
+                                {updateCheckObservation.value}                           
+                                </Message.Content>
+                        </Message>
+                        </div>
+                    }
+
                     <dt className="business-title" style={{ fontSize: '17px' }}>
                         <span style={{ paddingLeft: '20px' }}>Información básica</span>
                     </dt>
@@ -898,7 +1009,8 @@ function mapDispatchToProps(dispatch) {
         nonValidateEnter,
         deleteRelationshipServer,
         showLoading,
-        swtShowMessage
+        swtShowMessage,
+        saveUpdateInfoCheck
     }, dispatch);
 }
 
@@ -939,7 +1051,8 @@ function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal }, owner
                 contactFunctions: '',
                 contactRelevantFeatures: contact.contactRelevantFeatures,
                 contactHobbies: JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'),
-                contactSports: JSON.parse('["' + _.join(contact.sports, '","') + '"]')
+                contactSports: JSON.parse('["' + _.join(contact.sports, '","') + '"]'),
+                updateCheckObservation: contact.updatedInfoDesc
             }
         };
     } else {
