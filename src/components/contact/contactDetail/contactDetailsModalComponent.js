@@ -378,10 +378,9 @@ class ContactDetailsModalComponent extends Component {
         });
     }
     _handleChangeUpdateCheck(){
-        const { fields: { updateCheckObservation }} = this.props;
         const updateCheck = !(this.state.updateCheck);
         this.setState({ updateCheck }); 
-        if(this.state.updateCheck && !_.isEmpty(updateCheckObservation.value)){
+        if(this.state.updateCheck){
             this.setState({ showMessage: true});
         }else{
             this.setState({ showMessage: false });
@@ -409,8 +408,6 @@ class ContactDetailsModalComponent extends Component {
         const { contactDetail, contactsByClientFindServer } = this.props;
 
         const contact = contactDetail.get('contactDetailList');
-        showLoading(true, MESSAGE_LOAD_DATA);
-
         const jsonContact = {
             "updatedInfo": !this.state.updateCheck,
             "updatedInfoDesc": updateCheckObservation.value !== undefined ? updateCheckObservation.value : null,
@@ -420,6 +417,7 @@ class ContactDetailsModalComponent extends Component {
         if (_.isEmpty(updateCheckObservation.value)) {
             swtShowMessage('error', 'Error creando check', 'Señor usuario, ingrese una observación.');
         }
+        showLoading(true, MESSAGE_LOAD_DATA);
             saveUpdateInfoCheck(jsonContact).then((data) => {
             showLoading(false, "");
             changeStateSaveData(false, "");
@@ -1016,7 +1014,7 @@ class ContactDetailsModalComponent extends Component {
                     type="warning"
                     show={this.state.showMessage}
                     title="¡Advertencia!"
-                    text="Señor usuario, ¿Está seguro de que quiere desmarcar el contacto como desactualizado?"
+                    text="¿Señor usuario, certifica que la información del contacto se encuentra actualizada?"
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='¡Sí, estoy seguro!'
                     cancelButtonText="Cancelar"
