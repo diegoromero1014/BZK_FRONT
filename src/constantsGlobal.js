@@ -163,7 +163,7 @@ export const MAX_LENGTH_LINK_CLIENT_TRACER_CODE = 255;
 let API_URL;
 
 if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
-    API_URL = "https://localhost:8443/Centricity";
+    API_URL = "http://localhost:8080/Centricity";
 } else {
     if (WP_VAR_ENVIRONMENT === "production") {
         API_URL = "https://biztrack.bancolombia.corp/Centricity";
