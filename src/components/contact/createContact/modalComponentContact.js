@@ -136,8 +136,14 @@ class ModalComponentContact extends Component {
         }
 
         this.setState({ disabledDep: '' });
-        tipoGenero.onChange('');
-        this.setState({ generoData: genero });
+
+        if(genero.length == 1){
+            this.setState({ generoData: genero });
+            tipoGenero.onChange(genero[0].id);
+        } else {
+            this.setState({ generoData: '' });
+            tipoGenero.onChange('');
+        }
     }
 
     _onChangeCountry(val) {
@@ -376,7 +382,7 @@ class ModalComponentContact extends Component {
                                         {...tipoGenero}
                                         valueProp={'id'}
                                         textProp={'value'}
-                                        data={this.state.generoData}
+                                        data={selectsReducer.get(FILTER_GENDER)}
                                         shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'tipoGenero')}
                                     /></dd>
                                 </dl>

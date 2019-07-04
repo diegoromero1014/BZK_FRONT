@@ -77,6 +77,8 @@ class ContactDetailsModalComponent extends Component {
         this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);
         this._handleChangeUpdateCheck = this._handleChangeUpdateCheck.bind(this);
         this._saveUpdateInfoCheck = this._saveUpdateInfoCheck.bind(this);
+        this.unmarkContact = this.unmarkContact.bind(this);
+        this.cancelAlert = this.cancelAlert.bind(this);
         this.state = {
             isEditable: false,
             generoData: [],
@@ -86,7 +88,8 @@ class ContactDetailsModalComponent extends Component {
             updateCheck: false,
             updateCheckDesc : '',
             updateCheckPermission: false,
-            hasToUpdateInfo: false
+            hasToUpdateInfo: false, 
+            showMessage:null
         };
         momentLocalizer(moment);
         thisForm = this;
@@ -166,9 +169,13 @@ class ContactDetailsModalComponent extends Component {
             genero = selectsReducer.get(FILTER_GENDER);
         }
 
-        const contact = contactDetail.get('contactDetailList');
-        this.setState({ generoData: genero });
-        contactGender.onChange(contact.gender);
+        if(genero.length == 1){
+            this.setState({ generoData: genero });
+            contactGender.onChange(genero[0].id);
+        } else {
+            this.setState({ generoData: '' });
+            contactGender.onChange('');
+        }
     }
 
     _onchangeValue(type, val) {
@@ -377,9 +384,30 @@ class ContactDetailsModalComponent extends Component {
     _handleChangeUpdateCheck(){
         const updateCheck = !(this.state.updateCheck);
         this.setState({ updateCheck }); 
+        if(this.state.updateCheck){
+            this.setState({ showMessage: true});
+        }else{
+            this.setState({ showMessage: false });
+        }
+    }
+    cancelAlert(){
+        this.setState({
+            updateCheck: true,
+            showMessage:false
+        })
+    }
+    unmarkContact(){
+        const { fields: { updateCheckObservation }, showLoading} = this.props;
+        showLoading(true, MESSAGE_LOAD_DATA);
+        this.setState({
+            updateCheck: false,
+            showMessage: false
+        })
+        updateCheckObservation.value="";
+        this._saveUpdateInfoCheck();
     }
     _saveUpdateInfoCheck(){
-        const { fields: { updateCheckObservation }, redirectUrl, changeStateSaveData, callFromModuleContact, resetPage, swtShowMessage}= this.props;
+        const { fields: { updateCheckObservation }, redirectUrl, changeStateSaveData, resetPage, swtShowMessage, showLoading}= this.props;
         const { saveUpdateInfoCheck} = this.props;
         const { contactDetail, contactsByClientFindServer } = this.props;
 
@@ -393,10 +421,12 @@ class ContactDetailsModalComponent extends Component {
         if (_.isEmpty(updateCheckObservation.value)) {
             swtShowMessage('error', 'Error creando check', 'Señor usuario, ingrese una observación.');
         }
+        showLoading(true, MESSAGE_LOAD_DATA);
             saveUpdateInfoCheck(jsonContact).then((data) => {
+            showLoading(false, "");
             changeStateSaveData(false, "");
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
-               // redirectUrl("/login");
+                redirectUrl("/login");
             } else {
                 if (_.get(data, 'payload.data.status') === 200) {
                     this._closeViewOrEditContact();
@@ -983,6 +1013,18 @@ class ContactDetailsModalComponent extends Component {
                     title="Valores no validos"
                     text="Señor usuario, algunos campos del formulario contienen valores inválidos."
                     onConfirm={() => this.setState({ showErrorFormInvalidValue: false })}
+                />
+                <SweetAlert
+                    type="warning"
+                    show={this.state.showMessage}
+                    title="¡Advertencia!"
+                    text="¿Señor usuario, certifica que la información del contacto se encuentra actualizada?"
+                    confirmButtonColor='#DD6B55'
+                    confirmButtonText='¡Sí, estoy seguro!'
+                    cancelButtonText="Cancelar"
+                    showCancelButton={true}
+                    onCancel={this.cancelAlert}
+                    onConfirm={this.unmarkContact}
                 />
             </form>
         );
