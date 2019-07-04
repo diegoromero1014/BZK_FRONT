@@ -122,7 +122,6 @@ class ContactDetailsModalComponent extends Component {
             .then(function (data) {
                 showLoading(false, "");
                 const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
-                console.log(contact);
                 let hasToUpdateInfo = !that.state.updateCheckPermission && !contact.updatedInfo ;
                 that.setState({ updateCheck: !contact.updatedInfo, hasToUpdateInfo });
                 if (contact.country !== undefined && contact.country !== null) {
@@ -400,6 +399,7 @@ class ContactDetailsModalComponent extends Component {
     }
     cancelAlert(){
         const { swtShowMessage }=this.props;
+        const { contactsByClientFindServer } = this.props;
         this.setState({
             updateCheck: true,
             showMessage:false
@@ -407,8 +407,7 @@ class ContactDetailsModalComponent extends Component {
         if(this.state.isUpdatedInSubmit){
             showLoading(false, "");
             this._closeViewOrEditContact(); 
-            swtShowMessage('warning', 'Edición de contacto', 'Señor usuario, el contacto se editó pero aún no se ha certificado como contacto actualizado.')
-            
+            contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
         }
     }
     unmarkContact(){
@@ -433,7 +432,7 @@ class ContactDetailsModalComponent extends Component {
             "contactType": contact.contactType,
             "contactIdentityNumber": contact.contactIdentityNumber,
         };
-        if (_.isEmpty(updateCheckObservation.value)) {
+        if (_.isEmpty(updateCheckObservation.value) && this.state.updateCheck) {
             swtShowMessage('error', 'Error creando check', 'Señor usuario, ingrese una observación.');
             return; 
         }
@@ -448,6 +447,7 @@ class ContactDetailsModalComponent extends Component {
                     this.setState({ isUpdatedInSubmit: false });
                     this._closeViewOrEditContact();
                     swtShowMessage('success', 'Actualización de información', 'Señor usuario, la información se guardó de forma exitosa.');
+                    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
                     if (!_.isUndefined(resetPage)) {
                         resetPage();
                     }
@@ -1035,10 +1035,10 @@ class ContactDetailsModalComponent extends Component {
                     type="warning"
                     show={this.state.showMessage}
                     title="¡Advertencia!"
-                    text="¿Señor usuario certifica que con los cambios realizados, el contacto queda actualizado con las observaciones descritas?"
+                    text="¿Señor usuario, certifica que con los cambios realizados, el contacto queda actualizado con las observaciones descritas?"
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='¡Sí, estoy seguro!'
-                    cancelButtonText="Cancelar"
+                    cancelButtonText={this.state.isUpdatedInSubmit?"Guardar sin certificar":"Cancelar"}
                     showCancelButton={true}
                     onCancel={this.cancelAlert}
                     onConfirm={this.unmarkContact}
