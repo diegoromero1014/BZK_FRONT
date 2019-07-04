@@ -122,7 +122,7 @@ export class ButtonLinkClientComponent extends Component {
         } else if (!_.isNil(observationTrader.value) && patternOfForbiddenCharacter.test(observationTrader.value)) {
             messageRequiredObservations = checkFirstCharacter(observationTrader.value);
             isValidLinkEntities = false;
-        } else if (!_.isUndefined(observationTrader.value) && !_.isNull(observationTrader.value) && !_.isEmpty(observationTrader.value) && !regexHtmlInjection.test(observationTrader.value)) {
+        } else if (!_.isUndefined(observationTrader.value) && !_.isNull(observationTrader.value) && !_.isEmpty(observationTrader.value) && regexHtmlInjection.test(observationTrader.value)) {
             messageRequiredObservations = MESSAGE_ERROR_INJECTION_HTML;
             isValidLinkEntities = false;
         }
