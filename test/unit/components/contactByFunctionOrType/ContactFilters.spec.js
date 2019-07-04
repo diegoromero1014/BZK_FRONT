@@ -6,9 +6,9 @@ import thunk from 'redux-thunk';
 import { reducer as formReducer } from "redux-form";
 
 import ComboBox from "~/src/ui/comboBox/comboBoxComponent";
-import ContactsByFunctionOrType from "../../../../src/components/ContactByFunctionOrType/ContactByFunctionOrTypeComponent";
-import * as contactByFunctionActions from "../../../../src/components/ContactByFunctionOrType/actions";
-import * as globalActions from '../../../../src/components/globalComponents/actions';
+import ContactsByFunctionOrType from "~/src/components/ContactByFunctionOrType/ContactByFunctionOrTypeComponent";
+import * as contactByFunctionActions from "~/src/components/ContactByFunctionOrType/actions";
+import * as globalActions from '~/src/components/globalComponents/actions';
 
 const selectsReducer = Immutable.Map({});
 const contactsByFunctionOrType = Immutable.Map({});
