@@ -171,9 +171,13 @@ class ContactDetailsModalComponent extends Component {
             genero = selectsReducer.get(FILTER_GENDER);
         }
 
-        const contact = contactDetail.get('contactDetailList');
-        this.setState({ generoData: genero });
-        contactGender.onChange(contact.gender);
+        if(genero.length == 1){
+            this.setState({ generoData: genero });
+            contactGender.onChange(genero[0].id);
+        } else {
+            this.setState({ generoData: '' });
+            contactGender.onChange('');
+        }
     }
 
     _onchangeValue(type, val) {
