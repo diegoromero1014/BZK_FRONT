@@ -89,7 +89,8 @@ class ContactDetailsModalComponent extends Component {
             updateCheckDesc : '',
             updateCheckPermission: false,
             hasToUpdateInfo: false, 
-            showMessage:null
+            showMessage:null,
+            isUpdatedInSubmit:false
         };
         momentLocalizer(moment);
         thisForm = this;
@@ -121,6 +122,7 @@ class ContactDetailsModalComponent extends Component {
             .then(function (data) {
                 showLoading(false, "");
                 const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
+                console.log(contact);
                 let hasToUpdateInfo = !that.state.updateCheckPermission && !contact.updatedInfo ;
                 that.setState({ updateCheck: !contact.updatedInfo, hasToUpdateInfo });
                 if (contact.country !== undefined && contact.country !== null) {
@@ -309,7 +311,7 @@ class ContactDetailsModalComponent extends Component {
             contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
             contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact,
             contactLineOfBusiness, contactFunctions, contactHobbies, contactSports, contactSocialStyle,
-            contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
+            contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures, updateCheckObservation
             }, changeStateSaveData, callFromModuleContact, resetPage, swtShowMessage
         } = this.props;
         const { contactDetail, contactsByClientFindServer } = this.props;
@@ -362,8 +364,13 @@ class ContactDetailsModalComponent extends Component {
                 redirectUrl("/login");
             } else {
                 if (_.get(data, 'payload.data.status') === 200) {
-                    this._closeViewOrEditContact();
-                    swtShowMessage('success', 'Edición de contacto', 'Señor usuario, el contacto se editó de forma exitosa.');
+                    this.setState({isUpdatedInSubmit:true});
+                    if (this.state.updateCheck == true || !_.isEmpty(updateCheckObservation.value)) {
+                        this.setState({ showMessage: true });
+                    }else{
+                        this._closeViewOrEditContact();
+                        swtShowMessage('success', 'Edición de contacto', 'Señor usuario, el contacto se editó de forma exitosa.');
+                    }
                     contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
                     if (!_.isUndefined(resetPage)) {
                         resetPage();
@@ -378,19 +385,27 @@ class ContactDetailsModalComponent extends Component {
         });
     }
     _handleChangeUpdateCheck(){
+        const { fields: { updateCheckObservation }}=this.props;
         const updateCheck = !(this.state.updateCheck);
         this.setState({ updateCheck }); 
-        if(this.state.updateCheck){
+        if (this.state.updateCheck && !_.isEmpty(updateCheckObservation.value)){
             this.setState({ showMessage: true});
         }else{
             this.setState({ showMessage: false });
         }
     }
     cancelAlert(){
+        const { swtShowMessage }=this.props;
         this.setState({
             updateCheck: true,
             showMessage:false
         })
+        if(this.state.isUpdatedInSubmit){
+            showLoading(false, "");
+            this._closeViewOrEditContact(); 
+            swtShowMessage('warning', 'Edición de contacto', 'Señor usuario, el contacto se editó pero aún no se ha certificado como contacto actualizado.')
+            
+        }
     }
     unmarkContact(){
         const { fields: { updateCheckObservation }, showLoading} = this.props;
@@ -416,6 +431,7 @@ class ContactDetailsModalComponent extends Component {
         };
         if (_.isEmpty(updateCheckObservation.value)) {
             swtShowMessage('error', 'Error creando check', 'Señor usuario, ingrese una observación.');
+            return; 
         }
         showLoading(true, MESSAGE_LOAD_DATA);
             saveUpdateInfoCheck(jsonContact).then((data) => {
@@ -425,18 +441,19 @@ class ContactDetailsModalComponent extends Component {
                 redirectUrl("/login");
             } else {
                 if (_.get(data, 'payload.data.status') === 200) {
+                    this.setState({ isUpdatedInSubmit: false });
                     this._closeViewOrEditContact();
-                    swtShowMessage('success', 'Creación de check', 'Señor usuario, la información se guardó de forma exitosa.');
+                    swtShowMessage('success', 'Actualización de información', 'Señor usuario, la información se guardó de forma exitosa.');
                     if (!_.isUndefined(resetPage)) {
                         resetPage();
                     }
                 } else {
-                    swtShowMessage('error', 'Error creando check', 'Señor usuario, ocurrió un error creando el check.');
+                    swtShowMessage('error', 'Error actualizando información', 'Señor usuario, ocurrió un error guardando la información.');
                 }
             }
         }, (reason) => {
             changeStateSaveData(false, "");
-            swtShowMessage('error', 'Error creando check', 'Señor usuario, ocurrió un error creando el check.');
+            swtShowMessage('error', 'Error actualizando información', 'Señor usuario, ocurrió un error guardando la información.');
         });
 
     }
@@ -469,7 +486,7 @@ class ContactDetailsModalComponent extends Component {
                                 <div style={{ padding: '2.65em 0px 1em 0em' }} class="ui fitted toggle checkbox">
                                     <Checkbox
                                         toggle
-                                        label="La información del contacto no está actualizada"
+                                        label="La información del contacto está desactualizada"
                                         checked={this.state.updateCheck}
                                         onClick={this._handleChangeUpdateCheck}
                                     />
@@ -509,7 +526,7 @@ class ContactDetailsModalComponent extends Component {
                         <div>
                         <Message negative style={{margin:'1.5em'}}>
                             <Message.Content style={{float: 'rigth'}}>
-                                <Message.Header style={{minHeight:'28px'}}>La información está desactualizada</Message.Header>
+                                <Message.Header style={{ minHeight: '28px' }}>La información del contacto está desactualizada</Message.Header>
                                 {updateCheckObservation.value}                           
                                 </Message.Content>
                         </Message>
@@ -1014,7 +1031,7 @@ class ContactDetailsModalComponent extends Component {
                     type="warning"
                     show={this.state.showMessage}
                     title="¡Advertencia!"
-                    text="¿Señor usuario, certifica que la información del contacto se encuentra actualizada?"
+                    text="¿Señor usuario certifica que con los cambios realizados, el contacto queda actualizado con las observaciones descritas?"
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='¡Sí, estoy seguro!'
                     cancelButtonText="Cancelar"
