@@ -274,7 +274,7 @@ class ModalComponentContact extends Component {
             } else {
                 if ((_.get(data, 'payload.data.status') === 200)) {
                     this.setState({ showEx: true });
-                    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
+                    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "", "");
                 } else {
                     this.setState({ showEr: true });
                 }

@@ -7,6 +7,7 @@ import {NUMBER_RECORDS} from './constants';
 let v1 = "";
 let v2 = "";
 let v3 = "";
+let v4 = "";
 
 class PaginationContactComponent extends Component{
 
@@ -22,10 +23,11 @@ class PaginationContactComponent extends Component{
           value3
       } = nextProps;
       if ((v1 !== nextProps.value1)  ||  (v2 !== nextProps.value2)  ||
-          (v3 !== nextProps.value3)) {
+          (v3 !== nextProps.value3) || (v4 !== nextProps.value4)) {
       v1 = nextProps.value1;
       v2 = nextProps.value2;
       v3 = nextProps.value3;
+      v4 = nextProps.value4;
       const {clearContactOrder} = this.props;
       clearContactOrder();
       this._handleContactsByClientsFind(0);
@@ -49,7 +51,8 @@ class PaginationContactComponent extends Component{
       const {contactsByClient,contactsByClientFindServer} = this.props;
       contactsByClientFindServer(limInf,window.sessionStorage.getItem('idClientSelected'),NUMBER_RECORDS,contactsByClient.get('column'),contactsByClient.get('order'),contactsByClient.get('keywordContact'),v1,
     v2,
-    v3);
+    v3,
+    v4);
   }
 
   render(){
