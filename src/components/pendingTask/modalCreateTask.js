@@ -24,6 +24,7 @@ import { htmlToText, validateValue, validateValueExist, formatLongDateToDateWith
 import RichText from '../richText/richTextComponent';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import { fields, validations as validate } from './createPendingTask/fieldsAndRulesForReduxForm';
+import { nombreflujoAnalytics, BIZTRACK_MISTAREAS, _EDITARTAREA } from '../../constantsAnalitycs';
 
 var usersBanco = [];
 var idUsuario, nameUsuario;
@@ -90,6 +91,10 @@ class ModalCreateTask extends Component {
   }
 
   componentWillMount() {
+    window.dataLayer.push({
+      'nombreflujo': nombreflujoAnalytics,
+      'event':BIZTRACK_MISTAREAS+_EDITARTAREA,
+  });
     const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateEntity }, taskEdit, getMasterDataFields, getInfoTaskUser, updateUserNameTask } = this.props;
     updateUserNameTask("");
     getMasterDataFields([TASK_STATUS]);
@@ -211,6 +216,7 @@ class ModalCreateTask extends Component {
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll"
           style={{ paddingBottom: "20px" }}>
           <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+            <h1>Crear tarea</h1>
             <p style={{ paddingTop: "10px", marginBottom: "0px" }} >Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</p>
             <Row style={{ padding: "0px 10px 0px 0px" }}>
               <Col xs={12} md={4} lg={4}>
