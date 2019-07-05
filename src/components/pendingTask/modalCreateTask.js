@@ -24,6 +24,7 @@ import { htmlToText, validateValue, validateValueExist, formatLongDateToDateWith
 import RichText from '../richText/richTextComponent';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import { fields, validations as validate } from './createPendingTask/fieldsAndRulesForReduxForm';
+import { nombreflujoAnalytics, BIZTRACK_MISTAREAS, _EDITARTAREA } from '../../constantsAnalitycs';
 
 var usersBanco = [];
 var idUsuario, nameUsuario;
