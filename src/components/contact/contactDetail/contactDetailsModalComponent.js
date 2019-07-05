@@ -374,7 +374,7 @@ export class ContactDetailsModalComponent extends Component {
                         this._closeViewOrEditContact();
                         swtShowMessage('success', 'Edición de contacto', 'Señor usuario, el contacto se editó de forma exitosa.');
                     }
-                    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
+                    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "", "");
                     if (!_.isUndefined(resetPage)) {
                         resetPage();
                     }
