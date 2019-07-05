@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
-import { contactsByFunctionOrTypeFindServer, clearFilter, changePage, changeFunction, changeType, } from './actions';
+import { contactsByFunctionOrTypeFindServer, clearFilter, changePage, changeFunction, changeType, changePosition, changeDependency } from './actions';
 import { showLoading } from '../loading/actions';
 import { NUMBER_RECORDS, FORM_FILTERS_CONTACT_BY_FUNCTION_OR_TYPE } from './constants';
 import Pagination from './pagination';
@@ -17,18 +17,19 @@ import {
 import * as constants from '../selectsComponent/constants';
 import { reduxForm } from 'redux-form';
 import { updateTitleNavBar } from '../navBar/actions';
-import { SESSION_EXPIRED } from '../../constantsGlobal';
 import ListContactByFunctionOrType from './listContactByFunctionOrType';
 import _ from 'lodash';
 
-const fields = ['contactFunction', 'contactType'];
-const titleModule = 'Búsqueda de contactos por función o tipo';
+const fields = ['contactFunction', 'contactType', 'contactPositionFilter', 'contactDependencyFilter'];
+const titleModule = 'Búsqueda avanzada';
 
 class ContactsByFunctionOrType extends Component {
     constructor(props) {
         super(props);
         this._onChangeFunctionStatus = this._onChangeFunctionStatus.bind(this);
         this._onChangeTypeStatus = this._onChangeTypeStatus.bind(this);
+        this._onChangePositionStatus = this._onChangePositionStatus.bind(this);
+        this._onChangeDependencyStatus = this._onChangeDependencyStatus.bind(this);
         this._handleContactsFind = this._handleContactsFind.bind(this);
         this._cleanSearch = this._cleanSearch.bind(this);
     }
@@ -40,6 +41,8 @@ class ContactsByFunctionOrType extends Component {
             const { clearFilter, getMasterDataFields, consultDataSelect, updateTitleNavBar } = this.props;
             consultDataSelect(constants.FILTER_FUNCTION_ID);
             consultDataSelect(constants.FILTER_TYPE_CONTACT_ID);
+            consultDataSelect(constants.FILTER_CONTACT_POSITION);
+            consultDataSelect(constants.FILTER_DEPENDENCY);
             clearFilter();
             updateTitleNavBar(titleModule);
         }
@@ -50,10 +53,12 @@ class ContactsByFunctionOrType extends Component {
     }
 
     _cleanSearch() {
-        const { fields: { contactType, contactFunction }, clearFilter } = this.props;
+        const { fields: { contactType, contactFunction, contactPositionFilter, contactDependencyFilter }, clearFilter } = this.props;
         clearFilter();
         contactFunction.onChange(null);
         contactType.onChange(null);
+        contactPositionFilter.onChange(null);
+        contactDependencyFilter.onChange(null);
     }
 
     _onChangeFunctionStatus(val) {
@@ -74,12 +79,30 @@ class ContactsByFunctionOrType extends Component {
         }
     }
 
+    _onChangePositionStatus(val) {
+        const { fields: { contactPositionFilter }, changePosition } = this.props;
+        contactPositionFilter.onChange(val);
+        changePosition(val);
+        if (val) {
+            this._handleContactsFind();
+        }
+    }
+
+    _onChangeDependencyStatus(val) {
+        const { fields: { contactDependencyFilter }, changeDependency } = this.props;
+        contactDependencyFilter.onChange(val);
+        changeDependency(val);
+        if (val) {
+            this._handleContactsFind();
+        }
+    }
+
     _handleContactsFind() {
-        const { fields: { contactFunction, contactType }, contactsByFunctionOrTypeFindServer, contactsByFunctionOrType, changePage, showLoading } = this.props;
+        const { fields: { contactFunction, contactType, contactPositionFilter, contactDependencyFilter }, contactsByFunctionOrTypeFindServer, contactsByFunctionOrType, changePage, showLoading } = this.props;
         const order = contactsByFunctionOrType.get('order');
         const columnOrder = contactsByFunctionOrType.get('columnOrder');
         showLoading(true, 'Cargando..');
-        contactsByFunctionOrTypeFindServer(contactFunction.value, contactType.value, 1, NUMBER_RECORDS, order, columnOrder)
+        contactsByFunctionOrTypeFindServer(contactFunction.value, contactType.value, contactPositionFilter.value, contactDependencyFilter.value, 1, NUMBER_RECORDS, order, columnOrder)
             .then((data) => {
                 if (_.has(data, 'payload.data')) {
                     showLoading(false, null);
@@ -92,7 +115,7 @@ class ContactsByFunctionOrType extends Component {
     render() {
         var visibleTable = 'none';
         var visibleMessage = 'block';
-        const { fields: { contactFunction, contactType }, handleSubmit, reducerGlobal, contactsByFunctionOrType, selectsReducer } = this.props;
+        const { fields: { contactFunction, contactType, contactPositionFilter, contactDependencyFilter }, handleSubmit, reducerGlobal, contactsByFunctionOrType, selectsReducer } = this.props;
         if (_.size(contactsByFunctionOrType.get('responseContacts')) !== 0) {
             visibleTable = 'block';
             visibleMessage = 'none';
@@ -102,7 +125,7 @@ class ContactsByFunctionOrType extends Component {
             <div>
                 <form>
                     <Row style={{ borderBottom: "2px solid #D9DEDF", paddingTop: "15px", paddingBottom: "17px", paddingLeft: "17px", paddingRight: "17px" }}>
-                        <Col xs={12} sm={12} md={4} lg={4} style={{ width: '100%' }}>
+                        <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
                             <ComboBox
                                 name="contactFunction"
                                 labelInput="Función del contacto"
@@ -115,7 +138,7 @@ class ContactsByFunctionOrType extends Component {
                                 data={selectsReducer.get('dataTypeFunction') || []}
                             />
                         </Col>
-                        <Col xs={12} sm={12} md={4} lg={4} style={{ width: '100%' }}>
+                        <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
                             <ComboBox
                                 name="contactType"
                                 labelInput="Tipo de contacto"
@@ -126,6 +149,32 @@ class ContactsByFunctionOrType extends Component {
                                 valueProp={'id'}
                                 textProp={'value'}
                                 data={selectsReducer.get('dataTypeContact') || []}
+                            />
+                        </Col>
+                        <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
+                            <ComboBox
+                                name="contactPositionFilter"
+                                labelInput="Cargo"
+                                {...contactPositionFilter}
+                                onChange={val => this._onChangePositionStatus(val)}
+                                value={contactPositionFilter.value}
+                                onBlur={contactPositionFilter.onBlur}
+                                valueProp={'id'}
+                                textProp={'value'}
+                                data={selectsReducer.get('dataTypeContactPosition') || []}
+                            />
+                        </Col>
+                        <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
+                            <ComboBox
+                                name="contactDependencyFilter"
+                                labelInput="Área"
+                                {...contactDependencyFilter}
+                                onChange={val => this._onChangeDependencyStatus(val)}
+                                value={contactDependencyFilter.value}
+                                onBlur={contactDependencyFilter.onBlur}
+                                valueProp={'id'}
+                                textProp={'value'}
+                                data={selectsReducer.get('dataTypeDependency') || []}
                             />
                         </Col>
                         <Col xs={12} sm={12} md={1} lg={1} style={{ width: '100%' }}>
@@ -182,7 +231,9 @@ function mapDispatchToProps(dispatch) {
         consultDataSelect,
         showLoading,
         changeFunction,
-        changeType
+        changeType,
+        changePosition,
+        changeDependency
     }, dispatch);
 }
 
@@ -192,7 +243,7 @@ function mapStateToProps({ contactsByFunctionOrType, selectsReducer, navBar, red
         selectsReducer,
         navBar,
         reducerGlobal,
-        initialValues: { contactFunction: null, contactType: null }
+        initialValues: { contactFunction: null, contactType: null, contactPositionFilter: null, contactDependencyFilter: null }
     };
 }
 
