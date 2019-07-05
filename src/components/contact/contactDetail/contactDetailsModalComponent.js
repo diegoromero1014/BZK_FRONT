@@ -62,7 +62,7 @@ import {
 
 var thisForm;
 
-class ContactDetailsModalComponent extends Component {
+export class ContactDetailsModalComponent extends Component {
     constructor(props) {
         super(props);
         this._handlerSubmitContact = this._handlerSubmitContact.bind(this);
@@ -451,7 +451,9 @@ class ContactDetailsModalComponent extends Component {
                     if (!_.isUndefined(resetPage)) {
                         resetPage();
                     }
-                } else {
+                } else if (_.get(data, 'payload.data.status') === 422) {
+                    swtShowMessage('error', 'Error actualizando información', 'Señor usuario, la observación contiene caracteres inválidos.');
+                }else{
                     swtShowMessage('error', 'Error actualizando información', 'Señor usuario, ocurrió un error guardando la información.');
                 }
             }
