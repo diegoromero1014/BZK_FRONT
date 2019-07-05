@@ -1,4 +1,4 @@
-export const VERSION_DATE = "17/06/2019";
+export const VERSION_DATE = "09/07/2019";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const NATURAL_PERSON = "Persona natural";
@@ -163,7 +163,7 @@ export const MAX_LENGTH_LINK_CLIENT_TRACER_CODE = 255;
 let API_URL;
 
 if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
-    API_URL = "https://localhost:8443/Centricity/";
+    API_URL = "https://localhost:8443/Centricity";
 } else {
     if (WP_VAR_ENVIRONMENT === "production") {
         API_URL = "https://biztrack.bancolombia.corp/Centricity";
