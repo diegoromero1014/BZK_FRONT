@@ -269,7 +269,8 @@ class ModalComponentContact extends Component {
             "attitudeOverGroup": tipoActitud.value,
             "contactRelevantFeatures": contactRelevantFeatures.value,
             "callFromModuleContact": false,
-            "favoritesGroups": JSON.parse('[' + ((_.isNull(listaFavoritos) || _.isUndefined(listaFavoritos)) ? "" : listaFavoritos.value) + ']')
+            "favoritesGroups": JSON.parse('[' + ((_.isNull(listaFavoritos) || _.isUndefined(listaFavoritos)) ? "" : listaFavoritos.value) + ']'),
+            "updatedInfo" : true
         };
 
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
