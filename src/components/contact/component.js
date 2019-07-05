@@ -15,6 +15,7 @@ import { validatePermissionsByModule } from '../../actionsGlobal';
 import { contactsByClientFindServer, clearContact } from './actions';
 
 import { MODULE_CONTACTS, CREAR } from '../../constantsGlobal';
+import _ from "lodash";
 import { FILTER_OUTDATE_CONTACT, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, NUMBER_RECORDS } from './constants';
 
 const valuesYesNo = [
