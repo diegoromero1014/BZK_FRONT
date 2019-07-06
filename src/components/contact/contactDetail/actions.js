@@ -104,7 +104,7 @@ export function saveContact(contact) {
     payload: request
   }
 }
-export function saveUpdateInfoCheck(contact) {
+export function markAsOutdated(contact) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionTokenFront'),
@@ -127,7 +127,7 @@ export function saveUpdateInfoCheck(contact) {
     }
   }
 
-  var request = axios.post(APP_URL + '/saveUpdateInfoCheck', json);
+  var request = axios.post(APP_URL + '/markAsOutdated', json);
   return {
     type: SAVE_UPDATED_INFO_CHECK,
     payload: request

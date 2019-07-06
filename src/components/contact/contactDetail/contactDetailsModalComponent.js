@@ -20,7 +20,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { downloadFilePDF } from '../actions';
-import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer, saveUpdateInfoCheck} from './actions';
+import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer, markAsOutdated} from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions';
 import {
     consultDataSelect,
@@ -76,7 +76,7 @@ export class ContactDetailsModalComponent extends Component {
         this._closeViewOrEditContact = this._closeViewOrEditContact.bind(this);
         this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);
         this._handleChangeUpdateCheck = this._handleChangeUpdateCheck.bind(this);
-        this._saveUpdateInfoCheck = this._saveUpdateInfoCheck.bind(this);
+        this._markAsOutdated = this._markAsOutdated.bind(this);
         this.unmarkContact = this.unmarkContact.bind(this);
         this.cancelAlert = this.cancelAlert.bind(this);
         this.state = {
@@ -418,26 +418,22 @@ export class ContactDetailsModalComponent extends Component {
             showMessage: false
         })
         updateCheckObservation.value="";
-        this._saveUpdateInfoCheck();
+        this._markAsOutdated();
     }
-    _saveUpdateInfoCheck(){
+    _markAsOutdated(){
         const { fields: { updateCheckObservation }, redirectUrl, changeStateSaveData, resetPage, swtShowMessage, showLoading}= this.props;
-        const { saveUpdateInfoCheck} = this.props;
+        const { markAsOutdated} = this.props;
         const { contactDetail, contactsByClientFindServer } = this.props;
 
         const contact = contactDetail.get('contactDetailList');
         const jsonContact = {
             "updatedInfo": !this.state.updateCheck,
-            "updatedInfoDesc": updateCheckObservation.value !== undefined ? updateCheckObservation.value : null,
+            "updatedInfoDesc": !_.isUndefined(updateCheckObservation.value) && !_.isNull(updateCheckObservation.value) ? updateCheckObservation.value : "",
             "contactType": contact.contactType,
             "contactIdentityNumber": contact.contactIdentityNumber,
         };
-        if (_.isEmpty(updateCheckObservation.value) && this.state.updateCheck) {
-            swtShowMessage('error', 'Error creando check', 'Señor usuario, ingrese una observación.');
-            return; 
-        }
         showLoading(true, MESSAGE_LOAD_DATA);
-            saveUpdateInfoCheck(jsonContact).then((data) => {
+            markAsOutdated(jsonContact).then((data) => {
             showLoading(false, "");
             changeStateSaveData(false, "");
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
@@ -452,7 +448,11 @@ export class ContactDetailsModalComponent extends Component {
                         resetPage();
                     }
                 } else if (_.get(data, 'payload.data.status') === 422) {
-                    swtShowMessage('error', 'Error actualizando información', 'Señor usuario, la observación contiene caracteres inválidos.');
+                    const result = _.get(data, 'payload.data.data');
+                    updateCheckObservation.error = result[0].message;
+                    updateCheckObservation.touched=true;
+                    const val_ = updateCheckObservation.value;
+                    updateCheckObservation.onChange(val_);
                 }else{
                     swtShowMessage('error', 'Error actualizando información', 'Señor usuario, ocurrió un error guardando la información.');
                 }
@@ -482,6 +482,7 @@ export class ContactDetailsModalComponent extends Component {
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                     id="modalEditCotact" style={callFromModuleContact ? { backgroundColor: '#FFF' } : {}}>
                     {this.state.updateCheckPermission &&
+
                     <div>
                     <dt className="business-title" style={{ fontSize: '17px' }}>
                         <span style={{ paddingLeft: '20px' }}>Check de actualización de contacto.</span>
@@ -517,7 +518,7 @@ export class ContactDetailsModalComponent extends Component {
                                     <div style={{ padding: '1.5em 0em 1.5em 0em' }}>
                                         <button
                                             type="button" 
-                                            onClick={this._saveUpdateInfoCheck}
+                                            onClick={this._markAsOutdated}
                                             className="btn btn-primary modal-button-edit"
                                             >{'Guardar'}</button>
                                         </div>
@@ -1071,7 +1072,7 @@ function mapDispatchToProps(dispatch) {
         deleteRelationshipServer,
         showLoading,
         swtShowMessage,
-        saveUpdateInfoCheck
+        markAsOutdated
     }, dispatch);
 }
 
