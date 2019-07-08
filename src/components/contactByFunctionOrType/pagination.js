@@ -16,13 +16,11 @@ class Pagination extends Component{
         changePage(page);
         const idFunction = contactsByFunctionOrType.get('idFunction');
         const idTypeContact = contactsByFunctionOrType.get('idType');
-        const idPosition = contactsByFunctionOrType.get('idPosition');
-        const idDependency = contactsByFunctionOrType.get('idDependency');
         const order = contactsByFunctionOrType.get('order');
         const columnOrder = contactsByFunctionOrType.get('columnOrder');
 
         showLoading(true, 'Cargando..');
-        contactsByFunctionOrTypeFindServer(idFunction, idTypeContact, idPosition, idDependency, page, NUMBER_RECORDS, order, columnOrder).then((data) => {
+        contactsByFunctionOrTypeFindServer(idFunction, idTypeContact, page, NUMBER_RECORDS, order, columnOrder).then((data) => {
             if (has(data, 'payload.data')) {
                 showLoading(false, null);
             }
