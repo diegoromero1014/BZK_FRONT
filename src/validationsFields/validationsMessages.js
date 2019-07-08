@@ -38,3 +38,4 @@ export const MESSAGE_WARNING_JUSTIFICATIONS_RISK_GROUP = "Solo se permiten valor
 export const MESSAGE_WARNING_EXTERNAL_CLIENT_NAME = "Solo se permiten valores alfanuméricos y & /\\,;.#\"\"°()'-+´:";
 export const MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT = "Solo se permiten valores alfanuméricos y & /\\,;.#\"\"°()'-+´:";
 export const MESSAGE_REQUIRED_EMPLOYEE="Debe seleccionar un empleado";
+export const MESSAGE_ERROR_INJECTION_HTML = "No se permiten caracteres con la siguiente estructura < > < />";

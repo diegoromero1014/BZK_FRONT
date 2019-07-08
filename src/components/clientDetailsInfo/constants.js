@@ -18,3 +18,4 @@ export const CLOSE_TAB = 0;
 export const OPEN_TAB = 1;
 export const IMPORT = 0;
 export const EXPORT = 1;
+export const MAX_LENGTH_OBSERVATIONS = 1000;

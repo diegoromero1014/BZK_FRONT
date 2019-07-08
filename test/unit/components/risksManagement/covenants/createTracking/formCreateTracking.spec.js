@@ -38,9 +38,4 @@ describe('Test Covenant/formCreateTracking', () => {
         const wrapper = shallow(<FormCreateTracking {...defaultProps} />);
         expect(wrapper.find(Textarea).find({name: 'observations'})).to.have.length(1);
     });
-    /*it("Fecha de estados financieros shouldn't be required when fullfillmentCovenant is Not 'Si'", () => {
-        const wrapper = shallow(<FormCreateTracking {...defaultProps}  />);
-        wrapper.instance()._onFullfillmentCovenant(1);
-        expect(wrapper.state().isFinancialStatements).to.equal(false);
-    });*/
 });

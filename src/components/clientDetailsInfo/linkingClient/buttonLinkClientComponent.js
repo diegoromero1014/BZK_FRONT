@@ -21,21 +21,28 @@ import { consultInfoClient } from '../../clientInformation/actions';
 import { ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, HELP_LINK_MESSAGE } from './LinkEntitiesComponent/constants';
 import { FILTER_TYPE_LBO_ID } from '../../selectsComponent/constants';
 import { consultParameterServer } from "../../../actionsGlobal";
-import { MAX_LENGTH_LINK_CLIENT_TRACER_CODE } from "../../../constantsGlobal";
+import { MAX_LENGTH_LINK_CLIENT_TRACER_CODE, NATURAL_PERSON } from "../../../constantsGlobal";
 
-import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 import {
-    patternOfOnlyNumbersLinkClient, patternOfObservationLinkClient, patternOfForbiddenCharacter
+    patternOfOnlyNumbersLinkClient, patternOfObservationLinkClient, patternOfForbiddenCharacter, regexHtmlInjection
 } from './../../../validationsFields/patternsToValidateField';
 
 import {
-    MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT, MESSAGE_WARNING_MAX_LENGTH, MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT,
-    MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_FORBIDDEN_CHARACTER
+    MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT, MESSAGE_WARNING_MAX_LENGTH,
+    MESSAGE_REQUIRED_VALUE, MESSAGE_ERROR_INJECTION_HTML
 } from './../../../validationsFields/validationsMessages';
+
+import { MAX_LENGTH_OBSERVATIONS } from '../constants';
+
+import {
+    checkRequired, checkMaxLength, checkObservationsLinkClient, checkFirstCharacter
+} from './../../../validationsFields/rulesField';
+
+const fields = [ 'observationTrader' ];
 
 let helpLinksMessage = "";
 
-class ButtonLinkClientComponent extends Component {
+export class ButtonLinkClientComponent extends Component {
     constructor(props) {
         super(props);
         this.closeModal = this.closeModal.bind(this);
@@ -43,7 +50,8 @@ class ButtonLinkClientComponent extends Component {
         this._handleSaveLinkingClient = this._handleSaveLinkingClient.bind(this);
         this._getListEntities = this._getListEntities.bind(this);
         this.state = {
-            modalIsOpen: false
+            modalIsOpen: false,
+            observationError: null
         };
     }
 
@@ -70,7 +78,7 @@ class ButtonLinkClientComponent extends Component {
                 updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));
                 swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
             }
-        }, (reason) => {
+        }, () => {
             updateValuesBlackList(get(infoClient, 'levelBlackList'), get(infoClient, 'messageBlackList'));
             showLoading(false, '');
             swtShowMessage('error', 'Vinculación', 'Señor usuario, ocurrió un error consultando el cliente en listas de control.');
@@ -98,8 +106,33 @@ class ButtonLinkClientComponent extends Component {
         let isValidLinkEntities = true;
 
         let listOfEntities = [];
-
         let inValidMessageLinkEntities = "Señor usuario, por favor ingrese todos los campos obligatorios.";
+
+        let messageRequiredObservations;
+
+        if ((!_.isNull(observationTrader.value) && isEmpty(observationTrader.value) && isEqual(infoClient.clientTypeKey, NATURAL_PERSON)) && infoClient.linkingRequestId == null) {
+            messageRequiredObservations = checkRequired(observationTrader.value);
+            isValidLinkEntities = false;
+        } else if (!_.isNull(observationTrader.value) && !isEmpty(observationTrader.value) && observationTrader.value.length > MAX_LENGTH_OBSERVATIONS) {
+            messageRequiredObservations = checkMaxLength(MAX_LENGTH_OBSERVATIONS);
+            isValidLinkEntities = false;
+        } else if (!_.isUndefined(observationTrader.value) && !_.isNull(observationTrader.value) && !_.isEmpty(observationTrader.value) && !patternOfObservationLinkClient.test(observationTrader.value)) {
+            messageRequiredObservations = checkObservationsLinkClient(observationTrader.value);
+            isValidLinkEntities = false;
+        } else if (!_.isNil(observationTrader.value) && patternOfForbiddenCharacter.test(observationTrader.value)) {
+            messageRequiredObservations = checkFirstCharacter(observationTrader.value);
+            isValidLinkEntities = false;
+        } else if (!_.isUndefined(observationTrader.value) && !_.isNull(observationTrader.value) && !_.isEmpty(observationTrader.value) && regexHtmlInjection.test(observationTrader.value)) {
+            messageRequiredObservations = MESSAGE_ERROR_INJECTION_HTML;
+            isValidLinkEntities = false;
+        }
+
+        if (!isValidLinkEntities) {
+            this.setState({
+                observationError: messageRequiredObservations
+            });
+        }
+
         const newListEntities = linkEntitiesClient.map(linkEntity => {
 
             if (listOfEntities.indexOf(linkEntity.entity) == -1) {
@@ -121,8 +154,7 @@ class ButtonLinkClientComponent extends Component {
                     if (isEmpty(linkEntity.traderCode)) {
                         updateErrorsLinkEntities(true, "Debe ingresar todos los campos");
                         isValidLinkEntities = false;
-                    }
-                    else if (!_.isUndefined(linkEntity.traderCode) && !_.isNull(linkEntity.traderCode) && !patternOfOnlyNumbersLinkClient.test(linkEntity.traderCode)) {
+                    } else if (!_.isUndefined(linkEntity.traderCode) && !_.isNull(linkEntity.traderCode) && !patternOfOnlyNumbersLinkClient.test(linkEntity.traderCode)) {
                         messageWhiteList = MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT;
                         updateErrorsLinkEntities(true, messageWhiteList);
                         isValidLinkEntities = false;
@@ -155,16 +187,6 @@ class ButtonLinkClientComponent extends Component {
                 }
             }
         });
-
-        if (!_.isUndefined(observationTrader.value) && !_.isNull(observationTrader.value) && !patternOfObservationLinkClient.test(observationTrader.value)) {
-            messageWhiteList = MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT;
-            isValidLinkEntities = false;
-        } else if (!_.isNil(observationTrader.value) && patternOfForbiddenCharacter.test(observationTrader.value)) {
-            messageWhiteList = MESSAGE_WARNING_FORBIDDEN_CHARACTER;
-            updateEventErrors(true, message);
-            isValidLinkEntities = false;
-        }
-
 
         if (linkEntitiesClient.size == 0) {
             swtShowMessage('error', 'Vinculación', 'Señor usuario, debe ingresar por lo menos una entidad a vincular.');
@@ -206,6 +228,7 @@ class ButtonLinkClientComponent extends Component {
             setEntities(listLinkEntitiesClient);
         }
     }
+
     componentWillMount() {
         const { getMasterDataFields, consultParameterServer } = this.props;
         getMasterDataFields([FILTER_TYPE_LBO_ID]);
@@ -356,14 +379,18 @@ class ButtonLinkClientComponent extends Component {
                                                 width: "100%",
                                                 marginBottom: "10px"
                                             }} />
-                                            <span className="title-middle">Observaciones</span>
+                                            {isEqual(infoClient.clientTypeKey, NATURAL_PERSON) ?
+                                                <span className="title-middle">Observaciones/Justificación de vinculación PN</span>
+                                                :
+                                                <span className="title-middle">Observaciones</span>
+                                            }
                                         </div>
                                     </Col>
                                 </Row>
                                 <Row style={{ paddingBottom: '10px' }}>
                                     <Col xs={12} md={12} lg={12}>
                                         <h4>Observación vinculación</h4>
-                                        {_.isEmpty(infoClient.observationAdmin) ?
+                                        {isEmpty(infoClient.observationAdmin) ?
                                             <p>Sin observación.</p>
                                             :
                                             <p style={{ textAlign: 'justify' }}>{infoClient.observationAdmin}</p>
@@ -373,7 +400,13 @@ class ButtonLinkClientComponent extends Component {
                                 {infoClient.linkingRequestId == null &&
                                     <Row style={{ paddingBottom: '10px' }}>
                                         <Col xs={12} md={12} lg={12}>
-                                            <h4>Observación</h4>
+                                            <dt>
+                                                <span>Observación </span>
+                                                {
+                                                    isEqual(infoClient.clientTypeKey, NATURAL_PERSON) &&
+                                                    <span>(<span style={{ color: "red" }}>*</span>)</span>
+                                                }
+                                            </dt>
                                             <div>
                                                 <Textarea
                                                     {...observationTrader}
@@ -383,6 +416,7 @@ class ButtonLinkClientComponent extends Component {
                                                     max="1000"
                                                     rows={3}
                                                     touched={true}
+                                                    error={this.state.observationError}
                                                 />
                                             </div>
                                         </Col>
@@ -448,6 +482,5 @@ function mapStateToProps({ linkEntitiesClient, tabReducer, selectsReducer, black
 
 export default reduxForm({
     form: 'submitModalLinkClient',
-    fields,
-    validate
+    fields
 }, mapStateToProps, mapDispatchToProps)(ButtonLinkClientComponent);
