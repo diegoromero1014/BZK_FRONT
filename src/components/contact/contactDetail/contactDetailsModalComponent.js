@@ -6,7 +6,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import moment from 'moment';
 
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import { Checkbox, Icon, Message } from 'semantic-ui-react';
+import { Checkbox, Message } from 'semantic-ui-react';
 import Input from '../../../ui/input/inputComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
@@ -105,7 +105,7 @@ export class ContactDetailsModalComponent extends Component {
         this.setState({ updateCheckPermission });
         setGlobalCondition(!callFromModuleContact);
         
-        nonValidateEnter(true);
+        nonValidateEnter(false);
         showLoading(true, MESSAGE_LOAD_DATA);
         
         const that = this;
@@ -398,7 +398,6 @@ export class ContactDetailsModalComponent extends Component {
         }
     }
     cancelAlert(){
-        const { swtShowMessage }=this.props;
         const { contactsByClientFindServer } = this.props;
         this.setState({
             updateCheck: true,
@@ -509,9 +508,7 @@ export class ContactDetailsModalComponent extends Component {
                                             name="updateCheckObservation"
                                                 className="UpdateCheckObservation"
                                                 {...updateCheckObservation}
-                                            validateEnter={true}
                                                 type="text"
-                                                max="1000"
                                                 disabled={this.state.updateCheck ? '' : 'disabled'}
                                             />
                                         </dd>
