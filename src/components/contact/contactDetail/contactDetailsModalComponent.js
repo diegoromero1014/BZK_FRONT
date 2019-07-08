@@ -509,7 +509,6 @@ export class ContactDetailsModalComponent extends Component {
                                                 className="UpdateCheckObservation"
                                                 {...updateCheckObservation}
                                                 type="text"
-                                                max="1000"
                                                 disabled={this.state.updateCheck ? '' : 'disabled'}
                                             />
                                         </dd>
