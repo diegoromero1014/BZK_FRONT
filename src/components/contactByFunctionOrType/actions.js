@@ -9,14 +9,13 @@ import {
     CLEAR_PAGINATION_CONTACTS_BY_FUNCTION_OR_TYPE,
     ORDER_COLUMN_CONTACTS_BY_FUNCTION_OR_TYPE,
     CLEAR_FILTERS_CONTACTS_BY_FUNCTION_OR_TYPE,
+    NUMBER_RECORDS,
     CHANGE_FUNCTION_CONTACTS_BY_FUNCTION_OR_TYPE,
-    CHANGE_TYPE_CONTACTS_BY_FUNCTION_OR_TYPE,
-    CHANGE_TYPE_CONTACTS_BY_POSITION_OR_TYPE,
-    CHANGE_TYPE_CONTACTS_BY_DEPENDENCY_OR_TYPE
+    CHANGE_TYPE_CONTACTS_BY_FUNCTION_OR_TYPE
 } from './constants';
 import axios from 'axios';
 
-export function contactsByFunctionOrTypeFindServer(idFunction, idType, idPosition, idDependency, pageNum, maxRows, order, columnOrder) {
+export function contactsByFunctionOrTypeFindServer(idFunction, idType, pageNum, maxRows, order, columnOrder) {
 
 
     const json = {
@@ -35,8 +34,6 @@ export function contactsByFunctionOrTypeFindServer(idFunction, idType, idPositio
         "messageBody": {
             "functionId": idFunction,
             "typeOfContactId": idType,
-            "contactPositionId": idPosition,
-            "contactDependencyId": idDependency,
             pageNum,
             maxRows,
             order,
@@ -79,20 +76,6 @@ export function changeType(idType) {
     return {
         type: CHANGE_TYPE_CONTACTS_BY_FUNCTION_OR_TYPE,
         idType
-    }
-}
-
-export function changePosition(idPosition) {
-    return {
-        type: CHANGE_TYPE_CONTACTS_BY_POSITION_OR_TYPE,
-        idPosition
-    }
-}
-
-export function changeDependency(idDependency) {
-    return {
-        type: CHANGE_TYPE_CONTACTS_BY_DEPENDENCY_OR_TYPE,
-        idDependency
     }
 }
 
