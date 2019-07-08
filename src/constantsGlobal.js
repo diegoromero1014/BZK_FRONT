@@ -121,6 +121,7 @@ export const INFO_ESTUDIO_CREDITO = "Info Estudio de Crédito";
 export const GENERAR_PDF_ESTUDIO_CREDITO = "Generar PDF Estudio de crédito";
 export const GESTION_DOCUMENTAL = "Gestión Documental";
 export const GRUPO_RIESGO = "Grupo de Riesgo";
+export const MARCAR_CONTACTO_DESACTUALIZADO = "Marcar contacto desactualizado";
 
 //Variables de los modulos de la aplicación
 export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";
@@ -163,7 +164,7 @@ export const MAX_LENGTH_LINK_CLIENT_TRACER_CODE = 255;
 let API_URL;
 
 if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
-    API_URL = "https://localhost:8443/Centricity";
+    API_URL = "http://localhost:8084/Centricity";
 } else {
     if (WP_VAR_ENVIRONMENT === "production") {
         API_URL = "https://biztrack.bancolombia.corp/Centricity";

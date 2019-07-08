@@ -36,7 +36,8 @@ const fieldsWithRules = {
     contactFunctions: { rules: [checkRequiredWithGlobalCondition] },
     contactHobbies: { rules: [] },
     contactSports: { rules: [] },
-    contactRelevantFeatures: { rules: [checkContactRelevantFeatures, checkFirstCharacter] }
+    contactRelevantFeatures: { rules: [checkContactRelevantFeatures, checkFirstCharacter] },
+    updateCheckObservation: { rules: []}
 };
 
 export const fields = _.keys(fieldsWithRules);
