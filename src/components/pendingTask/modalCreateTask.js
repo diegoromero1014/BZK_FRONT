@@ -24,7 +24,6 @@ import { htmlToText, validateValue, validateValueExist, formatLongDateToDateWith
 import RichText from '../richText/richTextComponent';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import { fields, validations as validate } from './createPendingTask/fieldsAndRulesForReduxForm';
-import { nombreflujoAnalytics, BIZTRACK_MISTAREAS, _EDITARTAREA } from '../../constantsAnalitycs';
 
 var usersBanco = [];
 var idUsuario, nameUsuario;
@@ -91,10 +90,6 @@ class ModalCreateTask extends Component {
   }
 
   componentWillMount() {
-    window.dataLayer.push({
-      'nombreflujo': nombreflujoAnalytics,
-      'event':BIZTRACK_MISTAREAS+_EDITARTAREA,
-  });
     const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateEntity }, taskEdit, getMasterDataFields, getInfoTaskUser, updateUserNameTask } = this.props;
     updateUserNameTask("");
     getMasterDataFields([TASK_STATUS]);
