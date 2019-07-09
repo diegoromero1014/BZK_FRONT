@@ -13,7 +13,7 @@ class TdParticularityComponent extends Component {
         <td style={styles} className="text-center"
         >
             {columnRow.length > 0 ?
-                <Popup style={styleTooltip} trigger={ <button className="btn btn-success btn-sm"><i className={"comment alternate icon"} /></button> } inverted position='left center' wide='very'>{columnRow}</Popup>
+                <Popup style={styleTooltip} trigger={ <button className="btn btn-sm btn-success"><i style={{ margin: '0em', fontSize: '1.2em' }} className={"comment alternate icon"} /></button> } inverted position='left center' wide='very'>{columnRow}</Popup>
             : ''}            
         </td>
     );

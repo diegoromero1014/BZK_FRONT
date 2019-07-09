@@ -131,9 +131,10 @@ class ButtonDeleteComponent extends Component {
                 contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "",
                     "",
                     "",
+                    "",
                     "");
             } else if (actionsDelete.typeDelete === DELETE_CONTACT_FROM_FUNCTION_OR_TYPE) {
-                contactsByFunctionOrTypeFindServer(contactsByFunctionOrType.get('idFunction'), contactsByFunctionOrType.get('idType'), 1, NUMBER_RECORDS, 0, '');
+                contactsByFunctionOrTypeFindServer(contactsByFunctionOrType.get('idFunction'), contactsByFunctionOrType.get('idType'), contactsByFunctionOrType.get('idPosition'), contactsByFunctionOrType.get('idDependency'), 1, NUMBER_RECORDS, 0, '');
                 clearContactsByFunctionPagination();
             } else if (actionsDelete.typeDelete === DELETE_TYPE_SHAREHOLDER) {
                 clearShareholderCreate();

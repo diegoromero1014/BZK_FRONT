@@ -1,7 +1,7 @@
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
 var config = require("./webpack/webpack.config.dev");
-const IP_ENVIRONMENT = 'localhost';
+const IP_ENVIRONMENT = '0.0.0.0';
 new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
     hot: true,

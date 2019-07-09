@@ -10,6 +10,7 @@ import { NUMBER_RECORDS } from './constants';
 let v1 = "";
 let v2 = "";
 let v3 = "";
+let v4 = "";
 let limInf1 = 0;
 
 class SearchContactComponent extends Component {
@@ -25,10 +26,11 @@ class SearchContactComponent extends Component {
 
   componentWillReceiveProps(nextProps) {
     if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2) ||
-      (v3 !== nextProps.value3)) {
+      (v3 !== nextProps.value3) || (v4 !== nextProps.value4)) {
       v1 = nextProps.value1;
       v2 = nextProps.value2;
       v3 = nextProps.value3;
+      v4 = nextProps.value4;
       this._handleContactsByClientsFind();
     }
   }
@@ -55,7 +57,8 @@ class SearchContactComponent extends Component {
     contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, _keywordContact,
       v1,
       v2,
-      v3);
+      v3,
+      v4);
   }
 
   render() {
