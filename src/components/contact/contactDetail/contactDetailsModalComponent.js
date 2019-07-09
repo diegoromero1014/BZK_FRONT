@@ -1032,9 +1032,9 @@ export class ContactDetailsModalComponent extends Component {
                     onConfirm={() => this.setState({ showErrorFormInvalidValue: false })}
                 />
                 <SweetAlert
-                    type="warning"
+                    type={this.state.isUpdatedInSubmit ? "success" : "warning"}
                     show={this.state.showMessage}
-                    title="¡Advertencia!"
+                    title={this.state.isUpdatedInSubmit ? "¡Contacto guardado!" : "Advertencia"}
                     text="¿Señor usuario, certifica que con los cambios realizados, el contacto queda actualizado con las observaciones descritas?"
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='¡Sí, estoy seguro!'
