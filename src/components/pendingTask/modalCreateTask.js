@@ -7,7 +7,6 @@ import { Row, Grid, Col } from 'react-flexbox-grid';
 import Textarea from '../../ui/textarea/textareaComponent';
 import { filterUsersBanco } from '../participantsVisitPre/actions';
 import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import { getMasterDataFields } from '../selectsComponent/actions';
 import { TASK_STATUS } from '../selectsComponent/constants';
 import { createPendingTaskNew } from './createPendingTask/actions'
@@ -20,10 +19,12 @@ import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator, updateUserNameTa
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
-import { htmlToText, validateValue, validateValueExist, formatLongDateToDateWithNameMonth } from '../../actionsGlobal';
+import { validateValue,formatLongDateToDateWithNameMonth } from '../../actionsGlobal';
 import RichText from '../richText/richTextComponent';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import { fields, validations as validate } from './createPendingTask/fieldsAndRulesForReduxForm';
+import { nombreflujoAnalytics, _EDITARTAREA, BIZTRACK_MISTAREAS } from '../../constantsAnalytics';
+
 
 var usersBanco = [];
 var idUsuario, nameUsuario;
@@ -90,6 +91,10 @@ class ModalCreateTask extends Component {
   }
 
   componentWillMount() {
+    window.dataLayer.push({
+      'nombreflujo': nombreflujoAnalytics,
+      'event':BIZTRACK_MISTAREAS+_EDITARTAREA,
+  });
     const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateEntity }, taskEdit, getMasterDataFields, getInfoTaskUser, updateUserNameTask } = this.props;
     updateUserNameTask("");
     getMasterDataFields([TASK_STATUS]);

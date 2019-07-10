@@ -58,6 +58,7 @@ import {
     SESSION_EXPIRED,
     RED_COLOR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
 } from "../../../constantsGlobal";
+import { nombreflujoAnalytics, _CAMBIOFILTRO, BIZTRACK_MISTAREAS } from "../../../constantsAnalytics";
 
 const fields = ["region", "zone", "team", "taskStatus", "dateTaskTeam",
     "objetoUsuario", "nameUsuario", "idUsuario", "cargoUsuario", "empresaUsuario"
@@ -194,6 +195,12 @@ class ModalComponentPending extends Component {
     }
 
     _changeViewModeTeamTask() {
+        
+        window.dataLayer.push({
+            'nombreflujo': nombreflujoAnalytics,
+            'event':BIZTRACK_MISTAREAS +_CAMBIOFILTRO,
+        });
+    
         const { fields: { region, zone, team }, clearMyPendingTeamPaginator, clearOnlyListPendingTaskTeam, clearPendingTaskTeam, updateTitleNavBar } = this.props;
 
         this.state.teamViewTask = !this.state.teamViewTask;
