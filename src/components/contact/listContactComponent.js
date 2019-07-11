@@ -13,6 +13,7 @@ import { ELIMINAR } from '../../constantsGlobal';
 let v1 = "";
 let v2 = "";
 let v3 = "";
+let v4 = "";
 class ListContactComponent extends Component {
 
   constructor(props) {
@@ -37,10 +38,11 @@ class ListContactComponent extends Component {
 
   componentWillReceiveProps(nextProps) {
     if ((v1 !== nextProps.value1) || (v2 !== nextProps.value2) ||
-      (v3 !== nextProps.value3)) {
+      (v3 !== nextProps.value3) || (v4 !== nextProps.value4)) {
       v1 = nextProps.value1;
       v2 = nextProps.value2;
       v3 = nextProps.value3;
+      v4 = nextProps.value4;
       const { clearContactOrder } = this.props;
       clearContactOrder();
       this._orderColumn(0, "");
@@ -60,7 +62,8 @@ class ListContactComponent extends Component {
     contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, column, order, contactsByClient.get('keywordContact'),
       v1,
       v2,
-      v3);
+      v3,
+      v4);
   }
 
   _renderCellView(data) {
@@ -144,6 +147,10 @@ class ListContactComponent extends Component {
       {
         title: "Particularidad",
         key: "contactRelevantFeatures"
+      },
+      {
+        title: "Desactualizado",
+        key: "updatedInfo"
       },
       {
         title: "",

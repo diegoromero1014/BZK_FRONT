@@ -8,7 +8,7 @@ import { consultDataSelect } from '../actions';
 import { FILTER_STATUS_PREVISIT_ID } from '../../previsita/constants';
 import { FILTER_STATUS_BUSINESS_PLAN_ID } from '../../businessPlan/constants';
 import {
-  TASK_STATUS, FILTER_STATUS_VISIT_ID, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, CLIENT_ID_TYPE, FILTER_FUNCTION_ID,
+  FILTER_OUTDATE_CONTACT, TASK_STATUS, FILTER_STATUS_VISIT_ID, SHAREHOLDER_TYPE, SHAREHOLDER_KIND, CLIENT_ID_TYPE, FILTER_FUNCTION_ID,
   FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_GENDER, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_DEPENDENCY,
   FILTER_SOCIAL_STYLE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, PIPELINE_STATUS, FILTER_STATUS_PIPELINE_ID, CLIENT_TYPE
 } from '../constants';
@@ -41,7 +41,8 @@ class SelectFilterComponent extends Component {
       defaultValue,
       onChange,
       config,
-      disabled
+      disabled,
+      dataDefault
     } = this.props;
 
     var data = [];
@@ -81,8 +82,9 @@ class SelectFilterComponent extends Component {
       data = selectsReducer.get('dataTypeTaskType');
     } else if (idTypeFilter === CLIENT_TYPE) {
       data = selectsReducer.get('dataTypeClientType');
+    } else if (idTypeFilter === FILTER_OUTDATE_CONTACT) {
+      data = dataDefault;
     }
-
     return (
       <Combobox
         valueField='id'
