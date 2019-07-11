@@ -21,7 +21,7 @@ import {
     patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
     patternOfInventoryPolice, patternOfControlLinkedPayments, patternOfNameEntity, patternOfNoOperatingInCome,
     patternOfOnlyAlphabeticalAndSlash, patternOfRiskGroupName, patternOfObservationRiskGroup, patternOfJustificationsRiskGroup,
-    patternOfRiskExternalClientName, patternOfExternalClientNumberDocument, patternOfTaskObservation, patternOfOriginCityResources
+    patternOfRiskExternalClientName, patternOfExternalClientNumberDocument, patternOfTaskObservation, patternOfOriginCityResources, regexHtmlInjection
 } from './patternsToValidateField';
 
 import {
@@ -60,7 +60,8 @@ import {
     MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT,
     MESSAGE_REQUIRED_EMPLOYEE,
     MESSAGE_WARNING_TASK_OBSERVATIONS,
-    MESSAGE_WARNING_ORIGIN_CITY_RESOURCES
+    MESSAGE_WARNING_ORIGIN_CITY_RESOURCES,
+    MESSAGE_ERROR_INJECTION_HTML
 
 } from './validationsMessages';
 
@@ -452,6 +453,15 @@ export const checkContactRelevantFeatures = value => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfContactRelevantFeatures.test(value)) {
         message = MESSAGE_WARNING_RELEVANT_FEATURES;
+    }
+
+    return message;
+}
+export const checkRegexHtmlInjection = value => {
+    debugger;
+    let message = null;
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && regexHtmlInjection.test(value)) {
+        message = MESSAGE_ERROR_INJECTION_HTML;
     }
 
     return message;

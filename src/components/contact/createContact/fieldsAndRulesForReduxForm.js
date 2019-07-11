@@ -3,7 +3,7 @@ import _ from "lodash";
 import {
     checkRequired, checkNumberDocument, checkOnlyAlphabetical, checkMinLength,
     checkMaxLength, checkAddress, checkNeighborhood, checkPostalCode, checkPhone, checkOnlyNumbers,
-    checkContactRelevantFeatures, checkEmail, processRules, checkFirstCharacter
+    checkContactRelevantFeatures, checkEmail, processRules, checkFirstCharacter,checkRegexHtmlInjection
 } from './../../../validationsFields/rulesField';
 
 const fieldsWithRules = {
@@ -36,7 +36,7 @@ const fieldsWithRules = {
     tipoFuncion: { rules: [checkRequired] },
     tipoHobbie: { rules: [] },
     tipoDeporte: { rules: [] },
-    contactRelevantFeatures: { rules: [checkContactRelevantFeatures, checkFirstCharacter] },
+    contactRelevantFeatures: { rules: [checkRegexHtmlInjection, checkContactRelevantFeatures, checkFirstCharacter] },
     listaFavoritos: { rules: [] }
 };
 
