@@ -25,7 +25,7 @@ import {
     TAB_BUSINESS_PLAN, TAB_RISKS_MANAGEMENT, TAB_CUSTOMER_STORY
 } from '../../constantsGlobal';
 
-import { BIZTRACK_MIS_CLIENTES, _PIPELINE, nombreflujoAnalytics, _BUSINESS_PLAN } from '../../constantsAnalytics';
+import { BIZTRACK_MY_CLIENTS, _PIPELINE, nombreflujoAnalytics, _BUSINESS_PLAN, _RISKS_MANAGEMENT } from '../../constantsAnalytics';
 
 class TabClientInfo extends Component {
     constructor(props) {
@@ -216,11 +216,10 @@ class TabClientInfo extends Component {
             backgroundRisksManagement = { height: "60px", borderBottomStyle: "none", width: "140px" };
             backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "150px" };
         }
-        else if (tabActive === TAB_PIPELINE) {
-                       
+        else if (tabActive === TAB_PIPELINE) {                       
             window.dataLayer.push({
                 'nombreflujo': nombreflujoAnalytics,
-                'event': BIZTRACK_MIS_CLIENTES + _PIPELINE,
+                'event': BIZTRACK_MY_CLIENTS + _PIPELINE,
             });
 
             styleInfo = false;
@@ -253,8 +252,9 @@ class TabClientInfo extends Component {
         else if (tabActive === TAB_BUSINESS_PLAN) {
             window.dataLayer.push({
                 'nombreflujo': nombreflujoAnalytics,
-                'event': BIZTRACK_MIS_CLIENTES + _BUSINESS_PLAN,
+                'event': BIZTRACK_MY_CLIENTS + _BUSINESS_PLAN,
             });
+
             styleInfo = false;
             styleContacts = false;
             styleShareholders = false;
@@ -282,6 +282,10 @@ class TabClientInfo extends Component {
             backgroundRisksManagement = { height: "60px", borderBottomStyle: "none", width: "140px" };
             backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "150px" };
         } else if (tabActive === TAB_RISKS_MANAGEMENT) {
+            window.dataLayer.push({
+                'nombreflujo': nombreflujoAnalytics,
+                'event': BIZTRACK_MY_CLIENTS + _RISKS_MANAGEMENT,
+            });
             styleInfo = false;
             styleContacts = false;
             styleShareholders = false;
