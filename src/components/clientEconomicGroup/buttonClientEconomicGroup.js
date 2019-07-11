@@ -5,6 +5,7 @@ import {Row, Grid, Col} from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import ModalComponentEconomicGroup from './modalComponentEconomicGroup';
 import {BLUE_COLOR} from '../../constantsGlobal';
+import { nombreflujoAnalytics, _ECONOMIC_GROUP, BIZTRACK_MY_CLIENTS } from '../../constantsAnalytics';
 
 class buttonClientEconomicGroup extends Component {
 
@@ -19,6 +20,10 @@ class buttonClientEconomicGroup extends Component {
 
   openModal(){
     this.setState({modalIsOpen: true});
+    window.dataLayer.push({
+      'nombreflujo': nombreflujoAnalytics,
+      'event': BIZTRACK_MY_CLIENTS + _ECONOMIC_GROUP,
+    });
   }
 
   closeModal(){
