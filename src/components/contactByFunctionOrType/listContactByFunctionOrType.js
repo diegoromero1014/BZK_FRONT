@@ -105,6 +105,14 @@ class ListContactsByFunctionOrType extends Component {
             {
                 title: "Correo del contacto",
                 key: "contactEmail"
+            },
+            {
+                title: "Particularidad",
+                key: "contactRelevantFeatures"
+            },
+            {
+                title: "Desactualizado",
+                key: "updatedInfo"
             }
         ];
 
