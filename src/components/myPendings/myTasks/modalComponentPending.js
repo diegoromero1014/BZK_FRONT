@@ -199,8 +199,7 @@ class ModalComponentPending extends Component {
         window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
             'event':BIZTRACK_MISTAREAS +_CAMBIOFILTRO,
-        });
-    
+        }); 
         const { fields: { region, zone, team }, clearMyPendingTeamPaginator, clearOnlyListPendingTaskTeam, clearPendingTaskTeam, updateTitleNavBar } = this.props;
 
         this.state.teamViewTask = !this.state.teamViewTask;
