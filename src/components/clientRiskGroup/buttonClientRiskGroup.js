@@ -9,6 +9,7 @@ import {showLoading} from "../loading/actions";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import {validateResponse} from "../../actionsGlobal";
 import {updateFieldInfoClient} from '../clientInformation/actions';
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _CLIENT_RISK_GROUP } from "../../constantsAnalytics";
 
 class buttonClientRiskGroup extends Component {
 
@@ -22,6 +23,10 @@ class buttonClientRiskGroup extends Component {
 
     openModal() {
         this.props.showModalRiskGroup(true);
+        window.dataLayer.push({
+            'nombreflujo': nombreflujoAnalytics,
+            'event': BIZTRACK_MY_CLIENTS + _CLIENT_RISK_GROUP,
+        });
     }
 
     closeModal() {

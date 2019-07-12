@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import Modal from 'react-modal';
 import ModalComponentTeam from './modalComponentTeam';
 import {ORANGE_COLOR} from '../../constantsGlobal';
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _TEAM } from '../../constantsAnalytics';
 
 class buttonTeamComponent extends Component {
 
@@ -16,8 +17,12 @@ class buttonTeamComponent extends Component {
       };
   }
 
-  openModal(){
-    this.setState({modalIsOpen: true});
+  openModal() {
+    this.setState({ modalIsOpen: true });
+    window.dataLayer.push({
+      'nombreflujo': nombreflujoAnalytics,
+      'event': BIZTRACK_MY_CLIENTS + _TEAM,
+    });
   }
 
   closeModal(){
