@@ -12,7 +12,7 @@ export const MESSAGE_WARNING_INVALID_EMAIL = "No cumple con la estructura de cor
 export const MESSAGE_WARNING_POSTAL_CODE = "Solo se permiten valores alfanuméricos y -";
 export const MESSAGE_WARNING_PHONE = "Solo se permiten valores numéricos sin espacios";
 export const MESSAGE_WARNING_ONLY_NUMBERS = "Solo se permiten valores numéricos";
-export const MESSAGE_WARNING_RELEVANT_FEATURES = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
+export const MESSAGE_WARNING_RELEVANT_FEATURES = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_@*<>";
 export const MESSAGE_WARNING_OPPORTUNITY_NAME = 'Solo se permiten valores alfanuméricos y () ; , . - " ! $ % & /¿? ° # = ¡ : ´ + [ ] _';
 export const MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";
 export const MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT = "Solo se permiten valores numéricos";

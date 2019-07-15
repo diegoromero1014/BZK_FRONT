@@ -3,13 +3,13 @@ import { checkFirstCharacter, checkObservations, checkRequired, checkOnlyAlphabe
     checkNeighborhood, checkPostalCode, checkPhone, checkOnlyNumbers, checkEmail, checkContactRelevantFeatures,
     checkPipeLineOpportunityName, checkObservationsLinkClient, checkHistoryFields, checkOtherReason, checkClientName,
     checkClientContext, checkInventoryPolicy, checkControlLinkedPayments, checkClientDescription, checkClientAddress,
-    checkNameEntityProduct, checkdetailNonOperatingIncomePrincipal, checkOttherOperationsForeign, checkClientNeighborhood} from '../../../src/validationsFields/rulesField';
+    checkNameEntityProduct, checkdetailNonOperatingIncomePrincipal, checkOttherOperationsForeign, checkClientNeighborhood, checkRegexHtmlInjection} from '../../../src/validationsFields/rulesField';
 import { MESSAGE_WARNING_FORBIDDEN_CHARACTER, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_REQUIRED_VALUE,
     MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH, MESSAGE_WARNING_MAX_LENGTH,
     MESSAGE_WARNING_NUMBER_DOCUMENT, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE,
     MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS, MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES,
     MESSAGE_WARNING_OPPORTUNITY_NAME, MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_WARNING_HISTORY, MESSAGE_WARNING_OTHER_REASON,
-    MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_NAME_ENTITY, MESSAGE_WARNING_NO_OPERATING_IN_COME, MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH} from '../../../src/validationsFields/validationsMessages';
+    MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_NAME_ENTITY, MESSAGE_WARNING_NO_OPERATING_IN_COME, MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH, MESSAGE_ERROR_INJECTION_HTML} from '../../../src/validationsFields/validationsMessages';
 
 describe('Test checkRequired white list validation', () => {
     it('should throw error if the text is empty', () => {
@@ -779,5 +779,38 @@ describe('Test checkClientNeighborhood white list validation', () => {
         const value = '';
         const expectedMessage = null;
         expect(checkClientNeighborhood(value)).equal(expectedMessage);
+    });
+});
+
+describe('Test checkRegexHtmlInjection white list validation', () => {
+    it('should throw error when value has special characters', () => {
+        const value = '<></>';
+        const expectedMessage = MESSAGE_ERROR_INJECTION_HTML;
+        expect(checkRegexHtmlInjection(value)).equal(expectedMessage);
+    });
+    it('should throw null when value has any text', () => {
+        const value = '<>pruebaServicio</>';
+        const expectedMessage = MESSAGE_ERROR_INJECTION_HTML;
+        expect(checkRegexHtmlInjection(value)).equal(expectedMessage);
+    });
+    it('should throw null when value is correct checkRegexHtmlInjection', () => {
+        const value = '</>';
+        const expectedMessage = MESSAGE_ERROR_INJECTION_HTML;
+        expect(checkRegexHtmlInjection(value)).equal(expectedMessage);
+    });
+    it('should throw null when value is correct case 2 checkRegexHtmlInjection', () => {
+        const value = '<>';
+        const expectedMessage = null;
+        expect(checkRegexHtmlInjection(value)).equal(expectedMessage);
+    });
+    it('should throw null when value is correct case 3 checkRegexHtmlInjection', () => {
+        const value = '<><>';
+        const expectedMessage = null;
+        expect(checkRegexHtmlInjection(value)).equal(expectedMessage);
+    });
+    it('should throw null when value is incorrect checkRegexHtmlInjection', () => {
+        const value = '<p></p>';
+        const expectedMessage = MESSAGE_ERROR_INJECTION_HTML;
+        expect(checkRegexHtmlInjection(value)).equal(expectedMessage);
     });
 });

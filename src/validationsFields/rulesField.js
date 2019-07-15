@@ -458,7 +458,6 @@ export const checkContactRelevantFeatures = value => {
     return message;
 }
 export const checkRegexHtmlInjection = value => {
-    debugger;
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && regexHtmlInjection.test(value)) {
         message = MESSAGE_ERROR_INJECTION_HTML;

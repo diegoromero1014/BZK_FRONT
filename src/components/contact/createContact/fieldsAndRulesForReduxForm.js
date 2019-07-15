@@ -36,7 +36,7 @@ const fieldsWithRules = {
     tipoFuncion: { rules: [checkRequired] },
     tipoHobbie: { rules: [] },
     tipoDeporte: { rules: [] },
-    contactRelevantFeatures: { rules: [checkRegexHtmlInjection, checkContactRelevantFeatures, checkFirstCharacter] },
+    contactRelevantFeatures: { rules: [checkRegexHtmlInjection, checkContactRelevantFeatures, checkFirstCharacter, checkMaxLength(1000)] },
     listaFavoritos: { rules: [] }
 };
 
