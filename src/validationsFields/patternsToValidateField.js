@@ -2,7 +2,7 @@ export const patternOfOnlyAlphabetical = /^[a-zA-Z\sÁ-Úá-úÑñÜü]+$/;
 export const patternOfOnlyNumbers = /^[0-9]+$/;
 export const patternOfNumberDocument = /^[a-zA-Z0-9\-Á-Úá-úÑñÜü]+$/;
 export const patternOfPostalCode = /^[a-zA-Z0-9\-Á-Úá-úÑñÜü]+$/;
-export const patternOfAddress = /^[a-zA-Z0-9\s\-ÁÉÍÓÚáéíóúÑñ#();,."\/_´']+$/;
+export const patternOfAddress = /^[a-zA-Z0-9\s\-ÁÉÍÓÚáéíóúÑñÜü#();,."\/_´']+$/;
 export const patternOfOriginCityResources = /^[a-zA-Z\s\-ÁÉÍÓÚáéíóúÑñ#();,."\/_´']+$/;
 export const patternOfNeighborhood = /^[a-zA-Z0-9\s\-ÁÉÍÓÚáéíóúÑñÜü#();,.\"\/]+$/;
 export const patternOfObservation = /^[a-zA-Z0-9\s()\[\];,."!¡$%&\/¿?°#=':´+_\-Á-Úá-úÑñÜü]+$/;
