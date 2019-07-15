@@ -38,8 +38,144 @@ import ControlDashboard from "./components/transactional/controlDashComponent";
 import LinkingRequests from "./components/myPendings/linkingRequests/componentLinkingRequests";
 import Sheduler from "./components/sheduler/shedulerComponent";
 import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderConstruction"; 
+import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
+    CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST, 
+    LINKINGREQUESTS, MODALDRAFTDOCUMENTS, MODALCOMPONENTPENDING, ALERTCOVENANTS, 
+    ADMINALERTCLIENTSPORTFOLIOEXPIRATION, EDITBUSINESSPLAN, BUSINESSPLAN, 
+    EDITFORMPIPELINE, CREATEFORMPIPELINE, VISITEDIT, VISIT, EDITPREVISITA, 
+    PREVISITA, CLIENTCERTIFY, CLIENTSFIND, CLIENTEDIT, CREATEPROPSPECT, STUDYCREDIT, 
+    COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, VIEWMANAGEMENT, DASHBOARDCOMPONENT, 
+    LOGINCOMPONENT, 
+    aec,
+    LoginComponentURL,
+    DashboardComponentURL,
+    ViewManagementURL,
+    ShareholderComponentURL,
+    ComponentClientInformationURL,
+    StudyCreditURL,
+    CreatePropspectURL,
+    ClientEditURL,
+    ClientsFindURL,
+    ClientCertifyURL,
+    PrevisitaURL,
+    EditPrevisitaURL,
+    VisitEditURL,
+    createFormPipelineURL,
+    editFormPipelineURL,
+    BusinessPlanURL,
+    EditBusinessPlanURL,
+    AdminAlertClientsPendingUpdateURL,
+    AdminAlertClientsPortfolioExpirationURL,
+    AlertCovenantsURL,
+    ModalComponentPendingURL,
+    ModalDraftDocumentsURL,
+    AECURL,
+    LinkingRequestsURL,
+    AlertBlackListURL,
+    FindContactsURL,
+    ClientsContactsDetailsURL,
+    ContactByFunctionOrTypeComponentURL,
+    FavoritesGroupURL,
+    TransactionalURL,
+    WalletShareURL,
+    ControlDashboardURL,
+    ShedulerURL,
+    nombreflujoAnalytics,
+    AECACTIVE} from "./constantsAnalytics";
 
 class App extends Component {
+   
+    componentDidUpdate(prevProps) {
+        if (this.props.location !== prevProps.location) {
+          this.onRouteChanged();
+         
+
+
+        }
+      }
+
+      onRouteChanged() {
+          var routeActive =this.validateRouteActive();
+          window.dataLayer.push({
+            'nombreflujo': nombreflujoAnalytics,
+            'event': BIZTRACK_+routeActive,
+          });
+       
+      }
+      /*rutas del menu vertical deben parametrizarse el path segun el menu y el submenu de este*/
+      validateRouteActive(){
+        switch (this.props.location.pathname) {
+            case LoginComponentURL:
+                return LOGINCOMPONENT;
+            case DashboardComponentURL:
+                return DASHBOARDCOMPONENT;
+            case ViewManagementURL:
+                return VIEWMANAGEMENT;                                
+            case ShareholderComponentURL:
+                return SHAREHOLDERCOMPONENT;
+            case ComponentClientInformationURL:
+                return COMPONENTCLIENTINFORMATION;
+            case StudyCreditURL:
+                return STUDYCREDIT;
+            case CreatePropspectURL:
+                return CREATEPROPSPECT;
+            case ClientEditURL:
+                return CLIENTEDIT;
+            case ClientsFindURL:
+                return CLIENTSFIND;
+            case ClientCertifyURL:
+                return CLIENTCERTIFY;    
+            case PrevisitaURL:
+                return PREVISITA;
+            case EditPrevisitaURL:
+                return EDITPREVISITA;
+            case VisitEditURL:
+                return VISIT;                                
+            case VisitEditURL:
+                return VISITEDIT;
+            case createFormPipelineURL:
+                return CREATEFORMPIPELINE;
+            case editFormPipelineURL:
+                return EDITFORMPIPELINE;
+            case BusinessPlanURL:
+                return BUSINESSPLAN;
+            case EditBusinessPlanURL:
+                return EDITBUSINESSPLAN;
+            case AdminAlertClientsPendingUpdateURL:
+                return ADMINALERTCLIENTSPENDINGUPDATE;
+            case AdminAlertClientsPortfolioExpirationURL:
+                return ADMINALERTCLIENTSPORTFOLIOEXPIRATION;
+            case AlertCovenantsURL:
+                return ALERTCOVENANTS;
+            case ModalComponentPendingURL:
+                return MODALCOMPONENTPENDING;
+            case ModalDraftDocumentsURL:
+                return MODALDRAFTDOCUMENTS;
+            case AECURL:
+                return AECACTIVE;                                
+            case LinkingRequestsURL:
+                return LINKINGREQUESTS;
+            case AlertBlackListURL:
+                return ALERTBLACKLIST;
+            case FindContactsURL:
+                return FINDCONTACTS;
+            case ClientsContactsDetailsURL:
+                return CLIENTSCONTACTSDETAILS;
+            case ContactByFunctionOrTypeComponentURL:
+                return CONTACTBYFUNCTIONORTYPECOMPONENT;
+            case FavoritesGroupURL:
+                return FAVORITESGROUP;                                
+            case TransactionalURL:
+                return TRANSACTIONAL; 
+            case WalletShareURL:
+                return WALLETSHARE;
+            case ControlDashboardURL:
+                return CONTROLDASHBOARD;
+            case ShedulerURL:
+                return SHEDULER;
+        }
+      }
+    
     render() {
         return (
             <div style={{ width: "100%" }}>
@@ -78,7 +214,7 @@ export default (
                 <Route path="myPendings">
                     <Route path="myTasks" component={ModalComponentPending}></Route>
                     <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
-                    <Route path="AEC" component={AEC}></Route>
+                    <Route path="AEC" component={AEC} key="AEC"></Route>
                     <Route path="assigned" component={Assigned}></Route>
                     <Route path="linkingRequests" component={LinkingRequests}></Route>
                 </Route>

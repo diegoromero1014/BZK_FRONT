@@ -21,6 +21,7 @@ import _ from 'lodash';
 import { fields, validations as validate } from './fieldsAndRulesCustomerDelivery';
 
 import { CLIENT_STATUS, MANAGEMENT_BRAND } from '../structuredDelivery/constants';
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _CUSTOMER_DELIVERY_STORY } from '../../../constantsAnalytics';
 
 const meesageOneClient = "¿Señor usuario, certifica que el cliente y su información de historial se encuentra actualizada ?";
 const meesageMoreOneClient = "¿Señor usuario, certifica que los clientes y su información de historial se cuentra actualizada ?";
@@ -75,6 +76,10 @@ class ComponentCustomerDelivery extends Component {
     }
 
     componentWillMount() {
+        window.dataLayer.push({
+            'nombreflujo': nombreflujoAnalytics,
+            'event': BIZTRACK_MY_CLIENTS + _CUSTOMER_DELIVERY_STORY,
+          });
         const { getAllteams, getMasterDataFields, updateCheckEconomicGroup, consultParameterServer } = this.props;
         getAllteams();
         updateCheckEconomicGroup(false);

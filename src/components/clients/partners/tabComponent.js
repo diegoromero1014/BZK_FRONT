@@ -19,6 +19,7 @@ import {
     MODULE_SHAREHOLDERS, MODULE_BOARD_MEMBERS, MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT,
     MESSAGE_ERROR_SWEET_ALERT
 } from '../../../constantsGlobal';
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _PARTNERS } from '../../../constantsAnalytics';
 
 class TabComponent extends Component {
 
@@ -31,6 +32,10 @@ class TabComponent extends Component {
     }
 
     componentWillMount() {
+        window.dataLayer.push({
+            'nombreflujo': nombreflujoAnalytics,
+            'event': BIZTRACK_MY_CLIENTS + _PARTNERS,
+          });
         const { consultModulesAccess, showLoading, swtShowMessage } = this.props;
         showLoading(true, MESSAGE_LOAD_DATA);
         consultModulesAccess().then((data) => {
