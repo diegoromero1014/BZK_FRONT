@@ -5,6 +5,9 @@ import { reduxForm } from 'redux-form';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import moment from 'moment';
 
+import Ubicacion from './ubicacion';
+
+import Tooltip from '../../toolTip/toolTipComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
@@ -65,20 +68,30 @@ class ContactDetailsModalComponent extends Component {
         super(props);
         this._handlerSubmitContact = this._handlerSubmitContact.bind(this);
         this._onchangeValue = this._onchangeValue.bind(this);
-        this._onChangeCountry = this._onChangeCountry.bind(this);
-        this._onChangeProvince = this._onChangeProvince.bind(this);
         this._genero = this._genero.bind(this);
         this._uploadProvincesByCountryId = this._uploadProvincesByCountryId.bind(this);
         this._uploadCitiesByProvinceId = this._uploadCitiesByProvinceId.bind(this);
         this._editContact = this._editContact.bind(this);
         this._closeViewOrEditContact = this._closeViewOrEditContact.bind(this);
         this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);
+        this._handleChangeUpdateCheck = this._handleChangeUpdateCheck.bind(this);
+        this._markAsOutdated = this._markAsOutdated.bind(this);
+        this.unmarkContact = this.unmarkContact.bind(this);
+        this.cancelAlert = this.cancelAlert.bind(this);
+        
         this.state = {
             isEditable: false,
             generoData: [],
             showErrorForm: false,
             showErrorXss: false,
-            showErrorFormInvalidValue: false
+            showErrorFormInvalidValue: false,
+            updateCheck: false,
+            updateCheckDesc : '',
+            updateCheckPermission: false,
+            hasToUpdateInfo: false, 
+            showMessage:null,
+            isUpdatedInSubmit:false,
+            correspondenceAddressCopy:false,
         };
         momentLocalizer(moment);
         thisForm = this;
@@ -235,27 +248,6 @@ class ContactDetailsModalComponent extends Component {
         clearState();
     }
 
-    _onChangeCountry(val) {
-        const { fields: { contactCountry, contactProvince, contactCity } } = this.props;
-        if (val !== undefined && val !== null) {
-            contactCountry.onChange(val);
-            const { consultListWithParameterUbication } = this.props;
-            consultListWithParameterUbication(FILTER_PROVINCE, val);
-        }
-        contactProvince.onChange('');
-        contactCity.onChange('');
-    }
-
-    _onChangeProvince(val) {
-        const { fields: { contactProvince, contactCity } } = this.props;
-        if (val !== undefined && val !== null) {
-            contactProvince.onChange(val);
-            const { consultListWithParameterUbication } = this.props;
-            consultListWithParameterUbication(FILTER_CITY, val);
-        }
-        contactCity.onChange('');
-    }
-
     _uploadProvincesByCountryId(countryId) {
         const { consultListWithParameterUbication } = this.props;
         if (countryId !== undefined && countryId !== null) {
@@ -374,8 +366,8 @@ class ContactDetailsModalComponent extends Component {
             contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
             contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress,
             contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies, contactSports,
-            contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures
-            }, handleSubmit, selectsReducer, reducerGlobal
+                contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures, updateCheckObservation
+            }, handleSubmit, selectsReducer, reducerGlobal, clientInfo, consultListWithParameterUbication
         } = this.props;
 
         return (
@@ -582,89 +574,26 @@ class ContactDetailsModalComponent extends Component {
                         </Row>
                     </div>
                     <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información de ubicación y correspondencia</span>
-                    </dt>
+                    </dt>               
+                    <Ubicacion fields={ { contactCountry, contactProvince, contactCity, contactAddress, contactNeighborhood }} selectsReducer={selectsReducer} 
+                        isEditable={this.state.isEditable} clientInfo={clientInfo} consultListWithParameterUbication={consultListWithParameterUbication} 
+                    />
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>
-                            <Col xs={12} sm={12} md={6} lg={4}>
-                                <dt><span>País (</span><span style={{ color: 'red' }}>*</span><span>)</span></dt>
-                                <dd>
-                                    <ComboBox
-                                        name="contactCountry"
-                                        labelInput="Seleccione"
-                                        {...contactCountry}
-                                        onChange={val => this._onChangeCountry(val)}
-                                        value={contactCountry.value}
-                                        onBlur={contactCountry.onBlur}
-                                        valueProp={'id'}
-                                        textProp={'value'}
-                                        data={selectsReducer.get(FILTER_COUNTRY)}
-                                        disabled={this.state.isEditable ? '' : 'disabled'}
-                                    />
-                                </dd>
-                            </Col>
-                            <Col xs={12} sm={12} md={6} lg={4}>
-                                <dt><span>{'Departamento ('}</span><span
-                                    style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
-                                <dd>
-                                    <ComboBox
-                                        name="contactProvince"
-                                        labelInput="Seleccione"
-                                        {...contactProvince}
-                                        onChange={val => this._onChangeProvince(val)}
-                                        value={contactProvince.value}
-                                        onBlur={contactProvince.onBlur}
-                                        valueProp={'id'}
-                                        textProp={'value'}
-                                        data={selectsReducer.get('dataTypeProvince')}
-                                        disabled={this.state.isEditable ? '' : 'disabled'}
-                                    />
-                                </dd>
-                            </Col>
-                            <Col xs={12} sm={12} md={6} lg={4}>
-                                <dt><span>{'Ciudad ('}</span><span style={{ color: 'red' }}>{'*'}</span><span>{')'}</span>
-                                </dt>
-                                <dd>
-                                    <ComboBox
-                                        name="contactCity"
-                                        labelInput="Seleccione"
-                                        {...contactCity}
-                                        valueProp={'id'}
-                                        textProp={'value'}
-                                        data={selectsReducer.get('dataTypeCity')}
-                                        disabled={this.state.isEditable ? '' : 'disabled'}
-                                    />
-                                </dd>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col xs={12} sm={12} md={12} lg={12}>
-                                <dt><span>{'Dirección ('}</span><span
-                                    style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
-                                <dd>
-                                    <Textarea className="form-control need-input"
-                                        {...contactAddress}
-                                        validateEnter={true}
-                                        name="contactAddress"
-                                        maxLength="60"
-                                        disabled={this.state.isEditable ? '' : 'disabled'}
-                                        style={{ width: '100%', height: '100%' }}
-                                    />
-                                </dd>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col xs={12} sm={12} md={6} lg={4}>
-                                <dt><span>{'Barrio'}</span></dt>
-                                <dd>
-                                    <Input
-                                        name="contactNeighborhood"
-                                        type="text"
-                                        max="40"
-                                        disabled={this.state.isEditable ? '' : 'disabled'}
-                                        {...contactNeighborhood}
-                                    />
-                                </dd>
-                            </Col>
+                        <Col xs={12} sm={12} md={6} lg={4}>
+                            <dt>
+                                <span>{"Barrio"}</span>
+                            </dt>
+                            <dd>
+                                <Input
+                                name="contactNeighborhood"
+                                type="text"
+                                max="40"
+                                disabled={this.state.isEditable ? "" : "disabled"}
+                                {...contactNeighborhood}
+                                />
+                            </dd>
+                        </Col>
                             <Col xs={12} sm={12} md={6} lg={4}>
                                 <dt><span>{'Código postal'}</span></dt>
                                 <dd>
@@ -906,13 +835,15 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal }, ownerProps) {
+function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal, clientInformacion }, { fields }, ownerProps) {
     const contact = contactDetail.get('contactDetailList');
+    const clientInfo = Object.assign({}, clientInformacion.get('responseClientInfo'));
     if (contact) {
         return {
             contactDetail,
             selectsReducer,
             reducerGlobal,
+            clientInfo,
             initialValues: {
                 id: contact.id,
                 contactType: contact.contactType,
@@ -943,14 +874,16 @@ function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal }, owner
                 contactFunctions: '',
                 contactRelevantFeatures: contact.contactRelevantFeatures,
                 contactHobbies: JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'),
-                contactSports: JSON.parse('["' + _.join(contact.sports, '","') + '"]')
+                contactSports: JSON.parse('["' + _.join(contact.sports, '","') + '"]'),
+                updateCheckObservation: contact.updatedInfoDesc,
             }
         };
     } else {
         return {
             contactDetail,
             selectsReducer,
-            reducerGlobal
+            reducerGlobal,
+            clientInfo
         };
     }
 }
