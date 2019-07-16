@@ -1,0 +1,15 @@
+export const nombreflujoAnalytics ="biztrack";
+export const _CAMBIOFILTRO="_CAMBIOFILTRO";
+export const _EDITARTAREA="_EDITARTAREA";
+export const BIZTRACK_MISTAREAS="BIZTRACK_MISTAREAS";
+export const BIZTRACK_MY_CLIENTS = "BIZTRACK_MY_CLIENTS";
+export const _PIPELINE = "_PIPELINE";
+export const _BUSINESS_PLAN = "_BUSINESS_PLAN";
+export const _RISKS_MANAGEMENT = "_RISKS_MANAGEMENT";
+export const _CLIENT_VISOR = "_CLIENT_VISOR";
+export const _CLIENT_RISK_GROUP = "_CLIENT_RISK_GROUP";
+export const _TEAM = "_TEAM";
+export const _ECONOMIC_GROUP = "_ECONOMIC_GROUP";
+export const _COVENANT = "_COVENANT";
+export const _SURVEY = "_SURVEY";
+export const _AEC = "_AEC";

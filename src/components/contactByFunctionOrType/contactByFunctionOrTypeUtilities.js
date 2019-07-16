@@ -49,6 +49,9 @@ export const mapDataGrid = (data = []) => {
                     "clientContactId": clientContact.idClientContact
                 }
             }
-        }
+        },
+        updatedInfo: clientContact.updatedInfo,
+        updatedInfoDesc: clientContact.updatedInfoDesc,
+        contactRelevantFeatures: clientContact.contactRelevantFeatures
     }));
 };

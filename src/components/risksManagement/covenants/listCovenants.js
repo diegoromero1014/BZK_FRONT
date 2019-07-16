@@ -13,6 +13,7 @@ import { clientCovenants } from './actions';
 import { validatePermissionsByModule } from '../../../actionsGlobal';
 
 import { GREEN_COLOR, ORANGE_COLOR, RED_COLOR, GRAY_COLOR, MESSAGE_LOAD_DATA, MODULE_COVENANTS } from '../../../constantsGlobal';
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _COVENANT } from '../../../constantsAnalytics';
 
 class ListCovenantsComponent extends Component {
 
@@ -22,6 +23,11 @@ class ListCovenantsComponent extends Component {
     }
 
     componentWillMount() {
+        window.dataLayer.push({
+            'nombreflujo': nombreflujoAnalytics,
+            'event': BIZTRACK_MY_CLIENTS + _COVENANT,
+        });
+
         const { clientCovenants, showLoading, validatePermissionsByModule } = this.props;
         showLoading(true, MESSAGE_LOAD_DATA);
         clientCovenants().then((data) => {
