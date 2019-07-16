@@ -23,6 +23,8 @@ class buttonClientEconomicGroup extends Component {
     window.dataLayer.push({
       'nombreflujo': nombreflujoAnalytics,
       'event': BIZTRACK_MY_CLIENTS + _ECONOMIC_GROUP,
+      'pagina':_ECONOMIC_GROUP
+
     });
   }
 

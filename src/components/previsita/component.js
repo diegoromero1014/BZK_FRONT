@@ -41,6 +41,8 @@ class PrevisitComponent extends Component {
     window.dataLayer.push({
       'nombreflujo': nombreflujoAnalytics,
       'event': BIZTRACK_MY_CLIENTS + _PREVISIT,
+      'pagina':_PREVISIT
+
     });
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");

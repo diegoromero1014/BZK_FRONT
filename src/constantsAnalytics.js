@@ -21,10 +21,12 @@ export const _STORY = "_STORY";
 export const _CUSTOMER_DELIVERY_STORY = "_CUSTOMER_DELIVERY_STORY";
 export const _PREVISIT = "_PREVISIT";
 export const _VISIT = "_VISIT";
+export const _TASK = "_TASK";
 /**TERMINA MIS CLIENTES */
 export const LOGINCOMPONENT ="LOGINCOMPONENT";
 export const DASHBOARDCOMPONENT ="DASHBOARDCOMPONENT";
 export const VIEWMANAGEMENT ="VIEWMANAGEMENT";
+export const VIEWALERT ="VIEWALERT";
 export const SHAREHOLDERCOMPONENT ="SHAREHOLDERCOMPONENT";
 export const COMPONENTCLIENTINFORMATION ="COMPONENTCLIENTINFORMATION";
 export const STUDYCREDIT="STUDYCREDIT";
@@ -57,6 +59,9 @@ export const WALLETSHARE="WALLETSHARE";
 export const CONTROLDASHBOARD="CONTROLDASHBOARD";
 export const SHEDULER="SHEDULER";
 export const BIZTRACK_="BIZTRACK_";
+/** 
+ * constantes para identificar donde se hace el eevento para llevar el evento en el datalayer
+*/
 export const LoginComponentURL ="/login";
 export const DashboardComponentURL ="/dashboard";
 export const ViewManagementURL ="/dashboard/viewManagement";

@@ -81,7 +81,11 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     ControlDashboardURL,
     ShedulerURL,
     nombreflujoAnalytics,
-    AECACTIVE} from "./constantsAnalytics";
+    AECACTIVE,
+    ViewAlertsURL,
+    VIEWALERT,
+    ADMINALERTCLIENTSPENDINGUPDATE,
+    SHEDULER} from "./constantsAnalytics";
 
 class App extends Component {
    
@@ -95,15 +99,20 @@ class App extends Component {
       }
 
       onRouteChanged() {
+          
           var routeActive =this.validateRouteActive();
           window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
             'event': BIZTRACK_+routeActive,
+            'pagina':routeActive
+
+
           });
        
       }
       /*rutas del menu vertical deben parametrizarse el path segun el menu y el submenu de este*/
       validateRouteActive(){
+          
         switch (this.props.location.pathname) {
             case LoginComponentURL:
                 return LOGINCOMPONENT;
@@ -113,6 +122,8 @@ class App extends Component {
                 return VIEWMANAGEMENT;                                
             case ShareholderComponentURL:
                 return SHAREHOLDERCOMPONENT;
+            case ViewAlertsURL:
+                return VIEWALERT;
             case ComponentClientInformationURL:
                 return COMPONENTCLIENTINFORMATION;
             case StudyCreditURL:

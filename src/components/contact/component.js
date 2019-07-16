@@ -41,6 +41,8 @@ class ContactComponent extends Component {
     window.dataLayer.push({
       'nombreflujo': nombreflujoAnalytics,
       'event': BIZTRACK_MY_CLIENTS + _CONTACT,
+      'pagina':_CONTACT
+
     });
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");

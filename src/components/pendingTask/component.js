@@ -13,6 +13,7 @@ import { MODULE_TASKS, CREAR } from '../../constantsGlobal';
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import { redirectUrl } from '../globalComponents/actions';
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _TASK } from '../../constantsAnalytics';
 
 class UserTaskComponent extends Component {
 
@@ -26,6 +27,12 @@ class UserTaskComponent extends Component {
   }
 
   componentWillMount() {
+    window.dataLayer.push({
+      'nombreflujo': nombreflujoAnalytics,
+      'event': BIZTRACK_MY_CLIENTS + _TASK,
+      'pagina':_TASK
+
+    });
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {

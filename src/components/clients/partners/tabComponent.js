@@ -35,6 +35,8 @@ class TabComponent extends Component {
         window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
             'event': BIZTRACK_MY_CLIENTS + _PARTNERS,
+            'pagina':_PARTNERS
+
           });
         const { consultModulesAccess, showLoading, swtShowMessage } = this.props;
         showLoading(true, MESSAGE_LOAD_DATA);

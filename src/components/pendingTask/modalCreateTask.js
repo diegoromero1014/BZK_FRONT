@@ -91,10 +91,7 @@ class ModalCreateTask extends Component {
   }
 
   componentWillMount() {
-    window.dataLayer.push({
-      'nombreflujo': nombreflujoAnalytics,
-      'event':BIZTRACK_MISTAREAS+_EDITARTAREA,
-    });
+ 
     const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateEntity }, taskEdit, getMasterDataFields, getInfoTaskUser, updateUserNameTask } = this.props;
     updateUserNameTask("");
     getMasterDataFields([TASK_STATUS]);

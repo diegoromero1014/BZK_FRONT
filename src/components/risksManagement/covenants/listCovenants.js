@@ -26,6 +26,8 @@ class ListCovenantsComponent extends Component {
         window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
             'event': BIZTRACK_MY_CLIENTS + _COVENANT,
+            'pagina':_COVENANT
+
         });
 
         const { clientCovenants, showLoading, validatePermissionsByModule } = this.props;

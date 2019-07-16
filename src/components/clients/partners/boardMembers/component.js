@@ -35,6 +35,8 @@ class ComponentBoardMembers extends Component {
         window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
             'event': BIZTRACK_MY_CLIENTS + _BOARDMEMBERS,
+            'pagina':_BOARDMEMBERS
+
           });
         const { boardMembersReducer, getBoardMembers, changeStateSaveData, swtShowMessage, getMasterDataFields,
             validatePermissionsByModule, clearFilters, changeKeyword } = this.props;

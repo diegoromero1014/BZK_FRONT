@@ -79,6 +79,8 @@ class ComponentCustomerDelivery extends Component {
         window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
             'event': BIZTRACK_MY_CLIENTS + _CUSTOMER_DELIVERY_STORY,
+            'pagina':_CUSTOMER_DELIVERY_STORY
+
           });
         const { getAllteams, getMasterDataFields, updateCheckEconomicGroup, consultParameterServer } = this.props;
         getAllteams();

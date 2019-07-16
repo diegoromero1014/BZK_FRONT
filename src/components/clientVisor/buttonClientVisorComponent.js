@@ -27,6 +27,8 @@ class buttonClientVisorComponent extends Component {
         window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
             'event': BIZTRACK_MY_CLIENTS + _CLIENT_VISOR,
+            'pagina':_CLIENT_VISOR
+
         });
     }
 

@@ -31,6 +31,8 @@ class VisitComponent extends Component {
     window.dataLayer.push({
       'nombreflujo': nombreflujoAnalytics,
       'event': BIZTRACK_MY_CLIENTS + _VISIT,
+      'pagina':_VISIT
+
     });
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");

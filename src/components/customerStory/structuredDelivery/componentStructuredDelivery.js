@@ -210,6 +210,8 @@ class componentStructuredDelivery extends Component {
         window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
             'event': BIZTRACK_MY_CLIENTS + _STORY,
+            'pagina':_STORY
+
           });
         const { clearEvents, changeStateSaveData, callFromDeliveryClient, updateEventErrors } = this.props;
         setGlobalCondition(callFromDeliveryClient);
