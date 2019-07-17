@@ -23,7 +23,6 @@ import { validateValue,formatLongDateToDateWithNameMonth } from '../../actionsGl
 import RichText from '../richText/richTextComponent';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import { fields, validations as validate } from './createPendingTask/fieldsAndRulesForReduxForm';
-import { nombreflujoAnalytics, _EDITARTAREA, BIZTRACK_MISTAREAS } from '../../constantsAnalytics';
 
 
 var usersBanco = [];

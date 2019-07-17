@@ -99,7 +99,6 @@ class App extends Component {
       }
 
       onRouteChanged() {
-          
           var routeActive =this.validateRouteActive();
           window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
@@ -108,6 +107,7 @@ class App extends Component {
 
 
           });
+        
        
       }
       /*rutas del menu vertical deben parametrizarse el path segun el menu y el submenu de este*/
