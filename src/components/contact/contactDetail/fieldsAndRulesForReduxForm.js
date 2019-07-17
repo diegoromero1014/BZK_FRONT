@@ -3,7 +3,7 @@ import _ from "lodash";
 import {
     checkRequired, checkNumberDocument, checkOnlyAlphabetical, checkMinLength,
     checkMaxLength, checkAddress, checkNeighborhood, checkPostalCode, checkPhone, checkOnlyNumbers,
-    checkContactRelevantFeatures, checkEmail, checkRequiredWithGlobalCondition, processRules, checkFirstCharacter
+    checkContactRelevantFeatures, checkEmail, checkRequiredWithGlobalCondition, processRules, checkFirstCharacter, checkRegexHtmlInjection
 } from './../../../validationsFields/rulesField';
 
 const fieldsWithRules = {
@@ -36,7 +36,7 @@ const fieldsWithRules = {
     contactFunctions: { rules: [checkRequiredWithGlobalCondition] },
     contactHobbies: { rules: [] },
     contactSports: { rules: [] },
-    contactRelevantFeatures: { rules: [checkContactRelevantFeatures, checkFirstCharacter] },
+    contactRelevantFeatures: { rules: [checkRegexHtmlInjection,checkContactRelevantFeatures, checkFirstCharacter] },
     updateCheckObservation: { rules: []}
 };
 

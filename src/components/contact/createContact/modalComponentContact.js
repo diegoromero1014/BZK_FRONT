@@ -733,7 +733,7 @@ class ModalComponentContact extends Component {
                                     <dd>
                                         <TextareaComponent
                                             name="contactRelevantFeatures"
-                                            validateEnter={true}
+                                            validateEnter={false}
                                             type="text"
                                             max="1000"
                                             style={{ width: '100%', height: '100%' }}

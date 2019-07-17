@@ -981,7 +981,7 @@ export class ContactDetailsModalComponent extends Component {
                                     <dd>
                                         <Textarea
                                             name="contactRelevantFeatures"
-                                            validateEnter={true}
+                                            validateEnter={false}
                                             type="text"
                                             max="1000"
                                             style={{ width: '100%', height: '100%' }}
