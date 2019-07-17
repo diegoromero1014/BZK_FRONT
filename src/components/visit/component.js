@@ -14,6 +14,7 @@ import { MODULE_VISITS, CREAR, DESCARGAR } from '../../constantsGlobal';
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import { clearIdPrevisit } from './actions';
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _VISIT } from '../../constantsAnalytics';
 
 class VisitComponent extends Component {
 
@@ -27,6 +28,12 @@ class VisitComponent extends Component {
   }
 
   componentWillMount() {
+    window.dataLayer.push({
+      'nombreflujo': nombreflujoAnalytics,
+      'event': BIZTRACK_MY_CLIENTS + _VISIT,
+      'pagina':_VISIT
+
+    });
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {

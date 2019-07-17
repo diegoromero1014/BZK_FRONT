@@ -39,6 +39,7 @@ import { setEvents, clearEvents, } from './events/actions';
 import ToolTip from '../../toolTip/toolTipComponent';
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 import { setGlobalCondition } from './../../../validationsFields/rulesField'
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _STORY } from '../../../constantsAnalytics';
 
 let thisForm = null;
 
@@ -206,6 +207,12 @@ class componentStructuredDelivery extends Component {
     }
 
     componentWillMount() {
+        window.dataLayer.push({
+            'nombreflujo': nombreflujoAnalytics,
+            'event': BIZTRACK_MY_CLIENTS + _STORY,
+            'pagina':_STORY
+
+          });
         const { clearEvents, changeStateSaveData, callFromDeliveryClient, updateEventErrors } = this.props;
         setGlobalCondition(callFromDeliveryClient);
         clearEvents();

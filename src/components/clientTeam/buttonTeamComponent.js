@@ -22,6 +22,8 @@ class buttonTeamComponent extends Component {
     window.dataLayer.push({
       'nombreflujo': nombreflujoAnalytics,
       'event': BIZTRACK_MY_CLIENTS + _TEAM,
+      'pagina':_TEAM
+
     });
   }
 

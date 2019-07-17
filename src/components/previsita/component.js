@@ -17,6 +17,7 @@ import { updateTitleNavBar } from '../navBar/actions';
 
 import { NUMBER_RECORDS, FILTER_STATUS_PREVISIT_ID } from './constants';
 import { FILE_OPTION_PRE_VISIT_GUIDE, MODULE_PREVISITS, CREAR, DESCARGAR } from '../../constantsGlobal';
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _PREVISIT } from '../../constantsAnalytics';
 
 class PrevisitComponent extends Component {
 
@@ -37,6 +38,12 @@ class PrevisitComponent extends Component {
   }
 
   componentWillMount() {
+    window.dataLayer.push({
+      'nombreflujo': nombreflujoAnalytics,
+      'event': BIZTRACK_MY_CLIENTS + _PREVISIT,
+      'pagina':_PREVISIT
+
+    });
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
