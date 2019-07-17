@@ -66,7 +66,6 @@ export class Ubicacion extends React.Component {
     } = this.props;
 
     if (val) {
-      console.log(val);
       contactCity.onChange(val);
     }
   }
