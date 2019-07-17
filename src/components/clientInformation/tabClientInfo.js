@@ -220,6 +220,8 @@ class TabClientInfo extends Component {
             window.dataLayer.push({
                 'nombreflujo': nombreflujoAnalytics,
                 'event': BIZTRACK_MY_CLIENTS + _PIPELINE,
+                'pagina':_PIPELINE
+
             });
 
             styleInfo = false;
@@ -253,6 +255,8 @@ class TabClientInfo extends Component {
             window.dataLayer.push({
                 'nombreflujo': nombreflujoAnalytics,
                 'event': BIZTRACK_MY_CLIENTS + _BUSINESS_PLAN,
+                'pagina':_BUSINESS_PLAN
+
             });
 
             styleInfo = false;
@@ -285,6 +289,8 @@ class TabClientInfo extends Component {
             window.dataLayer.push({
                 'nombreflujo': nombreflujoAnalytics,
                 'event': BIZTRACK_MY_CLIENTS + _RISKS_MANAGEMENT,
+                'pagina':_RISKS_MANAGEMENT
+
             });
             styleInfo = false;
             styleContacts = false;

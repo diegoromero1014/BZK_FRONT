@@ -75,6 +75,8 @@ class ComponentSurvey extends Component {
         window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
             'event': BIZTRACK_MY_CLIENTS + _SURVEY,
+            'pagina':_SURVEY
+
         });
         const { clearSurvey, validatePermissionsByModule, getSurveyQualitativeVarible, swtShowMessage, changeStateSaveData } = this.props;
         clearSurvey(false);

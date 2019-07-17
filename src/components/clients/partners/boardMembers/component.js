@@ -20,6 +20,7 @@ import ListBoardMembers from './listBoardMembers';
 import PaginationBoardMembers from './paginationBoardMembers';
 import AlertWithoutPermissions from '../../../globalComponents/alertWithoutPermissions';
 import BtnCreateBoardMembers from './createEditBoardMembers/btnCreateBoardMembers';
+import { nombreflujoAnalytics, _BOARDMEMBERS, BIZTRACK_MY_CLIENTS } from '../../../../constantsAnalytics';
 
 class ComponentBoardMembers extends Component {
 
@@ -31,6 +32,12 @@ class ComponentBoardMembers extends Component {
     }
 
     componentWillMount() {
+        window.dataLayer.push({
+            'nombreflujo': nombreflujoAnalytics,
+            'event': BIZTRACK_MY_CLIENTS + _BOARDMEMBERS,
+            'pagina':_BOARDMEMBERS
+
+          });
         const { boardMembersReducer, getBoardMembers, changeStateSaveData, swtShowMessage, getMasterDataFields,
             validatePermissionsByModule, clearFilters, changeKeyword } = this.props;
         var idClient = window.sessionStorage.getItem('idClientSelected');

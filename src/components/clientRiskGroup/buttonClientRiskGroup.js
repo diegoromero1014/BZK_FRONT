@@ -26,6 +26,8 @@ class buttonClientRiskGroup extends Component {
         window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
             'event': BIZTRACK_MY_CLIENTS + _CLIENT_RISK_GROUP,
+            'pagina':_CLIENT_RISK_GROUP
+
         });
     }
 
