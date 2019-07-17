@@ -32,6 +32,7 @@ import {
     MESSAGE_SAVE_DATA,
     MESSAGE_LOAD_DATA
 } from '../../../constantsGlobal';
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _SURVEY } from '../../../constantsAnalytics';
 
 class ComponentSurvey extends Component {
     constructor(props) {
@@ -71,6 +72,10 @@ class ComponentSurvey extends Component {
     }
 
     componentWillMount() {
+        window.dataLayer.push({
+            'nombreflujo': nombreflujoAnalytics,
+            'event': BIZTRACK_MY_CLIENTS + _SURVEY,
+        });
         const { clearSurvey, validatePermissionsByModule, getSurveyQualitativeVarible, swtShowMessage, changeStateSaveData } = this.props;
         clearSurvey(false);
         changeStateSaveData(true, MESSAGE_LOAD_DATA);

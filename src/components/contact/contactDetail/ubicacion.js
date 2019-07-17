@@ -3,6 +3,7 @@ import { Row, Col } from "react-flexbox-grid";
 import { Checkbox } from "semantic-ui-react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import _ from 'lodash';
 
 import { swtShowMessage } from "../../sweetAlertMessages/actions";
 
@@ -16,7 +17,7 @@ import {
   FILTER_CITY
 } from "../../selectsComponent/constants";
 
-class Ubicacion extends React.Component {
+export class Ubicacion extends React.Component {
 
   originalCountry = "";
   originalProvince = "";
@@ -88,14 +89,11 @@ class Ubicacion extends React.Component {
       const address = clientInfo.addresses[0];
       if (address) {
 
-        console.log(contactCountry.value);
-
         if (this.firstTime) {
           this.originalCountry = contactCountry.value;
           this.originalProvince = contactProvince.value;
           this.originalAddress = contactAddress.value;
           this.originalNeighborhood = contactNeighborhood.value;
-
           this.firstTime = false;
         }
 
@@ -103,7 +101,6 @@ class Ubicacion extends React.Component {
         contactProvince.onChange(address.province);
         contactAddress.onChange(address.address);
         contactNeighborhood.onChange(address.neighborhood);
-
         newCity = address.city;
       } else {
         swtShowMessage('error', 'Ubicación vacía', 'Señor Usuario, el cliente en el que está ubicado no tiene datos de ubicación en la Sede Principal');
@@ -113,7 +110,6 @@ class Ubicacion extends React.Component {
       contactProvince.onChange(this.originalProvince);
       contactAddress.onChange(this.originalAddress);
       contactNeighborhood.onChange(this.originalNeighborhood);
-
       newCity = this.originalCity;
     }
 

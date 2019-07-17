@@ -2,7 +2,7 @@ import {APP_URL} from '../../constantsGlobal';
 import {CLEAR_CONTACT_ORDER,CLEAR_CONTACT_CREAR,ORDER_COLUMN,GET_CONTACT_LIST_CLIENT,CHANGE_KEYWORD_CONTACT,CHANGE_PAGE,LIMITE_INF,CLEAR_CONTACT,CLEAR_CONTACT_PAGINATOR} from './constants';
 import axios from 'axios';
 
-export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm,functionId,lobId,typeOfContactId){
+export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm,functionId,lobId,typeOfContactId,outdatedContact){
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionTokenFront'),
@@ -27,6 +27,7 @@ export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,
        "functionId" : functionId,
        "lobId" : lobId,
        "typeOfContactId": typeOfContactId,
+       "outdatedContact": outdatedContact,
    }
   }
 

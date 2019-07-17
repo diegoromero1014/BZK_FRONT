@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import { consultParameterServer } from '../../actionsGlobal';
 import { GREEN_COLOR, MESSAGE_LOAD_DATA } from "../../constantsGlobal";
 import { URL_VISOR_PARAMETER, URL_VISOR_DOCUMENT_PARAMETER, URL_VISOR_DOCUMENT_TYPE_PARAMETER } from "./constants";
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _CLIENT_VISOR } from "../../constantsAnalytics";
 
 class buttonClientVisorComponent extends Component {
 
@@ -22,7 +23,11 @@ class buttonClientVisorComponent extends Component {
     openModal() {
         this.setState({
             modalIsOpen: true
-        })
+        });
+        window.dataLayer.push({
+            'nombreflujo': nombreflujoAnalytics,
+            'event': BIZTRACK_MY_CLIENTS + _CLIENT_VISOR,
+        });
     }
 
     closeModal() {

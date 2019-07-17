@@ -14,6 +14,7 @@ import {AEC_STATUS, AEC_LEVEL} from '../../selectsComponent/constants';
 import {ACTIVE_STATE} from './constants';
 import {VIEW_AEC} from '../../modal/constants';
 import {swtShowMessage} from '../../sweetAlertMessages/actions';
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _AEC } from '../../../constantsAnalytics';
 
 class ListAECComponent extends Component {
 
@@ -23,6 +24,10 @@ class ListAECComponent extends Component {
     }
 
     componentWillMount() {
+        window.dataLayer.push({
+            'nombreflujo': nombreflujoAnalytics,
+            'event': BIZTRACK_MY_CLIENTS + _AEC,
+        });
         const {getAssetsAEC, getMasterDataFields, showLoading, clearListAEC, swtShowMessage} = this.props;
         clearListAEC();
         showLoading(true, MESSAGE_LOAD_DATA);

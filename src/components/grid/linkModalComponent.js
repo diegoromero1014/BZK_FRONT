@@ -102,7 +102,7 @@ class LinkModalComponent extends Component {
 
     _resetPageModule() {
         const {contactsByFunctionOrType,contactsByFunctionOrTypeFindServer} = this.props;
-        contactsByFunctionOrTypeFindServer(contactsByFunctionOrType.get('idFunction'), contactsByFunctionOrType.get('idType'), contactsByFunctionOrType.get('pageNum') , NUMBER_RECORDS, 0, '');
+        contactsByFunctionOrTypeFindServer(contactsByFunctionOrType.get('idFunction'), contactsByFunctionOrType.get('idType'), contactsByFunctionOrType.get('idPosition'), contactsByFunctionOrType.get('idDependency'), contactsByFunctionOrType.get('pageNum') , NUMBER_RECORDS, 0, '');
         this.setState({modalIsOpen: false});
     }
 

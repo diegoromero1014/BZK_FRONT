@@ -56,10 +56,12 @@ class ListContactsByFunctionOrType extends Component {
 
         const idFunction = contactsByFunctionOrType.get('idFunction');
         const idType = contactsByFunctionOrType.get('idType');
+        const idPosition = contactsByFunctionOrType.get('idPosition');
+        const idDependency = contactsByFunctionOrType.get('idDependency');
         const page = contactsByFunctionOrType.get('pageNum');
 
         showLoading(true, 'Cargando..');
-        contactsByFunctionOrTypeFindServer(idFunction, idType, page, NUMBER_RECORDS, orderContacts, columnContact).then((data) => {
+        contactsByFunctionOrTypeFindServer(idFunction, idType, idPosition, idDependency, page, NUMBER_RECORDS, orderContacts, columnContact).then((data) => {
             if (has(data, 'payload.data')) {
                 showLoading(false, null);
             }
@@ -103,6 +105,14 @@ class ListContactsByFunctionOrType extends Component {
             {
                 title: "Correo del contacto",
                 key: "contactEmail"
+            },
+            {
+                title: "Particularidad",
+                key: "contactRelevantFeatures"
+            },
+            {
+                title: "Desactualizado",
+                key: "updatedInfo"
             }
         ];
 

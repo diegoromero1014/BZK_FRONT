@@ -15,6 +15,7 @@ import BtnDeleteComponentNew from './buttonDeleteLocalComponent';
 import CheckComponent from './checkComponent';
 import TdConfidentialComponent from './tdConfidentialComponent';
 import TdParticularityComponent from './tdParticularityComponent';
+import TdUpdatedInfoComponent from './tdUpdatedInfoComponent';
 
 import { ACTION_CHECK } from './constants';
 
@@ -76,8 +77,10 @@ class GridComponent extends Component {
         cell = _.get(row, 'deleteLocal.component');
       } else if (value.key === 'commercialReport.isConfidential'){
         cell = <TdConfidentialComponent key={idx} columnRow={_.get(row, value.key) ? 'Confidencial': ''} styles={value.style}/>
-      } else if (value.key === 'contactRelevantFeatures'){
+      } else if (value.key === 'contactRelevantFeatures'){ 
         cell = <TdParticularityComponent key={idx} columnRow={_.get(row, value.key) ? _.get(row, value.key): ''} styles={value.style}/>
+      } else if (value.key === 'updatedInfo'){ 
+        cell = <TdUpdatedInfoComponent key={idx} columnRow={_.get(row, value.key)  ? '' : _.get(row, 'updatedInfoDesc')} styles={value.style}/>
       } else {
         cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} toolTip={_.get(row, 'toolTip')} headerToolTip={_.get(row, 'headerTooltip')} styles={value.style} />
       } 

@@ -15,7 +15,13 @@ import { validatePermissionsByModule } from '../../actionsGlobal';
 import { contactsByClientFindServer, clearContact } from './actions';
 
 import { MODULE_CONTACTS, CREAR } from '../../constantsGlobal';
-import { FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, NUMBER_RECORDS } from './constants';
+import _ from "lodash";
+import { FILTER_OUTDATE_CONTACT, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, NUMBER_RECORDS } from './constants';
+
+const valuesYesNo = [
+  { 'id': "0", 'value': "Si"},
+  { 'id': "1", 'value': "No"}
+];
 
 class ContactComponent extends Component {
 
@@ -25,7 +31,8 @@ class ContactComponent extends Component {
       openMessagePermissions: false,
       value1: "",
       value2: "",
-      value3: ""
+      value3: "",
+      value4: ""
     };
   }
 
@@ -35,7 +42,7 @@ class ContactComponent extends Component {
     } else {
       const { contactsByClientFindServer, clearContact, validatePermissionsByModule } = this.props;
       clearContact();
-      contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
+      contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "", "");
       validatePermissionsByModule(MODULE_CONTACTS).then((data) => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
@@ -67,6 +74,7 @@ class ContactComponent extends Component {
                   value1={this.state.value1}
                   value2={this.state.value2}
                   value3={this.state.value3}
+                  value4={this.state.value4}
                 />
               </Col>
               {_.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), CREAR), false) &&
@@ -92,6 +100,14 @@ class ContactComponent extends Component {
                 }}
                   idTypeFilter={FILTER_TYPE_CONTACT_ID} />
               </Col>
+              <Col xs><span style={{ fontWeight: 'bold', color: '#4C5360' }}>Contactos desactualizados:</span>
+                <SelectFilterContact config={{
+                  onChange: (value) => this.setState({ value4: value.id })
+                  }}
+                  dataDefault={valuesYesNo}
+                  idTypeFilter={FILTER_OUTDATE_CONTACT}
+                  />
+              </Col>
             </Row>
           </Grid>
         </div>
@@ -101,10 +117,12 @@ class ContactComponent extends Component {
               <ListContactComponent
                 value1={this.state.value1}
                 value2={this.state.value2}
-                value3={this.state.value3} />
+                value3={this.state.value3}
+                value4={this.state.value4} />
               <PaginationContactComponent value1={this.state.value1}
                 value2={this.state.value2}
                 value3={this.state.value3}
+                value4={this.state.value4}
               />
             </Col>
           </Row>

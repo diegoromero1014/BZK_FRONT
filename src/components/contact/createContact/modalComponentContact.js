@@ -251,7 +251,8 @@ class ModalComponentContact extends Component {
             "attitudeOverGroup": tipoActitud.value,
             "contactRelevantFeatures": contactRelevantFeatures.value,
             "callFromModuleContact": false,
-            "favoritesGroups": JSON.parse('[' + ((_.isNull(listaFavoritos) || _.isUndefined(listaFavoritos)) ? "" : listaFavoritos.value) + ']')
+            "favoritesGroups": JSON.parse('[' + ((_.isNull(listaFavoritos) || _.isUndefined(listaFavoritos)) ? "" : listaFavoritos.value) + ']'),
+            "updatedInfo" : true
         };
 
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -262,7 +263,7 @@ class ModalComponentContact extends Component {
             } else {
                 if ((_.get(data, 'payload.data.status') === 200)) {
                     this.setState({ showEx: true });
-                    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
+                    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "", "");
                 } else {
                     this.setState({ showEr: true });
                 }

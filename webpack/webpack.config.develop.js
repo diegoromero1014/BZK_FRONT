@@ -126,7 +126,7 @@ var webpack = require('webpack'),
             new HtmlWebpackPlugin({
                 title: 'Biztrack',
                 inject: 'body',
-                template: 'src/lib/indexQADev.ejs',
+                template: 'src/lib/indexDev.ejs',
             })
         ]
     };
