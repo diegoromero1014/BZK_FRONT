@@ -13,6 +13,7 @@ import {
   GET_XLS_TASK
 } from './constants';
 import axios from 'axios';
+import { downloadReport } from '../../../utils';
 
 export function tasksByUser(pageNum, maxRows, keyWord, orderMyPending, columnMyPending) {
   const json = {
@@ -287,4 +288,31 @@ export function getXlsTask(initialDate, finalDate, states) {
         "states": states
      }
   }
+}
+
+export function downloadPendingTask(listTask,changeStateSaveData) {
+  const name = "TareasPendientes.xlsx";
+
+  const payload = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "name": name,
+      "route": "BiztrackReports/pendingTask.jrxml",
+      "params": {},
+      "source": listTask
+    }
+  };
+
+  downloadReport(payload, "/generate/XLSX", name,changeStateSaveData);
 }

@@ -37,7 +37,8 @@ import {
     clearMyPendingTeamPaginator,
     clearOnlyListPendingTaskTeam,
     clearMyPendingsTeamOrder,
-    clearPendingTaskTeam
+    clearPendingTaskTeam,
+    downloadPendingTask
 } from "./actions";
 
 import { TASK_STATUS, LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE_REGION_ZONE } from '../../selectsComponent/constants';
@@ -107,16 +108,11 @@ class ModalComponentPending extends Component {
     }
 
     _downloadPendingTask() {
-        const { getDownloadPendingTask, changeStateSaveData, swtShowMessage } = this.props;
-        changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-        getDownloadPendingTask().then((data) => {
-            changeStateSaveData(false, "");
-            if (validateResponse(data)) {
-                window.open(APP_URL + '/getExcelReport?filename=' + _.get(data, 'payload.data.data.filename', null) + '&id=' + _.get(data, 'payload.data.data.sessionToken', null), '_blank');
-            } else {
-                swtShowMessage('error', 'Error descargando tareas', 'Señor usuario, ocurrió un error al tratar de descargar las tareas pendientes.');
-            }
-        });
+         const { changeStateSaveData } = this.props;
+        const {myPendingsReducer} = this.props;
+        const myPendings = !this.state.teamViewTask ? myPendingsReducer.get('pendingTaskListByUser'):myPendingsReducer.get('pendingTaskTeamListByUser');
+
+        downloadPendingTask(myPendings,changeStateSaveData);
     }
 
     componentWillMount() {
