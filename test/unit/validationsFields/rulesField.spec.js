@@ -418,7 +418,7 @@ describe('Test checkEmail white list validation', () => {
 describe('Test checkContactRelevantFeatures white list validation', () => {
     it('should throw error when value has special characters', () => {
         const value = '=<>#$#!%&/ this value contains special characters. ¿?°#=:´+_';
-        const expectedMessage = MESSAGE_WARNING_RELEVANT_FEATURES;
+        const expectedMessage = null;
         expect(checkContactRelevantFeatures(value)).equal(expectedMessage);
     });
 
