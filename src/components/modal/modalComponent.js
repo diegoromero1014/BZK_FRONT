@@ -65,10 +65,10 @@ class ModalComponentDialog extends Component {
 
     _contectViewModal(actions, idx) {
         var cell;
-        const { closeModal } = this.props;
+        const { closeModal, origin } = this.props;
         switch (actions.component) {
             case views.VIEW_CONTACT:
-                cell = <ContactDetailsModalComponent contactId={actions.id} isOpen={this.closeModal} />;
+                cell = <ContactDetailsModalComponent contactId={actions.id} isOpen={this.closeModal} origin={origin}/>;
                 break;
             case views.VIEW_SHAREHOLDER:
                 cell = <ComponentShareHolderDetail shareHolderId={actions.id} isOpen={this.closeModal} />;

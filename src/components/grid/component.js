@@ -32,14 +32,14 @@ class GridComponent extends Component {
     return <HeaderComponent key={idx} titleColumn={header.title} orderColumn={header.orderColumn} width={header.width} />;
   }
 
-  _renderCell(row, headers, modalTitle) {    
+  _renderCell(row, headers, modalTitle, origin) {    
     return headers.map((value, idx) => {      
       let cell;
       if (value.key === ACTION_CHECK) {
         const info = _.get(row, ACTION_CHECK, {});
         cell = <CheckComponent key={idx} fn={info.fn} args={info.argsFn} isChecked={info.isChecked} />
-      } else if (value.key === 'actions') {
-        cell = <ModalComponent key={idx} idModal={_.uniqueId()} modalTitle={modalTitle} actions={_.get(row, value.key)} />
+      } else if (value.key === 'actions') {        
+        cell = <ModalComponent key={idx} idModal={_.uniqueId()} modalTitle={modalTitle} actions={_.get(row, value.key)} origin={origin} />
       } else if (value.key === 'trafficLight') {
         cell = <TrafficLightComponent key={idx} colorTraffict={_.get(row, value.key)} />
       } else if (value.key === 'delete' && _.get(row, value.key)) {
@@ -90,11 +90,11 @@ class GridComponent extends Component {
     });
   }
 
-  _renderRow(data, headers, modalTitle) {
+  _renderRow(data, headers, modalTitle, origin) {
     return data.map((value, idx) => {
       return (
         <tr role="row" key={idx}>
-          {this._renderCell(value, headers, modalTitle)}
+          {this._renderCell(value, headers, modalTitle, origin)}
         </tr>
       );
     });
@@ -104,6 +104,7 @@ class GridComponent extends Component {
     const headers = this.props.headers;
     const data = this.props.data;
     const modalTitle = this.props.modalTitle;
+    const origin = this.props.origin;
     return (
       <table width="100%" className="tableBt4 tableBt4-striped has-column-selection dataTable no-footer" id="datagrid-container" role="grid" aria-describedby="datagrid-container_info">
         <thead style={{ color: '#4c5360' }}>
@@ -112,7 +113,7 @@ class GridComponent extends Component {
           </tr>
         </thead>
         <tbody>
-          {this._renderRow(data, headers(), modalTitle)}
+          {this._renderRow(data, headers(), modalTitle, origin)}
         </tbody>
       </table>
     );

@@ -17,6 +17,7 @@ import { contactsByClientFindServer, clearContact } from './actions';
 import { MODULE_CONTACTS, CREAR } from '../../constantsGlobal';
 import _ from "lodash";
 import { FILTER_OUTDATE_CONTACT, FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, NUMBER_RECORDS } from './constants';
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _CONTACT } from '../../constantsAnalytics';
 
 const valuesYesNo = [
   { 'id': "0", 'value': "Si"},
@@ -37,6 +38,12 @@ class ContactComponent extends Component {
   }
 
   componentWillMount() {
+    window.dataLayer.push({
+      'nombreflujo': nombreflujoAnalytics,
+      'event': BIZTRACK_MY_CLIENTS + _CONTACT,
+      'pagina':_CONTACT
+
+    });
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
@@ -118,7 +125,8 @@ class ContactComponent extends Component {
                 value1={this.state.value1}
                 value2={this.state.value2}
                 value3={this.state.value3}
-                value4={this.state.value4} />
+                value4={this.state.value4}
+                origin ={'clientInformation'} />
               <PaginationContactComponent value1={this.state.value1}
                 value2={this.state.value2}
                 value3={this.state.value3}

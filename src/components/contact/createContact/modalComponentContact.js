@@ -7,6 +7,9 @@ import { OrderedMap } from 'immutable';
 import moment from 'moment';
 import _ from 'lodash';
 
+import Ubicacion from '../contactDetail/ubicacion';
+
+import {Checkbox} from 'semantic-ui-react';
 import SweetAlert from '../../sweetalertFocus';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
@@ -69,13 +72,11 @@ class ModalComponentContact extends Component {
         super(props);
         this._close = this._close.bind(this);
         this._closeCreate = this._closeCreate.bind(this);
-        this._handleCreateContact = this._handleCreateContact.bind(this);
-        this._onChangeCountry = this._onChangeCountry.bind(this);
-        this._onChangeProvince = this._onChangeProvince.bind(this);
+        this._handleCreateContact = this._handleCreateContact.bind(this);                
         this._searchContact = this._searchContact.bind(this);
         this._genero = this._genero.bind(this);
         this._onClickLimpiar = this._onClickLimpiar.bind(this);
-        this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);
+        this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);        
         this.state = {
             showEx: false,
             showEr: false,
@@ -90,8 +91,8 @@ class ModalComponentContact extends Component {
             showCam: false,
             showErrorXss: false,
             showErrorForm: false,
-            showErrorFormInvalidValue: false
-
+            showErrorFormInvalidValue: false,
+            correspondenceAddressCopy:false,
         };
         momentLocalizer(moment);
         thisForm = this;
@@ -144,25 +145,6 @@ class ModalComponentContact extends Component {
             this.setState({ generoData: '' });
             tipoGenero.onChange('');
         }
-    }
-
-    _onChangeCountry(val) {
-        const { fields: { pais, departamento, ciudad } } = this.props;
-        pais.onChange(val);
-        const { consultListWithParameterUbication } = this.props;
-        consultListWithParameterUbication(FILTER_PROVINCE, pais.value);
-        departamento.onChange('');
-        ciudad.onChange('');
-        this.setState({ disabledDep: '' });
-    }
-
-    _onChangeProvince(val) {
-        const { fields: { departamento, ciudad } } = this.props;
-        departamento.onChange(val);
-        const { consultListWithParameterUbication } = this.props;
-        consultListWithParameterUbication(FILTER_CITY, departamento.value);
-        ciudad.onChange('');
-        this.setState({ disabledCiu: '' });
     }
 
     _closeCreate() {
@@ -307,7 +289,7 @@ class ModalComponentContact extends Component {
             segundoApellido, fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo,
             tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures,
             listaFavoritos
-            }, handleSubmit, reducerGlobal
+            }, handleSubmit, reducerGlobal, clientInfo, consultListWithParameterUbication
         } = this.props;
 
         return (
@@ -503,80 +485,14 @@ class ModalComponentContact extends Component {
                         </Row>
                     </div>
                     <dt style={{ visibility: this.state.noExiste }} className="col-md-12 business-title">
-                        Información de ubicación y correspondencia
+                        Información de ubicación y correspondencia 
                     </dt>
+                    <div style={{ visibility: this.state.noExiste }}>
+                        <Ubicacion fields={ { "contactCountry": pais, "contactProvince": departamento ,"contactCity": ciudad, "contactAddress": direccion, "contactNeighborhood": barrio }} selectsReducer={selectsReducer} 
+                            isEditable={true} clientInfo={clientInfo} consultListWithParameterUbication={consultListWithParameterUbication} origin={'createContact'}
+                        />
+                    </div>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px', visibility: this.state.noExiste }}>
-                        <Row>
-                            <Col xs>
-                                <dl style={{ width: '100%' }}>
-                                    <dt><span>País (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                    <dd><ComboBox
-                                        name="pais"
-                                        labelInput="Seleccione"
-                                        {...pais}
-                                        onChange={val => this._onChangeCountry(val)}
-                                        value={pais.value}
-                                        onBlur={pais.onBlur}
-                                        valueProp={'id'}
-                                        textProp={'value'}
-                                        data={selectsReducer.get(FILTER_COUNTRY) || []}
-                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'pais')}
-                                    /></dd>
-                                </dl>
-                            </Col>
-                            <Col xs>
-                                <dl style={{ width: '100%' }}>
-                                    <dt><span>Departamento (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                    <dd><ComboBox
-                                        name="departamento"
-                                        labelInput="Seleccione"
-                                        {...departamento}
-                                        disabled={this.state.disabledDep}
-                                        onChange={val => this._onChangeProvince(val)}
-                                        value={departamento.value}
-                                        onBlur={departamento.onBlur}
-                                        valueProp={'id'}
-                                        textProp={'value'}
-                                        data={selectsReducer.get('dataTypeProvince') || []}
-                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'departamento')}
-                                    /></dd>
-                                </dl>
-                            </Col>
-                            <Col xs>
-                                <dl style={{ width: '100%' }}>
-                                    <dt><span>Ciudad (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                    <dd><ComboBox
-                                        name="ciudad"
-                                        disabled={this.state.disabledCiu}
-                                        labelInput="Seleccione"
-                                        {...ciudad}
-                                        valueProp={'id'}
-                                        textProp={'value'}
-                                        data={selectsReducer.get('dataTypeCity') || []}
-                                        shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'ciudad')}
-                                    /></dd>
-                                </dl>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col xs>
-                                <dl style={{ width: '100%' }}>
-                                    <dt><span>Dirección (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                    <dd>
-                                        <TextareaComponent
-                                            name="direccion"
-                                            validateEnter={true}
-                                            type="text"
-                                            max="60"
-                                            style={{ width: '100%', height: '100%' }}
-                                            onChange={val => this._onchangeValue("direccion", val)}
-                                            rows={4}
-                                            {...direccion}
-                                            shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'direccion')}
-                                        /></dd>
-                                </dl>
-                            </Col>
-                        </Row>
                         <Row>
                             <Col xs>
                                 <dl style={{ width: '100%' }}>
@@ -733,7 +649,7 @@ class ModalComponentContact extends Component {
                                     <dd>
                                         <TextareaComponent
                                             name="contactRelevantFeatures"
-                                            validateEnter={true}
+                                            validateEnter={false}
                                             type="text"
                                             max="1000"
                                             style={{ width: '100%', height: '100%' }}
@@ -822,8 +738,11 @@ class ModalComponentContact extends Component {
     }
 }
 
-function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal, groupsFavoriteContacts }, { fields }) {
+function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal, groupsFavoriteContacts,clientInformacion }, { fields }) {
     const contactDetail = !createContactReducer.get('isClientContact') ? createContactReducer.get('responseSearchContactData') : false;
+    const clientInfo = Object.assign({}, clientInformacion.get('responseClientInfo'));
+    
+
     if (contactDetail && contactDetail.contactIdentityNumber) {
         return {
             selectsReducer,
@@ -860,14 +779,16 @@ function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal, 
                 tipoEntidad: JSON.parse('["' + _.join(contactDetail.lineOfBusiness, '","') + '"]'),
                 tipoFuncion: contactDetail.function !== null && contactDetail.function !== "" && contactDetail.function !== undefined ? JSON.parse('["' + _.join(contactDetail.function, '","') + '"]') : contactDetail.function,
                 tipoDeporte: JSON.parse('["' + _.join(contactDetail.sports, '","') + '"]'),
-                listaFavoritos: JSON.parse('["' + _.join(contactDetail.favoritesGroups, '","') + '"]')
-            }
+                listaFavoritos: JSON.parse('["' + _.join(contactDetail.favoritesGroups, '","') + '"]')                
+            },
+            clientInfo
         };
     } else {
         return {
             selectsReducer,
             reducerGlobal,
             groupsFavoriteContacts,
+            clientInfo,
             initialValues: {
                 tipoDocumento: '',
                 numeroDocumento: ''
@@ -892,7 +813,7 @@ function mapDispatchToProps(dispatch) {
         downloadFilePDF,
         changeStateSaveData,
         nonValidateEnter,
-        getListContactGroupById,
+        getListContactGroupById
     }, dispatch);
 }
 
