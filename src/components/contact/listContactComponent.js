@@ -160,11 +160,11 @@ class ListContactComponent extends Component {
   }
 
   render() {
-    const { contactsByClient } = this.props;
+    const { contactsByClient, origin } = this.props;
     const modalTitle = 'Contacto Detalle';
     const data = contactsByClient.get('contacts');
     return (<div className="horizontal-scroll-wrapper" style={{ overflow: 'scroll' }}>
-      <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} />
+      <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} origin={origin} />
     </div>
     );
   }
