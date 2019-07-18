@@ -24,7 +24,6 @@ export class Ubicacion extends React.Component {
   originalCity = "";
   originalNeighborhood = "";
   originalAddress = "";
-
   firstTime = true;
 
   constructor(props) {
@@ -79,20 +78,27 @@ export class Ubicacion extends React.Component {
         contactAddress,
         contactNeighborhood
       },
-      clientInfo
+      clientInfo,
+      swtShowMessage
     } = this.props;
 
     var newCity = "";
 
     if (data.checked) {
       const address = clientInfo.addresses[0];
-      if (address) {
 
+      if ((!_.isNull(address.country) || _.isUndefined(address.country) || !_.isEmpty(address.country) && 
+          (!_.isNull(address.province) || _.isUndefined(address.province) || !_.isEmpty(address.province)) && 
+          (!_.isNull(address.address) || _.isUndefined(address.address) || !_.isEmpty(address.address)) &&
+          (!_.isNull(address.neighborhood) || _.isUndefined(address.neighborhood) || !_.isEmpty(address.neighborhood)) &&
+          (!_.isNull(address.city) || _.isUndefined(address.city) || !_.isEmpty(address.city))))
+      {
         if (this.firstTime) {
           this.originalCountry = contactCountry.value;
           this.originalProvince = contactProvince.value;
           this.originalAddress = contactAddress.value;
           this.originalNeighborhood = contactNeighborhood.value;
+          this.originalCity = contactCity.value;
           this.firstTime = false;
         }
 
@@ -101,8 +107,12 @@ export class Ubicacion extends React.Component {
         contactAddress.onChange(address.address);
         contactNeighborhood.onChange(address.neighborhood);
         newCity = address.city;
+        setTimeout(() => {
+          contactCity.onChange(newCity);
+          this.forceUpdate();
+        }, 1000);
       } else {
-        swtShowMessage('error', 'Ubicación vacía', 'Señor Usuario, el cliente en el que está ubicado no tiene datos de ubicación en la Sede Principal');
+        swtShowMessage('error', 'Ubicación vacía', 'Señor usuario, este cliente no cuenta con información de ubicación');
       }
     } else {
       contactCountry.onChange(this.originalCountry);
@@ -110,12 +120,27 @@ export class Ubicacion extends React.Component {
       contactAddress.onChange(this.originalAddress);
       contactNeighborhood.onChange(this.originalNeighborhood);
       newCity = this.originalCity;
+      setTimeout(() => {
+        contactCity.onChange(newCity);
+        this.forceUpdate();
+      }, 1000);
     }
 
-    setTimeout(() => {
-      contactCity.onChange(newCity);
-      this.forceUpdate();
-    }, 1000);
+  }
+
+  _renderCheckbox(){
+    const {origin} = this.props;
+    if(origin === 'clientInformation' || origin === 'createContact'){
+      return (<Col xs={12} sm={12} md={3} lg={3}>
+      <Tooltip text="Al activar el campo, se copiará la información de ubicación de la sede principal del cliente seleccionado (dirección, país, ciudad, departamento y barrio)">
+        <Checkbox
+          onChange={(e, data) => this.handleChecked(e, data)}
+          label={"Copiar ubicación"}
+          toggle
+        />
+      </Tooltip>
+    </Col>)
+    }
   }
 
   render() {
@@ -127,7 +152,8 @@ export class Ubicacion extends React.Component {
         contactAddress        
       },
       selectsReducer,
-      isEditable
+      isEditable,
+      origin
     } = this.props;
 
     return (
@@ -139,15 +165,8 @@ export class Ubicacion extends React.Component {
             marginTop: "10px"
           }}
         >
-          <Col xs={12} sm={12} md={3} lg={3}>
-            <Tooltip text="Al activar el campo, se copiará la información de ubicación de la sede principal del cliente seleccionado (dirección, país, ciudad, departamento y barrio)">
-              <Checkbox
-                onChange={(e, data) => this.handleChecked(e, data)}
-                label={"Copiar ubicación"}
-                toggle
-              />
-            </Tooltip>
-          </Col>
+        {this._renderCheckbox()}
+          
           <Row>
             <Col xs={12} sm={12} md={6} lg={4}>
               <dt>

@@ -489,7 +489,7 @@ class ModalComponentContact extends Component {
                     </dt>
                     <div style={{ visibility: this.state.noExiste }}>
                         <Ubicacion fields={ { "contactCountry": pais, "contactProvince": departamento ,"contactCity": ciudad, "contactAddress": direccion, "contactNeighborhood": barrio }} selectsReducer={selectsReducer} 
-                            isEditable={true} clientInfo={clientInfo} consultListWithParameterUbication={consultListWithParameterUbication} 
+                            isEditable={true} clientInfo={clientInfo} consultListWithParameterUbication={consultListWithParameterUbication} origin={'createContact'}
                         />
                     </div>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px', visibility: this.state.noExiste }}>

@@ -454,7 +454,7 @@ export class ContactDetailsModalComponent extends Component {
             contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress,
             contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies, contactSports,
                 contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures, updateCheckObservation
-            }, handleSubmit, selectsReducer, reducerGlobal, clientInfo, consultListWithParameterUbication
+            }, handleSubmit, selectsReducer, reducerGlobal, clientInfo, consultListWithParameterUbication, origin
         } = this.props;
 
         return (
@@ -720,7 +720,7 @@ export class ContactDetailsModalComponent extends Component {
                     <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información de ubicación y correspondencia</span>
                     </dt>               
                     <Ubicacion fields={ { contactCountry, contactProvince, contactCity, contactAddress, contactNeighborhood }} selectsReducer={selectsReducer} 
-                        isEditable={this.state.isEditable} clientInfo={clientInfo} consultListWithParameterUbication={consultListWithParameterUbication} 
+                        isEditable={this.state.isEditable} clientInfo={clientInfo} consultListWithParameterUbication={consultListWithParameterUbication} origin={origin}
                     />
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>

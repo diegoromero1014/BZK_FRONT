@@ -8,8 +8,9 @@ import { createFieldsFromArray } from "~/test/helpers/ReduxFormField.js";
 
 const fields = createFieldsFromArray(["contactCountry", "contactProvince", "contactCity"]);
 const selectsReducer = Immutable.Map({});
+const origin ='clientInformation';
 
-const defaultProps = {fields: fields, selectsReducer};
+const defaultProps = {fields: fields, selectsReducer, origin};
 describe('Test Contact/ContactDetail/CheckUbicacion', () => {
 
     it('should render check: Cuando renderizo ubicacion', () => {
