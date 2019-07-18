@@ -125,7 +125,8 @@ class ContactComponent extends Component {
                 value1={this.state.value1}
                 value2={this.state.value2}
                 value3={this.state.value3}
-                value4={this.state.value4} />
+                value4={this.state.value4}
+                origin ={'clientInformation'} />
               <PaginationContactComponent value1={this.state.value1}
                 value2={this.state.value2}
                 value3={this.state.value3}
