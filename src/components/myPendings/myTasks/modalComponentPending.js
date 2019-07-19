@@ -107,12 +107,23 @@ class ModalComponentPending extends Component {
         }
     }
 
-    _downloadPendingTask() {
-         const { changeStateSaveData } = this.props;
-        const {myPendingsReducer} = this.props;
-        const myPendings = !this.state.teamViewTask ? myPendingsReducer.get('pendingTaskListByUser'):myPendingsReducer.get('pendingTaskTeamListByUser');
+    // _downloadPendingTask() {
+    //      const { changeStateSaveData } = this.props;
+    //     const {myPendingsReducer} = this.props;
+    //     const myPendings = !this.state.teamViewTask ? myPendingsReducer.get('pendingTaskListByUser'):myPendingsReducer.get('pendingTaskTeamListByUser');
 
-        downloadPendingTask(myPendings,changeStateSaveData);
+    //     downloadPendingTask(myPendings,changeStateSaveData);
+    // }
+
+    _downloadPendingTask() {
+        const { fields: { region, zone, team, taskStatus, dateTaskTeam, idUsuario }, getDownloadPendingTask, changeStateSaveData, swtShowMessage } = this.props;
+        console.log("download");
+        changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
+        getDownloadPendingTask(region.value, zone.value, team.value, taskStatus.value, dateTaskTeam.value, idUsuario.value).then((data) => {
+            changeStateSaveData(false, "");
+            console.log(data);
+            
+        });
     }
 
     componentWillMount() {

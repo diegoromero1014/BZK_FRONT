@@ -148,7 +148,7 @@ export function clearOnlyListPendingTask() {
   };
 }
 
-export function getDownloadPendingTask() {
+export function getDownloadPendingTask(region, zone, team, taskStatus, dateTaskTeam, idUsuario) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionTokenFront'),
@@ -163,11 +163,20 @@ export function getDownloadPendingTask() {
       "isSuccessful": true
     },
     "messageBody": {
-      
+      "pageNum": '',
+      "maxRows": '',
+      'region': region,
+      'zone': zone,
+      'team': team,
+      'taskStatus': taskStatus,
+      'dateTaskTeam': dateTaskTeam,
+      'idUsuario': idUsuario,
+      "order": '',
+      "columnOrder": ''
     }
   };
 
-  let request = axios.post(APP_URL + "/downloadPendingTaskRaw", json);
+  let request = axios.post(APP_URL + "/downloadPendingsTasksTeam", json);
   return {
     type: GET_DOWNLOAD_PENDINGS_TASKS,
     payload: request
