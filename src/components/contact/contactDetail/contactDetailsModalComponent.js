@@ -1051,6 +1051,7 @@ export default reduxForm({
     destroyOnUnmount: true,
     validate,
     onSubmitFail: errors => {
+        console.log(errors);
         document.getElementById('modalEditCotact').scrollTop = 0;
         let arrErrors = Object.keys(errors).map(i => errors[i]);
         let hasInvalidValues = Object.keys(errors).filter(item => (errors[item] ? errors[item] : "").indexOf(MESSAGE_WARNING_FORBIDDEN_CHARACTER_PREFIX) > -1);

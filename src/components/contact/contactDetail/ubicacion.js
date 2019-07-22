@@ -33,6 +33,7 @@ export class Ubicacion extends React.Component {
     this.handleChecked = this.handleChecked.bind(this);
     this.onChangeCity = this.onChangeCity.bind(this);
     this.changeCheckBox = this.changeCheckBox.bind(this);
+    this.changeCityWhenClearUbication = this.changeCityWhenClearUbication.bind(this);
 
     this.state = {
       checked: false
@@ -112,19 +113,16 @@ export class Ubicacion extends React.Component {
         contactNeighborhood.onChange(address.neighborhood);
         newCity = address.city;
 
-        setTimeout(() => {
-          contactCity.onChange(newCity);
-          this.forceUpdate();
-        }, 1000);
+        this.changeCityWhenClearUbication(contactCity, newCity);
     
     } else {
         contactCountry.onChange(this.originalCountry);
         consultListWithParameterUbication(FILTER_PROVINCE, this.originalCountry).then(() => {
-        contactProvince.onChange(this.originalProvince);
-        consultListWithParameterUbication(FILTER_CITY, this.originalProvince).then(() => {
-        contactProvince.onChange(this.originalProvince);
-        contactCity.onChange(this.originalCity);
-        })
+          contactProvince.onChange(this.originalProvince);
+          consultListWithParameterUbication(FILTER_CITY, this.originalProvince).then(() => {
+            contactProvince.onChange(this.originalProvince);
+            this.changeCityWhenClearUbication(contactCity, this.originalCity);
+          })
       });
 
       contactAddress.onChange(this.originalAddress);
@@ -132,6 +130,15 @@ export class Ubicacion extends React.Component {
       newCity = this.originalCity;
     }
 
+    
+
+  }
+
+  changeCityWhenClearUbication(city, newValue) {
+      setTimeout(() => {
+        city.onChange(newValue);
+        this.forceUpdate();
+      }, 1000);
   }
 
   changeCheckBox() {
