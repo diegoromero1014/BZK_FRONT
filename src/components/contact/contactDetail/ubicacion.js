@@ -32,6 +32,12 @@ export class Ubicacion extends React.Component {
     this.onChangeProvince = this.onChangeProvince.bind(this);
     this.handleChecked = this.handleChecked.bind(this);
     this.onChangeCity = this.onChangeCity.bind(this);
+    this.changeCheckBox = this.changeCheckBox.bind(this);
+
+    this.state = {
+      checked: false
+    }
+
   }
 
   onChangeCountry(val) {
@@ -39,12 +45,14 @@ export class Ubicacion extends React.Component {
       fields: { contactCountry, contactProvince, contactCity },
       consultListWithParameterUbication
     } = this.props;
+
     if (val !== undefined && val !== null) {
       contactCountry.onChange(val);
       consultListWithParameterUbication(FILTER_PROVINCE, val);
+      contactProvince.onChange("");
+      contactCity.onChange("");
     }
-    contactProvince.onChange("");
-    contactCity.onChange("");
+    
   }
 
   onChangeProvince(val) {
@@ -52,11 +60,13 @@ export class Ubicacion extends React.Component {
       fields: { contactProvince, contactCity },
       consultListWithParameterUbication
     } = this.props;
+
     if (val !== undefined && val !== null) {
       contactProvince.onChange(val);
       consultListWithParameterUbication(FILTER_CITY, val);
+      contactCity.onChange("");
     }
-    contactCity.onChange("");
+    
   }
 
   onChangeCity(val) {
@@ -79,20 +89,14 @@ export class Ubicacion extends React.Component {
         contactNeighborhood
       },
       clientInfo,
-      swtShowMessage
+      consultListWithParameterUbication
     } = this.props;
 
     var newCity = "";
 
-    if (data.checked) {
-      const address = clientInfo.addresses[0];
+    const address = clientInfo.addresses[0];
+      if (data.checked) {
 
-      if ((!_.isNull(address.country) || _.isUndefined(address.country) || !_.isEmpty(address.country) && 
-          (!_.isNull(address.province) || _.isUndefined(address.province) || !_.isEmpty(address.province)) && 
-          (!_.isNull(address.address) || _.isUndefined(address.address) || !_.isEmpty(address.address)) &&
-          (!_.isNull(address.neighborhood) || _.isUndefined(address.neighborhood) || !_.isEmpty(address.neighborhood)) &&
-          (!_.isNull(address.city) || _.isUndefined(address.city) || !_.isEmpty(address.city))))
-      {
         if (this.firstTime) {
           this.originalCountry = contactCountry.value;
           this.originalProvince = contactProvince.value;
@@ -107,35 +111,66 @@ export class Ubicacion extends React.Component {
         contactAddress.onChange(address.address);
         contactNeighborhood.onChange(address.neighborhood);
         newCity = address.city;
+
         setTimeout(() => {
           contactCity.onChange(newCity);
           this.forceUpdate();
         }, 1000);
-      } else {
-        swtShowMessage('error', 'Ubicación vacía', 'Señor usuario, este cliente no cuenta con información de ubicación');
-      }
+    
     } else {
-      contactCountry.onChange(this.originalCountry);
-      contactProvince.onChange(this.originalProvince);
+        contactCountry.onChange(this.originalCountry);
+        consultListWithParameterUbication(FILTER_PROVINCE, this.originalCountry).then(() => {
+        contactProvince.onChange(this.originalProvince);
+        consultListWithParameterUbication(FILTER_CITY, this.originalProvince).then(() => {
+        contactProvince.onChange(this.originalProvince);
+        contactCity.onChange(this.originalCity);
+        })
+      });
+
       contactAddress.onChange(this.originalAddress);
       contactNeighborhood.onChange(this.originalNeighborhood);
       newCity = this.originalCity;
-      setTimeout(() => {
-        contactCity.onChange(newCity);
-        this.forceUpdate();
-      }, 1000);
+    }
+
+  }
+
+  changeCheckBox() {
+
+    const { clientInfo, swtShowMessage } = this.props;
+
+    const address = clientInfo.addresses[0];
+
+    if (!this.state.checked) {
+      if ((!_.isNull(address.country) || _.isUndefined(address.country) || !_.isEmpty(address.country) || 
+      (!_.isNull(address.province) || _.isUndefined(address.province) || !_.isEmpty(address.province)) || 
+      (!_.isNull(address.address) || _.isUndefined(address.address) || !_.isEmpty(address.address)) ||
+      (!_.isNull(address.neighborhood) || _.isUndefined(address.neighborhood) || !_.isEmpty(address.neighborhood)) ||
+      (!_.isNull(address.city) || _.isUndefined(address.city) || !_.isEmpty(address.city))))
+      {
+        this.setState({checked: true});
+      } else {
+        
+        swtShowMessage('error', 'Ubicación vacía', 'Señor usuario, este cliente no cuenta con información de ubicación');
+        
+      }
+
+    } else {
+      this.setState({checked: false});
     }
 
   }
 
   _renderCheckbox(){
-    const {origin} = this.props;
+    const {origin, isEditable} = this.props;
     if(origin === 'clientInformation' || origin === 'createContact'){
       return (<Col xs={12} sm={12} md={3} lg={3}>
       <Tooltip text="Al activar el campo, se copiará la información de ubicación de la sede principal del cliente seleccionado (dirección, país, ciudad, departamento y barrio)">
         <Checkbox
           onChange={(e, data) => this.handleChecked(e, data)}
+          onClick={this.changeCheckBox}
+          checked={this.state.checked}
           label={"Copiar ubicación"}
+          disabled={!isEditable}
           toggle
         />
       </Tooltip>
@@ -152,8 +187,7 @@ export class Ubicacion extends React.Component {
         contactAddress        
       },
       selectsReducer,
-      isEditable,
-      origin
+      isEditable
     } = this.props;
 
     return (
@@ -179,9 +213,8 @@ export class Ubicacion extends React.Component {
                   name="contactCountry"
                   labelInput="Seleccione"
                   {...contactCountry}
-                  onChange={val => this.onChangeCountry(val)}
+                  onBlur={val => this.onChangeCountry(val)}
                   value={contactCountry.value}
-                  onBlur={contactCountry.onBlur}
                   valueProp={"id"}
                   textProp={"value"}
                   data={selectsReducer.get(FILTER_COUNTRY)}
@@ -200,9 +233,8 @@ export class Ubicacion extends React.Component {
                   name="contactProvince"
                   labelInput="Seleccione"
                   {...contactProvince}
-                  onChange={val => this.onChangeProvince(val)}
+                  onBlur={val => this.onChangeProvince(val)}
                   value={contactProvince.value}
-                  onBlur={contactProvince.onBlur}
                   valueProp={"id"}
                   textProp={"value"}
                   data={selectsReducer.get("dataTypeProvince")}
