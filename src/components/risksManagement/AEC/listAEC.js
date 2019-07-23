@@ -27,6 +27,8 @@ class ListAECComponent extends Component {
         window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
             'event': BIZTRACK_MY_CLIENTS + _AEC,
+            'pagina':_AEC
+
         });
         const {getAssetsAEC, getMasterDataFields, showLoading, clearListAEC, swtShowMessage} = this.props;
         clearListAEC();
