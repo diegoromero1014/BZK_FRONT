@@ -149,11 +149,10 @@ export class Ubicacion extends React.Component {
     const address = clientInfo.addresses[0];
 
     if (!this.state.checked) {
-      if ((!_.isNull(address.country) || _.isUndefined(address.country) || !_.isEmpty(address.country) || 
-      (!_.isNull(address.province) || _.isUndefined(address.province) || !_.isEmpty(address.province)) || 
-      (!_.isNull(address.address) || _.isUndefined(address.address) || !_.isEmpty(address.address)) ||
-      (!_.isNull(address.neighborhood) || _.isUndefined(address.neighborhood) || !_.isEmpty(address.neighborhood)) ||
-      (!_.isNull(address.city) || _.isUndefined(address.city) || !_.isEmpty(address.city))))
+      if ((!_.isNull(address.country) || _.isUndefined(address.country) || !_.isEmpty(address.country)) && 
+      (!_.isNull(address.province) || _.isUndefined(address.province) || !_.isEmpty(address.province)) && 
+      (!_.isNull(address.address) || _.isUndefined(address.address) || !_.isEmpty(address.address)) &&
+      (!_.isNull(address.city) || _.isUndefined(address.city) || !_.isEmpty(address.city)))
       {
         this.setState({checked: true});
         this.handleChecked(true);
