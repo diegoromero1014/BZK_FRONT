@@ -10,7 +10,8 @@ import {
   CLEAR_PENDING_TASK_TEAM,
   CLEAR_MY_PENDINGS_TEAM_ORDER,
   ORDER_COLUMN_MY_PENDING_TEAM,
-  GET_XLS_TASK
+  GET_XLS_TASK,
+  GET_DOWNLOAD_MY_PENDINGS_TASKS
 } from './constants';
 import axios from 'axios';
 import { downloadReport } from '../../../utils';
@@ -179,6 +180,41 @@ export function getDownloadPendingTask(region, zone, team, taskStatus, dateTaskT
   let request = axios.post(APP_URL + "/downloadPendingsTasksTeam", json);
   return {
     type: GET_DOWNLOAD_PENDINGS_TASKS,
+    payload: request
+  }
+}
+export function getDownloadMyPendingTask(keyWord) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "pageNum": '',
+      "maxRows": '',
+      'region': '',
+      'zone': '',
+      'team': '',
+      'taskStatus': '',
+      'dateTaskTeam': '',
+      'idUsuario': '',
+      "order": '',
+      "columnOrder": '',
+      "keyWord":keyWord
+    }
+  };
+
+  let request = axios.post(APP_URL + "/downloadMyPendingsTasks", json);
+  return {
+    type: GET_DOWNLOAD_MY_PENDINGS_TASKS,
     payload: request
   }
 }
