@@ -7,7 +7,6 @@ import moment from 'moment';
 
 import Ubicacion from './ubicacion';
 
-import Tooltip from '../../toolTip/toolTipComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { Checkbox, Message } from 'semantic-ui-react';
 import Input from '../../../ui/input/inputComponent';
