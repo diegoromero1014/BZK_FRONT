@@ -45,6 +45,7 @@ export function downloadReport(payload, endpoint, filename,changeStateSaveData) 
             }
         } else {
             swtShowMessage('error', 'Error descargando tareas', 'Señor usuario, ocurrió un error al tratar de descargar las tareas pendientes.');
+            changeStateSaveData(false, "");
         }
     };
 

@@ -114,7 +114,6 @@ class ModalComponentPending extends Component {
         changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
         getDownloadPendingTask(region.value, zone.value, team.value, taskStatus.value, dateTaskTeam.value, idUsuario.value).then((data) => {
             downloadPendingTask(data.payload.data.data,changeStateSaveData);
-            changeStateSaveData(false, "");            
         });
     }
 
@@ -123,7 +122,6 @@ class ModalComponentPending extends Component {
         changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
         getDownloadMyPendingTask(this.state.keywordMyPending).then((data)=>{
             downloadPendingTask(data.payload.data.data,changeStateSaveData);
-            changeStateSaveData(false, "");  
         });
     }
 
