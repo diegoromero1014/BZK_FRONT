@@ -37,7 +37,9 @@ import {
     clearMyPendingTeamPaginator,
     clearOnlyListPendingTaskTeam,
     clearMyPendingsTeamOrder,
-    clearPendingTaskTeam
+    clearPendingTaskTeam,
+    downloadPendingTask,
+    getDownloadMyPendingTask
 } from "./actions";
 
 import { TASK_STATUS, LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE_REGION_ZONE } from '../../selectsComponent/constants';
@@ -85,6 +87,7 @@ class ModalComponentPending extends Component {
         this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
         this._cleanSearch = this._cleanSearch.bind(this);
         this._downloadPendingTask = this._downloadPendingTask.bind(this);
+        this._downloadMyPendingTask = this._downloadMyPendingTask.bind(this);
         this._changeViewModeTeamTask = this._changeViewModeTeamTask.bind(this);
         this.consultInfoMyPendingTeamTask = this.consultInfoMyPendingTeamTask.bind(this);
         this._onChangeRegion = this._onChangeRegion.bind(this);
@@ -106,15 +109,18 @@ class ModalComponentPending extends Component {
     }
 
     _downloadPendingTask() {
-        const { getDownloadPendingTask, changeStateSaveData, swtShowMessage } = this.props;
+        const { fields: { region, zone, team, taskStatus, dateTaskTeam, idUsuario }, getDownloadPendingTask, changeStateSaveData, swtShowMessage } = this.props;
         changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-        getDownloadPendingTask().then((data) => {
-            changeStateSaveData(false, "");
-            if (validateResponse(data)) {
-                window.open(APP_URL + '/getExcelReport?filename=' + _.get(data, 'payload.data.data.filename', null) + '&id=' + _.get(data, 'payload.data.data.sessionToken', null), '_blank');
-            } else {
-                swtShowMessage('error', 'Error descargando tareas', 'Señor usuario, ocurrió un error al tratar de descargar las tareas pendientes.');
-            }
+        getDownloadPendingTask(region.value, zone.value, team.value, taskStatus.value, dateTaskTeam.value, idUsuario.value).then((data) => {
+            downloadPendingTask(data.payload.data.data,changeStateSaveData);
+        });
+    }
+
+    _downloadMyPendingTask(){
+        const {getDownloadMyPendingTask , changeStateSaveData} = this.props;
+        changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
+        getDownloadMyPendingTask(this.state.keywordMyPending).then((data)=>{
+            downloadPendingTask(data.payload.data.data,changeStateSaveData);
         });
     }
 
@@ -507,7 +513,7 @@ class ModalComponentPending extends Component {
                                 {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), DESCARGAR), false) &&
 
                                     <Tooltip text="Descarga de tareas pendientes">
-                                        <button className="btn btn-primary" type="button" onClick={this._downloadPendingTask}
+                                        <button className="btn btn-primary" type="button" onClick={ this.state.teamViewTask ? this._downloadPendingTask : this._downloadMyPendingTask}
                                             style={{ marginLeft: "10px" }} >
                                             <i className="file excel outline icon"
                                                 style={{ color: "white", margin: '0em', fontSize: '1.2em' }} />
@@ -632,7 +638,8 @@ function mapDispatchToProps(dispatch) {
         clearMyPendingsTeamOrder,
         clearPendingTaskTeam,
         filterUsersBanco,
-        formValidateKeyEnter
+        formValidateKeyEnter,
+        getDownloadMyPendingTask
     }, dispatch);
 }
 
