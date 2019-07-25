@@ -10,9 +10,11 @@ import {
   CLEAR_PENDING_TASK_TEAM,
   CLEAR_MY_PENDINGS_TEAM_ORDER,
   ORDER_COLUMN_MY_PENDING_TEAM,
-  GET_XLS_TASK
+  GET_XLS_TASK,
+  GET_DOWNLOAD_MY_PENDINGS_TASKS
 } from './constants';
 import axios from 'axios';
+import { downloadReport } from '../../../utils';
 
 export function tasksByUser(pageNum, maxRows, keyWord, orderMyPending, columnMyPending) {
   const json = {
@@ -147,7 +149,7 @@ export function clearOnlyListPendingTask() {
   };
 }
 
-export function getDownloadPendingTask() {
+export function getDownloadPendingTask(region, zone, team, taskStatus, dateTaskTeam, idUsuario) {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionTokenFront'),
@@ -162,13 +164,57 @@ export function getDownloadPendingTask() {
       "isSuccessful": true
     },
     "messageBody": {
-      
+      "pageNum": '',
+      "maxRows": '',
+      'region': region,
+      'zone': zone,
+      'team': team,
+      'taskStatus': taskStatus,
+      'dateTaskTeam': dateTaskTeam,
+      'idUsuario': idUsuario,
+      "order": '',
+      "columnOrder": ''
     }
   };
 
-  let request = axios.post(APP_URL + "/downloadPendingTaskRaw", json);
+  let request = axios.post(APP_URL + "/downloadPendingsTasksTeam", json);
   return {
     type: GET_DOWNLOAD_PENDINGS_TASKS,
+    payload: request
+  }
+}
+export function getDownloadMyPendingTask(keyWord) {
+  const json = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "pageNum": '',
+      "maxRows": '',
+      'region': '',
+      'zone': '',
+      'team': '',
+      'taskStatus': '',
+      'dateTaskTeam': '',
+      'idUsuario': '',
+      "order": '',
+      "columnOrder": '',
+      "keyWord":keyWord
+    }
+  };
+
+  let request = axios.post(APP_URL + "/downloadMyPendingsTasks", json);
+  return {
+    type: GET_DOWNLOAD_MY_PENDINGS_TASKS,
     payload: request
   }
 }
@@ -287,4 +333,31 @@ export function getXlsTask(initialDate, finalDate, states) {
         "states": states
      }
   }
+}
+
+export function downloadPendingTask(listTask,changeStateSaveData) {
+  const name = "TareasPendientes.xlsx";
+
+  const payload = {
+    "messageHeader": {
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": {
+      "name": name,
+      "route": "BiztrackReports/pendingTask.jrxml",
+      "params": {},
+      "source": listTask
+    }
+  };
+
+  downloadReport(payload, "/generate/XLSX", name,changeStateSaveData);
 }
