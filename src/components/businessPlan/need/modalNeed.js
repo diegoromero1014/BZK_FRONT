@@ -200,92 +200,144 @@ export class ModalNeed extends Component {
             needTask: needTask.value,
             needBenefits: needBenefits.value,
         };
-        validateWhiteListOnNeed(jsonValidate).then((data) => {
-            let errors = data.payload.data.data;
 
-            this.errorTask = null;
-            this.errorBenefits = null;
-            this.errorDescrption = null;
+        if (needEdit !== undefined) {
+            needEdit.needIdType = needType.value;
+            needEdit.needType = needC;
+            needEdit.descriptionNeed = descriptionNeed.value;
+            needEdit.descriptionNeedText = shorterStringValue(htmlToText(descriptionNeed.value), 120);
+            needEdit.productFamilyId = productFamily.value;
+            needEdit.productFamily = productF;
+            needEdit.needIdProduct = needProduct.value;
+            needEdit.needProduct = productC;
+            needEdit.needIdImplementation = needImplementation.value;
+            needEdit.needImplementation = implementation;
+            needEdit.needTask = needTask.value;
+            needEdit.needBenefits = needBenefits.value;
+            needEdit.needIdResponsable = idUsuario;
+            needEdit.needResponsable = nameUsuario;
+            needEdit.needDate = needDate.value;
+            needEdit.needFormat = needDate.value;
+            needEdit.statusIdNeed = statusNeed.value;
+            needEdit.statusNeed = status;
+            editNeed(needEdit);
 
-            for (let index = 0; index < errors.length; index++) {
-                const error = errors[index];
-                const field = error.fieldName;
+            swtShowMessage('success', "Necesidad editada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán.", { onConfirmCallback: this._closeCreate });
+
+        } else {
+            const uuid = _.uniqueId('need_');
+            let need = {
+                uuid,
+                needIdType: needType.value,
+                needType: needC,
+                descriptionNeed: descriptionNeed.value,
+                descriptionNeedText: shorterStringValue(htmlToText(descriptionNeed.value), 120),
+                productFamilyId: productFamily.value,
+                productFamily: productF,
+                needIdProduct: needProduct.value,
+                needProduct: productC,
+                needIdImplementation: needImplementation.value,
+                needImplementation: implementation,
+                needTask: needTask.value,
+                needBenefits: needBenefits.value,
+                needIdResponsable: idUsuario,
+                needResponsable: nameUsuario,
+                needDate: needDate.value,
+                needFormat: needDate.value,
+                statusIdNeed: statusNeed.value,
+                statusNeed: status
+            };
+            addNeed(need);
+            swtShowMessage('success', "Necesidad agregada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán.", { onConfirmCallback: this._closeCreate });
+        }
+
+        //TODO: revisar
+        // validateWhiteListOnNeed(jsonValidate).then((data) => {
+        //     let errors = data.payload.data.data;
+
+        //     this.errorTask = null;
+        //     this.errorBenefits = null;
+        //     this.errorDescrption = null;
+
+        //     for (let index = 0; index < errors.length; index++) {
+        //         const error = errors[index];
+        //         const field = error.fieldName;
                 
-                switch (field) {
-                    case "task":
-                        this.errorTask = error.message;
-                        break;
-                    case "expected_benefits":
-                        this.errorBenefits = error.message;
-                        break;
-                    case "descriptionOfClientNeed":
-                        this.errorDescrption = error.message;
-                        break;
-                    default:
-                        break;
-                }
-            }
+        //         switch (field) {
+        //             case "task":
+        //                 this.errorTask = error.message;
+        //                 break;
+        //             case "expected_benefits":
+        //                 this.errorBenefits = error.message;
+        //                 break;
+        //             case "descriptionOfClientNeed":
+        //                 this.errorDescrption = error.message;
+        //                 break;
+        //             default:
+        //                 break;
+        //         }
+        //     }
 
-            if (errors.length > 0) {
-                this.disableSubmitButton = false;
-                this.forceUpdate();
-                return;
-            }
+        //     if (errors.length > 0) {
+        //         this.disableSubmitButton = false;
+        //         this.forceUpdate();
+        //         return;
+        //     }
 
 
-            if (needEdit !== undefined) {
-                needEdit.needIdType = needType.value;
-                needEdit.needType = needC;
-                needEdit.descriptionNeed = descriptionNeed.value;
-                needEdit.descriptionNeedText = shorterStringValue(htmlToText(descriptionNeed.value), 120);
-                needEdit.productFamilyId = productFamily.value;
-                needEdit.productFamily = productF;
-                needEdit.needIdProduct = needProduct.value;
-                needEdit.needProduct = productC;
-                needEdit.needIdImplementation = needImplementation.value;
-                needEdit.needImplementation = implementation;
-                needEdit.needTask = needTask.value;
-                needEdit.needBenefits = needBenefits.value;
-                needEdit.needIdResponsable = idUsuario;
-                needEdit.needResponsable = nameUsuario;
-                needEdit.needDate = needDate.value;
-                needEdit.needFormat = needDate.value;
-                needEdit.statusIdNeed = statusNeed.value;
-                needEdit.statusNeed = status;
-                editNeed(needEdit);
+        //     if (needEdit !== undefined) {
+        //         needEdit.needIdType = needType.value;
+        //         needEdit.needType = needC;
+        //         needEdit.descriptionNeed = descriptionNeed.value;
+        //         needEdit.descriptionNeedText = shorterStringValue(htmlToText(descriptionNeed.value), 120);
+        //         needEdit.productFamilyId = productFamily.value;
+        //         needEdit.productFamily = productF;
+        //         needEdit.needIdProduct = needProduct.value;
+        //         needEdit.needProduct = productC;
+        //         needEdit.needIdImplementation = needImplementation.value;
+        //         needEdit.needImplementation = implementation;
+        //         needEdit.needTask = needTask.value;
+        //         needEdit.needBenefits = needBenefits.value;
+        //         needEdit.needIdResponsable = idUsuario;
+        //         needEdit.needResponsable = nameUsuario;
+        //         needEdit.needDate = needDate.value;
+        //         needEdit.needFormat = needDate.value;
+        //         needEdit.statusIdNeed = statusNeed.value;
+        //         needEdit.statusNeed = status;
+        //         editNeed(needEdit);
 
-                swtShowMessage('success', "Necesidad editada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán.", { onConfirmCallback: this._closeCreate });
+        //         swtShowMessage('success', "Necesidad editada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán.", { onConfirmCallback: this._closeCreate });
 
-            } else {
-                const uuid = _.uniqueId('need_');
-                let need = {
-                    uuid,
-                    needIdType: needType.value,
-                    needType: needC,
-                    descriptionNeed: descriptionNeed.value,
-                    descriptionNeedText: shorterStringValue(htmlToText(descriptionNeed.value), 120),
-                    productFamilyId: productFamily.value,
-                    productFamily: productF,
-                    needIdProduct: needProduct.value,
-                    needProduct: productC,
-                    needIdImplementation: needImplementation.value,
-                    needImplementation: implementation,
-                    needTask: needTask.value,
-                    needBenefits: needBenefits.value,
-                    needIdResponsable: idUsuario,
-                    needResponsable: nameUsuario,
-                    needDate: needDate.value,
-                    needFormat: needDate.value,
-                    statusIdNeed: statusNeed.value,
-                    statusNeed: status
-                };
-                addNeed(need);
-                swtShowMessage('success', "Necesidad agregada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán.", { onConfirmCallback: this._closeCreate });
-            }
+        //     } else {
+        //         const uuid = _.uniqueId('need_');
+        //         let need = {
+        //             uuid,
+        //             needIdType: needType.value,
+        //             needType: needC,
+        //             descriptionNeed: descriptionNeed.value,
+        //             descriptionNeedText: shorterStringValue(htmlToText(descriptionNeed.value), 120),
+        //             productFamilyId: productFamily.value,
+        //             productFamily: productF,
+        //             needIdProduct: needProduct.value,
+        //             needProduct: productC,
+        //             needIdImplementation: needImplementation.value,
+        //             needImplementation: implementation,
+        //             needTask: needTask.value,
+        //             needBenefits: needBenefits.value,
+        //             needIdResponsable: idUsuario,
+        //             needResponsable: nameUsuario,
+        //             needDate: needDate.value,
+        //             needFormat: needDate.value,
+        //             statusIdNeed: statusNeed.value,
+        //             statusNeed: status
+        //         };
+        //         addNeed(need);
+        //         swtShowMessage('success', "Necesidad agregada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán.", { onConfirmCallback: this._closeCreate });
+        //     }
 
-        }).catch((error) => {
-            console.log(error);
-        });
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
     }
 
     updateKeyValueUsersBanco(e) {

@@ -143,11 +143,15 @@ class FormBusinessPlan extends Component {
                         "productFamily": need.productFamilyId,
                         "product": need.needIdProduct,
                         "implementationTimeline": need.needIdImplementation,
-                        "task": need.needTask,
                         "expected_benefits": need.needBenefits,
                         "employeeResponsible": need.needIdResponsable,
                         "needFulfillmentStatus": need.statusIdNeed,
-                        "estimatedClosingDate": moment(need.needDate, DATE_FORMAT).format('x')
+                        "userTask": {
+                            "id": null,
+                            "task": need.needTask,
+                            "employeeResponsible": need.needIdResponsable,
+                            "closingDate": moment(need.needDate, DATE_FORMAT).format('x'),
+                        }
                     }
                     needsbB.push(data);
                 }
