@@ -178,8 +178,8 @@ class FormEdit extends Component {
                                 "userTask": {
                                     "id": null, //TODO: Pendiente usar el id de userTask devuelta en el servicio
                                     "task": need.needTask,
-                                    "employeeResponsible": need.needIdResponsable,
-                                    "closingDate": moment(need.needDate, DATE_FORMAT).format('x')
+                                    "idResponsable": need.needIdResponsable,
+                                    "finalDate": moment(need.needDate, DATE_FORMAT).format('x')
                                 }
                             }
                             needsbB.push(data);
