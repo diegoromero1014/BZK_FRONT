@@ -178,7 +178,8 @@ class FormBusinessPlan extends Component {
                 "opportunitiesAndThreats": this.state.opportunities,
                 "objective": this.state.objectiveBusiness,
                 "documentStatus": typeButtonClick,
-                "clientNeedFulfillmentPlan": needsbB,
+                // TODO: Atributo que envia las necesidades
+                // "clientNeedFulfillmentPlan": needsbB,
                 "relatedInternalParties": areasB,
                 "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
             };
