@@ -209,7 +209,8 @@ class FormEdit extends Component {
                         "opportunitiesAndThreats": this.state.opportunities,
                         "objective": this.state.objectiveBusiness,
                         "documentStatus": typeButtonClick,
-                        "clientNeedFulfillmentPlan": needsbB.length === 0 ? null : needsbB,
+                        // TODO: Atributo que envia las necesidades
+                        // "clientNeedFulfillmentPlan": needsbB.length === 0 ? null : needsbB,
                         "relatedInternalParties": areasB.length === 0 ? null : areasB,
                         "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
                     };
@@ -260,33 +261,33 @@ class FormEdit extends Component {
                 if (!_.isNil(part.finalValidityDate)) {
                     finalValidityDate.onChange(moment(part.finalValidityDate, "x").format(DATE_FORMAT));
                 }
-
-                _.forIn(part.clientNeedFulfillmentPlan, function (value, key) {
-                    const uuid = _.uniqueId('need_');
-                    let need = {
-                        uuid,
-                        needIdType: value.clientNeed,
-                        id: value.id,
-                        needType: value.clientNeedName,
-                        descriptionNeed: value.clientNeedDescription,
-                        descriptionNeedText: htmlToText(value.clientNeedDescription),
-                        productFamilyId: value.productFamily,
-                        productFamily: value.productFamilyName,
-                        needIdProduct: value.product,
-                        needProduct: value.productName,
-                        needIdImplementation: value.implementationTimeline,
-                        needImplementation: value.implementationTimelineName,
-                        needTask: value.task,
-                        needBenefits: value.expected_benefits,
-                        needIdResponsable: value.employeeResponsible,
-                        needResponsable: value.employeeResponsibleName,
-                        needDate: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
-                        needFormat: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
-                        statusIdNeed: value.needFulfillmentStatus,
-                        statusNeed: value.needFulfillmentStatusName
-                    }
-                    addNeed(need);
-                });
+                // TODO: Seteo de las necesidades en el request de edición de Plan de Negocio
+                // _.forIn(part.clientNeedFulfillmentPlan, function (value, key) {
+                //     const uuid = _.uniqueId('need_');
+                //     let need = {
+                //         uuid,
+                //         needIdType: value.clientNeed,
+                //         id: value.id,
+                //         needType: value.clientNeedName,
+                //         descriptionNeed: value.clientNeedDescription,
+                //         descriptionNeedText: htmlToText(value.clientNeedDescription),
+                //         productFamilyId: value.productFamily,
+                //         productFamily: value.productFamilyName,
+                //         needIdProduct: value.product,
+                //         needProduct: value.productName,
+                //         needIdImplementation: value.implementationTimeline,
+                //         needImplementation: value.implementationTimelineName,
+                //         needTask: value.task,
+                //         needBenefits: value.expected_benefits,
+                //         needIdResponsable: value.employeeResponsible,
+                //         needResponsable: value.employeeResponsibleName,
+                //         needDate: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
+                //         needFormat: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
+                //         statusIdNeed: value.needFulfillmentStatus,
+                //         statusNeed: value.needFulfillmentStatusName
+                //     }
+                //     addNeed(need);
+                // });
                 _.forIn(part.relatedInternalParties, function (value, key) {
                     const uuid = _.uniqueId('area_');
                     let area = {
