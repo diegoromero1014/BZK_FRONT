@@ -144,13 +144,12 @@ class FormBusinessPlan extends Component {
                         "product": need.needIdProduct,
                         "implementationTimeline": need.needIdImplementation,
                         "expected_benefits": need.needBenefits,
-                        "employeeResponsible": need.needIdResponsable,
-                        "needFulfillmentStatus": need.statusIdNeed,
                         "userTask": {
                             "id": null,
                             "task": need.needTask,
-                            "idResponsable": need.needIdResponsable,
-                            "finalDate": moment(need.needDate, DATE_FORMAT).format('x'),
+                            "employeeResponsible": Number(need.needIdResponsable),
+                            "closingDate": Number(moment(need.needDate, DATE_FORMAT).format('x')),
+                            "status": Number(need.statusIdNeed)
                         }
                     }
                     needsbB.push(data);
@@ -177,13 +176,12 @@ class FormBusinessPlan extends Component {
             let businessJson = {
                 "id": null,
                 "client": window.sessionStorage.getItem('idClientSelected'),
-                "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
-                "finalValidityDate": moment(finalValidityDate.value, DATE_FORMAT).format('x'),
+                "initialValidityDate": Number(moment(initialValidityDate.value, DATE_FORMAT).format('x')),
+                "finalValidityDate": Number(moment(finalValidityDate.value, DATE_FORMAT).format('x')),
                 "opportunitiesAndThreats": this.state.opportunities,
                 "objective": this.state.objectiveBusiness,
                 "documentStatus": typeButtonClick,
-                // TODO: Atributo que envia las necesidades
-                // "clientNeedFulfillmentPlan": needsbB,
+                "clientNeedFulfillmentPlan": needsbB,
                 "relatedInternalParties": areasB,
                 "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
             };

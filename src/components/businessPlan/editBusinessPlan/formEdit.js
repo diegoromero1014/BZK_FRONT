@@ -173,13 +173,13 @@ class FormEdit extends Component {
                                 "product": need.needIdProduct,
                                 "implementationTimeline": need.needIdImplementation,
                                 "expected_benefits": need.needBenefits,
-                                "needFulfillmentStatus": need.statusIdNeed,
                                 "estimatedClosingDate": moment(need.needDate, "DD/MM/YYYY").format('x'),
                                 "userTask": {
                                     "id": null, //TODO: Pendiente usar el id de userTask devuelta en el servicio
                                     "task": need.needTask,
-                                    "idResponsable": need.needIdResponsable,
-                                    "finalDate": moment(need.needDate, DATE_FORMAT).format('x')
+                                    "employeeResponsible": Number(need.needIdResponsable),
+                                    "closingDate": Number(moment(need.needDate, DATE_FORMAT).format('x')),
+                                    "status": Number(need.statusIdNeed)
                                 }
                             }
                             needsbB.push(data);
@@ -204,13 +204,12 @@ class FormEdit extends Component {
                     let businessJson = {
                         "id": detailBusiness.data.id,
                         "client": window.sessionStorage.getItem('idClientSelected'),
-                        "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
-                        "finalValidityDate": moment(finalValidityDate.value, DATE_FORMAT).format('x'),
+                        "initialValidityDate": Number(moment(initialValidityDate.value, DATE_FORMAT).format('x')),
+                        "finalValidityDate": Number(moment(finalValidityDate.value, DATE_FORMAT).format('x')),
                         "opportunitiesAndThreats": this.state.opportunities,
                         "objective": this.state.objectiveBusiness,
                         "documentStatus": typeButtonClick,
-                        // TODO: Atributo que envia las necesidades
-                        // "clientNeedFulfillmentPlan": needsbB.length === 0 ? null : needsbB,
+                        "clientNeedFulfillmentPlan": needsbB.length === 0 ? null : needsbB,
                         "relatedInternalParties": areasB.length === 0 ? null : areasB,
                         "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
                     };
