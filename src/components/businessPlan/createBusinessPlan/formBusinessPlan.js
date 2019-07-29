@@ -139,11 +139,11 @@ class FormBusinessPlan extends Component {
                     let data = {
                         "id": null,
                         "clientNeed": need.needIdType,
-                        "clientNeedDescription": need.descriptionNeed,
+                        "needDescription": need.descriptionNeed,
                         "productFamily": need.productFamilyId,
                         "product": need.needIdProduct,
                         "implementationTimeline": need.needIdImplementation,
-                        "expected_benefits": need.needBenefits,
+                        "expectedBenefits": need.needBenefits,
                         "userTask": {
                             "id": null,
                             "task": need.needTask,
@@ -167,7 +167,7 @@ class FormBusinessPlan extends Component {
                         "employeeResponsibleId": area.areaIdResponsable,
                         "needFulfillmentStatus": area.statusIdArea,
                         "actionStatus": area.needBenefits,
-                        "estimatedClosingDate": moment(area.areaDate, DATE_FORMAT).format('x')
+                        "estimatedClosing": Number(moment(area.areaDate, DATE_FORMAT).format('x'))
                     }
                     areasB.push(data);
                 }

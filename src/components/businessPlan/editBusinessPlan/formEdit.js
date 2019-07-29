@@ -168,11 +168,11 @@ class FormEdit extends Component {
                             let data = {
                                 "id": need.id,
                                 "clientNeed": need.needIdType,
-                                "clientNeedDescription": need.descriptionNeed,
+                                "needDescription": need.descriptionNeed,
                                 "productFamily": need.productFamilyId,
                                 "product": need.needIdProduct,
                                 "implementationTimeline": need.needIdImplementation,
-                                "expected_benefits": need.needBenefits,
+                                "expectedBenefits": need.needBenefits,
                                 "estimatedClosingDate": moment(need.needDate, "DD/MM/YYYY").format('x'),
                                 "userTask": {
                                     "id": null, //TODO: Pendiente usar el id de userTask devuelta en el servicio
@@ -196,7 +196,7 @@ class FormEdit extends Component {
                                 "employeeResponsibleId": area.areaIdResponsable,
                                 "needFulfillmentStatus": area.statusIdArea,
                                 "actionStatus": area.needBenefits,
-                                "estimatedClosingDate": moment(area.areaDate, "DD/MM/YYYY").format('x')
+                                "estimatedClosingDate": Number(moment(area.areaDate, "DD/MM/YYYY").format('x'))
                             }
                             areasB.push(data);
                         }
