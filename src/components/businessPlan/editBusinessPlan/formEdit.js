@@ -173,7 +173,6 @@ class FormEdit extends Component {
                                 "product": need.needIdProduct,
                                 "implementationTimeline": need.needIdImplementation,
                                 "expectedBenefits": need.needBenefits,
-                                "estimatedClosingDate": moment(need.needDate, "DD/MM/YYYY").format('x'),
                                 "userTask": {
                                     "id": null, //TODO: Pendiente usar el id de userTask devuelta en el servicio
                                     "task": need.needTask,
