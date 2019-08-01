@@ -174,7 +174,7 @@ class FormEdit extends Component {
                                 "implementationTimeline": need.needIdImplementation,
                                 "expectedBenefits": need.needBenefits,
                                 "userTask": {
-                                    "id": null, //TODO: Pendiente usar el id de userTask devuelta en el servicio
+                                    "id": need.userTask.id, //TODO: Pendiente usar el id de userTask devuelta en el servicio
                                     "task": need.needTask,
                                     "employeeResponsible": Number(need.needIdResponsable),
                                     "closingDate": Number(moment(need.needDate, DATE_FORMAT).format('x')),
@@ -248,6 +248,7 @@ class FormEdit extends Component {
             getMasterDataFields([OBJECTIVE_BUSINESS]);
             showLoading(true, 'Cargando...');
             detailBusiness(id).then((result) => {
+                debugger;
                 let part = result.payload.data.data;
                 this.setState({
                     objectiveBusiness: part.objective,
@@ -263,32 +264,32 @@ class FormEdit extends Component {
                     finalValidityDate.onChange(moment(part.finalValidityDate, "x").format(DATE_FORMAT));
                 }
                 // TODO: Seteo de las necesidades en el request de edición de Plan de Negocio
-                // _.forIn(part.clientNeedFulfillmentPlan, function (value, key) {
-                //     const uuid = _.uniqueId('need_');
-                //     let need = {
-                //         uuid,
-                //         needIdType: value.clientNeed,
-                //         id: value.id,
-                //         needType: value.clientNeedName,
-                //         descriptionNeed: value.clientNeedDescription,
-                //         descriptionNeedText: htmlToText(value.clientNeedDescription),
-                //         productFamilyId: value.productFamily,
-                //         productFamily: value.productFamilyName,
-                //         needIdProduct: value.product,
-                //         needProduct: value.productName,
-                //         needIdImplementation: value.implementationTimeline,
-                //         needImplementation: value.implementationTimelineName,
-                //         needTask: value.task,
-                //         needBenefits: value.expected_benefits,
-                //         needIdResponsable: value.employeeResponsible,
-                //         needResponsable: value.employeeResponsibleName,
-                //         needDate: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
-                //         needFormat: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
-                //         statusIdNeed: value.needFulfillmentStatus,
-                //         statusNeed: value.needFulfillmentStatusName
-                //     }
-                //     addNeed(need);
-                // });
+                _.forIn(part.clientNeedFulfillmentPlan, function (value, key) {
+                    const uuid = _.uniqueId('need_');
+                    let need = {
+                        uuid,
+                        needIdType: value.clientNeed,
+                        id: value.id,
+                        needType: value.clientNeedName,
+                        descriptionNeed: value.clientNeedDescription,
+                        descriptionNeedText: htmlToText(value.clientNeedDescription),
+                        productFamilyId: value.productFamily,
+                        productFamily: value.productFamilyName,
+                        needIdProduct: value.product,
+                        needProduct: value.productName,
+                        needIdImplementation: value.implementationTimeline,
+                        needImplementation: value.implementationTimelineName,
+                        needTask: value.task,
+                        needBenefits: value.expected_benefits,
+                        needIdResponsable: value.employeeResponsible,
+                        needResponsable: value.employeeResponsibleName,
+                        needDate: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
+                        needFormat: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
+                        statusIdNeed: value.needFulfillmentStatus,
+                        statusNeed: value.needFulfillmentStatusName
+                    }
+                    addNeed(need);
+                });
                 _.forIn(part.relatedInternalParties, function (value, key) {
                     const uuid = _.uniqueId('area_');
                     let area = {
