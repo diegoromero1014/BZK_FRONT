@@ -247,6 +247,7 @@ class FormEdit extends Component {
             showLoading(true, 'Cargando...');
             detailBusiness(id).then((result) => {
                 debugger;
+                debugger;
                 let part = result.payload.data.data;
                 this.setState({
                     objectiveBusiness: part.objective,
