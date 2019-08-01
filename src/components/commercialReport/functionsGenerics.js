@@ -1,9 +1,10 @@
-export const buildJsoncommercialReport = (commercialReport, usersPermission, confidential) => {
+export const buildJsoncommercialReport = (commercialReport, usersPermission, confidential, documentStatus) => {
     let json = {
         "id": null,
         "isConfidential": confidential,
         "usersWithPermission": usersPermission,
-        "status": null
+        "status": null,
+        "documentStatus": documentStatus
     }
 
     if (commercialReport) {

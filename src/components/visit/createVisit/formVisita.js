@@ -246,7 +246,7 @@ class FormVisita extends Component {
               "employee": task.idResponsable,
               "employeeName": task.responsable,
               "closingDate": moment(task.fecha, "DD/MM/YYYY").format('x'),
-              "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
+              "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
             }
             tareas.push(data);
           }
@@ -268,7 +268,7 @@ class FormVisita extends Component {
           "visitType": this.state.typeVisit,
           "documentStatus": typeButtonClick,
           "preVisitId": idPrevisitSeleted === null || idPrevisitSeleted === undefined || idPrevisitSeleted === "" ? null : idPrevisitSeleted,
-          "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
+          "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
         }
         const that = this;
         changeStateSaveData(true, MESSAGE_SAVE_DATA);

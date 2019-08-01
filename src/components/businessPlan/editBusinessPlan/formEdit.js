@@ -201,8 +201,6 @@ class FormEdit extends Component {
                         }
                     );
 
-                    let comercialReportObj = buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'));
-                    comercialReportObj.documentStatus = typeButtonClick;
                     let businessJson = {
                         "id": detailBusiness.data.id,
                         "client": window.sessionStorage.getItem('idClientSelected'),
@@ -213,7 +211,7 @@ class FormEdit extends Component {
                         "documentStatus": typeButtonClick,
                         "clientNeedFulfillmentPlan": needsbB.length === 0 ? null : needsbB,
                         "relatedInternalParties": areasB.length === 0 ? null : areasB,
-                        "commercialReport": comercialReportObj
+                        "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
                     };
                     //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
                     this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
