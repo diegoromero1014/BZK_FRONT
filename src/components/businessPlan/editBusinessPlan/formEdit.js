@@ -246,7 +246,7 @@ class FormEdit extends Component {
             getMasterDataFields([OBJECTIVE_BUSINESS]);
             showLoading(true, 'Cargando...');
             detailBusiness(id).then((result) => {
-                debugger;
+                
                 let part = result.payload.data.data;
                 this.setState({
                     objectiveBusiness: part.objective,
@@ -284,7 +284,7 @@ class FormEdit extends Component {
                         needDate: moment(value.userTask.closingDate).format('DD/MM/YYYY'),
                         needFormat: moment(value.userTask.closingDate).format('DD/MM/YYYY'),
                         statusIdNeed: value.userTask.status,
-                        statusNeed: value.userTask.statusName
+                        statusNeed: value.userTask.nameStatus
                     }
                     addNeed(need);
                 });
