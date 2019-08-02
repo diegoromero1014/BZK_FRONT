@@ -220,6 +220,7 @@ export class ModalNeed extends Component {
             needEdit.needFormat = needDate.value;
             needEdit.statusIdNeed = statusNeed.value;
             needEdit.statusNeed = status;
+            needEdit.idTask = needEdit.userTask.id
             editNeed(needEdit);
 
             swtShowMessage('success', "Necesidad editada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán.", { onConfirmCallback: this._closeCreate });
@@ -521,9 +522,9 @@ function mapStateToProps({ needs, selectsReducer }, { needEdit }) {
                 needResponsable: needEdit.needResponsable,
                 idEmployee: needEdit.needIdResponsable,
                 statusNeed: needEdit.statusIdNeed,
-                needDate: needEdit.needFormat
+                needDate: needEdit.needFormat,
+                userTask: needEdit.userTask
             }
-
         }
     } else {
         return {

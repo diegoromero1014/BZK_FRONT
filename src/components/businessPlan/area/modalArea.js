@@ -123,6 +123,7 @@ export class ModalArea extends Component {
   }
 
   _handleCreateArea() {
+    debugger;
     const { fields: { idEmployee, areaDes, actionArea, areaResponsable, areaDate, statusArea }, handleSubmit, error, addArea, editArea, areaEdit, selectsReducer, swtShowMessage, validateWhiteListOnArea } = this.props;
     let status = _.get(_.filter(selectsReducer.get(STATUS_AREAS), ['id', parseInt(statusArea.value)]), '[0].value');
     if (areaResponsable.value !== nameUsuario) {

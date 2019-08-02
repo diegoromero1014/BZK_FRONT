@@ -173,7 +173,13 @@ class FormEdit extends Component {
                                 "product": need.needIdProduct,
                                 "implementationTimeline": need.needIdImplementation,
                                 "expectedBenefits": need.needBenefits,
-                                "userTask": need.userTask
+                                "userTask": {
+                                    "id": need.idTask,
+                                    "task": need.needTask,
+                                    "employeeResponsible": need.needIdResponsable,
+                                    "closingDate": Number(moment(need.needDate, "DD/MM/YYYY").format('x')),
+                                    "status": need.statusIdNeed
+                                }
                             }
                             needsbB.push(data);
                         }
