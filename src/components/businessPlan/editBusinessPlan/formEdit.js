@@ -173,13 +173,7 @@ class FormEdit extends Component {
                                 "product": need.needIdProduct,
                                 "implementationTimeline": need.needIdImplementation,
                                 "expectedBenefits": need.needBenefits,
-                                "userTask": {
-                                    "id": need.userTask.id, //TODO: Pendiente usar el id de userTask devuelta en el servicio
-                                    "task": need.needTask,
-                                    "employeeResponsible": Number(need.needIdResponsable),
-                                    "closingDate": Number(moment(need.needDate, DATE_FORMAT).format('x')),
-                                    "status": Number(need.statusIdNeed)
-                                }
+                                "userTask": need.userTask
                             }
                             needsbB.push(data);
                         }
@@ -284,7 +278,8 @@ class FormEdit extends Component {
                         needDate: moment(value.userTask.closingDate).format('DD/MM/YYYY'),
                         needFormat: moment(value.userTask.closingDate).format('DD/MM/YYYY'),
                         statusIdNeed: value.userTask.status,
-                        statusNeed: value.userTask.statusName
+                        statusNeed: value.userTask.statusName,
+                        userTask: value.userTask
                     }
                     addNeed(need);
                 });
