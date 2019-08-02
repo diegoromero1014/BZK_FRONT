@@ -240,7 +240,7 @@ class FormEdit extends Component {
             getMasterDataFields([OBJECTIVE_BUSINESS]);
             showLoading(true, 'Cargando...');
             detailBusiness(id).then((result) => {
-                debugger;
+                
                 let part = result.payload.data.data;
                 this.setState({
                     objectiveBusiness: part.objective,
@@ -278,7 +278,7 @@ class FormEdit extends Component {
                         needDate: moment(value.userTask.closingDate).format('DD/MM/YYYY'),
                         needFormat: moment(value.userTask.closingDate).format('DD/MM/YYYY'),
                         statusIdNeed: value.userTask.status,
-                        statusNeed: value.userTask.statusName,
+                        statusNeed: value.userTask.nameStatus,
                         userTask: value.userTask
                     }
                     addNeed(need);
@@ -410,8 +410,8 @@ class FormEdit extends Component {
                 let fechaCreateDateMoment = moment(detailBusiness.data.createdTimestamp, "x").locale('es');
                 fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
             }
-            if (detailBusiness.data.lastBusinessPlan !== null) {
-                let dateBusinessLastReviewD = moment(detailBusiness.data.lastBusinessPlan, "x").locale('es');
+            if (detailBusiness.data.reviewedDate !== null) {
+                let dateBusinessLastReviewD = moment(detailBusiness.data.reviewedDate, "x").locale('es');
                 dateBusinessLastReview = moment(dateBusinessLastReviewD, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
             }
         }
