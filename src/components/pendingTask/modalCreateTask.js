@@ -96,7 +96,6 @@ class ModalCreateTask extends Component {
     getMasterDataFields([TASK_STATUS]);
     let idTask = _.get(taskEdit, 'id', taskEdit);
     getInfoTaskUser(idTask).then((data) => {
-      debugger;
       const task = _.get(data, 'payload.data.data');
       responsable.onChange(task.responsable);
       idEmployee.onChange(task.idResponsable);
