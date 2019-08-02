@@ -195,7 +195,7 @@ class FormEdit extends Component {
                                 "employeeResponsibleId": area.areaIdResponsable,
                                 "needFulfillmentStatus": area.statusIdArea,
                                 "actionStatus": area.needBenefits,
-                                "estimatedClosingDate": Number(moment(area.areaDate, "DD/MM/YYYY").format('x'))
+                                "estimatedClosing": Number(moment(area.areaDate, "DD/MM/YYYY").format('x'))
                             }
                             areasB.push(data);
                         }
@@ -297,8 +297,8 @@ class FormEdit extends Component {
                         actionArea: value.actionNeeded,
                         areaIdResponsable: value.employeeResponsibleId,
                         areaResponsable: value.employeeResponsibleId !== null ? value.employeeResponsibleIdName : value.employeeResponsible,
-                        areaDate: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
-                        areaFormat: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
+                        areaDate: moment(value.estimatedClosing).format('DD/MM/YYYY'),
+                        areaFormat: moment(value.estimatedClosing).format('DD/MM/YYYY'),
                         statusIdArea: value.needFulfillmentStatus,
                         statusArea: value.actionStatus
                     };
