@@ -415,8 +415,8 @@ class FormEdit extends Component {
                 let fechaCreateDateMoment = moment(detailBusiness.data.createdTimestamp, "x").locale('es');
                 fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
             }
-            if (detailBusiness.data.lastBusinessPlan !== null) {
-                let dateBusinessLastReviewD = moment(detailBusiness.data.lastBusinessPlan, "x").locale('es');
+            if (detailBusiness.data.reviewedDate !== null) {
+                let dateBusinessLastReviewD = moment(detailBusiness.data.reviewedDate, "x").locale('es');
                 dateBusinessLastReview = moment(dateBusinessLastReviewD, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
             }
         }
