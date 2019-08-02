@@ -247,7 +247,6 @@ class FormEdit extends Component {
             showLoading(true, 'Cargando...');
             detailBusiness(id).then((result) => {
                 debugger;
-                debugger;
                 let part = result.payload.data.data;
                 this.setState({
                     objectiveBusiness: part.objective,
@@ -269,23 +268,23 @@ class FormEdit extends Component {
                         uuid,
                         needIdType: value.clientNeed,
                         id: value.id,
-                        needType: value.clientNeedName,
-                        descriptionNeed: value.clientNeedDescription,
-                        descriptionNeedText: htmlToText(value.clientNeedDescription),
+                        needType: value.need,
+                        descriptionNeed: value.needDescription,
+                        descriptionNeedText: htmlToText(value.needDescription),
                         productFamilyId: value.productFamily,
                         productFamily: value.productFamilyName,
                         needIdProduct: value.product,
                         needProduct: value.productName,
                         needIdImplementation: value.implementationTimeline,
                         needImplementation: value.implementationTimelineName,
-                        needTask: value.task,
-                        needBenefits: value.expected_benefits,
-                        needIdResponsable: value.employeeResponsible,
-                        needResponsable: value.employeeResponsibleName,
-                        needDate: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
-                        needFormat: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
-                        statusIdNeed: value.needFulfillmentStatus,
-                        statusNeed: value.needFulfillmentStatusName
+                        needTask: value.userTask.task,
+                        needBenefits: value.expectedBenefits,
+                        needIdResponsable: value.userTask.employeeResponsible,
+                        needResponsable: value.userTask.responsibleName,
+                        needDate: moment(value.userTask.closingDate).format('DD/MM/YYYY'),
+                        needFormat: moment(value.userTask.closingDate).format('DD/MM/YYYY'),
+                        statusIdNeed: value.userTask.status,
+                        statusNeed: value.userTask.statusName
                     }
                     addNeed(need);
                 });
