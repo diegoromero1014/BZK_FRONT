@@ -164,7 +164,8 @@ class FormEdit extends Component {
                 if (!errorInForm) {
                     let needsbB = [];
                     _.map(needs.toArray(),
-                        function (need) {
+                    function (need) {
+                            let idNeed = (need.userTask !== null && need.userTask !== undefined  && need.userTask.id !== undefined) ? need.userTask.id : null;
                             let data = {
                                 "id": need.id,
                                 "clientNeed": need.needIdType,
@@ -174,7 +175,7 @@ class FormEdit extends Component {
                                 "implementationTimeline": need.needIdImplementation,
                                 "expectedBenefits": need.needBenefits,
                                 "userTask": {
-                                    "id": (need.userTask !== null && need.userTask !== undefined) ? need.userTask.id : null,
+                                    "id": idNeed,
                                     "task": need.needTask,
                                     "employeeResponsible": need.needIdResponsable,
                                     "closingDate": Number(moment(need.needDate, "DD/MM/YYYY").format('x')),

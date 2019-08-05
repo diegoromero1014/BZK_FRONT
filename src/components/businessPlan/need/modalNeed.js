@@ -202,6 +202,7 @@ export class ModalNeed extends Component {
         };
 
         if (needEdit !== undefined) {
+            let idNeed = (needEdit.userTask !== null && needEdit.userTask !== undefined  && needEdit.userTask.id !== undefined) ? needEdit.userTask.id : null;
             needEdit.needIdType = needType.value;
             needEdit.needType = needC;
             needEdit.descriptionNeed = descriptionNeed.value;
@@ -220,7 +221,7 @@ export class ModalNeed extends Component {
             needEdit.needFormat = needDate.value;
             needEdit.statusIdNeed = statusNeed.value;
             needEdit.statusNeed = status;
-            needEdit.idTask = needEdit.userTask.id
+            needEdit.idTask = idNeed;
             editNeed(needEdit);
 
             swtShowMessage('success', "Necesidad editada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán.", { onConfirmCallback: this._closeCreate });
