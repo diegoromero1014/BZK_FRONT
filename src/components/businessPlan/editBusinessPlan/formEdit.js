@@ -174,7 +174,7 @@ class FormEdit extends Component {
                                 "implementationTimeline": need.needIdImplementation,
                                 "expectedBenefits": need.needBenefits,
                                 "userTask": {
-                                    "id": need.idTask,
+                                    "id": (need.userTask !== null && need.userTask !== undefined) ? need.userTask.id : null,
                                     "task": need.needTask,
                                     "employeeResponsible": need.needIdResponsable,
                                     "closingDate": Number(moment(need.needDate, "DD/MM/YYYY").format('x')),
