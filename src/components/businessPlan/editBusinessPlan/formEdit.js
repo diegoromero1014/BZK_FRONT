@@ -262,7 +262,7 @@ class FormEdit extends Component {
                 if (!_.isNil(part.finalValidityDate)) {
                     finalValidityDate.onChange(moment(part.finalValidityDate, "x").format(DATE_FORMAT));
                 }
-                // TODO: Seteo de las necesidades en el request de edición de Plan de Negocio
+
                 _.forIn(part.clientNeedFulfillmentPlan, function (value, key) {
                     const uuid = _.uniqueId('need_');
                     let need = {
