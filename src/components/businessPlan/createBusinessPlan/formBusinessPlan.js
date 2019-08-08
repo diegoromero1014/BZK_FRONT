@@ -139,15 +139,18 @@ class FormBusinessPlan extends Component {
                     let data = {
                         "id": null,
                         "clientNeed": need.needIdType,
-                        "clientNeedDescription": need.descriptionNeed,
+                        "needDescription": need.descriptionNeed,
                         "productFamily": need.productFamilyId,
                         "product": need.needIdProduct,
                         "implementationTimeline": need.needIdImplementation,
-                        "task": need.needTask,
-                        "expected_benefits": need.needBenefits,
-                        "employeeResponsible": need.needIdResponsable,
-                        "needFulfillmentStatus": need.statusIdNeed,
-                        "estimatedClosingDate": moment(need.needDate, DATE_FORMAT).format('x')
+                        "expectedBenefits": need.needBenefits,
+                        "userTask": {
+                            "id": null,
+                            "task": need.needTask,
+                            "employeeResponsible": Number(need.needIdResponsable),
+                            "closingDate": Number(moment(need.needDate, DATE_FORMAT).format('x')),
+                            "status": Number(need.statusIdNeed)
+                        }
                     }
                     needsbB.push(data);
                 }
@@ -164,7 +167,7 @@ class FormBusinessPlan extends Component {
                         "employeeResponsibleId": area.areaIdResponsable,
                         "needFulfillmentStatus": area.statusIdArea,
                         "actionStatus": area.needBenefits,
-                        "estimatedClosingDate": moment(area.areaDate, DATE_FORMAT).format('x')
+                        "estimatedClosing": Number(moment(area.areaDate, DATE_FORMAT).format('x'))
                     }
                     areasB.push(data);
                 }
@@ -173,14 +176,14 @@ class FormBusinessPlan extends Component {
             let businessJson = {
                 "id": null,
                 "client": window.sessionStorage.getItem('idClientSelected'),
-                "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
-                "finalValidityDate": moment(finalValidityDate.value, DATE_FORMAT).format('x'),
+                "initialValidityDate": Number(moment(initialValidityDate.value, DATE_FORMAT).format('x')),
+                "finalValidityDate": Number(moment(finalValidityDate.value, DATE_FORMAT).format('x')),
                 "opportunitiesAndThreats": this.state.opportunities,
                 "objective": this.state.objectiveBusiness,
                 "documentStatus": typeButtonClick,
                 "clientNeedFulfillmentPlan": needsbB,
                 "relatedInternalParties": areasB,
-                "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
+                "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
             };
             //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
             this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);

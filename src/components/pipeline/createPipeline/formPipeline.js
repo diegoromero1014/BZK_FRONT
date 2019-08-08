@@ -383,7 +383,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "areaAssets": areaAssets.value ? areaAssets.value : "",
               "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.00'),
               "disbursementPlans": listDisburmentPlans,
-              "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
+              "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
