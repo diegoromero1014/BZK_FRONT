@@ -44,7 +44,7 @@ const validate = values => {
     return errors;
 };
 
-class FormEdit extends Component {
+export class FormEdit extends Component {
 
     constructor(props) {
         super(props);
