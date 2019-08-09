@@ -44,7 +44,7 @@ const validate = values => {
     return errors;
 };
 
-class FormEdit extends Component {
+export class FormEdit extends Component {
 
     constructor(props) {
         super(props);
@@ -164,19 +164,23 @@ class FormEdit extends Component {
                 if (!errorInForm) {
                     let needsbB = [];
                     _.map(needs.toArray(),
-                        function (need) {
+                    function (need) {
+                            let idNeed = (need.userTask !== null && need.userTask !== undefined  && need.userTask.id !== undefined) ? need.userTask.id : null;
                             let data = {
                                 "id": need.id,
                                 "clientNeed": need.needIdType,
-                                "clientNeedDescription": need.descriptionNeed,
+                                "needDescription": need.descriptionNeed,
                                 "productFamily": need.productFamilyId,
                                 "product": need.needIdProduct,
                                 "implementationTimeline": need.needIdImplementation,
-                                "task": need.needTask,
-                                "expected_benefits": need.needBenefits,
-                                "employeeResponsible": need.needIdResponsable,
-                                "needFulfillmentStatus": need.statusIdNeed,
-                                "estimatedClosingDate": moment(need.needDate, "DD/MM/YYYY").format('x')
+                                "expectedBenefits": need.needBenefits,
+                                "userTask": {
+                                    "id": idNeed,
+                                    "task": need.needTask,
+                                    "employeeResponsible": need.needIdResponsable,
+                                    "closingDate": Number(moment(need.needDate, "DD/MM/YYYY").format('x')),
+                                    "status": need.statusIdNeed
+                                }
                             }
                             needsbB.push(data);
                         }
@@ -192,22 +196,23 @@ class FormEdit extends Component {
                                 "employeeResponsibleId": area.areaIdResponsable,
                                 "needFulfillmentStatus": area.statusIdArea,
                                 "actionStatus": area.needBenefits,
-                                "estimatedClosingDate": moment(area.areaDate, "DD/MM/YYYY").format('x')
+                                "estimatedClosing": Number(moment(area.areaDate, "DD/MM/YYYY").format('x'))
                             }
                             areasB.push(data);
                         }
                     );
+
                     let businessJson = {
                         "id": detailBusiness.data.id,
                         "client": window.sessionStorage.getItem('idClientSelected'),
-                        "initialValidityDate": moment(initialValidityDate.value, DATE_FORMAT).format('x'),
-                        "finalValidityDate": moment(finalValidityDate.value, DATE_FORMAT).format('x'),
+                        "initialValidityDate": Number(moment(initialValidityDate.value, DATE_FORMAT).format('x')),
+                        "finalValidityDate": Number(moment(finalValidityDate.value, DATE_FORMAT).format('x')),
                         "opportunitiesAndThreats": this.state.opportunities,
                         "objective": this.state.objectiveBusiness,
                         "documentStatus": typeButtonClick,
                         "clientNeedFulfillmentPlan": needsbB.length === 0 ? null : needsbB,
                         "relatedInternalParties": areasB.length === 0 ? null : areasB,
-                        "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
+                        "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
                     };
                     //Se realiza la validación de fechas y se realiza la acción de guardado si aplica
                     this._onSelectFieldDate(moment(initialValidityDate.value, DATE_FORMAT), moment(finalValidityDate.value, DATE_FORMAT), null, true, businessJson);
@@ -242,6 +247,7 @@ class FormEdit extends Component {
             getMasterDataFields([OBJECTIVE_BUSINESS]);
             showLoading(true, 'Cargando...');
             detailBusiness(id).then((result) => {
+                
                 let part = result.payload.data.data;
                 this.setState({
                     objectiveBusiness: part.objective,
@@ -263,23 +269,24 @@ class FormEdit extends Component {
                         uuid,
                         needIdType: value.clientNeed,
                         id: value.id,
-                        needType: value.clientNeedName,
-                        descriptionNeed: value.clientNeedDescription,
-                        descriptionNeedText: htmlToText(value.clientNeedDescription),
+                        needType: value.need,
+                        descriptionNeed: value.needDescription,
+                        descriptionNeedText: htmlToText(value.needDescription),
                         productFamilyId: value.productFamily,
                         productFamily: value.productFamilyName,
                         needIdProduct: value.product,
                         needProduct: value.productName,
                         needIdImplementation: value.implementationTimeline,
                         needImplementation: value.implementationTimelineName,
-                        needTask: value.task,
-                        needBenefits: value.expected_benefits,
-                        needIdResponsable: value.employeeResponsible,
-                        needResponsable: value.employeeResponsibleName,
-                        needDate: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
-                        needFormat: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
-                        statusIdNeed: value.needFulfillmentStatus,
-                        statusNeed: value.needFulfillmentStatusName
+                        needTask: value.userTask.task,
+                        needBenefits: value.expectedBenefits,
+                        needIdResponsable: value.userTask.employeeResponsible,
+                        needResponsable: value.userTask.responsibleName,
+                        needDate: moment(value.userTask.closingDate).format('DD/MM/YYYY'),
+                        needFormat: moment(value.userTask.closingDate).format('DD/MM/YYYY'),
+                        statusIdNeed: value.userTask.status,
+                        statusNeed: value.userTask.nameStatus,
+                        userTask: value.userTask
                     }
                     addNeed(need);
                 });
@@ -291,8 +298,8 @@ class FormEdit extends Component {
                         actionArea: value.actionNeeded,
                         areaIdResponsable: value.employeeResponsibleId,
                         areaResponsable: value.employeeResponsibleId !== null ? value.employeeResponsibleIdName : value.employeeResponsible,
-                        areaDate: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
-                        areaFormat: moment(value.estimatedClosingDate).format('DD/MM/YYYY'),
+                        areaDate: moment(value.estimatedClosing).format('DD/MM/YYYY'),
+                        areaFormat: moment(value.estimatedClosing).format('DD/MM/YYYY'),
                         statusIdArea: value.needFulfillmentStatus,
                         statusArea: value.actionStatus
                     };
@@ -410,8 +417,8 @@ class FormEdit extends Component {
                 let fechaCreateDateMoment = moment(detailBusiness.data.createdTimestamp, "x").locale('es');
                 fechaCreateString = fechaCreateDateMoment.format("DD") + " " + fechaCreateDateMoment.format("MMM") + " " + fechaCreateDateMoment.format("YYYY") + ", " + fechaCreateDateMoment.format("hh:mm a");
             }
-            if (detailBusiness.data.lastBusinessPlan !== null) {
-                let dateBusinessLastReviewD = moment(detailBusiness.data.lastBusinessPlan, "x").locale('es');
+            if (detailBusiness.data.reviewedDate !== null) {
+                let dateBusinessLastReviewD = moment(detailBusiness.data.reviewedDate, "x").locale('es');
                 dateBusinessLastReview = moment(dateBusinessLastReviewD, "YYYY/DD/MM").locale('es').format("DD MMM YYYY");
             }
         }

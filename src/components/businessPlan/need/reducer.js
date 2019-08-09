@@ -29,7 +29,8 @@ export default (state = initialState, action) => {
         needDate: need.needDate,
         needFormat: need.needFormat,
         statusNeed: need.statusNeed,
-        statusIdNeed: need.statusIdNeed
+        statusIdNeed: need.statusIdNeed,
+        userTask: need.userTask
       });
       return state.push(newNeed);
     case constants.DELETE_NEED:
@@ -60,6 +61,7 @@ export default (state = initialState, action) => {
           item.needFormat = needEdit.needFormat;
           item.statusNeed = needEdit.statusNeed;
           item.statusIdNeed = needEdit.statusIdNeed;
+          item.userTask = needEdit.userTask;
           return item;
         }
       );
