@@ -47,22 +47,22 @@ describe('Test BusinessPlan/editBusinessPlan/formEdit', () => {
         expect(wrapper.find(DateTimePickerUi)).to.have.length(2);
     });
 
-    it('should render DateTimePickerUi', () => {
+    it('should render ComboBox', () => {
         const wrapper = shallow(<FormEdit {...defaultProps} createBusiness={resolveData} detailBusiness={resolveData} />);
         expect(wrapper.find(ComboBox)).to.have.length(1);
     });
 
-    it('should render DateTimePickerUi', () => {
+    it('should render RichText', () => {
         const wrapper = shallow(<FormEdit {...defaultProps} createBusiness={resolveData} detailBusiness={resolveData} />);
         expect(wrapper.find(RichText)).to.have.length(1);
     });
 
-    it('should render DateTimePickerUi', () => {
+    it('should render NeedBusiness', () => {
         const wrapper = shallow(<FormEdit {...defaultProps} createBusiness={resolveData} detailBusiness={resolveData} />);
         expect(wrapper.find(NeedBusiness)).to.have.length(1);
     });
 
-    it('should render DateTimePickerUi', () => {
+    it('should render AreaBusiness', () => {
         const wrapper = shallow(<FormEdit {...defaultProps} createBusiness={resolveData} detailBusiness={resolveData} />);
         expect(wrapper.find(AreaBusiness)).to.have.length(1);
     });

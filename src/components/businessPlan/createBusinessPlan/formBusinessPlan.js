@@ -43,7 +43,7 @@ const validate = values => {
     let errors = {};
     return errors;
 };
-class FormBusinessPlan extends Component {
+export class FormBusinessPlan extends Component {
 
     constructor(props) {
         super(props);
