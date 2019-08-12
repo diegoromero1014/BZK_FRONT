@@ -8,6 +8,7 @@ import RichText from "~/src/components/richText/richTextComponent";
 import NeedBusiness from "~/src/components/businessPlan/need/needBusiness";
 import AreaBusiness from "~/src/components/businessPlan/area/areaBusiness";
 import {FormEdit} from "~/src/components/businessPlan/editBusinessPlan/formEdit.js";
+import { wrap } from 'module';
 
 const fields = ["initialValidityDate", "finalValidityDate", "objectiveBusiness", "opportunities"];
 const selectsReducer = Immutable.Map({});
@@ -20,6 +21,9 @@ const nonValidateEnter = () => { };
 const setConfidential = () => { };
 const handleSubmit = () => { };
 const showLoading = () => { };
+const swtShowMessage = () => {};
+
+
 
 const dataPromise = {payload: { data: { status: 200, validateLogin: true, data: {
                             objective: "", opportunitiesAndThreats: "", initialValidityDate: "", initialValidityDate: "",
@@ -33,7 +37,7 @@ const resolveData = () => {
 }
 
 const defaultProps = { fields: fields, selectsReducer, handleSubmit, businessPlanReducer, reducerGlobal, nonValidateEnter,
-                        setConfidential, clientInformacion, getMasterDataFields, showLoading };
+                        setConfidential, clientInformacion, getMasterDataFields, showLoading, swtShowMessage };
 
 describe('Test BusinessPlan/editBusinessPlan/formEdit', () => {
 
@@ -66,4 +70,22 @@ describe('Test BusinessPlan/editBusinessPlan/formEdit', () => {
         const wrapper = shallow(<FormEdit {...defaultProps} createBusiness={resolveData} detailBusiness={resolveData} />);
         expect(wrapper.find(AreaBusiness)).to.have.length(1);
     });
+
+    it('El formulario deberia estar bloqueado la edición por defecto', () => {
+        const wrapper = shallow(<FormEdit {...defaultProps} createBusiness={resolveData} detailBusiness={resolveData} />);
+        expect(wrapper.find(PermissionUserReports).find({disabled: 'disabled'})).to.have.length(1);
+        expect(wrapper.state().isEditable).equal(false);
+    });
+
+    it('El formulario deberia desbloquearse cuando se da click en Editar', () => {
+        const reducerGlobalWithBussinessPlanPermissions = Immutable.Map({ permissionsBussinessPlan: ["Editar"] });
+        const wrapper = shallow(<FormEdit {...defaultProps} reducerGlobal={reducerGlobalWithBussinessPlanPermissions} createBusiness={resolveData} detailBusiness={resolveData} />);
+        
+        const editButton = wrapper.find('.modal-button-edit');
+        editButton.simulate('click');
+
+        expect(wrapper.find(PermissionUserReports).find({disabled: ''})).to.have.length(1);
+        expect(wrapper.state().isEditable).equal(true);
+    });
+
 });
