@@ -554,9 +554,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             } else {
                 showLoading(true, 'Cargando...');
 
-                consultDataSelect(PRODUCTS, PRODUCTS_MASK).then((data) => {                    
+                consultDataSelect(PRODUCTS, PRODUCTS_MASK).then((data) => {                 
                     this.setState({
-                        products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
+                        products: _.get(data, 'payload.data.data', [])
                     });
                 });
 
