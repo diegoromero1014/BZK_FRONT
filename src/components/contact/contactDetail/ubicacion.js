@@ -33,6 +33,7 @@ export class Ubicacion extends React.Component {
     this.handleChecked = this.handleChecked.bind(this);
     this.onChangeCity = this.onChangeCity.bind(this);
     this.changeCheckBox = this.changeCheckBox.bind(this);
+    this.changeCityWhenClearUbication = this.changeCityWhenClearUbication.bind(this);
 
     this.state = {
       checked: false
@@ -79,7 +80,7 @@ export class Ubicacion extends React.Component {
     }
   }
 
-  handleChecked(e, data) {
+  handleChecked(checked) {
     const {
       fields: {
         contactCountry,
@@ -95,7 +96,7 @@ export class Ubicacion extends React.Component {
     var newCity = "";
 
     const address = clientInfo.addresses[0];
-      if (data.checked) {
+      if (checked) {
 
         if (this.firstTime) {
           this.originalCountry = contactCountry.value;
@@ -112,26 +113,33 @@ export class Ubicacion extends React.Component {
         contactNeighborhood.onChange(address.neighborhood);
         newCity = address.city;
 
-        setTimeout(() => {
-          contactCity.onChange(newCity);
-          this.forceUpdate();
-        }, 1000);
+        this.changeCityWhenClearUbication(contactCity, newCity);
     
     } else {
-        contactCountry.onChange(this.originalCountry);
-        consultListWithParameterUbication(FILTER_PROVINCE, this.originalCountry).then(() => {
-        contactProvince.onChange(this.originalProvince);
-        consultListWithParameterUbication(FILTER_CITY, this.originalProvince).then(() => {
-        contactProvince.onChange(this.originalProvince);
-        contactCity.onChange(this.originalCity);
-        })
-      });
+        if (!this.firstTime) {
+          contactCountry.onChange(this.originalCountry);
+          consultListWithParameterUbication(FILTER_PROVINCE, this.originalCountry).then(() => {
+            contactProvince.onChange(this.originalProvince);
+            consultListWithParameterUbication(FILTER_CITY, this.originalProvince).then(() => {
+              contactProvince.onChange(this.originalProvince);
+              this.changeCityWhenClearUbication(contactCity, this.originalCity);
+            })
+          });
 
-      contactAddress.onChange(this.originalAddress);
-      contactNeighborhood.onChange(this.originalNeighborhood);
-      newCity = this.originalCity;
+        contactAddress.onChange(this.originalAddress);
+        contactNeighborhood.onChange(this.originalNeighborhood);
+        newCity = this.originalCity;
+      }
+        
     }
 
+  }
+
+  changeCityWhenClearUbication(city, newValue) {
+      setTimeout(() => {
+        city.onChange(newValue);
+        this.forceUpdate();
+      }, 1000);
   }
 
   changeCheckBox() {
@@ -141,13 +149,13 @@ export class Ubicacion extends React.Component {
     const address = clientInfo.addresses[0];
 
     if (!this.state.checked) {
-      if ((!_.isNull(address.country) || _.isUndefined(address.country) || !_.isEmpty(address.country) || 
-      (!_.isNull(address.province) || _.isUndefined(address.province) || !_.isEmpty(address.province)) || 
-      (!_.isNull(address.address) || _.isUndefined(address.address) || !_.isEmpty(address.address)) ||
-      (!_.isNull(address.neighborhood) || _.isUndefined(address.neighborhood) || !_.isEmpty(address.neighborhood)) ||
-      (!_.isNull(address.city) || _.isUndefined(address.city) || !_.isEmpty(address.city))))
+      if ((!_.isNull(address.country) || _.isUndefined(address.country) || !_.isEmpty(address.country)) && 
+      (!_.isNull(address.province) || _.isUndefined(address.province) || !_.isEmpty(address.province)) && 
+      (!_.isNull(address.address) || _.isUndefined(address.address) || !_.isEmpty(address.address)) &&
+      (!_.isNull(address.city) || _.isUndefined(address.city) || !_.isEmpty(address.city)))
       {
         this.setState({checked: true});
+        this.handleChecked(true);
       } else {
         
         swtShowMessage('error', 'Ubicación vacía', 'Señor usuario, este cliente no cuenta con información de ubicación');
@@ -156,6 +164,7 @@ export class Ubicacion extends React.Component {
 
     } else {
       this.setState({checked: false});
+      this.handleChecked(false);
     }
 
   }
@@ -166,7 +175,6 @@ export class Ubicacion extends React.Component {
       return (<Col xs={12} sm={12} md={3} lg={3}>
       <Tooltip text="Al activar el campo, se copiará la información de ubicación de la sede principal del cliente seleccionado (dirección, país, ciudad, departamento y barrio)">
         <Checkbox
-          onChange={(e, data) => this.handleChecked(e, data)}
           onClick={this.changeCheckBox}
           checked={this.state.checked}
           label={"Copiar ubicación"}

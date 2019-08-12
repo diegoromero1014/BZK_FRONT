@@ -246,7 +246,7 @@ class FormEdit extends Component {
                             "employee": task.idResponsable,
                             "employeeName": task.responsable,
                             "closingDate": moment(task.fecha, "DD/MM/YYYY").format('x'),
-                            "commercialReport": buildJsoncommercialReport(task.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
+                            "commercialReport": buildJsoncommercialReport(task.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
                         }
                         tareas.push(data);
                     }
@@ -264,7 +264,7 @@ class FormEdit extends Component {
                     "userTasks": tareas,
                     "documentStatus": typeButtonClick,
                     "preVisitId": idPrevisitSeleted,
-                    "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'))
+                    "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
                 }
                 const { createVisti } = this.props;
                 const that = this;

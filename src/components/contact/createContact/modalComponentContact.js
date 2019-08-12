@@ -252,7 +252,8 @@ class ModalComponentContact extends Component {
             "contactRelevantFeatures": contactRelevantFeatures.value,
             "callFromModuleContact": false,
             "favoritesGroups": JSON.parse('[' + ((_.isNull(listaFavoritos) || _.isUndefined(listaFavoritos)) ? "" : listaFavoritos.value) + ']'),
-            "updatedInfo" : true
+            "updatedInfo" : true,
+            "callFromCommercial": true
         };
 
         changeStateSaveData(true, MESSAGE_SAVE_DATA);

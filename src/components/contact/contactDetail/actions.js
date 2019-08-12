@@ -94,7 +94,8 @@ export function saveContact(contact) {
       "socialStyle": contact.socialStyle,
       "attitudeOverGroup": contact.attitudeOverGroup,
       "contactRelevantFeatures": contact.contactRelevantFeatures,
-      "callFromModuleContact": contact.callFromModuleContact
+      "callFromModuleContact": contact.callFromModuleContact,
+      "callFromCommercial": true
     }
   }
 
