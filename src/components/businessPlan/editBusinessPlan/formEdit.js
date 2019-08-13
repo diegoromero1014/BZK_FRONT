@@ -179,7 +179,8 @@ export class FormEdit extends Component {
                                     "task": need.needTask,
                                     "employeeResponsible": need.needIdResponsable,
                                     "closingDate": Number(moment(need.needDate, "DD/MM/YYYY").format('x')),
-                                    "status": need.statusIdNeed
+                                    "status": need.statusIdNeed,
+                                    "advance": need.userTask.advance
                                 }
                             }
                             needsbB.push(data);
