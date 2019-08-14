@@ -30,7 +30,7 @@ var idUsuario, nameUsuario;
 let nameEntity;
 
 
-class ModalCreateTask extends Component {
+export class ModalCreateTask extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -199,7 +199,7 @@ class ModalCreateTask extends Component {
     var visibleEdit, editAction;
     var userName = myPendingsReducer.get('userName');
     if (actionEdit) {
-      visibleEdit = _.isNull(userName) || _.isUndefined(userName) ? true : _.isEqual(userName.toLowerCase(), localStorage.getItem('userNameFront').toLowerCase());
+      visibleEdit = _.isNull(userName) || _.isUndefined(userName) ? true : _.isEqual(userName.toLowerCase(), window.localStorage.getItem('userNameFront').toLowerCase());
     } else {
       editAction = true;
     }
