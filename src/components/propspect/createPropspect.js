@@ -86,12 +86,12 @@ class CreatePropspect extends Component {
     idNumber.onChange(idNumber.value.trim());
     validateProspectExists(idType.value, idNumber.value.trim())
       .then((data) => {
-        if ((_.get(data, 'payload.data.status') === "Exists")) {
+        if ((_.get(data, 'payload.data.data.status') === "Exists")) {
           typeMessage = "warning";
           titleMessage = "Prospecto/cliente existente";
           message = "El prospecto/cliente ya se encuentra registrado en la aplicación.";
           this.setState({ showEr: true });
-        } else if (_.get(data, 'payload.data.status') === "Error") {
+        } else if (_.get(data, 'payload.data.data.status') === 500) {
           typeMessage = "error";
           titleMessage = "Error";
           message = "Ocurrió un error tratando de consultar si el prospecto ya se encuentra registrado en la aplicación.";
