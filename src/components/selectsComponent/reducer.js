@@ -81,9 +81,9 @@ export default (state = initialState, action) => {
         case constants.FILTER_CITY:
             return state.set('dataTypeCity', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_PROVINCE_CLIENT:
-            return state.set('dataTypeProvinceClient', defaultData(action, constants.PAY_LOAD_DATA));
+            return state.set('dataTypeProvinceClient', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_CITY_CLIENT:
-            return state.set('dataTypeCityClient', defaultData(action, constants.PAY_LOAD_DATA));
+            return state.set('dataTypeCityClient', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_HOBBIES:
             return state.set('dataTypeHobbies', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_SPORTS:
