@@ -35,7 +35,7 @@ class BusinessPlanComponent extends Component {
     } else {
       const { businessPlanByClientFindServer, clearBusinessPlan, validatePermissionsByModule } = this.props;
       clearBusinessPlan();
-      businessPlanByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "bp.initialValidityDate", 1, "", "");
+      businessPlanByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "BP.D31_INITIAL_VALIDITY_DATE", 1, "", "");
 
       validatePermissionsByModule(MODULE_BUSSINESS_PLAN).then((data) => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
