@@ -30,7 +30,7 @@ var idUsuario, nameUsuario;
 let nameEntity;
 
 
-class ModalCreateTask extends Component {
+export class ModalCreateTask extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -91,7 +91,7 @@ class ModalCreateTask extends Component {
 
   componentWillMount() {
  
-    const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea, dateEntity }, taskEdit, getMasterDataFields, getInfoTaskUser, updateUserNameTask } = this.props;
+    const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea }, taskEdit, getMasterDataFields, getInfoTaskUser, updateUserNameTask } = this.props;
     updateUserNameTask("");
     getMasterDataFields([TASK_STATUS]);
     let idTask = _.get(taskEdit, 'id', taskEdit);
@@ -107,10 +107,7 @@ class ModalCreateTask extends Component {
       } else {
         fecha.onChange(moment(task.finalDate).format("DD/MM/YYYY"));
       }
-      if (task.dateEntity !== null && task.dateEntity !== '') {
         nameEntity = task.nameEntity;
-        dateEntity.onChange(formatLongDateToDateWithNameMonth(task.dateEntity));
-      }
       tarea.onChange(task.task);
     });
   }
@@ -196,13 +193,13 @@ class ModalCreateTask extends Component {
 }
   render() {
     
-    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit, dateEntity, idEmployee },
+    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit, idEmployee },
       selectsReducer, reducerGlobal, handleSubmit, myPendingsReducer, actionEdit } = this.props;
     const styleRow = {};
     var visibleEdit, editAction;
     var userName = myPendingsReducer.get('userName');
     if (actionEdit) {
-      visibleEdit = _.isNull(userName) || _.isUndefined(userName) ? true : _.isEqual(userName.toLowerCase(), localStorage.getItem('userNameFront').toLowerCase());
+      visibleEdit = _.isNull(userName) || _.isUndefined(userName) ? true : _.isEqual(userName.toLowerCase(), window.localStorage.getItem('userNameFront').toLowerCase());
     } else {
       editAction = true;
     }
@@ -309,10 +306,10 @@ class ModalCreateTask extends Component {
           </div>
         </div>
         <div className="modalBt4-footer modal-footer">
-          {dateEntity.value !== null && dateEntity.value !== '' ?
+          {nameEntity ?
             <Row xs={12} md={12} lg={12}>
               <Col xs={6} md={10} lg={10} style={{ textAlign: "left", varticalAlign: "middle", marginLeft: "0px" }}>
-                <span style={{ fontWeight: "bold", color: "#818282" }}>Pendiente de {nameEntity}: </span><span style={{ marginLeft: "0px", color: "#818282" }}>{dateEntity.value}</span>
+                <span style={{ fontWeight: "bold", color: "#818282" }}>Pendiente de {nameEntity} </span>
               </Col>
               <Col xs={6} md={2} lg={2}>
                 <button

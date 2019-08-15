@@ -43,7 +43,7 @@ class ListNeed extends Component {
             var data = _.chain(needs.toArray()).map(need => {
                 const {
                     uuid, needType, needIdType, needFormat, descriptionNeed, descriptionNeedText, productFamily, productFamilyId, needProduct, needIdProduct, needImplementation,
-                    statusNeed, needIdImplementation, needTask, needBenefits, needIdResponsable, needResponsable, needDate, statusIdNeed
+                    statusNeed, needIdImplementation, needTask, needBenefits, needIdResponsable, needResponsable, needDate, statusIdNeed, userTask
                 } = need;
                 return _.assign({}, {
                     'actions': {
@@ -75,7 +75,8 @@ class ListNeed extends Component {
                         typeDelete: DELETE_NEED_VIEW,
                         id: uuid,
                         mensaje: "¿Señor usuario, está seguro que desea eliminar la necesidad?"
-                    }
+                    },
+                    userTask: userTask
                 });
             })
                 .value();

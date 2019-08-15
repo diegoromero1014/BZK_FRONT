@@ -551,7 +551,7 @@ class FormPrevisita extends Component {
                     "constructiveTension": this.state.constructiveTension,
                     "documentStatus": typeButtonClick,
                     "endTime": this.state.durationPreVisit,
-                    "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'))
+                    "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
                 }
 
                 validateDatePreVisit(visitTime, endVisitTime).then((data) => {

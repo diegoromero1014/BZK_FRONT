@@ -200,92 +200,66 @@ export class ModalNeed extends Component {
             needTask: needTask.value,
             needBenefits: needBenefits.value,
         };
-        validateWhiteListOnNeed(jsonValidate).then((data) => {
-            let errors = data.payload.data.data;
 
-            this.errorTask = null;
-            this.errorBenefits = null;
-            this.errorDescrption = null;
+        if (needEdit !== undefined) {
+            let idNeed = (needEdit.userTask !== null && needEdit.userTask !== undefined  && needEdit.userTask.id !== undefined) ? needEdit.userTask.id : null;
+            needEdit.needIdType = needType.value;
+            needEdit.needType = needC;
+            needEdit.descriptionNeed = descriptionNeed.value;
+            needEdit.descriptionNeedText = shorterStringValue(htmlToText(descriptionNeed.value), 120);
+            needEdit.productFamilyId = productFamily.value;
+            needEdit.productFamily = productF;
+            needEdit.needIdProduct = needProduct.value;
+            needEdit.needProduct = productC;
+            needEdit.needIdImplementation = needImplementation.value;
+            needEdit.needImplementation = implementation;
+            needEdit.needTask = needTask.value;
+            needEdit.needBenefits = needBenefits.value;
+            needEdit.needIdResponsable = idUsuario;
+            needEdit.needResponsable = nameUsuario;
+            needEdit.needDate = needDate.value;
+            needEdit.needFormat = needDate.value;
+            needEdit.statusIdNeed = statusNeed.value;
+            needEdit.statusNeed = status;
+            needEdit.idTask = idNeed;
+            editNeed(needEdit);
 
-            for (let index = 0; index < errors.length; index++) {
-                const error = errors[index];
-                const field = error.fieldName;
-                
-                switch (field) {
-                    case "task":
-                        this.errorTask = error.message;
-                        break;
-                    case "expected_benefits":
-                        this.errorBenefits = error.message;
-                        break;
-                    case "descriptionOfClientNeed":
-                        this.errorDescrption = error.message;
-                        break;
-                    default:
-                        break;
+            swtShowMessage('success', "Necesidad editada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán.", { onConfirmCallback: this._closeCreate });
+
+        } else {
+            const uuid = _.uniqueId('need_');
+            let need = {
+                uuid,
+                needIdType: needType.value,
+                needType: needC,
+                descriptionNeed: descriptionNeed.value,
+                descriptionNeedText: shorterStringValue(htmlToText(descriptionNeed.value), 120),
+                productFamilyId: productFamily.value,
+                productFamily: productF,
+                needIdProduct: needProduct.value,
+                needProduct: productC,
+                needIdImplementation: needImplementation.value,
+                needImplementation: implementation,
+                needTask: needTask.value,
+                needBenefits: needBenefits.value,
+                needIdResponsable: idUsuario,
+                needResponsable: nameUsuario,
+                needDate: needDate.value,
+                needFormat: needDate.value,
+                statusIdNeed: statusNeed.value,
+                statusNeed: status,
+                userTask: {
+                    id: null,
+                    task: '',
+                    employeeResponsible: '',
+                    closingDate: '',
+                    status: '',
+                    advance: ''
                 }
-            }
-
-            if (errors.length > 0) {
-                this.disableSubmitButton = false;
-                this.forceUpdate();
-                return;
-            }
-
-
-            if (needEdit !== undefined) {
-                needEdit.needIdType = needType.value;
-                needEdit.needType = needC;
-                needEdit.descriptionNeed = descriptionNeed.value;
-                needEdit.descriptionNeedText = shorterStringValue(htmlToText(descriptionNeed.value), 120);
-                needEdit.productFamilyId = productFamily.value;
-                needEdit.productFamily = productF;
-                needEdit.needIdProduct = needProduct.value;
-                needEdit.needProduct = productC;
-                needEdit.needIdImplementation = needImplementation.value;
-                needEdit.needImplementation = implementation;
-                needEdit.needTask = needTask.value;
-                needEdit.needBenefits = needBenefits.value;
-                needEdit.needIdResponsable = idUsuario;
-                needEdit.needResponsable = nameUsuario;
-                needEdit.needDate = needDate.value;
-                needEdit.needFormat = needDate.value;
-                needEdit.statusIdNeed = statusNeed.value;
-                needEdit.statusNeed = status;
-                editNeed(needEdit);
-
-                swtShowMessage('success', "Necesidad editada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades editadas se perderán.", { onConfirmCallback: this._closeCreate });
-
-            } else {
-                const uuid = _.uniqueId('need_');
-                let need = {
-                    uuid,
-                    needIdType: needType.value,
-                    needType: needC,
-                    descriptionNeed: descriptionNeed.value,
-                    descriptionNeedText: shorterStringValue(htmlToText(descriptionNeed.value), 120),
-                    productFamilyId: productFamily.value,
-                    productFamily: productF,
-                    needIdProduct: needProduct.value,
-                    needProduct: productC,
-                    needIdImplementation: needImplementation.value,
-                    needImplementation: implementation,
-                    needTask: needTask.value,
-                    needBenefits: needBenefits.value,
-                    needIdResponsable: idUsuario,
-                    needResponsable: nameUsuario,
-                    needDate: needDate.value,
-                    needFormat: needDate.value,
-                    statusIdNeed: statusNeed.value,
-                    statusNeed: status
-                };
-                addNeed(need);
-                swtShowMessage('success', "Necesidad agregada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán.", { onConfirmCallback: this._closeCreate });
-            }
-
-        }).catch((error) => {
-            console.log(error);
-        });
+            };
+            addNeed(need);
+            swtShowMessage('success', "Necesidad agregada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán.", { onConfirmCallback: this._closeCreate });
+        }
     }
 
     updateKeyValueUsersBanco(e) {
@@ -557,9 +531,9 @@ function mapStateToProps({ needs, selectsReducer }, { needEdit }) {
                 needResponsable: needEdit.needResponsable,
                 idEmployee: needEdit.needIdResponsable,
                 statusNeed: needEdit.statusIdNeed,
-                needDate: needEdit.needFormat
+                needDate: needEdit.needFormat,
+                userTask: needEdit.userTask
             }
-
         }
     } else {
         return {
@@ -575,7 +549,15 @@ function mapStateToProps({ needs, selectsReducer }, { needEdit }) {
                 needBenefits: '',
                 needResponsable: '',
                 statusNeed: '',
-                needDate: ''
+                needDate: '',
+                userTask: {
+                    id: null,
+                    task: '',
+                    employeeResponsible: '',
+                    closingDate: '',
+                    status: '',
+                    advance: ''
+                }
             }
         };
     }
