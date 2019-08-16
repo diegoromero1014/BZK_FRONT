@@ -3,8 +3,8 @@ import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN, CLEAR_STATE } from './constants';
 import { INIT_INPUT_EVENTS, STOP_INPUT_EVENTS, APP_NAME } from '../../constantsGlobal';
 import axios from 'axios';
 import momentTimeZone from 'moment-timezone';
-//
-export function validateLogin(username, password) {
+
+export function validateLogin(username, password, recaptcha) {
 
     const json = {
         messageHeader: {
@@ -21,11 +21,14 @@ export function validateLogin(username, password) {
         messageBody: {
             "username": username,
             "password": password,
+            "recaptcha": recaptcha,
             "application": APP_NAME,
             "timeZone": momentTimeZone.tz.guess()
         }
     };
-    const request = axios.post(APP_URL + "/userAuthentication", json);
+    const request = axios.post(APP_URL + "/userAuthentication", json, {
+        withCredentials: true,        
+    });
     return {
         type: VALIDATE_LOGIN,
         payload: request
