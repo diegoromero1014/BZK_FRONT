@@ -191,29 +191,6 @@ export function economicGroupsByKeyword(keyword) {
   }
 }
 
-export function getPipelineProducts() {
-  const json = {
-    messageHeader: {
-      "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
-    },
-    messageBody: {}
-  };
-  let request = axios.post(APP_URL + "/productList", json);
-  return {
-    type: PIPELINE_PRODUCTS,
-    payload: request
-  };
-}
-
 export function getClientNeeds() {
   const json = {
     messageHeader: {
