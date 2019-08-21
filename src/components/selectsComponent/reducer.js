@@ -63,7 +63,7 @@ export default (state = initialState, action) => {
         case constants.CIIU:
             return state.set("dataCIIU", defaultData(action, 'payload.data.messageBody.ciiuValueObjects'));
         case constants.SUB_CIIU:
-            return state.set("dataSubCIIU", defaultData(action, 'payload.data.messageBody.subCiiuValueObjects'));
+            return state.set("dataSubCIIU", defaultData(action, 'payload.data.data.subCiiuValueObjects'));
         case constants.FILTER_GENDER:
             return state.set('dataTypeGender', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_TITLE:
