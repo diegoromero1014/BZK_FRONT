@@ -84,7 +84,8 @@ export const TEAM_VALUE_OBJECTS = "teamValueObjects";
 export const MANAGEMENT_BRAND = "managementBrand";
 export const MANAGEMENT_BRAND_KEY = "managementBrandKey";
 export const OCCUPATION = "occupation";
-export const MANAGEMENTS_OF_SECTOR_STRATEGY =  "managementsOfSectorStrategy"
+export const MANAGEMENTS_OF_SECTOR_STRATEGY =  "managementsOfSectorStrategy";
+export const PAY_LOAD_DATA = 'payload.data.data';
 //INICIO prevent overwrite data reducer editclient
 export const FILTER_PROVINCE_CLIENT = 'provinceClient';
 export const FILTER_CITY_CLIENT = 'cityClient';
