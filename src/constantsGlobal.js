@@ -162,25 +162,29 @@ export const TAB_CUSTOMER_STORY = 10;
 export const MAX_LENGTH_LINK_CLIENT_TRACER_CODE = 255;
 
 let API_URL;
+let GOOGLE_RECAPTCHA_PUBLIC_KEY;
 
 if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
     API_URL = "http://localhost:8084/Centricity";
+    GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcSM7AUAAAAAOgy56jmc06CPK7uDLZNiwzkG6Y8';
 } else {
-    if (WP_VAR_ENVIRONMENT === "production") {
+    if (WP_VAR_ENVIRONMENT === "production") {        
         API_URL = "https://biztrack.bancolombia.corp/Centricity";
+        GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcN9rMUAAAAAAA6mSV4rn_7BHZvOVlQlWBIXLeB';
     } else if (WP_VAR_ENVIRONMENT === 'development') {
         API_URL = "https://was-biztrackdev.apps.ambientesbc.com/Centricity";
+        GOOGLE_RECAPTCHA_PUBLIC_KEY = '6Lf39bMUAAAAANetoQ4U_xpWh1pNHdANtBM7Mc-5';
     } else if (WP_VAR_ENVIRONMENT === 'quality') {
         API_URL = "https://biztrackqa.apps.ambientesbc.com/Centricity";
-    } else if (WP_VAR_ENVIRONMENT === 'aws') {
-        API_URL = "https://biztrack.apps.bancolombia.com/Centricity";
+        GOOGLE_RECAPTCHA_PUBLIC_KEY = '6Lfm9bMUAAAAAEqNTrF1KqOgb6sx9bR1qRyWMCAZ';
     } else if (WP_VAR_ENVIRONMENT === 'sameorigin') {
         API_URL = window.location.origin + "/Centricity";
+        GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcN9rMUAAAAAAA6mSV4rn_7BHZvOVlQlWBIXLeB';
     }
 }
 
 export const APP_URL = API_URL;
-
+export const GRECAPTCHA_PUBLIC_KEY = GOOGLE_RECAPTCHA_PUBLIC_KEY;
 export const INIT_INPUT_EVENTS = 'ias-ayax/input/init-events-observer';
 export const STOP_INPUT_EVENTS = 'ias-ayax/input/stop-events-observer';
 export const UPDATE_INPUT_EVENT = 'ias-ayax/input/update-event-observer';

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {GOOGLE_SITE_KEY} from './constants';
+import { GRECAPTCHA_PUBLIC_KEY } from '../../constantsGlobal';
 
 export default class ReCaptcha extends Component {
 
@@ -10,7 +10,7 @@ export default class ReCaptcha extends Component {
     render() {
         return (
             <div>
-                <div className="g-recaptcha recaptcha" data-sitekey={GOOGLE_SITE_KEY}></div>
+                <div className="g-recaptcha recaptcha" data-sitekey={GRECAPTCHA_PUBLIC_KEY}></div>
             </div>
         )
     }
