@@ -57,7 +57,7 @@ class FormLogin extends Component {
         e.preventDefault();
         
         const { usuario, password } = this.state;
-        const recaptcha = this.state.loginAttempts >= 2 ? getGrecaptcha().getResponse() : null;        
+        //const recaptcha = this.state.loginAttempts >= 2 ? getGrecaptcha().getResponse() : null;        
         const { validateLogin, showLoading, changeActiveItemMenu } = this.props;
         showLoading(true, LOADING_LOGIN);        
         validateLogin(usuario, password, recaptcha)
