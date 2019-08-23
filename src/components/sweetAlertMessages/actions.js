@@ -4,6 +4,8 @@
 export const CLOSE_SWT_MESSAGE = "CLOSE_SWT_MESSAGE";
 export const SHOW_SWT_MESSAGE = "SHOW_SWT_MESSAGE";
 
+import {store} from '../../index';
+
 /**
  * 
  * @param {String} typeMessage 
@@ -23,6 +25,10 @@ export function swtShowMessage(typeMessage, title, message, customProps, props){
         customProps,
         props
     };
+}
+
+export function dispatchShowMessageToStore(...args) {
+    store.dispatch(swtShowMessage(...args));
 }
 
 export function swtCloseMessage(){

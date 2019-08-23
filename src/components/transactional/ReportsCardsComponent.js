@@ -2,6 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { Icon, Button } from 'semantic-ui-react'
 import ModalComponent from './ModalComponent';
 
+import { dispatchShowMessageToStore } from '../sweetAlertMessages/actions';
+import { executeFunctionIfInternetExplorer, showSweetAlertErrorMessage } from '../../utils/browserValidation';
+
 class ReportsCardsComponent extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +23,7 @@ class ReportsCardsComponent extends Component {
                 this.handleDownload();
                 break;
             case 'FRAME':
-                this.handleOpenModal();
+                executeFunctionIfInternetExplorer(this.handleOpenModal, showSweetAlertErrorMessage(dispatchShowMessageToStore))
                 break;
         }
     }
@@ -34,10 +37,7 @@ class ReportsCardsComponent extends Component {
     }
 
     handleDownload() {
-        console.log('object');
-
         const { url } = this.props;
-
         if (url) {
             this.redurectUrl(url);
         }

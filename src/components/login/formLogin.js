@@ -15,18 +15,21 @@ import { LOADING_LOGIN, ITEM_ACTIVE_MENU_DEFAULT } from './constants';
 import { MESSAGE_SERVER_ERROR, REQUEST_SUCCESS } from '../../constantsGlobal';
 import { showLoading } from '../loading/actions';
 import { changeActiveItemMenu } from '../menu/actions';
+import { isInternetExplorer } from '../../utils/browserValidation';
 
 import SweetAlert from "../sweetalertFocus";
-import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 
 class FormLogin extends Component {
     constructor(props) {
         super(props);
+
+        const message = !isInternetExplorer() ? "Para acceder a todas las funcionalidades de biztrack, por favor ingrese por Internet Explorer" : "" ;
+
         this.state = {
             usuario: "",
             password: "",
-            message: "",
+            message,
             showMessageNotification: false,
             messageTitle: '¡Aviso!',
             messageNotification: ''
