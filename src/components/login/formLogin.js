@@ -82,7 +82,7 @@ class FormLogin extends Component {
                     let res = JSON.parse(response.payload.data.data);
                     this.setState({
                         message: res.message,
-                        //loginAttempts: res.loginAttempts                        
+                        loginAttempts: res.loginAttempts                        
                     });
                 }
                 showLoading(false, '');
