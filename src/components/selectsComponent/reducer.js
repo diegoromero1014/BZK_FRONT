@@ -99,7 +99,7 @@ export default (state = initialState, action) => {
         case constants.TYPE_NOTES:
             return state.set('dataTypeNotes', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.ECONOMIC_GROUPS:
-            return state.set('dataEconomicGroup', defaultData(action, 'payload.data.messageBody.economicGroupValueObjects'));
+            return state.set('dataEconomicGroup', defaultData(action, 'payload.data.data'));
         case constants.SHAREHOLDER_KIND:
             return state.set('dataTypeShareholdersKind', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.SHAREHOLDER_TYPE:
