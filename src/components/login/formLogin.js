@@ -82,6 +82,7 @@ class FormLogin extends Component {
                     let res = JSON.parse(response.payload.data.data);
                     this.setState({
                         message: res.message,
+                        //TODO: Habilitar reCaptcha
                         //loginAttempts: res.loginAttempts                        
                     });
                 }
