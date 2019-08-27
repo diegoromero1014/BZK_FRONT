@@ -492,7 +492,8 @@ export function validateFields(values, validations, errors) {
                             errors[field] = constants.VALUE_XSS_INVALID;
                         }
                         break;
-
+                    default:
+                        break;
                 }
             }
         });

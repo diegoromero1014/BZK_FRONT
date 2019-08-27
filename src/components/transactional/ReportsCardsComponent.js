@@ -32,6 +32,8 @@ export class ReportsCardsComponent extends Component {
             case 'FRAME':
                 executeFunctionIfInternetExplorer(this.handleOpenModal, showSweetAlertErrorMessage(swtShowMessage));
                 break;
+            default:
+                swtShowMessage('error', 'Reporte', 'Señor usuario, no fue posible abrir el reporte');
         }
     }
 
