@@ -5,7 +5,8 @@ import configureStore from './store/store';
 import Routes from './routes';
 import Router from './historyRouter';
 import {syncHistoryWithStore} from 'react-router-redux';
-const store = configureStore();
+
+export const store = configureStore();
 
 const reduxRouterMiddleware = syncHistoryWithStore(Router, store);
 

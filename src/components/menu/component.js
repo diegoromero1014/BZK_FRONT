@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import MenuListComponent from "./menuListComponent";
 import SwtAlertMessage from "../sweetAlertMessages/swtMessageComponent";
 import {
@@ -13,9 +13,8 @@ import {
     MODULE_CLIENTS,
     MODULE_CONTACTS,
     MODULE_MANAGERIAL_VIEW,
-    MODULE_TRANSACTIONAL, 
-    MODULE_LINKING_REQUESTS,
-    MODULE_SHEDULER
+    MODULE_TRANSACTIONAL,
+    MODULE_LINKING_REQUESTS
 } from "../../constantsGlobal";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -23,8 +22,8 @@ import { consultModulesAccess } from "../navBar/actions";
 import { showLoading } from "../loading/actions";
 import { initialMenuPermissions } from "../menu/actions";
 import { Header, Image } from "semantic-ui-react";
-import { redirectUrl } from '../../actionsGlobal';
 import ImageBrand from '../../../img/svg/logo_bancolombia_blanco_biztrack.svg';
+import { executePromiseIf } from '../../utils/catchRequest';
 
 const itemManagerialView = {
     text: "Vista gerencial",
@@ -88,10 +87,14 @@ const childrenAlertBlackList = { text: "Listas de control", link: "/dashboard/al
 class MenuComponent extends Component {
     constructor(props) {
         super(props);
+        this.getMenuListPermission = this.getMenuListPermission.bind(this);
     }
 
-    getMenuListPermission(permissions) {
-        const { initialMenuPermissions } = this.props;
+    getMenuListPermission() {
+        const { initialMenuPermissions, navBar } = this.props;
+
+        const permissions = navBar.get("mapModulesAccess");
+
         let menuItems = [];
         itemMyPendings.children = [];
         itemMyPendings.children.push(childrenMyPendingsMyTaks);
@@ -129,7 +132,7 @@ class MenuComponent extends Component {
             menuItems.push(itemContacts);
         }
         if (_.get(permissions, MODULE_TRANSACTIONAL)) {
-            menuItems.push(itemTransactional); 
+            menuItems.push(itemTransactional);
         }
         menuItems.push(itemScheduler);
         if (_.get(permissions, MODULE_AEC)) {
@@ -139,18 +142,18 @@ class MenuComponent extends Component {
         initialMenuPermissions(menuItems);
     }
 
+
+
     componentWillMount() {
+        const { consultModulesAccess, showLoading, navBar } = this.props;
         if (window.localStorage.getItem('sessionTokenFront') === "") {
-            
-        } else {
-            const { consultModulesAccess, showLoading } = this.props;
-            showLoading(true, 'Cargando...');
-            consultModulesAccess().then((data) => {
-                showLoading(false, '');
-                const permissions = _.get(data, 'payload.data.data');
-                this.getMenuListPermission(permissions);
-            });
+            return;
         }
+        executePromiseIf(
+            navBar.get("mapModulesAccess").length == 0,
+            consultModulesAccess,
+            this.getMenuListPermission
+        )
     }
 
     render() {
@@ -174,8 +177,8 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ menu }, ownerProps) {
-    return { menu };
+function mapStateToProps({ menu, navBar }, ownerProps) {
+    return { menu, navBar };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuComponent);

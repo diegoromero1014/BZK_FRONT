@@ -1,17 +1,27 @@
 import React, { Component, PropTypes } from 'react';
-import { Icon, Button } from 'semantic-ui-react'
-import ModalComponent from './ModalComponent';
+import { Icon, Button } from 'semantic-ui-react';
+import { bindActionCreators } from "redux";
+import { connect } from 'react-redux';
 
-class ReportsCardsComponent extends Component {
+import ModalComponent from './ModalComponent';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
+import { executeFunctionIfInternetExplorer, showSweetAlertErrorMessage } from '../../utils/browserValidation';
+
+export class ReportsCardsComponent extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             OPENED: false
         }
+
+        this.handleAction = this.handleAction.bind(this);
     }
 
     handleAction(type) {
+
+        const { swtShowMessage } = this.props;
+
         switch (type.toUpperCase()) {
             case 'VIEW':
                 this.handleVisualize();
@@ -20,7 +30,7 @@ class ReportsCardsComponent extends Component {
                 this.handleDownload();
                 break;
             case 'FRAME':
-                this.handleOpenModal();
+                executeFunctionIfInternetExplorer(this.handleOpenModal, showSweetAlertErrorMessage(swtShowMessage));
                 break;
         }
     }
@@ -34,10 +44,7 @@ class ReportsCardsComponent extends Component {
     }
 
     handleDownload() {
-        console.log('object');
-
         const { url } = this.props;
-
         if (url) {
             this.redurectUrl(url);
         }
@@ -95,4 +102,13 @@ ReportsCardsComponent.propTypes = {
     url: PropTypes.string.isRequired,
 };
 
-export default ReportsCardsComponent
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        swtShowMessage 
+    }, dispatch)
+}
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(ReportsCardsComponent)

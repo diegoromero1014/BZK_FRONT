@@ -1,5 +1,5 @@
 import React from 'react';
-import ReportsCardsComponent from '../../../../src/components/transactional/ReportsCardsComponent';
+import {ReportsCardsComponent} from '../../../../src/components/transactional/ReportsCardsComponent';
 import ModalComponent from '../../../../src/components/transactional/ModalComponent';
 import { Icon, Button } from 'semantic-ui-react';
 
