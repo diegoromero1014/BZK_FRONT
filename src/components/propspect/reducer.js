@@ -12,7 +12,9 @@ const initialState = Immutable.Map({
 export default (state = initialState, action) => {
   switch (action.type) {
     case VALIDATE_PROSPECT_EXISTS:
-      const { status, validateLogin, prospectExist } = action.payload.data;
+      const { status, prospectExist } = action.payload.data.data;
+      const { validateLogin } = action.payload.data;
+      
       return state.withMutations(map => {
         map
           .set('validateLogin', validateLogin)

@@ -247,7 +247,15 @@ export class ModalNeed extends Component {
                 needDate: needDate.value,
                 needFormat: needDate.value,
                 statusIdNeed: statusNeed.value,
-                statusNeed: status
+                statusNeed: status,
+                userTask: {
+                    id: null,
+                    task: '',
+                    employeeResponsible: '',
+                    closingDate: '',
+                    status: '',
+                    advance: ''
+                }
             };
             addNeed(need);
             swtShowMessage('success', "Necesidad agregada exitosamente", "Señor usuario, recuerde guardar el plan de negocio. De no ser así las necesidades agregadas se perderán.", { onConfirmCallback: this._closeCreate });
@@ -541,7 +549,15 @@ function mapStateToProps({ needs, selectsReducer }, { needEdit }) {
                 needBenefits: '',
                 needResponsable: '',
                 statusNeed: '',
-                needDate: ''
+                needDate: '',
+                userTask: {
+                    id: null,
+                    task: '',
+                    employeeResponsible: '',
+                    closingDate: '',
+                    status: '',
+                    advance: ''
+                }
             }
         };
     }

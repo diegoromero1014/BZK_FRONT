@@ -42,7 +42,7 @@ class ListBusinessPlanComponent extends Component {
       v1 = nextProps.value1;
       const { clearBusinessPlanOrder } = this.props;
       clearBusinessPlanOrder();
-      this._orderColumn(1, "bp.initialValidityDate");
+      this._orderColumn(1, "BP.D31_INITIAL_VALIDITY_DATE");
     }
   }
 
@@ -71,12 +71,12 @@ class ListBusinessPlanComponent extends Component {
       },
       {
         title: "Fecha inicial",
-        orderColumn: <span><i className="caret down icon" style={{ cursor: 'pointer', display: this.state.orderD }} onClick={() => this._orderColumn(0, "initialValidityDate")}></i><i className="caret up icon" style={{ cursor: 'pointer', display: this.state.orderA }} onClick={() => this._orderColumn(1, "initialValidityDate")}></i></span>,
+        orderColumn: <span><i className="caret down icon" style={{ cursor: 'pointer', display: this.state.orderD }} onClick={() => this._orderColumn(0, "BP.D31_INITIAL_VALIDITY_DATE")}></i><i className="caret up icon" style={{ cursor: 'pointer', display: this.state.orderA }} onClick={() => this._orderColumn(1, "BP.D31_INITIAL_VALIDITY_DATE")}></i></span>,
         key: "initialValidityDate"
       },
       {
         title: "Fecha final",
-        orderColumn: <span><i className="caret down icon" style={{ cursor: 'pointer', display: this.state.orderD }} onClick={() => this._orderColumn(0, "finalValidityDate")}></i><i className="caret up icon" style={{ cursor: 'pointer', display: this.state.orderA }} onClick={() => this._orderColumn(1, "finalValidityDate")}></i></span>,
+        orderColumn: <span><i className="caret down icon" style={{ cursor: 'pointer', display: this.state.orderD }} onClick={() => this._orderColumn(0, "BP.D31_FINAL_VALIDITY_DATE")}></i><i className="caret up icon" style={{ cursor: 'pointer', display: this.state.orderA }} onClick={() => this._orderColumn(1, "BP.D31_FINAL_VALIDITY_DATE")}></i></span>,
         key: "finalValidityDate"
       },
       {
