@@ -277,7 +277,7 @@ class componentStructuredDelivery extends Component {
                         <Col xs={12} md={12} lg={12}>
                             <div style={{ paddingRight: "15px" }}>
                                 <dt>
-                                    <span>Reciprocidades</span>
+                                    <span>Reciprocidades /  Negociación tarifas Cash Management</span>
                                     {callFromDeliveryClient &&
                                         <span>
                                             (<span style={{ color: "red" }}>*</span>)
