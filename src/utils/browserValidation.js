@@ -11,7 +11,9 @@ export function executeFunctionIf(condition, doable, onError) {
     if(condition()) {
         doable();
     } else {
-        onError();
+        if (typeof onError === 'function') {
+            onError();
+        } 
     }
 }
 

@@ -16,6 +16,8 @@ import { getAllowSurveyQualitativeVarible } from './qualitativeVariable/actions'
 import { showLoading } from '../loading/actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
+import { executePromiseIf } from '../../utils/catchRequest';
+
 import { TAB_COVENANTS, TAB_AEC, TAB_QUALITATIVE_VARIABLE } from './constants';
 import {
     MODULE_COVENANTS, MODULE_AEC, MODULE_QUALITATIVE_VARIABLES, MESSAGE_LOAD_DATA,
@@ -33,19 +35,15 @@ class RisksManagementComponent extends Component {
     }
 
     componentWillMount() {
-        const { consultModulesAccess, getAllowSurveyQualitativeVarible, clientInformacion, showLoading, swtShowMessage } = this.props;
+        const { consultModulesAccess, getAllowSurveyQualitativeVarible, clientInformacion, showLoading, swtShowMessage, navBar } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         getAllowSurveyQualitativeVarible(infoClient.id);
         showLoading(true, MESSAGE_LOAD_DATA);
-        consultModulesAccess().then((data) => {
-            showLoading(false, "");
-            if (!validateResponse(data)) {
-                swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-            }
-        }, (reason) => {
-            showLoading(false, "");
-            swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-        });
+        
+        executePromiseIf(
+            navBar.get("mapModulesAccess"),
+            consultModulesAccess
+        )
 
     }
 
