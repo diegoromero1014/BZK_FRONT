@@ -1,6 +1,6 @@
 
 export function getUserAgent() {
-    return "";
+    return window.navigator.userAgent;
 }
 
 export function isInternetExplorer() {
