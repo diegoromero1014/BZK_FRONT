@@ -9,19 +9,15 @@ import ListCovenant from './covenants/listCovenants';
 import ListAEC from './AEC/listAEC';
 import ComponentSurvey from './qualitativeVariable/componentSurvey';
 
-import { validateResponse, validatePermissionsByModule } from '../../actionsGlobal';
 import { consultModulesAccess } from '../navBar/actions';
 import { updateTabSeletedRisksManagment } from './actions';
 import { getAllowSurveyQualitativeVarible } from './qualitativeVariable/actions';
-import { showLoading } from '../loading/actions';
-import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 import { executePromiseIf } from '../../utils/catchRequest';
 
 import { TAB_COVENANTS, TAB_AEC, TAB_QUALITATIVE_VARIABLE } from './constants';
 import {
-    MODULE_COVENANTS, MODULE_AEC, MODULE_QUALITATIVE_VARIABLES, MESSAGE_LOAD_DATA,
-    TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
+    MODULE_COVENANTS, MODULE_AEC, MODULE_QUALITATIVE_VARIABLES
 } from '../../constantsGlobal';
 
 
@@ -35,10 +31,9 @@ class RisksManagementComponent extends Component {
     }
 
     componentWillMount() {
-        const { consultModulesAccess, getAllowSurveyQualitativeVarible, clientInformacion, showLoading, swtShowMessage, navBar } = this.props;
+        const { consultModulesAccess, getAllowSurveyQualitativeVarible, clientInformacion, navBar } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         getAllowSurveyQualitativeVarible(infoClient.id);
-        showLoading(true, MESSAGE_LOAD_DATA);
         
         executePromiseIf(
             navBar.get("mapModulesAccess"),
@@ -109,9 +104,7 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         consultModulesAccess,
         updateTabSeletedRisksManagment,
-        getAllowSurveyQualitativeVarible,
-        showLoading,
-        swtShowMessage
+        getAllowSurveyQualitativeVarible
     }, dispatch);
 }
 
