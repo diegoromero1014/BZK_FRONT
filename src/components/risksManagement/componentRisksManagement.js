@@ -36,7 +36,7 @@ class RisksManagementComponent extends Component {
         getAllowSurveyQualitativeVarible(infoClient.id);
         
         executePromiseIf(
-            navBar.get("mapModulesAccess"),
+            navBar.get("mapModulesAccess").length == 0,
             consultModulesAccess
         )
 

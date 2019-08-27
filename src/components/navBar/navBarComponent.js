@@ -29,7 +29,7 @@ class NavBarComponent extends Component {
         if (window.localStorage.getItem('sessionTokenFront')) {
 
             executePromiseIf(
-                navBar.get("mapModulesAccess"),
+                navBar.get("mapModulesAccess").length == 0,
                 consultModulesAccess
             )
 
