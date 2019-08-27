@@ -56,6 +56,7 @@ export const WALLETSHARE="WALLETSHARE";
 export const CONTROLDASHBOARD="CONTROLDASHBOARD";
 export const SHEDULER="SHEDULER";
 export const BIZTRACK_="BIZTRACK_";
+export const DEFAULT="";
 /** 
  * constantes para identificar donde se hace el eevento para llevar el evento en el datalayer
 */
