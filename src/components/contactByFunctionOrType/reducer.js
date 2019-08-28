@@ -19,7 +19,7 @@ const initialState = Immutable.Map({
 export default (state = initialState, action = {}) => {
     switch (action.type) {
         case actions.FIND_CONTACTS_BY_FUNCTION_OR_TYPE:
-            const response = action.payload.data;
+            const response = action.payload.data.data;
             return state.withMutations(map => {
                 map
                     .set('status', 'processed')
