@@ -8,7 +8,7 @@ export function createErrorsPriority(fields, order) {
 export function shouldHandleError(mapSet, key) {
 }
 
-export function downloadReport(payload, endpoint, filename,changeStateSaveData) {
+export function downloadReport(payload, endpoint, filename, changeStateSaveData) {
     changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
 
     let request = new XMLHttpRequest();
