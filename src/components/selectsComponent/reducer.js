@@ -51,68 +51,65 @@ const initialState = Immutable.Map({
 export default (state = initialState, action) => {
     switch (action.type) {
         case constants.CLIENT_ID_TYPE:
-            return state.set("dataTypeDocument", defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set("dataTypeDocument", defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_FUNCTION_ID:
-            return state.set("dataTypeFunction", defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set("dataTypeFunction", defaultData(action, constants.PAY_LOAD_DATA));
         case constants.PIPELINE_STATUS:
-            return state.set("dataPipelineStatus", defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set("dataPipelineStatus", defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_TYPE_CONTACT_ID:
-            return state.set("dataTypeContact", defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set("dataTypeContact", defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_TYPE_LBO_ID:
-            return state.set("dataTypeLBO", defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set("dataTypeLBO", defaultData(action, constants.PAY_LOAD_DATA));
         case constants.CIIU:
             return state.set("dataCIIU", defaultData(action, 'payload.data.messageBody.ciiuValueObjects'));
         case constants.SUB_CIIU:
-            return state.set("dataSubCIIU", defaultData(action, 'payload.data.messageBody.subCiiuValueObjects'));
+            return state.set("dataSubCIIU", defaultData(action, 'payload.data.data.subCiiuValueObjects'));
         case constants.FILTER_GENDER:
-            return state.set('dataTypeGender', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeGender', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_TITLE:
-            return state.set('dataTypeTitle', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeTitle', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_DEPENDENCY:
-            return state.set('dataTypeDependency', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeDependency', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_CONTACT_POSITION:
-            return state.set('dataTypeContactPosition', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeContactPosition', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_SOCIAL_STYLE:
-            return state.set('dataTypeSocialStyle', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeSocialStyle', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_COUNTRY:
-            return state.set('dataTypeCountry', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
-
+            return state.set('dataTypeCountry', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_PROVINCE:
             return state.set('dataTypeProvince', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_CITY:
             return state.set('dataTypeCity', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
-
         case constants.FILTER_PROVINCE_CLIENT:
             return state.set('dataTypeProvinceClient', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FILTER_CITY_CLIENT:
             return state.set('dataTypeCityClient', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
-
         case constants.FILTER_HOBBIES:
-            return state.set('dataTypeHobbies', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeHobbies', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_SPORTS:
-            return state.set('dataTypeSports', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeSports', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_ATTITUDE_OVER_GROUP:
-            return state.set('dataTypeAttitudeOverGroup', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeAttitudeOverGroup', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.TEAM_FOR_EMPLOYEE:
             return state.set('teamValueObjects', defaultData(action, 'payload.data.teamValueObjects'));
         case constants.TEAM_FOR_EMPLOYEE_REGION_ZONE:
             return state.set('teamValueObjects', defaultData(action, 'payload.data.teamValueObjects'));
         case constants.TEAM_FOR_REGION_EMPLOYEE:
-            return state.set('teamValueObjects', defaultData(action, 'payload.data.data'));
+            return state.set('teamValueObjects', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.TYPE_NOTES:
-            return state.set('dataTypeNotes', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeNotes', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.ECONOMIC_GROUPS:
             return state.set('dataEconomicGroup', defaultData(action, 'payload.data.messageBody.economicGroupValueObjects'));
         case constants.SHAREHOLDER_KIND:
-            return state.set('dataTypeShareholdersKind', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeShareholdersKind', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.SHAREHOLDER_TYPE:
-            return state.set('dataTypeShareholdersType', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeShareholdersType', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.CLIENT_TYPE:
-            return state.set('dataTypeClientType', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeClientType', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.CERTIFICATION_STATUS:
-            return state.set('dataTypeCertificationStatus', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeCertificationStatus', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.TASK_STATUS:
-            return state.set('dataTypeTaskType', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeTaskType', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.CLEAR_VALUES_COUNTRY:
             return state.withMutations(map => {
                 map
@@ -141,25 +138,25 @@ export default (state = initialState, action) => {
             const clientNeeds = action.payload.data.messageBody.clientNeedValueObjects;
             return state.set('pipelineClientNeeds', clientNeeds);
         case constants.LIST_REGIONS:
-            return state.set('region', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('region', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.LIST_REGIONS_BY_EMPLOYEE:
             return state.set('region', defaultData(action, 'payload.data.masterDataDetailEntries'));
         case constants.LIST_ZONES:
             return state.set('zone', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.FULLFILLMENT_COVENANT:
-            return state.set('fullfillmentCovenant', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('fullfillmentCovenant', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.CUSTOMER_TYPOLOGY:
-            return state.set('customerTypology', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('customerTypology', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.SEGMENTS:
-            return state.set('segment', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('segment', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.SUBSEGMENTS:
             return state.set('subSegment', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.REASON_CONFORMATION:
-            return state.set('reasonConformation', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('reasonConformation', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.PRODUCTS:
             return state.set('products', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.PRODUCTS_MASK:
-            return state.set('allProducts', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('allProducts', defaultData(action, 'payload.data.data'));
         case constants.CLEAR_LISTS:
             const clearLists = action.lists;
             return state.withMutations(map => {
@@ -168,7 +165,7 @@ export default (state = initialState, action) => {
                 });
             });
         case constants.MANAGEMENTS_OF_SECTOR_STRATEGY:
-            return state.set('managementsOfsectorStrategy', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('managementsOfsectorStrategy', defaultData(action, constants.PAY_LOAD_DATA));
         default:
             return state;
     }

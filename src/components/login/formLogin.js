@@ -17,7 +17,8 @@ import { showLoading } from '../loading/actions';
 import { changeActiveItemMenu } from '../menu/actions';
 
 import SweetAlert from "../sweetalertFocus";
-import { swtShowMessage } from '../sweetAlertMessages/actions';
+import ReCaptcha from '../recaptcha/component';
+import {getGrecaptcha} from '../recaptcha/actions';
 
 
 class FormLogin extends Component {
@@ -29,9 +30,9 @@ class FormLogin extends Component {
             message: "",
             showMessageNotification: false,
             messageTitle: '¡Aviso!',
-            messageNotification: ''
-        }
-
+            messageNotification: '',
+            loginAttempts: 0
+        };        
         this._redirectLogin = this._redirectLogin.bind(this);
     }
 
@@ -52,14 +53,14 @@ class FormLogin extends Component {
         redirectUrl("/dashboard/clients");
     }
 
-
     _handleValidateLogin(e) {
         e.preventDefault();
         
         const { usuario, password } = this.state;
+        const recaptcha = this.state.loginAttempts >= 2 ? getGrecaptcha().getResponse() : null;        
         const { validateLogin, showLoading, changeActiveItemMenu } = this.props;
-        showLoading(true, LOADING_LOGIN);
-        validateLogin(usuario, password)
+        showLoading(true, LOADING_LOGIN);        
+        validateLogin(usuario, password, recaptcha)
             .then(response => {
                 if (_.get(response, 'payload.data.status') === REQUEST_SUCCESS) {
                     if (_.get(response, 'payload.data.data.message', true)) {
@@ -67,22 +68,22 @@ class FormLogin extends Component {
                             message: (_.get(response, 'payload.data.data.message'))
                         });
                     } else {
-
                         const { saveSessionToken, redirectUrl } = this.props;
                         saveSessionToken(_.get(response, 'payload.data.data.sessionToken'));
                         saveSessionUserName(usuario);
                         changeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
 
                         // Activar cookie
-                        document.cookie = 'estadoconexion=activa;path=/';
-
-                        let messageNotification = _.get(response, 'payload.data.data.messageNotification');
+                        document.cookie = 'estadoconexion=activa;path=/';                        
 
                         redirectUrl("/dashboard/clients");
                     }
                 } else {
+                    let res = JSON.parse(response.payload.data.data);
                     this.setState({
-                        message: MESSAGE_SERVER_ERROR
+                        message: res.message,
+                        //TODO: Habilitar reCaptcha
+                        //loginAttempts: res.loginAttempts                        
                     });
                 }
                 showLoading(false, '');
@@ -114,7 +115,7 @@ class FormLogin extends Component {
     }
 
     render() {
-        const { login } = this.props;
+        const { login } = this.props;               
         return (
             <form onSubmit={this._handleValidateLogin.bind(this)} className=" loginform" autoComplete="off">
                 <h4 className="form-item" style={{ marginLeft: '0px', paddingLeft: '28px', paddingRight: '28px' }}>Hola,
@@ -141,6 +142,9 @@ class FormLogin extends Component {
                         placeholder="Contraseña" className="input-edit"
                         required value={this.state.password}
                         onChange={this._handleChangePassword.bind(this)}></input>
+                </div>
+                <div className={'form-item ' + (this.state.loginAttempts >= 2 ? 'show' : 'hidden')} style={{ marginLeft: "0px", paddingLeft: '28px', paddingRight: '28px' }}>                    
+                    <ReCaptcha></ReCaptcha>
                 </div>
                 <div style={{ marginLeft: "28px", marginTop: "20px", marginBottom: "0px", marginRight: "10px" }}>
                     <span style={{ color: "#e76e70", size: "17px" }}>{this.state.message}</span>
