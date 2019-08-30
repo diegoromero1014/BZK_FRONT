@@ -73,6 +73,8 @@ class LinkModalComponent extends Component {
             case VIEW_CONTACT:
                 const clientId = get(properties, 'id.clientId');
                 window.sessionStorage.setItem('idClientSelected', clientId);
+            default:
+                break;
         }
         this.setState({modalIsOpen: true});
     }

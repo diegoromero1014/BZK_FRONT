@@ -7,6 +7,9 @@ import { GREEN_COLOR, MESSAGE_LOAD_DATA } from "../../constantsGlobal";
 import { URL_VISOR_PARAMETER, URL_VISOR_DOCUMENT_PARAMETER, URL_VISOR_DOCUMENT_TYPE_PARAMETER } from "./constants";
 import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _CLIENT_VISOR } from "../../constantsAnalytics";
 
+import { executeFunctionIfInternetExplorer, showSweetAlertErrorMessage } from '../../utils/browserValidation'
+import { swtShowMessage } from "../sweetAlertMessages/actions";
+
 class buttonClientVisorComponent extends Component {
 
     constructor(props) {
@@ -57,11 +60,11 @@ class buttonClientVisorComponent extends Component {
 
 
     render() {
-        const { clientdIdNumber, clientNameType } = this.props;
+        const { clientdIdNumber, clientNameType, swtShowMessage } = this.props;
 
         return (
             <div>
-                <button className="btn btn-primary" type="button" title="Visor cliente" style={{ marginTop: "0px", backgroundColor: GREEN_COLOR, borderRadius: "0px", height: "50%", float: "right", cursor: 'pointer' }} onClick={this.openModal}>
+                <button className="btn btn-primary" type="button" title="Visor cliente" style={{ marginTop: "0px", backgroundColor: GREEN_COLOR, borderRadius: "0px", height: "50%", float: "right", cursor: 'pointer' }} onClick={() => executeFunctionIfInternetExplorer(this.openModal, showSweetAlertErrorMessage(swtShowMessage))}>
                     <i className="chart line icon" style={{ color: "white", margin: '0em', fontSize: '1.5em' }}></i>
                 </button>
                 <Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
@@ -90,7 +93,8 @@ class buttonClientVisorComponent extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        consultParameterServer
+        consultParameterServer,
+        swtShowMessage
     }, dispatch);
 }
 

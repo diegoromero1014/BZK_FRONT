@@ -61,7 +61,7 @@ export default (state = initialState, action) => {
         case constants.FILTER_TYPE_LBO_ID:
             return state.set("dataTypeLBO", defaultData(action, constants.PAY_LOAD_DATA));
         case constants.CIIU:
-            return state.set("dataCIIU", defaultData(action, 'payload.data.messageBody.ciiuValueObjects'));
+            return state.set("dataCIIU", defaultData(action, 'payload.data.data.ciiuValueObjects'));
         case constants.SUB_CIIU:
             return state.set("dataSubCIIU", defaultData(action, 'payload.data.data.subCiiuValueObjects'));
         case constants.FILTER_GENDER:
@@ -99,7 +99,7 @@ export default (state = initialState, action) => {
         case constants.TYPE_NOTES:
             return state.set('dataTypeNotes', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.ECONOMIC_GROUPS:
-            return state.set('dataEconomicGroup', defaultData(action, 'payload.data.messageBody.economicGroupValueObjects'));
+            return state.set('dataEconomicGroup', defaultData(action, 'payload.data.data'));
         case constants.SHAREHOLDER_KIND:
             return state.set('dataTypeShareholdersKind', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.SHAREHOLDER_TYPE:
@@ -135,7 +135,7 @@ export default (state = initialState, action) => {
                 });
             });
         case constants.PIPELINE_CLIENT_NEEDS:
-            const clientNeeds = action.payload.data.messageBody.clientNeedValueObjects;
+            const clientNeeds = action.payload.data.data.clientNeedValueObjects;
             return state.set('pipelineClientNeeds', clientNeeds);
         case constants.LIST_REGIONS:
             return state.set('region', defaultData(action, constants.PAY_LOAD_DATA));

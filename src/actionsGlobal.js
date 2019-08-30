@@ -6,30 +6,15 @@ import _ from 'lodash';
 import { redirectUrl } from './components/globalComponents/actions';
 import * as constants from './constantsGlobal';
 
+import {catchAction} from './utils/catchRequest';
+
 export function consultParameterServer(tagConsult) {
-    const json = {
-        "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-            "timestamp": new Date().getTime(),
-            "service": "",
-            "status": "0",
-            "language": "es",
-            "displayErrorMessage": "",
-            "technicalErrorMessage": "",
-            "applicationVersion": "",
-            "debug": true,
-            "isSuccessful": true
-        },
-        "messageBody": {
-            "name": tagConsult
-        }
+    const messageBody = {
+        "name": tagConsult
     };
 
-    var request = axios.post(constants.APP_URL + "/getParameterByName", json);
-    return {
-        type: constants.CONSULT_PARAMETER_NAME,
-        payload: request
-    }
+    return catchAction(messageBody, '/getParameterByName', constants.CONSULT_PARAMETER_NAME, tagConsult);
+    
 }
 
 export function setSecurityMessage(message) {
@@ -101,29 +86,12 @@ export function formValidateKeyEnter(e, validate) {
 
 export function validatePermissionsByModule(module) {
     const json = {
-        "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-            "timestamp": new Date().getTime(),
-            "service": "",
-            "status": "0",
-            "language": "es",
-            "displayErrorMessage": "",
-            "technicalErrorMessage": "",
-            "applicationVersion": "",
-            "debug": true,
-            "isSuccessful": true
-        },
-        "messageBody": {
             "module": module,
             "typeApp": constants.FRONT_APP
-        }
     };
 
-    var request = axios.post(constants.APP_URL + "/validatePermissionsModule", json);
-    return {
-        type: module,
-        payload: request
-    }
+    return catchAction(json, '/validatePermissionsModule', module, module);
+
 }
 
 export function shorterStringValue(element, minLength) {
@@ -492,7 +460,8 @@ export function validateFields(values, validations, errors) {
                             errors[field] = constants.VALUE_XSS_INVALID;
                         }
                         break;
-
+                    default:
+                        break;
                 }
             }
         });
