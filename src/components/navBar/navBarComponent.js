@@ -6,7 +6,6 @@ import { backButtonFilter } from '../clients/actions';
 import BellAlert from '../alerts/bellClientAlertComponent';
 import { redirectUrl } from '../globalComponents/actions';
 import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
-import { executePromiseIf } from '../../utils/catchRequest'
 
 class NavBarComponent extends Component {
     constructor(props) {
@@ -28,10 +27,9 @@ class NavBarComponent extends Component {
         
         if (window.localStorage.getItem('sessionTokenFront')) {
 
-            executePromiseIf(
-                navBar.get("mapModulesAccess").length == 0,
-                consultModulesAccess
-            )
+            
+                consultModulesAccess()
+            
 
         }
 

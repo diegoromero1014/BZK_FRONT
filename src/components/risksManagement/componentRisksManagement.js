@@ -13,8 +13,6 @@ import { consultModulesAccess } from '../navBar/actions';
 import { updateTabSeletedRisksManagment } from './actions';
 import { getAllowSurveyQualitativeVarible } from './qualitativeVariable/actions';
 
-import { executePromiseIf } from '../../utils/catchRequest';
-
 import { TAB_COVENANTS, TAB_AEC, TAB_QUALITATIVE_VARIABLE } from './constants';
 import {
     MODULE_COVENANTS, MODULE_AEC, MODULE_QUALITATIVE_VARIABLES
@@ -35,11 +33,8 @@ class RisksManagementComponent extends Component {
         const infoClient = clientInformacion.get('responseClientInfo');
         getAllowSurveyQualitativeVarible(infoClient.id);
         
-        executePromiseIf(
-            navBar.get("mapModulesAccess").length == 0,
-            consultModulesAccess
-        )
-
+        consultModulesAccess();
+        
     }
 
     componentWillUnmount() {
