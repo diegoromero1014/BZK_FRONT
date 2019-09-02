@@ -23,7 +23,7 @@ import { showLoading } from "../loading/actions";
 import { initialMenuPermissions } from "../menu/actions";
 import { Header, Image } from "semantic-ui-react";
 import ImageBrand from '../../../img/svg/logo_bancolombia_blanco_biztrack.svg';
-import { executePromiseIf } from '../../utils/catchRequest';
+import _ from "lodash";
 
 const itemManagerialView = {
     text: "Vista gerencial",
@@ -142,18 +142,15 @@ class MenuComponent extends Component {
         initialMenuPermissions(menuItems);
     }
 
-
-
     componentWillMount() {
         const { consultModulesAccess, showLoading, navBar } = this.props;
         if (window.localStorage.getItem('sessionTokenFront') === "") {
             return;
         }
-        executePromiseIf(
-            navBar.get("mapModulesAccess").length == 0,
-            consultModulesAccess,
-            this.getMenuListPermission
-        )
+        consultModulesAccess().then((data) => {
+            const permissions = _.get(data, 'payload.data.data');
+            this.getMenuListPermission(permissions);
+        });
     }
 
     render() {
