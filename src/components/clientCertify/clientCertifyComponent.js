@@ -29,19 +29,15 @@ import { updateTitleNavBar } from "../navBar/actions";
 import { clearNotes, deleteNote, setNotes } from "../clientEdit/notes/actions";
 import { showLoading } from "../loading/actions";
 import {
-    clearValuesAdressess, consultList,
-    consultListWithParameterUbication, economicGroupsByKeyword, getMasterDataFields
+    clearValuesAdressess,
+    consultList,
+    consultListWithParameterUbication,
+    economicGroupsByKeyword,
+    getMasterDataFields
 } from "../selectsComponent/actions";
-import {
-    sendErrorsUpdate, updateErrorsNotes
-} from "../clientDetailsInfo/actions";
-import {
-    MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA
-} from '../../constantsGlobal';
-import {
-    KEY_DESMONTE,
-    KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME
-} from "../clientEdit/constants";
+import { sendErrorsUpdate, updateErrorsNotes } from "../clientDetailsInfo/actions";
+import { MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA } from '../../constantsGlobal';
+import { KEY_DESMONTE, KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME } from "../clientEdit/constants";
 
 import { fields, validations as validate } from './fieldsAndRulesCertifyClient';
 
@@ -434,7 +430,7 @@ export class ClientCertify extends React.Component {
             if (economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined) {
                 $('.ui.search.participantBanc').toggleClass('loading');
                 economicGroupsByKeyword(economicGroupName.value).then((data) => {
-                    let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
+                    let economicGroup1 = _.get(data, 'payload.data.data');
                     let economicGroup2 = _.forEach(economicGroup1, function (data1) {
                         data1.title = data1.group;
                         data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';

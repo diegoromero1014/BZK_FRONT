@@ -335,7 +335,7 @@ export function getXlsTask(initialDate, finalDate, states) {
   }
 }
 
-export function downloadPendingTask(listTask,changeStateSaveData) {
+export function downloadPendingTask(listTask, changeStateSaveData) {
   const name = "TareasPendientes.xlsx";
 
   const payload = {
@@ -359,5 +359,5 @@ export function downloadPendingTask(listTask,changeStateSaveData) {
     }
   };
 
-  downloadReport(payload, "/generate/XLSX", name,changeStateSaveData);
+  downloadReport(payload, "/generate/XLSX", name, changeStateSaveData);
 }

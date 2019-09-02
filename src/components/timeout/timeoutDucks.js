@@ -16,7 +16,7 @@ function getLastDateToken() {
             "timestamp": new Date().getTime(),
             "sessionToken": window.localStorage.getItem('sessionTokenFront')
         },
-        messageBody: ""
+        messageBody: window.localStorage.getItem('sessionTokenFront')
     }
     var request = axios.post(APP_URL + "/updateSessionLastDate", json)
     return request;

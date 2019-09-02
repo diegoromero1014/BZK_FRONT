@@ -153,8 +153,8 @@ class FormEdit extends Component {
     }
 
     _onClickPDF() {
-        const { pdfDescarga } = this.props;
-        pdfDescarga(window.sessionStorage.getItem('idClientSelected'), this.state.idVisit);
+        const { pdfDescarga, changeStateSaveData } = this.props;
+        pdfDescarga(changeStateSaveData, this.state.idVisit);
     }
 
     _closeConfirmCloseVisit() {

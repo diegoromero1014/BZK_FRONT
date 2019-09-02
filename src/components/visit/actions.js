@@ -3,6 +3,7 @@ import {CHANGE_IDPREVISIT,CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,GE
   CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT, CREATE_VISIT, GET_DETAIL_VISIT, OWNER_DRAFT,
   GET_CSV_VISIT_BY_CLIENT, CLEAR_IDPREVISIT, CHANGE_PAGE_ASSOCIATE__VISIT } from './constants';
 import axios from 'axios';
+import { downloadReport } from '../../utils';
 
 export function createVisti(jsonVisit){
   const json = {
@@ -28,8 +29,33 @@ export function createVisti(jsonVisit){
   }
 }
 
-export function pdfDescarga(idclient, idVisit){
-  window.open(APP_URL + "/pdfReportVisit?idClient="+idclient+"&idVisit="+idVisit+"&language=es"+ "&sessionToken=" + window.localStorage.getItem('sessionTokenFront'));
+export function pdfDescarga(changeStateSaveData, idVisit) {
+  const name = "Visita/reunión.pdf";
+
+  const payload = {
+    "messageHeader": {
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+        "timestamp": new Date().getTime(),
+        "service": "",
+        "status": "0",
+        "language": "es",
+        "displayErrorMessage": "",
+        "technicalErrorMessage": "",
+        "applicationVersion": "",
+        "debug": true,
+        "isSuccessful": true
+    },
+    "messageBody": {
+        "name": name,
+        "route": "BiztrackReports/visit.jrxml",
+        "params": {
+          "P_ID_VISIT": Number(idVisit)
+        },
+        "source": []
+    }
+  };
+
+  downloadReport(payload, "/generate/PDF", name, changeStateSaveData);
 }
 
 export function visitByClientFindServer(clientId,pageNum,maxRows,columnOrder,participatingOrder,statusDocumentId){

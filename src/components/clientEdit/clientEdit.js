@@ -20,7 +20,6 @@ import ProductsClient from "./products/productList";
 import BottonContactAdmin from "../clientDetailsInfo/bottonContactAdmin";
 import BottonShareholderAdmin from "../clientDetailsInfo/bottonShareholderAdmin";
 import ModalErrorsUpdateClient from "./modalErrorsUpdateClient";
-import ClientTypology from "../contextClient/clientTypology";
 import ContextEconomicActivity from "../contextClient/contextEconomicActivity";
 import ComponentListLineBusiness from "../contextClient/listLineOfBusiness/whiteListLineBusiness";
 import ComponentListDistributionChannel from "../contextClient/listDistributionChannel/componentListDistributionChannel";
@@ -31,9 +30,7 @@ import ComponentListMainSupplier from "../contextClient/listMainSupplier/compone
 import ComponentListMainCompetitor from "../contextClient/listMainCompetitor/componentListMainCompetitor";
 import ComponentListIntOperations from "../contextClient/listInternationalOperations/componentListIntOperations";
 import ComponentInfoClient from './components/InfoClient';
-import { validationRules as rulesInfoClient } from './components/InfoClient.js';
 import ActividadEconomica from './components/ActividadEconomica';
-import { validationRules as rulesActividadEconomica } from './components/ActividadEconomica';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
 
 import { clearProducts, setProducts } from "./products/actions";
@@ -44,37 +41,63 @@ import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { showLoading } from "../loading/actions";
 import { saveCreditStudy } from "../clients/creditStudy/actions";
 import {
-    validateResponse, stringValidate, onSessionExpire, validateFields,
-    validateWhileListResponse, replaceCommaInNumber
+    onSessionExpire,
+    replaceCommaInNumber,
+    stringValidate,
+    validateResponse,
+    validateWhileListResponse
 } from "../../actionsGlobal";
 import { updateTitleNavBar } from "../navBar/actions";
 import {
-    seletedButton, sendErrorsUpdate, updateClient, updateErrorsNotes,
+    seletedButton,
+    sendErrorsUpdate,
+    updateClient,
+    updateErrorsNotes,
     validateContactShareholder
 } from "../clientDetailsInfo/actions";
 import { goBack, redirectUrl } from "../globalComponents/actions";
 import {
-    clearValuesAdressess, consultDataSelect, consultList, consultListWithParameter,
-    consultListWithParameterUbication, economicGroupsByKeyword, getMasterDataFields
+    clearValuesAdressess,
+    consultDataSelect,
+    consultList,
+    consultListWithParameter,
+    consultListWithParameterUbication,
+    economicGroupsByKeyword,
+    getMasterDataFields
 } from "../selectsComponent/actions";
 
 import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
 import * as constants from "../selectsComponent/constants";
 import {
-    CONSTRUCT_PYME, KEY_DESMONTE,
-    KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME,
-    KEY_OPTION_OTHER_OPERATIONS_FOREIGNS, KEY_OPTION_OTHER_ORIGIN_GOODS,
-    KEY_OPTION_OTHER_ORIGIN_RESOURCE, MAXIMUM_OPERATIONS_FOREIGNS, UPDATE_METHOD,
-    EDIT_METHOD
+    EDIT_METHOD,
+    KEY_DESMONTE,
+    KEY_EXCEPCION,
+    KEY_EXCEPCION_NO_GERENCIADO,
+    KEY_EXCEPCION_NO_NECESITA_LME,
+    KEY_OPTION_OTHER_OPERATIONS_FOREIGNS,
+    KEY_OPTION_OTHER_ORIGIN_GOODS,
+    KEY_OPTION_OTHER_ORIGIN_RESOURCE,
+    MAXIMUM_OPERATIONS_FOREIGNS,
+    UPDATE_METHOD
 } from "./constants";
 import {
-    ALLOWS_NEGATIVE_INTEGER, DATE_REQUIERED, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA,
-    ONLY_POSITIVE_INTEGER, OPTION_REQUIRED, VALUE_REQUIERED, VALUE_XSS_INVALID,
-    INFO_ESTUDIO_CREDITO, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_ERROR_INVALID_INPUT
+    ALLOWS_NEGATIVE_INTEGER,
+    INFO_ESTUDIO_CREDITO,
+    MESSAGE_ERROR_INVALID_INPUT,
+    MESSAGE_ERROR_SWEET_ALERT,
+    MESSAGE_LOAD_DATA,
+    MESSAGE_SAVE_DATA,
+    ONLY_POSITIVE_INTEGER,
+    OPTION_REQUIRED,
+    TITLE_ERROR_SWEET_ALERT
 } from '../../constantsGlobal';
 import {
-    DISTRIBUTION_CHANNEL, INT_OPERATIONS, LINE_OF_BUSINESS, MAIN_CLIENTS,
-    MAIN_COMPETITOR, MAIN_SUPPLIER
+    DISTRIBUTION_CHANNEL,
+    INT_OPERATIONS,
+    LINE_OF_BUSINESS,
+    MAIN_CLIENTS,
+    MAIN_COMPETITOR,
+    MAIN_SUPPLIER
 } from "../contextClient/constants";
 
 import { fields, validations as validate } from './fieldsAndRulesClientEditUpdate';
@@ -330,7 +353,7 @@ class clientEdit extends Component {
             if (economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined) {
                 $('.ui.search.participantBanc').toggleClass('loading');
                 economicGroupsByKeyword(economicGroupName.value).then((data) => {
-                    let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
+                    let economicGroup1 = _.get(data, 'payload.data.data');
                     let economicGroup2 = _.forEach(economicGroup1, function (data1) {
                         data1.title = data1.group;
                         data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
