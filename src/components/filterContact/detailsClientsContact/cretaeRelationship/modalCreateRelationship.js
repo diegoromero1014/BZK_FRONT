@@ -2,18 +2,23 @@ import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import SweetAlert from '../../../sweetalertFocus';
 import { bindActionCreators } from 'redux';
-import { Row, Col } from 'react-flexbox-grid';
+import { Col, Row } from 'react-flexbox-grid';
 import { getContactDetails } from '../../../contact/contactDetail/actions';
 import { changeStateSaveData } from '../../../dashboard/actions';
-import { formValidateKeyEnter, nonValidateEnter } from '../../../../actionsGlobal';
+import { formValidateKeyEnter } from '../../../../actionsGlobal';
 import MultipleSelect from '../../../../ui/multipleSelect/multipleSelectComponent';
 import ComboBox from '../../../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../../../ui/comboBoxFilter/comboBoxFilter';
-import { changeValueOpenModal, updateRelationshipClientcontact, modifyClientRelationship, clientsByEconomicGroup } from '../../actions';
+import {
+    changeValueOpenModal,
+    clientsByEconomicGroup,
+    modifyClientRelationship,
+    updateRelationshipClientcontact
+} from '../../actions';
 import { OPEN_CREATE_MODAL } from '../../constants';
-import { FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID } from '../../../selectsComponent/constants';
+import { FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID } from '../../../selectsComponent/constants';
 import { economicGroupsByKeyword } from '../../../selectsComponent/actions';
-import { OPTION_REQUIRED, MESSAGE_SAVE_DATA } from '../../../../constantsGlobal';
+import { MESSAGE_SAVE_DATA, OPTION_REQUIRED } from '../../../../constantsGlobal';
 import ListCreateRelationship from './listCreateRelationship';
 import { clientsFindServer } from '../../../clients/actions';
 import { redirectUrl } from '../../../globalComponents/actions';
@@ -174,7 +179,7 @@ class ModalCreateRelationship extends Component {
             if (economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined && economicGroupName.value.length >= 3) {
                 $('.ui.search.economicGroup').toggleClass('loading');
                 economicGroupsByKeyword(economicGroupName.value).then((data) => {
-                    let economicGroup1 = _.get(data, 'payload.data.messageBody.economicGroupValueObjects');
+                    let economicGroup1 = _.get(data, 'payload.data.data');
                     let economicGroup2 = _.forEach(economicGroup1, function (data1) {
                         data1.title = data1.group;
                         data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
