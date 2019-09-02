@@ -26,12 +26,13 @@ class FormLogin extends Component {
     constructor(props) {
         super(props);
 
-        const message = !isInternetExplorer() ? "Para acceder a todas las funcionalidades de biztrack, por favor ingrese por Internet Explorer" : "" ;
+        const browserMessage = !isInternetExplorer() ? "Para acceder a todas las funcionalidades de biztrack, por favor ingrese por Internet Explorer" : "" ;
 
         this.state = {
             usuario: "",
             password: "",
-            message,
+            message: "",
+            browserMessage,
             showMessageNotification: false,
             messageTitle: '¡Aviso!',
             messageNotification: '',
@@ -85,9 +86,8 @@ class FormLogin extends Component {
                 } else {
                     let res = JSON.parse(response.payload.data.data);
                     this.setState({
-                        message: res.message,
-                        //TODO: Habilitar reCaptcha
-                        //loginAttempts: res.loginAttempts                        
+                        message: res.message,                        
+                        loginAttempts: res.loginAttempts                        
                     });
                 }
                 showLoading(false, '');
@@ -152,6 +152,9 @@ class FormLogin extends Component {
                 </div>
                 <div style={{ marginLeft: "28px", marginTop: "20px", marginBottom: "0px", marginRight: "10px" }}>
                     <span style={{ color: "#e76e70", size: "17px" }}>{this.state.message}</span>
+                </div>
+                <div style={{ marginLeft: "28px", marginTop: "20px", marginBottom: "0px", marginRight: "10px" }}>
+                    <span style={{ color: "#e76e70", size: "17px" }}>{this.state.browserMessage}</span>
                 </div>
                 <div className="button-item" style={{ marginLeft: "0px", paddingLeft: '28px', paddingRight: '28px' }}>
                     <button type="submit" className="btn btn-primary" style={{ width: "100%", marginLeft: "0px" }}>
