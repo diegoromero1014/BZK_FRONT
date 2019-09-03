@@ -2,15 +2,11 @@ import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
-import { consultList } from '../../selectsComponent/actions';
-import { TEAM_FOR_EMPLOYEE } from '../../selectsComponent/constants';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
-    MESSAGE_SAVE_DATA, STYLE_BUTTON_BOTTOM, VALUE_XSS_INVALID, VALUE_REQUIERED,
-    REGEX_SIMPLE_XSS, REGEX_SIMPLE_XSS_STRING, REGEX_SIMPLE_XSS_MESAGE, REGEX_SIMPLE_XSS_MESAGE_SHORT,
+    MESSAGE_SAVE_DATA, STYLE_BUTTON_BOTTOM, REGEX_SIMPLE_XSS_MESAGE,
     INCOMPLETE_INFORMATION, ALL_FIELDS_REQUIERED, MOST_ADD_AN_EVENT
 } from '../../../constantsGlobal';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask, xssValidation } from '../../../actionsGlobal';
 import {MAX_LENGTH_EVENT_NAME} from '../../../constantsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
@@ -193,7 +189,7 @@ class componentStructuredDelivery extends Component {
                     listEventsData.map((event) => {
                         listEvents.push({
                             name: event.name,
-                            date: moment(event.dateEvent, 'YYYY-MM-DD').format('DD/MM/YYYY')
+                            date: moment(event.dateEvent).format('DD/MM/YYYY')
                         });
                     });
                     setEvents(listEvents);
