@@ -186,7 +186,6 @@ class componentStructuredDelivery extends Component {
                     dificultSituationsDate.onChange(structuredDeliveryInfo.dificultSituationsDate);
                     var listEventsData = structuredDeliveryInfo.listEvents;
                     var listEvents = [];
-                    debugger;
                     listEventsData.map((event) => {
                         listEvents.push({
                             name: event.name,
