@@ -25,6 +25,13 @@ import RichText from '../richText/richTextComponent';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import { fields, validations as validate } from './createPendingTask/fieldsAndRulesForReduxForm';
 import ButtonDetailsRedirectComponent from '../grid/buttonDetailsRedirectComponent';
+import { detailBusiness } from './../businessPlan/actions';
+import { detailVisit } from './../visit/actions';
+import {validatePermissionsByModule} from './../../actionsGlobal';
+import {
+  MODULE_BUSSINESS_PLAN,
+  MODULE_VISITS
+} from './../../constantsGlobal';
 
 
 var usersBanco = [];
@@ -97,12 +104,20 @@ export class ModalCreateTask extends Component {
 
   componentWillMount() {
  
-    const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea }, taskEdit, getMasterDataFields, getInfoTaskUser, updateUserNameTask } = this.props;
+    const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea }, taskEdit, getMasterDataFields, getInfoTaskUser, updateUserNameTask, detailBusiness, detailVisit, dispatch } = this.props;
     updateUserNameTask("");
     getMasterDataFields([TASK_STATUS]);
     let idTask = _.get(taskEdit, 'id', taskEdit);
     getInfoTaskUser(idTask).then((data) => {
       const task = _.get(data, 'payload.data.data');
+      if (task.nameEntity === 'Plan de negocio') {
+        dispatch(validatePermissionsByModule(MODULE_BUSSINESS_PLAN));
+        detailBusiness(task.entityId);
+      } else if (task.nameEntity === 'Visita') {
+        dispatch(validatePermissionsByModule(MODULE_VISITS));
+        detailVisit(task.entityId);
+      }
+
       responsable.onChange(task.responsable);
       idEmployee.onChange(task.idResponsable);
       idEstado.onChange(task.idStatus);
@@ -192,22 +207,25 @@ export class ModalCreateTask extends Component {
     }
   }
   _handleRelationLink(){
-    const {visitReducer, businessPlanReducer} = this.props;
+    const{businessPlanReducer, visitReducer}=this.props;
     let actionsRedirect;
+    let detail;
     switch (nameEntity) {
       case "Plan de negocio":
+        detail = businessPlanReducer.get("detailBusiness");
         actionsRedirect = {
           typeClickDetail: "businessPlan",
-          ownerDraft: businessPlanReducer.get('ownerDraft'),
+          ownerDraft: detail.data.documentStatus,
           idClient: this.clientId,
           urlRedirect: "/dashboard/businessPlanEdit",
           id: this.entityId
         };
         break;
       case"Visita":
+      detail = visitReducer.get("detailVisit");
         actionsRedirect = {
           typeClickDetail:"visita",
-          ownerDraft: visitReducer.get('ownerDraft'),
+          ownerDraft: detail.data.documentStatus,
           idClient: this.clientId,
           urlRedirect: "/dashboard/visitaEditar",
           id: this.entityId
@@ -348,7 +366,11 @@ export class ModalCreateTask extends Component {
             <Row xs={12} md={12} lg={12}>
               <Col xs={6} md={10} lg={10} style={{ textAlign: "left", varticalAlign: "middle", marginLeft: "0px" }}>
                {!_.isNull(this.entityId) ? 
-                <span style={{ fontWeight: "bold", color: "#818282"}}>Pendiente de {nameEntity}<span style={{paddingLeft:"2em"}}><ButtonDetailsRedirectComponent actionsRedirect={ () => {this.cancelSubmit = true; return this._handleRelationLink()  }} /> </span></span> 
+                <span style={{ fontWeight: "bold", color: "#818282"}}>Pendiente de {nameEntity}
+                  <span style={{paddingLeft:"2em"}}>
+                    <ButtonDetailsRedirectComponent actionsRedirect={ () => {this.cancelSubmit = true; return this._handleRelationLink()  }} />
+                  </span>
+                </span> 
                 :<span style={{ fontWeight: "bold", color: "#818282"}}>Pendiente de {nameEntity}</span>
                }
               </Col>
@@ -389,7 +411,10 @@ function mapDispatchToProps(dispatch) {
     getInfoTaskUser,
     tasksByUser,
     validateValue,
-    swtShowMessage
+    swtShowMessage,
+    detailBusiness,
+    detailVisit,
+    validatePermissionsByModule
   }, dispatch);
 }
 
