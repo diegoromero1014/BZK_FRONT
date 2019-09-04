@@ -118,10 +118,10 @@ export function detailBusiness(idBusiness){
      }
 }
 var request = axios.post(APP_URL + "/businessDetail", json);
-     return{
-       type: constants.GET_DETAIL_BUSINESS,
-       payload: request
-     }
+  return{
+    type: constants.GET_DETAIL_BUSINESS,
+    payload: request
+  }
 }
 
 export function getCsvBusinessPlanByClient(clientId, haveNeeds) {
