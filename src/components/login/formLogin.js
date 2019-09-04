@@ -86,8 +86,9 @@ class FormLogin extends Component {
                 } else {
                     let res = JSON.parse(response.payload.data.data);
                     this.setState({
-                        message: res.message,                        
-                        loginAttempts: res.loginAttempts                        
+                        message: res.message,             
+                        //TODO: reCaptcha deshabilitado           
+                        //loginAttempts: res.loginAttempts                        
                     });
                 }
                 showLoading(false, '');
