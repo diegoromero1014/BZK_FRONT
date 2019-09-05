@@ -166,7 +166,7 @@ let GOOGLE_RECAPTCHA_PUBLIC_KEY;
 
 if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
     API_URL = "http://localhost:8084/Centricity";
-    GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcSM7AUAAAAAOgy56jmc06CPK7uDLZNiwzkG6Y8';
+    GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LfAurYUAAAAANYuFR4J_cUqY7Xw5nJ5ISYF6r4q';
 } else {
     if (WP_VAR_ENVIRONMENT === "production") {        
         API_URL = "https://biztrack.bancolombia.corp/Centricity";
