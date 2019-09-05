@@ -14,7 +14,6 @@ import RisksManagements from '../risksManagement/componentRisksManagement';
 import ComponentCustomerStory from '../customerStory/componentCustomerStory';
 
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
-import { consultModulesAccess } from '../navBar/actions';
 
 import {
     MODULE_CONTACTS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS, MODULE_PIPELINE, MODULE_BUSSINESS_PLAN,
@@ -430,8 +429,7 @@ class TabClientInfo extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        updateTabSeleted,
-        consultModulesAccess
+        updateTabSeleted
     }, dispatch);
 }
 

@@ -28,42 +28,48 @@ class ButtonDetailsRedirectComponent extends Component {
             actionsRedirect, updateTitleNavBar, changeOwnerDraft, changeOwnerDraftPrevisit, changeOwnerDraftPipeline, showLoading,
             updateStatusModal, toggleMenu, navBar
         } = this.props;
+        let redirectObject;
+        if (typeof actionsRedirect === 'function') {
+            redirectObject = actionsRedirect();
+        } else {
+            redirectObject = actionsRedirect;
+        }
         showLoading(true, 'Cargando cliente...');
-        if (actionsRedirect.typeClickDetail === MODULE_VISIT) {
+        if (redirectObject.typeClickDetail === MODULE_VISIT) {
             updateTitleNavBar("Informe de visita/reunión");
-            changeOwnerDraft(actionsRedirect.ownerDraft);
-            if (!isUndefined(actionsRedirect.idClient)) {
-                this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
+            changeOwnerDraft(redirectObject.ownerDraft);
+            if (!isUndefined(redirectObject.idClient)) {
+                this._handleRedirect(redirectObject.urlRedirect + '/' + redirectObject.id, redirectObject.idClient);
             } else {
                 showLoading(false, null);
-                redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+                redirectUrl(redirectObject.urlRedirect + '/' + redirectObject.id);
             }
-        } else if (actionsRedirect.typeClickDetail === MODULE_PREVISIT) {
+        } else if (redirectObject.typeClickDetail === MODULE_PREVISIT) {
             updateTitleNavBar("Informe de previsita");
-            changeOwnerDraftPrevisit(actionsRedirect.ownerDraft);
-            if (!isUndefined(actionsRedirect.idClient)) {
-                this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
+            changeOwnerDraftPrevisit(redirectObject.ownerDraft);
+            if (!isUndefined(redirectObject.idClient)) {
+                this._handleRedirect(redirectObject.urlRedirect + '/' + redirectObject.id, redirectObject.idClient);
             } else {
                 showLoading(false, null);
-                redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+                redirectUrl(redirectObject.urlRedirect + '/' + redirectObject.id);
             }
-        } else if (actionsRedirect.typeClickDetail === MODULE_PIPELINE) {
+        } else if (redirectObject.typeClickDetail === MODULE_PIPELINE) {
             updateTitleNavBar("Informe de pipeline");
-            changeOwnerDraftPipeline(actionsRedirect.ownerDraft);
-            if (!isUndefined(actionsRedirect.idClient)) {
-                this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
+            changeOwnerDraftPipeline(redirectObject.ownerDraft);
+            if (!isUndefined(redirectObject.idClient)) {
+                this._handleRedirect(redirectObject.urlRedirect + '/' + redirectObject.id, redirectObject.idClient);
             } else {
                 showLoading(false, null);
-                redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+                redirectUrl(redirectObject.urlRedirect + '/' + redirectObject.id);
             }
-        } else if (actionsRedirect.typeClickDetail === MODULE_BUSINESS_PLAN) {
+        } else if (redirectObject.typeClickDetail === MODULE_BUSINESS_PLAN) {
             updateTitleNavBar("Informe de plan de negocio");
-            changeOwnerDraftPipeline(actionsRedirect.ownerDraft);
-            if (!isUndefined(actionsRedirect.idClient)) {
-                this._handleRedirect(actionsRedirect.urlRedirect + '/' + actionsRedirect.id, actionsRedirect.idClient);
+            changeOwnerDraftPipeline(redirectObject.ownerDraft);
+            if (!isUndefined(redirectObject.idClient)) {
+                this._handleRedirect(redirectObject.urlRedirect + '/' + redirectObject.id, redirectObject.idClient);
             } else {
                 showLoading(false, null);
-                redirectUrl(actionsRedirect.urlRedirect + '/' + actionsRedirect.id);
+                redirectUrl(redirectObject.urlRedirect + '/' + redirectObject.id);
             }
         }
         if (navBar.get('status') === MENU_OPENED) {
@@ -95,7 +101,6 @@ class ButtonDetailsRedirectComponent extends Component {
 }
 
 ButtonDetailsRedirectComponent.propTypes = {
-    actionsRedirect: PropTypes.object,
     icon: PropTypes.string
 };
 

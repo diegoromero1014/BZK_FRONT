@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
+import {Button} from 'semantic-ui-react';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../ui/comboBoxFilter/comboBoxFilter';
 import { Row, Grid, Col } from 'react-flexbox-grid';
@@ -23,6 +24,14 @@ import { validateValue,formatLongDateToDateWithNameMonth } from '../../actionsGl
 import RichText from '../richText/richTextComponent';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import { fields, validations as validate } from './createPendingTask/fieldsAndRulesForReduxForm';
+import ButtonDetailsRedirectComponent from '../grid/buttonDetailsRedirectComponent';
+import { detailBusiness } from './../businessPlan/actions';
+import { detailVisit } from './../visit/actions';
+import {validatePermissionsByModule} from './../../actionsGlobal';
+import {
+  MODULE_BUSSINESS_PLAN,
+  MODULE_VISITS
+} from './../../constantsGlobal';
 
 
 var usersBanco = [];
@@ -39,12 +48,16 @@ export class ModalCreateTask extends Component {
       showErrtask: false,
       tareaError: null
     };
+    this.cancelSubmit = false;
+    this.entityId = null;
+    this.clientId = null;
     this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
     this._closeViewOrEditTask = this._closeViewOrEditTask.bind(this);
     this._handleEditTask = this._handleEditTask.bind(this);
     this._updateValue = this._updateValue.bind(this);
     this._editTask = this._editTask.bind(this);
     this.processValidation =this.processValidation.bind(this);
+    this._handleRelationLink = this._handleRelationLink.bind(this);
   }
 
   _updateValue(value) {
@@ -91,12 +104,20 @@ export class ModalCreateTask extends Component {
 
   componentWillMount() {
  
-    const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea }, taskEdit, getMasterDataFields, getInfoTaskUser, updateUserNameTask } = this.props;
+    const { fields: { id, responsable, idEmployee, idEstado, advance, fecha, tarea }, taskEdit, getMasterDataFields, getInfoTaskUser, updateUserNameTask, detailBusiness, detailVisit, dispatch } = this.props;
     updateUserNameTask("");
     getMasterDataFields([TASK_STATUS]);
     let idTask = _.get(taskEdit, 'id', taskEdit);
     getInfoTaskUser(idTask).then((data) => {
       const task = _.get(data, 'payload.data.data');
+      if (task.nameEntity === 'Plan de negocio') {
+        dispatch(validatePermissionsByModule(MODULE_BUSSINESS_PLAN));
+        detailBusiness(task.entityId);
+      } else if (task.nameEntity === 'Visita') {
+        dispatch(validatePermissionsByModule(MODULE_VISITS));
+        detailVisit(task.entityId);
+      }
+
       responsable.onChange(task.responsable);
       idEmployee.onChange(task.idResponsable);
       idEstado.onChange(task.idStatus);
@@ -108,6 +129,8 @@ export class ModalCreateTask extends Component {
         fecha.onChange(moment(task.finalDate).format("DD/MM/YYYY"));
       }
         nameEntity = task.nameEntity;
+        this.entityId = task.entityId;
+        this.clientId = task.clientId;
       tarea.onChange(task.task);
     });
   }
@@ -136,6 +159,9 @@ export class ModalCreateTask extends Component {
   _handleEditTask() {
     const { createPendingTaskNew, changeStateSaveData, idClient, swtShowMessage } = this.props;
     const { fields: { id, responsable, idEmployee, fecha, idEstado, tarea, advance }, handleSubmit, error } = this.props;
+    if (this.cancelSubmit) {
+      return;
+    }
     if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
 
       var messageBody = {
@@ -179,6 +205,36 @@ export class ModalCreateTask extends Component {
     } else {
       fecha.onChange('');
     }
+  }
+  _handleRelationLink(){
+    const{businessPlanReducer, visitReducer}=this.props;
+    let actionsRedirect;
+    let detail;
+    switch (nameEntity) {
+      case "Plan de negocio":
+        detail = businessPlanReducer.get("detailBusiness");
+        actionsRedirect = {
+          typeClickDetail: "businessPlan",
+          ownerDraft: detail.data.documentStatus,
+          idClient: this.clientId,
+          urlRedirect: "/dashboard/businessPlanEdit",
+          id: this.entityId
+        };
+        break;
+      case"Visita":
+      detail = visitReducer.get("detailVisit");
+        actionsRedirect = {
+          typeClickDetail:"visita",
+          ownerDraft: detail.data.documentStatus,
+          idClient: this.clientId,
+          urlRedirect: "/dashboard/visitaEditar",
+          id: this.entityId
+          };
+          break;
+        default:
+          break;
+        }
+        return actionsRedirect;
   }
   processValidation(field) {
     if (field) {
@@ -309,9 +365,17 @@ export class ModalCreateTask extends Component {
           {nameEntity ?
             <Row xs={12} md={12} lg={12}>
               <Col xs={6} md={10} lg={10} style={{ textAlign: "left", varticalAlign: "middle", marginLeft: "0px" }}>
-                <span style={{ fontWeight: "bold", color: "#818282" }}>Pendiente de {nameEntity} </span>
+               {!_.isNull(this.entityId) ? 
+                <span style={{ fontWeight: "bold", color: "#818282"}}>Pendiente de {nameEntity}
+                  <span style={{paddingLeft:"2em"}}>
+                    <ButtonDetailsRedirectComponent actionsRedirect={ () => {this.cancelSubmit = true; return this._handleRelationLink()  }} />
+                  </span>
+                </span> 
+                :<span style={{ fontWeight: "bold", color: "#818282"}}>Pendiente de {nameEntity}</span>
+               }
               </Col>
               <Col xs={6} md={2} lg={2}>
+
                 <button
                   type="submit"
                   className="btn btn-primary modal-button-edit"
@@ -347,17 +411,22 @@ function mapDispatchToProps(dispatch) {
     getInfoTaskUser,
     tasksByUser,
     validateValue,
-    swtShowMessage
+    swtShowMessage,
+    detailBusiness,
+    detailVisit,
+    validatePermissionsByModule
   }, dispatch);
 }
 
-function mapStateToProps({ tasksByClient, selectsReducer, participants, reducerGlobal, myPendingsReducer }, { taskEdit }) {
+function mapStateToProps({ tasksByClient, selectsReducer, participants, reducerGlobal, visitReducer, businessPlanReducer, myPendingsReducer }, { taskEdit }) {
   return {
     tasksByClient,
     selectsReducer,
     participants,
     reducerGlobal,
-    myPendingsReducer
+    myPendingsReducer, 
+    visitReducer,
+    businessPlanReducer
   }
 }
 

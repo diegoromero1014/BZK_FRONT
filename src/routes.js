@@ -85,7 +85,8 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     ViewAlertsURL,
     VIEWALERT,
     ADMINALERTCLIENTSPENDINGUPDATE,
-    SHEDULER} from "./constantsAnalytics";
+    SHEDULER,
+    DEFAULT} from "./constantsAnalytics";
 
 class App extends Component {
    
@@ -184,6 +185,8 @@ class App extends Component {
                 return CONTROLDASHBOARD;
             case ShedulerURL:
                 return SHEDULER;
+            default:
+                return DEFAULT;
         }
       }
     

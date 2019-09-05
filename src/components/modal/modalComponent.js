@@ -48,6 +48,8 @@ class ModalComponentDialog extends Component {
                 clearValuesAdressessKeys();
                 clearSearchShareholder();
                 break;
+            default:
+                break;
         }
 
         this.setState({ modalIsOpen: true });
@@ -104,6 +106,9 @@ class ModalComponentDialog extends Component {
             case views.VIEW_OBSERVATIONS_BY_RISK_GROUP:
                 cell = <ModalObservationsRiskGroup idRiskGroup={actions.idRiskGroup} infoRiskGroup={actions.infoRiskGroup}
                     isOpen={this.closeModal} />
+                break;
+            default:
+                break;
         }
 
         return (cell);
