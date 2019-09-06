@@ -5,7 +5,6 @@ import rootReducer from '../reducers';
 import thunk from 'redux-thunk';
 import promise from 'redux-promise';
 import { invalidTokenMiddleware } from './middleware';
-import { from } from 'rxjs/observable/from';
 
 const epics = combineEpics(inputEventsEpic);
 const epicMiddleware = createEpicMiddleware(epics);
