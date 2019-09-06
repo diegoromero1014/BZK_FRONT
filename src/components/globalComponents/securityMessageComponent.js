@@ -17,7 +17,7 @@ export class SecurityMessageComponent extends Component {
         if (_.isEmpty(securityMessage)) {
             consultParameterServer(MESSAGE_SECURITY_FORM).then((data) => {
                 if (_.isObject(data.payload) && !_.isUndefined(data.payload.data)) {
-                    const response = JSON.parse(data.payload.data.parameter);
+                    const response = data.payload.data.data;
                     const message = !_.isUndefined(response.value) ? response.value : '';
                     setSecurityMessage(message);
                 }

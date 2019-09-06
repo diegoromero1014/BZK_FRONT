@@ -642,9 +642,8 @@ class FormPrevisita extends Component {
         } else {
             getMasterDataFields([PREVISIT_TYPE]);
             consultParameterServer(LAST_PREVISIT_REVIEW).then((data) => {
-                if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
-                    data.payload.data.parameter !== undefined) {
-                    datePrevisitLastReview = JSON.parse(data.payload.data.parameter).value;
+                if (data.payload.data.data !== null && data.payload.data.data !== "" && data.payload.data.data !== undefined) {
+                    datePrevisitLastReview = data.payload.data.data.value;
                     datePrevisitLastReview = moment(datePrevisitLastReview, "DD/MM/YYYY").locale('es').format("DD MMM YYYY");
                 }
             });

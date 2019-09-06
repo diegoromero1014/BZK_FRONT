@@ -234,9 +234,8 @@ export class ButtonLinkClientComponent extends Component {
         getMasterDataFields([FILTER_TYPE_LBO_ID]);
         this._getListEntities();
         consultParameterServer(HELP_LINK_MESSAGE).then((data) => {
-            if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
-                data.payload.data.parameter !== undefined) {
-                helpLinksMessage = JSON.parse(data.payload.data.parameter).value;
+            if (data.payload.data.data !== null && data.payload.data.data !== "" && data.payload.data.data !== undefined) {
+                helpLinksMessage = data.payload.data.data.value;
             }
         });
     }
