@@ -64,7 +64,8 @@ class FormLogin extends Component {
         
         const { usuario, password } = this.state;
         const recaptcha = this.state.loginAttempts >= 2 ? getGrecaptcha().getResponse() : null;        
-        const { validateLogin, showLoading, changeActiveItemMenu } = this.props;
+        const { validateLogin, showLoading, changeActiveItemMenu, changeTokenStatus } = this.props;
+        changeTokenStatus(true);
         showLoading(true, LOADING_LOGIN);        
         validateLogin(usuario, password, recaptcha)
             .then(response => {
@@ -103,7 +104,7 @@ class FormLogin extends Component {
     }
 
     componentWillMount() {
-        const { showLoading, stopObservablesLeftTimer, clearStateLogin, changeTokenStatus, dashboardReducer } = this.props;
+        const { showLoading, stopObservablesLeftTimer, clearStateLogin, dashboardReducer } = this.props;
 
         let token = window.localStorage.getItem('sessionTokenFront');
 
@@ -111,8 +112,7 @@ class FormLogin extends Component {
 
         clearCache();
         showLoading(false, null);        
-        changeTokenStatus(true);
-
+        
         if (token == null || token === '' || !validToken) {
 
             stopObservablesLeftTimer();
