@@ -18,9 +18,9 @@ export default (state = initialState, action) => {
             const response = action.payload.data;
             return state.withMutations(map => {
                 map
-                    .set('status', response.status)
-                    .set('rowCount', response.rowCount)
-                    .set('userTasksByClient', JSON.parse(response.pendingTaskList))
+                    .set('status', response.data.status)
+                    .set('rowCount', response.data.rowCount)
+                    .set('userTasksByClient', response.data.rows)
             });
         case CHANGE_PAGE:
             return state.set('page', action.currentPage);
