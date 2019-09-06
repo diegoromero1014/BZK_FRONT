@@ -1,15 +1,21 @@
 import Immutable from 'immutable';
-import { SAVE_DATA_LOADING, PRODUCTION_UPGRADE_REQUEST, PRODUCTION_UPGRADE_NOTIFIED } from './constants';
+import { SAVE_DATA_LOADING, PRODUCTION_UPGRADE_REQUEST,
+  PRODUCTION_UPGRADE_NOTIFIED, VALID_TOKEN } from './constants';
 
 const initialState = Immutable.Map({
   showSaveData: false,
   messageData: '',
   productionUpgradeNotified: false,
-  productionUpgradeMessage: ""
+  productionUpgradeMessage: "",
+  validToken: true
 });
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case VALID_TOKEN:
+      return state.withMutations(map => {
+        map.set("validToken", action.value)
+      })
     case SAVE_DATA_LOADING:
       return state.withMutations(map => {
         map

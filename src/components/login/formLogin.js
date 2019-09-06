@@ -20,7 +20,8 @@ import { isInternetExplorer } from '../../utils/browserValidation';
 import SweetAlert from "../sweetalertFocus";
 import ReCaptcha from '../recaptcha/component';
 import {getGrecaptcha} from '../recaptcha/actions';
-
+import {clearCache} from '../../utils/catchRequest';
+import { changeTokenStatus } from '../dashboard/actions';
 
 class FormLogin extends Component {
     constructor(props) {
@@ -102,11 +103,17 @@ class FormLogin extends Component {
     }
 
     componentWillMount() {
-        const { stopObservablesLeftTimer, clearStateLogin } = this.props;
+        const { showLoading, stopObservablesLeftTimer, clearStateLogin, changeTokenStatus, dashboardReducer } = this.props;
 
         let token = window.localStorage.getItem('sessionTokenFront');
 
-        if (token == null || token === '') {
+        const validToken = dashboardReducer.get("validToken");
+
+        clearCache();
+        showLoading(false, null);        
+        changeTokenStatus(true);
+
+        if (token == null || token === '' || !validToken) {
 
             stopObservablesLeftTimer();
             //Limpiar variables de sesion (idClientSelected)
@@ -188,13 +195,15 @@ function mapDispatchToProps(dispatch) {
         clearStateLogin,
         redirectUrl,
         showLoading,
-        changeActiveItemMenu
+        changeActiveItemMenu,
+        changeTokenStatus
     }, dispatch);
 }
 
-function mapStateToProps({ login }, ownerProps) {
+function mapStateToProps({ login, dashboardReducer }, ownerProps) {
     return {
-        login
+        login,
+        dashboardReducer
     };
 }
 
