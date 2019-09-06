@@ -5,11 +5,13 @@ import ReduxPromise from 'redux-promise';
 import DevTools from '../components/devTools/component';
 import {inputEventsEpic} from '../components/timeout/timeoutDucks';
 
+import { invalidTokenMiddleware } from './middleware';
+
 const epics = combineEpics(inputEventsEpic);
 const epicMiddleware = createEpicMiddleware(epics);
 
 const finalCreateStore = compose(
-  applyMiddleware(ReduxPromise, epicMiddleware),
+  applyMiddleware(ReduxPromise, epicMiddleware, invalidTokenMiddleware),
   DevTools.instrument({maxAge: 10})
 )(createStore);
 
