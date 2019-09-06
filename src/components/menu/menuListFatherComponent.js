@@ -5,7 +5,6 @@ import _ from "lodash";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {changeActiveItemMenu} from './actions';
-import {clearCache} from '../../utils/catchRequest';
 
 class MenuListFatherComponent extends Component {
 
@@ -22,7 +21,6 @@ class MenuListFatherComponent extends Component {
             if (link === '/logout') {
                 // Click en logout
                 this.clearSessionVariables()
-                clearCache();
                 redirectUrl('/login')         
             }
             redirectUrl(link);
