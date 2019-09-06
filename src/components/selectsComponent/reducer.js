@@ -146,7 +146,7 @@ export default (state = initialState, action) => {
         case constants.FULLFILLMENT_COVENANT:
             return state.set('fullfillmentCovenant', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.CUSTOMER_TYPOLOGY:
-            return state.set('customerTypology', defaultData(action, constants.PAY_LOAD_DATA));
+            return state.set('customerTypology', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.SEGMENTS:
             return state.set('segment', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.SUBSEGMENTS:
