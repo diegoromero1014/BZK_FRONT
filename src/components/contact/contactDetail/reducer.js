@@ -16,7 +16,7 @@ export default (state = initialContactDetail, action) => {
     switch (action.type) {
         case GET_CONTACT_DETAILS:
             const response = action.payload.data;
-            const contactDetail = JSON.parse(response.contactDetail);
+            const contactDetail = response.data;
             const listClientcontacts = _.isNull(contactDetail) || _.isNull(contactDetail.listClientcontacts) ? [] : contactDetail.listClientcontacts;
             return state.withMutations(map => {
                 map.set('contactDetailList', contactDetail)

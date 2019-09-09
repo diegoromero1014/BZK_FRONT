@@ -28,7 +28,7 @@ export default function (state = initialState, action) {
                     .set('isClientContact', response.isClientContact)
                     .set('findContact', response.findContact)
                     .set('validateLogin', response.validateLogin)
-                    .set('responseSearchContactData', JSON.parse(response.contactDetail));
+                    .set('responseSearchContactData', response.data);
 
             });
         case actions.CLEAR_SEARCH_CONTACT:
