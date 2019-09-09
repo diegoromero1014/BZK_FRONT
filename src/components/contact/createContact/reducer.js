@@ -20,8 +20,7 @@ export default function (state = initialState, action) {
         case actions.CREATE_CONTACT:
             const { responseCreateContact } = action.payload.data;
             return state.set('responseCreateContactData', responseCreateContact);
-        case actions.SEARCH_CONTACT:            
-        debugger;
+        case actions.SEARCH_CONTACT:                    
             const response = action.payload.data;
             return state.withMutations(map => {
                 map
