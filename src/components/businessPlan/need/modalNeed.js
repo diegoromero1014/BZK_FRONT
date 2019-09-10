@@ -11,7 +11,7 @@ import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import { getClientNeeds, getMasterDataFields, consultListWithParameterUbication, consultDataSelect } from "../../selectsComponent/actions";
 import { IMPLEMENTATION_TIMELINE, PRODUCTS, PRODUCT_FAMILY } from "./constants";
-import { addNeed, editNeed, validateWhiteListOnNeed } from "./actions";
+import { addNeed, editNeed } from "./actions";
 import _ from "lodash";
 import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
@@ -178,7 +178,7 @@ export class ModalNeed extends Component {
     }
 
     _handleCreateNeed() {
-        const { fields: { needType, idEmployee, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit, swtShowMessage, validateWhiteListOnNeed } = this.props;
+        const { fields: { needType, idEmployee, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit, swtShowMessage } = this.props;
         let status = _.get(_.filter(selectsReducer.get(TASK_STATUS), ['id', parseInt(statusNeed.value)]), '[0].value');
         let implementation = _.get(_.filter(selectsReducer.get(IMPLEMENTATION_TIMELINE), ['id', parseInt(needImplementation.value)]), '[0].value');
         let needC = _.get(_.filter(selectsReducer.get('pipelineClientNeeds'), ['id', parseInt(needType.value)]), '[0].need');
@@ -507,7 +507,6 @@ function mapDispatchToProps(dispatch) {
         getMasterDataFields,
         filterUsersBanco,
         addNeed,
-        validateWhiteListOnNeed,
         editNeed,
         swtShowMessage,
         consultDataSelect,

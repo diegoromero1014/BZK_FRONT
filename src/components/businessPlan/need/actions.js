@@ -28,26 +28,3 @@ export function clearNeed() {
     type: constants.CLEAR_NEED
   };
 }
-
-export function validateWhiteListOnNeed(jsonValidateNeed) {
-  const jsonValidate = {
-    messageHeader: {
-      "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
-    },
-    messageBody: jsonValidateNeed
-  }
-  var request = axios.post(APP_URL + "/validateWhiteListOnNeed", jsonValidate);
-  return {
-    type: constants.VALIDATE_NEED,
-    payload: request
-  }
-}
