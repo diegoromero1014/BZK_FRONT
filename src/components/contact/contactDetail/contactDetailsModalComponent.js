@@ -122,8 +122,8 @@ export class ContactDetailsModalComponent extends Component {
         getMasterDataFields(masterData).then(function (data) {
             getContactDetails(contactId, idClient)
             .then(function (data) {
-                showLoading(false, "");
-                const contact = JSON.parse(_.get(data, 'payload.data.contactDetail'));
+                showLoading(false, "");                           
+                const contact = _.get(data, 'payload.data.data');
                 let hasToUpdateInfo = !that.state.updateCheckPermission && !contact.updatedInfo ;
                 that.setState({ updateCheck: !contact.updatedInfo, hasToUpdateInfo });
                 if (contact.country !== undefined && contact.country !== null) {
