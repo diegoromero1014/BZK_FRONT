@@ -29,25 +29,3 @@ export function clearTasks(){
     };
 }
 
-export function validateWhiteListOnTask(jsonValidateTask) {
-  const jsonValidate = {
-    messageHeader: {
-      "timestamp": new Date().getTime(),
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
-    },
-    messageBody: jsonValidateTask
-  }
-  var request = axios.post(APP_URL + "/validateWhiteListOnTask", jsonValidate);
-  return {
-    type: constants.VALIDATE_TASK,
-    payload: request
-  }
-}
