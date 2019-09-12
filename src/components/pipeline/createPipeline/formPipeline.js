@@ -556,9 +556,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         consultDataSelect(PRODUCTS, PRODUCTS_MASK);
 
         consultParameterServer(LAST_PIPELINE_REVIEW).then((data) => {
-          if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
-            data.payload.data.parameter !== undefined) {
-            datePipelineLastReview = JSON.parse(data.payload.data.parameter).value;
+          if (data.payload.data.data !== null && data.payload.data.data !== "" && data.payload.data.data !== undefined) {
+            datePipelineLastReview = data.payload.data.data.value;
             datePipelineLastReview = moment(datePipelineLastReview, "DD/MM/YYYY").locale('es').format("DD MMM YYYY");
           }
         });

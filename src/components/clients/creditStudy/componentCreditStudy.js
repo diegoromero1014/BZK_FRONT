@@ -672,7 +672,7 @@ export class ComponentStudyCredit extends Component {
         let permissionToGeneratePDF = _.get(reducerGlobal.get('permissionsStudyCredit'), _.indexOf(reducerGlobal.get('permissionsStudyCredit'), GENERAR_PDF_ESTUDIO_CREDITO), false);
         //Obtiene el parametro de dias habilitados para generar pdf en la BD
         consultParameterServer(DIAS_HABILITADOS_PARA_GENERAR_PDF).then((data) => {
-            var response = JSON.parse(data.payload.data.parameter);
+            var response = data.payload.data.data;
             const daysParameter = !_.isUndefined(response.value) ? response.value : '';
             this.setState({
                 permissionToGeneratePDF,

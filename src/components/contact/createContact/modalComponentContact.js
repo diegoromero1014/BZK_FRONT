@@ -187,8 +187,8 @@ class ModalComponentContact extends Component {
                 return;
             }
 
-            searchContact(tipoDocumento.value, documentNumber, window.sessionStorage.getItem('idClientSelected')).then((data) => {
-                if ((_.get(data, 'payload.data.isClientContact'))) {
+            searchContact(tipoDocumento.value, documentNumber, window.sessionStorage.getItem('idClientSelected')).then((data) => {                
+                if ((_.get(data, 'payload.data.data.isClientContact'))) {
                     clearSearchContact();
                     this.props.resetForm();
                     this.setState({ showErrorYa: true });

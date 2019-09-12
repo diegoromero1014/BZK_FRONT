@@ -103,8 +103,7 @@ export default (state = initialState, action = {}) => {
             });
             return state.set('group', newGroupSearch);
         case actions.SEARCH_CONTACT_FOR_GROUP:
-            let response7 = get(action.payload, 'data.contactDetail', []);
-            response7 = JSON.parse(response7);
+            let response7 = action.payload.data.data;
             let contactSearch = {
                 id: response7.id,
                 contactIdentityNumber: response7.contactIdentityNumber,

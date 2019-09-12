@@ -24,14 +24,14 @@ class ListClientsValidations extends Component {
         const { consultParameterServer } = this.props;
 
         consultParameterServer(CLIENT_STATUS).then(resolve => {
-            if (resolve && resolve.payload && resolve.payload.data && resolve.payload.data.parameter) {
-                this.setState({ clientStatus: JSON.parse(resolve.payload.data.parameter).value });
+            if (resolve && resolve.payload && resolve.payload.data && resolve.payload.data.data) {
+                this.setState({ clientStatus: resolve.payload.data.data.value });
             }
         });
 
         consultParameterServer(MANAGEMENT_BRAND).then(resolve => {
-            if (resolve && resolve.payload && resolve.payload.data && resolve.payload.data.parameter) {
-                this.setState({ managementBrand: JSON.parse(resolve.payload.data.parameter).value });
+            if (resolve && resolve.payload && resolve.payload.data && resolve.payload.data.data) {
+                this.setState({ managementBrand: resolve.payload.data.data.value });
             }
         });
     }
