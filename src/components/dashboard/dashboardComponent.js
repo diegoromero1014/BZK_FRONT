@@ -111,6 +111,18 @@ class Dashboard extends Component {
     }
   }
 
+  componentDidUpdate() {
+
+    const { dashboardReducer } = this.props;
+
+    const validToken = dashboardReducer.get("validToken");
+
+    if(!validToken) {
+      redirectUrl('/login');
+    }
+
+  }
+
   render() {
     const { dashboardReducer } = this.props;
 

@@ -20,15 +20,15 @@ export default function (state = initialState, action) {
         case actions.CREATE_CONTACT:
             const { responseCreateContact } = action.payload.data;
             return state.set('responseCreateContactData', responseCreateContact);
-        case actions.SEARCH_CONTACT:
+        case actions.SEARCH_CONTACT:                    
             const response = action.payload.data;
             return state.withMutations(map => {
                 map
                     .set('status', response.status)
-                    .set('isClientContact', response.isClientContact)
-                    .set('findContact', response.findContact)
+                    .set('isClientContact', response.data.isClientContact)
+                    .set('findContact', response.data.findContact)
                     .set('validateLogin', response.validateLogin)
-                    .set('responseSearchContactData', JSON.parse(response.contactDetail));
+                    .set('responseSearchContactData', response.data);
 
             });
         case actions.CLEAR_SEARCH_CONTACT:

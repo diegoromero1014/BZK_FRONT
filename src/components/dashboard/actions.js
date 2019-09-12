@@ -1,7 +1,8 @@
 import {
   SAVE_DATA_LOADING,
   PRODUCTION_UPGRADE_REQUEST,
-  PRODUCTION_UPGRADE_NOTIFIED
+  PRODUCTION_UPGRADE_NOTIFIED,
+  VALID_TOKEN
 } from './constants';
 
 import axios from 'axios';
@@ -44,5 +45,12 @@ export function validateUpgrateProductionActive() {
 export function notifiedProductionUpgrade() {
   return {
     type: PRODUCTION_UPGRADE_NOTIFIED
+  }
+}
+
+export function changeTokenStatus(status) {
+  return {
+    type: VALID_TOKEN,
+    value: status
   }
 }
