@@ -45,10 +45,8 @@ class buttonClientVisorComponent extends Component {
         const { consultParameterServer } = this.props;
 
         consultParameterServer(URL_VISOR_PARAMETER).then((data) => {
-            if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
-                data.payload.data.parameter !== undefined) {
-
-                let parameter = JSON.parse(data.payload.data.parameter).value;
+            if (data.payload.data.data !== null && data.payload.data.data !== "" && data.payload.data.data !== undefined) {
+                let parameter = data.payload.data.data.value;
 
                 this.setState({
                     visor_url: parameter

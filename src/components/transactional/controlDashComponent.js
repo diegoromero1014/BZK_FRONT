@@ -18,9 +18,8 @@ class ControlDashboard extends Component {
         } else {
             const { consultParameterServer, updateTitleNavBar,setUrlParameter } = this.props;
             consultParameterServer(CONTROL_DASHBOARD_URL_PARAMETER).then((data) => {
-                if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
-                    data.payload.data.parameter !== undefined) {
-                    setUrlParameter(CONTROL_DASHBOARD_URL_PARAMETER,JSON.parse(data.payload.data.parameter).value);
+                if (data.payload.data.data !== null && data.payload.data.data !== "" && data.payload.data.data !== undefined) {
+                    setUrlParameter(CONTROL_DASHBOARD_URL_PARAMETER, data.payload.data.data.value);
                 }
             });
             updateTitleNavBar(CONTROL_DASHBOARD_TITLE);
