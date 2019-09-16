@@ -26,8 +26,8 @@ export default (state = initialState, action) => {
             const orderedList = orderBy(response.data.rows,'datePrevisit','desc');
             return state.withMutations(map => {
                 map.set('status', response.status)
-                    .set('rowCount', response.rowCount)
-                    .set('previsitList', response.data.rows);
+                    .set('rowCount', response.data.rowCount)
+                    .set('previsitList', orderedList);
             });
         case CHANGE_PAGE:
             return state.set('page', action.currentPage);
