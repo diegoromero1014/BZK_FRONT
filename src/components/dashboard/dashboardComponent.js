@@ -65,8 +65,8 @@ class Dashboard extends Component {
    * @param { Object } data 
    */
   initializeRanges = (data) => {
-    if (data.parameter !== null && data.parameter !== "" && data.parameter !== undefined) {
-      let value = (JSON.parse(data.parameter).value).split(" | ");
+    if (data.data !== null && data.data !== "" && data.data !== undefined) {
+      let value = data.data.value.split(" | ");
 
       this.setState({
         initialDate: new Date(value[0]),
@@ -109,6 +109,18 @@ class Dashboard extends Component {
         });
       }
     }
+  }
+
+  componentDidUpdate() {
+
+    const { dashboardReducer } = this.props;
+
+    const validToken = dashboardReducer.get("validToken");
+
+    if(!validToken) {
+      redirectUrl('/login');
+    }
+
   }
 
   render() {

@@ -23,11 +23,11 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case GET_PREVISIT_LIST:
             const response = action.payload.data;
-            const orderedList = orderBy(JSON.parse(response.previsitList),'datePrevisit','desc');
+            const orderedList = orderBy(response.data.rows,'datePrevisit','desc');
             return state.withMutations(map => {
                 map.set('status', response.status)
-                    .set('rowCount', response.rowCount)
-                    .set('previsitList', orderedList );
+                    .set('rowCount', response.data.rowCount)
+                    .set('previsitList', orderedList);
             });
         case CHANGE_PAGE:
             return state.set('page', action.currentPage);

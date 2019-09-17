@@ -27,7 +27,7 @@ export default (state = initialState, action) => {
             return state.withMutations(map => {
                 map.set('status', response.status)
                     .set('rowCount', response.rowCount)
-                    .set('pipelineList', isUndefined(response.pipelineList) ? [] : JSON.parse(response.pipelineList));
+                    .set('pipelineList', response.data.rows);
             });
         case CHANGE_PAGE:
             return state.set('page', action.currentPage);

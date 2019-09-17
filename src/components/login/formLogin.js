@@ -20,7 +20,8 @@ import { isInternetExplorer } from '../../utils/browserValidation';
 import SweetAlert from "../sweetalertFocus";
 import ReCaptcha from '../recaptcha/component';
 import {getGrecaptcha} from '../recaptcha/actions';
-
+import {clearCache} from '../../utils/catchRequest';
+import { changeTokenStatus } from '../dashboard/actions';
 
 class FormLogin extends Component {
     constructor(props) {
@@ -63,7 +64,8 @@ class FormLogin extends Component {
         
         const { usuario, password } = this.state;
         const recaptcha = this.state.loginAttempts >= 2 ? getGrecaptcha().getResponse() : null;        
-        const { validateLogin, showLoading, changeActiveItemMenu } = this.props;
+        const { validateLogin, showLoading, changeActiveItemMenu, changeTokenStatus } = this.props;
+        changeTokenStatus(true);
         showLoading(true, LOADING_LOGIN);        
         validateLogin(usuario, password, recaptcha)
             .then(response => {
@@ -101,11 +103,16 @@ class FormLogin extends Component {
     }
 
     componentWillMount() {
-        const { stopObservablesLeftTimer, clearStateLogin } = this.props;
+        const { showLoading, stopObservablesLeftTimer, clearStateLogin, dashboardReducer } = this.props;
 
         let token = window.localStorage.getItem('sessionTokenFront');
 
-        if (token == null || token === '') {
+        const validToken = dashboardReducer.get("validToken");
+
+        clearCache();
+        showLoading(false, null);        
+        
+        if (token == null || token === '' || !validToken) {
 
             stopObservablesLeftTimer();
             //Limpiar variables de sesion (idClientSelected)
@@ -187,13 +194,15 @@ function mapDispatchToProps(dispatch) {
         clearStateLogin,
         redirectUrl,
         showLoading,
-        changeActiveItemMenu
+        changeActiveItemMenu,
+        changeTokenStatus
     }, dispatch);
 }
 
-function mapStateToProps({ login }, ownerProps) {
+function mapStateToProps({ login, dashboardReducer }, ownerProps) {
     return {
-        login
+        login,
+        dashboardReducer
     };
 }
 

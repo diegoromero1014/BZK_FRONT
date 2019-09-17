@@ -97,8 +97,8 @@ function request() {
  * @param { Object } data 
  */
 function initializeRanges(data) {
-    if (data.parameter !== null && data.parameter !== "" && data.parameter !== undefined) {
-        let value = (JSON.parse(data.parameter).value).split(" | ");
+    if (data.data !== null && data.data !== "" && data.data !== undefined) {
+        let value = data.data.value.split(" | ");
 
         initialDate = new Date(value[0]);
         finalDate = new Date(value[1]);

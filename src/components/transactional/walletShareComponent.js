@@ -18,9 +18,8 @@ class WalletShare extends Component {
         } else {
             const { consultParameterServer, updateTitleNavBar,setUrlParameter } = this.props;
             consultParameterServer(PARAMETER_WALLET_SHARE_URL).then((data) => {
-                if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
-                    data.payload.data.parameter !== undefined) {
-                    setUrlParameter(PARAMETER_WALLET_SHARE_URL,JSON.parse(data.payload.data.parameter).value);
+                if (data.payload.data.data !== null && data.payload.data.data !== "" && data.payload.data.data !== undefined) {
+                    setUrlParameter(PARAMETER_WALLET_SHARE_URL,data.payload.data.data.value);
                 }
             });
             updateTitleNavBar(MODULE_WALLET_SHARE_TITLE);
