@@ -11,7 +11,7 @@ import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import RichText from "../../richText/richTextComponent";
 
-import { addTask, editTask, validateWhiteListOnTask } from "./actions";
+import { addTask, editTask} from "./actions";
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import { htmlToText } from "../../../actionsGlobal";
 import { swtShowMessage } from "../../sweetAlertMessages/actions";
@@ -110,34 +110,11 @@ class ModalTask extends Component {
     }
 
     _handleCreateTask() {
-        const { fields: { responsable, fecha, tarea, idEmployee, id }, validateWhiteListOnTask, addTask, editTask, taskEdit, swtShowMessage } = this.props;
+        const { fields: { responsable, fecha, tarea, idEmployee, id },  addTask, editTask, taskEdit, swtShowMessage } = this.props;
         if (responsable.value !== nameUsuario) {
             nameUsuario = responsable.value;
             idUsuario = null;
         }
-
-        let jsonValidate = {
-            task: tarea.value
-        };
-
-        validateWhiteListOnTask(jsonValidate).then((data) => {
-            let errors = data.payload.data.data;
-
-            this.errorTask = null;
-
-            for (let index = 0; index < errors.length; index++) {
-                const error = errors[index];
-                const field = error.fieldName;
-
-                if (_.isEqual(field, 'task')) {
-                    this.errorTask = error.message;
-                }
-            }
-
-            if (errors.length > 0) {
-                this.forceUpdate();
-                return;
-            }
 
             if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
                 if (taskEdit !== undefined) {
@@ -172,7 +149,7 @@ class ModalTask extends Component {
             } else {
                 fecha.onChange('');
             }
-        });
+        
     }
 
     render() {
@@ -251,8 +228,7 @@ function mapDispatchToProps(dispatch) {
         addTask,
         editTask,
         filterUsersBanco,
-        swtShowMessage,
-        validateWhiteListOnTask
+        swtShowMessage
     }, dispatch);
 }
 

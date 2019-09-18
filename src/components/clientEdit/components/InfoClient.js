@@ -182,7 +182,6 @@ export class InfoClient extends React.Component {
                                 style={{ width: '100%', height: '100%' }}
                                 onChange={val => this._onchangeValue("description", val)}
                                 placeholder="Ingrese la descripción"
-                                max="1000"
                                 rows={4}
                                 {...description}
                             />

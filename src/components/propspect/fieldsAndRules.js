@@ -8,7 +8,7 @@ import {
 
 const fieldsWithRules = {
     razonSocial: { rules: [checkRequired, checkFirstCharacter, checkClientName, checkMaxLength(50)] },
-    descriptionCompany: { rules: [checkFirstCharacter, checkClientDescription] },
+    descriptionCompany: { rules: [checkFirstCharacter, checkClientDescription, checkMaxLength(1000)] },
     reportVirtual: { rules: [] },
     extractsVirtual: { rules: [] },
     marcGeren: { rules: [] },
