@@ -40,7 +40,7 @@ const fieldsWithRules= {
      operationsForeigns:{rules: [checkForValueOperationsForeigns]},
      economicGroupName:{rules: [checkEconomicGroup]},
      controlLinkedPayments:{rules: [checkControlLinkedPaymentsRequired, checkControlLinkedPayments, checkFirstCharacter, checkMaxLength(1000)]},
-     description:{rules: [checkFirstCharacter, checkClientDescription]},
+     description:{rules: [checkFirstCharacter, checkClientDescription, checkMaxLength(1000)]},
      neighborhood:{rules: [checkFirstCharacter, checkClientNeighborhood, checkMaxLength(40)]},
      contextClientField:{rules: [checkFirstCharacter, checkClientContext, checkMaxLength(1000)]},
      inventoryPolicy:{rules: [checkFirstCharacter, checkInventoryPolicy, checkMaxLength(1200)]},
