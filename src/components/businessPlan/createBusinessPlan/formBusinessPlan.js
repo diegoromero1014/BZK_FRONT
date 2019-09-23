@@ -242,9 +242,8 @@ export class FormBusinessPlan extends Component {
         } else {
             getMasterDataFields([OBJECTIVE_BUSINESS]);
             consultParameterServer(LAST_BUSINESS_REVIEW).then((data) => {
-                if (data.payload.data.parameter !== null && data.payload.data.parameter !== "" &&
-                    data.payload.data.parameter !== undefined) {
-                    dateBusinessLastReview = JSON.parse(data.payload.data.parameter).value;
+                if (data.payload.data.data !== null && data.payload.data.data !== "" && data.payload.data.data !== undefined) {
+                    dateBusinessLastReview = data.payload.data.data.value;
                     dateBusinessLastReview = moment(dateBusinessLastReview, DATE_FORMAT).locale('es').format(DATE_FORMAT);
                 }
             });
