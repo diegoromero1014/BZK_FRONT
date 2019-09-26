@@ -132,9 +132,8 @@ export const checkRequiredResponsible = (value, fields) => {
 
 export const checkForValueSubSegmentEditClient = (value, fields, props) => {
     let message = null;
-    let segmentValue = _.get(_.find(props.selectsReducer.get(SEGMENTS), ['id', parseInt(fields.segment)]), 'value');
     let isEditButton = props.idButton;
-    if (_.isEqual(CONSTRUCT_PYME, segmentValue) && isEditButton !== BUTTON_EDIT) {
+    if (isEditButton !== BUTTON_EDIT) {
         if (_.isNull(String(value)) || _.isEmpty(String(value)) || _.isUndefined(value)) {
             message = MESSAGE_REQUIRED_VALUE;
         }
