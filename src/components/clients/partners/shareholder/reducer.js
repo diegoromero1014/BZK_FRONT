@@ -22,8 +22,8 @@ export default (state = initialState, action) => {
             return state.withMutations(map => {
                 map
                     .set('status', response.status)
-                    .set('rowCount', response.rowCount)
-                    .set('shareholders', JSON.parse(response.shareholders));
+                    .set('rowCount', response.data.rowCount)
+                    .set('shareholders', response.data.rows);
             });
         case CHANGE_KEYWORD_SHAREHOLDER:
             return state.set('keywordShareholder', action.keywordShareholder);
