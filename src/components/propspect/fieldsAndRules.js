@@ -2,7 +2,7 @@ import _ from "lodash";
 
 import {
     checkRequired, checkClientName, checkFirstCharacter,
-    checkMaxLength, processRules, checkForValueSubSegment, checkNumbers,
+    checkMaxLength, processRules, checkNumbers,
     checkClientDescription, checkClientAddress, checkClientNeighborhood, checkNumberLength
 } from '../../validationsFields/rulesField';
 
@@ -31,7 +31,7 @@ const fieldsWithRules = {
     expenses: { rules: [checkNumberLength(15)]  },
     dateSalesAnnuals: { rules: [] },
     segment: { rules: [checkRequired] },
-    subSegment: { rules: [checkForValueSubSegment] }
+    subSegment: { rules: [checkRequired] }
 }
 
 export const fields = _.keys(fieldsWithRules);
