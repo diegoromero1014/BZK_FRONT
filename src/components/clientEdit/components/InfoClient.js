@@ -133,7 +133,7 @@ export class InfoClient extends React.Component {
                 </Col>
                 <Col xs={12} md={4} lg={4}>
                         <div style={{ marginTop: "10px" }}>
-                            <dt><span>Subsegmento</span> {idButton !== BUTTON_EDIT && (<span style={{ color: "red" }}>*</span>)}</dt>
+                            <dt><span>Subsegmento</span></dt>
                             <ComboBox
                                 name="subSegment"
                                 labelInput="Sebsegmento"

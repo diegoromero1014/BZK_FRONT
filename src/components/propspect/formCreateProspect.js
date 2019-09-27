@@ -340,7 +340,7 @@ class FormCreateProspect extends Component {
 
                     <Col xs={12} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                            <dt><span>Subsegmento (</span><span style={{ color: "red" }}>*</span>)</dt>
+                            <dt><span>Subsegmento</span></dt>
                             <ComboBox
                                 name="subSegment"
                                 labelInput="Sebsegmento"
@@ -349,7 +349,7 @@ class FormCreateProspect extends Component {
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get(SUBSEGMENTS)}
                                 {...subSegment}
-                                touched={true}
+                                showEmptyObject={true}
                             />
                         </div>
                     </Col>
