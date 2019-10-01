@@ -45,7 +45,7 @@ class ShareholderComponent extends Component {
       clearShareholder();
       shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'),
         NUMBER_RECORDS, "sh.sharePercentage", 1, "", "", "").then((data) => {
-          if (_.get(data, 'payload.data.rowCount') !== 0) {
+          if (_.get(data, 'payload.data.data.rowCount') !== 0) {
             enableClickCertificationShareholder = "disabled";
           } else {
             enableClickCertificationShareholder = "";
@@ -91,10 +91,6 @@ class ShareholderComponent extends Component {
     const { updateCertificateNoShareholder, changeCheckInfoClient } = this.props;
     updateCertificateNoShareholder(selector[0].checked);
     changeCheckInfoClient(selector[0].checked);
-  }
-
-  _validateDisabledCheckCertificate() {
-
   }
 
   render() {

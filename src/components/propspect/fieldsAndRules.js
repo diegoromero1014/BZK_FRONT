@@ -2,13 +2,13 @@ import _ from "lodash";
 
 import {
     checkRequired, checkClientName, checkFirstCharacter,
-    checkMaxLength, processRules, checkForValueSubSegment, checkNumbers,
-    checkClientDescription, checkClientAddress, checkClientNeighborhood, checkNumberLength
+    checkMaxLength, processRules, checkNumbers,
+    checkClientDescription, checkClientAddress, checkClientNeighborhood, checkNumberLength, checkForValidSubSegment
 } from '../../validationsFields/rulesField';
 
 const fieldsWithRules = {
     razonSocial: { rules: [checkRequired, checkFirstCharacter, checkClientName, checkMaxLength(50)] },
-    descriptionCompany: { rules: [checkFirstCharacter, checkClientDescription] },
+    descriptionCompany: { rules: [checkFirstCharacter, checkClientDescription, checkMaxLength(1000)] },
     reportVirtual: { rules: [] },
     extractsVirtual: { rules: [] },
     marcGeren: { rules: [] },
@@ -31,7 +31,7 @@ const fieldsWithRules = {
     expenses: { rules: [checkNumberLength(15)]  },
     dateSalesAnnuals: { rules: [] },
     segment: { rules: [checkRequired] },
-    subSegment: { rules: [checkForValueSubSegment] }
+    subSegment: { rules: [checkForValidSubSegment] }
 }
 
 export const fields = _.keys(fieldsWithRules);

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {processRules, checkIsUpdateClient, checkClientName, checkMaxLength,
-    checkNumberDocument, checkFirstCharacter, checkRequired, checkForValueSubSegmentEditClient,
+    checkNumberDocument, checkFirstCharacter, checkRequired, checkForValidSubSegment,
     checkClientDescription, checkForValueIdSubCiiuEditClient, checkClientContext, checkInventoryPolicy,
     checkControlLinkedPayments, checkControlLinkedPaymentsRequired, checkClientNeighborhood, checkNumbers,
     checkNumberLength, checkdetailNonOperatingIncome, checkForValueJustifyNoGerenEditClient, checkForValueJustifyNoLMEEditClient,
@@ -40,7 +40,7 @@ const fieldsWithRules= {
      operationsForeigns:{rules: [checkForValueOperationsForeigns]},
      economicGroupName:{rules: [checkEconomicGroup]},
      controlLinkedPayments:{rules: [checkControlLinkedPaymentsRequired, checkControlLinkedPayments, checkFirstCharacter, checkMaxLength(1000)]},
-     description:{rules: [checkFirstCharacter, checkClientDescription]},
+     description:{rules: [checkFirstCharacter, checkClientDescription, checkMaxLength(1000)]},
      neighborhood:{rules: [checkFirstCharacter, checkClientNeighborhood, checkMaxLength(40)]},
      contextClientField:{rules: [checkFirstCharacter, checkClientContext, checkMaxLength(1000)]},
      inventoryPolicy:{rules: [checkFirstCharacter, checkInventoryPolicy, checkMaxLength(1200)]},
@@ -56,7 +56,7 @@ const fieldsWithRules= {
      idNumber: { rules: [checkRequired, checkNumberDocument, checkFirstCharacter, checkMaxLength(30)] },
      idTypeClient: { rules: [checkRequired] },
      segment: { rules: [checkRequired] },
-     subSegment: { rules: [checkForValueSubSegmentEditClient] },
+     subSegment: { rules: [checkForValidSubSegment] },
      groupEconomic:{rules:[]},
      customerCoverageIntOpe:{rules:[]}
  };
