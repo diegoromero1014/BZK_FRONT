@@ -12,7 +12,7 @@ import * as constants from "../../selectsComponent/constants";
 
 import { getMasterDataFields, consultListWithParameterUbication } from '../../selectsComponent/actions';
 
-import { TITLE_DESCRIPTION, CONSTRUCT_PYME, GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../constants';
+import { TITLE_DESCRIPTION, GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../constants';
 import { BUTTON_EDIT } from "../../clientDetailsInfo/constants";
 
 
@@ -25,10 +25,6 @@ export class InfoClient extends React.Component {
         this._checkSubSegmentRender = this._checkSubSegmentRender.bind(this);
 
         this.firstChange = false;
-
-        this.state = {
-            isSegmentPymeConstruct: false
-        }
 
     }
 
@@ -51,8 +47,8 @@ export class InfoClient extends React.Component {
 
     }
 
-    _changeSegment(idSegment, firstConsult, subSegmentId) {
-        const { segment, customerTypology, subSegment, selectsReducer, getMasterDataFields, consultListWithParameterUbication } = this.props;
+    _changeSegment(idSegment, firstConsult) {
+        const { segment, customerTypology, selectsReducer, getMasterDataFields, consultListWithParameterUbication } = this.props;
         const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
         segment.onChange(idSegment);
 
@@ -62,17 +58,8 @@ export class InfoClient extends React.Component {
             } else {
                 getMasterDataFields([constants.CUSTOMER_TYPOLOGY], true);
             }
-            if (_.isEqual(CONSTRUCT_PYME, value)) {
-                consultListWithParameterUbication(constants.SUBSEGMENTS, idSegment).then((data) => {
-                    if (!_.isNull(subSegmentId) && firstConsult) {
-                        subSegment.onChange(subSegmentId);
-                    }
-                });
-            }
-            this.setState({ isSegmentPymeConstruct: _.isEqual(CONSTRUCT_PYME, value) });
             if (!firstConsult) {
                 customerTypology.onChange('');
-                subSegment.onChange('');
             }
         }
     }
@@ -144,10 +131,9 @@ export class InfoClient extends React.Component {
                         />
                     </div>
                 </Col>
-                {
-                    this.state.isSegmentPymeConstruct && <Col xs={12} md={4} lg={4}>
+                <Col xs={12} md={4} lg={4}>
                         <div style={{ marginTop: "10px" }}>
-                            <dt><span>Subsegmento</span> {idButton !== BUTTON_EDIT && (<span style={{ color: "red" }}>*</span>)}</dt>
+                            <dt><span>Subsegmento</span></dt>
                             <ComboBox
                                 name="subSegment"
                                 labelInput="Sebsegmento"
@@ -163,7 +149,7 @@ export class InfoClient extends React.Component {
                             />
                         </div>
                     </Col>
-                }
+            
                 <ClientTypology customerTypology={customerTypology}
                     data={selectsReducer.get(constants.CUSTOMER_TYPOLOGY)} />
 

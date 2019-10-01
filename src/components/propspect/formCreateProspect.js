@@ -44,9 +44,6 @@ let messageConfirm = "Recuerde que una vez creado el prospecto sólo podrá ser 
 let titleConfirm = "Confirmación creación";
 let typeConfirm = "create";
 
-//Controla si el campo Segmento esta seleccionado constructor pyme.
-let isSegmentPymeConstruct = false;
-
 let isNature = false;
 
 class FormCreateProspect extends Component {
@@ -81,7 +78,7 @@ class FormCreateProspect extends Component {
 
     _redirectClients() {
         redirectUrl("/dashboard/clients");
-}
+    }
 
     _closeError() {
         this.setState({ show: false, showEx: false, showEr: false });
@@ -203,7 +200,6 @@ class FormCreateProspect extends Component {
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             createProspect(jsonCreateProspect)
                 .then((data) => {
-                    isSegmentPymeConstruct = false;
                     changeStateSaveData(false, "");
                     if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
                         redirectUrl("/login");
@@ -225,16 +221,8 @@ class FormCreateProspect extends Component {
 
 
     _changeSegment(idSegment) {
-        const { fields: { segment, subSegment }, selectsReducer, consultListWithParameterUbication } = this.props;
-        const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
+        const { fields: { segment } } = this.props;
         segment.onChange(idSegment);
-        if (!_.isUndefined(value)) {
-            if (_.isEqual(CONSTRUCT_PYME, value)) {
-                consultListWithParameterUbication(constants.SUBSEGMENTS, idSegment);
-            }
-            isSegmentPymeConstruct = _.isEqual(CONSTRUCT_PYME, value);
-            subSegment.onChange('');
-        }
     }
 
     componentWillMount() {
@@ -243,7 +231,6 @@ class FormCreateProspect extends Component {
         consultList(constants.TEAM_FOR_EMPLOYEE);
         consultList(constants.CIIU);
         consultDataSelect(constants.FILTER_COUNTRY);
-        isSegmentPymeConstruct = false;
     }
 
     _onChangeCIIU(val) {
@@ -303,20 +290,20 @@ class FormCreateProspect extends Component {
                     marginBottom: "100px",
                     backgroundColor: "#F0F0F0"
                 }}>
-                        <Col xs={12} md={12} lg={6} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
-                                <Input
-                                    name="razonSocial"
-                                    type="text"
-                                    max="50"
-                                    placeholder="Ingrese la razón social del prospecto"
-                                    {...razonSocial}
-                                />
-                            </div>
-                        </Col>
-                
-                
+                    <Col xs={12} md={12} lg={6} style={{ marginTop: "20px", paddingRight: "35px" }}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
+                            <dt><span>Razón social (</span><span style={{ color: "red" }}>*</span>)</dt>
+                            <Input
+                                name="razonSocial"
+                                type="text"
+                                max="50"
+                                placeholder="Ingrese la razón social del prospecto"
+                                {...razonSocial}
+                            />
+                        </div>
+                    </Col>
+
+
                     <Col xs={8} md={6} lg={6} style={{ marginTop: "20px", paddingRight: "35px" }}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
                             <dt><span>Célula (</span><span style={{ color: "red" }}>*</span>)</dt>
@@ -350,24 +337,23 @@ class FormCreateProspect extends Component {
                         </div>
                     </Col>
 
-                    {
-                        isSegmentPymeConstruct &&
-                        <Col xs={12} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
-                            <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                                <dt><span>Subsegmento (</span><span style={{ color: "red" }}>*</span>)</dt>
-                                <ComboBox
-                                    name="subSegment"
-                                    labelInput="Sebsegmento"
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    parentId="dashboardComponentScroll"
-                                    data={selectsReducer.get(SUBSEGMENTS)}
-                                    {...subSegment}
-                                    touched={true}
-                                />
-                            </div>
-                        </Col>
-                    }
+
+                    <Col xs={12} md={4} lg={4} style={{ marginTop: "20px", paddingRight: "35px" }}>
+                        <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
+                            <dt><span>Subsegmento</span></dt>
+                            <ComboBox
+                                name="subSegment"
+                                labelInput="Sebsegmento"
+                                valueProp={'id'}
+                                textProp={'value'}
+                                parentId="dashboardComponentScroll"
+                                data={selectsReducer.get(SUBSEGMENTS)}
+                                {...subSegment}
+                                showEmptyObject={true}
+                            />
+                        </div>
+                    </Col>
+
 
                     <Col xs={12} md={12} lg={12} style={{ marginTop: "20px", paddingRight: "35px" }}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
