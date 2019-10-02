@@ -371,6 +371,11 @@ class TabClientInfo extends Component {
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Historial del cliente</a>
                             </li>
                         }
+                        {_.get(navBar.get('mapModulesAccess'), MODULE_BUSSINESS_PLAN) &&
+                        <li style={backgroundBusinessPlan} onClick={this._handleClickTabItem.bind(this, TAB_BUSINESS_PLAN)}>
+                            <a className="button-link-url" style={{ marginRight: "15px" }}>Plan de negocio</a>
+                        </li>
+                        }
                         {_.get(navBar.get('mapModulesAccess'), MODULE_PREVISITS) &&
                             <li style={backgroundPrevisitas} onClick={this._handleClickTabItem.bind(this, TAB_PREVISITS)}>
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Previsitas</a>
@@ -381,19 +386,14 @@ class TabClientInfo extends Component {
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Visitas/Reunión</a>
                             </li>
                         }
+                        {_.get(navBar.get('mapModulesAccess'), MODULE_PIPELINE) &&
+                        <li style={backgroundPipeline} onClick={this._handleClickTabItem.bind(this, TAB_PIPELINE)}>
+                            <a className="button-link-url" style={{ marginRight: "15px" }}>Pipeline</a>
+                        </li>
+                        }
                         {_.get(navBar.get('mapModulesAccess'), MODULE_TASKS) &&
                             <li style={backgroundPending} onClick={this._handleClickTabItem.bind(this, TAB_PENDING_TASK)}>
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Tareas</a>
-                            </li>
-                        }
-                        {_.get(navBar.get('mapModulesAccess'), MODULE_PIPELINE) &&
-                            <li style={backgroundPipeline} onClick={this._handleClickTabItem.bind(this, TAB_PIPELINE)}>
-                                <a className="button-link-url" style={{ marginRight: "15px" }}>Pipeline</a>
-                            </li>
-                        }
-                        {_.get(navBar.get('mapModulesAccess'), MODULE_BUSSINESS_PLAN) &&
-                            <li style={backgroundBusinessPlan} onClick={this._handleClickTabItem.bind(this, TAB_BUSINESS_PLAN)}>
-                                <a className="button-link-url" style={{ marginRight: "15px" }}>Planes de negocios</a>
                             </li>
                         }
                         {_.get(navBar.get('mapModulesAccess'), MODULE_RISKS_MANAGEMENT) &&
