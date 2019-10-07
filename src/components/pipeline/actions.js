@@ -168,3 +168,10 @@ export function updateDisbursementPlans(listDisbursementPlans, origin) {
     origin
   };
 }
+
+export function setOpenPipelineChild(value) {
+  return {
+    type: constants.SET_OPEN_PIPELINE_CHILD,
+    value
+  }
+}

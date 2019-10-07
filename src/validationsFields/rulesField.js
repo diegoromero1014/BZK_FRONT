@@ -486,6 +486,14 @@ export const checkPipeLineOpportunityName = value => {
     return message;
 }
 
+export const checkRequiredPipelinePadre =  (value, fields, props) => {
+    let isPipelineChild = props.pipelineReducer.get("isPipelineChildOpen");
+    if (!isPipelineChild) {
+        return checkRequired(value);
+    }
+    return null;
+}
+
 export const checkObservationsLinkClient = value => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfObservationLinkClient.test(value)) {

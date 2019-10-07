@@ -12,6 +12,7 @@ export const GET_CSV_PIPELINE_BY_CLIENT = 'GET_CSV_PIPELINE_BY_CLIENT';
 export const CREATE_EDIT_PIPELINE = "CREATE_EDIT_PIPELINE";
 export const GET_PIPELINE = "GET_PIPELINE";
 export const OWNER_DRAFT = "OWNER_DRAFT";
+export const SET_OPEN_PIPELINE_CHILD = "SET_OPEN_PIPELINE_CHILD";
 export const PIPELINE_STATUS = "pipelineStatus";
 export const LINE_OF_BUSINESS_LEASING = "Leasing Bancolombia";
 export const ORIGIN_PIPELIN_BUSINESS = "pipelineBusiness";
