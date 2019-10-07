@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-flexbox-grid';
+import { Col, Row } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
+import _ from 'lodash';
 
 import SweetAlert from '../sweetalertFocus';
 import FormCreateProspect from './formCreateProspect';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import Input from '../../ui/input/inputComponent';
+import { fields, validations as validate } from './fieldsAndRulesCreatePropspect';
 import SecurityMessageComponent from './../globalComponents/securityMessageComponent';
 
-import { validateProspectExists, clearState, clearAllState } from './actions';
+import { clearAllState, clearState, validateProspectExists } from './actions';
 import { redirectUrl } from '../globalComponents/actions';
 import { consultDataSelect, consultList, getMasterDataFields } from '../selectsComponent/actions';
-import { onSessionExpire } from '../../actionsGlobal';
 
-import { SESSION_EXPIRED } from '../../constantsGlobal';
+import { onSessionExpire } from '../../actionsGlobal';
 import * as constants from '../selectsComponent/constants';
 import * as constantsPropect from './constants';
-
-import { fields, validations as validate } from './fieldsAndRulesCreatePropspect';
-
-import _ from 'lodash';
 
 var prospectInApplication = true;
 
@@ -50,10 +47,10 @@ class CreatePropspect extends Component {
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     }
-    const { consultDataSelect, consultList, getMasterDataFields } = this.props;
+    const { consultList, getMasterDataFields } = this.props;
 
     getMasterDataFields([constants.CLIENT_ID_TYPE, constants.CONTACT_ID_TYPE, constants.CLIENT_TYPE]).then((data) => {
-      if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
+      if (_.get(data, 'payload.data.validateLogin') === false) {
         onSessionExpire();
       }
     });
@@ -133,7 +130,7 @@ class CreatePropspect extends Component {
   }
 
   render() {
-    const { fields: { idType, idNumber, clientType }, error, handleSubmit, clearState } = this.props
+    const { fields: { idType, idNumber, clientType }, handleSubmit } = this.props;
     const { propspectReducer } = this.props;
     const { selectsReducer } = this.props;
     const status = propspectReducer.get('status');
@@ -143,6 +140,7 @@ class CreatePropspect extends Component {
     } else {
       prospectInApplication = true;
     }
+
     return (
       <div style={{ marginTop: "10px" }}>
         <SecurityMessageComponent />

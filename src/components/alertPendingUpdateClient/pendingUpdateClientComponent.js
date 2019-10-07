@@ -1,30 +1,24 @@
-/**
- * Created by ahurtado on 11/23/2016.
- */
-import React, {Component} from 'react';
-import {Grid, Row, Col} from 'react-flexbox-grid';
-import {bindActionCreators} from 'redux';
-import {clientsPendingUpdateFindServer, clearFilter, changePage, changeKeyword, changeTeam,changeRegion,changeZone} from './actions';
-import {showLoading} from '../loading/actions';
-import SearchBarClient from './searchClientAlertPendingUpdate';
-import {NUMBER_RECORDS,FORM_FILTER_ALERT_PUC} from './constants';
-import Pagination from './pagination';
-import {redirectUrl} from '../globalComponents/actions';
+import React, { Component } from 'react';
+import { Col, Grid, Row } from 'react-flexbox-grid';
+import { bindActionCreators } from 'redux';
+import { reduxForm } from 'redux-form';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import {
-    consultList,
-    getMasterDataFields,
-    consultListWithParameterUbication,
-    consultDataSelect,
-    consultTeamsByRegionByEmployee
-} from '../selectsComponent/actions';
-import * as constants from '../selectsComponent/constants';
-import {reduxForm} from 'redux-form';
-import {updateTitleNavBar} from '../navBar/actions';
-import {SESSION_EXPIRED} from '../../constantsGlobal';
+import SearchBarClient from './searchClientAlertPendingUpdate';
+import Pagination from './pagination';
 import ListClientsPendingUpdate from './listClientPendingUpdate';
 import _ from 'lodash';
-import {onSessionExpire} from '../../actionsGlobal'
+
+import { changeKeyword, changePage, changeRegion, changeTeam, changeZone, clearFilter, clientsPendingUpdateFindServer } from './actions';
+import { showLoading } from '../loading/actions';
+import { redirectUrl } from '../globalComponents/actions';
+import { updateTitleNavBar } from '../navBar/actions';
+import { onSessionExpire } from '../../actionsGlobal'
+import {
+    consultDataSelect, consultList, consultListWithParameterUbication, consultTeamsByRegionByEmployee, getMasterDataFields
+} from '../selectsComponent/actions';
+
+import { FORM_FILTER_ALERT_PUC, NUMBER_RECORDS } from './constants';
+import * as constants from '../selectsComponent/constants';
 
 const fields = ["team", "region", "zone"];
 const titleModule = 'Alerta de clientes pendientes por actualizar';
@@ -47,7 +41,7 @@ class ClientsPendingUpdate extends Component {
             const {clearFilter, consultList, getMasterDataFields, consultDataSelect, updateTitleNavBar} = this.props;
             showLoading(true, 'Cargando..');
             getMasterDataFields([constants.CERTIFICATION_STATUS]).then((data) => {
-                if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
+                if (_.get(data, 'payload.data.validateLogin') === false) {
                     onSessionExpire();
                 }
             });
@@ -61,6 +55,7 @@ class ClientsPendingUpdate extends Component {
             updateTitleNavBar(titleModule);
         }
     }
+
     componentWillUnmount(){
         this.props.updateTitleNavBar('');
     }
@@ -88,7 +83,10 @@ class ClientsPendingUpdate extends Component {
 
     _onChangeRegionStatus(val) {
         if (!_.isEqual(val, "")) {
-            const {fields: {team, region, zone}, consultListWithParameterUbication, changeRegion, consultTeamsByRegionByEmployee} = this.props;
+            const {
+                fields: {team, region, zone}, consultListWithParameterUbication, changeRegion, consultTeamsByRegionByEmployee
+            } = this.props;
+
             region.onChange(val);
             zone.onChange(null);
             team.onChange(null);
@@ -125,10 +123,10 @@ class ClientsPendingUpdate extends Component {
     render() {
         var visibleTable = 'none';
         var visibleMessage = 'block';
-        const {fields:{team, region, zone}, handleSubmit, reducerGlobal, alertPendingUpdateClient, selectsReducer} = this.props;
+        const {fields:{team, region, zone}, alertPendingUpdateClient, selectsReducer} = this.props;
         if(_.size(alertPendingUpdateClient.get('responseClients')) !== 0) {
-        visibleTable = 'block';
-        visibleMessage = 'none';
+            visibleTable = 'block';
+            visibleMessage = 'none';
         }
         const numberTotalClientFiltered = alertPendingUpdateClient.get('totalClientsByFiltered');
         return (
@@ -247,4 +245,3 @@ function mapStateToProps({alertPendingUpdateClient, selectsReducer, navBar, redu
 }
 
 export default reduxForm({form: FORM_FILTER_ALERT_PUC, fields}, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
-

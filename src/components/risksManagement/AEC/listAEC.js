@@ -1,20 +1,22 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {Row, Col} from 'react-flexbox-grid';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Col, Row } from 'react-flexbox-grid';
 import GridComponent from '../../grid/component';
-import {redirectUrl} from '../../globalComponents/actions';
 import _ from 'lodash';
-import {showLoading} from '../../loading/actions';
-import {getAssetsAEC, clearListAEC} from './actions';
-import {shorterStringValue, formatLongDateToDateWithNameMonth, validateResponse} from '../../../actionsGlobal';
-import {TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_LOAD_DATA} from '../../../constantsGlobal';
-import {getMasterDataFields} from '../../selectsComponent/actions';
-import {AEC_STATUS, AEC_LEVEL} from '../../selectsComponent/constants';
-import {ACTIVE_STATE} from './constants';
-import {VIEW_AEC} from '../../modal/constants';
-import {swtShowMessage} from '../../sweetAlertMessages/actions';
-import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _AEC } from '../../../constantsAnalytics';
+
+import { redirectUrl } from '../../globalComponents/actions';
+import { showLoading } from '../../loading/actions';
+import { clearListAEC, getAssetsAEC } from './actions';
+import { getMasterDataFields } from '../../selectsComponent/actions';
+import { formatLongDateToDateWithNameMonth, shorterStringValue, validateResponse } from '../../../actionsGlobal';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
+
+import { MESSAGE_ERROR_SWEET_ALERT, MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT } from '../../../constantsGlobal';
+import { AEC_LEVEL, AEC_STATUS } from '../../selectsComponent/constants';
+import { ACTIVE_STATE } from './constants';
+import { VIEW_AEC } from '../../modal/constants';
+import { _AEC, BIZTRACK_MY_CLIENTS, nombreflujoAnalytics } from '../../../constantsAnalytics';
 
 class ListAECComponent extends Component {
 
@@ -34,7 +36,7 @@ class ListAECComponent extends Component {
         clearListAEC();
         showLoading(true, MESSAGE_LOAD_DATA);
         getMasterDataFields([AEC_STATUS, AEC_LEVEL]).then((data) => {
-            const statesAEC = data.payload.data.messageBody.masterDataDetailEntries;
+            const statesAEC = data.payload.data.data.masterDataDetailEntries;
             const idActiveState = _.get(_.filter(statesAEC, ['key', ACTIVE_STATE]), '[0].id');
             const json = {
                 idClient: window.sessionStorage.getItem('idClientSelected'),
