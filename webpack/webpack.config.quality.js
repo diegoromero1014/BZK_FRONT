@@ -28,7 +28,7 @@ var webpack = require('webpack'),
             path: assetsPath,
             filename: '[name]-[chunkhash].js',
             chunkFilename: '[name]-[chunkhash].js',
-            publicPath: '/',
+            publicPath: '/biztrack/',
         },
         progress: true,
         resolve: {
