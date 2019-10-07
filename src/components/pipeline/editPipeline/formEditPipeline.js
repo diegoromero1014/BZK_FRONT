@@ -165,8 +165,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _onClickPDF() {
-            const { pdfDescarga, params: { id } } = this.props;
-            pdfDescarga(window.sessionStorage.getItem('idClientSelected'), id);
+            const { pdfDescarga, params: { id }, changeStateSaveData } = this.props;
+            pdfDescarga(changeStateSaveData, id);
         }
 
         _changeCurrency(currencyValue) {
