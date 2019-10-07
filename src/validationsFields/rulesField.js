@@ -488,7 +488,6 @@ export const checkPipeLineOpportunityName = value => {
 
 export const checkRequiredPipelinePadre =  (value, fields, props) => {
     let isPipelineChild = props.pipelineReducer.get("isPipelineChildOpen");
-    console.log(isPipelineChild, value);
     if (!isPipelineChild) {
         return checkRequired(value);
     }

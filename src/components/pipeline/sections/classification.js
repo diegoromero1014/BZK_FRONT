@@ -13,11 +13,7 @@ export default class Classification extends React.Component {
     render() {
 
         const { pipelineType, selectsReducer, commercialOportunity, disabled } = this.props;
-
         const disabledClass = disabled ? 'disabled' : ''; 
-
-        console.log(disabled);
-
         return (
             <div>
                   <Row className="pipeline__section" >

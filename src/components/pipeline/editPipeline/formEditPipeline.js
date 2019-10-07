@@ -534,9 +534,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             mellowingPeriod.onChange(data.mellowingPeriod);
             areaAssets.onChange(data.areaAssets);
             areaAssetsValue.onChange(fomatInitialStateNumber(data.areaAssetsValue, 2));
-
-            debugger;
-
             pipelineType.onChange(data.pipelineType);
             commercialOportunity.onChange(data.commercialOportunity);
         }
