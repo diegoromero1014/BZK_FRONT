@@ -9,6 +9,7 @@ import Immutable from "immutable";
 import { reducer as formReducer } from "redux-form";
 import * as actionsGlobal from "../../../../../src/actionsGlobal";
 import Input from "../../../../../src/ui/input/inputComponent";
+import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
 import _ from "lodash";
 
 const middleWares = [thunk];
@@ -79,10 +80,65 @@ describe("Test CreatePipeline", () => {
 
     expect(wrapper.find(Input)).to.have.length(7);
   });
+
+  it('show Active field when areaAssetsEnabled value is true', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+      wrapper.instance()._changeAreaAssetsEnabledValue(true);         
+
+      expect(wrapper.find(ComboBox)).to.have.length(12);
+  });
+
+  it('hide Active field when areaAssetsEnabled value is false', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+      wrapper.instance()._changeAreaAssetsEnabledValue(false);         
+
+      expect(wrapper.find(ComboBox)).to.have.length(11);
+  });
+
+  it('show PivotNit field when showPivotNitField value is true', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+      wrapper.instance()._changeShowPivotNitField(true);         
+
+      expect(wrapper.find(Input).find({name: 'pivotNit'})).to.have.length(1);
+  });
+
+  it('hide PivotNit field when showPivotNitField value is false', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+      wrapper.instance()._changeShowPivotNitField(false);         
+
+      expect(wrapper.find(Input).find({name: 'pivotNit'})).to.have.length(0);
+  });
 });
 
 describe("Test CreatePipelineChildren", () => {
   let store;
+  let origin = "pipelineChildren";
+  const PipelineComponentChildren = createFormPipeline(
+    origin,
+    ORIGIN_PIPELIN_BUSINESS,
+    null
+  );
+
   beforeEach(() => {
     const selectsReducer = Immutable.Map({ PRODUCT_FAMILY: productFamily });
     const pipelineReducer = Immutable.Map({
@@ -109,13 +165,7 @@ describe("Test CreatePipelineChildren", () => {
     stubGetParameter.restore();
 
   });
-
-  let origin = "pipelineChildren";
-  const PipelineComponentChildren = createFormPipeline(
-    origin,
-    ORIGIN_PIPELIN_BUSINESS,
-    null
-  );
+  
   it("when createPipeline Children should not render formPipeline/HeaderPipeline", () => {
     const wrapper = shallow(<PipelineComponentChildren store={store} />)
       .dive()
@@ -145,5 +195,5 @@ describe("Test CreatePipelineChildren", () => {
     expect(
       wrapper.find(Input).find({ name: "txtOpportunityName" })
     ).to.have.length(0);
-  });
+  });  
 });
