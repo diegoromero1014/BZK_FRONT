@@ -1,4 +1,4 @@
-export const VERSION_DATE = "25/09/2019";
+export const VERSION_DATE = "08/10/2019";
 export const PERSONA_NATURAL = 451;
 export const PERSONA_JURIDICA = 452;
 export const NATURAL_PERSON = "Persona natural";
@@ -175,7 +175,7 @@ if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
         API_URL = "https://was-biztrackdev.apps.ambientesbc.com/Centricity";
         GOOGLE_RECAPTCHA_PUBLIC_KEY = '6Lf39bMUAAAAANetoQ4U_xpWh1pNHdANtBM7Mc-5';
     } else if (WP_VAR_ENVIRONMENT === 'quality') {
-        API_URL = "https://biztrackqa.apps.ambientesbc.com/Centricity";
+        API_URL = "https://was-biztrackqa.apps.ambientesbc.com/Centricity";
         GOOGLE_RECAPTCHA_PUBLIC_KEY = '6Lfm9bMUAAAAAEqNTrF1KqOgb6sx9bR1qRyWMCAZ';
     } else if (WP_VAR_ENVIRONMENT === 'sameorigin') {
         API_URL = window.location.origin + "/Centricity";
