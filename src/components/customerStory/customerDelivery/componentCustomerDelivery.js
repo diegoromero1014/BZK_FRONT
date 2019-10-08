@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
+import moment from 'moment';
+
 import { consultList } from '../../selectsComponent/actions';
 import { REASON_TRANFER } from '../../selectsComponent/constants';
 import { getMasterDataFields } from '../../selectsComponent/actions';
@@ -112,6 +114,14 @@ class ComponentCustomerDelivery extends Component {
     _handleSubmitDelivery() {
         const { fields: { idCelula }, customerStory, clientInformacion, swtShowMessage } = this.props;
         const { managementBrand, clientStatus } = this.state;
+
+        const dateNow = moment();
+        const endDate = moment("31/01/2020","DD/MM/YYYY");
+
+        if ( dateNow.isBefore(endDate)) {
+            swtShowMessage("warning", "Advertencia", "Señor usuario, la entrega de clientes estara deshabilitada hasta el dia 31/01/2020.");
+            return;
+        }
 
         if (_.isEqual(idCelula.value, clientInformacion.get("responseClientInfo").celulaId.toString())) {
             swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, la célula que seleccionó es a la que pertenece(n) actualmente.');
