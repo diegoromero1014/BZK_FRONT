@@ -119,7 +119,7 @@ class ComponentCustomerDelivery extends Component {
         const endDate = moment("31/01/2020","DD/MM/YYYY");
 
         if ( dateNow.isBefore(endDate)) {
-            swtShowMessage("warning", "Advertencia", "Señor usuario, la entrega de clientes estara deshabilitada hasta el dia 31/01/2020.");
+            swtShowMessage("warning", "Advertencia", "Señor usuario, La entrega estructurada de clientes está suspendida temporalmente.");
             return;
         }
 
