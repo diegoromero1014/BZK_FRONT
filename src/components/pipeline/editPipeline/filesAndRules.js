@@ -43,8 +43,8 @@ export const fieldsWithRules = {
     areaAssetsValue: { rules: [checkNumberLength(15)] }, 
     termInMonthsValues: { rules: [checkRequired] },
     pendingDisbursementAmount: { rules: [checkNumberLength(15)] },
-    pipelineType: { rules: [checkRequiredPipelinePadre] },
-    commercialOportunity: { rules: [checkRequiredPipelinePadre] }
+    pipelineType: { rules: [checkRequired] },
+    commercialOportunity: { rules: [checkRequired] }
 }
 
 export const fields = _.keys(fieldsWithRules);

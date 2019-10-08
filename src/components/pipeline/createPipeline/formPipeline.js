@@ -602,13 +602,13 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 </Col>
               </Row>}
 
-              {origin !== ORIGIN_PIPELIN_BUSINESS &&
+              
                   <Classification 
                     pipelineType={pipelineType}
                     commercialOportunity={commercialOportunity}
                     selectsReducer={selectsReducer}
                   />
-              }
+              
 
 
               <Row className="pipeline__section" style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : {}}>

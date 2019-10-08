@@ -675,14 +675,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 </Col>
                             </Row>}
 
-                            {origin !== ORIGIN_PIPELIN_BUSINESS &&
+                            
                                 <Classification
                                     pipelineType={pipelineType}
                                     commercialOportunity={commercialOportunity}
                                     selectsReducer={selectsReducer}
                                     disabled={!this.state.isEditable}
                                 />
-                            }
+                            
 
                             <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
