@@ -91,7 +91,7 @@ export default (state = initialState, action) => {
         case constants.FILTER_ATTITUDE_OVER_GROUP:
             return state.set('dataTypeAttitudeOverGroup', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.TEAM_FOR_EMPLOYEE:
-            return state.set('teamValueObjects', defaultData(action, 'payload.data.teamValueObjects'));
+            return state.set('teamValueObjects', defaultData(action, 'payload.data.data'));
         case constants.TEAM_FOR_EMPLOYEE_REGION_ZONE:
             return state.set('teamValueObjects', defaultData(action, 'payload.data.data.teamValueObjects'));
         case constants.TEAM_FOR_REGION_EMPLOYEE:
