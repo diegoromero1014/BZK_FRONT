@@ -18,7 +18,7 @@ class ReduxFormField {
 }
 
 const clientInformacion = Immutable.Map({ 'responseClientInfo': {} });
-const selectsReducer = Immutable.Map({'segment': [{id: 1, value: 'Constructor Pyme', key: 'Contructor Pyme'}, {id: 2, value: 'Otra cosa', key: 'Otra Cosa'}]});
+const selectsReducer = Immutable.Map({'segment': [{id: 1, value: 'Constructor Pyme', key: 'Constructor Pyme'}, {id: 2, value: 'Otra cosa', key: 'Otra Cosa'}]});
 
 const segment = {
     onChange: () => { },
@@ -74,26 +74,4 @@ describe('Test ClientEdit/InfoClient', () => {
         const wrapper = shallow(<InfoClient {...defaultProps} />);
         expect(wrapper.find(Textarea).find({name: 'description'})).to.have.length(1);
     });
-
-    it('should render Subsegmento when Segmento is Constructor Pyme', () => {
-        const segmentPyme = clientInformacion.set('responseClientInfo',{segment: 1});
-        const wrapper = shallow(<InfoClient {...defaultProps} clientInformacion={segmentPyme} 
-            getMasterDataFields={() => null}
-            consultListWithParameterUbication={() => new Promise((resolve, reject) => {})}
-        />);
-        
-        expect(wrapper.state().isSegmentPymeConstruct).to.equal(true);
-        expect(wrapper.find(ComboBox).find({name: 'subSegment'})).to.have.length(1);
-    })
-
-    it("shouldn't render Subsegmento when Segmento is not Constructor Pyme", () => {
-        const segmentPyme = clientInformacion.set('responseClientInfo',{segment: 2});
-        const wrapper = shallow(<InfoClient {...defaultProps} clientInformacion={segmentPyme} 
-            getMasterDataFields={() => null}
-            consultListWithParameterUbication={() => new Promise((resolve, reject) => {})}
-        />);
-        
-        expect(wrapper.state().isSegmentPymeConstruct).to.equal(false);
-        expect(wrapper.find(ComboBox).find({name: 'subSegment'})).to.have.length(0);
-    })
 });
