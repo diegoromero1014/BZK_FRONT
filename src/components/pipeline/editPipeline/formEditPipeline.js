@@ -40,8 +40,8 @@ import {
 import {
     BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
     MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS, PROBABILITY,
-    PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, 
-    PRODUCTS_MASK, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY
+    PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES,
+    PRODUCTS_MASK, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY, PIPELINE_JUSTIFICATION
 } from "../../selectsComponent/constants";
 import {
     EDITAR, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER, REVIEWED_DATE_FORMAT, SAVE_DRAFT,
@@ -80,6 +80,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
     let nameCurrency = _.uniqueId('currency_');
     let participantBanc = _.uniqueId('participantBanc_');
     let inputParticipantBanc = _.uniqueId('inputParticipantBanc_');
+    let nameJustificationPipeline = _.uniqueId('justificationPipeline_');
     let typeMessage = "success";
     let titleMessage = "";
     let message = "";
@@ -308,7 +309,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const { fields: {
                 idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                 moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity
+                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification
             }, createEditPipeline, changeStateSaveData, swtShowMessage, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
             } = this.props;
 
@@ -356,8 +357,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.00'),
                             "disbursementPlans": listDisburmentPlans,
                             "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick),
-                            "pipelineType" : pipelineType.value,
-                            "commercialOportunity" : commercialOportunity.value
+                            "pipelineType": pipelineType.value,
+                            "commercialOportunity": commercialOportunity.value,
+                            "justification": justification.value
                         };
                         if (origin === ORIGIN_PIPELIN_BUSINESS) {
                             typeMessage = "success";
@@ -569,7 +571,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
                 getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                     PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
-                    FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY]).then((result) => {
+                    FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY,
+                    PIPELINE_JUSTIFICATION]).then((result) => {
                         if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                             const { params: { id } } = this.props;
                             getPipelineById(id).then((result) => {
@@ -617,7 +620,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                     moneyDistribitionMarket, pendingDisbursementAmount, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
                     positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                    termInMonthsValues, pipelineType, commercialOportunity
+                    termInMonthsValues, pipelineType, commercialOportunity, justification
                 }, selectsReducer, handleSubmit, pipelineReducer, reducerGlobal
             } = this.props;
 
@@ -799,6 +802,23 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
+                                <Col xs={12} md={6} lg={6}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Justificación (</span><span style={{ color: "red" }}>*</span>)
+                                        </dt>
+                                        <ComboBox
+                                            labelInput="Seleccione..."
+                                            valueProp={'id'}
+                                            textProp={'value'}
+                                            {...justification}
+                                            name={nameJustificationPipeline}
+                                            parentId="dashboardComponentScroll"
+                                            data={selectsReducer.get(PIPELINE_JUSTIFICATION) || []}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -830,8 +850,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             </div>
                                         }
                                     </div>
-                                </Col>
-                                <Col xs={6} md={3} lg={3}>
+                                </Col>                                
+                            </Row>
+                            <Row style={{ padding: "0px 10px 20px 20px" }}>
+                                <Col xs={12} md={6} lg={6}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
                                             <span>Período de maduración</span>

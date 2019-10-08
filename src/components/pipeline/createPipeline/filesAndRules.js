@@ -35,7 +35,8 @@ export const fieldsWithRules = {
     termInMonthsValues: { rules: [checkRequired] },
     pendingDisbursementAmount: { rules: [checkNumberLength(15)] },
     pipelineType: { rules: [checkRequiredPipelinePadre] },
-    commercialOportunity: { rules: [checkRequiredPipelinePadre] }
+    commercialOportunity: { rules: [checkRequiredPipelinePadre] },
+    justification: { rules: [checkRequired]}
 }
 
 export const fields = _.keys(fieldsWithRules);

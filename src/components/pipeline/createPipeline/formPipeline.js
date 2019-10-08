@@ -42,7 +42,8 @@ import {
   TERM_IN_MONTHS_VALUES,
   CURRENCY,
   PIPELINE_TYPE,
-  COMMERCIAL_OPORTUNITY
+  COMMERCIAL_OPORTUNITY,
+  PIPELINE_JUSTIFICATION
 } from "../../selectsComponent/constants";
 import { BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY, ORIGIN_PIPELIN_BUSINESS, PRODUCT_FAMILY_LEASING, CURRENCY_MESSAGE } from "../constants";
 import {
@@ -96,6 +97,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   let nameCurrency = _.uniqueId('currency_');
   let participantBanc = _.uniqueId('participantBanc_');
   let inputParticipantBanc = _.uniqueId('inputParticipantBanc_');
+  let nameJustificationPipeline = _.uniqueId('justificationPipeline_');
 
   class FormPipeline extends Component {
 
@@ -178,7 +180,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const {
         fields: {
           nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, reviewedDate,
-          client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues
+          client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues, justification
         }
       } = this.props;
 
@@ -208,6 +210,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       moneyDistribitionMarket.onChange('');
       areaAssets.onChange('');
       areaAssetsValue.onChange('');
+      justification.onChange('');
     }
 
     _changeCurrency(currencyValue) {
@@ -342,7 +345,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         fields: {
           idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, probability, nameUsuario,
           opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues, pendingDisbursementAmount,
-          pipelineType, commercialOportunity
+          pipelineType, commercialOportunity, justification
         }, createEditPipeline, swtShowMessage, changeStateSaveData, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
       } = this.props;
 
@@ -389,8 +392,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.00'),
               "disbursementPlans": listDisburmentPlans,
               "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick),
-              "pipelineType" : pipelineType.value,
-              "commercialOportunity" : commercialOportunity.value
+              "pipelineType": pipelineType.value,
+              "commercialOportunity": commercialOportunity.value,
+              "justification": justification.value
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -559,7 +563,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY,
           PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
           FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY,
-          PIPELINE_TYPE, COMMERCIAL_OPORTUNITY]);
+          PIPELINE_TYPE, COMMERCIAL_OPORTUNITY, PIPELINE_JUSTIFICATION]);
 
         consultDataSelect(PRODUCTS, PRODUCTS_MASK);
 
@@ -576,7 +580,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const { fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, pendingDisbursementAmount,
         probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod,
-        moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity, areaAssetsValue, termInMonthsValues },
+        moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity, areaAssetsValue, termInMonthsValues, justification },
         selectsReducer, handleSubmit, reducerGlobal, pipelineReducer } = this.props;
 
       const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
@@ -603,11 +607,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               </Row>}
 
               {origin !== ORIGIN_PIPELIN_BUSINESS &&
-                  <Classification 
-                    pipelineType={pipelineType}
-                    commercialOportunity={commercialOportunity}
-                    selectsReducer={selectsReducer}
-                  />
+                <Classification
+                  pipelineType={pipelineType}
+                  commercialOportunity={commercialOportunity}
+                  selectsReducer={selectsReducer}
+                />
               }
 
 
@@ -712,6 +716,22 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
+                <Col xs={12} md={6} lg={6}>
+                  <div style={{ paddingRight: "15px" }}>
+                    <dt>
+                      <span>Justificación (</span><span style={{ color: "red" }}>*</span>)
+                    </dt>
+                    <ComboBox
+                      labelInput="Seleccione..."
+                      valueProp={'id'}
+                      textProp={'value'}
+                      {...justification}
+                      name={nameJustificationPipeline}
+                      parentId="dashboardComponentScroll"
+                      data={selectsReducer.get(PIPELINE_JUSTIFICATION) || []}
+                    />
+                  </div>
+                </Col>
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -743,42 +763,44 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     }
                   </div>
                 </Col>
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{ paddingRight: "15px" }}>
-                    <dt>
-                      <span>Período de maduración</span>
-                      <ToolTip text={HELP_PROBABILITY}>
-                        <i className="help circle icon blue"
-                          style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
-                      </ToolTip>
-                    </dt>
-                    <ComboBox
-                      labelInput="Seleccione..."
-                      valueProp={'id'}
-                      textProp={'value'}
-                      {...mellowingPeriod}
-                      name={nameMellowingPeriod}
-                      parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(MELLOWING_PERIOD) || []}
-                    />
-                  </div>
-                </Col>
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{ paddingRight: "15px" }}>
-                    <dt>
-                      <span>Libros</span>
-                    </dt>
-                    <ComboBox
-                      labelInput="Seleccione..."
-                      valueProp={'id'}
-                      textProp={'value'}
-                      {...moneyDistribitionMarket}
-                      name={nameMoneyDistribitionMarket}
-                      parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(FILTER_MONEY_DISTRIBITION_MARKET) || []}
-                    />
-                  </div>
-                </Col>
+                <Row style={{ padding: "0px 10px 20px 20px" }}>
+                  <Col xs={12} md={6} lg={6}>
+                    <div style={{ paddingRight: "15px" }}>
+                      <dt>
+                        <span>Período de maduración</span>
+                        <ToolTip text={HELP_PROBABILITY}>
+                          <i className="help circle icon blue"
+                            style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
+                        </ToolTip>
+                      </dt>
+                      <ComboBox
+                        labelInput="Seleccione..."
+                        valueProp={'id'}
+                        textProp={'value'}
+                        {...mellowingPeriod}
+                        name={nameMellowingPeriod}
+                        parentId="dashboardComponentScroll"
+                        data={selectsReducer.get(MELLOWING_PERIOD) || []}
+                      />
+                    </div>
+                  </Col>
+                  <Col xs={6} md={3} lg={3}>
+                    <div style={{ paddingRight: "15px" }}>
+                      <dt>
+                        <span>Libros</span>
+                      </dt>
+                      <ComboBox
+                        labelInput="Seleccione..."
+                        valueProp={'id'}
+                        textProp={'value'}
+                        {...moneyDistribitionMarket}
+                        name={nameMoneyDistribitionMarket}
+                        parentId="dashboardComponentScroll"
+                        data={selectsReducer.get(FILTER_MONEY_DISTRIBITION_MARKET) || []}
+                      />
+                    </div>
+                  </Col>
+                </Row>
               </Row>
               <Row className="pipeline__section__fields">
                 <Col xs={6} md={3} lg={3}>
