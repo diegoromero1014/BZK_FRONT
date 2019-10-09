@@ -105,7 +105,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showFormAddDisbursementPlan: false,
                 disbursementPlanRequired: false,
                 products: [],
-                showAlertCurrency: false 
+                showAlertCurrency: false ,
+                messageTooltipNominalValue: ''
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -133,6 +134,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this.showFormDisbursementPlan = this.showFormDisbursementPlan.bind(this);
             this._changeValue = this._changeValue.bind(this);
             this.showAlertDisabledCurrency = this.showAlertDisabledCurrency.bind(this);
+            this._onChangeBusinessCategory=this._onChangeBusinessCategory.bind(this);
         }
 
         showFormDisbursementPlan(isOpen) {
@@ -300,6 +302,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 this.showFormDisbursementPlan(false);
             }
         }
+
+        _onChangeBusinessCategory(val) {
+            const {  selectsReducer } = this.props;
+            this.setState({
+                messageTooltipNominalValue: _.get(_.find(selectsReducer.get('businessCategory'), ['id', parseInt(val)]), 'description')
+            })
+
+          }
 
         _submitEditPipeline() {
             const { fields: {
@@ -871,6 +881,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             name={nameBusinessCategory}
                                             parentId="dashboardComponentScroll"
                                             data={selectsReducer.get(BUSINESS_CATEGORY) || []}
+                                            onChange={key => this._onChangeBusinessCategory(key)}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
                                     </div>
@@ -991,20 +1002,22 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             <span>Valor nominal (</span>
                                             <span style={{ color: "red" }}>*</span>)
                                         </dt>
-                                        <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
-                                            <Input
-                                                {...value}
-                                                name="valueMillions"
-                                                type="text"
-                                                placeholder="Miles ' , ' y decimales ' . '"
-                                                parentId="dashboardComponentScroll"
-                                                onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
-                                                onFocus={val => handleFocusValueNumber(value, value.value)}
-                                                disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
-                                                onChange={val => this._changeValue(val)
-                                                }
-                                            />
-                                        </div>
+                                        <ToolTip text={this.state.messageTooltipNominalValue}>
+                                            <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
+                                                <Input
+                                                    {...value}
+                                                    name="valueMillions"
+                                                    type="text"
+                                                    placeholder="Miles ' , ' y decimales ' . '"
+                                                    parentId="dashboardComponentScroll"
+                                                    onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
+                                                    onFocus={val => handleFocusValueNumber(value, value.value)}
+                                                    disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
+                                                    onChange={val => this._changeValue(val)
+                                                    }
+                                                />
+                                            </div>
+                                        </ToolTip>
                                     </div>
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>

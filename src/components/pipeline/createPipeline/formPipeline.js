@@ -91,9 +91,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   let nameCurrency = _.uniqueId('currency_');
   let participantBanc = _.uniqueId('participantBanc_');
   let inputParticipantBanc = _.uniqueId('inputParticipantBanc_');
-
+  
   class FormPipeline extends Component {
-
+    
     constructor(props) {
       super(props);
       thisForm = this;
@@ -112,7 +112,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         showFormAddDisbursementPlan: false,
         disbursementPlanRequired: false,
         products: [],
-        showAlertCurrency: false
+        showAlertCurrency: false,
+        messageTooltipNominalValue: ''
       };
 
      
@@ -139,6 +140,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.showFormDisbursementPlan = this.showFormDisbursementPlan.bind(this);
       this._changeValue = this._changeValue.bind(this);
       this.showAlertDisabledCurrency = this.showAlertDisabledCurrency.bind(this);
+      this._onChangeBusinessCategory=this._onChangeBusinessCategory.bind(this);
     }
 
     showFormDisbursementPlan(isOpen) {
@@ -262,6 +264,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       }
 
       value.onChange(val);
+    }
+
+    _onChangeBusinessCategory(val) {
+      const {  selectsReducer } = this.props;
+      this.setState({
+          messageTooltipNominalValue: _.get(_.find(selectsReducer.get('businessCategory'), ['id', parseInt(val)]), 'description')
+      })
+      console.log(this.state.messageTooltipNominalValue);
     }
 
     _changeProductFamily(currencyValue) {
@@ -775,6 +785,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name={nameBusinessCategory}
                       parentId="dashboardComponentScroll"
                       data={selectsReducer.get(BUSINESS_CATEGORY) || []}
+                      onChange={key => this._onChangeBusinessCategory(key)}
                     />
                   </div>
                 </Col>
@@ -880,6 +891,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     <dt>
                       <span>Valor nominal (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
+                    <ToolTip text={this.state.messageTooltipNominalValue}>
                     <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
                       <Input
                         {...value}
@@ -893,6 +905,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                         onChange={val => this._changeValue(val)}
                       />
                     </div>
+                    </ToolTip>
                   </div>
                 </Col>
                 <Col xs={6} md={3} lg={3}>
