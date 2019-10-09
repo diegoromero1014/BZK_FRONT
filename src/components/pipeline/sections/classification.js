@@ -8,11 +8,11 @@ import {
     COMMERCIAL_OPORTUNITY
 } from "../../selectsComponent/constants";
 
-export default class Classification extends React.Component {
+export default class Classification extends React.Component {    
 
     render() {
 
-        const { pipelineType, selectsReducer, commercialOportunity, disabled } = this.props;
+        const { pipelineType, selectsReducer, commercialOportunity, disabled, pipelineTypeOnChange } = this.props;
         const disabledClass = disabled ? 'disabled' : ''; 
         return (
             <div>
@@ -37,6 +37,7 @@ export default class Classification extends React.Component {
                         parentId="dashboardComponentScroll"
                         data={selectsReducer.get(PIPELINE_TYPE) || []}
                         disabled={disabledClass}
+                        onChange={(val) => pipelineTypeOnChange(val)}
                       />
                     </Col>
                     <Col md={6} >

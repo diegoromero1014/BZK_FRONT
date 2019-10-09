@@ -66,12 +66,10 @@ import {
 } from './validationsMessages';
 
 import {
-    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, SUBSEGMENTS
+    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, SUBSEGMENTS, PIPELINE_TYPE
 } from '../components/selectsComponent/constants';
 
-import {
-    CONSTRUCT_PYME
-} from '../components/clientEdit/constants';
+import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO } from "../components/pipeline/constants";
 
 let globalCondition = false;
 export const setGlobalCondition = value => {
@@ -491,6 +489,31 @@ export const checkRequiredPipelinePadre =  (value, fields, props) => {
     if (!isPipelineChild) {
         return checkRequired(value);
     }
+    return null;
+}
+
+export const checkRequiredPipelineJustification = (value, fields, props) => {    
+    const pipelineTypes = props.selectsReducer.get(PIPELINE_TYPE);
+    const businessStatusList = props.selectsReducer.get(PIPELINE_STATUS);
+    let pipelineTypeSelected = null;
+    let pipelineTypeSelectedKey = null;
+    let businessStatusSelected = null;
+    let businessStatusSelectedKey = null;
+
+    if(pipelineTypes){
+        pipelineTypeSelected = pipelineTypes.find((pipelineType) => pipelineType.id == fields.pipelineType);      
+        pipelineTypeSelectedKey = pipelineTypeSelected ? pipelineTypeSelected.key.toLowerCase() : '';
+    }    
+
+    if(businessStatusList){
+        businessStatusSelected = businessStatusList.find((status) => status.id == fields.businessStatus);
+        businessStatusSelectedKey = businessStatusSelected ? businessStatusSelected.key.toLowerCase() : '';
+    }
+        
+    if(pipelineTypeSelectedKey == OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){                
+        return checkRequired(value);
+    }
+
     return null;
 }
 
