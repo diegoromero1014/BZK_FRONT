@@ -40,7 +40,7 @@ import {
 import {
     BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
     MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS, PROBABILITY,
-    PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, PRODUCTS_MASK, CURRENCY
+    PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, PRODUCTS_MASK, CURRENCY, CLIENT_NEED
 } from "../../selectsComponent/constants";
 import {
     EDITAR, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER, REVIEWED_DATE_FORMAT, SAVE_DRAFT,
@@ -613,7 +613,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
                 getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                     PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
-                    FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY]).then((result) => {
+                    FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY, CLIENT_NEED]).then((result) => {
                         if (origin !== ORIGIN_PIPELIN_BUSINESS) {
                             const { params: { id } } = this.props;
                             getPipelineById(id).then((result) => {
@@ -769,11 +769,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         <ComboBox
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
-                                            textProp={'need'}
+                                            textProp={'value'}
                                             {...need}
                                             name={nameNeed}
                                             parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get('pipelineClientNeeds') || []}
+                                            data={selectsReducer.get(CLIENT_NEED) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
                                     </div>

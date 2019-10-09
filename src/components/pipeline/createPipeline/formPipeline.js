@@ -39,7 +39,8 @@ import {
   PRODUCTS,
   PRODUCTS_MASK,
   TERM_IN_MONTHS_VALUES,
-  CURRENCY
+  CURRENCY,
+  CLIENT_NEED
 } from "../../selectsComponent/constants";
 import { BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY, ORIGIN_PIPELIN_BUSINESS, CURRENCY_MESSAGE, LEASING, FINANCIAL_LEASING, OPERATING_LEASE, IMPORTATION_LEASING, FACTORING, FACTORING_BANCOLOMBIA_CONFIRMING, FACTORING_PLUS, TRIANGULAR_LINE } from "../constants";
 import {
@@ -595,7 +596,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       } else {
         getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY,
           PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
-          FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY]);
+          FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY, CLIENT_NEED]);
 
         consultDataSelect(PRODUCTS, PRODUCTS_MASK);
 
@@ -677,11 +678,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     <ComboBox
                       labelInput="Seleccione..."
                       valueProp={'id'}
-                      textProp={'need'}
+                      textProp={'value'}
                       {...need}
                       name={nameNeed}
                       parentId="dashboardComponentScroll"
-                      data={selectsReducer.get('pipelineClientNeeds') || []}
+                      data={selectsReducer.get(CLIENT_NEED) || []}
                     />
                   </div>
                 </Col>
