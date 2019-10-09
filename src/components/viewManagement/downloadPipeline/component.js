@@ -119,7 +119,7 @@ class DownloadPipeline extends Component {
                         <br/>
                         <Col>
                             <dt>
-                                <span>Seleccione rango de fechas en el que desea el archivo - DD/MM/YYYY (</span><span
+                                <span>Seleccione rango de fechas en el que desea el archivo - Día/Mes/Año (</span><span
                                 style={{color: "red"}}>*</span>)
                             </dt>
                         </Col>
