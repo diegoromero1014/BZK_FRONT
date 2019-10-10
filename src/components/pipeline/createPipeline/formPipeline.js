@@ -45,8 +45,11 @@ import {
   COMMERCIAL_OPORTUNITY,
   PIPELINE_JUSTIFICATION
 } from "../../selectsComponent/constants";
-import { BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY, ORIGIN_PIPELIN_BUSINESS, PRODUCT_FAMILY_LEASING, CURRENCY_MESSAGE, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO,
-  LEASING, FINANCIAL_LEASING, OPERATING_LEASE, IMPORTATION_LEASING, FACTORING, FACTORING_BANCOLOMBIA_CONFIRMING, FACTORING_PLUS, TRIANGULAR_LINE} from "../constants";
+import { BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY,
+  ORIGIN_PIPELIN_BUSINESS, PRODUCT_FAMILY_LEASING, CURRENCY_MESSAGE, OPORTUNITIES_MANAGEMENT,
+  BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO, LEASING, FINANCIAL_LEASING,
+  OPERATING_LEASE, IMPORTATION_LEASING, FACTORING, FACTORING_BANCOLOMBIA_CONFIRMING,
+  FACTORING_PLUS, TRIANGULAR_LINE, NUEVO_NEGOCIO} from "../constants";
 import {
   ALLOWS_NEGATIVE_INTEGER,
   MESSAGE_ERROR,
@@ -123,7 +126,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         showJustificationField: false,
         showProbabilityField: true,
         showMellowingPeriodField: true,
-        showPivotNitField: false
+        showPivotNitField: false,
+        pipelineStatus: []
       };
 
 
@@ -153,6 +157,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._pipelineTypeAndBusinessOnChange = this._pipelineTypeAndBusinessOnChange.bind(this);
       this._changeAreaAssetsEnabledValue = this._changeAreaAssetsEnabledValue.bind(this);
       this._changeShowPivotNitField = this._changeShowPivotNitField.bind(this);
+      this.setPipelineStatusValues = this.setPipelineStatusValues.bind(this);
     }
 
     showFormDisbursementPlan(isOpen) {
@@ -417,7 +422,20 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         businessStatusSelectedKey = businessStatusSelected.key ? businessStatusSelected.key.toLowerCase() : '';
       }      
 
-      this._validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey);      
+      this._validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey); 
+      this.setPipelineStatusValues(pipelineTypeSelectedKey);
+    }
+
+    setPipelineStatusValues(pipelineTypeSelectedKey) {
+
+      const { selectsReducer } = this.props; 
+
+      if (pipelineTypeSelectedKey == NUEVO_NEGOCIO) {
+        this.setState({ pipelineStatus : selectsReducer.get(PIPELINE_STATUS).filter(value => value.key.toLowerCase() != BUSINESS_STATUS_NO_CONTACTADO ) })
+      } else {
+        this.setState({ pipelineStatus: selectsReducer.get(PIPELINE_STATUS) })
+      }
+
     }
 
     _getBusinessStatusById(id){
@@ -831,7 +849,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...businessStatus}
                       name={nameBusinessStatus}
                       parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(PIPELINE_STATUS) || []}
+                      data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
                       onChange={val => this._changeBusinessStatus(val)}
                     />
                   </div>

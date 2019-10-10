@@ -62,7 +62,8 @@ import {
     FACTORING_BANCOLOMBIA_CONFIRMING,
     FACTORING_PLUS,
     TRIANGULAR_LINE,
-    IMPORTATION_LEASING
+    IMPORTATION_LEASING,
+    NUEVO_NEGOCIO
 } from "../constants";
 import { addUsers, setConfidential } from "../../commercialReport/actions";
 import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
@@ -126,7 +127,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showJustificationField: false,
                 showProbabilityField: true,
                 showMellowingPeriodField: true,
-                showPivotNitField: false
+                showPivotNitField: false,
+                pipelineStatus: []
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -157,6 +159,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._pipelineTypeAndBusinessOnChange = this._pipelineTypeAndBusinessOnChange.bind(this);
             this._changeAreaAssetsEnabledValue = this._changeAreaAssetsEnabledValue.bind(this);
             this._changeShowPivotNitField = this._changeShowPivotNitField.bind(this);
+            this.setPipelineStatusValues = this.setPipelineStatusValues.bind(this);
         }
 
         showFormDisbursementPlan(isOpen) {
@@ -383,7 +386,20 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
 
             this._validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey);
+            this.setPipelineStatusValues(pipelineTypeSelectedKey);
         }
+
+        setPipelineStatusValues(pipelineTypeSelectedKey) {
+
+            const { selectsReducer } = this.props; 
+      
+            if (pipelineTypeSelectedKey == NUEVO_NEGOCIO) {
+              this.setState({ pipelineStatus : selectsReducer.get(PIPELINE_STATUS).filter(value => value.key.toLowerCase() != BUSINESS_STATUS_NO_CONTACTADO ) })
+            } else {
+              this.setState({ pipelineStatus: selectsReducer.get(PIPELINE_STATUS) })
+            }
+      
+          }
 
         _getBusinessStatusById(id){
             const {selectsReducer} = this.props;
@@ -923,7 +939,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             {...businessStatus}
                                             name={nameBusinessStatus}
                                             parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(PIPELINE_STATUS) || []}
+                                            data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                             onChange={val => this._changeBusinessStatus(val)}
                                         />
