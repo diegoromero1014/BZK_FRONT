@@ -28,3 +28,13 @@ export const UPDATE_DISBURSEMENT_PLANS = "UPDATE_DISBURSEMENT_PLANS";
 export const CURRENCY_MESSAGE = "Señor usuario, mientras exista un plan de desembolso, no se puede editar la moneda ni el valor nominal. Si requiere editarlos debe eliminar los desembolsos.";
 export const OPORTUNITIES_MANAGEMENT = "gestión de oportunidades";
 
+export const LEASING = 'leasing';
+export const FINANCIAL_LEASING = 'leasing financiero';
+export const OPERATING_LEASE = 'arrendamiento operativo';
+export const IMPORTATION_LEASING = 'leasing de importación';
+export const FACTORING = 'factoring';
+export const FACTORING_BANCOLOMBIA_CONFIRMING = 'factoring bancolombia confirming';
+export const FACTORING_PLUS = 'factoring plus';
+export const TRIANGULAR_LINE = 'línea triangular';
+
+
