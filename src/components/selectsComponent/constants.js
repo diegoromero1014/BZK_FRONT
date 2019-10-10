@@ -45,6 +45,7 @@ export const TASK_STATUS = "taskStatus";
 export const PREVISIT_TYPE = "previsitType";
 export const PIPELINE_STATUS = "pipelineStatus";
 export const PIPELINE_TYPE = "pipelineType";
+export const PIPELINE_JUSTIFICATION = "pipelineJustification";
 export const COMMERCIAL_OPORTUNITY = "commercialOportunity";
 export const PIPELINE_INDEXING = "indexing";
 export const PIPELINE_PRIORITY = "priority";

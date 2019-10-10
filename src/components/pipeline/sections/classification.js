@@ -3,8 +3,6 @@ import { Col, Row } from "react-flexbox-grid";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { uniqueId } from 'lodash';
-
 import SectionTitle from './sectionTitle';
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import {
@@ -13,6 +11,8 @@ import {
 } from "../../selectsComponent/constants";
 import { changeMainPipeline } from '../actions';
 
+import { checkReducerValue } from '../../../validationsFields/rulesField';
+
 export class Classification extends React.Component {
 
     constructor(props) {
@@ -20,12 +20,12 @@ export class Classification extends React.Component {
       this.addFieldNameToChangeFunction = this.addFieldNameToChangeFunction.bind(this);
       this.pipelineTypeChange = this.pipelineTypeChange.bind(this);
       this.commercialOportunityChange = this.commercialOportunityChange.bind(this);
+      this.shouldRenderComercialOportunity = this.shouldRenderComercialOportunity.bind(this);
     }
 
     addFieldNameToChangeFunction(name, value) {
       const { pipelineReducer, changeMainPipeline, isChildren } = this.props;
-      debugger;
-
+ 
       if (!isChildren) {
         let newValue = {};
         newValue[name] = value;
@@ -35,7 +35,9 @@ export class Classification extends React.Component {
     }
 
     pipelineTypeChange(...props) {
+      const { pipelineTypeOnChange } = this.props;
       this.addFieldNameToChangeFunction("pipelineType", ...props);
+      pipelineTypeOnChange(props[0]);
     }
 
     commercialOportunityChange(...props) {
@@ -48,10 +50,20 @@ export class Classification extends React.Component {
       }
     }
 
+    shouldRenderComercialOportunity() {
+
+      const { commercialOportunity, pipelineType, selectsReducer } = this.props;
+
+      return checkReducerValue(commercialOportunity.value,
+        pipelineType.value,
+        selectsReducer.get(PIPELINE_TYPE),
+        (value) => value == "Gestión de oportunidades",
+        () => true
+      );
+    }
+
     componentDidMount() {
       const { isChildren, pipelineReducer, pipelineType, commercialOportunity } = this.props;
-
-      debugger;
 
       if (isChildren) {
         this.setDefaultValue(pipelineType, pipelineReducer, 'pipelineType');
@@ -65,8 +77,6 @@ export class Classification extends React.Component {
         const { pipelineType, selectsReducer, commercialOportunity, disabled,
         pipelineTypeName, commercialOportunityName } = this.props;
         const disabledClass = disabled ? 'disabled' : '';
-
-          console.log({ pipelineTypeName, commercialOportunityName  });
 
         return (
             <div>
@@ -94,6 +104,7 @@ export class Classification extends React.Component {
                         onChange={this.pipelineTypeChange}
                       />
                     </Col>
+                    { this.shouldRenderComercialOportunity() && 
                     <Col md={6} >
                       <dt>
                         <span>Oportunidades comerciales (<span style={{ color: "red" }}>*</span>)</span>
@@ -110,6 +121,7 @@ export class Classification extends React.Component {
                         onChange={this.commercialOportunityChange}
                       />
                     </Col>
+                    }
                   </Row>
                 </div>
         )

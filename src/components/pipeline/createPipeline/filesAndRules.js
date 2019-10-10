@@ -3,7 +3,9 @@ import _ from "lodash";
 import {
     checkRequired, processRules, checkRequiredWithGlobalCondition,
     checkOnlyAlphabetical, checkPipeLineOpportunityName, 
-    checkFirstCharacter, checkNumberLength, checkRequiredPipelinePadre
+    checkFirstCharacter, checkNumberLength, checkRequiredPipelinePadre, 
+    checkRequiredPipelineJustification,
+    checkNumberDocument, checkRequiredComercialOportunity
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -35,7 +37,9 @@ export const fieldsWithRules = {
     termInMonthsValues: { rules: [checkRequired] },
     pendingDisbursementAmount: { rules: [checkNumberLength(15)] },
     pipelineType: { rules: [checkRequired] },
-    commercialOportunity: { rules: [checkRequired] }
+    commercialOportunity: { rules: [checkRequiredComercialOportunity] },
+    justification: { rules: [checkRequiredPipelineJustification]},
+    pivotNit: {rules: [checkRequired, checkNumberDocument, checkFirstCharacter]}
 }
 
 export const fields = _.keys(fieldsWithRules);
