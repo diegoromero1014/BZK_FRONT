@@ -3,7 +3,7 @@ import _ from "lodash";
 import {
     checkRequired, processRules, checkRequiredWithGlobalCondition,
     checkOnlyAlphabetical, checkPipeLineOpportunityName, 
-    checkFirstCharacter, checkNumberLength, checkRequiredPipelinePadre, 
+    checkFirstCharacter, checkNumberLength, 
     checkRequiredPipelineJustification,
     checkNumberDocument, checkRequiredComercialOportunity
 } from '../../../validationsFields/rulesField';
