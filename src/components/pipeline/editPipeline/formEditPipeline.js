@@ -80,6 +80,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
     let nameCurrency = _.uniqueId('currency_');
     let participantBanc = _.uniqueId('participantBanc_');
     let inputParticipantBanc = _.uniqueId('inputParticipantBanc_');
+    let pipelineTypeName = _.uniqueId('pipelineType');
+    let commercialOportunityName = _.uniqueId("commercialOportunity");
     let typeMessage = "success";
     let titleMessage = "";
     let message = "";
@@ -674,16 +676,16 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'} />
                                 </Col>
                             </Row>}
-
                             
                                 <Classification
                                     pipelineType={pipelineType}
                                     commercialOportunity={commercialOportunity}
-                                    selectsReducer={selectsReducer}
+                                    isChildren={origin === ORIGIN_PIPELIN_BUSINESS}
                                     disabled={!this.state.isEditable}
+                                    pipelineTypeName={pipelineTypeName}
+                                    commercialOportunityName={commercialOportunityName}
                                 />
                             
-
                             <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
                                     <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>

@@ -175,3 +175,10 @@ export function setOpenPipelineChild(value) {
     value
   }
 }
+
+export function changeMainPipeline(value) {
+  return {
+    type: constants.CHANGE_MAIN_PIPELINE,
+    value
+  }
+}

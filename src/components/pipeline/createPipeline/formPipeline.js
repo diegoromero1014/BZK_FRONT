@@ -17,7 +17,7 @@ import { setGlobalCondition } from './../../../validationsFields/rulesField';
 import Classification from '../sections/classification';
 
 import { redirectUrl } from "../../globalComponents/actions";
-import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans } from "../actions";
+import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans, changeMainPipeline } from "../actions";
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -96,6 +96,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   let nameCurrency = _.uniqueId('currency_');
   let participantBanc = _.uniqueId('participantBanc_');
   let inputParticipantBanc = _.uniqueId('inputParticipantBanc_');
+  let pipelineTypeName = _.uniqueId('pipelineType');
+  let commercialOportunityName = _.uniqueId("commercialOportunity");
 
   class FormPipeline extends Component {
 
@@ -602,15 +604,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 </Col>
               </Row>}
 
-              
                   <Classification 
                     pipelineType={pipelineType}
                     commercialOportunity={commercialOportunity}
-                    selectsReducer={selectsReducer}
+                    isChildren={origin === ORIGIN_PIPELIN_BUSINESS}
+                    pipelineTypeName={pipelineTypeName}
+                    commercialOportunityName={commercialOportunityName}
                   />
               
-
-
               <Row className="pipeline__section" style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : {}}>
                 <Col xs={12} md={12} lg={12}>
                   <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -1135,7 +1136,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       consultListWithParameterUbication,
       clearLists,
       consultDataSelect,
-      setConfidential
+      setConfidential,
+      changeMainPipeline
     }, dispatch);
   }
 

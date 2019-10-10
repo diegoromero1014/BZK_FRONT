@@ -2,9 +2,8 @@ import Immutable from 'immutable';
 import {
     GET_PIPELINE_LIST, CHANGE_PAGE, LIMITE_INF, ORDER_COLUMN_PIPELINE,
     CLEAR_PIPELINE, CLEAR_PIPELINE_ORDER, CLEAR_PIPELINE_PAGINATOR, GET_PIPELINE, OWNER_DRAFT,
-    UPDATE_DISBURSEMENT_PLANS, ORIGIN_PIPELIN_BUSINESS, SET_OPEN_PIPELINE_CHILD
+    UPDATE_DISBURSEMENT_PLANS, ORIGIN_PIPELIN_BUSINESS, SET_OPEN_PIPELINE_CHILD, CHANGE_MAIN_PIPELINE
 } from './constants';
-import { isUndefined } from 'lodash';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -18,7 +17,8 @@ const initialState = Immutable.Map({
     ownerDraft: 0,
     disbursementPlans: [],
     childBusinessDisbursementPlans: [],
-    isPipelineChildOpen: false
+    isPipelineChildOpen: false,
+    mainPipeline: {}
 });
 
 export default (state = initialState, action) => {
@@ -72,6 +72,10 @@ export default (state = initialState, action) => {
         case SET_OPEN_PIPELINE_CHILD:
             return state.withMutations(map => {
                 map.set('isPipelineChildOpen', action.value)
+            })
+        case CHANGE_MAIN_PIPELINE:
+            return state.withMutations(map => {
+                map.set('mainPipeline', action.value)
             })
         default:
             return state;
