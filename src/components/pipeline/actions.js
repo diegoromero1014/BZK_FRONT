@@ -77,29 +77,33 @@ export function orderColumnPipeline(orderPipeline, columnPipeline) {
   };
 }
 
-export function getCsvPipelineByClient(clientId) {
-  const json = {
+export function getCsvPipelineByClient(changeStateSaveData, clientId) {
+  const name = "Pipeline.xlsx";
+
+  const payload = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "timestamp": new Date().getTime(),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+        "timestamp": new Date().getTime(),
+        "service": "",
+        "status": "0",
+        "language": "es",
+        "displayErrorMessage": "",
+        "technicalErrorMessage": "",
+        "applicationVersion": "",
+        "debug": true,
+        "isSuccessful": true
     },
     "messageBody": {
-      "clientId": clientId
+        "name": name,
+        "route": "BiztrackReports/PIPELINE_BY_CLIENT.jrxml",
+        "params": {
+          "P_ID_CLIENT": Number(clientId)
+        },
+        "source": []
     }
-  }
-  let request = axios.post(APP_URL + "/getCsvPipelineClient", json);
-  return {
-    type: constants.GET_CSV_PIPELINE_BY_CLIENT,
-    payload: request
-  }
+  };
+
+  downloadReport(payload, "/generate/XLSX", name, changeStateSaveData);
 }
 
 export function createEditPipeline(jsonPipeline) {
