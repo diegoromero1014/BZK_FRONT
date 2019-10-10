@@ -278,7 +278,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       
       consultListWithParameterUbication("", currencyValue).then((data) => {
         this.setState({
-          products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
+          products: _.get(data, 'payload.data.data', [])
         });
       });
       product.onChange('');
