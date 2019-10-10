@@ -761,6 +761,23 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 </Col>
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
+                            <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Necesidad del cliente (</span><span style={{ color: "red" }}>*</span>)
+                                        </dt>
+                                        <ComboBox
+                                            labelInput="Seleccione..."
+                                            valueProp={'id'}
+                                            textProp={'need'}
+                                            {...need}
+                                            name={nameNeed}
+                                            parentId="dashboardComponentScroll"
+                                            data={selectsReducer.get('pipelineClientNeeds') || []}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
                                 <Col xs={12} md={6} lg={6}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -782,23 +799,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Necesidad del cliente (</span><span style={{ color: "red" }}>*</span>)
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'need'}
-                                            {...need}
-                                            name={nameNeed}
-                                            parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get('pipelineClientNeeds') || []}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                        />
-                                    </div>
-                                </Col>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
                                             <span>Producto</span>
                                         </dt>
                                         <ComboBox
@@ -810,12 +810,32 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                             {...product}
                                             name={nameProduct}
-                                            onChange={val => this._changeProduct(val)}
                                         />
                                     </div>
                                 </Col>
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
+                            <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            {origin === ORIGIN_PIPELIN_BUSINESS ?
+                                                <span>Categoría del negocio</span>
+                                                :
+                                                <span>Categoría del negocio (<span style={{ color: "red" }}>*</span>)</span>
+                                            }
+                                        </dt>
+                                        <ComboBox
+                                            labelInput="Seleccione..."
+                                            valueProp={'id'}
+                                            textProp={'value'}
+                                            {...businessCategory}
+                                            name={nameBusinessCategory}
+                                            parentId="dashboardComponentScroll"
+                                            data={selectsReducer.get(BUSINESS_CATEGORY) || []}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -887,7 +907,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-                                <Col xs={6} md={3} lg={3}>
+                            </Row>
+                            <Row style={{ padding: "0px 10px 20px 20px" }}>
+                            <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
                                             <span>Libros</span>
@@ -900,29 +922,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             name={nameMoneyDistribitionMarket}
                                             parentId="dashboardComponentScroll"
                                             data={selectsReducer.get(FILTER_MONEY_DISTRIBITION_MARKET) || []}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                        />
-                                    </div>
-                                </Col>
-                            </Row>
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            {origin === ORIGIN_PIPELIN_BUSINESS ?
-                                                <span>Categoría del negocio</span>
-                                                :
-                                                <span>Categoría del negocio (<span style={{ color: "red" }}>*</span>)</span>
-                                            }
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            {...businessCategory}
-                                            name={nameBusinessCategory}
-                                            parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(BUSINESS_CATEGORY) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
                                     </div>
