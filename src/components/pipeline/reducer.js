@@ -23,11 +23,11 @@ const initialState = Immutable.Map({
 export default (state = initialState, action) => {
     switch (action.type) {
         case GET_PIPELINE_LIST:
-            const response = action.payload.data;
+            const response = action.payload.data.data;
             return state.withMutations(map => {
                 map.set('status', response.status)
                     .set('rowCount', response.rowCount)
-                    .set('pipelineList', response.data.rows);
+                    .set('pipelineList', response.rows);
             });
         case CHANGE_PAGE:
             return state.set('page', action.currentPage);
