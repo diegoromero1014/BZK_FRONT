@@ -406,18 +406,17 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       idCurrencyAux = currency.value;
     }
 
-    _pipelineTypeAndBusinessOnChange(value){      
-      const { fields:{ businessStatus }, selectsReducer} = this.props;
+    _pipelineTypeAndBusinessOnChange(value){            
+      const { fields:{ businessStatus }, selectsReducer} = this.props;       
       let businessStatusSelectedKey = null;
       let businessStatusSelected = null;      
       let pipelineTypeSelectedKey = null;
-      const pipelineTypes = selectsReducer.get(PIPELINE_TYPE);
-      const pipelineTypeSelected = pipelineTypes.find((pipelineType) => pipelineType.id == value);      
-      
+      const pipelineTypes = selectsReducer.get(PIPELINE_TYPE);      
+      const pipelineTypeSelected = pipelineTypes.find((pipelineType) => pipelineType.id == value);                  
       if(pipelineTypeSelected){
         pipelineTypeSelectedKey = pipelineTypeSelected.key ? pipelineTypeSelected.key.toLowerCase() : '';
       }
-
+      
       if(businessStatus.value.length){
         businessStatusSelected = this._getBusinessStatusById(businessStatus.value);                  
         businessStatusSelectedKey = businessStatusSelected.key ? businessStatusSelected.key.toLowerCase() : '';

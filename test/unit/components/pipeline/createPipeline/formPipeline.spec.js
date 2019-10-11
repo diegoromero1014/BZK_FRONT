@@ -1,7 +1,7 @@
 import React from "react";
 import createFormPipeline from "../../../../../src/components/pipeline/createPipeline/formPipeline";
 import HeaderPipeline from "../../../../../src/components/pipeline/headerPipeline";
-import { ORIGIN_PIPELIN_BUSINESS } from "../../../../../src/components/pipeline/constants";
+import { ORIGIN_PIPELIN_BUSINESS, OPORTUNITIES_MANAGEMENT, NUEVO_NEGOCIO } from "../../../../../src/components/pipeline/constants";
 import PermissionsUserReports from "../../../../../src/components/commercialReport/permissionsUserReports";
 import thunk from "redux-thunk";
 import configureStore from "redux-mock-store";
@@ -17,12 +17,22 @@ const mockStore = configureStore(middleWares);
 
 const clientInfo = [{}, {}];
 const productFamily = [{}, {}];
+const pipelineTypes = [
+  {
+    id: 1,
+    key: OPORTUNITIES_MANAGEMENT
+  },
+  {
+    id: 2,
+    key: NUEVO_NEGOCIO
+  }];
+
 let stubGetParameter;
 
 describe("Test CreatePipeline", () => {
-  let store;
+  let store; 
   beforeEach(() => {
-    const selectsReducer = Immutable.Map({ PRODUCT_FAMILY: productFamily });
+    const selectsReducer = Immutable.Map({ PRODUCT_FAMILY: productFamily, pipelineType: pipelineTypes});
     const pipelineReducer = Immutable.Map({
       nameDisbursementPlansInReducer: "disbursementPlans"
     });
@@ -127,6 +137,16 @@ describe("Test CreatePipeline", () => {
       wrapper.instance()._changeShowPivotNitField(false);         
 
       expect(wrapper.find(Input).find({name: 'pivotNit'})).to.have.length(0);
+  });
+
+  it('hide mellowing period and probability fields on pipeline type change', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+      wrapper.instance()._pipelineTypeAndBusinessOnChange(1);         
   });
 });
 
