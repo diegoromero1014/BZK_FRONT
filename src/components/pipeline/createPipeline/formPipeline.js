@@ -415,8 +415,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       if(pipelineTypeSelected){
         pipelineTypeSelectedKey = pipelineTypeSelected.key ? pipelineTypeSelected.key.toLowerCase() : '';
       }
-
-      console.log(businessStatus);
+      
       if(businessStatus.value.length){
         businessStatusSelected = this._getBusinessStatusById(businessStatus.value);                  
         businessStatusSelectedKey = businessStatusSelected.key ? businessStatusSelected.key.toLowerCase() : '';
