@@ -93,4 +93,5 @@ export const PAY_LOAD_DATA = 'payload.data.data';
 export const FILTER_PROVINCE_CLIENT = 'provinceClient';
 export const FILTER_CITY_CLIENT = 'cityClient';
 export const CURRENCY = 'currency';
+export const CLIENT_NEED = 'clientNeed';
 //FIN
