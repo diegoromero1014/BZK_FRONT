@@ -11,8 +11,6 @@ describe("", () => {
 
         const result = getCatchedResult('/e1', 'param1');
 
-        console.log(result);
-
         if (!result) {
             //Se lanza error porque el endpoint si existe
             expect(true).equals(false);

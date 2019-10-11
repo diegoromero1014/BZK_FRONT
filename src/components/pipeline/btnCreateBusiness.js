@@ -7,7 +7,7 @@ import Modal from 'react-modal';
 import createFormPipeline from './createPipeline/formPipeline';
 import SecurityMessageComponent from './../globalComponents/securityMessageComponent';
 
-import { toggleModalContact } from './actions';
+import { toggleModalContact, setOpenPipelineChild } from './actions';
 
 import { ORIGIN_PIPELIN_BUSINESS } from './constants';
 
@@ -23,10 +23,12 @@ class BotonCreateComponent extends Component {
   }
 
   openModal() {
+    this.props.setOpenPipelineChild(true);
     this.setState({ modalIsOpen: true });
   }
 
   closeModal() {
+    this.props.setOpenPipelineChild(false);
     this.setState({ modalIsOpen: false });
   }
 
@@ -65,7 +67,8 @@ class BotonCreateComponent extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    toggleModalContact
+    toggleModalContact,
+    setOpenPipelineChild
   }, dispatch);
 }
 

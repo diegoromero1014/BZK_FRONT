@@ -198,3 +198,17 @@ export function updateDisbursementPlans(listDisbursementPlans, origin) {
     origin
   };
 }
+
+export function setOpenPipelineChild(value) {
+  return {
+    type: constants.SET_OPEN_PIPELINE_CHILD,
+    value
+  }
+}
+
+export function changeMainPipeline(value) {
+  return {
+    type: constants.CHANGE_MAIN_PIPELINE,
+    value
+  }
+}
