@@ -66,12 +66,10 @@ import {
 } from './validationsMessages';
 
 import {
-    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, SUBSEGMENTS
+    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, SUBSEGMENTS, PIPELINE_TYPE, PRODUCTS
 } from '../components/selectsComponent/constants';
 
-import {
-    CONSTRUCT_PYME
-} from '../components/clientEdit/constants';
+import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO, FACTORING_BANCOLOMBIA_CONFIRMING, FACTORING_PLUS, TRIANGULAR_LINE } from "../components/pipeline/constants";
 
 let globalCondition = false;
 export const setGlobalCondition = value => {
@@ -484,6 +482,89 @@ export const checkPipeLineOpportunityName = value => {
     }
 
     return message;
+}
+
+export const checkRequiredPipelinePadre =  (value, fields, props) => {
+    let isPipelineChild = props.pipelineReducer.get("isPipelineChildOpen");
+    if (!isPipelineChild) {
+        return checkRequired(value);
+    }
+    return null;
+}
+
+/**
+ * 
+ * @param {*} fieldValue -> Valor al que se le aplican las reglas de validación
+ * @param {*} selectedValue -> Id del catalogo seleccionado
+ * @param {*} catalogValues -> Valores del catalogo
+ * @param {*} checkCondition -> Condición que debe cumplir la llave del catalogo seleccionado
+ * @param {*} checkRules -> Reglas que debe cumplir fieldValue. El retorno de checkRules sera el retorno de toda la función
+ * 
+ * @Return {*} El retorno sera el retorno de la función checkRules
+ * 
+ */
+export const checkReducerValue = (fieldValue, selectedValue, catalogValues, checkCondition, checkRules) => {
+
+    if (!catalogValues) {
+        return;
+    }
+        
+    var selectedCatalog = catalogValues.find((catalog) => catalog.id == selectedValue );
+    if (!selectedCatalog) {
+        return;
+    }
+    
+    if (checkCondition(selectedCatalog.key)) {
+        return checkRules(fieldValue);
+    }
+}
+
+export const checkRequiredComercialOportunity = (value, fields, props) => {    
+    return checkReducerValue(value,
+        fields.pipelineType,
+        props.selectsReducer.get(PIPELINE_TYPE),
+        (value) => value == "Gestión de oportunidades",
+        checkRequired
+    );
+}
+
+export const checkRequiredPipelineJustification = (value, fields, props) => {    
+    const pipelineTypes = props.selectsReducer.get(PIPELINE_TYPE);
+    const businessStatusList = props.selectsReducer.get(PIPELINE_STATUS);
+    let pipelineTypeSelected = null;
+    let pipelineTypeSelectedKey = null;
+    let businessStatusSelected = null;
+    let businessStatusSelectedKey = null;
+
+    if(pipelineTypes){
+        pipelineTypeSelected = pipelineTypes.find((pipelineType) => pipelineType.id == fields.pipelineType);      
+        pipelineTypeSelectedKey = pipelineTypeSelected ? pipelineTypeSelected.key.toLowerCase() : '';
+    }    
+
+    if(businessStatusList){
+        businessStatusSelected = businessStatusList.find((status) => status.id == fields.businessStatus);
+        businessStatusSelectedKey = businessStatusSelected ? businessStatusSelected.key.toLowerCase() : '';
+    }
+        
+    if(pipelineTypeSelectedKey == OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){                
+        return checkRequired(value);
+    }
+
+    return null;
+}
+
+export const checkRequiredPivotNit = (value, fields, props) => {
+
+    return checkReducerValue(value,
+        fields.product,
+        props.selectsReducer.get(PRODUCTS),
+        (value) => {
+            const productKey = value ? value.toLowerCase() : '';            
+            return (productKey == FACTORING_BANCOLOMBIA_CONFIRMING || productKey == FACTORING_PLUS || productKey == TRIANGULAR_LINE);
+        },
+        (value) => {
+            return checkRequired(value) || checkNumberDocument(value) || checkFirstCharacter(value)
+        });
 }
 
 export const checkObservationsLinkClient = value => {

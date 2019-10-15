@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-flexbox-grid';
+import { Col, Row } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import _ from 'lodash';
 import { bindActionCreators } from 'redux';
@@ -10,12 +10,12 @@ import SweetAlert from '../sweetalertFocus';
 import MemberRiskGroup from './memberRiskGroup';
 
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import { validateResponse, formValidateKeyEnter, nonValidateEnter,onSessionExpire } from '../../actionsGlobal';
+import { formValidateKeyEnter, nonValidateEnter, onSessionExpire, validateResponse } from '../../actionsGlobal';
 import { findClientByStrTypeIdAndNumber } from '../clients/actions';
 import { getMasterDataFields } from '../selectsComponent/actions';
 import { showLoading } from '../loading/actions';
 
-import { SESSION_EXPIRED, NATURAL_PERSON } from '../../constantsGlobal';
+import { NATURAL_PERSON } from '../../constantsGlobal';
 import * as constants from '../selectsComponent/constants';
 import { fieldsSearch as fields, validationsSearch as validate } from './fieldsAndRulesForReduxForm';
 
@@ -52,17 +52,17 @@ class modalComponentMemberRiskGroup extends Component {
     componentWillMount() {
         this.setState({ showForm: false });
         this.props.getMasterDataFields([constants.CLIENT_TYPE]).then((data) => {
-            if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
+            if (_.get(data, 'payload.data.validateLogin') === false) {
                 onSessionExpire();
             }
         });
         this.props.getMasterDataFields([constants.CONTACT_ID_TYPE]).then((data) => {
-            if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
+            if (_.get(data, 'payload.data.validateLogin') === false) {
                 onSessionExpire();
             }
         });
         this.props.getMasterDataFields([constants.CLIENT_ID_TYPE]).then((data) => {
-            if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
+            if (_.get(data, 'payload.data.validateLogin') === false) {
                 onSessionExpire();
             }
         });
