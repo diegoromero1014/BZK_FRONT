@@ -45,17 +45,7 @@ class ComponentCustomerStory extends Component {
         if (_.isUndefined(valueAprove) || _.isNull(valueAprove) || _.isEmpty(valueAprove)) {
             this.setState({ errorAprove: OPTION_REQUIRED });
         } else {
-            const { clientInformacion, aproveRejectDeliveryClient, swtShowMessage, consultInfoClient, changeStateSaveData } = this.props;
-            const { dateUpdateDelivery } = clientInformacion.get("responseClientInfo");
-
-            const deliveryDate = moment(dateUpdateDelivery);
-            const initialDate = moment("02/09/2019","DD/MM/YYYY");
-            const finalDate = moment("05/10/2019", "dd/MM/YYYY");
-            
-            if (deliveryDate.isAfter(initialDate) && deliveryDate.isBefore(finalDate)) {
-                swtShowMessage("warning", "Advertencia", "Señor usuario, la recepción de clientes se hará de forma masiva el día 4 de octubre");
-                return;
-            }
+            const { aproveRejectDeliveryClient, swtShowMessage, consultInfoClient, changeStateSaveData } = this.props;
 
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
             aproveRejectDeliveryClient(window.sessionStorage.getItem('idClientSelected'), valueAprove).then((data) => {

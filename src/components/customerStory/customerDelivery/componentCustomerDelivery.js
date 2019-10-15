@@ -10,6 +10,7 @@ import { fields, validations as validate } from './fieldsAndRulesCustomerDeliver
 import { CLIENT_STATUS, MANAGEMENT_BRAND } from '../structuredDelivery/constants';
 import { _CUSTOMER_DELIVERY_STORY, BIZTRACK_MY_CLIENTS, nombreflujoAnalytics } from '../../../constantsAnalytics';
 import _ from 'lodash';
+import moment from 'moment';
 
 
 import { consultList, getMasterDataFields } from '../../selectsComponent/actions';
@@ -112,6 +113,14 @@ class ComponentCustomerDelivery extends Component {
     _handleSubmitDelivery() {
         const { fields: { idCelula }, customerStory, clientInformacion, swtShowMessage } = this.props;
         const { managementBrand, clientStatus } = this.state;
+
+        const dateNow = moment();
+        const endDate = moment("31/01/2020","DD/MM/YYYY");
+
+        if ( dateNow.isBefore(endDate)) {
+            swtShowMessage("warning", "Advertencia", "Señor usuario, La entrega estructurada de clientes está suspendida temporalmente.");
+            return;
+        }
 
         if (_.isEqual(idCelula.value, clientInformacion.get("responseClientInfo").celulaId.toString())) {
             swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, la célula que seleccionó es a la que pertenece(n) actualmente.');
