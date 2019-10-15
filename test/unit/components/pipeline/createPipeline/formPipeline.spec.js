@@ -140,7 +140,12 @@ describe("Test CreatePipeline", () => {
   });
 
   it('hide mellowing period and probability fields on pipeline type change', () => {
-    const wrapper = shallow(<PipelineComponent store={store} />)
+    const fields = {
+      businessStatus: {
+        value: 1
+      }
+    };
+    const wrapper = shallow(<PipelineComponent store={store} fields={fields} />)
       .dive()
       .dive()
       .dive()

@@ -41,7 +41,7 @@ import {
     BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
     MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS, PROBABILITY,
     PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES,
-    PRODUCTS_MASK, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY, PIPELINE_JUSTIFICATION, CLIENT_NEED
+    PRODUCTS_MASK, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY, PIPELINE_JUSTIFICATION, CLIENT_NEED, FILTER_MULTISELECT_FIELDS
 } from "../../selectsComponent/constants";
 import {
     EDITAR, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER, REVIEWED_DATE_FORMAT, SAVE_DRAFT,
@@ -285,7 +285,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
             }            
-            consultListWithParameterUbication("", currencyValue).then((data) => {        
+            consultListWithParameterUbication(FILTER_MULTISELECT_FIELDS, currencyValue).then((data) => {        
               this.setState({
                 products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
               });
@@ -307,7 +307,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
               });
         }
 
-        _changeProduct(value){                          
+        _changeProduct(value){                         
             const { fields: {productFamily}, selectsReducer} = this.props;      
             let productFamilySelected = selectsReducer.get(PRODUCT_FAMILY).find((family) => family.id == productFamily.value);
             let products = this.state.products;
@@ -328,7 +328,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     this._changeAreaAssetsEnabledValue(false);
                     break;
                 }
-              }else if(productFamilySelectedKey === FACTORING){
+              }else if(productFamilySelectedKey === FACTORING){                  
                 switch (productSelectedKey) {
                   case FACTORING_BANCOLOMBIA_CONFIRMING:
                   case FACTORING_PLUS:
@@ -901,6 +901,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                             {...product}
                                             name={nameProduct}
+                                            onChange={val => this._changeProduct(val)}
                                         />
                                     </div>
                                 </Col>
