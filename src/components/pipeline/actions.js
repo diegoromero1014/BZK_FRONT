@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import { APP_URL } from '../../constantsGlobal';
 import * as constants from './constants';
+import { downloadReport } from '../../utils';
 
 export function pipelineByClientFindServer(clientId, pageNum, maxRows, columnOrder, order, statusDocumentId, pipelineStatus) {
   const json = {
@@ -76,29 +77,33 @@ export function orderColumnPipeline(orderPipeline, columnPipeline) {
   };
 }
 
-export function getCsvPipelineByClient(clientId) {
-  const json = {
+export function getCsvPipelineByClient(changeStateSaveData, clientId) {
+  const name = "Pipeline.xlsx";
+
+  const payload = {
     "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "timestamp": new Date().getTime(),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+        "timestamp": new Date().getTime(),
+        "service": "",
+        "status": "0",
+        "language": "es",
+        "displayErrorMessage": "",
+        "technicalErrorMessage": "",
+        "applicationVersion": "",
+        "debug": true,
+        "isSuccessful": true
     },
     "messageBody": {
-      "clientId": clientId
+        "name": name,
+        "route": "BiztrackReports/PIPELINE_BY_CLIENT.jrxml",
+        "params": {
+          "P_ID_CLIENT": Number(clientId)
+        },
+        "source": []
     }
-  }
-  let request = axios.post(APP_URL + "/getCsvPipelineClient", json);
-  return {
-    type: constants.GET_CSV_PIPELINE_BY_CLIENT,
-    payload: request
-  }
+  };
+
+  downloadReport(payload, "/generate/XLSX", name, changeStateSaveData);
 }
 
 export function createEditPipeline(jsonPipeline) {
@@ -150,8 +155,33 @@ export function getPipelineById(pipelineId) {
   };
 }
 
-export function pdfDescarga(idclient, idPipeline) {
-  window.open(APP_URL + "/pdfReportPipeline?idClient=" + idclient + "&idPipeline=" + idPipeline + "&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionTokenFront'));
+export function pdfDescarga(changeStateSaveData, idPipeline) {
+  const name = "Pipeline.pdf";
+
+  const payload = {
+    "messageHeader": {
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+        "timestamp": new Date().getTime(),
+        "service": "",
+        "status": "0",
+        "language": "es",
+        "displayErrorMessage": "",
+        "technicalErrorMessage": "",
+        "applicationVersion": "",
+        "debug": true,
+        "isSuccessful": true
+    },
+    "messageBody": {
+        "name": name,
+        "route": "BiztrackReports/pipeline2.jrxml",
+        "params": {
+          "P_ID_PIPELINE": Number(idPipeline)
+        },
+        "source": []
+    }
+  };
+
+  downloadReport(payload, "/generate/PDF", name, changeStateSaveData);
 }
 
 export function changeOwnerDraftPipeline(ownerDraft) {
@@ -167,4 +197,18 @@ export function updateDisbursementPlans(listDisbursementPlans, origin) {
     listDisbursementPlans: listDisbursementPlans,
     origin
   };
+}
+
+export function setOpenPipelineChild(value) {
+  return {
+    type: constants.SET_OPEN_PIPELINE_CHILD,
+    value
+  }
+}
+
+export function changeMainPipeline(value) {
+  return {
+    type: constants.CHANGE_MAIN_PIPELINE,
+    value
+  }
 }

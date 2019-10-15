@@ -135,8 +135,10 @@ export default (state = initialState, action) => {
                 });
             });
         case constants.PIPELINE_CLIENT_NEEDS:
-            const clientNeeds = action.payload.data.data.clientNeedValueObjects;
+            const clientNeeds = action.payload.data.data.clientNeedValueObjects;            
             return state.set('pipelineClientNeeds', clientNeeds);
+        case constants.PIPELINE_JUSTIFICATION:                             
+            return state.set('pipelineJustification', defaultData(action, 'payload.data.data'));            
         case constants.LIST_REGIONS:
             return state.set('region', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.LIST_REGIONS_BY_EMPLOYEE:
@@ -153,7 +155,7 @@ export default (state = initialState, action) => {
             return state.set('subSegment', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.REASON_CONFORMATION:
             return state.set('reasonConformation', defaultData(action, constants.PAY_LOAD_DATA));
-        case constants.PRODUCTS:
+        case constants.PRODUCTS:            
             return state.set('products', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
         case constants.PRODUCTS_MASK:
             return state.set('allProducts', defaultData(action, 'payload.data.data'));
