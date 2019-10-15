@@ -959,8 +959,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                         {...probability}
                         name={nameProbability}
                         parentId="dashboardComponentScroll"
-                        data={selectsReducer.get(PROBABILITY) || []}
-                        disabled={this.state.probabilityEnabled ? '' : 'disabled'}
+                        data={selectsReducer.get(PROBABILITY) || []}                        
                       />
                     </div>
                   </Col>
