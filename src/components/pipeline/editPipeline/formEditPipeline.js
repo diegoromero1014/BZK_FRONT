@@ -287,7 +287,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }            
             consultListWithParameterUbication(FILTER_MULTISELECT_FIELDS, currencyValue).then((data) => {        
               this.setState({
-                products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
+                products: _.get(data, 'payload.data.data', [])
               });
             });
             if (!_.isEqual(pipelineReducer.get('detailPipeline').productFamily, productFamily.value)) {

@@ -303,7 +303,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
       consultListWithParameterUbication(FILTER_MULTISELECT_FIELDS, currencyValue).then((data) => {
         this.setState({
-          products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
+          products: _.get(data, 'payload.data.data', [])
         });
       });
       product.onChange('');
@@ -706,7 +706,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         selectsReducer, handleSubmit, reducerGlobal, pipelineReducer } = this.props;
 
       const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
-      const isPipelineChild = pipelineReducer.get("isPipelineChildOpen");
+      const isPipelineChild = pipelineReducer.get("isPipelineChildOpen");      
 
       return (
         <div>
@@ -842,7 +842,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
                       <span>Estado (</span><span style={{ color: "red" }}>*</span>)
-                    </dt>
+                    </dt>                    
                     <ComboBox
                       labelInput="Seleccione..."
                       valueProp={'id'}

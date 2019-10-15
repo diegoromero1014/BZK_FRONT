@@ -1,55 +1,47 @@
 import React, { Component } from "react";
 import { Col, Row } from "react-flexbox-grid";
 import { bindActionCreators } from "redux";
-import {
-    changeKeyword,
-    changePage,
-    clearClients,
-    clientsFindServer,
-    deleteAllRecentClients,
-    getRecentClients,
-    saveSelectValue,
-    backButtonFilter,
-    clearSaveSelectedValue
-} from "./actions";
 import ClientListItem from "./clientListItem";
 import SearchBarClient from "./searchBarClient";
-import { AEC_NO_APLICA, ID_OPTION_ALL_LEVEL_AEC, NUMBER_RECORDS } from "./constants";
-import Pagination from "./pagination";
-import { redirectUrl } from "../globalComponents/actions";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
-import { consultList, getMasterDataFields } from "../selectsComponent/actions";
-import * as constants from "../selectsComponent/constants";
+import Pagination from "./pagination";
 import { reduxForm } from "redux-form";
+import SweetAlert from "../sweetalertFocus";
+import { isNil } from 'lodash';
+import Tooltip from "../toolTip/toolTipComponent";
+
+import { swtShowMessage } from "../sweetAlertMessages/actions";
+import { showLoading } from '../loading/actions';
+import { redirectUrl } from "../globalComponents/actions";
+import { consultList, getMasterDataFields } from "../selectsComponent/actions";
 import { updateTitleNavBar } from "../navBar/actions";
 import { clearContact } from "../contact/actions";
 import { clearInfoClient } from "../clientInformation/actions";
+import { onSessionExpire, validatePermissionsByModule, validateResponse } from "../../actionsGlobal";
+import { updateTabSeleted } from "../clientDetailsInfo/actions";
+import { updateTabSeletedRisksManagment } from "../risksManagement/actions";
+import {
+    backButtonFilter, changeKeyword, changePage, clearClients, clearSaveSelectedValue,
+    clientsFindServer, deleteAllRecentClients, getRecentClients, saveSelectValue
+} from "./actions";
+
+import { AEC_NO_APLICA, ID_OPTION_ALL_LEVEL_AEC, NUMBER_RECORDS } from "./constants";
+import * as constants from "../selectsComponent/constants";
+import { TAB_AEC } from "../risksManagement/constants";
 import {
     MESSAGE_ERROR_SWEET_ALERT,
     MESSAGE_LOAD_DATA,
     MODULE_CLIENTS,
     MODULE_PROSPECT,
-    SESSION_EXPIRED,
     TAB_RISKS_MANAGEMENT,
     TITLE_ERROR_SWEET_ALERT,
-    VISUALIZAR,
-    valuesYesNo
+    valuesYesNo,
+    VISUALIZAR
 } from "../../constantsGlobal";
-import { validatePermissionsByModule, validateResponse, onSessionExpire } from "../../actionsGlobal";
-import { updateTabSeleted } from "../clientDetailsInfo/actions";
-import { updateTabSeletedRisksManagment } from "../risksManagement/actions";
-import { TAB_AEC } from "../risksManagement/constants";
-import { swtShowMessage } from "../sweetAlertMessages/actions";
-import Tooltip from "../toolTip/toolTipComponent";
-import SweetAlert from "../sweetalertFocus";
-import { showLoading } from '../loading/actions';
-import { isNil } from 'lodash';
 
 const fields = ["team", "certificationStatus", "bussinesRol", "management", "decisionCenter", "levelAEC"];
 var levelsAEC;
-let varBackButtonFilter = false;
 
-let filterSearchBar = "";
 let dataFilterStore = null;
 let firstChangeValidateFilters = false;
 
@@ -79,9 +71,10 @@ class ClientsFind extends Component {
         if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
-            const { fields: { team, bussinesRol, management, decisionCenter, certificationStatus, levelAEC }, clearClients, consultList, getMasterDataFields, clearContact, clearInfoClient,
-                updateTitleNavBar, validatePermissionsByModule, selectsReducer, updateTabSeleted,
-                updateTabSeletedRisksManagment, getRecentClients, swtShowMessage, showLoading, clientR, backButtonFilter, clearSaveSelectedValue, changeKeyword } = this.props;
+            const { clearClients, consultList, getMasterDataFields, clearContact, clearInfoClient, updateTitleNavBar,
+                validatePermissionsByModule, updateTabSeleted, updateTabSeletedRisksManagment, getRecentClients,
+                swtShowMessage, showLoading, clientR, backButtonFilter, clearSaveSelectedValue, changeKeyword
+            } = this.props;
 
             const { fields } = this.props;
 
@@ -90,7 +83,7 @@ class ClientsFind extends Component {
             updateTabSeleted(null);
             updateTabSeletedRisksManagment(null);
             getMasterDataFields([constants.CERTIFICATION_STATUS, constants.BUSINESS_ROL, constants.AEC_LEVEL, constants.MANAGEMENT_BRAND]).then((data) => {
-                const lists = _.groupBy(data.payload.data.messageBody.masterDataDetailEntries, 'field');
+                const lists = _.groupBy(data.payload.data.data.masterDataDetailEntries, 'field');
                 const aecLevel = lists.aecLevel;
                 aecLevel.push({
                     field: constants.AEC_LEVEL,
@@ -102,19 +95,22 @@ class ClientsFind extends Component {
                 levelsAEC = _.remove(aecLevel, function (level) {
                     return level.key !== AEC_NO_APLICA;
                 });
-                if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
+                if (_.get(data, 'payload.data.validateLogin') === false) {
                     onSessionExpire();
                 }
             });
+
             consultList(constants.TEAM_FOR_EMPLOYEE);
             updateTitleNavBar("Mis clientes");
             clearInfoClient();
             clearContact();
+
             validatePermissionsByModule(MODULE_PROSPECT).then((data) => {
                 if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                     onSessionExpire();
                 }
             });
+
             validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
                 if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                     onSessionExpire();
@@ -125,7 +121,6 @@ class ClientsFind extends Component {
                 }
             });
 
-
             const backButtonVariable = clientR.get('backStateFilters');
             if (backButtonVariable) {
                 const filters = clientR.get('filterValues');
@@ -133,7 +128,6 @@ class ClientsFind extends Component {
                     if (fields[value.name]) {
                         fields[value.name].onChange(value.value);
                     } else {
-                        // filterSearchBar = value.value;
                         changeKeyword(value.value);
                     }
                 });
@@ -165,8 +159,7 @@ class ClientsFind extends Component {
     }
 
     _cleanSearch() {
-        const { fields: { team }, clearClients, updateTabSeleted, clearSaveSelectedValue, updateTabSeletedRisksManagment,
-            getRecentClients, showLoading } = this.props;
+        const { clearClients, updateTabSeleted, clearSaveSelectedValue, updateTabSeletedRisksManagment, getRecentClients, showLoading } = this.props;
         this.props.resetForm();
         showLoading(true, MESSAGE_LOAD_DATA);
         clearClients();
@@ -262,17 +255,18 @@ class ClientsFind extends Component {
             name: "levelAEC",
             value: val
         };
+
         levelAEC.onChange(val);
         if (val) {
             this._handleClientsFind();
         }
         saveSelectValue(jsonFilter);
-
     }
 
     _handleClientsFind() {
-        const { fields: { certificationStatus, team, bussinesRol, management, decisionCenter, levelAEC }, showLoading,
-            swtShowMessage, clientsFindServer, clientR, changePage } = this.props;
+        const { fields: { certificationStatus, team, bussinesRol, management, decisionCenter, levelAEC },
+            showLoading, swtShowMessage, clientsFindServer, clientR, changePage
+        } = this.props;
         showLoading(true, MESSAGE_LOAD_DATA);
 
         let filters = {
@@ -289,8 +283,6 @@ class ClientsFind extends Component {
         if (dataFilterStore && firstChangeValidateFilters) {
             filters = Object.assign(filters, dataFilterStore);
         }
-
-
 
         clientsFindServer(searchBar, 0, NUMBER_RECORDS, filters.certificationStatus, filters.team, filters.bussinesRol, filters.management,
             filters.decisionCenter, filters.levelAEC).then((data) => {
@@ -326,6 +318,7 @@ class ClientsFind extends Component {
         this.setState({
             showConfirmDeleteRecentClientes: false
         });
+
         showLoading(true, MESSAGE_LOAD_DATA);
         deleteAllRecentClients().then((data) => {
             showLoading(false, "");
@@ -342,7 +335,7 @@ class ClientsFind extends Component {
     }
 
     render() {
-        const { fields: { team, certificationStatus, bussinesRol, management, decisionCenter, levelAEC }, handleSubmit, navBar, reducerGlobal } = this.props;
+        const { fields: { team, certificationStatus, bussinesRol, management, decisionCenter, levelAEC }, reducerGlobal } = this.props;
         const { clientR, selectsReducer } = this.props;
         const countClients = isNil(clientR.get('countClients')) ? 0 : clientR.get('countClients');
         const status = clientR.get('status');
