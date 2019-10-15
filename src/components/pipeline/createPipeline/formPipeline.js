@@ -44,7 +44,8 @@ import {
   PIPELINE_TYPE,
   COMMERCIAL_OPORTUNITY,
   PIPELINE_JUSTIFICATION,
-  CLIENT_NEED
+  CLIENT_NEED,
+  FILTER_MULTISELECT_FIELDS
 } from "../../selectsComponent/constants";
 import { BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY,
   ORIGIN_PIPELIN_BUSINESS, PRODUCT_FAMILY_LEASING, CURRENCY_MESSAGE, OPORTUNITIES_MANAGEMENT,
@@ -300,7 +301,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         }).length > 0
       });
 
-      consultListWithParameterUbication("", currencyValue).then((data) => {
+      consultListWithParameterUbication(FILTER_MULTISELECT_FIELDS, currencyValue).then((data) => {
         this.setState({
           products: _.get(data, 'payload.data.messageBody.masterDataDetailEntries', [])
         });

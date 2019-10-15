@@ -66,10 +66,10 @@ import {
 } from './validationsMessages';
 
 import {
-    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, SUBSEGMENTS, PIPELINE_TYPE
+    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, SUBSEGMENTS, PIPELINE_TYPE, PRODUCTS
 } from '../components/selectsComponent/constants';
 
-import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO } from "../components/pipeline/constants";
+import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO, FACTORING_BANCOLOMBIA_CONFIRMING, FACTORING_PLUS, TRIANGULAR_LINE } from "../components/pipeline/constants";
 
 let globalCondition = false;
 export const setGlobalCondition = value => {
@@ -519,7 +519,7 @@ export const checkReducerValue = (fieldValue, selectedValue, catalogValues, chec
     }
 }
 
-export const checkRequiredComercialOportunity = (value, fields, props) => {
+export const checkRequiredComercialOportunity = (value, fields, props) => {    
     return checkReducerValue(value,
         fields.pipelineType,
         props.selectsReducer.get(PIPELINE_TYPE),
@@ -551,6 +551,20 @@ export const checkRequiredPipelineJustification = (value, fields, props) => {
     }
 
     return null;
+}
+
+export const checkRequiredPivotNit = (value, fields, props) => {
+
+    return checkReducerValue(value,
+        fields.product,
+        props.selectsReducer.get(PRODUCTS),
+        (value) => {
+            const productKey = value ? value.toLowerCase() : '';            
+            return (productKey == FACTORING_BANCOLOMBIA_CONFIRMING || productKey == FACTORING_PLUS || productKey == TRIANGULAR_LINE);
+        },
+        (value) => {
+            return checkRequired(value) || checkNumberDocument(value) || checkFirstCharacter(value)
+        });
 }
 
 export const checkObservationsLinkClient = value => {
