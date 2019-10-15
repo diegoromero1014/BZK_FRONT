@@ -139,13 +139,8 @@ describe("Test CreatePipeline", () => {
       expect(wrapper.find(Input).find({name: 'pivotNit'})).to.have.length(0);
   });
 
-  it('hide mellowing period and probability fields on pipeline type change', () => {
-    const fields = {
-      businessStatus: {
-        value: 1
-      }
-    };
-    const wrapper = shallow(<PipelineComponent store={store} fields={fields} />)
+  it('hide mellowing period and probability fields on pipeline type change', () => {    
+    const wrapper = shallow(<PipelineComponent store={store}/>)
       .dive()
       .dive()
       .dive()
