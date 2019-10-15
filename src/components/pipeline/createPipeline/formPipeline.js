@@ -271,7 +271,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.setState({
           messageTooltipNominalValue: _.get(_.find(selectsReducer.get('businessCategory'), ['id', parseInt(val)]), 'description')
       })
-      console.log(this.state.messageTooltipNominalValue);
     }
 
     _changeProductFamily(currencyValue) {
