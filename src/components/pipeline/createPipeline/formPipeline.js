@@ -957,7 +957,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 </Col>
               </Row>
               
-              <Row style={{ padding: "20px 23px 20px 20px" }}>
+              <Row style={{ padding: "0px 10px 20px 20px" }}>
                 {this.state.showProbabilityField ? 
                   <Col xs={6} md={3} lg={3}>
                     <div style={{ paddingRight: "15px" }}>
