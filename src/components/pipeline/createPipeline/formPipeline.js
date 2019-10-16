@@ -845,6 +845,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name={nameBusinessCategory}
                       parentId="dashboardComponentScroll"
                       data={selectsReducer.get(BUSINESS_CATEGORY) || []}
+                      onChange={key => this._onChangeBusinessCategory(key)}
                     />
                   </div>
                 </Col>
@@ -955,42 +956,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   </div>
                 </Col>
               </Row>
-              <Row style={{ padding: "0px 10px 20px 20px" }}>
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{ paddingRight: "15px" }}>
-                    <dt>
-                      <span>Categoría del negocio (</span><span style={{ color: "red" }}>*</span>)
-                    </dt>
-                    <ComboBox
-                      labelInput="Seleccione..."
-                      valueProp={'id'}
-                      textProp={'value'}
-                      {...businessCategory}
-                      name={nameBusinessCategory}
-                      parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(BUSINESS_CATEGORY) || []}
-                      onChange={key => this._onChangeBusinessCategory(key)}
-                    />
-                  </div>
-                </Col>
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{ paddingRight: "15px" }}>
-                    <dt>
-                      <span>Probabilidad</span>
-                    </dt>
-                    <ComboBox
-                      labelInput="Seleccione..."
-                      valueProp={'id'}
-                      textProp={'value'}
-                      {...probability}
-                      name={nameProbability}
-                      parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(PROBABILITY) || []}
-                      disabled={this.state.probabilityEnabled ? '' : 'disabled'}
-                    />
-                  </div>
-                </Col>
-              </Row>
+              
               <Row style={{ padding: "20px 23px 20px 20px" }}>
                 {this.state.showProbabilityField ? 
                   <Col xs={6} md={3} lg={3}>

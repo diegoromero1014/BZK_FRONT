@@ -933,7 +933,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             name={nameBusinessCategory}
                                             parentId="dashboardComponentScroll"
                                             data={selectsReducer.get(BUSINESS_CATEGORY) || []}
+                                            onChange={key => this._onChangeBusinessCategory(key)}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
+
                                         />
                                     </div>
                                 </Col>
@@ -1050,45 +1052,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 </Col>
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            {origin === ORIGIN_PIPELIN_BUSINESS ?
-                                                <span>Categoría del negocio</span>
-                                                :
-                                                <span>Categoría del negocio (<span style={{ color: "red" }}>*</span>)</span>
-                                            }
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            {...businessCategory}
-                                            name={nameBusinessCategory}
-                                            parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(BUSINESS_CATEGORY) || []}
-                                            onChange={key => this._onChangeBusinessCategory(key)}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                        />
-                                    </div>
-                                </Col>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Probabilidad</span>
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            {...probability}
-                                            name={nameProbability}
-                                            parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(PROBABILITY) || []}
-                                            disabled={(this.state.probabilityEnabled && this.state.isEditable) ? '' : 'disabled'}
-                                        />
-                                    </div>
-                                </Col>
                                 {this.state.showProbabilityField ?
                                     <Col xs={6} md={3} lg={3}>
                                         <div style={{ paddingRight: "15px" }}>
