@@ -100,12 +100,13 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   let nameCurrency = _.uniqueId('currency_');
   let participantBanc = _.uniqueId('participantBanc_');
   let inputParticipantBanc = _.uniqueId('inputParticipantBanc_');
+  
   let pipelineTypeName = _.uniqueId('pipelineType');
   let commercialOportunityName = _.uniqueId("commercialOportunity");
   let nameJustificationPipeline = _.uniqueId('justificationPipeline_');
 
   class FormPipeline extends Component {
-
+    
     constructor(props) {
       super(props);
       thisForm = this;
@@ -125,6 +126,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         disbursementPlanRequired: false,
         products: [],
         showAlertCurrency: false,
+        messageTooltipNominalValue: '',
         showJustificationField: false,
         showProbabilityField: true,
         showMellowingPeriodField: true,
@@ -156,6 +158,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.showFormDisbursementPlan = this.showFormDisbursementPlan.bind(this);
       this._changeValue = this._changeValue.bind(this);
       this.showAlertDisabledCurrency = this.showAlertDisabledCurrency.bind(this);
+      this._onChangeBusinessCategory=this._onChangeBusinessCategory.bind(this);
       this._pipelineTypeAndBusinessOnChange = this._pipelineTypeAndBusinessOnChange.bind(this);
       this._changeAreaAssetsEnabledValue = this._changeAreaAssetsEnabledValue.bind(this);
       this._changeShowPivotNitField = this._changeShowPivotNitField.bind(this);
@@ -287,6 +290,13 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       }
 
       value.onChange(val);
+    }
+
+    _onChangeBusinessCategory(val) {
+      const {  selectsReducer } = this.props;
+      this.setState({
+          messageTooltipNominalValue: _.get(_.find(selectsReducer.get('businessCategory'), ['id', parseInt(val)]), 'description')
+      })
     }
 
     _changeProductFamily(currencyValue) {
@@ -835,6 +845,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name={nameBusinessCategory}
                       parentId="dashboardComponentScroll"
                       data={selectsReducer.get(BUSINESS_CATEGORY) || []}
+                      onChange={key => this._onChangeBusinessCategory(key)}
                     />
                   </div>
                 </Col>
@@ -945,6 +956,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   </div>
                 </Col>
               </Row>
+              
               <Row style={{ padding: "0px 10px 20px 20px" }}>
                 {this.state.showProbabilityField ? 
                   <Col xs={6} md={3} lg={3}>
@@ -1047,7 +1059,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     <dt>
                       <span>Valor nominal (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
-                    <div onClick={() => this.showAlertDisabledCurrency(isEditableValue)} >
+                    <ToolTip text={this.state.messageTooltipNominalValue}>
+                    <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
                       <Input
                         {...value}
                         name="valueMillions"
@@ -1060,6 +1073,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                         onChange={val => this._changeValue(val)}
                       />
                     </div>
+                    </ToolTip>
                   </div>
                 </Col>
                 <Col xs={6} md={3} lg={3}>
