@@ -148,6 +148,21 @@ describe("Test CreatePipeline", () => {
 
       wrapper.instance()._pipelineTypeAndBusinessOnChange(1);         
   });
+
+  
+
+  
+  it('should render  messages tooltip value nominal', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+    .dive()
+    .dive()
+    .dive()
+    .dive();
+
+    
+    wrapper.instance()._onChangeBusinessCategory(1);         
+    expect(wrapper.find(ComboBox).find({ name: 'product_' }));
+});
 });
 
 describe("Test CreatePipelineChildren", () => {
@@ -215,5 +230,6 @@ describe("Test CreatePipelineChildren", () => {
     expect(
       wrapper.find(Input).find({ name: "txtOpportunityName" })
     ).to.have.length(0);
-  });  
+  });
+
 });
