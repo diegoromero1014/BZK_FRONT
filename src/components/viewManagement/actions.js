@@ -2,6 +2,7 @@ import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
 import {TAB_SELETED_ACTIVE, GET_CSV, LOAD_CHART, CHANGE_ERROR_YEAR} from './constants';
 import {downloadReport} from "../../utils";
+import moment from "moment";
 
 export function changeTabSeletedChartView(tabSeleted) {
     return {
@@ -54,7 +55,7 @@ export function getCsv(year,url, hasParticipatingContacts, hasParticipatingEmplo
 
 export function getXlsPipeline(changeStateSaveData, initialDate, finalDate) {
   const name = "Pipeline vista gerencial.xls";
-
+  
   const payload = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionTokenFront'),
@@ -73,8 +74,8 @@ export function getXlsPipeline(changeStateSaveData, initialDate, finalDate) {
       "route": "BiztrackReports/pipeline_view_manager.jrxml",
       "params": {
         "P_USER_NAME": window.localStorage.getItem("userNameFront"),
-        "P_INITIAL_DATE": initialDate,
-        "P_FINAL_DATE": finalDate
+        "P_INITIAL_DATE": moment(initialDate, 'DD/MM/YYYY').toDate().getTime(),
+        "P_FINAL_DATE": moment(finalDate, 'DD/MM/YYYY').toDate().getTime()
       },
       "source": []
     }
