@@ -55,7 +55,7 @@ export function getCsv(year,url, hasParticipatingContacts, hasParticipatingEmplo
 
 export function getXlsPipeline(changeStateSaveData, initialDate, finalDate) {
   const name = "Pipeline vista gerencial.xls";
-  debugger;
+  
   const payload = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionTokenFront'),
