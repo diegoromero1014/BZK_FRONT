@@ -19,6 +19,9 @@ import {get,indexOf,has} from 'lodash';
 import {showLoading} from '../loading/actions';
 import {clientsPortfolioExpirationFindServer} from './actions';
 import {NUMBER_RECORDS} from './constants';
+import { ALERT_PORTFOLIO_EXPECTATIONS } from '../selectsComponent/constants';
+import { getMasterDataFields } from "../../components/selectsComponent/actions";
+import { ALERT_PORTFOLIO_EXPIRATION_LIST } from '../modal/constants';
 
 class ListClientsPortfolioExpiration extends Component {
 
@@ -34,10 +37,12 @@ class ListClientsPortfolioExpiration extends Component {
     }
 
     componentWillMount() {
+        const {getMasterDataFields} = this.props;
         this.state = {
             orderA: 'none',
             orderD: 'inline-block'
         }
+        getMasterDataFields([ALERT_PORTFOLIO_EXPECTATIONS])
     }
 
     _orderColumn(orderClients, columnClients) {
@@ -115,7 +120,7 @@ class ListClientsPortfolioExpiration extends Component {
         const data = alertPortfolioExpiration.get('responseClients');
         return (
             <div className="horizontal-scroll-wrapper" style={{overflow: 'scroll', background: '#fff'}}>
-                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle="Observaciones"/>
+                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle="Observaciones" origin={ALERT_PORTFOLIO_EXPIRATION_LIST}/>
             </div>
         );
     }
@@ -128,6 +133,7 @@ function mapDispatchToProps(dispatch) {
         clearClientPagination,
         orderColumnClientPortfolioExpiration,
         clientsPortfolioExpirationFindServer,
+        getMasterDataFields,
         showLoading
     }, dispatch);
 }

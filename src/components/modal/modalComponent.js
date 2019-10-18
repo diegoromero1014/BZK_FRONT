@@ -34,6 +34,7 @@ class ModalComponentDialog extends Component {
         this.openModal = this.openModal.bind(this);
         this.renderTitle = this.renderTitle.bind(this);
         this.renderConfidentialBrand = this.renderConfidentialBrand.bind(this);
+        this.renderOpenModalButton = this.renderOpenModalButton.bind(this);
         
         this.state = {
             modalIsOpen: false
@@ -147,16 +148,36 @@ class ModalComponentDialog extends Component {
         }
     }
 
-
-    render() {
-        const actions = this.props.actions;
-        const modalSize = get(actions, 'modalSize', 'lg');
-
-        return (
-            <td style={{ padding: '10px', textAlign: 'center' }}>
+    renderOpenModalButton(){
+        const {origin, alertPortfolioExpiration, actions} = this.props;
+        const alertPortfolioExp = _.find(alertPortfolioExpiration.get('responseClients'), (item) => {
+            return _.isEqual(item.id, actions.id); 
+        });        
+        switch (origin) {
+            case views.ALERT_PORTFOLIO_EXPIRATION_LIST:
+                const isAlertWithObservationsAndExpectations = !alertPortfolioExp.observations && !alertPortfolioExp.expectations ? false : true;
+                return (
+                <button className={"btn btn-sm " + (isAlertWithObservationsAndExpectations ? "btn-success" : "btn-danger")} onClick={this.openModal}>
+                    <i className="pencil icon" style={{ margin: '0em', fontSize: '1.2em' }} />
+                </button>
+                )                        
+            default:
+                return (
                 <button className="btn btn-primary btn-sm" onClick={this.openModal}>
                     <i className="zoom icon" style={{ margin: '0em', fontSize: '1.2em' }} />
                 </button>
+                )                
+        }
+    }
+
+
+    render() {
+        const {actions} = this.props;
+        const modalSize = get(actions, 'modalSize', 'lg');   
+                       
+        return (
+            <td style={{ padding: '10px', textAlign: 'center' }}>
+                {this.renderOpenModalButton()}                
                 <Modal
                     isOpen={this.state.modalIsOpen}
                     onRequestClose={this.closeModal}
@@ -182,9 +203,10 @@ class ModalComponentDialog extends Component {
     }
 }
 
-function mapStateToProps({ modal }, { idModal }) {
+function mapStateToProps({ modal, alertPortfolioExpiration }, { idModal }) {
     return {
-        modalStatus: modal.get('modalState')
+        modalStatus: modal.get('modalState'),
+        alertPortfolioExpiration
     };
 }
 

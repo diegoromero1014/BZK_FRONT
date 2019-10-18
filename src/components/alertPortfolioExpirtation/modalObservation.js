@@ -7,13 +7,19 @@ import {reduxForm} from 'redux-form';
 import {Row, Col} from 'react-flexbox-grid';
 import {clientsPortfolioExpirationFindServer,saveObservationPortfolioExp} from './actions';
 import Textarea from '../../ui/textarea/textareaComponent';
+import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import _ from 'lodash';
 import {showLoading} from '../loading/actions';
 import {swtShowMessage} from '../sweetAlertMessages/actions';
 import {fields, validations as validate} from "./fieldsAndRulesForReduxForm";
+import { getMasterDataFields } from "../../components/selectsComponent/actions";
 
+import { ALERT_PORTFOLIO_EXPECTATIONS } from '../selectsComponent/constants';
+import ModalClientName from '../globalComponents/modalClientName/component';
 
-class ModalObservation extends Component {
+let nameExpectations = _.uniqueId('expectations');
+
+class ModalObservation extends Component {    
 
     constructor(props) {
         super(props);
@@ -21,12 +27,16 @@ class ModalObservation extends Component {
     }
 
     _handleSaveObservation() {
-        const {isOpen, fields:{observations}, alertPortfolioExpId, saveObservationPortfolioExp,
+        const {isOpen, fields:{observations, expectations}, alertPortfolioExpId, saveObservationPortfolioExp,
             showLoading, swtShowMessage, alertPortfolioExpiration, clientsPortfolioExpirationFindServer} = this.props;
         showLoading(true, 'Guardando...');
         
-        if (!_.isEqual(observations.value.trim(), '')) {
-                saveObservationPortfolioExp(alertPortfolioExpId, observations.value)
+        if (!_.isEqual(observations.value.trim(), '') && !_.isNull(expectations.value)) {
+                const request = {
+                    observations: observations.value,
+                    expectations: expectations.value
+                };                
+                saveObservationPortfolioExp(alertPortfolioExpId, request)
                 .then((data) => {
                     showLoading(false, null);
                     if (_.isEqual(_.get(data, 'payload.status'), 200)) {
@@ -59,37 +69,56 @@ class ModalObservation extends Component {
     }
 
     render() {
-        const {fields:{observations}, handleSubmit} = this.props;
+        const {fields:{observations, expectations}, handleSubmit, selectsReducer, clientName} = this.props;               
         return (
-            <form onSubmit={handleSubmit(this._handleSaveObservation)}>
-                <div>
-                    <div className="modalBt4-body modal-body clearfix"
-                        style={{ overflowX: 'hidden', maxHeight: '490px !important' }}>
-                        <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                            <Row style={{ paddingTop: '10px' }}>
-                                <Col xs={12} md={12} lg={12}>
-                                    <h4>Observaciones</h4>
-                                    <div>
-                                        <Textarea
-                                            name="actionArea"
-                                            type="text"
-                                            style={{ width: '100%', height: '100%', textAlign: 'justify' }}
-                                            max="1000"
-                                            rows={5}
-                                            {...observations}
-                                        />
-                                    </div>
-                                </Col>
-                            </Row>
+            <div>
+                <ModalClientName clientName={clientName}></ModalClientName>
+                <form onSubmit={handleSubmit(this._handleSaveObservation)}>
+                    <div>
+                        <div className="modalBt4-body modal-body clearfix"
+                            style={{ overflowX: 'hidden', maxHeight: '340px', height: '340px'}}>
+                            <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                                <Row style={{ paddingTop: '10px' }}>
+                                    <Col xs={12} md={12} lg={12}>
+                                        <h4>Observaciones (<span style={{ color: "red" }}>*</span>)</h4>
+                                        <div>
+                                            <Textarea
+                                                name="actionArea"
+                                                type="text"
+                                                style={{ width: '100%', height: '100%', textAlign: 'justify' }}
+                                                max="1000"
+                                                rows={5}
+                                                {...observations}
+                                            />
+                                        </div>
+                                    </Col>
+                                </Row>
+                                <Row style={{paddingTop: '10px'}}>
+                                    <Col xs={12} md={12} lg={12}>
+                                        <h4>Expectativas (<span style={{ color: "red" }}>*</span>)</h4>
+                                        <div>
+                                        <ComboBox
+                                            labelInput="Seleccione..."
+                                            valueProp={'id'}
+                                            textProp={'value'}
+                                            {...expectations}
+                                            name={nameExpectations}
+                                            parentId="dashboardComponentScroll"
+                                            data={selectsReducer.get(ALERT_PORTFOLIO_EXPECTATIONS) || []}
+                                            />
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
+                        <div className="modalBt4-footer modal-footer">
+                            <button type="submit"
+                                className="btn btn-primary modal-button-edit">Guardar
+                        </button>
                         </div>
                     </div>
-                    <div className="modalBt4-footer modal-footer">
-                        <button type="submit"
-                            className="btn btn-primary modal-button-edit">Guardar
-                    </button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         );
     }
 }
@@ -99,21 +128,27 @@ function mapDispatchToProps(dispatch) {
         saveObservationPortfolioExp,
         showLoading,
         swtShowMessage,
-        clientsPortfolioExpirationFindServer
+        clientsPortfolioExpirationFindServer,
+        getMasterDataFields
     }, dispatch);
 }
 
-function mapStateToProps({reducerGlobal, alertPortfolioExpiration}, {alertPortfolioExpId}) {
+function mapStateToProps({reducerGlobal, alertPortfolioExpiration, selectsReducer}, {alertPortfolioExpId}) {
     const listClientsAlertPortfolioExp = alertPortfolioExpiration.get('responseClients');
     const alertPortfolioExp = _.filter(listClientsAlertPortfolioExp, (item) => {
         return _.isEqual(item.id, alertPortfolioExpId);
     });
+
+     
     return {
         reducerGlobal,
         alertPortfolioExpiration,
+        selectsReducer,
         initialValues: {
-            observations: _.get(alertPortfolioExp, '0.observations', '')
-        }
+            observations: _.get(alertPortfolioExp, '0.observations', ''),
+            expectations: _.get(alertPortfolioExp, '0.expectations', '')          
+        },
+        clientName: _.get(alertPortfolioExp, '0.clientName', '')
     };
 }
 
