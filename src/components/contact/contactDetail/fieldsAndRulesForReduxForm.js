@@ -30,7 +30,7 @@ const fieldsWithRules = {
     contactTelephoneNumber: { rules: [checkRequired, checkFirstCharacter, checkMinLength(7), checkPhone, checkMaxLength(30)] },
     contactExtension: { rules: [checkOnlyNumbers, checkFirstCharacter, checkMaxLength(14)] },
     contactMobileNumber: { rules: [checkPhone, checkFirstCharacter, checkMinLength(8), checkMaxLength(30)] },
-    contactEmailAddress: { rules: [checkRequired, checkFirstCharacter, checkEmail, checkMaxLength(50)] },
+    contactEmailAddress: { rules: [checkRequired, checkFirstCharacter, checkEmail, checkMaxLength(55)] },
     contactTypeOfContact: { rules: [checkRequiredWithGlobalCondition] },
     contactLineOfBusiness: { rules: [] },
     contactFunctions: { rules: [checkRequiredWithGlobalCondition] },

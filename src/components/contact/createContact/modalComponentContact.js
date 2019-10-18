@@ -559,7 +559,7 @@ class ModalComponentContact extends Component {
                                     <dd><Input
                                         name="correo"
                                         type="text"
-                                        max="50"
+                                        max="55"
                                         {...correo}
                                         shouldHandleUpdate={shouldHandleError(this.state.errorMap, 'correo')}
                                     /></dd>
