@@ -486,7 +486,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             titleMessage = "Necesidad "+NEED_FINANCING;
 
             message = `Señor usuario, si cambia la ${PIPELINE_NEED_CLIENT}, la información diligenciada en los campos ${PIPELINE_INDEXING_FIELD}, ${PIPELINE_PENDING_DISBURSEMENT_AMOUNT},
-            ${PIPELINE_TERM_IN_MONTHS_AND_VALUES}, ${PIPELINE_DISBURSEMENT_PLAN} se borrarán\n\n¿Está seguro que desea cambiar la ${PIPELINE_NEED_CLIENT}?`
+            y ${PIPELINE_TERM_IN_MONTHS_AND_VALUES} se borrarán\n\n¿Está seguro que desea cambiar la ${PIPELINE_NEED_CLIENT}?`
 
             this.setState({
                 showConfirmChangeNeed: true

@@ -577,7 +577,7 @@ export const checkRequiredTermInMonths = (value, fields, props) => {
             return (productKey == NEED_FINANCING);
         },
         (value) => {
-            return checkRequired(value) || checkNumberDocument(value) || checkFirstCharacter(value)
+            return checkRequired(value) || checkFirstCharacter(value)
         });
 }
 
@@ -590,7 +590,7 @@ export const checkRequiredTermInMonthsValue = (value, fields, props) => {
             return (productKey == NEED_FINANCING);
         },
         (value) => {
-            return checkRequired(value) || checkNumberDocument(value) || checkFirstCharacter(value)
+            return checkRequired(value)
         });
 }
 
