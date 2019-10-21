@@ -19,7 +19,7 @@ import ModalClientName from '../globalComponents/modalClientName/component';
 
 let nameExpectations = _.uniqueId('expectations');
 
-class ModalObservation extends Component {    
+export class ModalObservation extends Component {    
 
     constructor(props) {
         super(props);
@@ -88,6 +88,7 @@ class ModalObservation extends Component {
                                                 style={{ width: '100%', height: '100%', textAlign: 'justify' }}
                                                 max="1000"
                                                 rows={5}
+                                                className="observationsField"
                                                 {...observations}
                                             />
                                         </div>
@@ -104,6 +105,7 @@ class ModalObservation extends Component {
                                             {...expectations}
                                             name={nameExpectations}
                                             parentId="dashboardComponentScroll"
+                                            className="expectationsField"
                                             data={selectsReducer.get(ALERT_PORTFOLIO_EXPECTATIONS) || []}
                                             />
                                         </div>

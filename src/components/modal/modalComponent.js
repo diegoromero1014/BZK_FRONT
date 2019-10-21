@@ -26,6 +26,7 @@ import * as views from './constants';
 
 import { get } from 'lodash';
 import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
+import AlertPortfolioExpirationObservationsActionModal from '../alertPortfolioExpirtation/alertPortfolioExpirationObservationsActionModal';
 
 class ModalComponentDialog extends Component {
     constructor(props) {
@@ -154,12 +155,9 @@ class ModalComponentDialog extends Component {
             return _.isEqual(item.id, actions.id); 
         });        
         switch (origin) {
-            case views.ALERT_PORTFOLIO_EXPIRATION_LIST:
-                const isAlertWithObservationsAndExpectations = !alertPortfolioExp.observations && !alertPortfolioExp.expectations ? false : true;
-                return (
-                <button className={"btn btn-sm " + (isAlertWithObservationsAndExpectations ? "btn-success" : "btn-danger")} onClick={this.openModal}>
-                    <i className="pencil icon" style={{ margin: '0em', fontSize: '1.2em' }} />
-                </button>
+            case views.ALERT_PORTFOLIO_EXPIRATION_LIST:                
+                return (                    
+                    <AlertPortfolioExpirationObservationsActionModal alertPortfolioExp={alertPortfolioExp} openModal={this.openModal}/>
                 )                        
             default:
                 return (

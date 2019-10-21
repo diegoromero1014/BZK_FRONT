@@ -89,7 +89,7 @@ class ListClientsPortfolioExpiration extends Component {
                 key: "groupTotalBalance"
             },
             {
-                title: "Días vencidos",
+                title: "Días mora proyectados",
                 orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "daysOverdue")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "daysOverdue")}></i></span>,
                 key: "daysOverdue"
             },
@@ -104,7 +104,7 @@ class ListClientsPortfolioExpiration extends Component {
                 key: "responsible"
             },
             {
-                title: "Observaciones",
+                title: "Diligenciar Observaciones",
                 key: "actions"
             }
         ];
@@ -120,7 +120,7 @@ class ListClientsPortfolioExpiration extends Component {
         const data = alertPortfolioExpiration.get('responseClients');
         return (
             <div className="horizontal-scroll-wrapper" style={{overflow: 'scroll', background: '#fff'}}>
-                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle="Observaciones" origin={ALERT_PORTFOLIO_EXPIRATION_LIST}/>
+                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle="Diligenciar Observaciones" origin={ALERT_PORTFOLIO_EXPIRATION_LIST}/>
             </div>
         );
     }
