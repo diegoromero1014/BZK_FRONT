@@ -1,6 +1,3 @@
-/**
- * Created by ahurtado on 12/06/2016.
- */
 import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {bindActionCreators} from 'redux';
@@ -11,7 +8,8 @@ import {
     changeKeyword,
     changeTeam,
     changeRegion,
-    changeZone
+    changeZone,
+    getNameAlert
 } from './actions';
 import {showLoading} from '../loading/actions';
 import SearchBarClient from './searchClientsPortfolioExpiration';
@@ -29,14 +27,12 @@ import {
 import * as constants from '../selectsComponent/constants';
 import {reduxForm} from 'redux-form';
 import {updateTitleNavBar} from '../navBar/actions';
-import {SESSION_EXPIRED} from '../../constantsGlobal';
 import ListClientsAlertPortfolioExp from './listPortfolioExpiration';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {formatLongDateToDateWithNameMonth, validateResponse} from '../../actionsGlobal';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import _ from 'lodash';
-import { relative } from 'path';
 
 const fields = ["team", "region", "zone"];
 const titleModule = 'Alerta de clientes de cartera vencida o próxima a vencer';
@@ -53,7 +49,7 @@ class ClientsPendingUpdate extends Component {
     }
 
     componentWillMount() {
-        const {showLoading} = this.props;
+        const {showLoading, getNameAlert } = this.props;
         if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
@@ -67,7 +63,14 @@ class ClientsPendingUpdate extends Component {
                     swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
                 }
             });
-            updateTitleNavBar(titleModule);
+            getNameAlert().then(resolve => {
+                if(resolve.payload.data != 500) {
+                    updateTitleNavBar(resolve.payload.data.data);
+                } else  {
+                    swtShowMessage('error', 'Error consultando el nombre del componente', 'Señor usuario, ocurrió un error consultanto el nombre del componente configurado.');
+                    updateTitleNavBar(titleModule);
+                }
+            });
         }
     }
 
@@ -256,6 +259,7 @@ function mapDispatchToProps(dispatch) {
         swtShowMessage,
         changeRegion,
         changeZone,
+        getNameAlert,
         consultTeamsByRegionByEmployee
     }, dispatch);
 }
