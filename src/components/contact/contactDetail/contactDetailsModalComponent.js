@@ -795,7 +795,7 @@ export class ContactDetailsModalComponent extends Component {
                                     <Input
                                         name="contactEmailAddress"
                                         type="text"
-                                        max="50"
+                                        max="55"
                                         disabled={this.state.isEditable ? '' : 'disabled'}
                                         {...contactEmailAddress}
                                     />
