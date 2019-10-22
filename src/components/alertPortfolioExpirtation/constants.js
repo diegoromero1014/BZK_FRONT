@@ -15,5 +15,6 @@ export const CHANGE_REGION_PE = "CHANGE_REGION_PE";
 export const CHANGE_ZONE_PE = "CHANGE_ZONE_PE";
 export const FORM_FILTER_ALERT_PE = "formFilterAlertPE";
 export const SAVE_OBSERVATIONS = "SAVE_OBSERVATIONS";
+export const NAME_ALERT = "NAME_ALERT";
 
 
