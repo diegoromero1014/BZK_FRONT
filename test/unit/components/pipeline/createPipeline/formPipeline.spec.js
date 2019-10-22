@@ -319,37 +319,6 @@ describe("Test CreatePipelineChildren", () => {
     stubGetParameter.restore();
 
   });
-  
-  it("when createPipeline Children should not render formPipeline/HeaderPipeline", () => {
-    const wrapper = shallow(<PipelineComponentChildren store={store} />)
-      .dive()
-      .dive()
-      .dive()
-      .dive();
-
-    expect(wrapper.find(HeaderPipeline)).to.have.length(0);
-  });
-  it("when createPipeline Children should not render formPipeline/PermissionsUserReports ", () => {
-    const wrapper = shallow(<PipelineComponentChildren store={store} />)
-      .dive()
-      .dive()
-      .dive()
-      .dive();
-
-    expect(wrapper.find(PermissionsUserReports)).to.have.length(0);
-  });
-  it("when createPipeline Children should not render formPipeline/PermissionsUserReports ", () => {
-    const wrapper = shallow(<PipelineComponentChildren store={store} />)
-      .dive()
-      .dive()
-      .dive()
-      .dive();
-
-    expect(wrapper.find(Input)).to.have.length(5);
-    expect(
-      wrapper.find(Input).find({ name: "txtOpportunityName" })
-    ).to.have.length(0);
-  });
 
   it('Show termInMonths when showtermInMonthsField is true formPipeline/pipelineChild', () => {
     const wrapper = shallow(<PipelineComponentChildren store={store} />)
@@ -459,5 +428,36 @@ describe("Test CreatePipelineChildren", () => {
 
       wrapper.instance()._validateShowFinancingNeedFields(false);
       expect(wrapper.find(ComponentDisbursementPlan)).to.have.length(0);
+  });
+
+  it("when createPipeline Children should not render formPipeline/HeaderPipeline", () => {
+    const wrapper = shallow(<PipelineComponentChildren store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+    expect(wrapper.find(HeaderPipeline)).to.have.length(0);
+  });
+  it("when createPipeline Children should not render formPipeline/PermissionsUserReports ", () => {
+    const wrapper = shallow(<PipelineComponentChildren store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+    expect(wrapper.find(PermissionsUserReports)).to.have.length(0);
+  });
+  it("when createPipeline Children should not render formPipeline/PermissionsUserReports ", () => {
+    const wrapper = shallow(<PipelineComponentChildren store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+    expect(wrapper.find(Input)).to.have.length(5);
+    expect(
+      wrapper.find(Input).find({ name: "txtOpportunityName" })
+    ).to.have.length(0);
   });
 });
