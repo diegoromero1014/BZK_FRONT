@@ -138,7 +138,8 @@ export function orderColumnClientPortfolioExpiration(orderClients, columnClients
     };
 }
 
-export function saveObservationPortfolioExp(idAlertPortfolioExp, observations) {
+export function saveObservationPortfolioExp(idAlertPortfolioExp, data) {
+    const {observations, expectations} = data;
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionTokenFront'),
@@ -155,7 +156,8 @@ export function saveObservationPortfolioExp(idAlertPortfolioExp, observations) {
         },
         "messageBody": {
             "idAlert": idAlertPortfolioExp,
-            observations
+            observations,
+            expectations
         }
     };
     const request = axios.post(APP_URL + "/saveObservationsAlertPortfolioExp", json);
