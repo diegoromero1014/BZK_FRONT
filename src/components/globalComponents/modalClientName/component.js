@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 let styles = {
-    margin: '0px 0px 0px 15px'
+    margin: '0px 0px 0px 18px'
 };
 
 export default class ModalClientName extends Component {
@@ -11,10 +11,12 @@ export default class ModalClientName extends Component {
     }
     
     render() {
-        const {clientName} = this.props;
+        const {clientName, typeDocument, clientDocument} = this.props;        
         return (
             <div style={styles}>
-                <b>Cliente:</b> <span>{clientName}</span>
+                <span><b>{typeDocument}: </b> {clientDocument}</span>
+                <br></br>
+                <span><b>Cliente:</b> {clientName}</span>                
             </div>
         )
     }
