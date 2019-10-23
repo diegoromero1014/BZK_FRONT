@@ -1,6 +1,7 @@
 import { APP_URL } from '../../../constantsGlobal';
 import { GET_ASSETS_AEC, GET_DETAIL_AEC, CLEAR_AEC, CLEAR_LIST_AEC, CLEAR_DETAIL_AEC } from './constants';
 import axios from 'axios';
+import { generatePDF } from '../../reports/pdf/actions';
 
 export function getAssetsAEC(jsonAEC) {
     const json = {
@@ -46,6 +47,18 @@ export function getDetailAEC(idAEC) {
         type: GET_DETAIL_AEC,
         payload: request
     }
+}
+
+export function downloadPDF(changeStateSaveData, idAEC){
+    const requestBody = {
+        "name": "AEC.pdf",
+        "route": "BiztrackReports/aec.jrxml",
+        "params": {
+            "P_ID_AEC": Number(idAEC)
+        },
+        "source": []
+    };
+    generatePDF(changeStateSaveData, requestBody);
 }
 
 export function clearDetailAEC() {

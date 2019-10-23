@@ -1,18 +1,24 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
-import { getDetailAEC, clearDetailAEC } from './actions';
-import { redirectUrl } from '../../globalComponents/actions';
+import { getDetailAEC, clearDetailAEC, downloadPDF } from './actions';
 import { formatLongDateToDateWithNameMonth, formatCurrency, validateResponse } from '../../../actionsGlobal';
 import { MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { AEC_STATUS, AEC_LEVEL } from '../../selectsComponent/constants';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
-class ModalDetailAEC extends Component {
+export class ModalDetailAEC extends Component {
+    
     constructor(props) {
         super(props);
+        this.downloadPDF = this.downloadPDF.bind(this);
+    }
+
+    downloadPDF(){
+        const {idAEC, downloadPDF, changeStateSaveData} = this.props;
+        downloadPDF(changeStateSaveData, idAEC);
     }
 
     componentWillMount() {
@@ -103,6 +109,9 @@ class ModalDetailAEC extends Component {
                     </div>
                 </div>
                 <div className="modalBt4-footer modal-footer">
+                    <button type="button" onClick={this.downloadPDF} className="btn btn-primary modal-button-edit">
+                        <span>Descargar PDF</span>
+                    </button>
                 </div>
             </div>
         );
@@ -115,7 +124,8 @@ function mapDispatchToProps(dispatch) {
         getDetailAEC,
         clearDetailAEC,
         validateResponse,
-        swtShowMessage
+        swtShowMessage,
+        downloadPDF
     }, dispatch);
 }
 
