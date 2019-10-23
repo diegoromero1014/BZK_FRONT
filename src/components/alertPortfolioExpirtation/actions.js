@@ -6,11 +6,11 @@ import {
     FIND_CLIENTS_PORTFOLIO_EXPIRATION, CHANGE_PAGE_FOR_ALERT_PORTFOLIO_EXPIRATION,
     CLEAR_CLIENT_ORDER_PE, CLEAR_CLIENT_PAGINATION_PE, ORDER_COLUMN_CLIENT_PE,
     CHANGE_KEYWORD_NAME_NIT_PE, CLEAR_FILTER_CLIENTS_PE, UPDATE_NUMBER_TOTAL_CLIENTS_PE, NUMBER_RECORDS,
-    CHANGE_TEAM_PE, CHANGE_REGION_PE, CHANGE_ZONE_PE, SAVE_OBSERVATIONS
+    CHANGE_TEAM_PE, CHANGE_REGION_PE, CHANGE_ZONE_PE, SAVE_OBSERVATIONS, CHANGE_TYPE, CHANGE_LINE
 } from './constants';
 import axios from 'axios';
 
-export function clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idRegion, idZone, pageNum, maxRows,order,columnOrder) {
+export function clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idRegion, idZone, pageNum, maxRows, order, columnOrder, line, type) {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionTokenFront'),
@@ -32,6 +32,8 @@ export function clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idR
             "pageNum": pageNum,
             "maxRows": maxRows,
             "order" : order,
+            "businessLine": line,
+            "expirationType": type,
             "columnOrder" : columnOrder
         }
     };
@@ -78,6 +80,8 @@ export function clearFilter() {
             "idTeam": null,
             "idRegion": null,
             "idZone": null,
+            "businessLine": null,
+            "expirationType": null,
             "pageNum": 1,
             "maxRows": NUMBER_RECORDS,
             "order" : 0,
@@ -107,6 +111,20 @@ export function changeZone(idZone) {
     return {
         type: CHANGE_ZONE_PE,
         idZone
+    }
+}
+
+export function changeType(type) {
+    return {
+        type: CHANGE_TYPE,
+        type
+    }
+}
+
+export function changeLine(line) {
+    return {
+        type: CHANGE_LINE,
+        line
     }
 }
 
