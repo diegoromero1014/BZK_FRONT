@@ -10,7 +10,8 @@ import {
     changeRegion,
     changeZone,
     changeType,
-    changeLine
+    changeLine,
+    getNameAlert
 } from './actions';
 import {showLoading} from '../loading/actions';
 import SearchBarClient from './searchClientsPortfolioExpiration';
@@ -50,7 +51,7 @@ class ClientsPendingUpdate extends Component {
     }
 
     componentWillMount() {
-        const {showLoading, getMasterDataFields} = this.props;
+        const {showLoading, getMasterDataFields, getNameAlert } = this.props;
         if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
@@ -65,7 +66,14 @@ class ClientsPendingUpdate extends Component {
                     swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
                 }
             });
-            updateTitleNavBar(titleModule);
+            getNameAlert().then(resolve => {
+                if(resolve.payload.data != 500) {
+                    updateTitleNavBar(resolve.payload.data.data);
+                } else  {
+                    swtShowMessage('error', 'Error consultando el nombre del componente', 'Señor usuario, ocurrió un error consultanto el nombre del componente configurado.');
+                    updateTitleNavBar(titleModule);
+                }
+            });
         }
     }
 
@@ -308,6 +316,7 @@ function mapDispatchToProps(dispatch) {
         changeZone,
         changeType,
         changeLine,
+        getNameAlert,
         consultTeamsByRegionByEmployee
     }, dispatch);
 }

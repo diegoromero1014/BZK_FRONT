@@ -17,5 +17,6 @@ export const CHANGE_TYPE = "CHANGE_TYPE";
 export const CHANGE_LINE = "CHANGE_LINE";
 export const FORM_FILTER_ALERT_PE = "formFilterAlertPE";
 export const SAVE_OBSERVATIONS = "SAVE_OBSERVATIONS";
+export const NAME_ALERT = "NAME_ALERT";
 
 

@@ -8,7 +8,7 @@ const styleTooltip = {
 
 class TdParticularityComponent extends Component {
   render() {      
-    const {columnRow, styles} = this.props; 
+    const {columnRow, styles} = this.props;    
     return (
         <td style={styles} className="text-center"
         >
