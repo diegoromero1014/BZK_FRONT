@@ -69,10 +69,10 @@ export class ModalObservation extends Component {
     }
 
     render() {
-        const {fields:{observations, expectations}, handleSubmit, selectsReducer, clientName} = this.props;               
+        const {fields:{observations, expectations}, handleSubmit, selectsReducer, client} = this.props;                       
         return (
             <div>
-                <ModalClientName clientName={clientName}></ModalClientName>
+                <ModalClientName clientName={client.clientName} typeDocument={client.typeDocument} clientDocument={client.document}></ModalClientName>
                 <form onSubmit={handleSubmit(this._handleSaveObservation)}>
                     <div>
                         <div className="modalBt4-body modal-body clearfix"
@@ -139,7 +139,7 @@ function mapStateToProps({reducerGlobal, alertPortfolioExpiration, selectsReduce
     const listClientsAlertPortfolioExp = alertPortfolioExpiration.get('responseClients');
     const alertPortfolioExp = _.filter(listClientsAlertPortfolioExp, (item) => {
         return _.isEqual(item.id, alertPortfolioExpId);
-    });
+    });    
 
      
     return {
@@ -150,7 +150,11 @@ function mapStateToProps({reducerGlobal, alertPortfolioExpiration, selectsReduce
             observations: _.get(alertPortfolioExp, '0.observations', ''),
             expectations: _.get(alertPortfolioExp, '0.expectations', '')          
         },
-        clientName: _.get(alertPortfolioExp, '0.clientName', '')
+        client: {
+            clientName: _.get(alertPortfolioExp, '0.clientName', ''),
+            typeDocument: _.get(alertPortfolioExp, '0.typeDocument', ''),
+            document: _.get(alertPortfolioExp, '0.idNumberClient', ''),
+        }
     };
 }
 
