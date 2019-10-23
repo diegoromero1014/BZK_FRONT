@@ -554,8 +554,7 @@ export const checkRequiredPipelineJustification = (value, fields, props) => {
     return null;
 }
 
-export const checkRequiredPivotNit = (value, fields, props) => {
-
+export const checkRequiredPivotNit = (value, fields, props) => {    
     return checkReducerValue(value,
         fields.product,
         props.selectsReducer.get(PRODUCTS),

@@ -2,15 +2,23 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
-import { getDetailAEC, clearDetailAEC } from './actions';
+import { getDetailAEC, clearDetailAEC, downloadPDF } from './actions';
 import { formatLongDateToDateWithNameMonth, formatCurrency, validateResponse } from '../../../actionsGlobal';
 import { MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import ModalClientName from '../../globalComponents/modalClientName/component';
 
-class ModalDetailAEC extends Component {
+export class ModalDetailAEC extends Component {
+    
     constructor(props) {
         super(props);
+        this.downloadPDF = this.downloadPDF.bind(this);
+    }
+
+    downloadPDF(){
+        const {idAEC, downloadPDF, changeStateSaveData} = this.props;
+        downloadPDF(changeStateSaveData, idAEC);
     }
 
     componentWillMount() {
@@ -35,11 +43,7 @@ class ModalDetailAEC extends Component {
         return (
             <div>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{ overflowX: 'hidden', maxHeight: '490px !important' }}>
-                    <div style={{margin: '0 0 0 18px'}}>
-                        <span><b>{infoClient.clientNameType}: </b>{infoClient.clientIdNumber}</span>
-                        <br></br>
-                        <span><b>Cliente: </b>{infoClient.clientName}</span>
-                    </div>
+                    <ModalClientName clientName={infoClient.clientName} typeDocument={infoClient.clientNameType} clientDocument={infoClient.clientIdNumber}></ModalClientName>                    
                     <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información del AEC</span></dt>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>
@@ -103,6 +107,9 @@ class ModalDetailAEC extends Component {
                     </div>
                 </div>
                 <div className="modalBt4-footer modal-footer">
+                    <button type="button" onClick={this.downloadPDF} className="btn btn-primary modal-button-edit">
+                        <span>Descargar PDF</span>
+                    </button>
                 </div>
             </div>
         );
@@ -115,7 +122,8 @@ function mapDispatchToProps(dispatch) {
         getDetailAEC,
         clearDetailAEC,
         validateResponse,
-        swtShowMessage
+        swtShowMessage,
+        downloadPDF
     }, dispatch);
 }
 

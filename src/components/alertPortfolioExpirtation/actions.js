@@ -6,9 +6,10 @@ import {
     FIND_CLIENTS_PORTFOLIO_EXPIRATION, CHANGE_PAGE_FOR_ALERT_PORTFOLIO_EXPIRATION,
     CLEAR_CLIENT_ORDER_PE, CLEAR_CLIENT_PAGINATION_PE, ORDER_COLUMN_CLIENT_PE,
     CHANGE_KEYWORD_NAME_NIT_PE, CLEAR_FILTER_CLIENTS_PE, UPDATE_NUMBER_TOTAL_CLIENTS_PE, NUMBER_RECORDS,
-    CHANGE_TEAM_PE, CHANGE_REGION_PE, CHANGE_ZONE_PE, SAVE_OBSERVATIONS
+    CHANGE_TEAM_PE, CHANGE_REGION_PE, CHANGE_ZONE_PE, SAVE_OBSERVATIONS, NAME_ALERT
 } from './constants';
 import axios from 'axios';
+import { CODE_ALERT_PORTFOLIO_EXPIRATION } from '../alerts/constants';
 
 export function clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idRegion, idZone, pageNum, maxRows,order,columnOrder) {
     const json = {
@@ -137,7 +138,8 @@ export function orderColumnClientPortfolioExpiration(orderClients, columnClients
     };
 }
 
-export function saveObservationPortfolioExp(idAlertPortfolioExp, observations) {
+export function saveObservationPortfolioExp(idAlertPortfolioExp, data) {
+    const {observations, expectations} = data;
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionTokenFront'),
@@ -154,12 +156,38 @@ export function saveObservationPortfolioExp(idAlertPortfolioExp, observations) {
         },
         "messageBody": {
             "idAlert": idAlertPortfolioExp,
-            observations
+            observations,
+            expectations
         }
     };
     const request = axios.post(APP_URL + "/saveObservationsAlertPortfolioExp", json);
     return {
         type: SAVE_OBSERVATIONS,
+        payload: request
+    }
+}
+
+export function getNameAlert() {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": CODE_ALERT_PORTFOLIO_EXPIRATION
+    };
+
+    const request = axios.post(APP_URL + "/getNameAlertPortfolio", json);
+
+    return {
+        type: NAME_ALERT,
         payload: request
     }
 }

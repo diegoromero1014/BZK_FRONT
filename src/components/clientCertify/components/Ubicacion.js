@@ -137,10 +137,10 @@ class Ubicacion extends React.Component {
                     </Col>
                     <Col xs={12} md={4} lg={4}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                            <dt><span>Departamento</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
+                            <dt><span>Departamento/Provincia</span>{!isExclient && <span style={{ color: "red" }}>*</span> }</dt>
                             <ComboBox
                                 name="province"
-                                labelInput="Seleccione departamento..."
+                                labelInput="Seleccione departamento/provincia..."
                                 {...province}
                                 onChange={val => this._onChangeProvince(val)}
                                 value={province.value}
