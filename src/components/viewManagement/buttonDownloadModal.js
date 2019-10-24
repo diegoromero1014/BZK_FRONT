@@ -7,8 +7,8 @@ import ModalDownloadBusinessPlan from '../businessPlan/downloadBusinessPlan/comp
 import DownloadTask from '../pendingTask/downloadTask/component';
 import {changeErrorYearSeleted} from './actions';
 import Modal from 'react-modal';
-import { TAB_VISIT, TAB_PREVISIT, TAB_BUSINESS, TAB_TASKS } from './constants';
-import { TAB_PENDING_TASK } from '../../constantsGlobal';
+import { TAB_VISIT, TAB_PREVISIT, TAB_BUSINESS, TAB_TASKS, TAB_PIPELINE } from './constants';
+import DownloadPipeline from "./downloadPipeline/component";
 
 class ButtonDownloadModal extends Component {
 
@@ -46,7 +46,10 @@ class ButtonDownloadModal extends Component {
       title = "de planes de negocio";
     } else if (itemSeleted === TAB_TASKS) {
       title = "de tareas";
+    } else if (itemSeleted === TAB_PIPELINE) {
+      title = "de pipeline";
     }
+
     return (
       <div>
         <i className='green file excel outline icon'
@@ -65,6 +68,7 @@ class ButtonDownloadModal extends Component {
               </div>
               {itemSeleted === TAB_VISIT && <ModalDownloadVisit itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />}
               {itemSeleted === TAB_PREVISIT && <ModalDownloadPreVisit itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />}
+              {itemSeleted === TAB_PIPELINE && <DownloadPipeline itemSelectedModal={itemSeleted} isOpen={this.closeModal} />}
               {itemSeleted === TAB_BUSINESS && <ModalDownloadBusinessPlan itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />}
               {itemSeleted === TAB_TASKS && <DownloadTask itemSeletedModal={itemSeleted} yearModal={year} isOpen={this.closeModal} />}
             </div>

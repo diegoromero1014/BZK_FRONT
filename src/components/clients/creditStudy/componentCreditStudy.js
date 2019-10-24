@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
-import { Row, Col } from 'react-flexbox-grid';
+import { Col, Row } from 'react-flexbox-grid';
 import _ from "lodash";
 import moment from 'moment';
 
-import {TooltipGeneratePDF} from './../tooltipGeneratePDF/tooltipGeneratePDF';
+import { TooltipGeneratePDF } from './../tooltipGeneratePDF/tooltipGeneratePDF';
 
 import SweetAlert from '../../sweetalertFocus';
 import ClientTypology from '../../contextClient/clientTypology';
@@ -30,35 +30,66 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { showLoading } from "../../loading/actions";
 import {
-    getContextClient, saveCreditStudy, validateInfoCreditStudy,
-    updateNotApplyCreditContact, existsPDFforTheSameDay, generatePDF
+    existsPDFforTheSameDay,
+    generatePDF,
+    getContextClient,
+    saveCreditStudy,
+    updateNotApplyCreditContact,
+    validateInfoCreditStudy
 } from './actions';
 
-import { LINE_OF_BUSINESS, DISTRIBUTION_CHANNEL, MAIN_CLIENTS, MAIN_COMPETITOR, MAIN_SUPPLIER, INT_OPERATIONS } from '../../contextClient/constants';
+import {
+    DISTRIBUTION_CHANNEL,
+    INT_OPERATIONS,
+    LINE_OF_BUSINESS,
+    MAIN_CLIENTS,
+    MAIN_COMPETITOR,
+    MAIN_SUPPLIER
+} from '../../contextClient/constants';
 import * as constantsSelects from '../../selectsComponent/constants';
 import {
-    validateResponse, stringValidate, getUserBlockingReport, stopBlockToReport,
-    validateWhileListResponse, replaceCommaInNumber, consultParameterServer } from '../../../actionsGlobal';
-import { GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../../clientEdit/constants';
+    consultParameterServer,
+    getUserBlockingReport,
+    replaceCommaInNumber,
+    stopBlockToReport,
+    stringValidate,
+    validateResponse,
+    validateWhileListResponse
+} from '../../../actionsGlobal';
+import { FINANCIAL_INSTITUTIONS, GOVERNMENT } from '../../clientEdit/constants';
 import {
-    MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_REPLACE_PDF,
-    YES, APP_URL, MESSAGE_ERROR_INVALID_INPUT,
-    BLOCK_CREDIT_STUDY, TIME_REQUEST_BLOCK_REPORT, GENERAR_PDF_ESTUDIO_CREDITO, DIAS_HABILITADOS_PARA_GENERAR_PDF,EDITAR
+    APP_URL,
+    BLOCK_CREDIT_STUDY,
+    DIAS_HABILITADOS_PARA_GENERAR_PDF,
+    EDITAR,
+    GENERAR_PDF_ESTUDIO_CREDITO,
+    MESSAGE_ERROR_INVALID_INPUT,
+    MESSAGE_ERROR_SWEET_ALERT,
+    MESSAGE_LOAD_DATA,
+    MESSAGE_REPLACE_PDF,
+    TIME_REQUEST_BLOCK_REPORT,
+    TITLE_ERROR_SWEET_ALERT,
+    YES
 } from '../../../constantsGlobal';
 import {
-    A_WITH_OBSERVATION, ALL_WITH_COMMENTS, ORIGIN_CREDIT_STUDY,
-    ERROR_MESSAGE_FOR_A_SHAREHOLDER_WITH_OBSERVATION, ERROR_MESSAGE_FOR_ALL_SHAREHOLDER_WITH_OBSERVATION,
-    ERROR_MESSAGE_FOR_A_BOARD_MEMBERS_WITH_OBSERVATION, ERROR_MESSAGE_FOR_ALL_BOARD_MEMBERS_WITH_OBSERVATION,
-    SUCCESS_MESSAGE_FOR_SHAREHOLDER, SUCCESS_MESSAGE_FOR_BOARD_MEMBERS
+    A_WITH_OBSERVATION,
+    ALL_WITH_COMMENTS,
+    ERROR_MESSAGE_FOR_A_BOARD_MEMBERS_WITH_OBSERVATION,
+    ERROR_MESSAGE_FOR_A_SHAREHOLDER_WITH_OBSERVATION,
+    ERROR_MESSAGE_FOR_ALL_BOARD_MEMBERS_WITH_OBSERVATION,
+    ERROR_MESSAGE_FOR_ALL_SHAREHOLDER_WITH_OBSERVATION,
+    ORIGIN_CREDIT_STUDY,
+    SUCCESS_MESSAGE_FOR_BOARD_MEMBERS,
+    SUCCESS_MESSAGE_FOR_SHAREHOLDER
 } from './constants';
 
-import { validations as validate, fields } from './fieldsAndRules';
+import { fields, validations as validate } from './fieldsAndRules';
 
 var errorMessageForShareholders = SUCCESS_MESSAGE_FOR_SHAREHOLDER;
 var errorMessageForBoardMembers = SUCCESS_MESSAGE_FOR_BOARD_MEMBERS;
 var messageContact = 'La información de los contactos es válida, ';
 var contextClientInfo, numberOfShareholders, infoValidate, numberOfBoardMembers;
-var showCheckValidateSection, overdueCreditStudy, fechaModString, errorShareholder, errorContact, errorBoardMembers;
+var showCheckValidateSection, overdueCreditStudy, errorShareholder, errorContact, errorBoardMembers;
 var infoClient, fechaModString = '', updatedBy = null, createdBy = null, createdTimestampString;
 
 const containerButtons = {
@@ -180,8 +211,7 @@ export class ComponentStudyCredit extends Component {
     }
 
     _handleChangeValueNotApplyCreditContact() {
-        const { fields: { notApplyCreditContact }, updateNotApplyCreditContact, swtShowMessage,
-            changeStateSaveData } = this.props;
+        const { fields: { notApplyCreditContact }, updateNotApplyCreditContact, swtShowMessage, changeStateSaveData } = this.props;
         var jsonCreditContact = {
             idClient: window.sessionStorage.getItem('idClientSelected'),
             notApplyCreditContact: !notApplyCreditContact.value
@@ -245,13 +275,11 @@ export class ComponentStudyCredit extends Component {
         this.setState({
             showConfirmExit: false
         });
-        const { updateTabSeleted } = this.props;
         globalActions.redirectUrl("/dashboard/clientInformation");
     }
 
     _createJsonSaveContextClient(isDraft) {
-        const { fields: { contextClientField, inventoryPolicy, customerTypology,
-            controlLinkedPayments }, clientInformacion } = this.props;
+        const { fields: { contextClientField, inventoryPolicy, customerTypology, controlLinkedPayments }, clientInformacion } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { contextClient } = infoClient;
         const listLineOfBusiness = clientInformacion.get('listParticipation');
@@ -349,8 +377,10 @@ export class ComponentStudyCredit extends Component {
     }
 
     _validateInformationToSave() {
-        const { fields: { contextClientField, customerTypology, controlLinkedPayments, inventoryPolicy }, clientInformacion,
-            swtShowMessage, studyCreditReducer } = this.props;
+        const { fields: { contextClientField, customerTypology, controlLinkedPayments },
+            clientInformacion, swtShowMessage, studyCreditReducer
+        } = this.props;
+
         const infoClient = clientInformacion.get('responseClientInfo');
         var allowSave = true;
         var contextClientInfo = studyCreditReducer.get('contextClient');
@@ -401,10 +431,8 @@ export class ComponentStudyCredit extends Component {
 
                             shouldDisplayMessage = true;
                             contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
-
-
-
                         }
+
                         if (listDistribution.length === 0 &&
                             (noAppliedDistributionChannel === false || !stringValidate(noAppliedDistributionChannel))) {
                             this.setState({
@@ -416,6 +444,7 @@ export class ComponentStudyCredit extends Component {
                             shouldDisplayMessage = true;
                             contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
+
                         if (listMainCustomer.length === 0 &&
                             (noAppliedMainClients === false || !stringValidate(noAppliedMainClients))) {
                             this.setState({
@@ -427,6 +456,7 @@ export class ComponentStudyCredit extends Component {
                             shouldDisplayMessage = true;
                             contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
+
                         if (listMainSupplier.length === 0 &&
                             (noAppliedMainSuppliers === false || !stringValidate(noAppliedMainSuppliers))) {
                             this.setState({
@@ -438,6 +468,7 @@ export class ComponentStudyCredit extends Component {
                             shouldDisplayMessage = true;
                             contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
+
                         if (listMainCompetitor.length === 0 &&
                             (noAppliedMainCompetitors === false || !stringValidate(noAppliedMainCompetitors))) {
                             this.setState({
@@ -449,6 +480,7 @@ export class ComponentStudyCredit extends Component {
                             shouldDisplayMessage = true;
                             contentErrorMessage = "Es necesario diligenciar todos los campos obligatorios";
                         }
+
                         if (_.isEqual(infoClient.operationsForeignCurrency, 1) && listOperations.length === 0 &&
                             (noAppliedIntOperations === false || !stringValidate(noAppliedIntOperations))) {
                             this.setState({
@@ -474,9 +506,11 @@ export class ComponentStudyCredit extends Component {
                                 customerTypology: true
                             });
                         }
+
                         if (!noAppliedControlLinkedPayments && !stringValidate(controlLinkedPayments.value)) {
                             allowSave = false;
                         }
+
                         if (contextClientInfo.overdueCreditStudy && (!this.state.valueCheckSectionActivityEconomic ||
                             !this.state.valueCheckSectionInventoryPolicy || !this.state.valueCheckSectionMainClients ||
                             !this.state.valueCheckSectionMainCompetitor || !this.state.valueCheckSectionMainSupplier ||
@@ -497,7 +531,6 @@ export class ComponentStudyCredit extends Component {
     }
 
     _submitSaveContextClient(tipoGuardado) {
-
         showLoading(true, "Cargando...");
 
         let username = window.localStorage.getItem('userNameFront');
@@ -614,9 +647,7 @@ export class ComponentStudyCredit extends Component {
 
         // Envio el id del cliente como primer parametro ya que solo hay un estudio de credito por cliente
         return getUserBlockingReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
-
             if (!this._ismounted) {
-
                 clearInterval(this.state.intervalId);
                 return;
             }
@@ -707,9 +738,10 @@ export class ComponentStudyCredit extends Component {
     }
 
     componentWillMount() {
-        const { fields: { customerTypology, contextClientField, inventoryPolicy, controlLinkedPayments }, updateTitleNavBar, getContextClient, swtShowMessage, changeStateSaveData,
-            clientInformacion, consultListWithParameterUbication,
-            getMasterDataFields, reducerGlobal } = this.props;
+        const { fields: { customerTypology, contextClientField, inventoryPolicy, controlLinkedPayments },
+            updateTitleNavBar, getContextClient, swtShowMessage, changeStateSaveData, clientInformacion,
+            consultListWithParameterUbication, getMasterDataFields, reducerGlobal
+        } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
 
         if (_.isEmpty(infoClient)) {
@@ -721,7 +753,7 @@ export class ComponentStudyCredit extends Component {
 
             this.canUserEditBlockedReport(logUser);
             getMasterDataFields([constantsSelects.SEGMENTS, constantsSelects.FILTER_COUNTRY]).then((data) => {
-                const value = _.get(_.find(data.payload.data.messageBody.masterDataDetailEntries, ['id', parseInt(infoClient.segment)]), 'value');
+                const value = _.get(_.find(data.payload.data.data.masterDataDetailEntries, ['id', parseInt(infoClient.segment)]), 'value');
                 if (!_.isUndefined(value)) {
                     if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {
                         consultListWithParameterUbication(constantsSelects.CUSTOMER_TYPOLOGY, infoClient.segment).then((data) => {
@@ -736,10 +768,10 @@ export class ComponentStudyCredit extends Component {
             }, () => {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             });
+
             updateTitleNavBar("Informe estudio de crédito");
             changeStateSaveData(true, MESSAGE_LOAD_DATA);
             getContextClient(idClient).then((data) => {
-
                 changeStateSaveData(false, "");
                 if (!validateResponse(data)) {
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
@@ -774,12 +806,14 @@ export class ComponentStudyCredit extends Component {
     }
 
     render() {
-        const { selectsReducer, fields: { customerTypology, contextClientField,
-            inventoryPolicy, typeOperationIntOpera, participationIntOpe,
-            idCountryIntOpe, participationIntOpeCountry, customerCoverageIntOpe, descriptionCoverageIntOpe, nameMainSupplier,
-            participationMS, termMainSupplier, relevantInformationMainSupplier, notApplyCreditContact,
-            controlLinkedPayments },
-            studyCreditReducer, handleSubmit, clientInformacion } = this.props;
+        const {
+            fields: {
+                customerTypology, contextClientField, inventoryPolicy, typeOperationIntOpera, participationIntOpe,
+                idCountryIntOpe, participationIntOpeCountry, customerCoverageIntOpe, descriptionCoverageIntOpe, nameMainSupplier,
+                participationMS, termMainSupplier, relevantInformationMainSupplier, notApplyCreditContact,controlLinkedPayments
+            }, selectsReducer, studyCreditReducer, handleSubmit, clientInformacion
+        } = this.props;
+
         contextClientInfo = studyCreditReducer.get('contextClient');
         infoValidate = studyCreditReducer.get('validateInfoCreditStudy');
         showCheckValidateSection = false;

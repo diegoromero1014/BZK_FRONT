@@ -44,10 +44,10 @@ class PaginationPipelineComponent extends Component{
 
   _handlePipelineByClientsFind(limInf){
     const {pipelineByClientFindServer,pipelineReducer} = this.props;
-    pipelineByClientFindServer(window.sessionStorage.getItem('idClientSelected'),limInf,NUMBER_RECORDS,pipelineReducer.get('columnPipeline'),pipelineReducer.get('orderPipeline'),v1,v2);
+    pipelineByClientFindServer(window.sessionStorage.getItem('idClientSelected'), limInf, NUMBER_RECORDS, pipelineReducer.get('columnPipeline'), pipelineReducer.get('orderPipeline'), v1, v2);
   }
 
-  render(){
+  render() {
     const {pipelineReducer, config} = this.props;
     var page = pipelineReducer.get('page');
     var firstPage = 1;
