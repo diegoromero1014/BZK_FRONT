@@ -152,17 +152,6 @@ describe("Test CreatePipeline", () => {
       expect(wrapper.find(SweetAlert)).to.have.length(8);
   });
 
-  it('Show render formPipeline/SwetAlert when need changes', () => {
-    const wrapper = shallow(<PipelineComponent store={store} />)
-      .dive()
-      .dive()
-      .dive()
-      .dive();
-
-      wrapper.instance()._closeConfirmChangeNeed();
-      expect(wrapper.find(SweetAlert)).to.have.length(8);
-  });
-
   it('Show termInMonths when showtermInMonthsField is true', () => {
     const wrapper = shallow(<PipelineComponent store={store} />)
       .dive()
