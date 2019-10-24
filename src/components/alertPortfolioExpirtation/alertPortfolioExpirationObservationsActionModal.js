@@ -14,7 +14,7 @@ export class AlertPortfolioExpirationObservationsActionModal extends Component {
 
     render() {
         const alertPortfolioExp = this.props.alertPortfolioExp ? this.props.alertPortfolioExp : {};
-        const isAlertWithObservationsAndExpectations = !alertPortfolioExp.observations && !alertPortfolioExp.expectations ? false : true;
+        const isAlertWithObservationsAndExpectations = alertPortfolioExp.observations && alertPortfolioExp.expectations;
         return (
             <div>
                 <Popup style={styleTooltip} trigger={ 
