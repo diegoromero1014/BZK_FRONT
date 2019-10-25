@@ -14,6 +14,7 @@ import RisksManagements from '../risksManagement/componentRisksManagement';
 import ComponentCustomerStory from '../customerStory/componentCustomerStory';
 
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
+import _ from 'lodash';
 
 import {
     MODULE_CONTACTS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS, MODULE_PIPELINE, MODULE_BUSSINESS_PLAN,
@@ -26,7 +27,7 @@ import {
 
 import { BIZTRACK_MY_CLIENTS, _PIPELINE, nombreflujoAnalytics, _BUSINESS_PLAN, _RISKS_MANAGEMENT } from '../../constantsAnalytics';
 
-class TabClientInfo extends Component {
+export class TabClientInfo extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -352,7 +353,7 @@ class TabClientInfo extends Component {
                         backgroundColor: "white", height: "60px",
                         boxShadow: "0px 1px 0px 0 rgba(0, 0, 0, 0.2)", marginTop: "0px"
                     }}>
-                        <li style={backgroundInfo} onClick={this._handleClickTabItem.bind(this, TAB_INFO)}>
+                        <li style={backgroundInfo} id='infoTab' onClick={this._handleClickTabItem.bind(this, TAB_INFO)}>
                             <a className="button-link-url" style={{ marginRight: "15px" }}>Info</a>
                         </li>
                         {_.get(navBar.get('mapModulesAccess'), MODULE_CONTACTS) &&
@@ -371,6 +372,11 @@ class TabClientInfo extends Component {
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Historial del cliente</a>
                             </li>
                         }
+                        {_.get(navBar.get('mapModulesAccess'), MODULE_BUSSINESS_PLAN) &&
+                        <li style={backgroundBusinessPlan} onClick={this._handleClickTabItem.bind(this, TAB_BUSINESS_PLAN)}>
+                            <a className="button-link-url" style={{ marginRight: "15px" }}>Plan de negocio</a>
+                        </li>
+                        }
                         {_.get(navBar.get('mapModulesAccess'), MODULE_PREVISITS) &&
                             <li style={backgroundPrevisitas} onClick={this._handleClickTabItem.bind(this, TAB_PREVISITS)}>
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Previsitas</a>
@@ -381,19 +387,14 @@ class TabClientInfo extends Component {
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Visitas/Reunión</a>
                             </li>
                         }
+                        {_.get(navBar.get('mapModulesAccess'), MODULE_PIPELINE) &&
+                        <li style={backgroundPipeline} onClick={this._handleClickTabItem.bind(this, TAB_PIPELINE)}>
+                            <a className="button-link-url" style={{ marginRight: "15px" }}>Pipeline</a>
+                        </li>
+                        }
                         {_.get(navBar.get('mapModulesAccess'), MODULE_TASKS) &&
                             <li style={backgroundPending} onClick={this._handleClickTabItem.bind(this, TAB_PENDING_TASK)}>
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Tareas</a>
-                            </li>
-                        }
-                        {_.get(navBar.get('mapModulesAccess'), MODULE_PIPELINE) &&
-                            <li style={backgroundPipeline} onClick={this._handleClickTabItem.bind(this, TAB_PIPELINE)}>
-                                <a className="button-link-url" style={{ marginRight: "15px" }}>Pipeline</a>
-                            </li>
-                        }
-                        {_.get(navBar.get('mapModulesAccess'), MODULE_BUSSINESS_PLAN) &&
-                            <li style={backgroundBusinessPlan} onClick={this._handleClickTabItem.bind(this, TAB_BUSINESS_PLAN)}>
-                                <a className="button-link-url" style={{ marginRight: "15px" }}>Planes de negocios</a>
                             </li>
                         }
                         {_.get(navBar.get('mapModulesAccess'), MODULE_RISKS_MANAGEMENT) &&

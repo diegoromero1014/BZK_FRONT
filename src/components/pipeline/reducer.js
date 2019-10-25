@@ -2,9 +2,8 @@ import Immutable from 'immutable';
 import {
     GET_PIPELINE_LIST, CHANGE_PAGE, LIMITE_INF, ORDER_COLUMN_PIPELINE,
     CLEAR_PIPELINE, CLEAR_PIPELINE_ORDER, CLEAR_PIPELINE_PAGINATOR, GET_PIPELINE, OWNER_DRAFT,
-    UPDATE_DISBURSEMENT_PLANS, ORIGIN_PIPELIN_BUSINESS
+    UPDATE_DISBURSEMENT_PLANS, ORIGIN_PIPELIN_BUSINESS, SET_OPEN_PIPELINE_CHILD, CHANGE_MAIN_PIPELINE
 } from './constants';
-import { isUndefined } from 'lodash';
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -17,17 +16,19 @@ const initialState = Immutable.Map({
     detailPipeline: {},
     ownerDraft: 0,
     disbursementPlans: [],
-    childBusinessDisbursementPlans: []
+    childBusinessDisbursementPlans: [],
+    isPipelineChildOpen: false,
+    mainPipeline: {}
 });
 
 export default (state = initialState, action) => {
     switch (action.type) {
         case GET_PIPELINE_LIST:
-            const response = action.payload.data;
+            const response = action.payload.data.data;
             return state.withMutations(map => {
                 map.set('status', response.status)
                     .set('rowCount', response.rowCount)
-                    .set('pipelineList', response.data.rows);
+                    .set('pipelineList', response.rows);
             });
         case CHANGE_PAGE:
             return state.set('page', action.currentPage);
@@ -68,6 +69,14 @@ export default (state = initialState, action) => {
             } else {
                 return state.set('disbursementPlans', action.listDisbursementPlans);
             }
+        case SET_OPEN_PIPELINE_CHILD:
+            return state.withMutations(map => {
+                map.set('isPipelineChildOpen', action.value)
+            })
+        case CHANGE_MAIN_PIPELINE:
+            return state.withMutations(map => {
+                map.set('mainPipeline', action.value)
+            })
         default:
             return state;
     }

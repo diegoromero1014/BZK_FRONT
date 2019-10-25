@@ -1,27 +1,27 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
-import { Row, Col } from 'react-flexbox-grid';
-import { consultList } from '../../selectsComponent/actions';
-import { REASON_TRANFER } from '../../selectsComponent/constants';
-import { getMasterDataFields } from '../../selectsComponent/actions';
-import {
-    MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA, OTHER, INFO_ESTUDIO_CREDITO
-} from '../../../constantsGlobal';
+import { Col, Row } from 'react-flexbox-grid';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import ListClientsValidations from './listClientsValidations';
-import { clientsByEconomicGroup, updateTeamClients, getAllteams, updateCheckEconomicGroup } from '../actions';
-import { validateResponse, consultParameterServer } from '../../../actionsGlobal';
+import Input from '../../../ui/input/inputComponent';
+import SweetAlert from '../../sweetalertFocus';
+import { fields, validations as validate } from './fieldsAndRulesCustomerDelivery';
+import { CLIENT_STATUS, MANAGEMENT_BRAND } from '../structuredDelivery/constants';
+import { _CUSTOMER_DELIVERY_STORY, BIZTRACK_MY_CLIENTS, nombreflujoAnalytics } from '../../../constantsAnalytics';
+import _ from 'lodash';
+import moment from 'moment';
+
+
+import { consultList, getMasterDataFields } from '../../selectsComponent/actions';
+import { clientsByEconomicGroup, getAllteams, updateCheckEconomicGroup, updateTeamClients } from '../actions';
+import { consultParameterServer, validateResponse } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { consultInfoClient } from '../../clientInformation/actions';
-import Input from '../../../ui/input/inputComponent';
-import SweetAlert from '../../sweetalertFocus';
-import _ from 'lodash';
-import { fields, validations as validate } from './fieldsAndRulesCustomerDelivery';
 
-import { CLIENT_STATUS, MANAGEMENT_BRAND } from '../structuredDelivery/constants';
-import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _CUSTOMER_DELIVERY_STORY } from '../../../constantsAnalytics';
+import { REASON_TRANFER } from '../../selectsComponent/constants';
+import { INFO_ESTUDIO_CREDITO, MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA, OTHER } from '../../../constantsGlobal';
 
 const meesageOneClient = "¿Señor usuario, certifica que el cliente y su información de historial se encuentra actualizada ?";
 const meesageMoreOneClient = "¿Señor usuario, certifica que los clientes y su información de historial se cuentra actualizada ?";
@@ -81,12 +81,13 @@ class ComponentCustomerDelivery extends Component {
             'event': BIZTRACK_MY_CLIENTS + _CUSTOMER_DELIVERY_STORY,
             'pagina':_CUSTOMER_DELIVERY_STORY
 
-          });
+        });
+
         const { getAllteams, getMasterDataFields, updateCheckEconomicGroup, consultParameterServer } = this.props;
         getAllteams();
         updateCheckEconomicGroup(false);
         getMasterDataFields([REASON_TRANFER]).then((data) => {
-            valuesReasonTranfer = _.get(data, 'payload.data.messageBody.masterDataDetailEntries');
+            valuesReasonTranfer = _.get(data, 'payload.data.data.masterDataDetailEntries');
         });
         this.consultClients(window.sessionStorage.getItem('idClientSelected'), null);
 
@@ -112,6 +113,14 @@ class ComponentCustomerDelivery extends Component {
     _handleSubmitDelivery() {
         const { fields: { idCelula }, customerStory, clientInformacion, swtShowMessage } = this.props;
         const { managementBrand, clientStatus } = this.state;
+
+        const dateNow = moment();
+        const endDate = moment("31/01/2020","DD/MM/YYYY");
+
+        if ( dateNow.isBefore(endDate)) {
+            swtShowMessage("warning", "Advertencia", "Señor usuario, La entrega estructurada de clientes está suspendida temporalmente.");
+            return;
+        }
 
         if (_.isEqual(idCelula.value, clientInformacion.get("responseClientInfo").celulaId.toString())) {
             swtShowMessage('error', 'Error entregando cliente(s)', 'Señor usuario, la célula que seleccionó es a la que pertenece(n) actualmente.');
@@ -141,13 +150,14 @@ class ComponentCustomerDelivery extends Component {
     }
 
     _saveUpdateTeamClient() {
-        const { fields: { idCelula, reasonTranfer, otherReason }, customerStory, swtShowMessage, updateTeamClients, changeStateSaveData,
-            consultInfoClient, clientInformacion } = this.props;
+        const {
+            fields: { idCelula, reasonTranfer, otherReason }, customerStory, swtShowMessage, updateTeamClients,
+            changeStateSaveData, consultInfoClient, clientInformacion
+        } = this.props;
         //Valido si el cliente me lo estan asignando, para así no mostrar los campos de cmabio de célula
         const { deliveryClient } = clientInformacion.get("responseClientInfo");
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
         this.setState({ showConfirmUpdate: false });
-        const idClients = _.map(customerStory.get('listClientsDelivery'), 'idClient');
         const json = {
             "clients": customerStory.get('listClientsDelivery'),
             "idTeam": idCelula.value,
@@ -170,10 +180,10 @@ class ComponentCustomerDelivery extends Component {
     }
 
     render() {
-
         const { fields: { idCelula, reasonTranfer, otherReason }, customerStory, selectsReducer, handleSubmit, clientInformacion, reducerGlobal } = this.props;
         const { deliveryClient } = clientInformacion.get("responseClientInfo");
         allowAccessContextClient = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
+
         return (
             <form onSubmit={handleSubmit(this._handleSubmitDelivery)}>
                 {!deliveryClient &&

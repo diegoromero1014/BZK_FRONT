@@ -41,7 +41,7 @@ const tabReducer = {
 };
 
 const defaultProps = { clientInformacion, selectsReducer, notes, updateErrorsNotes, updateTitleNavBar, getMasterDataFields, consultList, handleSubmit,
-    setNotes, tabReducer, swtShowMessage, economicGroupsByKeyword, deleteNote, clearNotes, tabReducer, fields};
+    setNotes, tabReducer, swtShowMessage, economicGroupsByKeyword, deleteNote, clearNotes, fields};
 
 describe('Test ClientCertify', () => {
     it('should render InfoCliente', () => {              
