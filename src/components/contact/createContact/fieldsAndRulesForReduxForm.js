@@ -30,7 +30,7 @@ const fieldsWithRules = {
     telefono: { rules: [checkRequired, checkFirstCharacter, checkMinLength(7), checkPhone, checkMaxLength(30)] },
     extension: { rules: [checkOnlyNumbers, checkFirstCharacter, checkMaxLength(14)] },
     celular: { rules: [checkPhone, checkFirstCharacter, checkMaxLength(30)] },
-    correo: { rules: [checkRequired, checkFirstCharacter, checkEmail, checkMaxLength(50)] },
+    correo: { rules: [checkRequired, checkFirstCharacter, checkEmail, checkMaxLength(55)] },
     tipoContacto: { rules: [checkRequired] },
     tipoEntidad: { rules: [] },
     tipoFuncion: { rules: [checkRequired] },

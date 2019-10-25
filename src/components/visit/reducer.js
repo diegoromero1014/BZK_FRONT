@@ -27,8 +27,8 @@ export default (state = initialState, action) => {
       return state.withMutations(map => {
         map
           .set('status', response.status)
-          .set('rowCount', response.rowCount)
-          .set('visitList', JSON.parse(response.visitList));
+          .set('rowCount', response.data.rowCount)
+          .set('visitList',response.data.rows);
       });
     case CHANGE_PAGE:
       return state.set('page', action.currentPage);

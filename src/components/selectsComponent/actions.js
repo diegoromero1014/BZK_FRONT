@@ -122,6 +122,33 @@ export function consultListWithParameterUbication(field, parentId) {
   }
 }
 
+
+export function consultListByCatalogType(field, parentId, catalogType) {
+  const json = {
+    messageHeader: {
+      "timestamp": new Date().getTime(),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    messageBody: {
+      "parentId": parentId,
+      "field": catalogType
+    }
+  };
+  const request = axios.post(APP_URL + "/masterDataByParentId", json);
+  return {
+    type: field,
+    payload: request
+  }
+}
+
 export function clearConsultListWithParameterUbication(field) {
   return {
     type: field
