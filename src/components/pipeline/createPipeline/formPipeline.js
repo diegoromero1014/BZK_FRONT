@@ -74,6 +74,8 @@ import { buildJsoncommercialReport } from "../../commercialReport/functionsGener
 import { setConfidential } from "../../commercialReport/actions";
 
 let typeMessage = "success";
+const Colocaciones="Colocaciones";
+const Captaciones="Captaciones";
 let titleMessage = "";
 let message = "";
 let typeButtonClick = null;
@@ -131,7 +133,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         showProbabilityField: true,
         showMellowingPeriodField: true,
         showPivotNitField: false,
-        pipelineStatus: []
+        pipelineStatus: [],
+        showInteresSpread: false,
       };
 
 
@@ -294,8 +297,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
 
     _onChangeBusinessCategory(val) {
       const {  selectsReducer } = this.props;
+      let showLocalInteresSpread=false;
+      const  keyBusinessCategory= _.get(_.find(selectsReducer.get('businessCategory'), ['id', parseInt(val)]), 'key')
+            if(keyBusinessCategory == Colocaciones || keyBusinessCategory ==Captaciones){
+                showLocalInteresSpread=true;
+            }
       this.setState({
-          messageTooltipNominalValue: _.get(_.find(selectsReducer.get('businessCategory'), ['id', parseInt(val)]), 'description')
+          messageTooltipNominalValue: _.get(_.find(selectsReducer.get('businessCategory'), ['id', parseInt(val)]), 'description'),
+          showInteresSpread:showLocalInteresSpread
       })
     }
 
@@ -1001,6 +1010,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
+                {this.state.showInteresSpread ?
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -1017,6 +1027,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
+                :null}
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -1059,7 +1070,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     <dt>
                       <span>Valor nominal (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
-                    <ToolTip text={this.state.messageTooltipNominalValue}>
+                    <ToolTip text={this.state.messageTooltipNominalValue} rendertooltip={this.state.messageTooltipNominalValue}> 
                     <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
                       <Input
                         {...value}
