@@ -318,12 +318,12 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     _onChangeBusinessCategory(val) {
       const {  selectsReducer } = this.props;
       let showLocalInteresSpread=false;
-      const  keyBusinessCategory= _.get(_.find(selectsReducer.get('businessCategory'), ['id', parseInt(val)]), 'key')
+      const  keyBusinessCategory= _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'value')
             if(keyBusinessCategory == Colocaciones || keyBusinessCategory ==Captaciones){
                 showLocalInteresSpread=true;
             }
       this.setState({
-          messageTooltipNominalValue: _.get(_.find(selectsReducer.get('businessCategory'), ['id', parseInt(val)]), 'description'),
+          messageTooltipNominalValue: _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'description'),
           showInteresSpread:showLocalInteresSpread
       })
     }
