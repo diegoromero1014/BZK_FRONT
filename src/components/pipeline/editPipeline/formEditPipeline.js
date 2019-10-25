@@ -1430,7 +1430,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                 {...areaAssets}
                                                 name={nameAreaAssets}
                                                 parentId="dashboardComponentScroll"
-                                                data={selectsReducer.get(FILTER_ACTIVE) || []}                                            
+                                                data={selectsReducer.get(FILTER_ACTIVE) || []}   
+                                                disabled={this.state.isEditable ? '' : 'disabled'}                                         
                                             />
                                         </div>
                                     </Col>
