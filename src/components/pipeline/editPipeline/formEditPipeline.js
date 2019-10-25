@@ -75,6 +75,8 @@ import Classification from '../sections/classification';
 import '../pipeline.style.scss';
 
 let thisForm;
+const Colocaciones="Colocaciones";
+const Captaciones="Captaciones";
 let typeButtonClick = null;
 let nameDisbursementPlansInReducer = "disbursementPlans";
 
@@ -132,6 +134,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showProbabilityField: true,
                 showMellowingPeriodField: true,
                 showPivotNitField: false,
+                pipelineStatus: [],
+                messageTooltipNominalValue:null,
+                showInteresSpread: false,
                 showConfirmChangeNeed: false,
                 showAlertFinancingAndPlan: false,
                 showtermInMonthsField: false,
@@ -173,6 +178,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._changeAreaAssetsEnabledValue = this._changeAreaAssetsEnabledValue.bind(this);
             this._changeShowPivotNitField = this._changeShowPivotNitField.bind(this);
             this.setPipelineStatusValues = this.setPipelineStatusValues.bind(this);
+            this.renderNominalValue = this.renderNominalValue.bind(this);
             this._showAlertFinancingAndPlan = this._showAlertFinancingAndPlan.bind(this);
             this._changeNeedsClient = this._changeNeedsClient.bind(this);
             this._changeCatalogProductFamily = this._changeCatalogProductFamily.bind(this);
@@ -404,8 +410,16 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         _onChangeBusinessCategory(val) {
             const {  selectsReducer } = this.props;
+            let showLocalInteresSpread=false;
+            const  keyBusinessCategory= _.get(_.find(selectsReducer.get('businessCategory'), ['id', parseInt(val)]), 'key')
+            if(keyBusinessCategory == Colocaciones || keyBusinessCategory ==Captaciones){
+                showLocalInteresSpread=true;
+            }
+            
             this.setState({
-                messageTooltipNominalValue: _.get(_.find(selectsReducer.get('businessCategory'), ['id', parseInt(val)]), 'description')
+                messageTooltipNominalValue: _.get(_.find(selectsReducer.get('businessCategory'), ['id', parseInt(val)]), 'description'),
+                showInteresSpread:showLocalInteresSpread
+
             })
 
           }
@@ -892,6 +906,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
         }
 
+        renderNominalValue() {
+            const { fields: {value }, pipelineReducer } = this.props;
+            const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
+
+           
+        }
+
         render() {
             const {
                 fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
@@ -1258,6 +1279,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     </div>
                                 </Col>
                                 : null}
+                                {this.state.showInteresSpread ?
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -1275,6 +1297,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
+                                :null}
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -1320,22 +1343,22 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             <span>Valor nominal (</span>
                                             <span style={{ color: "red" }}>*</span>)
                                         </dt>
-                                        <ToolTip text={this.state.messageTooltipNominalValue}>
-                                            <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
-                                                <Input
-                                                    {...value}
-                                                    name="valueMillions"
-                                                    type="text"
-                                                    placeholder="Miles ' , ' y decimales ' . '"
-                                                    parentId="dashboardComponentScroll"
-                                                    onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
-                                                    onFocus={val => handleFocusValueNumber(value, value.value)}
-                                                    disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
-                                                    onChange={val => this._changeValue(val)
-                                                    }
-                                                />
-                                            </div>
-                                        </ToolTip>
+                                            <ToolTip text={this.state.messageTooltipNominalValue} rendertooltip={this.state.messageTooltipNominalValue}>
+                                                <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
+                                                    <Input
+                                                        {...value}
+                                                        name="valueMillions"
+                                                        type="text"
+                                                        placeholder="Miles ' , ' y decimales ' . '"
+                                                        parentId="dashboardComponentScroll"
+                                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
+                                                        onFocus={val => handleFocusValueNumber(value, value.value)}
+                                                        disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
+                                                        onChange={val => this._changeValue(val)
+                                                        }
+                                                    />
+                                                </div>
+                                            </ToolTip>
                                     </div>
                                 </Col>
                                 {this.state.showpendingDisbursementAmountField ?
