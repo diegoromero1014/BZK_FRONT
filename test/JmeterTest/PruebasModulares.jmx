@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.1.1 r1855137">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.0 r1840935">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -30,7 +30,7 @@
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">${__P(SERVER,biztrackqa.apps.ambientesbc.com)}</stringProp>
+        <stringProp name="HTTPSampler.domain">${__P(SERVER,was-biztrackqa.apps.ambientesbc.com)}</stringProp>
         <stringProp name="HTTPSampler.port">8443</stringProp>
         <stringProp name="HTTPSampler.protocol">https</stringProp>
         <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -69,7 +69,7 @@
         <stringProp name="variableNames">username,password</stringProp>
       </CSVDataSet>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Login" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Login" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -2576,7 +2576,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Buscar Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="63 /Centricity/clientListForEmployee" enabled="true">
@@ -2697,7 +2697,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Detalle Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="45 /Centricity/updateSessionLastDate" enabled="true">
@@ -3148,7 +3148,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Detalle Vinculación" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="54 /Centricity/getParameterByName" enabled="true">
@@ -3262,20 +3262,20 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
-          <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
-            <stringProp name="JSON_PATH">$.status</stringProp>
-            <stringProp name="EXPECTED_VALUE">200</stringProp>
-            <boolProp name="JSONVALIDATION">true</boolProp>
-            <boolProp name="EXPECT_NULL">false</boolProp>
-            <boolProp name="INVERT">false</boolProp>
-            <boolProp name="ISREGEX">true</boolProp>
-          </JSONPathAssertion>
-          <hashTree/>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Guardar Vinculación" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="57 /Centricity/saveLinkingClient" enabled="true">
@@ -3462,6 +3462,10 @@
             <hashTree/>
           </hashTree>
         </hashTree>
+        <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Aserción de Duración" enabled="true">
+          <stringProp name="DurationAssertion.duration">4000</stringProp>
+        </DurationAssertion>
+        <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Pipeline" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -4710,7 +4714,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Buscar Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="63 /Centricity/clientListForEmployee" enabled="true">
@@ -4827,11 +4831,20 @@
               <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
             </JSONPostProcessor>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Detalle Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="45 /Centricity/updateSessionLastDate" enabled="true">
@@ -5222,6 +5235,15 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="52 /Centricity/getParameterByName" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -5282,7 +5304,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Cargar Pipelines" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="45 /Centricity/getParameterByName" enabled="true">
@@ -5401,6 +5423,15 @@
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.rows[0].id</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
             </JSONPostProcessor>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="47 /Centricity/validatePermissionsModule" enabled="true">
@@ -5571,19 +5602,10 @@
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
-            <stringProp name="JSON_PATH">$.status</stringProp>
-            <stringProp name="EXPECTED_VALUE">200</stringProp>
-            <boolProp name="JSONVALIDATION">true</boolProp>
-            <boolProp name="EXPECT_NULL">false</boolProp>
-            <boolProp name="INVERT">false</boolProp>
-            <boolProp name="ISREGEX">true</boolProp>
-          </JSONPathAssertion>
-          <hashTree/>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Ver Pipeline" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="61 /Centricity/getParameterByName" enabled="true">
@@ -5752,6 +5774,15 @@
                 </elementProp>
               </collectionProp>
             </HeaderManager>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="59 /Centricity/masterDataByField" enabled="true">
@@ -5930,6 +5961,15 @@
               <boolProp name="ISREGEX">true</boolProp>
             </JSONPathAssertion>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="64 /Centricity/masterDataByParentId" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -5990,7 +6030,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Guardar Pipeline" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="77 /Centricity/savePipeline" enabled="true">
@@ -6048,6 +6088,15 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="78 /Centricity/clientInformation" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -6104,6 +6153,15 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="79 /Centricity/listClientPipeline" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -6159,6 +6217,15 @@
                 </elementProp>
               </collectionProp>
             </HeaderManager>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="80 /Centricity/masterDataByField" enabled="true">
@@ -6273,16 +6340,11 @@
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
-            <stringProp name="JSON_PATH">$.status</stringProp>
-            <stringProp name="EXPECTED_VALUE">200</stringProp>
-            <boolProp name="JSONVALIDATION">true</boolProp>
-            <boolProp name="EXPECT_NULL">false</boolProp>
-            <boolProp name="INVERT">false</boolProp>
-            <boolProp name="ISREGEX">true</boolProp>
-          </JSONPathAssertion>
-          <hashTree/>
         </hashTree>
+        <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Aserción de Duración" enabled="true">
+          <stringProp name="DurationAssertion.duration">4000</stringProp>
+        </DurationAssertion>
+        <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Certificar Cliente" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -7531,7 +7593,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Buscar Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="63 /Centricity/clientListForEmployee" enabled="true">
@@ -7648,11 +7710,20 @@
               <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
             </JSONPostProcessor>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Detalle Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="45 /Centricity/updateSessionLastDate" enabled="true">
@@ -8043,6 +8114,15 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="52 /Centricity/getParameterByName" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -8103,7 +8183,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Formulario Certificar" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="124 /Centricity/getParameterByName" enabled="true">
@@ -8725,7 +8805,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Guardar Certificar Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="132 /Centricity/saveClient" enabled="true">
@@ -8782,6 +8862,15 @@
                 </elementProp>
               </collectionProp>
             </HeaderManager>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="134 /Centricity/masterDataByFields" enabled="true">
@@ -8895,8 +8984,21 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
         </hashTree>
+        <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Aserción de Duración" enabled="true">
+          <stringProp name="DurationAssertion.duration">10000</stringProp>
+        </DurationAssertion>
+        <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Plan de negocio" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -10145,7 +10247,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Buscar Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="63 /Centricity/clientListForEmployee" enabled="true">
@@ -10262,11 +10364,20 @@
               <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
             </JSONPostProcessor>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Detalle Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="45 /Centricity/updateSessionLastDate" enabled="true">
@@ -10657,6 +10768,15 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="52 /Centricity/getParameterByName" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -10717,7 +10837,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Cargar Planes de negocio" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="148 /Centricity/masterDataByField" enabled="true">
@@ -10893,20 +11013,20 @@
               <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
             </JSONPostProcessor>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
-          <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
-            <stringProp name="JSON_PATH">$.status</stringProp>
-            <stringProp name="EXPECTED_VALUE">200</stringProp>
-            <boolProp name="JSONVALIDATION">true</boolProp>
-            <boolProp name="EXPECT_NULL">false</boolProp>
-            <boolProp name="INVERT">false</boolProp>
-            <boolProp name="ISREGEX">true</boolProp>
-          </JSONPathAssertion>
-          <hashTree/>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Ver Plan de negocio" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="150 /Centricity/getUserBlockingReport" enabled="true">
@@ -11132,6 +11252,15 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="152 /Centricity/businessDetail" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -11201,7 +11330,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Guardar Plan de negocio" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="160 /Centricity/getUserBlockingReport" enabled="true">
@@ -11315,6 +11444,15 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="163 /Centricity/deleteBlockedReport" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -11426,6 +11564,15 @@
                 </elementProp>
               </collectionProp>
             </HeaderManager>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="166 /Centricity/masterDataByField" enabled="true">
@@ -11539,17 +11686,21 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
-          <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
-            <stringProp name="JSON_PATH">$.status</stringProp>
-            <stringProp name="EXPECTED_VALUE">200</stringProp>
-            <boolProp name="JSONVALIDATION">true</boolProp>
-            <boolProp name="EXPECT_NULL">false</boolProp>
-            <boolProp name="INVERT">false</boolProp>
-            <boolProp name="ISREGEX">true</boolProp>
-          </JSONPathAssertion>
-          <hashTree/>
         </hashTree>
+        <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Aserción de Duración" enabled="true">
+          <stringProp name="DurationAssertion.duration">4000</stringProp>
+        </DurationAssertion>
+        <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Previsita" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -12798,7 +12949,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Buscar Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="63 /Centricity/clientListForEmployee" enabled="true">
@@ -12919,7 +13070,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Detalle Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="45 /Centricity/updateSessionLastDate" enabled="true">
@@ -13310,6 +13461,15 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="52 /Centricity/getParameterByName" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -13370,7 +13530,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Cargar Previsita" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="64 /Centricity/validatePermissionsModule" enabled="true">
@@ -13546,20 +13706,20 @@
               <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
             </JSONPostProcessor>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
-          <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
-            <stringProp name="JSON_PATH">$.status</stringProp>
-            <stringProp name="EXPECTED_VALUE">200</stringProp>
-            <boolProp name="JSONVALIDATION">true</boolProp>
-            <boolProp name="EXPECT_NULL">false</boolProp>
-            <boolProp name="INVERT">false</boolProp>
-            <boolProp name="ISREGEX">true</boolProp>
-          </JSONPathAssertion>
-          <hashTree/>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Ver Previsita" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="111 /Centricity/getParameterByName" enabled="true">
@@ -13962,11 +14122,20 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Guardar Previsita" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="120 /Centricity/getUserBlockingReport" enabled="true">
@@ -14136,6 +14305,15 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="126 /Centricity/masterDataByField" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -14304,6 +14482,15 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="124 /Centricity/clientInformation" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -14360,8 +14547,21 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
         </hashTree>
+        <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Aserción de Duración" enabled="true">
+          <stringProp name="DurationAssertion.duration">4000</stringProp>
+        </DurationAssertion>
+        <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Visita" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -15609,8 +15809,8 @@
           </hashTree>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Buscar Cliente" enabled="true">
+          <boolProp name="TransactionController.parent">true</boolProp>
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="63 /Centricity/clientListForEmployee" enabled="true">
@@ -15730,8 +15930,8 @@
           </hashTree>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Detalle Cliente" enabled="true">
+          <boolProp name="TransactionController.parent">true</boolProp>
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="45 /Centricity/updateSessionLastDate" enabled="true">
@@ -16181,8 +16381,8 @@
           </hashTree>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Cargar Visitas" enabled="true">
+          <boolProp name="TransactionController.parent">true</boolProp>
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="182 /Centricity/validatePermissionsModule" enabled="true">
@@ -16354,9 +16554,18 @@
             <hashTree/>
             <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
               <stringProp name="JSONPostProcessor.referenceNames">visitId</stringProp>
-              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.visitList[0].id</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.rows[0].id</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
             </JSONPostProcessor>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="184 /Centricity/getParameterByName" enabled="true">
@@ -16415,19 +16624,10 @@
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
-            <stringProp name="JSON_PATH">$.status</stringProp>
-            <stringProp name="EXPECTED_VALUE">200</stringProp>
-            <boolProp name="JSONVALIDATION">true</boolProp>
-            <boolProp name="EXPECT_NULL">false</boolProp>
-            <boolProp name="INVERT">false</boolProp>
-            <boolProp name="ISREGEX">true</boolProp>
-          </JSONPathAssertion>
-          <hashTree/>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Ver visita" enabled="false">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Ver visita" enabled="true">
+          <boolProp name="TransactionController.parent">true</boolProp>
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="187 /Centricity/getParameterByName" enabled="true">
@@ -16765,6 +16965,15 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="186 /Centricity/visitDocumentDetail" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -16832,9 +17041,9 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Guardar Visita" enabled="false">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Guardar Visita" enabled="true">
+          <boolProp name="TransactionController.parent">true</boolProp>
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="192 /Centricity/saveVisit" enabled="true">
@@ -17071,6 +17280,10 @@
             <hashTree/>
           </hashTree>
         </hashTree>
+        <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Aserción de Duración" enabled="true">
+          <stringProp name="DurationAssertion.duration">4000</stringProp>
+        </DurationAssertion>
+        <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Estudio de credito" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -18319,7 +18532,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Buscar Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="63 /Centricity/clientListForEmployee" enabled="true">
@@ -18440,7 +18653,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Detalle Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="45 /Centricity/updateSessionLastDate" enabled="true">
@@ -18891,7 +19104,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Ver Estudio de credito" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="252 /Centricity/getContextClientByClient" enabled="true">
@@ -19298,7 +19511,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Guardar Estudio de credito" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="257 /Centricity/getUserBlockingReport" enabled="true">
@@ -19591,6 +19804,10 @@
             <hashTree/>
           </hashTree>
         </hashTree>
+        <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Aserción de Duración" enabled="true">
+          <stringProp name="DurationAssertion.duration">4000</stringProp>
+        </DurationAssertion>
+        <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Entrega estructurada" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -20839,7 +21056,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Buscar Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="63 /Centricity/clientListForEmployee" enabled="true">
@@ -20960,7 +21177,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Detalle Cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="45 /Centricity/updateSessionLastDate" enabled="true">
@@ -21411,7 +21628,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Ver Historial de cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="284 /Centricity/updateSessionLastDate" enabled="true">
@@ -21693,11 +21910,20 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Ver Entrega de cliente" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="292 /Centricity/getParameterByName" enabled="true">
@@ -21983,7 +22209,7 @@
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Realizar entrega" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
-          <boolProp name="TransactionController.parent">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
         </TransactionController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="294 /Centricity/updateTeamClients" enabled="true">
@@ -22041,6 +22267,15 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="295 /Centricity/clientInformation" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -22097,8 +22332,21 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.status</stringProp>
+              <stringProp name="EXPECTED_VALUE">200</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
         </hashTree>
+        <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Aserción de Duración" enabled="true">
+          <stringProp name="DurationAssertion.duration">4000</stringProp>
+        </DurationAssertion>
+        <hashTree/>
       </hashTree>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
