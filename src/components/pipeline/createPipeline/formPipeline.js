@@ -21,11 +21,10 @@ import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans, changeM
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { clearLists, consultDataSelect, consultListWithParameterUbication, getClientNeeds, getMasterDataFields } from "../../selectsComponent/actions";
+import { clearLists, consultDataSelect, consultListWithParameterUbication, getClientNeeds, getMasterDataFields, consultListByCatalogType } from "../../selectsComponent/actions";
 import { consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, handleFocusValueNumber, nonValidateEnter } from "../../../actionsGlobal";
 
 import {
-  BUSINESS_CATEGORY,
   FILTER_ACTIVE,
   FILTER_COUNTRY,
   FILTER_MONEY_DISTRIBITION_MARKET,
@@ -36,7 +35,6 @@ import {
   PIPELINE_PRIORITY,
   PIPELINE_STATUS,
   PROBABILITY,
-  PRODUCT_FAMILY,
   PRODUCTS,
   PRODUCTS_MASK,
   TERM_IN_MONTHS_VALUES,
@@ -127,6 +125,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         showFormAddDisbursementPlan: false,
         disbursementPlanRequired: false,
         products: [],
+        productsFamily: [],
+        businessCategories: [],
         showAlertCurrency: false,
         messageTooltipNominalValue: '',
         showJustificationField: false,
@@ -164,6 +164,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
       this._changeBusinessStatus = this._changeBusinessStatus.bind(this);
       this._changeProductFamily = this._changeProductFamily.bind(this);
+      this._changeProduct = this._changeProduct.bind(this);
       this.showFormDisbursementPlan = this.showFormDisbursementPlan.bind(this);
       this._changeValue = this._changeValue.bind(this);
       this.showAlertDisabledCurrency = this.showAlertDisabledCurrency.bind(this);
@@ -174,6 +175,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.setPipelineStatusValues = this.setPipelineStatusValues.bind(this);
       this._showAlertFinancingAndPlan = this._showAlertFinancingAndPlan.bind(this);
       this._changeNeedsClient = this._changeNeedsClient.bind(this);
+      this._changeCatalogProductFamily = this._changeCatalogProductFamily.bind(this);
       this.showMessageChangeClientNeed = this.showMessageChangeClientNeed.bind(this);
       this._cleanFieldsOfClientNeed = this._cleanFieldsOfClientNeed.bind(this);
       this._closeCancelConfirmChanNeed = this._closeCancelConfirmChanNeed.bind(this);
@@ -317,8 +319,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeProductFamily(currencyValue) {
-      const { selectsReducer, fields: { areaAssets, product }, consultListWithParameterUbication } = this.props;
-      let _product_family = selectsReducer.get(PRODUCT_FAMILY)
+      const { fields: { areaAssets, product, businessCategory }, consultListByCatalogType } = this.props;
+      let _product_family = this.state.productsFamily;
       areaAssets.onChange('');
       this.setState({
         areaAssetsEnabled: _product_family.filter(pFamily => {
@@ -328,12 +330,19 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         }).length > 0
       });
 
-      consultListWithParameterUbication(FILTER_MULTISELECT_FIELDS, currencyValue).then((data) => {
+      consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "products").then((data) => {
         this.setState({
           products: _.get(data, 'payload.data.data', [])
         });
       });
       product.onChange('');
+
+      consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "businessCategory").then((data) => {
+          this.setState({
+              businessCategories: _.get(data, 'payload.data.data', [])
+          });
+      });
+      businessCategory.onChange('');
     }
 
     _changeAreaAssetsEnabledValue(value){      
@@ -349,11 +358,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeProduct(value) {
-      const { fields: { productFamily }, selectsReducer } = this.props;
-      let productFamilySelected = selectsReducer.get(PRODUCT_FAMILY).find((family) => family.id == productFamily.value);
+      const { fields: { productFamily } } = this.props;
+      let productFamilySelected = this.state.productsFamily.find((family) => family.id == productFamily.value);
       let products = this.state.products;
       let productSelected = products.find((product) => product.id == value);
-      if (productSelected) {
+      if (productFamilySelected && productSelected) {
         let productFamilySelectedKey = productFamilySelected.key ? productFamilySelected.key.toLowerCase()
           : (productFamilySelected.value ? productFamilySelected.value.toLowerCase() : '');
         let productSelectedKey = productSelected.key ? productSelected.key.toLowerCase()
@@ -511,14 +520,28 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               this._showAlertFinancingAndPlan(true);
               need.onChange(_.get(_.filter(selectsReducer.get(CLIENT_NEED), ['key', NEED_FINANCING]), '[0].id', ""));
           } else {
-              this.showMessageChangeClientNeed()
+              this.showMessageChangeClientNeed();
           }
+      }
+
+      if((newValueIsFinancing && !this.state.isFinancingNeed) || (!newValueIsFinancing && !this.state.isFinancingNeed)) {
+          this._changeCatalogProductFamily(need.value);
       }
 
       if (newValueIsFinancing) {
           this.setState({isFinancingNeed: true});
           this._validateShowFinancingNeedFields(true);
       }
+  }
+
+  _changeCatalogProductFamily(currencyValue){
+      const { fields: { productFamily }, consultListByCatalogType } = this.props;
+      consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "productFamily").then((data) => {
+          this.setState({
+              productsFamily: _.get(data, 'payload.data.data', [])
+          });
+        });
+        productFamily.onChange('');
   }
 
   showMessageChangeClientNeed() {
@@ -549,11 +572,13 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   }
 
   _closeConfirmChangeNeed() {
+      const {fields: { need }} = this.props;
       this._validateShowFinancingNeedFields(false);
       this.setState({
           showConfirmChangeNeed: false,
           isFinancingNeed: false
       });
+      this._changeCatalogProductFamily(need.value);
       this._cleanFieldsOfClientNeed();
   }
 
@@ -794,7 +819,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         redirectUrl("/dashboard/clientInformation");
       } else {
         getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY,
-          PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
+          PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, MELLOWING_PERIOD,
           FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY,
           PIPELINE_TYPE, COMMERCIAL_OPORTUNITY, PIPELINE_JUSTIFICATION, CLIENT_NEED]);
 
@@ -910,7 +935,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...productFamily}
                       name={nameProductFamily}
                       parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(PRODUCT_FAMILY) || []}
+                      data={this.state.productsFamily}
                       onChange={val => this._changeProductFamily(val)}
                     />
                   </div>
@@ -946,7 +971,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...businessCategory}
                       name={nameBusinessCategory}
                       parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(BUSINESS_CATEGORY) || []}
+                      data={this.state.businessCategories}
                       onChange={key => this._onChangeBusinessCategory(key)}
                     />
                   </div>
@@ -1444,6 +1469,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       updateDisbursementPlans,
       swtShowMessage,
       consultListWithParameterUbication,
+      consultListByCatalogType,
       clearLists,
       consultDataSelect,
       setConfidential,
