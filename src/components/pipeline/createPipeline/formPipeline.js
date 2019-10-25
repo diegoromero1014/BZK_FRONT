@@ -319,7 +319,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeProductFamily(currencyValue) {
-      const { fields: { areaAssets, productFamily, product, businessCategory }, consultListByCatalogType, pipelineReducer } = this.props;
+      const { fields: { areaAssets, product, businessCategory }, consultListByCatalogType } = this.props;
       let _product_family = this.state.productsFamily;
       areaAssets.onChange('');
       this.setState({
@@ -535,7 +535,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   }
 
   _changeCatalogProductFamily(currencyValue){
-      const { fields: { need, productFamily }, consultListByCatalogType, pipelineReducer } = this.props;
+      const { fields: { productFamily }, consultListByCatalogType } = this.props;
       consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "productFamily").then((data) => {
           this.setState({
               productsFamily: _.get(data, 'payload.data.data', [])
