@@ -437,7 +437,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 pipelineTypeSelectedKey = pipelineTypeSelected.key ? pipelineTypeSelected.key.toLowerCase() : '';
             }
 
-            if (businessStatus.value.length) {
+            if (businessStatus.value) {
                 businessStatusSelected = this._getBusinessStatusById(businessStatus.value);
                 businessStatusSelectedKey = businessStatusSelected.key ? businessStatusSelected.key.toLowerCase() : '';
             }
@@ -1124,6 +1124,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                             onChange={val => this._changeBusinessStatus(val)}
+                                            filterData={true}
                                         />
                                     </div>
                                 </Col>

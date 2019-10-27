@@ -112,6 +112,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     constructor(props) {
       super(props);
       thisForm = this;
+      this.pipelineStatusFiltered = null;
       this.state = {
         showMessageCreatePipeline: false,
         showConfirm: false,
@@ -143,8 +144,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         showindexingField: false,
         showpendingDisbursementAmountField: false,
         showComponentDisbursementPlan: false,
-        isFinancingNeed: false,
-        pipelineStatus: []
+        isFinancingNeed: false
       };
 
 
@@ -186,6 +186,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._closeConfirmChangeNeed = this._closeConfirmChangeNeed.bind(this);
       this._getNeedById = this._getNeedById.bind(this);
       this._validateShowFinancingNeedFields = this._validateShowFinancingNeedFields.bind(this);
+      this.changePipelineType = this.changePipelineType.bind(this);
+      this.getPipelineSelectedKey = this.getPipelineSelectedKey.bind(this);
+      this.getBusinessStatusKey = this.getBusinessStatusKey.bind(this);
     }
 
     showFormDisbursementPlan(isOpen) {
@@ -453,36 +456,50 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       idCurrencyAux = currency.value;
     }
 
-    _pipelineTypeAndBusinessOnChange(value){            
-      const { fields:{ businessStatus }, selectsReducer} = this.props;       
-      let businessStatusSelectedKey = null;
-      let businessStatusSelected = null;      
-      let pipelineTypeSelectedKey = null;
+    getPipelineSelectedKey(value) {
+      const { selectsReducer } = this.props;
       const pipelineTypes = selectsReducer.get(PIPELINE_TYPE);      
       const pipelineTypeSelected = pipelineTypes.find((pipelineType) => pipelineType.id == value);                  
       if(pipelineTypeSelected){
-        pipelineTypeSelectedKey = pipelineTypeSelected.key ? pipelineTypeSelected.key.toLowerCase() : '';
+        return pipelineTypeSelected.key ? pipelineTypeSelected.key.toLowerCase() : '';
       }
-      
-      if(businessStatus.value.length){
-        businessStatusSelected = this._getBusinessStatusById(businessStatus.value);                  
-        businessStatusSelectedKey = businessStatusSelected.key ? businessStatusSelected.key.toLowerCase() : '';
-      }      
-
-      this._validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey); 
-      this.setPipelineStatusValues(pipelineTypeSelectedKey);
+      return "";
     }
 
-    setPipelineStatusValues(pipelineTypeSelectedKey) {
+    getBusinessStatusKey() {
+      const {fields: {businessStatus}} = this.props;
+      if(businessStatus.value){
+        const businessStatusSelected = this._getBusinessStatusById(businessStatus.value);                  
+        return businessStatusSelected.key ? businessStatusSelected.key.toLowerCase() : '';
+      }
+      return "";
+    }
 
-      const { selectsReducer } = this.props; 
+    changePipelineType(value) {
+      const pipelineTypeSelectedKey = this.getPipelineSelectedKey(value);
+      this.setPipelineStatusValues(pipelineTypeSelectedKey, this.getBusinessStatusKey());
+      this._pipelineTypeAndBusinessOnChange(value);
+    }
 
+    _pipelineTypeAndBusinessOnChange(value){                 
+      let businessStatusSelectedKey = this.getBusinessStatusKey();        
+      let pipelineTypeSelectedKey = this.getPipelineSelectedKey(value);
+      this._validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey); 
+    }
+
+    setPipelineStatusValues(pipelineTypeSelectedKey, businessStatusSelectedKey) {
+      const { selectsReducer, fields: {businessStatus} } = this.props; 
       if (pipelineTypeSelectedKey == NUEVO_NEGOCIO) {
-        this.setState({ pipelineStatus : selectsReducer.get(PIPELINE_STATUS).filter(value => value.key.toLowerCase() != BUSINESS_STATUS_NO_CONTACTADO ) })
+        if (!this.pipelineStatusFiltered) {
+          this.pipelineStatusFiltered = selectsReducer.get(PIPELINE_STATUS).filter(value => value.key.toLowerCase() != BUSINESS_STATUS_NO_CONTACTADO );
+        }
+        this.setState({ pipelineStatus : this.pipelineStatusFiltered });
+        if (businessStatusSelectedKey == BUSINESS_STATUS_NO_CONTACTADO) {
+          businessStatus.onChange('');
+        }
       } else {
         this.setState({ pipelineStatus: selectsReducer.get(PIPELINE_STATUS) })
       }
-
     }
 
     _getBusinessStatusById(id){
@@ -880,7 +897,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     isChildren={origin === ORIGIN_PIPELIN_BUSINESS}
                     pipelineTypeName={pipelineTypeName}
                     commercialOportunityName={commercialOportunityName}
-                    pipelineTypeOnChange={this._pipelineTypeAndBusinessOnChange}
+                    pipelineTypeOnChange={this.changePipelineType}
                   />
               
               <Row className="pipeline__section" style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : {}}>
@@ -1000,6 +1017,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       parentId="dashboardComponentScroll"
                       data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
                       onChange={val => this._changeBusinessStatus(val)}
+                      filterData={true}
                     />
                   </div>
                 </Col>
