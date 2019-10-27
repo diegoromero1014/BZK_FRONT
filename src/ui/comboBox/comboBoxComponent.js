@@ -78,7 +78,6 @@ class comboBoxComponent extends Component {
         } else {
             // Se agrega campo filter data para evitar que se vuelva a seleccionar un valor anteriormente filtrado
             if (this.pastValue && this.pastData != data && !filterData) {
-                debugger;
                 this._changeValue(this.pastValue, name, data);
             } else if (valueIsNotEmpty) {
                 this._changeValue(value, name, data);
