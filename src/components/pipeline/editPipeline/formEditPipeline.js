@@ -498,8 +498,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             newValueIsFinancing = needSelectedKey === NEED_FINANCING;
 
             if (!newValueIsFinancing && this.state.isFinancingNeed) {
-
-                if(pipelineReducer.get('disbursementPlans').length > 0) {
+                let disbursementPlans = (origin === ORIGIN_PIPELIN_BUSINESS) ? 'childBusinessDisbursementPlans': 'disbursementPlans';
+                if(pipelineReducer.get(disbursementPlans).length > 0) {
                     this._showAlertFinancingAndPlan(true);
                     need.onChange(_.get(_.filter(selectsReducer.get(CLIENT_NEED), ['key', NEED_FINANCING]), '[0].id', ""));
                 } else {
