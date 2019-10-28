@@ -38,7 +38,6 @@ export class Classification extends React.Component {
     pipelineTypeChange(...props) {
       const { pipelineTypeOnChange, commercialOportunity, selectsReducer } = this.props;
       const pipelineTypeKey = _.get(_.find(selectsReducer.get(PIPELINE_TYPE), ['id', parseInt(props[0])]), 'key', "");
-      debugger;
       if (pipelineTypeKey.toLowerCase() !== OPORTUNITIES_MANAGEMENT) {
         commercialOportunity.onChange("");
       }
