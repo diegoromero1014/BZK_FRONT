@@ -2,6 +2,7 @@ import React from 'react';
 import { Col, Row } from "react-flexbox-grid";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import _ from 'lodash';
 
 import SectionTitle from './sectionTitle';
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
@@ -10,7 +11,7 @@ import {
     COMMERCIAL_OPORTUNITY
 } from "../../selectsComponent/constants";
 import { changeMainPipeline } from '../actions';
-
+import { OPORTUNITIES_MANAGEMENT } from '../constants';
 import { checkReducerValue } from '../../../validationsFields/rulesField';
 
 export class Classification extends React.Component {
@@ -35,8 +36,11 @@ export class Classification extends React.Component {
     }
 
     pipelineTypeChange(...props) {
-      const { pipelineTypeOnChange, commercialOportunity } = this.props;
-      commercialOportunity.onChange("");
+      const { pipelineTypeOnChange, commercialOportunity, selectsReducer } = this.props;
+      const pipelineTypeKey = _.get(_.find(selectsReducer.get(PIPELINE_TYPE), ['id', parseInt(props[0])]), 'key', "");
+      if (pipelineTypeKey.toLowerCase() !== OPORTUNITIES_MANAGEMENT) {
+        commercialOportunity.onChange("");
+      }
       this.addFieldNameToChangeFunction("pipelineType", ...props);
       pipelineTypeOnChange(props[0]);
     }
