@@ -314,7 +314,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 areaAssets.onChange('');
             }
 
-            consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "products").then((data) => {
+            consultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {
               this.setState({
                 products: _.get(data, 'payload.data.data', [])
               });
