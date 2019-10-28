@@ -334,16 +334,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     _changeProductFamily(currencyValue) {
       const { fields: { areaAssets, product, businessCategory }, consultListByCatalogType } = this.props;
       let _product_family = this.state.productsFamily;
-      areaAssets.onChange('');
-      this.setState({
-        areaAssetsEnabled: _product_family.filter(pFamily => {
-          return (
-            pFamily.id == currencyValue && pFamily.key == PRODUCT_FAMILY_LEASING
-          )
-        }).length > 0
-      });
+      areaAssets.onChange('');      
 
-      consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "products").then((data) => {
+      consultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {        
         this.setState({
           products: _.get(data, 'payload.data.data', [])
         });
@@ -355,6 +348,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               businessCategories: _.get(data, 'payload.data.data', [])
           });
       });
+      
       businessCategory.onChange('');
     }
 
