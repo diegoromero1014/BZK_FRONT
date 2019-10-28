@@ -35,7 +35,8 @@ export class Classification extends React.Component {
     }
 
     pipelineTypeChange(...props) {
-      const { pipelineTypeOnChange } = this.props;
+      const { pipelineTypeOnChange, commercialOportunity } = this.props;
+      commercialOportunity.onChange("");
       this.addFieldNameToChangeFunction("pipelineType", ...props);
       pipelineTypeOnChange(props[0]);
     }
