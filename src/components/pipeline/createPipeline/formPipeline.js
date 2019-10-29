@@ -332,8 +332,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeProductFamily(currencyValue) {
-      const { fields: { areaAssets, product, businessCategory }, consultListByCatalogType } = this.props;
-      let _product_family = this.state.productsFamily;
+      const { fields: { areaAssets, product, businessCategory }, consultListByCatalogType } = this.props;      
       areaAssets.onChange('');      
 
       consultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {        

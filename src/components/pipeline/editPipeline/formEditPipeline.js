@@ -309,12 +309,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeProductFamily(currencyValue) {
-            const { fields: { areaAssets, productFamily, product, businessCategory }, consultListByCatalogType, pipelineReducer } = this.props;
+            const { fields: { areaAssets, productFamily, product, businessCategory }, consultListByCatalogType, pipelineReducer } = this.props;            
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
-            }
+            }        
 
-            consultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {
+            consultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {                
               this.setState({
                 products: _.get(data, 'payload.data.data', [])
               });
@@ -348,9 +348,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeProduct(value){                         
-            const { fields: { productFamily } } = this.props;
+            const { fields: { productFamily }, selectsReducer } = this.props;
             let productFamilySelected = this.state.productsFamily.find((family) => family.id == productFamily.value);
-            let products = this.state.products;
+            let products = selectsReducer.get(PRODUCTS);
             let productSelected = products.find((product) => product.id == value);            
             if(productFamilySelected && productSelected){
               let productFamilySelectedKey = productFamilySelected.key ? productFamilySelected.key.toLowerCase() 
@@ -409,7 +409,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _onChangeBusinessCategory(val) {
-            const {  selectsReducer } = this.props;
             let showLocalInteresSpread=false;
             
             const  keyBusinessCategory= _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key')
@@ -780,8 +779,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             } = this.props;
 
             updateDisbursementPlans(data.disbursementPlans, origin);
-            this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport });
-            productFamily.onChange(data.productFamily);
+            this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport });            
             opportunityName.onChange(data.opportunityName);
             businessStatus.onChange(data.businessStatus);
             commission.onChange(fomatInitialStateNumber(data.commission));
@@ -790,8 +788,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             nameUsuario.onChange(data.employeeResponsibleName);
             indexing.onChange(data.indexing);
             need.onChange(data.need);
-            observations.onChange(data.observations === null ? '' : data.observations);
-            product.onChange(data.product);
+            observations.onChange(data.observations === null ? '' : data.observations);            
             roe.onChange(fomatInitialStateNumber(data.roe));
             moneyDistribitionMarket.onChange(data.moneyDistribitionMarket);
             termInMonths.onChange(data.termInMonths);
@@ -817,6 +814,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             pipelineType.onChange(data.pipelineType);
             commercialOportunity.onChange(data.commercialOportunity);
             justification.onChange(data.justification);            
+            productFamily.onChange(data.productFamily);
+            product.onChange(data.product);
             pivotNit.onChange(data.pivotNit);
         }
 
@@ -841,13 +840,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             if (_.isEmpty(infoClient)) {
                 redirectUrl("/dashboard/clientInformation");
             } else {
-                showLoading(true, 'Cargando...');
-
-                consultDataSelect(PRODUCTS, PRODUCTS_MASK).then((data) => {
-                    this.setState({
-                        products: _.get(data, 'payload.data.data', [])
-                    });
-                });
+                showLoading(true, 'Cargando...');                
 
                 consultDataSelect(PRODUCT_FAMILY, PRODUCTS_MASK).then((data) => {
                     this.setState({
@@ -892,7 +885,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
         }
 
-        componentDidMount() {
+        componentDidMount() {            
             if (pipelineBusiness !== null && pipelineBusiness !== undefined && pipelineBusiness !== '') {
                 this._consultInfoPipeline(pipelineBusiness);
             }
