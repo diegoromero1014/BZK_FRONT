@@ -41,7 +41,7 @@ class ToolTipComponent extends Component {
         const _size = isUndefined(size) ? null : size;
         const _wide = isUndefined(wide) ? true : wide;
         const _inverted = isUndefined(inverted) ? true : inverted;
-        debugger;
+
         if (text==null || text=="") {
             return <div>{children}</div>
         }
