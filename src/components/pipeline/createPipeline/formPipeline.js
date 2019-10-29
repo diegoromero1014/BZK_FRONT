@@ -189,6 +189,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.changePipelineType = this.changePipelineType.bind(this);
       this.getPipelineSelectedKey = this.getPipelineSelectedKey.bind(this);
       this.getBusinessStatusKey = this.getBusinessStatusKey.bind(this);
+      this._nameDisbursementPlansInReducer = this._nameDisbursementPlansInReducer.bind(this);
     }
 
     showFormDisbursementPlan(isOpen) {
@@ -535,8 +536,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       newValueIsFinancing = needSelectedKey === NEED_FINANCING;
 
       if (!newValueIsFinancing && this.state.isFinancingNeed) {
-        let disbursementPlans = (origin === ORIGIN_PIPELIN_BUSINESS) ? 'childBusinessDisbursementPlans': 'disbursementPlans';
-        if(pipelineReducer.get(disbursementPlans).length > 0) {
+        if(pipelineReducer.get(this._nameDisbursementPlansInReducer()).length > 0) {
               this._showAlertFinancingAndPlan(true);
               need.onChange(_.get(_.filter(selectsReducer.get(CLIENT_NEED), ['key', NEED_FINANCING]), '[0].id', ""));
           } else {
@@ -854,6 +854,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       }
     }
 
+    _nameDisbursementPlansInReducer() {
+      return (origin === ORIGIN_PIPELIN_BUSINESS) ? 'childBusinessDisbursementPlans': 'disbursementPlans';
+    }
+
     render() {
       const { fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, pendingDisbursementAmount,
@@ -861,7 +865,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity, areaAssetsValue, termInMonthsValues, justification, pivotNit },
         selectsReducer, handleSubmit, reducerGlobal, pipelineReducer } = this.props;
 
-      const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
+      const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
       const isPipelineChild = pipelineReducer.get("isPipelineChildOpen");      
 
       return (

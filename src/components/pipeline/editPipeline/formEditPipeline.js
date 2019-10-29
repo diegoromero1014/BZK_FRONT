@@ -188,6 +188,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._closeConfirmChangeNeed = this._closeConfirmChangeNeed.bind(this);
             this._getNeedById = this._getNeedById.bind(this);
             this._validateShowFinancingNeedFields = this._validateShowFinancingNeedFields.bind(this);
+            this._nameDisbursementPlansInReducer = this._nameDisbursementPlansInReducer.bind(this);
         }
 
         showFormDisbursementPlan(isOpen) {
@@ -497,8 +498,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             newValueIsFinancing = needSelectedKey === NEED_FINANCING;
 
             if (!newValueIsFinancing && this.state.isFinancingNeed) {
-                let disbursementPlans = (origin === ORIGIN_PIPELIN_BUSINESS) ? 'childBusinessDisbursementPlans': 'disbursementPlans';
-                if(pipelineReducer.get(disbursementPlans).length > 0) {
+                if(pipelineReducer.get(this._nameDisbursementPlansInReducer()).length > 0) {
                     this._showAlertFinancingAndPlan(true);
                     need.onChange(_.get(_.filter(selectsReducer.get(CLIENT_NEED), ['key', NEED_FINANCING]), '[0].id', ""));
                 } else {
@@ -506,13 +506,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 }
             }
 
+            if((newValueIsFinancing && !this.state.isFinancingNeed) || (!newValueIsFinancing && !this.state.isFinancingNeed)) {
+                this._changeCatalogProductFamily(need.value);
+            }
+
             if (newValueIsFinancing) {
                 this.setState({isFinancingNeed: true});
                 this._validateShowFinancingNeedFields(true);
-            }
-
-            if(newValueIsFinancing || (!newValueIsFinancing && !this.state.isFinancingNeed)) {
-                this._changeCatalogProductFamily(need.value);
             }
         }
 
@@ -902,9 +902,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         renderNominalValue() {
             const { fields: {value }, pipelineReducer } = this.props;
-            const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
+            const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
+        }
 
-           
+        _nameDisbursementPlansInReducer() {
+            return (origin === ORIGIN_PIPELIN_BUSINESS) ? 'childBusinessDisbursementPlans': 'disbursementPlans';
         }
 
         render() {
@@ -917,7 +919,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             } = this.props;
 
             const ownerDraft = pipelineReducer.get('ownerDraft');
-            const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
+            const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
             let fechaModString = '';
             if (updatedTimestamp.value !== null) {
                 let fechaModDateMoment = moment(updatedTimestamp.value, "x").locale('es');
