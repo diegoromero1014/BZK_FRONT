@@ -46,12 +46,12 @@ import {
   FILTER_MULTISELECT_FIELDS
 } from "../../selectsComponent/constants";
 import { BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY,
-  ORIGIN_PIPELIN_BUSINESS, PRODUCT_FAMILY_LEASING, CURRENCY_MESSAGE, OPORTUNITIES_MANAGEMENT,
+  ORIGIN_PIPELIN_BUSINESS, CURRENCY_MESSAGE, OPORTUNITIES_MANAGEMENT,
   BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO, LEASING, FINANCIAL_LEASING,
   OPERATING_LEASE, IMPORTATION_LEASING, FACTORING, FACTORING_BANCOLOMBIA_CONFIRMING,
   FACTORING_PLUS, TRIANGULAR_LINE, NUEVO_NEGOCIO, NEED_FINANCING,
   PIPELINE_INDEXING_FIELD, PIPELINE_PENDING_DISBURSEMENT_AMOUNT, PIPELINE_TERM_IN_MONTHS_AND_VALUES,
-  PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE} from "../constants";
+  PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS} from "../constants";
 import {
   ALLOWS_NEGATIVE_INTEGER,
   MESSAGE_ERROR,
@@ -74,8 +74,6 @@ import { buildJsoncommercialReport } from "../../commercialReport/functionsGener
 import { setConfidential } from "../../commercialReport/actions";
 
 let typeMessage = "success";
-const Colocaciones="Colocaciones";
-const Captaciones="Captaciones";
 let titleMessage = "";
 let message = "";
 let typeButtonClick = null;
@@ -319,13 +317,12 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       value.onChange(val);
     }
 
-    _onChangeBusinessCategory(val) {
-      const {  selectsReducer } = this.props;
-      let showLocalInteresSpread=false;
-      const  keyBusinessCategory= _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'value')
-            if(keyBusinessCategory == Colocaciones || keyBusinessCategory ==Captaciones){
-                showLocalInteresSpread=true;
-            }
+    _onChangeBusinessCategory(val) {      
+      let showLocalInteresSpread = false;
+      const  keyBusinessCategory= _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key') ? _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key').toLowerCase() : '';
+      if(keyBusinessCategory == PLACEMENTS || keyBusinessCategory == CATCHMENTS){
+          showLocalInteresSpread=true;
+      }
       this.setState({
           messageTooltipNominalValue: _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'description'),
           showInteresSpread:showLocalInteresSpread
