@@ -65,7 +65,7 @@ import {
     IMPORTATION_LEASING,
     NUEVO_NEGOCIO,
     NEED_FINANCING,PIPELINE_INDEXING_FIELD, PIPELINE_PENDING_DISBURSEMENT_AMOUNT, PIPELINE_TERM_IN_MONTHS_AND_VALUES,
-    PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE
+    PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS
 } from "../constants";
 import { addUsers, setConfidential } from "../../commercialReport/actions";
 import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
@@ -75,8 +75,6 @@ import Classification from '../sections/classification';
 import '../pipeline.style.scss';
 
 let thisForm;
-const Colocaciones="Colocaciones";
-const Captaciones="Captaciones";
 let typeButtonClick = null;
 let nameDisbursementPlansInReducer = "disbursementPlans";
 
@@ -410,18 +408,16 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _onChangeBusinessCategory(val) {
-            let showLocalInteresSpread=false;
-            
-            const  keyBusinessCategory= _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key')
-            if(keyBusinessCategory == Colocaciones || keyBusinessCategory ==Captaciones){
-                showLocalInteresSpread=true;
+            let showLocalInteresSpread = false;            
+            const keyBusinessCategory= _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key') ? _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key').toLowerCase() : '';
+            if(keyBusinessCategory == PLACEMENTS || keyBusinessCategory == CATCHMENTS){
+                showLocalInteresSpread = true;
             }
             
             this.setState({
                 messageTooltipNominalValue: _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'description'),
                 showInteresSpread:showLocalInteresSpread
-
-            })
+            });
 
           }
 
