@@ -318,7 +318,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _onChangeBusinessCategory(val) {      
-      let showLocalInteresSpread = false;
+      let showLocalInteresSpread = false;      
       const  keyBusinessCategory= _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key') ? _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key').toLowerCase() : '';
       if(keyBusinessCategory == PLACEMENTS || keyBusinessCategory == CATCHMENTS){
           showLocalInteresSpread=true;
@@ -622,7 +622,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           pipelineType, commercialOportunity, justification, pivotNit
         }, createEditPipeline, swtShowMessage, changeStateSaveData, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
       } = this.props;
-
+      
       if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
         this.setState({
           employeeResponsible: true
