@@ -119,18 +119,26 @@ class ListDisbursementPlans extends Component {
             } else {
                 let arrEstimatedDisburDate = estimatedDisburDate.value.split("/");
                 let currentDate = new Date();
+                var nominalvalueNum= parseFloat((nominalValue.value.toString()).replace(/,/g, ""));
                 var listDisbursementPlans = pipelineReducer.get(this._getNameDisbursementPlansInReducer());
                 var totalDisbursementAmount = _.sumBy(listDisbursementPlans, 'disbursementAmount');
                 const disbursementAmountNum = parseFloat((disbursementAmount.value.toString()).replace(/,/g, ""));
                 var pendingDisbursementAmountNum = parseFloat((pendingDisbursementAmount.value.toString()).replace(/,/g, ""));
                 if (this.state.entitySeleted != null) {
                     var disbursementAmountEntitySelected = _.get(_.filter(listDisbursementPlans, ['id', this.state.entitySeleted.id]), '[0].disbursementAmount');
-                    if(arrEstimatedDisburDate!=null && arrEstimatedDisburDate[0]<=(currentDate.getMonth() + 1)&& arrEstimatedDisburDate[1]<=currentDate.getFullYear()){
+                    var estimatedDisburDateSelected = _.get(_.filter(listDisbursementPlans, ['id', this.state.entitySeleted.id]), '[0].estimatedDisburDate'); 
+                    let arrEstimatedDisburDateSelected = estimatedDisburDateSelected.split("/");
+                 
+                    if(arrEstimatedDisburDateSelected!=null && arrEstimatedDisburDateSelected[0]<=(currentDate.getMonth() + 1)
+                            && arrEstimatedDisburDateSelected[1]<=currentDate.getFullYear()){
                         totalDisbursementAmount = _.subtract(totalDisbursementAmount, disbursementAmountEntitySelected);
                         pendingDisbursementAmountNum = _.sum([pendingDisbursementAmountNum, disbursementAmountEntitySelected]);
+                        handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (pendingDisbursementAmountNum).toString(), true, 2);
                     }
+
+
                 }
-                if ((disbursementAmountNum > pendingDisbursementAmountNum && this.state.entitySeleted == null) ||
+                if (((disbursementAmountNum + totalDisbursementAmount)> nominalvalueNum && this.state.entitySeleted == null) ||
                     (this.state.entitySeleted != null && disbursementAmountNum > pendingDisbursementAmountNum)) {
                     swtShowMessage(MESSAGE_ERROR, 'Plan de desembolso', 'Señor usuario, el valor de desembolso no puede superar el valor pendiente por desembolsar.');
                 } else {
