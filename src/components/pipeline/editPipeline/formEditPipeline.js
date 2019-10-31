@@ -141,8 +141,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showindexingField: false,
                 showpendingDisbursementAmountField: false,
                 showComponentDisbursementPlan: false,
-                isFinancingNeed: false,
-                pipelineStatus: []
+                isFinancingNeed: false
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -407,7 +406,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
         }
 
-        _onChangeBusinessCategory(val) {            
+        _onChangeBusinessCategory(val) {
+            const { fields: { commission } } = this.props;
             let showLocalInteresSpread = false;            
             const keyBusinessCategory= _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key') ? _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key').toLowerCase() : '';
             if(keyBusinessCategory == PLACEMENTS || keyBusinessCategory == CATCHMENTS){
@@ -418,7 +418,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 messageTooltipNominalValue: _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'description'),
                 showInteresSpread:showLocalInteresSpread
             });
-
+            commission.onChange("");
           }
 
         _pipelineTypeAndBusinessOnChange(value) {        
@@ -461,6 +461,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
           }
 
         _validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey) {
+            const { fields: {justification} } = this.props;
             if(pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){
                 this.setState({
                     showMellowingPeriodField: false,
@@ -474,6 +475,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     showJustificationField: false
                 });
             }
+            justification.onChange("");
         }
 
         _showAlertFinancingAndPlan(isEditableValue) {

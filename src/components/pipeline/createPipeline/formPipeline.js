@@ -317,7 +317,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       value.onChange(val);
     }
 
-    _onChangeBusinessCategory(val) {      
+    _onChangeBusinessCategory(val) {
+      const { fields: { commission } } = this.props;
       let showLocalInteresSpread = false;      
       const  keyBusinessCategory= _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key') ? _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key').toLowerCase() : '';
       if(keyBusinessCategory == PLACEMENTS || keyBusinessCategory == CATCHMENTS){
@@ -326,7 +327,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.setState({
           messageTooltipNominalValue: _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'description'),
           showInteresSpread:showLocalInteresSpread
-      })
+      });
+      commission.onChange("");
     }
 
     _changeProductFamily(currencyValue) {
@@ -499,7 +501,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       return businessStatusList.find((status) => status.id == id);
     }
 
-    _validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey){      
+    _validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey){
+      const { fields: {justification} } = this.props;
       if(pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){
         this.setState({
           showMellowingPeriodField: false,
@@ -513,6 +516,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           showJustificationField: false
         });        
       }
+      justification.onChange("");
     }
 
   _showAlertFinancingAndPlan(isEditableValue) {
