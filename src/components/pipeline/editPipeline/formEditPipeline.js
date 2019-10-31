@@ -322,7 +322,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             if (!_.isEqual(pipelineReducer.get('detailPipeline').productFamily, productFamily.value)) {
                 product.onChange('');
             }
-
+            
             consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "businessCategory").then((data) => {
                 this.setState({
                     businessCategories: _.get(data, 'payload.data.data', [])
@@ -407,7 +407,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
         }
 
-        _onChangeBusinessCategory(val) {
+        _onChangeBusinessCategory(val) {            
             let showLocalInteresSpread = false;            
             const keyBusinessCategory= _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key') ? _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key').toLowerCase() : '';
             if(keyBusinessCategory == PLACEMENTS || keyBusinessCategory == CATCHMENTS){
@@ -775,7 +775,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             } = this.props;
 
             updateDisbursementPlans(data.disbursementPlans, origin);
-            this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport });            
+            this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport });    
+            this.loadCategories();        
             opportunityName.onChange(data.opportunityName);
             businessStatus.onChange(data.businessStatus);
             commission.onChange(fomatInitialStateNumber(data.commission));
@@ -802,8 +803,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             positionCreatedBy.onChange(data.positionCreatedBy);
             positionUpdatedBy.onChange(data.positionUpdatedBy);
             reviewedDate.onChange(moment(data.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT));
-            probability.onChange(data.probability);
-            businessCategory.onChange(data.businessCategory);
+            probability.onChange(data.probability);            
             mellowingPeriod.onChange(data.mellowingPeriod);
             areaAssets.onChange(data.areaAssets);
             areaAssetsValue.onChange(fomatInitialStateNumber(data.areaAssetsValue, 2));
@@ -812,7 +812,17 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             justification.onChange(data.justification);            
             productFamily.onChange(data.productFamily);
             product.onChange(data.product);
-            pivotNit.onChange(data.pivotNit);
+            pivotNit.onChange(data.pivotNit);            
+            businessCategory.onChange(data.businessCategory);
+        }
+
+        loadCategories(){
+            const {fields: {productFamily}, consultListByCatalogType} = this.props;
+            consultListByCatalogType(FILTER_MULTISELECT_FIELDS, productFamily, "businessCategory").then((data) => {
+                this.setState({
+                    businessCategories: _.get(data, 'payload.data.data', [])
+                });
+            });
         }
 
         componentWillMount() {
@@ -841,12 +851,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 consultDataSelect(PRODUCT_FAMILY, PRODUCTS_MASK).then((data) => {
                     this.setState({
                         productsFamily: _.get(data, 'payload.data.data', [])
-                    });
-                });
-
-                consultDataSelect(BUSINESS_CATEGORY, PRODUCTS_MASK).then((data) => {
-                    this.setState({
-                        businessCategories: _.get(data, 'payload.data.data', [])
                     });
                 });
 

@@ -318,7 +318,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _onChangeBusinessCategory(val) {      
-      let showLocalInteresSpread = false;
+      let showLocalInteresSpread = false;      
       const  keyBusinessCategory= _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key') ? _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key').toLowerCase() : '';
       if(keyBusinessCategory == PLACEMENTS || keyBusinessCategory == CATCHMENTS){
           showLocalInteresSpread=true;
