@@ -444,7 +444,7 @@ describe('Test checkPipeLineOpportunityName white list validation', () => {
 
     it('should throw null when value is empty', () => {
         const value = '';
-        const expectedMessage = null;
+        const expectedMessage = MESSAGE_REQUIRED_VALUE;
         expect(checkPipeLineOpportunityName(value)).equal(expectedMessage);
     });
 
