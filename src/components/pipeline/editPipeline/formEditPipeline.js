@@ -345,7 +345,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         _changeProduct(value){                         
             const { fields: { productFamily }, selectsReducer } = this.props;
             let productFamilySelected = this.state.productsFamily.find((family) => family.id == productFamily.value);
-            let products = selectsReducer.get(PRODUCTS);
+            let products = selectsReducer.get(PRODUCTS_MASK);
             let productSelected = products.find((product) => product.id == value);            
             if(productFamilySelected && productSelected){
               let productFamilySelectedKey = productFamilySelected.key ? productFamilySelected.key.toLowerCase() 
