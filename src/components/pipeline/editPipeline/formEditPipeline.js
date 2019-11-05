@@ -307,16 +307,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeProductFamily(currencyValue) {
-            const { fields: { areaAssets, productFamily, product, businessCategory }, consultListByCatalogType, pipelineReducer } = this.props;  
-            this.loadCategories(currencyValue);           
+            const { fields: { areaAssets, productFamily, product, businessCategory }, pipelineReducer, selectsReducer } = this.props;   
+            const productsByFamily = selectsReducer.get(PRODUCTS_MASK).filter(p => p.parentId == currencyValue);                                              
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
-            }                 
-
-            consultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {                
-              this.setState({
-                products: _.get(data, 'payload.data.data', [])
-              });
+            }             
+            
+            this.setState({
+                products: productsByFamily
             });
 
             if (!_.isEqual(pipelineReducer.get('detailPipeline').productFamily, productFamily.value)) {
@@ -781,16 +779,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     positionUpdatedBy, reviewedDate, probability, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
                     termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit
                 }, updateDisbursementPlans
-            } = this.props;            
-
+            } = this.props;                        
             updateDisbursementPlans(data.disbursementPlans, origin);
             this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport });                                                                                                 
             pipelineType.onChange(data.pipelineType);  
             commercialOportunity.onChange(data.commercialOportunity);   
             opportunityName.onChange(data.opportunityName);
-            need.onChange(data.need);
-            productFamily.onChange(data.productFamily);
-            product.onChange(data.product);
+            need.onChange(data.need);   
+            productFamily.onChange(data.productFamily);                     
             commission.onChange(fomatInitialStateNumber(data.commission));            
             businessStatus.onChange(data.businessStatus); 
             justification.onChange(data.justification);                           
@@ -821,7 +817,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             positionCreatedBy.onChange(data.positionCreatedBy);
             positionUpdatedBy.onChange(data.positionUpdatedBy);
             reviewedDate.onChange(moment(data.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)); 
-            businessCategory.onChange(data.businessCategory);               
+            businessCategory.onChange(data.businessCategory);      
+            product.onChange(data.product);
         }
 
         loadCategories(productFamily){
@@ -871,8 +868,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     PIPELINE_JUSTIFICATION, CLIENT_NEED]).then((result) => {
                         if (origin !== ORIGIN_PIPELIN_BUSINESS) {                            
                             const { params: { id } } = this.props;
-                            getPipelineById(id).then((result) => {                                
-                                showLoading(false, null);                                
+                            getPipelineById(id).then((result) => {                                                                                       
                                 if (!validateResponse(result)) {
                                     swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                                 } else {
@@ -888,6 +884,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     }                                    
                                     this._consultInfoPipeline(data);                                    
                                 }
+                                showLoading(false, null);         
                             });
                         } else {
                             showLoading(false, null);
