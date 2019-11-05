@@ -124,7 +124,7 @@ export default (state = initialState, action) => {
                     .set('dataTypeProvince', null)
                     .set('dataTypeCity', null)
             });
-        case constants.FILTER_MULTISELECT_FIELDS: /* Consulta de varias listas en un mismo servicio */
+        case constants.FILTER_MULTISELECT_FIELDS: /* Consulta de varias listas en un mismo servicio */        
             const masterDataDetailEntries = action.payload.data.data === undefined || action.payload.data.data === null ? [] : action.payload.data.data.masterDataDetailEntries;
             const lists = _.groupBy(masterDataDetailEntries, 'field');
             const keys = _.keys(lists);            
@@ -134,6 +134,8 @@ export default (state = initialState, action) => {
                     map.set(key, values);
                 });
             });
+        case constants.BUSINESS_CATEGORY:
+            return state.set('businessCategory', defaultData(action, 'payload.data.data'));
         case constants.PIPELINE_CLIENT_NEEDS:
             const clientNeeds = action.payload.data.data.clientNeedValueObjects;            
             return state.set('pipelineClientNeeds', clientNeeds);
@@ -159,6 +161,8 @@ export default (state = initialState, action) => {
             return state.set('products', defaultData(action, 'payload.data.data'));
         case constants.PRODUCTS_MASK:
             return state.set('allProducts', defaultData(action, 'payload.data.data'));
+        case constants.ALL_BUSINESS_CATEGORIES:
+            return state.set(constants.ALL_BUSINESS_CATEGORIES, defaultData(action, 'payload.data.data'));
         case constants.CLEAR_LISTS:
             const clearLists = action.lists;
             return state.withMutations(map => {
