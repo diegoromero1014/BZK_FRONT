@@ -215,6 +215,7 @@ class ListDisbursementPlans extends Component {
                                     type="text"
                                     max="15"
                                     {...disbursementAmount}
+                                    placeholder="Miles ' , ' y decimales ' . '"
                                     onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, disbursementAmount, val, true, 2)}
                                     onFocus={val => handleFocusValueNumber(disbursementAmount, disbursementAmount.value)}
                                     error={_.isEmpty(disbursementAmount.value) ? VALUE_REQUIERED : null}

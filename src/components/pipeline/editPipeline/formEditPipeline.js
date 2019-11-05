@@ -307,16 +307,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeProductFamily(currencyValue) {
-            const { fields: { areaAssets, productFamily, product, businessCategory }, consultListByCatalogType, pipelineReducer } = this.props;  
-            this.loadCategories(currencyValue);           
+            const { fields: { areaAssets, productFamily, product, businessCategory }, pipelineReducer, selectsReducer } = this.props;   
+            const productsByFamily = selectsReducer.get(PRODUCTS_MASK).filter(p => p.parentId == currencyValue);                                              
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
-            }                 
-
-            consultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {                
-              this.setState({
-                products: _.get(data, 'payload.data.data', [])
-              });
+            }             
+            
+            this.setState({
+                products: productsByFamily
             });
 
             if (!_.isEqual(pipelineReducer.get('detailPipeline').productFamily, productFamily.value)) {
@@ -345,7 +343,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         _changeProduct(value){                         
             const { fields: { productFamily }, selectsReducer } = this.props;
             let productFamilySelected = this.state.productsFamily.find((family) => family.id == productFamily.value);
-            let products = selectsReducer.get(PRODUCTS);
+            let products = selectsReducer.get(PRODUCTS_MASK);
             let productSelected = products.find((product) => product.id == value);            
             if(productFamilySelected && productSelected){
               let productFamilySelectedKey = productFamilySelected.key ? productFamilySelected.key.toLowerCase() 
@@ -481,8 +479,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     showProbabilityField: true,
                     showJustificationField: false
                 });
-            }
-            justification.onChange("");
+                justification.onChange("");
+            }            
         }
 
         _showAlertFinancingAndPlan(isEditableValue) {
@@ -781,19 +779,17 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     positionUpdatedBy, reviewedDate, probability, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
                     termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit
                 }, updateDisbursementPlans
-            } = this.props;
-
+            } = this.props;                        
             updateDisbursementPlans(data.disbursementPlans, origin);
-            this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport });                   
+            this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport });                                                                                                 
             pipelineType.onChange(data.pipelineType);  
             commercialOportunity.onChange(data.commercialOportunity);   
             opportunityName.onChange(data.opportunityName);
-            need.onChange(data.need);
-            productFamily.onChange(data.productFamily);
-            product.onChange(data.product);
+            need.onChange(data.need);   
+            productFamily.onChange(data.productFamily);                     
             commission.onChange(fomatInitialStateNumber(data.commission));            
-            businessStatus.onChange(data.businessStatus);  
-            justification.onChange(data.justification);                                                                      
+            businessStatus.onChange(data.businessStatus); 
+            justification.onChange(data.justification);                           
             idUsuario.onChange(data.employeeResponsible);
             nameUsuario.onChange(data.employeeResponsibleName);
             mellowingPeriod.onChange(data.mellowingPeriod);
@@ -821,7 +817,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             positionCreatedBy.onChange(data.positionCreatedBy);
             positionUpdatedBy.onChange(data.positionUpdatedBy);
             reviewedDate.onChange(moment(data.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)); 
-            businessCategory.onChange(data.businessCategory);             
+            businessCategory.onChange(data.businessCategory);      
+            product.onChange(data.product);
         }
 
         loadCategories(productFamily){
@@ -871,8 +868,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     PIPELINE_JUSTIFICATION, CLIENT_NEED]).then((result) => {
                         if (origin !== ORIGIN_PIPELIN_BUSINESS) {                            
                             const { params: { id } } = this.props;
-                            getPipelineById(id).then((result) => {                                
-                                showLoading(false, null);                                
+                            getPipelineById(id).then((result) => {                                                                                       
                                 if (!validateResponse(result)) {
                                     swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                                 } else {
@@ -888,6 +884,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     }                                    
                                     this._consultInfoPipeline(data);                                    
                                 }
+                                showLoading(false, null);         
                             });
                         } else {
                             showLoading(false, null);
@@ -896,7 +893,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
         }
 
-        componentDidMount() {            
+        componentDidMount() {                                
             if (pipelineBusiness !== null && pipelineBusiness !== undefined && pipelineBusiness !== '') {
                 this._consultInfoPipeline(pipelineBusiness);
             }
@@ -927,8 +924,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
                     termInMonthsValues, pipelineType, commercialOportunity, justification, pivotNit
                 }, selectsReducer, handleSubmit, pipelineReducer, reducerGlobal
-            } = this.props;
-
+            } = this.props;            
             const ownerDraft = pipelineReducer.get('ownerDraft');
             const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
             let fechaModString = '';
@@ -1031,7 +1027,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             marginBottom: "10px"
                                         }} />
                                         <i className="browser icon" style={{ fontSize: "20px" }} />
-                                        <span style={{ fontSize: "20px" }}> Datos de pipeline</span>
+                                        <span style={{ fontSize: "20px" }}> Pipeline</span>
                                     </div>
                                 </Col>
                             </Row>
@@ -1152,7 +1148,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             />
                                         </div>
                                     </Col>
-                                    : null}
+                                    : null}                                    
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
                                 <Col xs={6} md={3} lg={3}>
