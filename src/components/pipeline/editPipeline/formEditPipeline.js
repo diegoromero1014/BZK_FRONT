@@ -1027,7 +1027,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             marginBottom: "10px"
                                         }} />
                                         <i className="browser icon" style={{ fontSize: "20px" }} />
-                                        <span style={{ fontSize: "20px" }}> Datos de pipeline</span>
+                                        <span style={{ fontSize: "20px" }}> Pipeline</span>
                                     </div>
                                 </Col>
                             </Row>
