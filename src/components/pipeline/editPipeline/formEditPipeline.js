@@ -481,8 +481,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     showProbabilityField: true,
                     showJustificationField: false
                 });
-            }
-            justification.onChange("");
+                justification.onChange("");
+            }            
         }
 
         _showAlertFinancingAndPlan(isEditableValue) {
@@ -781,10 +781,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     positionUpdatedBy, reviewedDate, probability, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
                     termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit
                 }, updateDisbursementPlans
-            } = this.props;
+            } = this.props;            
 
             updateDisbursementPlans(data.disbursementPlans, origin);
-            this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport });                   
+            this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport });                                                                                                 
             pipelineType.onChange(data.pipelineType);  
             commercialOportunity.onChange(data.commercialOportunity);   
             opportunityName.onChange(data.opportunityName);
@@ -792,8 +792,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             productFamily.onChange(data.productFamily);
             product.onChange(data.product);
             commission.onChange(fomatInitialStateNumber(data.commission));            
-            businessStatus.onChange(data.businessStatus);  
-            justification.onChange(data.justification);                                                                      
+            businessStatus.onChange(data.businessStatus); 
+            justification.onChange(data.justification);                           
             idUsuario.onChange(data.employeeResponsible);
             nameUsuario.onChange(data.employeeResponsibleName);
             mellowingPeriod.onChange(data.mellowingPeriod);
@@ -821,7 +821,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             positionCreatedBy.onChange(data.positionCreatedBy);
             positionUpdatedBy.onChange(data.positionUpdatedBy);
             reviewedDate.onChange(moment(data.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)); 
-            businessCategory.onChange(data.businessCategory);             
+            businessCategory.onChange(data.businessCategory);               
         }
 
         loadCategories(productFamily){
@@ -896,7 +896,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
         }
 
-        componentDidMount() {            
+        componentDidMount() {                                
             if (pipelineBusiness !== null && pipelineBusiness !== undefined && pipelineBusiness !== '') {
                 this._consultInfoPipeline(pipelineBusiness);
             }
@@ -927,8 +927,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
                     termInMonthsValues, pipelineType, commercialOportunity, justification, pivotNit
                 }, selectsReducer, handleSubmit, pipelineReducer, reducerGlobal
-            } = this.props;
-
+            } = this.props;            
             const ownerDraft = pipelineReducer.get('ownerDraft');
             const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
             let fechaModString = '';
@@ -1152,7 +1151,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             />
                                         </div>
                                     </Col>
-                                    : null}
+                                    : null}                                    
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
                                 <Col xs={6} md={3} lg={3}>
