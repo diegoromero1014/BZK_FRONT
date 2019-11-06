@@ -887,44 +887,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             } else {
                                 showLoading(false, null);
                             }
-                        })
-
-                /*consultDataSelect(PRODUCT_FAMILY, ALL_PRODUCT_FAMILIES).then((data) => {
-                    this.setState({
-                        productsFamily: _.get(data, 'payload.data.data', [])
-                    });
-                });*/
-
-                //consultDataSelect(BUSINESS_CATEGORY, ALL_BUSINESS_CATEGORIES); 
-
-                /*getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
-                    PROBABILITY, LINE_OF_BUSINESS, MELLOWING_PERIOD,
-                    FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY,
-                    PIPELINE_JUSTIFICATION, CLIENT_NEED]).then((result) => {
-                        if (origin !== ORIGIN_PIPELIN_BUSINESS) {                            
-                            const { params: { id } } = this.props;
-                            getPipelineById(id).then((result) => {                                                                                       
-                                if (!validateResponse(result)) {
-                                    swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-                                } else {
-                                    let data = result.payload.data.data;
-                                    _.forIn(data.listPipelines, function (pipeline, key) {
-                                        const uuid = _.uniqueId('pipelineBusiness_');
-                                        pipeline.uuid = uuid;
-                                        addBusiness(pipeline);
-                                    });
-                                    if (data.commercialReport) {
-                                        setConfidential(data.commercialReport.isConfidential);
-                                        fillUsersPermissions(data.commercialReport.usersWithPermission, addUsers);
-                                    }                                    
-                                    this._consultInfoPipeline(data);                                    
-                                }
-                                showLoading(false, null);         
-                            });
-                        } else {
-                            showLoading(false, null);
-                        }
-                    });*/
+                        });
             }
         }
 
