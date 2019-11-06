@@ -307,6 +307,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeProductFamily(currencyValue) {
+            debugger;
             const { fields: { areaAssets, productFamily, product, businessCategory }, pipelineReducer, selectsReducer } = this.props;   
             const productsByFamily = selectsReducer.get(PRODUCTS_MASK).filter(p => p.parentId == currencyValue);                                              
             if (!this.state.flagInitLoadAssests) {
@@ -859,6 +860,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                         productsFamily: _.get(data, 'payload.data.data', [])
                     });
                 });
+
+                consultDataSelect(BUSINESS_CATEGORY, ALL_BUSINESS_CATEGORIES); 
 
                 getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                     PROBABILITY, LINE_OF_BUSINESS, MELLOWING_PERIOD,

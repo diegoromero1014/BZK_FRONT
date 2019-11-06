@@ -21,11 +21,12 @@ class EditPipeline extends Component {
 
 	componentWillMount() {
 		const {clientInformacion, consultDataSelect} = this.props;
+		consultDataSelect(BUSINESS_CATEGORY, ALL_BUSINESS_CATEGORIES);
 		const infoClient = clientInformacion.get('responseClientInfo');
 		if(_.isEmpty(infoClient)) {
         	redirectUrl("/dashboard/clientInformation");
 		}
-		consultDataSelect(BUSINESS_CATEGORY, ALL_BUSINESS_CATEGORIES);
+		
   	}
 
 	render() {
