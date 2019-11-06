@@ -307,7 +307,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeProductFamily(currencyValue) {
-            debugger;
             const { fields: { areaAssets, productFamily, product, businessCategory }, pipelineReducer, selectsReducer } = this.props;   
             const productsByFamily = selectsReducer.get(PRODUCTS_MASK).filter(p => p.parentId == currencyValue);                                              
             if (!this.state.flagInitLoadAssests) {
@@ -408,7 +407,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         showInteresSpreadField(businessCategoryValue){
             const { fields: { commission }, selectsReducer } = this.props; 
-            const businessCategories = selectsReducer.get(ALL_BUSINESS_CATEGORIES); 
+            const businessCategories = selectsReducer.get(ALL_BUSINESS_CATEGORIES);
             const selectedBusinessCategory = businessCategories.find((businessCategory) => businessCategory.id == businessCategoryValue);     
             const keyBusinessCategory= selectedBusinessCategory ? selectedBusinessCategory.key.toLowerCase() : '';
             if(keyBusinessCategory == PLACEMENTS || keyBusinessCategory == CATCHMENTS){                
@@ -1106,7 +1105,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             {...businessCategory}
                                             name={nameBusinessCategory}
                                             parentId="dashboardComponentScroll"
-                                            data={this.state.businessCategories || selectsReducer.get(BUSINESS_CATEGORY)}
+                                            data={this.state.businessCategories || selectsReducer.get(ALL_BUSINESS_CATEGORIES)}
                                             onChange={key => this._onChangeBusinessCategory(key)}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                             filterData={true}
