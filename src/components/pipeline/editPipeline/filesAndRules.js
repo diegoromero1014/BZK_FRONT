@@ -37,7 +37,7 @@ export const fieldsWithRules = {
     probability: { rules: [] }, 
     amountDisbursed: { rules: [] }, 
     estimatedDisburDate: { rules: [] }, 
-    opportunityName: { rules: [checkRequired, checkPipeLineOpportunityName, checkFirstCharacter] }, 
+    opportunityName: { rules: [checkPipeLineOpportunityName, checkFirstCharacter] }, 
     productFamily: { rules: [checkRequired] }, 
     mellowingPeriod: { rules: [] }, 
     moneyDistribitionMarket: { rules: [] }, 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.0 r1840935">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.1.1 r1855137">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -160,7 +160,7 @@
                 <collectionProp name="Arguments.arguments">
                   <elementProp name="" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;timestamp&quot;:1569938527723,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;username&quot;:&quot;${username_ldap}&quot;,&quot;password&quot;:&quot;${password_ldap}&quot;,&quot;recaptcha&quot;:null,&quot;application&quot;:&quot;FRONT_OFFICE&quot;,&quot;timeZone&quot;:&quot;America/Bogota&quot;, &quot;isPerformance&quot;: true}}</stringProp>
+                    <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;timestamp&quot;:1569938527723,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;username&quot;:&quot;${username_ldap}&quot;,&quot;password&quot;:&quot;${password_ldap}&quot;,&quot;recaptcha&quot;:null,&quot;application&quot;:&quot;FRONT_OFFICE&quot;,&quot;timeZone&quot;:&quot;America/Bogota&quot;, &quot;isPerformanceTest&quot;: true}}</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                   </elementProp>
                 </collectionProp>

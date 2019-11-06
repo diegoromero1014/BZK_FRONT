@@ -1,3 +1,5 @@
+export const ALL_BUSINESS_CATEGORIES = "allBusinessCategories";
+export const ALL_PRODUCT_FAMILIES = "allProductFamilies";
 export const CLIENT_TYPE = "clientType";
 export const DOCUMENT_TYPE_PERSON = "documentTypePerson";
 export const CLIENT_ID_TYPE = "clientIdType";
