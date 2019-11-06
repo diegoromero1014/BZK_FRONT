@@ -858,12 +858,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                         PROBABILITY, LINE_OF_BUSINESS, MELLOWING_PERIOD,
                         FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY,
-                        PIPELINE_JUSTIFICATION, CLIENT_NEED])]).then((data) => {
-                            const productsFamily = _.get(data[0], 'payload.data.data', [])
-                            this.setState({
-                                productsFamily
-                            });     
-                            
+                        PIPELINE_JUSTIFICATION, CLIENT_NEED])]).then((data) => {                                                         
                             if (origin !== ORIGIN_PIPELIN_BUSINESS) {                            
                                 const { params: { id } } = this.props;
                                 getPipelineById(id).then((result) => {                                                                                       
