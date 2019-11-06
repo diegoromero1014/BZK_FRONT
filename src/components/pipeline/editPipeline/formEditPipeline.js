@@ -41,7 +41,7 @@ import {
     BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
     MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS, PROBABILITY,
     PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES,
-    PRODUCTS_MASK, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY, PIPELINE_JUSTIFICATION, CLIENT_NEED, FILTER_MULTISELECT_FIELDS, ALL_BUSINESS_CATEGORIES
+    PRODUCTS_MASK, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY, PIPELINE_JUSTIFICATION, CLIENT_NEED, FILTER_MULTISELECT_FIELDS, ALL_BUSINESS_CATEGORIES, ALL_PRODUCT_FAMILIES
 } from "../../selectsComponent/constants";
 import {
     EDITAR, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER, REVIEWED_DATE_FORMAT, SAVE_DRAFT,
@@ -342,7 +342,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         _changeProduct(value){                         
             const { fields: { productFamily }, selectsReducer } = this.props;
-            let productFamilySelected = this.state.productsFamily.find((family) => family.id == productFamily.value);
+            let productFamilySelected = selectsReducer.get(ALL_PRODUCT_FAMILIES).find((family) => family.id == productFamily.value);
             let products = selectsReducer.get(PRODUCTS_MASK);
             let productSelected = products.find((product) => product.id == value);            
             if(productFamilySelected && productSelected){
@@ -852,17 +852,52 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             if (_.isEmpty(infoClient)) {
                 redirectUrl("/dashboard/clientInformation");
             } else {
-                showLoading(true, 'Cargando...');                
+                showLoading(true, 'Cargando...');   
+                
+                Promise.all([consultDataSelect(PRODUCT_FAMILY, ALL_PRODUCT_FAMILIES), consultDataSelect(BUSINESS_CATEGORY, ALL_BUSINESS_CATEGORIES),
+                    getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
+                        PROBABILITY, LINE_OF_BUSINESS, MELLOWING_PERIOD,
+                        FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY,
+                        PIPELINE_JUSTIFICATION, CLIENT_NEED])]).then((data) => {
+                            const productsFamily = _.get(data[0], 'payload.data.data', [])
+                            this.setState({
+                                productsFamily
+                            });     
+                            
+                            if (origin !== ORIGIN_PIPELIN_BUSINESS) {                            
+                                const { params: { id } } = this.props;
+                                getPipelineById(id).then((result) => {                                                                                       
+                                    if (!validateResponse(result)) {
+                                        swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                                    } else {
+                                        let data = result.payload.data.data;
+                                        _.forIn(data.listPipelines, function (pipeline, key) {
+                                            const uuid = _.uniqueId('pipelineBusiness_');
+                                            pipeline.uuid = uuid;
+                                            addBusiness(pipeline);
+                                        });
+                                        if (data.commercialReport) {
+                                            setConfidential(data.commercialReport.isConfidential);
+                                            fillUsersPermissions(data.commercialReport.usersWithPermission, addUsers);
+                                        }                                    
+                                        this._consultInfoPipeline(data);                                    
+                                    }
+                                    showLoading(false, null);         
+                                });
+                            } else {
+                                showLoading(false, null);
+                            }
+                        })
 
-                consultDataSelect(PRODUCT_FAMILY, PRODUCTS_MASK).then((data) => {
+                /*consultDataSelect(PRODUCT_FAMILY, ALL_PRODUCT_FAMILIES).then((data) => {
                     this.setState({
                         productsFamily: _.get(data, 'payload.data.data', [])
                     });
-                });
+                });*/
 
-                consultDataSelect(BUSINESS_CATEGORY, ALL_BUSINESS_CATEGORIES); 
+                //consultDataSelect(BUSINESS_CATEGORY, ALL_BUSINESS_CATEGORIES); 
 
-                getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
+                /*getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                     PROBABILITY, LINE_OF_BUSINESS, MELLOWING_PERIOD,
                     FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY,
                     PIPELINE_JUSTIFICATION, CLIENT_NEED]).then((result) => {
@@ -889,7 +924,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                         } else {
                             showLoading(false, null);
                         }
-                    });
+                    });*/
             }
         }
 

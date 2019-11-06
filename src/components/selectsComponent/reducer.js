@@ -163,6 +163,8 @@ export default (state = initialState, action) => {
             return state.set('allProducts', defaultData(action, 'payload.data.data'));
         case constants.ALL_BUSINESS_CATEGORIES:
             return state.set(constants.ALL_BUSINESS_CATEGORIES, defaultData(action, 'payload.data.data'));
+        case constants.ALL_PRODUCT_FAMILIES:
+            return state.set(constants.ALL_PRODUCT_FAMILIES, defaultData(action, 'payload.data.data'));
         case constants.CLEAR_LISTS:
             const clearLists = action.lists;
             return state.withMutations(map => {
