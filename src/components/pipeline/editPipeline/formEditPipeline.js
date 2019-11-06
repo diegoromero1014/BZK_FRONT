@@ -126,7 +126,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 disbursementPlanRequired: false,
                 products: [],
                 productsFamily: [],
-                businessCategories: [],
                 showAlertCurrency: false,
                 showJustificationField: false,
                 showProbabilityField: true,
@@ -141,7 +140,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showindexingField: false,
                 showpendingDisbursementAmountField: false,
                 showComponentDisbursementPlan: false,
-                isFinancingNeed: false
+                isFinancingNeed: false,
+                businessCategories: null
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -407,7 +407,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         showInteresSpreadField(businessCategoryValue){
             const { fields: { commission }, selectsReducer } = this.props; 
-            const businessCategories = selectsReducer.get(ALL_BUSINESS_CATEGORIES); 
+            const businessCategories = selectsReducer.get(ALL_BUSINESS_CATEGORIES);
             const selectedBusinessCategory = businessCategories.find((businessCategory) => businessCategory.id == businessCategoryValue);     
             const keyBusinessCategory= selectedBusinessCategory ? selectedBusinessCategory.key.toLowerCase() : '';
             if(keyBusinessCategory == PLACEMENTS || keyBusinessCategory == CATCHMENTS){                
@@ -1065,6 +1065,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                             data={this.state.productsFamily}
                                             onChange={val => this._changeProductFamily(val)}
+                                            filterData={true}
                                         />
                                     </div>
                                 </Col>
@@ -1104,10 +1105,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             {...businessCategory}
                                             name={nameBusinessCategory}
                                             parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(BUSINESS_CATEGORY)}
+                                            data={this.state.businessCategories || selectsReducer.get(ALL_BUSINESS_CATEGORIES)}
                                             onChange={key => this._onChangeBusinessCategory(key)}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
-
+                                            filterData={true}
                                         />
                                     </div>
                                 </Col>
