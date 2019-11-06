@@ -407,7 +407,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         showInteresSpreadField(businessCategoryValue){
             const { fields: { commission }, selectsReducer } = this.props; 
-            const businessCategories = selectsReducer.get(ALL_BUSINESS_CATEGORIES); 
+            const businessCategories = selectsReducer.get(ALL_BUSINESS_CATEGORIES);
             const selectedBusinessCategory = businessCategories.find((businessCategory) => businessCategory.id == businessCategoryValue);     
             const keyBusinessCategory= selectedBusinessCategory ? selectedBusinessCategory.key.toLowerCase() : '';
             if(keyBusinessCategory == PLACEMENTS || keyBusinessCategory == CATCHMENTS){                
@@ -860,6 +860,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     });
                 });
 
+                consultDataSelect(BUSINESS_CATEGORY, ALL_BUSINESS_CATEGORIES); 
+
                 getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                     PROBABILITY, LINE_OF_BUSINESS, MELLOWING_PERIOD,
                     FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY,
@@ -1103,7 +1105,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             {...businessCategory}
                                             name={nameBusinessCategory}
                                             parentId="dashboardComponentScroll"
-                                            data={this.state.businessCategories || selectsReducer.get(BUSINESS_CATEGORY)}
+                                            data={this.state.businessCategories || selectsReducer.get(ALL_BUSINESS_CATEGORIES)}
                                             onChange={key => this._onChangeBusinessCategory(key)}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                             filterData={true}
