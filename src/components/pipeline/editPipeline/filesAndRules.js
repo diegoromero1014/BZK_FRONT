@@ -3,7 +3,9 @@ import _ from "lodash";
 import {
     checkRequired, processRules, checkRequiredWithGlobalCondition,
     checkOnlyAlphabetical, checkPipeLineOpportunityName, 
-    checkFirstCharacter, checkNumberLength
+    checkFirstCharacter, checkNumberLength,checkRequiredPipelineJustification,
+    checkRequiredComercialOportunity, checkRequiredPivotNit, checkRequiredTermInMonths,
+    checkRequiredTermInMonthsValue
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -21,7 +23,7 @@ export const fieldsWithRules = {
     value: { rules: [checkRequired, checkNumberLength(15)] }, 
     commission: { rules: [checkNumberLength(10)] }, 
     roe: { rules: [checkNumberLength(10)] }, 
-    termInMonths: { rules: [checkRequired, checkNumberLength(4)] }, 
+    termInMonths: { rules: [checkRequiredTermInMonths, checkNumberLength(4)] },
     businessStatus: { rules: [] }, 
     businessCategory: { rules: [checkRequiredWithGlobalCondition] }, 
     currency: { rules: [checkRequired] }, 
@@ -35,14 +37,18 @@ export const fieldsWithRules = {
     probability: { rules: [] }, 
     amountDisbursed: { rules: [] }, 
     estimatedDisburDate: { rules: [] }, 
-    opportunityName: { rules: [checkRequired, checkPipeLineOpportunityName, checkFirstCharacter] }, 
+    opportunityName: { rules: [checkPipeLineOpportunityName, checkFirstCharacter] }, 
     productFamily: { rules: [checkRequired] }, 
     mellowingPeriod: { rules: [] }, 
     moneyDistribitionMarket: { rules: [] }, 
     areaAssets: { rules: [] }, 
     areaAssetsValue: { rules: [checkNumberLength(15)] }, 
-    termInMonthsValues: { rules: [checkRequired] },
-    pendingDisbursementAmount: { rules: [checkNumberLength(15)] }
+    termInMonthsValues: { rules: [checkRequiredTermInMonthsValue] },
+    pendingDisbursementAmount: { rules: [checkNumberLength(15)] },
+    pipelineType: { rules: [checkRequired] },
+    commercialOportunity: { rules: [checkRequiredComercialOportunity] },
+    justification : {rules: [checkRequiredPipelineJustification] },
+    pivotNit: {rules: [checkRequiredPivotNit]}
 }
 
 export const fields = _.keys(fieldsWithRules);

@@ -78,16 +78,21 @@ class ListDisbursementPlans extends Component {
         const listDisbursementPlans = pipelineReducer.get(this._getNameDisbursementPlansInReducer());
         var disbursementAmountItem = 0;
         const pendingDisbursementAmountNum = parseFloat(((pendingDisbursementAmount.value).toString()).replace(/,/g, ""));
+        let estimatedDisburDate;
         const newListPart = _.remove(listDisbursementPlans, (item) => {
             if (_.isEqual(item.id, this.state.entityDelete.id)) {
                 disbursementAmountItem = parseFloat((item.disbursementAmount.toString()).replace(/,/g, ""));
+                estimatedDisburDate = item.estimatedDisburDate;
                 return false;
             } else {
                 return true;
             }
         });
-
-        handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, _.sum([pendingDisbursementAmountNum, disbursementAmountItem]).toFixed(2), true, 2);
+        let arrEstimatedDisburDate = estimatedDisburDate.split("/");
+        let currentDate = new Date();
+        if(arrEstimatedDisburDate!=null && arrEstimatedDisburDate[0]<=(currentDate.getMonth() + 1)&& arrEstimatedDisburDate[1]<=currentDate.getFullYear()){
+            handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, _.sum([pendingDisbursementAmountNum, disbursementAmountItem]).toFixed(2), true, 2);
+        }
         updateDisbursementPlans(newListPart, origin);
         this.setState({
             entityDelete: null,
@@ -112,16 +117,28 @@ class ListDisbursementPlans extends Component {
             if (!moment(estimatedDisburDate.value, 'MM/YYYY').isValid()) {
                 swtShowMessage(MESSAGE_ERROR, 'Plan de desembolso', 'Señor usuario, debe seleccionar un valor válido para la fecha de desembolso.');
             } else {
+                let arrEstimatedDisburDate = estimatedDisburDate.value.split("/");
+                let currentDate = new Date();
+                var nominalvalueNum= parseFloat((nominalValue.value.toString()).replace(/,/g, ""));
                 var listDisbursementPlans = pipelineReducer.get(this._getNameDisbursementPlansInReducer());
                 var totalDisbursementAmount = _.sumBy(listDisbursementPlans, 'disbursementAmount');
                 const disbursementAmountNum = parseFloat((disbursementAmount.value.toString()).replace(/,/g, ""));
                 var pendingDisbursementAmountNum = parseFloat((pendingDisbursementAmount.value.toString()).replace(/,/g, ""));
                 if (this.state.entitySeleted != null) {
                     var disbursementAmountEntitySelected = _.get(_.filter(listDisbursementPlans, ['id', this.state.entitySeleted.id]), '[0].disbursementAmount');
-                    totalDisbursementAmount = _.subtract(totalDisbursementAmount, disbursementAmountEntitySelected);
-                    pendingDisbursementAmountNum = _.sum([pendingDisbursementAmountNum, disbursementAmountEntitySelected]);
+                    var estimatedDisburDateSelected = _.get(_.filter(listDisbursementPlans, ['id', this.state.entitySeleted.id]), '[0].estimatedDisburDate'); 
+                    let arrEstimatedDisburDateSelected = estimatedDisburDateSelected.split("/");
+                 
+                    if(arrEstimatedDisburDateSelected!=null && arrEstimatedDisburDateSelected[0]<=(currentDate.getMonth() + 1)
+                            && arrEstimatedDisburDateSelected[1]<=currentDate.getFullYear()){
+                        totalDisbursementAmount = _.subtract(totalDisbursementAmount, disbursementAmountEntitySelected);
+                        pendingDisbursementAmountNum = _.sum([pendingDisbursementAmountNum, disbursementAmountEntitySelected]);
+                        handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (pendingDisbursementAmountNum).toString(), true, 2);
+                    }
+
+
                 }
-                if ((disbursementAmountNum > pendingDisbursementAmountNum && this.state.entitySeleted == null) ||
+                if (((disbursementAmountNum + totalDisbursementAmount)> nominalvalueNum && this.state.entitySeleted == null) ||
                     (this.state.entitySeleted != null && disbursementAmountNum > pendingDisbursementAmountNum)) {
                     swtShowMessage(MESSAGE_ERROR, 'Plan de desembolso', 'Señor usuario, el valor de desembolso no puede superar el valor pendiente por desembolsar.');
                 } else {
@@ -133,8 +150,10 @@ class ListDisbursementPlans extends Component {
                             estimatedDisburDate: estimatedDisburDate.value
                         };
                         listDisbursementPlans.push(newDisbursementPlan);
-                        disbursementAmountItem = _.subtract(pendingDisbursementAmountNum, newDisbursementPlan.disbursementAmount);
-                        handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (disbursementAmountItem).toString(), true, 2);
+                        if(arrEstimatedDisburDate!=null && arrEstimatedDisburDate[0]<=(currentDate.getMonth() + 1)&& arrEstimatedDisburDate[1]<=currentDate.getFullYear()){
+                            disbursementAmountItem = _.subtract(pendingDisbursementAmountNum, newDisbursementPlan.disbursementAmount);
+                            handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (disbursementAmountItem).toString(), true, 2);
+                         }
                     } else {
                         const updateValue = {
                             id: this.state.entitySeleted.id,
@@ -144,8 +163,10 @@ class ListDisbursementPlans extends Component {
                         listDisbursementPlans = _.remove(listDisbursementPlans, (item) => {
                             return !_.isEqual(item.id, this.state.entitySeleted.id);
                         });
-                        disbursementAmountItem = _.subtract(pendingDisbursementAmountNum, disbursementAmountNum).toFixed(2);
-                        handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (disbursementAmountItem).toString(), true, 2);
+                        if(arrEstimatedDisburDate!=null && arrEstimatedDisburDate[0]<=(currentDate.getMonth() + 1)&& arrEstimatedDisburDate[1]<=currentDate.getFullYear()){
+                            disbursementAmountItem = _.subtract(pendingDisbursementAmountNum, disbursementAmountNum).toFixed(2);
+                            handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (disbursementAmountItem).toString(), true, 2);
+                        }
                         listDisbursementPlans.push(updateValue);
                     }
                     updateDisbursementPlans(listDisbursementPlans, origin);
@@ -194,6 +215,7 @@ class ListDisbursementPlans extends Component {
                                     type="text"
                                     max="15"
                                     {...disbursementAmount}
+                                    placeholder="Miles ' , ' y decimales ' . '"
                                     onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, disbursementAmount, val, true, 2)}
                                     onFocus={val => handleFocusValueNumber(disbursementAmount, disbursementAmount.value)}
                                     error={_.isEmpty(disbursementAmount.value) ? VALUE_REQUIERED : null}

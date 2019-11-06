@@ -77,13 +77,13 @@ export default (state = initialState, action) => {
         case constants.FILTER_COUNTRY:
             return state.set('dataTypeCountry', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_PROVINCE:
-            return state.set('dataTypeProvince', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeProvince', defaultData(action, 'payload.data.data'));
         case constants.FILTER_CITY:
-            return state.set('dataTypeCity', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeCity', defaultData(action, 'payload.data.data'));
         case constants.FILTER_PROVINCE_CLIENT:
-            return state.set('dataTypeProvinceClient', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeProvinceClient', defaultData(action, 'payload.data.data'));
         case constants.FILTER_CITY_CLIENT:
-            return state.set('dataTypeCityClient', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('dataTypeCityClient', defaultData(action, 'payload.data.data'));
         case constants.FILTER_HOBBIES:
             return state.set('dataTypeHobbies', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.FILTER_SPORTS:
@@ -91,9 +91,9 @@ export default (state = initialState, action) => {
         case constants.FILTER_ATTITUDE_OVER_GROUP:
             return state.set('dataTypeAttitudeOverGroup', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.TEAM_FOR_EMPLOYEE:
-            return state.set('teamValueObjects', defaultData(action, 'payload.data.teamValueObjects'));
+            return state.set('teamValueObjects', defaultData(action, 'payload.data.data'));
         case constants.TEAM_FOR_EMPLOYEE_REGION_ZONE:
-            return state.set('teamValueObjects', defaultData(action, 'payload.data.teamValueObjects'));
+            return state.set('teamValueObjects', defaultData(action, 'payload.data.data.teamValueObjects'));
         case constants.TEAM_FOR_REGION_EMPLOYEE:
             return state.set('teamValueObjects', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.TYPE_NOTES:
@@ -124,39 +124,47 @@ export default (state = initialState, action) => {
                     .set('dataTypeProvince', null)
                     .set('dataTypeCity', null)
             });
-        case constants.FILTER_MULTISELECT_FIELDS: /* Consulta de varias listas en un mismo servicio */
-            const masterDataDetailEntries = action.payload.data.messageBody === undefined || action.payload.data.messageBody === null ? [] : action.payload.data.messageBody.masterDataDetailEntries;
+        case constants.FILTER_MULTISELECT_FIELDS: /* Consulta de varias listas en un mismo servicio */        
+            const masterDataDetailEntries = action.payload.data.data === undefined || action.payload.data.data === null ? [] : action.payload.data.data.masterDataDetailEntries;
             const lists = _.groupBy(masterDataDetailEntries, 'field');
-            const keys = _.keys(lists);
+            const keys = _.keys(lists);            
             return state.withMutations(map => {
                 _.map(keys, key => {
                     const values = _.get(lists, key);
                     map.set(key, values);
                 });
             });
+        case constants.BUSINESS_CATEGORY:
+            return state.set('businessCategory', defaultData(action, 'payload.data.data'));
         case constants.PIPELINE_CLIENT_NEEDS:
-            const clientNeeds = action.payload.data.data.clientNeedValueObjects;
+            const clientNeeds = action.payload.data.data.clientNeedValueObjects;            
             return state.set('pipelineClientNeeds', clientNeeds);
+        case constants.PIPELINE_JUSTIFICATION:                             
+            return state.set('pipelineJustification', defaultData(action, 'payload.data.data'));            
         case constants.LIST_REGIONS:
             return state.set('region', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.LIST_REGIONS_BY_EMPLOYEE:
             return state.set('region', defaultData(action, 'payload.data.masterDataDetailEntries'));
         case constants.LIST_ZONES:
-            return state.set('zone', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('zone', defaultData(action, 'payload.data.data'));
         case constants.FULLFILLMENT_COVENANT:
             return state.set('fullfillmentCovenant', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.CUSTOMER_TYPOLOGY:
-            return state.set('customerTypology', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('customerTypology', defaultData(action, 'payload.data.data'));
         case constants.SEGMENTS:
             return state.set('segment', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.SUBSEGMENTS:
-            return state.set('subSegment', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+            return state.set('subSegment', defaultData(action, 'payload.data.data'));
         case constants.REASON_CONFORMATION:
             return state.set('reasonConformation', defaultData(action, constants.PAY_LOAD_DATA));
-        case constants.PRODUCTS:
-            return state.set('products', defaultData(action, 'payload.data.messageBody.masterDataDetailEntries'));
+        case constants.PRODUCTS:            
+            return state.set('products', defaultData(action, 'payload.data.data'));
         case constants.PRODUCTS_MASK:
             return state.set('allProducts', defaultData(action, 'payload.data.data'));
+        case constants.ALL_BUSINESS_CATEGORIES:
+            return state.set(constants.ALL_BUSINESS_CATEGORIES, defaultData(action, 'payload.data.data'));
+        case constants.ALL_PRODUCT_FAMILIES:
+            return state.set(constants.ALL_PRODUCT_FAMILIES, defaultData(action, 'payload.data.data'));
         case constants.CLEAR_LISTS:
             const clearLists = action.lists;
             return state.withMutations(map => {

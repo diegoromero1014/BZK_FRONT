@@ -66,7 +66,7 @@ class comboBoxComponent extends Component {
         selector.dropdown('set text', labelInput);
     }
 
-    componentWillReceiveProps({ value, name, pristine, labelInput, data }) {
+    componentWillReceiveProps({ value, name, pristine, labelInput, data, filterData }) {
         const selector = $(`.ui.selection.dropdown.${name}`);
         selector.dropdown('refresh');
         const isEmptyAndUsed = _.isEqual(value, '') && this.state.used;
@@ -76,8 +76,8 @@ class comboBoxComponent extends Component {
         if (setPristineAgain) {
             this._setPristine(labelInput, name);
         } else {
-
-            if (this.pastValue && this.pastData != data) {
+            // Se agrega campo filter data para evitar que se vuelva a seleccionar un valor anteriormente filtrado
+            if (this.pastValue && this.pastData != data && !filterData) {
                 this._changeValue(this.pastValue, name, data);
             } else if (valueIsNotEmpty) {
                 this._changeValue(value, name, data);
@@ -185,7 +185,8 @@ comboBoxComponent.PropTypes = {
 };
 
 comboBoxComponent.defaultProps = {
-    showEmptyObject: false
+    showEmptyObject: false,
+    filterData: false
 }
 
 export default scrollToComponent(comboBoxComponent);

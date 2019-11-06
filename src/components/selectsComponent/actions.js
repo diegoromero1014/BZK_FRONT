@@ -1,11 +1,16 @@
 import { APP_URL } from '../../constantsGlobal';
 import axios from 'axios';
 import {
-  FILTER_MULTISELECT_FIELDS, CLEAR_VALUES_COUNTRY, ECONOMIC_GROUPS,
-  TEAM_FOR_REGION_EMPLOYEE, CLEAR_VALUES_COUNTRY_KEY, PIPELINE_PRODUCTS,
-  PIPELINE_CLIENT_NEEDS, CLEAR_LISTS, LIST_REGIONS_BY_EMPLOYEE
+  CLEAR_LISTS,
+  CLEAR_VALUES_COUNTRY,
+  CLEAR_VALUES_COUNTRY_KEY,
+  ECONOMIC_GROUPS,
+  FILTER_MULTISELECT_FIELDS,
+  LIST_REGIONS_BY_EMPLOYEE,
+  PIPELINE_CLIENT_NEEDS,
+  TEAM_FOR_REGION_EMPLOYEE
 } from './constants';
-import { isUndefined, isNull } from 'lodash';
+import { isNull, isUndefined } from 'lodash';
 
 export function consultDataSelect(field, mask) {
   const json = {
@@ -108,6 +113,33 @@ export function consultListWithParameterUbication(field, parentId) {
     },
     messageBody: {
       "parentId": parentId
+    }
+  };
+  const request = axios.post(APP_URL + "/masterDataByParentId", json);
+  return {
+    type: field,
+    payload: request
+  }
+}
+
+
+export function consultListByCatalogType(field, parentId, catalogType) {
+  const json = {
+    messageHeader: {
+      "timestamp": new Date().getTime(),
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    messageBody: {
+      "parentId": parentId,
+      "field": catalogType
     }
   };
   const request = axios.post(APP_URL + "/masterDataByParentId", json);

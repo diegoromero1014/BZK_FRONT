@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
 import _ from "lodash";
@@ -16,49 +15,54 @@ import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 
 import { redirectUrl } from "../../globalComponents/actions";
-import { formValidateKeyEnter } from '../../../actionsGlobal';
+import { formValidateKeyEnter, onSessionExpire, validateResponse } from '../../../actionsGlobal';
 import { updateTitleNavBar } from "../../navBar/actions";
-import { validateResponse, onSessionExpire } from "../../../actionsGlobal";
 import { swtShowMessage } from "../../sweetAlertMessages/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { showLoading } from "../../loading/actions";
 import { filterUsersBanco } from '../../participantsVisitPre/actions';
-import { getMasterDataFields, consultList, consultListWithParameterUbication, consultListWithParameter } from '../../selectsComponent/actions';
 import {
+    consultList,
+    consultListWithParameter,
+    consultListWithParameterUbication,
+    getMasterDataFields
+} from '../../selectsComponent/actions';
+import {
+    changePageTeam,
     clearMyPendingPaginator,
     clearMyPendingsOrder,
-    clearOnlyListPendingTask,
-    clearPendingTask,
-    getDownloadPendingTask,
-    tasksByUser,
-    tasksTeamByUser,
-    changePageTeam,
-    limitiInfTeam,
-    clearMyPendingTeamPaginator,
-    clearOnlyListPendingTaskTeam,
     clearMyPendingsTeamOrder,
+    clearMyPendingTeamPaginator,
+    clearOnlyListPendingTask,
+    clearOnlyListPendingTaskTeam,
+    clearPendingTask,
     clearPendingTaskTeam,
     downloadPendingTask,
-    getDownloadMyPendingTask
+    getDownloadMyPendingTask,
+    getDownloadPendingTask,
+    limitiInfTeam,
+    tasksByUser,
+    tasksTeamByUser
 } from "./actions";
 
-import { TASK_STATUS, LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE_REGION_ZONE } from '../../selectsComponent/constants';
+import { LIST_REGIONS, LIST_ZONES, TASK_STATUS, TEAM_FOR_EMPLOYEE_REGION_ZONE } from '../../selectsComponent/constants';
 import {
-    NUMBER_RECORDS,
-    MY_PENDINGS_TITLE,
-    MY_PENDINGS_BY_TEAM_TITLE,
     ERROR_TITLE_FILTERS_TEAM,
-    ERROR_TITLE_FILTERS_TEAM_MESSAGE
+    ERROR_TITLE_FILTERS_TEAM_MESSAGE,
+    MY_PENDINGS_BY_TEAM_TITLE,
+    MY_PENDINGS_TITLE,
+    NUMBER_RECORDS
 } from "./constants";
 import {
-    APP_URL,
     DESCARGAR,
     GREEN_COLOR,
     MESSAGE_DOWNLOAD_DATA,
-    MESSAGE_LOAD_DATA, MESSAGE_ERROR,
+    MESSAGE_ERROR,
+    MESSAGE_ERROR_SWEET_ALERT,
+    MESSAGE_LOAD_DATA,
     ORANGE_COLOR,
-    SESSION_EXPIRED,
-    RED_COLOR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT
+    RED_COLOR,
+    TITLE_ERROR_SWEET_ALERT
 } from "../../../constantsGlobal";
 
 const fields = ["region", "zone", "team", "taskStatus", "dateTaskTeam",
@@ -109,7 +113,7 @@ class ModalComponentPending extends Component {
     }
 
     _downloadPendingTask() {
-        const { fields: { region, zone, team, taskStatus, dateTaskTeam, idUsuario }, getDownloadPendingTask, changeStateSaveData, swtShowMessage } = this.props;
+        const { fields: { region, zone, team, taskStatus, dateTaskTeam, idUsuario }, getDownloadPendingTask, changeStateSaveData } = this.props;
         changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
         getDownloadPendingTask(region.value, zone.value, team.value, taskStatus.value, dateTaskTeam.value, idUsuario.value).then((data) => {
             downloadPendingTask(data.payload.data.data,changeStateSaveData);
@@ -125,15 +129,14 @@ class ModalComponentPending extends Component {
     }
 
     componentWillMount() {
-
-        const { clearPendingTask, consultList, updateTitleNavBar, getMasterDataFields, showLoading, swtShowMessage, consultListWithParameter } = this.props;
+        const { clearPendingTask, updateTitleNavBar, getMasterDataFields, showLoading, swtShowMessage, consultListWithParameter } = this.props;
         clearPendingTask();
         showLoading(true, MESSAGE_LOAD_DATA);
         consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, { region: "", zone: "" });
 
         getMasterDataFields([TASK_STATUS, LIST_REGIONS, LIST_ZONES]).then((data) => {
             this.consultInfoMyPendingTask();
-            if (_.get(data, 'payload.data.messageHeader.status') === SESSION_EXPIRED) {
+            if (_.get(data, 'payload.data.validateLogin') === false) {
                 onSessionExpire();
             }
 
@@ -146,7 +149,7 @@ class ModalComponentPending extends Component {
     }
 
     consultInfoMyPendingTask() {
-        const { tasksByUser, clearMyPendingPaginator, clearOnlyListPendingTask, showLoading, swtShowMessage, updateTitleNavBar } = this.props;
+        const { tasksByUser, clearMyPendingPaginator, clearOnlyListPendingTask, showLoading, swtShowMessage } = this.props;
 
         clearOnlyListPendingTask();
         clearMyPendingPaginator();
@@ -163,7 +166,8 @@ class ModalComponentPending extends Component {
 
     consultInfoMyPendingTeamTask() {
         const { fields: { region, zone, team, taskStatus, dateTaskTeam, idUsuario }, tasksTeamByUser, clearMyPendingTeamPaginator,
-            clearOnlyListPendingTaskTeam, clearMyPendingsTeamOrder, showLoading, swtShowMessage, updateTitleNavBar } = this.props;
+            clearOnlyListPendingTaskTeam, clearMyPendingsTeamOrder, showLoading, swtShowMessage
+        } = this.props;
 
         if (!region.value && !zone.value && !team.value && !taskStatus.value && !dateTaskTeam.value && !idUsuario.value) {
             swtShowMessage(MESSAGE_ERROR, ERROR_TITLE_FILTERS_TEAM, ERROR_TITLE_FILTERS_TEAM_MESSAGE);
@@ -224,9 +228,11 @@ class ModalComponentPending extends Component {
 
     _cleanSearch() {
         this.setState({ keywordMyPending: "" });
-        const { fields: { region, zone, team, nameUsuario, idUsuario, cargoUsuario, empresaUsuario, taskStatus, dateTaskTeam }, tasksByUser, clearMyPendingPaginator,
-            clearMyPendingsOrder, clearMyPendingsTeamOrder, clearOnlyListPendingTask,
-            showLoading, clearOnlyListPendingTaskTeam, clearMyPendingTeamPaginator, clearPendingTaskTeam, consultListWithParameter } = this.props;
+        const {
+            fields: { region, zone, team, nameUsuario, idUsuario, cargoUsuario, empresaUsuario, taskStatus, dateTaskTeam },
+            tasksByUser, clearMyPendingPaginator, clearMyPendingsOrder, clearOnlyListPendingTask,
+            showLoading, clearPendingTaskTeam, consultListWithParameter
+        } = this.props;
 
 
         region.onChange("");
@@ -260,7 +266,7 @@ class ModalComponentPending extends Component {
     }
 
     _onChangeRegion(val) {
-        const { fields: { region, zone, team }, consultTeamsByRegionByEmployee, consultListWithParameterUbication, consultListWithParameter } = this.props;
+        const { fields: { region, zone, team }, consultListWithParameterUbication, consultListWithParameter } = this.props;
 
         consultListWithParameterUbication(LIST_ZONES, region.value);
         consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
@@ -292,7 +298,6 @@ class ModalComponentPending extends Component {
 
     _loadResponsable() {
         const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco, swtShowMessage } = this.props;
-        const selfThis = this;
 
         if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
             if (nameUsuario.value.length < 3) {
@@ -345,7 +350,7 @@ class ModalComponentPending extends Component {
     }
 
     _changeResponsableInput(e) {
-        const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco } = this.props;
+        const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario } } = this.props;
         nameUsuario.onChange(e);
 
         if (!e.currentTarget.value) {
@@ -358,7 +363,10 @@ class ModalComponentPending extends Component {
     }
 
     render() {
-        const { fields: { region, zone, team, taskStatus, dateTaskTeam, nameUsuario, idUsuario }, myPendingsReducer, reducerGlobal, selectsReducer, formValidateKeyEnter } = this.props;
+        const {
+            fields: { region, zone, team, taskStatus, dateTaskTeam, nameUsuario, idUsuario },
+            myPendingsReducer, reducerGlobal, selectsReducer, formValidateKeyEnter
+        } = this.props;
 
         let visibleTable = 'none';
         let visibleTableTeam = 'none';

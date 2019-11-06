@@ -118,14 +118,15 @@ class ModalComponentShareholder extends Component {
 
       searchShareholder(tipoDocumento.value, numeroDocumentoTrimmed,
         window.sessionStorage.getItem('idClientSelected')).then((data) => {
-          if ((_.get(data, 'payload.data.shareholderExist'))) { //Si el accionista existe
+          let accionista = _.get(data, 'payload.data.data');
+          if (accionista) { //Si el accionista existe
             typeMessage = "warning";
             titleMessage = "Advertencia";
             message = "Señor usuario, el cliente ya presenta una relación con el accionista buscado.";
             this.setState({ showMessage: true });
             this.props.resetForm();
 
-          } else if (!(_.get(data, 'payload.data.shareholderExist'))) { //Si el accionista no existe
+          } else if (!accionista){ //Si el accionista no existe
             this.setState({ disabled: 'disabled' });
             this.setState({ noExiste: 'visible' });
             this.setState({ botonBus: 'none' });

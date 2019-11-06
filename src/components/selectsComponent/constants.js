@@ -1,3 +1,5 @@
+export const ALL_BUSINESS_CATEGORIES = "allBusinessCategories";
+export const ALL_PRODUCT_FAMILIES = "allProductFamilies";
 export const CLIENT_TYPE = "clientType";
 export const DOCUMENT_TYPE_PERSON = "documentTypePerson";
 export const CLIENT_ID_TYPE = "clientIdType";
@@ -44,6 +46,9 @@ export const VISIT_TYPE = "visitType";
 export const TASK_STATUS = "taskStatus";
 export const PREVISIT_TYPE = "previsitType";
 export const PIPELINE_STATUS = "pipelineStatus";
+export const PIPELINE_TYPE = "pipelineType";
+export const PIPELINE_JUSTIFICATION = "pipelineJustification";
+export const COMMERCIAL_OPORTUNITY = "commercialOportunity";
 export const PIPELINE_INDEXING = "indexing";
 export const PIPELINE_PRIORITY = "priority";
 export const FILTER_STATUS_TASK_ID ="FILTER_STATUS_TASK_ID";
@@ -90,4 +95,5 @@ export const PAY_LOAD_DATA = 'payload.data.data';
 export const FILTER_PROVINCE_CLIENT = 'provinceClient';
 export const FILTER_CITY_CLIENT = 'cityClient';
 export const CURRENCY = 'currency';
+export const CLIENT_NEED = 'clientNeed';
 //FIN

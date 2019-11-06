@@ -4,6 +4,7 @@
 import React, {Component, PropTypes} from 'react';
 import {Popup} from 'semantic-ui-react'
 import {isUndefined} from 'lodash';
+import { debug } from 'util';
 
 export const TOOLTIP_SIZE = {
     mini: 'mini',
@@ -32,7 +33,7 @@ export const TOOLTIP_ACTION = {
 
 class ToolTipComponent extends Component {
     render() {
-        const {children, text, position, title, action, style, size, inverted, wide} = this.props;
+        const {children, text, position, title, action, style, size, inverted, wide, rendertooltip} = this.props;
         const _header = isUndefined(title) ? null : title;
         const _position = isUndefined(position) ? 'top left' : position;
         const _style = isUndefined(style) ? null : style;
@@ -40,6 +41,11 @@ class ToolTipComponent extends Component {
         const _size = isUndefined(size) ? null : size;
         const _wide = isUndefined(wide) ? true : wide;
         const _inverted = isUndefined(inverted) ? true : inverted;
+
+        if (text==null || text=="") {
+            return <div>{children}</div>
+        }
+
         return <Popup
             trigger={children}
             header={_header}
@@ -50,8 +56,12 @@ class ToolTipComponent extends Component {
             size={_size}
             on={_action}
             position={_position}
-        />
+            />
     }
+}
+
+ToolTipComponent.defaultProps = {
+    rendertooltip: true
 }
 
 ToolTipComponent.propTypes = {
