@@ -5,7 +5,7 @@ import '../../../styles/stylePageNotFound/pageNotFound.scss';
 import { Link } from 'react-router';
 
 
-const pageNotFound = () => {
+const PageNotFound = () => {
     return (
         <div className="page-not-found">
             <img src={background} alt="site under construction" />
@@ -19,4 +19,4 @@ const pageNotFound = () => {
     );
 };
 
-export default pageNotFound;
+export default PageNotFound;

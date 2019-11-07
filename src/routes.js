@@ -38,7 +38,7 @@ import ControlDashboard from "./components/transactional/controlDashComponent";
 import LinkingRequests from "./components/myPendings/linkingRequests/componentLinkingRequests";
 import Sheduler from "./components/sheduler/shedulerComponent";
 import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderConstruction";
-import pageNotFound from "./components/notFoundPage/pageNotFound";
+import PageNotFound from "./components/notFoundPage/PageNotFound";
 import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
     CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST, 
     LINKINGREQUESTS, MODALDRAFTDOCUMENTS, MODALCOMPONENTPENDING, ALERTCOVENANTS, 
@@ -244,7 +244,7 @@ export default (
                 <Route path="controlDashboard" component={ControlDashboard}></Route>
                 <Route path="sheduler" component={Sheduler}></Route>
             </Route>
-            <Route path="*" component={pageNotFound}/>
+            <Route path="*" component={PageNotFound}/>
         </Route>
     </Grid>
 );
