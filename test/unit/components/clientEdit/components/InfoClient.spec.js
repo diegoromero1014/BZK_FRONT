@@ -6,9 +6,7 @@ import Input from "~/src/ui/input/inputComponent";
 import ComboBox from "~/src/ui/comboBox/comboBoxComponent";
 import Textarea from "~/src/ui/textarea/textareaComponent";
 
-import * as SelectActions from '~/src/components/selectsComponent/actions';
-
-import InfoClientRedux, { InfoClient } from '~/src/components/clientEdit/components/InfoClient';
+import { InfoClient } from '~/src/components/clientEdit/components/InfoClient';
 
 class ReduxFormField {
     constructor() {
@@ -18,6 +16,7 @@ class ReduxFormField {
 }
 
 const clientInformacion = Immutable.Map({ 'responseClientInfo': {} });
+const consultListByCatalogType = () => { };
 const selectsReducer = Immutable.Map({'segment': [{id: 1, value: 'Constructor Pyme', key: 'Constructor Pyme'}, {id: 2, value: 'Otra cosa', key: 'Otra Cosa'}]});
 
 const segment = {
@@ -42,7 +41,7 @@ const description = {
 }
 
 const defaultProps = { clientInformacion, selectsReducer, segment, 
-    idTypeClient, idNumber, subSegment, description };
+    idTypeClient, idNumber, subSegment, description, consultListByCatalogType };
 
 describe('Test ClientEdit/InfoClient', () => {
     it('should render ClientTypology', () => {

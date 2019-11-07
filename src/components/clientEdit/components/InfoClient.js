@@ -10,7 +10,7 @@ import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ClientTypology from "../../contextClient/clientTypology";
 import * as constants from "../../selectsComponent/constants";
 
-import { getMasterDataFields, consultListWithParameterUbication } from '../../selectsComponent/actions';
+import { getMasterDataFields, consultListWithParameterUbication, consultListByCatalogType } from '../../selectsComponent/actions';
 
 import { TITLE_DESCRIPTION, GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../constants';
 import { BUTTON_EDIT } from "../../clientDetailsInfo/constants";
@@ -44,13 +44,15 @@ export class InfoClient extends React.Component {
 
     componentDidUpdate() {
         this._checkSubSegmentRender();
-
     }
 
     _changeSegment(idSegment, firstConsult) {
-        const { segment, customerTypology, selectsReducer, getMasterDataFields, consultListWithParameterUbication } = this.props;
+        const { segment, subSegment, customerTypology, selectsReducer, getMasterDataFields, consultListWithParameterUbication, consultListByCatalogType } = this.props;
         const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
         segment.onChange(idSegment);
+
+        consultListByCatalogType(constants.SUBSEGMENTS, idSegment, constants.SUBSEGMENTS);
+        subSegment.onChange(firstConsult ? subSegment : '');
 
         if (!_.isUndefined(value)) {
             if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {
@@ -191,7 +193,8 @@ function mapStateToProps({ selectsReducer, clientInformacion }) {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getMasterDataFields,
-        consultListWithParameterUbication
+        consultListWithParameterUbication,
+        consultListByCatalogType
     }, dispatch)
 }
 
