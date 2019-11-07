@@ -22,17 +22,6 @@ const defaultProps = { fields:fields, clientInformacion, selectsReducer,
     handleSubmit,consultListByCatalogType,
     getMasterDataFields, consultList, consultDataSelect };
 
-describe('Test createProspect/onChangeFields', () => {
-
-    it('should refresh subSegment lists when segment changes', () => {
-        const wrapper = shallow(<FormCreateProspect {...defaultProps} />);
-    
-        wrapper.instance()._changeSegment(123);
-        console.log(wrapper)
-        expect(wrapper.state().segment).to.equal("123");
-    });
-});
-
 describe('Test createProspect', () => {
     
     it('should render segment', () => {
