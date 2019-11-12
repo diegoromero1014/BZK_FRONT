@@ -11,8 +11,11 @@ import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonRiskGroup from '../clientRiskGroup/buttonClientRiskGroup';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
 import ButtonClientVisorComponent from '../clientVisor/buttonClientVisorComponent';
+import NotificationComponent from '../notification/notificationComponent';
+import NotificationExpiredPortfolio from '../alertPortfolioExpirtation/notificationExpiredPortfolio';
 
 import { consultInfoClient } from './actions';
+import { validateExpiredPortfolio } from './actions';
 import { updateTitleNavBar, viewAlertClient } from '../navBar/actions';
 import { redirectUrl } from '../globalComponents/actions';
 import { clearEntities } from '../clientDetailsInfo/linkingClient/LinkEntitiesComponent/actions';
@@ -20,7 +23,7 @@ import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
 import { updateTabSeletedCS } from '../customerStory/actions';
 
-import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS,MODULE_STUDY_CREDIT, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
+import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS, MODULE_STUDY_CREDIT, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
 import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
 import { TAB_STORY } from '../customerStory/constants';
 
@@ -29,8 +32,14 @@ class ComponentClientInformation extends Component {
         super(props);
 
         this.state = {
-            allow_visor_cliente: false
+            allow_visor_cliente: false,
+            notification: {
+                open: false,
+                data: null
+            }
         };
+
+        this.closeNotification = this.closeNotification.bind(this);
     }
 
     componentWillMount() {
@@ -41,9 +50,10 @@ class ComponentClientInformation extends Component {
                 resetAccordion();
             }
             $(window).scrollTop(0);
+            
             const { updateTitleNavBar, viewAlertClient, consultInfoClient, showLoading, updateTabSeletedCS } = this.props;
             updateTitleNavBar("Mis clientes");
-            showLoading(true, 'Cargando..');
+            showLoading(true, 'Cargando...');
 
             validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
                 let permissions = _.get(data, 'payload.data.data.permissions')
@@ -73,11 +83,34 @@ class ComponentClientInformation extends Component {
 
     componentDidMount() {
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
+        
+        const { validateExpiredPortfolio } = this.props;
+        validateExpiredPortfolio().then((response) => {
+            const { data } = response.payload.data;
+            if (data.length > 0) {
+                this.setState({
+                    notification: {
+                        open: true,
+                        data: data 
+                    }
+                });
+            }
+            
+        })
     }
 
     componentWillUnmount() {
         this.props.viewAlertClient(false);
         this.props.clearEntities();
+    }
+
+    closeNotification() {
+        this.setState({
+            notification: {
+                open: false,
+                data: null
+            }
+        })
     }
 
     render() {
@@ -99,6 +132,14 @@ class ComponentClientInformation extends Component {
 
         return (
             <div>
+                { this.state.notification.open && 
+                    <NotificationComponent 
+                        type="error" 
+                        title="Carteras vencidas o próximas a vencer." 
+                        component={<NotificationExpiredPortfolio data={this.state.notification.data} />}
+                        close={this.closeNotification}
+                    />
+                }
                 <header className="header-client-detail" style={{ boxShadow: "-3px 2px 5px 0 rgba(0, 0, 0, 0.2)" }}>
                     <Row>
                         <Col xs={11} sm={11} md={11} lg={11}>
@@ -243,7 +284,8 @@ function mapDispatchToProps(dispatch) {
         showLoading,
         resetAccordion,
         updateTabSeletedCS,
-        validatePermissionsByModule
+        validatePermissionsByModule,
+        validateExpiredPortfolio
     }, dispatch);
 }
 
