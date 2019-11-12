@@ -11,7 +11,8 @@ import BtnEditBusiness from '../btnEditBusiness';
 
 import { shorterStringValue } from '../../../actionsGlobal';
 
-import { PRODUCTS_MASK, PIPELINE_BUSINESS, PIPELINE_STATUS } from '../../selectsComponent/constants';
+import { PRODUCTS_MASK, PIPELINE_BUSINESS, PIPELINE_STATUS, PRODUCTS } from '../../selectsComponent/constants';
+import { consultDataSelect } from "../../selectsComponent/actions";
 
 var idBusinessSeleted = null;
 
@@ -23,6 +24,13 @@ class ListBusiness extends Component {
     };
 
     static propTypes = {};
+
+    
+    componentWillMount(){
+        const {consultDataSelect} = this.props;
+        consultDataSelect(PRODUCTS, PRODUCTS_MASK);
+    }
+
 
     closeModal = () => {
         this.setState({ modalIsOpen: false });
@@ -45,12 +53,11 @@ class ListBusiness extends Component {
     };
 
     _mapValuesBusiness = (businessData, idx) => {
-        const { selectsReducer, disabled } = this.props;
-        const products = selectsReducer.get(PRODUCTS_MASK);
-        const business = selectsReducer.get(PIPELINE_BUSINESS);
+        const { selectsReducer, disabled } = this.props;        
+        const products = selectsReducer.get(PRODUCTS_MASK);        
         const states = selectsReducer.get(PIPELINE_STATUS);
-        const { uuid, product, businessStatus } = businessData;
-        let nameProduct, nameBusiness, nameState;
+        const { product, businessStatus } = businessData;
+        let nameProduct, nameState;        
 
         if (product !== null && product !== '' && product !== undefined) {
             nameProduct = _.get(_.filter(products, ['id', parseInt(product)]), '[0].value');
@@ -79,11 +86,9 @@ class ListBusiness extends Component {
             disabledButtonCreate = 'disabled';
         } else {
             disabledButtonCreate = '';
-        }
-        
-        const modalTitle = 'Negocio detalle';
+        }        
 
-        return (
+        return (            
             <div className="tab-content break-word" style={{
                 zIndex: 0,
                 border: '1px solid #cecece',
@@ -139,7 +144,8 @@ class ListBusiness extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        deleteBusiness
+        deleteBusiness,
+        consultDataSelect
     }, dispatch);
 }
 

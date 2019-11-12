@@ -12,6 +12,7 @@ import * as actionsGlobal from "../../../../../src/actionsGlobal";
 import Input from "../../../../../src/ui/input/inputComponent";
 import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
 import SweetAlert from "../../../../../src/components/sweetalertFocus";
+import * as selectsComponent from "../../../../../src/components/selectsComponent/actions";
 import _ from "lodash";
 
 const middleWares = [thunk];
@@ -28,8 +29,11 @@ const pipelineTypes = [
     id: 2,
     key: NUEVO_NEGOCIO
   }];
+const productsFamilyResolve = {payload: {data: {data: { id: 10, value: 'Factoring Plus', key: 'Factoring Plus', field: 'products', description: ''}}}};
+const productsResolve = {payload: {data: {data: { id: 100, value: 'Captación', key: 'Captación', field: 'businessCategory', description: ''}}}};
 
 let stubGetParameter;
+let stubGetCatalogType;
 
 describe("Test CreatePipeline", () => {
   let store; 
@@ -52,11 +56,18 @@ describe("Test CreatePipeline", () => {
       .returns(() => {
         return new Promise((resolve, reject) => resolve(getParameterSuccess));
       });
+
+    stubGetCatalogType = sinon.stub(selectsComponent, "consultListByCatalogType");
+    stubGetCatalogType.onCall(0)
+      .returns(() => { return new Promise((resolve, reject) => resolve(
+        {payload: {data: {data: { id: 1, value: 'Factoring', key: 'Factoring', field: 'productFamily', description: ''}}}}
+      )); });
   });
 
   afterEach(function() {
     // runs after each test in this block
     stubGetParameter.restore();
+    stubGetCatalogType.restore();
 
   });
 
@@ -90,7 +101,7 @@ describe("Test CreatePipeline", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(5);
+    expect(wrapper.find(Input)).to.have.length(4);
   });
 
   it('show Active field when areaAssetsEnabled value is true', () => {
@@ -149,17 +160,6 @@ describe("Test CreatePipeline", () => {
       .dive();
 
       wrapper.instance().showMessageChangeClientNeed();
-      expect(wrapper.find(SweetAlert)).to.have.length(8);
-  });
-
-  it('Show render formPipeline/SwetAlert when need changes', () => {
-    const wrapper = shallow(<PipelineComponent store={store} />)
-      .dive()
-      .dive()
-      .dive()
-      .dive();
-
-      wrapper.instance()._closeConfirmChangeNeed();
       expect(wrapper.find(SweetAlert)).to.have.length(8);
   });
 
@@ -296,7 +296,56 @@ describe("Test CreatePipeline", () => {
     
     wrapper.instance()._onChangeBusinessCategory(1);         
     expect(wrapper.find(ComboBox).find({ name: 'product_' }));
-});
+  });
+
+  it('should to close confirm alert should not be a financing need when need changed from financing need to another kind of need', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+    .dive()
+    .dive()
+    .dive()
+    .dive();
+
+    wrapper.instance()._closeConfirmChangeNeed();
+    setTimeout(() => {
+      expect(wrapper.state().showConfirmChangeNeed).to.equal(false);
+      expect(wrapper.state().isFinancingNeed).to.equal(false);
+    }, 1 );
+  });
+
+  it('should refresh productFamily when need field changes', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+    .dive()
+    .dive()
+    .dive()
+    .dive();
+
+    wrapper.instance()._changeCatalogProductFamily(1);
+    setTimeout(() => expect(wrapper.state().productsFamily.value).to.equal("Factoring"), 1 );
+  });
+
+  it('should refresh products and categories lists when need changes', () => {
+    stubGetCatalogType.onCall(0)
+      .returns(() => { return new Promise((resolve, reject) => resolve(
+        productsFamilyResolve
+    )); });
+
+    stubGetCatalogType.onCall(1)
+      .returns(() => { return new Promise((resolve, reject) => resolve(
+          productsResolve
+    )); });
+
+    const wrapper = shallow(<PipelineComponent store={store} />)
+    .dive()
+    .dive()
+    .dive()
+    .dive();
+
+    wrapper.instance()._changeProductFamily(1);
+    setTimeout(() => {
+      expect(wrapper.state().products.value).to.equal("Factoring Plus");
+      expect(wrapper.state().businessCategories.value).to.equal("Captación");
+    }, 1 );
+  });
 });
 
 describe("Test CreatePipelineChildren", () => {
@@ -327,11 +376,17 @@ describe("Test CreatePipelineChildren", () => {
         return new Promise((resolve, reject) => resolve(getParameterSuccess));
       });
 
+    stubGetCatalogType = sinon.stub(selectsComponent, "consultListByCatalogType");
+    stubGetCatalogType.onCall(0)
+      .returns(() => { return new Promise((resolve, reject) => resolve(
+        {payload: {data: {data: { id: 1, value: 'Factoring', key: 'Factoring', field: 'productFamily', description: ''}}}}
+      )); });
   });
 
   afterEach(function() {
     // runs after each test in this block
     stubGetParameter.restore();
+    stubGetCatalogType.restore();
 
   });
 
@@ -470,9 +525,58 @@ describe("Test CreatePipelineChildren", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(5);
+    expect(wrapper.find(Input)).to.have.length(4);
     expect(
       wrapper.find(Input).find({ name: "txtOpportunityName" })
     ).to.have.length(0);
+  });
+
+  it('should to close confirm alert should not be a financing need when need changed from financing need to another kind of need formPipeline/pipelineChild', () => {
+    const wrapper = shallow(<PipelineComponentChildren store={store} />)
+    .dive()
+    .dive()
+    .dive()
+    .dive();
+
+    wrapper.instance()._closeConfirmChangeNeed();
+    setTimeout(() => {
+      expect(wrapper.state().showConfirmChangeNeed).to.equal(false);
+      expect(wrapper.state().isFinancingNeed).to.equal(false);
+    }, 1 );
+  });
+
+  it('should refresh productFamily when need field changes formPipeline/pipelineChild', () => {
+    const wrapper = shallow(<PipelineComponentChildren store={store} />)
+    .dive()
+    .dive()
+    .dive()
+    .dive();
+
+    wrapper.instance()._changeCatalogProductFamily(1);
+    setTimeout(() => expect(wrapper.state().productsFamily.value).to.equal("Factoring"), 1 );
+  });
+
+  it('should refresh products and categories lists when need changes formPipeline/pipelineChild', () => {
+    stubGetCatalogType.onCall(0)
+      .returns(() => { return new Promise((resolve, reject) => resolve(
+        productsFamilyResolve
+    )); });
+
+    stubGetCatalogType.onCall(1)
+      .returns(() => { return new Promise((resolve, reject) => resolve(
+        productsResolve
+    )); });
+
+    const wrapper = shallow(<PipelineComponentChildren store={store} />)
+    .dive()
+    .dive()
+    .dive()
+    .dive();
+
+    wrapper.instance()._changeProductFamily(1);
+    setTimeout(() => {
+      expect(wrapper.state().products.value).to.equal("Factoring Plus");
+      expect(wrapper.state().businessCategories.value).to.equal("Captación");
+    }, 1 );
   });
 });

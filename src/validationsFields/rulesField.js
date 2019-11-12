@@ -476,13 +476,9 @@ export const checkRegexHtmlInjection = value => {
     return message;
 }
 
-export const checkPipeLineOpportunityName = value => {
-    let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfOpportunityName.test(value)) {
-        message = MESSAGE_WARNING_OPPORTUNITY_NAME;
-    }
-
-    return message;
+export const checkPipeLineOpportunityName = value => {        
+    const required = checkRequired(value);
+    return required ? required : (!patternOfOpportunityName.test(value) ? MESSAGE_WARNING_OPPORTUNITY_NAME : null);
 }
 
 export const checkRequiredPipelinePadre =  (value, fields, props) => {
