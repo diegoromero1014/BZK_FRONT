@@ -53,8 +53,9 @@ class Sheduler extends Component {
         const { getSchedulerPrevisits, clearLists, updateTitleNavBar, clrearConsultListWithParameter, clearConsultListWithParameterUbication, consultList, consultDataSelect, getRegionsByEmployee } = this.props;
         clearLists([LIST_ZONES, TEAM_VALUE_OBJECTS]);
         getRegionsByEmployee().then((regions) => {
-            let listaRegiones = regions.payload.data.masterDataDetailEntries
-            if (listaRegiones.length == 0) {
+
+            let listaRegiones = regions.payload.data.data
+            if (_.isEmpty(listaRegiones)) {
                 consultDataSelect(LIST_REGIONS);
             }
         });

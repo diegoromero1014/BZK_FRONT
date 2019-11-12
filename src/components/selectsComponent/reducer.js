@@ -144,7 +144,7 @@ export default (state = initialState, action) => {
         case constants.LIST_REGIONS:
             return state.set('region', defaultData(action, constants.PAY_LOAD_DATA));
         case constants.LIST_REGIONS_BY_EMPLOYEE:
-            return state.set('region', defaultData(action, 'payload.data.masterDataDetailEntries'));
+            return state.set('region', defaultData(action, 'payload.data.data'));
         case constants.LIST_ZONES:
             return state.set('zone', defaultData(action, 'payload.data.data'));
         case constants.FULLFILLMENT_COVENANT:
