@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
-import ModalDownloadVisit from '../visit/downloadVisits/component';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Modal from 'react-modal';
+
+import ModalDownloadVisit from '../visit/downloadVisits/component';
 import ModalDownloadPreVisit from '../previsita/downloadPrevisits/component';
 import ModalDownloadBusinessPlan from '../businessPlan/downloadBusinessPlan/component';
 import DownloadTask from '../pendingTask/downloadTask/component';
-import {changeErrorYearSeleted} from './actions';
-import Modal from 'react-modal';
-import { TAB_VISIT, TAB_PREVISIT, TAB_BUSINESS, TAB_TASKS, TAB_PIPELINE } from './constants';
 import DownloadPipeline from "./downloadPipeline/component";
+
+import { changeErrorYearSeleted } from './actions';
+
+import { TAB_BUSINESS, TAB_PIPELINE, TAB_PREVISIT, TAB_TASKS, TAB_VISIT } from './constants';
 
 class ButtonDownloadModal extends Component {
 

@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
-import { Row, Grid, Col } from 'react-flexbox-grid';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import { getCsvVisitsByClient } from '../actions';
+import { Col, Row } from 'react-flexbox-grid';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import moment from 'moment';
+
+import { getCsvVisitsByClient } from '../actions';
+import { changeStateSaveData } from '../../dashboard/actions';
+import { getCsv } from '../../viewManagement/actions';
+
 import { APP_URL, MESSAGE_DOWNLOAD_DATA } from '../../../constantsGlobal';
 import { TAB_VISIT } from '../constants';
-import { getCsv } from '../../viewManagement/actions';
-import moment from 'moment';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import { changeStateSaveData } from '../../dashboard/actions';
 
 class DownloadVisits extends Component {
 
