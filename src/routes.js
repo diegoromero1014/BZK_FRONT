@@ -205,6 +205,7 @@ export default (
         <Redirect from="/" to="/login" />
         <Route path="/" component={App}>
             <Route path="login" component={LoginComponent}></Route>
+            <Route path="logout" component={LoginComponent}></Route>
             <Route path="pageUnderConstruction" component={pageUnderConstructor} />
             <Route path="dashboard" component={DashboardComponent}>
                 <Route path="clients" component={ClientsFind}></Route>
