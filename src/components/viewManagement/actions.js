@@ -54,7 +54,7 @@ export function getCsv(year,url, hasParticipatingContacts, hasParticipatingEmplo
 }
 
 export function getPipelineXls(initialDate, finalDate, changeStateSaveData) {
-  const name = "Pipeline.xlsx"
+  const name = "Pipeline.xlsx";
 
   const payload = {
     "messageHeader": {
