@@ -8,18 +8,9 @@ export default class NotificationComponent extends Component {
         super(props);
         this.state = {
             options: [
-                {
-                    type: "success",
-                    color: "#A5DC86"
-                },
-                {
-                    type: "error",
-                    color: "#E95B4C"
-                },
-                {
-                    type: "info",
-                    color: "#00448c"
-                }
+                { type: "success", color: "#A5DC86" },
+                { type: "error", color: "#E95B4C" },
+                { type: "info", color: "#00448c" }
             ]
         }
     }
@@ -54,7 +45,7 @@ export default class NotificationComponent extends Component {
                     </Col>
                     <Col xs={8}>
                         <center style={{ marginTop: "10px" }}>
-                            <strong>{ title }</strong>
+                            <strong name='titleNotification'>{ title }</strong>
                         </center>
                     </Col>
                     <Col xs={2}>
@@ -67,7 +58,7 @@ export default class NotificationComponent extends Component {
                         </center>  
                     </Col>
                     <Col xs={12}>
-                        <center>{ component }</center> 
+                        <center name='contentComponent'>{ component }</center> 
                     </Col>
                 </Row>
             </div>

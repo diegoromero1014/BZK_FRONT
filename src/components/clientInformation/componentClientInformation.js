@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid';
-import $ from 'jquery';
 import _ from 'lodash';
 
 import RaitingInternal from './ratingInternal';
@@ -27,7 +26,7 @@ import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, GRAY_COLOR, GREEN_COLOR, MODUL
 import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
 import { TAB_STORY } from '../customerStory/constants';
 
-class ComponentClientInformation extends Component {
+export class ComponentClientInformation extends Component {
     constructor(props) {
         super(props);
 
@@ -49,7 +48,6 @@ class ComponentClientInformation extends Component {
             if (tabActive === null) {
                 resetAccordion();
             }
-            $(window).scrollTop(0);
             
             const { updateTitleNavBar, viewAlertClient, consultInfoClient, showLoading, updateTabSeletedCS } = this.props;
             updateTitleNavBar("Mis clientes");
@@ -71,7 +69,6 @@ class ComponentClientInformation extends Component {
                 }
                 showLoading(false, '');
             });
-
 
             viewAlertClient(true);
             updateTabSeletedCS(TAB_STORY);
@@ -95,7 +92,6 @@ class ComponentClientInformation extends Component {
                     }
                 });
             }
-            
         })
     }
 
@@ -119,9 +115,9 @@ class ComponentClientInformation extends Component {
         var showAECNoAplica = false;
         var showAECNivel = true;
         var aecStatus = "";
-
+        
         const allowAccessRiskGroup = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GRUPO_RIESGO), false);
-
+        
         if (infoClient !== null && infoClient !== undefined) {
             aecStatus = infoClient.aecStatus;
             if (aecStatus === undefined || aecStatus === null || aecStatus === AEC_NO_APLIED) {
@@ -133,7 +129,7 @@ class ComponentClientInformation extends Component {
         return (
             <div>
                 { this.state.notification.open && 
-                    <NotificationComponent 
+                    <NotificationComponent
                         type="error" 
                         title="Carteras vencidas o próximas a vencer." 
                         component={<NotificationExpiredPortfolio data={this.state.notification.data} />}

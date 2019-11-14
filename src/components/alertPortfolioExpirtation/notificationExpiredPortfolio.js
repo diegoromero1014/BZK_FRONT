@@ -7,7 +7,7 @@ export default class NotificationExpiredPortfolio extends Component {
         super(props);
 
         this.state = {
-            seeMore: true
+            seeMore: false
         }
     }
 
@@ -17,14 +17,14 @@ export default class NotificationExpiredPortfolio extends Component {
         
         return (
             <div>
-                { seeMore ?
-                    <center><p style={{ cursor: "pointer"}} onClick={() => this.setState({ seeMore: !seeMore}) }>Ver más...</p></center>
+                { !seeMore ?
+                    <center name="verMas"><p style={{ cursor: "pointer"}} onClick={() => this.setState({ seeMore: !seeMore}) }>Ver más...</p></center>
                     :
-                    <center><p style={{ cursor: "pointer"}} onClick={() => this.setState({ seeMore: !seeMore}) }>Ver menos...</p></center>
+                    <center name="verMenos"><p style={{ cursor: "pointer"}} onClick={() => this.setState({ seeMore: !seeMore}) }>Ver menos...</p></center>
                 }
                 <br/>
-                { !seeMore &&
-                    <div className="animated fadeInUp">
+                { seeMore &&
+                    <div name='content' className="animated fadeInUp">
                         <Row>
                             <Col xs={4}><strong>Entidad</strong></Col>
                             <Col xs={4}><strong>Saldo Vencido</strong></Col>
@@ -32,7 +32,7 @@ export default class NotificationExpiredPortfolio extends Component {
                         </Row>
                         { 
                             data.map(item => (
-                                <div>
+                                <div key={item.entityName}>
                                     <Row>
                                         <Col xs={4}>{ item.entityName }</Col>
                                         <Col xs={4}>{ item.overdueBalance }</Col>
@@ -47,5 +47,4 @@ export default class NotificationExpiredPortfolio extends Component {
             </div>
         );
     }
-    
 }
