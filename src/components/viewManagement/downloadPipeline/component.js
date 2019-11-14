@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Col, Row} from 'react-flexbox-grid';
-import {getPipelineXls, getXlsPipeline} from '../actions';
+import {getPipelineXls } from '../actions';
 import {bindActionCreators} from 'redux';
 import {reduxForm} from 'redux-form';
 import moment from 'moment';
@@ -55,7 +55,7 @@ class DownloadPipeline extends Component {
     }
 
     downloadPipeline() {
-        const {fields: {initialValidityDate, finalValidityDate}, changeStateSaveData, getXlsPipeline, swtShowMessage, getPipelineXls, itemSelectedModal} = this.props;
+        const {fields: {initialValidityDate, finalValidityDate}, changeStateSaveData, swtShowMessage, getPipelineXls, itemSelectedModal} = this.props;
         let errorInForm = false;
 
         if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value) || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid()) {
@@ -72,13 +72,7 @@ class DownloadPipeline extends Component {
 
         if (!errorInForm) {
             if (TAB_PIPELINE === itemSelectedModal) {
-                getPipelineXls(initialValidityDate.value, finalValidityDate.value).then(function (request) {
-                    if (request.payload.data.status === 200) {
-                        getXlsPipeline(changeStateSaveData, request.payload.data.data);
-                    }
-                }).catch(function (error) {
-                    console.log(error);
-                });
+                getPipelineXls(initialValidityDate.value, finalValidityDate.value, changeStateSaveData);
             }
         } else {
             swtShowMessage(MESSAGE_ERROR, 'Campos obligatorios', 'Señor usuario, para descargar las tareas debe ingresar los campos obligatorios.');
@@ -235,7 +229,6 @@ function mapStateToProps({businessPlanReducer, selectsReducer}) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getXlsPipeline,
         getPipelineXls,
         changeStateSaveData,
         swtShowMessage,

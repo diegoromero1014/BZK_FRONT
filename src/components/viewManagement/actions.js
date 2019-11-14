@@ -53,9 +53,10 @@ export function getCsv(year,url, hasParticipatingContacts, hasParticipatingEmplo
   }
 }
 
-export function getPipelineXls(initialDate, finalDate) {
-  let url = "/getPipelineXls";
-  const json = {
+export function getPipelineXls(initialDate, finalDate, changeStateSaveData) {
+  const name = "Pipeline.xlsx"
+
+  const payload = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionTokenFront'),
       "timestamp": new Date().getTime(),
@@ -73,44 +74,11 @@ export function getPipelineXls(initialDate, finalDate) {
       "finalDate": moment(finalDate, 'DD/MM/YYYY').toDate().getTime()
     }
   };
-  let request = axios.post(APP_URL + url, json);
-  return {
-    type: GET_CSV,
-    payload: request
-  }
+
+  downloadReport(payload, "/getPipelineXls", name, changeStateSaveData);
 }
 
-export function getXlsPipeline(changeStateSaveData, request) {
-  const name = "Pipeline vista gerencial.xls";
 
-  request = request.map(
-      value => Object.assign(value, { createDate: moment(value.createDate).format("DD/MM/YYYY"), updateDate: moment(value.updateDate).format('DD/MM/YYYY')})
-  );
-
-  debugger;
-  const payload = {
-    "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "timestamp": new Date().getTime(),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
-    },
-    "messageBody": {
-      "name": name,
-      "route": "BiztrackReports/PipelineGerencialView.jrxml",
-      "params": {},
-      "source": request
-    }
-  };
-
-  downloadReport(payload, "/generate/XLS", name, changeStateSaveData);
-}
 
 
 
