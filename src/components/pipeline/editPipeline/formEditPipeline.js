@@ -1108,7 +1108,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Estado del nogocio (</span><span style={{ color: "red" }}>*</span>)
+                                            <span>Estado del negocio (</span><span style={{ color: "red" }}>*</span>)
                                         </dt>
                                         <ComboBox
                                             labelInput="Seleccione..."
