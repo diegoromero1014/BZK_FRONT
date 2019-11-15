@@ -53,9 +53,9 @@ export function getCsv(year,url, hasParticipatingContacts, hasParticipatingEmplo
   }
 }
 
-export function getXlsPipeline(changeStateSaveData, initialDate, finalDate) {
-  const name = "Pipeline vista gerencial.xls";
-  
+export function getPipelineXls(initialDate, finalDate, changeStateSaveData) {
+  const name = "Pipeline.xlsx";
+
   const payload = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionTokenFront'),
@@ -70,19 +70,15 @@ export function getXlsPipeline(changeStateSaveData, initialDate, finalDate) {
       "isSuccessful": true
     },
     "messageBody": {
-      "name": name,
-      "route": "BiztrackReports/pipeline_view_manager.jrxml",
-      "params": {
-        "P_USER_NAME": window.localStorage.getItem("userNameFront"),
-        "P_INITIAL_DATE": moment(initialDate, 'DD/MM/YYYY').toDate().getTime(),
-        "P_FINAL_DATE": moment(finalDate, 'DD/MM/YYYY').toDate().getTime()
-      },
-      "source": []
+      "initialDate": moment(initialDate, 'DD/MM/YYYY').toDate().getTime(),
+      "finalDate": moment(finalDate, 'DD/MM/YYYY').toDate().getTime()
     }
   };
 
-  downloadReport(payload, "/generate/XLS", name, changeStateSaveData);
+  downloadReport(payload, "/getPipelineXls", name, changeStateSaveData);
 }
+
+
 
 
 
