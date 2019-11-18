@@ -1,10 +1,7 @@
 export const VERSION_DATE = "18/10/2019";
-export const PERSONA_NATURAL = 451;
-export const PERSONA_JURIDICA = 452;
 export const NATURAL_PERSON = "Persona natural";
 export const JURIDICAL_PERSON = "Persona jurídica";
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
-export const FILE_OPTION_REPORT_VISIT = 2;
 export const FILE_OPTION_SHOPPING_MAP = 3;
 export const FILE_OPTION_PRE_VISIT_GUIDE = 4;
 export const CONSULT_PARAMETER_NAME = 'CONSULT_PARAMETER_NAME';
@@ -51,37 +48,34 @@ export const CLIENT_ORIGIN_RESOURCES = "clientOriginResources";
 export const CLIENT_ORIGIN_GOODS = "clientOriginGoods";
 
 export const TITLE_CONCLUSIONS_VISIT = "En este campo se podrán ingresar los aspectos más relevantes, los acuerdos " +
-    " y compromisos que se dieron en la reunión. Además, registrar los comentarios del estado de servicio.\n\n" +
-    "Si en la visita se presentó una propuesta de negocio al cliente, se deberá indicar ¿qué tan real es el " +
-    " interés del cliente en nuestra propuesta? Para dar respuesta a esta pregunta tenga en cuenta las " +
-    " dimensiones del “Mapa de Proceso de Compra del Cliente”, utilícelo como una herramienta de chequeo " +
-    " (ver pdf).";
+  " y compromisos que se dieron en la reunión. Además, registrar los comentarios del estado de servicio.\n\n" +
+  "Si en la visita se presentó una propuesta de negocio al cliente, se deberá indicar ¿qué tan real es el " +
+  " interés del cliente en nuestra propuesta? Para dar respuesta a esta pregunta tenga en cuenta las " +
+  " dimensiones del “Mapa de Proceso de Compra del Cliente”, utilícelo como una herramienta de chequeo " +
+  " (ver pdf).";
 export const TITLE_OTHERS_PARTICIPANTS = "En esta sección se podrán ingresar los otros participantes que asistieron a la " +
-    " reunión, tanto participantes por parte del Grupo Bancolombia como del cliente.\n" +
-    "Los campos “nombre”, “cargo” y “empresa” son de texto libre, diligencie los 3 campos " +
-    " y haga clic en el botón  “+ agregar participante”.";
+  " reunión, tanto participantes por parte del Grupo Bancolombia como del cliente.\n" +
+  "Los campos “nombre”, “cargo” y “empresa” son de texto libre, diligencie los 3 campos " +
+  " y haga clic en el botón  “+ agregar participante”.";
 export const TITLE_BANC_PARTICIPANTS = "En esta sección se podrán adicionar como “participantes en la reunión " +
-    "por parte del Grupo Bancolombia” a personas que estén creadas como usuarios en Biztrack.\n\n" +
-    "Si desea adicionar un participante y no está creado en Biztrack, haga uso de la sección " +
-    "“Otros participantes en la reunión”.";
+  "por parte del Grupo Bancolombia” a personas que estén creadas como usuarios en Biztrack.\n\n" +
+  "Si desea adicionar un participante y no está creado en Biztrack, haga uso de la sección " +
+  "“Otros participantes en la reunión”.";
 export const TITLE_CLIENT_PARTICIPANTS = "En esta sección se podrán adicionar como “participantes en la reunión por parte del cliente” a los contactos del cliente en Biztrack. Si desea adicionar un participante y que este no quede como contacto haga uso de la sección “Otros participantes en la reunión”\n\n" +
-    "Agregar un participante:\n" +
-    "1. Ingrese el nombre del contacto (campo: “Nombre”)\n" +
-    "2. Seleccione el contacto que desea como participante\n" +
-    "3. Haga clic en el botón “+ agregar participante”\n\n" +
-    "Los campos “cargo”, “estilo social”, “actitud frente al grupo”, se alimentan automáticamente de la información del contacto registrada en Biztrack, si salen en blanco deberá:\n" +
-    "a. Guardar el informe como borrador\n" +
-    "b. Ir la pestaña de “contactos” y completar los campos.\n" +
-    "c. Retomar la edición del informe y agregar el contacto\n\n" +
-    "Crear contacto:\n" +
-    "Si desea crear un contacto en Biztrack para adicionarlo como participante haga clic en el botón “crear contacto” y diligencie todos los campos. Repita los pasos para agregar participante.\n";
+  "Agregar un participante:\n" +
+  "1. Ingrese el nombre del contacto (campo: “Nombre”)\n" +
+  "2. Seleccione el contacto que desea como participante\n" +
+  "3. Haga clic en el botón “+ agregar participante”\n\n" +
+  "Los campos “cargo”, “estilo social”, “actitud frente al grupo”, se alimentan automáticamente de la información del contacto registrada en Biztrack, si salen en blanco deberá:\n" +
+  "a. Guardar el informe como borrador\n" +
+  "b. Ir la pestaña de “contactos” y completar los campos.\n" +
+  "c. Retomar la edición del informe y agregar el contacto\n\n" +
+  "Crear contacto:\n" +
+  "Si desea crear un contacto en Biztrack para adicionarlo como participante haga clic en el botón “crear contacto” y diligencie todos los campos. Repita los pasos para agregar participante.\n";
 export const TITLE_OPPORTUNITY_BUSINESS = "Piense en: Medio Ambiente de la Industria, Medio ambiente económico, Mercado, Competencia, Medio Ambiente Político, Legislación, Tendencias Sociales.";
 export const OPTION_REQUIRED = "Debe seleccionar una opción";
 export const VALUE_REQUIERED = "Debe ingresar un valor";
 export const VALUE_XSS_INVALID = "La información ingresada contiene caracteres invalidos.";
-export const INVALID_EMAIL = "Debe ingresar un formato válido";
-export const DATE_REQUIERED = "Debe seleccionar un día";
-export const DATE_START_AFTER = "La fecha inicial es superior a la final";
 export const DATE_FORMAT = "DD/MM/YYYY";
 export const DATETIME_FORMAT = "DD/MM/YYYY hh:mm a";
 export const REVIEWED_DATE_FORMAT = "DD MMM YYYY";
@@ -106,9 +100,7 @@ export const CREAR = "Crear";
 export const EDITAR = "Editar";
 export const ELIMINAR = "Eliminar";
 export const DESCARGAR = "Descargar";
-export const FINALIZAR = "Finalizar";
 export const VINCULAR = "Vincular";
-export const ESTUDIO_DE_CREDITO = "Estudio de crédito";
 export const ENTREGA_ESTRUCTURADA = "Entrega estructurada";
 export const COMMERCIAL = "Comercial";
 export const GENERATE_PDF = "Generar PDF";
@@ -145,7 +137,6 @@ export const MODULE_QUALITATIVE_VARIABLES = "Variables Cualitativas";
 export const MODULE_TRANSACTIONAL = "Mis Informes";
 export const MODULE_RISK_GROUP = "Grupos de riesgo";
 export const MODULE_LINKING_REQUESTS = "Solicitudes de vinculación";
-export const MODULE_SHEDULER = "Scheduler";
 export const MODULE_STUDY_CREDIT = "Estudio de crédito";
 
 export const TAB_INFO = 1;
@@ -165,22 +156,22 @@ let API_URL;
 let GOOGLE_RECAPTCHA_PUBLIC_KEY;
 
 if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
-    API_URL = "http://localhost:8084/Centricity";
-    GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcSM7AUAAAAAOgy56jmc06CPK7uDLZNiwzkG6Y8';
+  API_URL = "http://localhost:8084/Centricity";
+  GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcSM7AUAAAAAOgy56jmc06CPK7uDLZNiwzkG6Y8';
 } else {
-    if (WP_VAR_ENVIRONMENT === "production") {        
-        API_URL = "https://biztrack.bancolombia.corp/Centricity";
-        GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcN9rMUAAAAAAA6mSV4rn_7BHZvOVlQlWBIXLeB';
-    } else if (WP_VAR_ENVIRONMENT === 'development') {
-        API_URL = "https://was-biztrackdev.apps.ambientesbc.com/Centricity";
-        GOOGLE_RECAPTCHA_PUBLIC_KEY = '6Lf39bMUAAAAANetoQ4U_xpWh1pNHdANtBM7Mc-5';
-    } else if (WP_VAR_ENVIRONMENT === 'quality') {
-        API_URL = "https://was-biztrackqa.apps.ambientesbc.com/Centricity";
-        GOOGLE_RECAPTCHA_PUBLIC_KEY = '6Lfm9bMUAAAAAEqNTrF1KqOgb6sx9bR1qRyWMCAZ';
-    } else if (WP_VAR_ENVIRONMENT === 'sameorigin') {
-        API_URL = window.location.origin + "/Centricity";
-        GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcN9rMUAAAAAAA6mSV4rn_7BHZvOVlQlWBIXLeB';
-    }
+  if (WP_VAR_ENVIRONMENT === "production") {
+    API_URL = "https://biztrack.bancolombia.corp/Centricity";
+    GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcN9rMUAAAAAAA6mSV4rn_7BHZvOVlQlWBIXLeB';
+  } else if (WP_VAR_ENVIRONMENT === 'development') {
+    API_URL = "https://was-biztrackdev.apps.ambientesbc.com/Centricity";
+    GOOGLE_RECAPTCHA_PUBLIC_KEY = '6Lf39bMUAAAAANetoQ4U_xpWh1pNHdANtBM7Mc-5';
+  } else if (WP_VAR_ENVIRONMENT === 'quality') {
+    API_URL = "https://was-biztrackqa.apps.ambientesbc.com/Centricity";
+    GOOGLE_RECAPTCHA_PUBLIC_KEY = '6Lfm9bMUAAAAAEqNTrF1KqOgb6sx9bR1qRyWMCAZ';
+  } else if (WP_VAR_ENVIRONMENT === 'sameorigin') {
+    API_URL = window.location.origin + "/Centricity";
+    GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcN9rMUAAAAAAA6mSV4rn_7BHZvOVlQlWBIXLeB';
+  }
 }
 
 export const APP_URL = API_URL;
@@ -190,7 +181,6 @@ export const STOP_INPUT_EVENTS = 'ias-ayax/input/stop-events-observer';
 export const UPDATE_INPUT_EVENT = 'ias-ayax/input/update-event-observer';
 export const SEND_INPUT_EVENT = 'ias-ayax/input/send-event-observer';
 export const CLEAN_INPUT_EVENT = 'ias-ayax/input/clean-event-observer';
-export const REDIRECT_TO_LOGIN = 'ias-ayax/input/redirect-to-url';
 
 //Mensajes de error
 export const TITLE_ERROR_SWEET_ALERT = "Error ejecutando transacción";
@@ -199,34 +189,34 @@ export const MESSAGE_ERROR_INVALID_INPUT = "Señor usuario, los datos enviados c
 //Mensajes advertencia
 export const MESSAGE_REPLACE_PDF = "Señor usuario, ya fue generado un PDF para este cliente, ¿Desea reemplazarlo?"
 
-export const STYLE_BUTTONS_ACTIONS = { paddingRight: '7px', paddingLeft: '7px' };
+export const STYLE_BUTTONS_ACTIONS = {paddingRight: '7px', paddingLeft: '7px'};
 export const STYLE_CONTAINER_BUTTONS = {
-    position: "fixed",
-    border: "1px solid #C2C2C2",
-    bottom: "0px",
-    width: "100%",
-    marginBottom: "0px",
-    backgroundColor: "#F8F8F8",
-    height: "50px",
-    background: "rgba(255,255,255,0.75)"
+  position: "fixed",
+  border: "1px solid #C2C2C2",
+  bottom: "0px",
+  width: "100%",
+  marginBottom: "0px",
+  backgroundColor: "#F8F8F8",
+  height: "50px",
+  background: "rgba(255,255,255,0.75)"
 };
 
 //Data para los select de respuesta "Aprobar" - "Rechazar"
 export const VALUES_APROVE = [
-    { 'id': '', 'value': "Seleccione..." },
-    { 'id': true, 'value': "Aprobar" },
-    { 'id': false, 'value': "Rechazar" }
+  {'id': '', 'value': "Seleccione..."},
+  {'id': true, 'value': "Aprobar"},
+  {'id': false, 'value': "Rechazar"}
 ];
 
 export const STYLE_BUTTON_BOTTOM = {
-    marginLeft: '-35px',
-    position: 'fixed',
-    border: '1px solid rgb(194, 194, 194)',
-    bottom: '0px',
-    width: '100%',
-    marginBottom: '0px',
-    height: '50px',
-    background: 'rgba(255, 255, 255, 0.74902)'
+  marginLeft: '-35px',
+  position: 'fixed',
+  border: '1px solid rgb(194, 194, 194)',
+  bottom: '0px',
+  width: '100%',
+  marginBottom: '0px',
+  height: '50px',
+  background: 'rgba(255, 255, 255, 0.74902)'
 }
 
 export const ORDER_ASC = 0;
@@ -234,17 +224,14 @@ export const ORDER_DESC = 1;
 export const STR_YES = "Si";
 
 export const valuesYesNo = [
-    { 'id': true, 'value': "Si" },
-    { 'id': false, 'value': "No" }
+  {'id': true, 'value': "Si"},
+  {'id': false, 'value': "No"}
 ];
 
 /**
  * INICIO REGEX XSS
  */
-export const REGEX_GENERAL_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|(<meta|<iframe|<link|<script|((\+|\-|\*|=).*cmd)|scriptlet|error=|http-equiv|@import)/g;
-export const REGEX_FUNCTIONS_XSS = /onstart|onabort|onbeforeunload|onerror|onhashchange|onload|onpageshow|onpagehide|onresize|onscroll|onunload|onmouseover/g;
 export const REGEX_SIMPLE_XSS = /(?![',.-])[#-.]|[[-^]|[?|{}]|<.*?>/g;
-// export const REGEX_SIMPLE_XSS_STRING = "/(?![',.-])[#-.]|[[-^]|[?|{}]|<.*?>/g";
 export const REGEX_SIMPLE_XSS_STRING = "/<.*?>|((\\+|\\-|\\*|=).*cmd)|&#|onabort|onbeforeunload|onerror|onhashchange|onload|onstart|onpageshow|onpagehide|onresize|onscroll|onunload|javascript|onmouseover/g";
 
 export const REGEX_SIMPLE_XSS_STRING_TAG = "/<.*?>/g";
@@ -280,10 +267,10 @@ export const NAME_REPORT_PREVISIT = "PreVisita";
 export const BLOCK_CREDIT_STUDY = "CreditStudy";
 export const BLOCK_BUSINESS_PLAN = "BusinessPlan";
 
- /**
-  * PARAMETROS BLOQUEO
-  */
-    export const TIME_REQUEST_BLOCK_REPORT = 60000;
+/**
+ * PARAMETROS BLOQUEO
+ */
+export const TIME_REQUEST_BLOCK_REPORT = 60000;
 
 
 /**
@@ -304,4 +291,4 @@ export const MOST_ADD_AN_EVENT = "Señor usuario, para guardar debe agregar un e
 export const MESSAGE_SECURITY_FORM = "MENSAJE_SEGURIDAD_FORMULARIOS";
 
 //PARAMETRO DE DIAS HABILITADO PARA GENERAR PDF ESTUDIO DE CRÉDITO
-export const DIAS_HABILITADOS_PARA_GENERAR_PDF ="DIAS_HABILITADOS_PARA_GENERAR_PDF";
+export const DIAS_HABILITADOS_PARA_GENERAR_PDF = "DIAS_HABILITADOS_PARA_GENERAR_PDF";

@@ -291,7 +291,9 @@ export function validateResponse(response) {
         window.localStorage.setItem('sessionTokenFront', '');
         redirectUrl("/login");
     } else {
-        if ((_.get(response, 'payload.data.status') === constants.REQUEST_ERROR) || (_.get(response, 'payload.data.status') === constants.REQUEST_ERROR_XSS)) {
+        if ((_.get(response, 'payload.data.status') === constants.REQUEST_ERROR) ||
+          (_.get(response, 'payload.data.status') === constants.REQUEST_ERROR_XSS)||
+          validateWhileListResponse(response)) {
             return false;
         }
     }
