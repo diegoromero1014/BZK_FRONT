@@ -43,6 +43,7 @@ export class ModalDetailAEC extends Component {
         return (
             <div>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{ overflowX: 'hidden', maxHeight: '490px !important' }}>
+                    <br></br>
                     <ModalClientName clientName={infoClient.clientName} typeDocument={infoClient.clientNameType} clientDocument={infoClient.clientIdNumber}></ModalClientName>                    
                     <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información del AEC</span></dt>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
