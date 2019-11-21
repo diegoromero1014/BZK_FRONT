@@ -14,9 +14,9 @@ export default class ModalClientName extends Component {
         const {clientName, typeDocument, clientDocument} = this.props;        
         return (
             <div style={styles}>
-                <span><b>{typeDocument}: </b> {clientDocument}</span>
+                <span name="clientDocument"><b>{typeDocument}: </b> {clientDocument}</span>
                 <br></br>
-                <span><b>Cliente:</b> {clientName}</span>                
+                <span name="clientName"><b>Cliente:</b> {clientName}</span>                
             </div>
         )
     }
