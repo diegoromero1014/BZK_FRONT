@@ -188,7 +188,7 @@ export class ModalCreateTask extends Component {
             
               if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
                               
-                const validationsErrorFromServer = _.get(data, 'payload.data.data');
+                const validationsErrorFromServer = _.get(data, 'payload.data.data[0].detail');
                     _.forEach(validationsErrorFromServer, (field) => {
                     this.processValidation(field);
                 });
@@ -238,9 +238,9 @@ export class ModalCreateTask extends Component {
   }
   processValidation(field) {
     if (field) {
-        switch (field.fieldName) {
+        switch (field.field) {
             case "task":
-                this.setState({ tareaError: field.message });
+                this.setState({ tareaError: field.message[0] });
                 break;   
             default:
                 break;
