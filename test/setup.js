@@ -6,6 +6,7 @@ import sinon from 'sinon';
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const { document } = new JSDOM('<!doctype html><html><body></body></html>').window;
+document['getElementById'] = () => { return {} };
 global.document = document;
 global.window = document.defaultView;
 global.requestAnimationFrame = callback => {
