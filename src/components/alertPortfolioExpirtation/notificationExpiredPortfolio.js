@@ -24,7 +24,7 @@ export default class NotificationExpiredPortfolio extends Component {
                 }
                 <br/>
                 { seeMore &&
-                    <div name='content' className="animated fadeInUp">
+                    <div name='content' className="animated zoomIn">
                         <Row>
                             <Col xs={4}><strong>Entidad</strong></Col>
                             <Col xs={4}><strong>Saldo Vencido</strong></Col>
