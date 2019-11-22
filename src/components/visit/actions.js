@@ -4,6 +4,7 @@ import {CHANGE_IDPREVISIT,CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,GE
   GET_CSV_VISIT_BY_CLIENT, CLEAR_IDPREVISIT, CHANGE_PAGE_ASSOCIATE__VISIT } from './constants';
 import axios from 'axios';
 import { downloadReport } from '../../utils';
+import { generatePDF } from '../reports/pdf/actions';
 
 export function createVisti(jsonVisit){
   const json = {
@@ -29,33 +30,17 @@ export function createVisti(jsonVisit){
   }
 }
 
-export function pdfDescarga(changeStateSaveData, idVisit) {
-  const name = "Visita/reunión.pdf";
-
-  const payload = {
-    "messageHeader": {
-        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-        "timestamp": new Date().getTime(),
-        "service": "",
-        "status": "0",
-        "language": "es",
-        "displayErrorMessage": "",
-        "technicalErrorMessage": "",
-        "applicationVersion": "",
-        "debug": true,
-        "isSuccessful": true
+export function pdfDescarga(changeStateSaveData, idVisit) {  
+  const requestBody = {
+    "name": "Visita/reunión.pdf",
+    "route": "BiztrackReports/visit.jrxml",
+    "params": {
+      "P_ID_VISIT": Number(idVisit)
     },
-    "messageBody": {
-        "name": name,
-        "route": "BiztrackReports/visit.jrxml",
-        "params": {
-          "P_ID_VISIT": Number(idVisit)
-        },
-        "source": []
-    }
+    "source": []
   };
 
-  downloadReport(payload, "/generate/PDF", name, changeStateSaveData);
+  generatePDF(changeStateSaveData, requestBody);
 }
 
 export function visitByClientFindServer(clientId,pageNum,maxRows,columnOrder,participatingOrder,statusDocumentId){

@@ -353,7 +353,7 @@ export class FormEdit extends Component {
                                     this.setState({ showMessageCreateBusiness: true });
                                 } else {
                                     if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
-                                        const validationsErrorFromServer = _.get(data, 'payload.data.data');
+                                        const validationsErrorFromServer = _.get(data, 'payload.data.data[0].detail');
                                         _.forEach(validationsErrorFromServer, (field) => {
                                             this.processValidation(field);
                                         });
@@ -390,8 +390,8 @@ export class FormEdit extends Component {
     }
 
     processValidation(field) {
-        if (field && field.fieldName && field.fieldName == "opportunitiesAndThreats") {
-            this.setState({ opportunitiesError: field.message });
+        if (field && field.field && field.field  == "opportunitiesAndThreats") {
+            this.setState({ opportunitiesError: field.message[0] });
         }
     }
 

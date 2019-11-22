@@ -285,7 +285,7 @@ export class FormBusinessPlan extends Component {
                                     this.setState({ showMessageCreateBusiness: true });
                                 } else {
                                     if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
-                                        const validationsErrorFromServer = _.get(data, 'payload.data.data');
+                                        const validationsErrorFromServer = _.get(data, 'payload.data.data[0].detail');
                                         _.forEach(validationsErrorFromServer, (field) => {
                                             this.processValidation(field);
                                         });
@@ -322,9 +322,9 @@ export class FormBusinessPlan extends Component {
 
     processValidation(field) {
         if (field) {
-            switch (field.fieldName) {
+            switch (field.field) {
                 case "opportunitiesAndThreats":
-                    this.setState({ opportunitiesError: field.message });
+                    this.setState({ opportunitiesError: field.message[0] });
                     break;
                 default:
                     break;
