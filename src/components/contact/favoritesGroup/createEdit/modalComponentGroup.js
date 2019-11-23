@@ -136,6 +136,7 @@ class ModalComponentGroup extends Component {
             else {
                 getValidateExistGroup(searchGroup.value).then((data) => {
                     const groupSearch = _.get(data.payload, 'data.data', null);
+                    if(data.payload.data.status == 200){
                     if (!_.isNull(groupSearch)) {
                         if (groupsFavoriteContacts.get('group').get('id') == groupSearch.id) {
                             saveNameGroup(searchGroup.value);
@@ -162,6 +163,13 @@ class ModalComponentGroup extends Component {
                             showLoading(false, '');
                         }
                     }
+                } else if (data.payload.data.status == 422) {
+                    swtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
+                    showLoading(false, '');
+                }else {
+                    swtShowMessage(MESSAGE_ERROR, 'Error en el servidor', 'Ocurrió un error en el servidor');
+                    showLoading(false, '');
+                }
                 });
             }
 
