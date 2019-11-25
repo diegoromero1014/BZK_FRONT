@@ -32,7 +32,7 @@ export default class NotificationExpiredPortfolio extends Component {
                         </Row>
                         { 
                             data.map(item => (
-                                <div key={item.entityName}>
+                                <div key={item.idAlert}>
                                     <Row>
                                         <Col xs={4}>{ item.entityName }</Col>
                                         <Col xs={4}>{ item.overdueBalance }</Col>
