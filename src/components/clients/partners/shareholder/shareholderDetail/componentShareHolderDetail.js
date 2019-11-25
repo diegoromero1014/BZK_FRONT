@@ -428,7 +428,7 @@ class ComponentShareHolderDetail extends Component {
                 />
               </Col>
               <Col xs={12} md={4} lg={4}>
-                <dt><span>Departamento</span></dt>
+                <dt><span>Departamento/Provincia</span></dt>
                 <ComboBox
                   name="departamento"
                   labelInput="Seleccione"

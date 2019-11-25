@@ -1,6 +1,3 @@
-/**
- * Created by ahurtado on 12/06/2016.
- */
 import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {bindActionCreators} from 'redux';
@@ -11,7 +8,10 @@ import {
     changeKeyword,
     changeTeam,
     changeRegion,
-    changeZone
+    changeZone,
+    changeType,
+    changeLine,
+    getNameAlert
 } from './actions';
 import {showLoading} from '../loading/actions';
 import SearchBarClient from './searchClientsPortfolioExpiration';
@@ -29,16 +29,15 @@ import {
 import * as constants from '../selectsComponent/constants';
 import {reduxForm} from 'redux-form';
 import {updateTitleNavBar} from '../navBar/actions';
-import {SESSION_EXPIRED} from '../../constantsGlobal';
 import ListClientsAlertPortfolioExp from './listPortfolioExpiration';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {formatLongDateToDateWithNameMonth, validateResponse} from '../../actionsGlobal';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import _ from 'lodash';
-import { relative } from 'path';
+import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
 
-const fields = ["team", "region", "zone"];
+const fields = ["team", "region", "zone", "line", "type"];
 const titleModule = 'Alerta de clientes de cartera vencida o próxima a vencer';
 
 class ClientsPendingUpdate extends Component {
@@ -53,7 +52,7 @@ class ClientsPendingUpdate extends Component {
     }
 
     componentWillMount() {
-        const {showLoading} = this.props;
+        const {showLoading, getMasterDataFields, getNameAlert } = this.props;
         if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
@@ -61,13 +60,21 @@ class ClientsPendingUpdate extends Component {
             showLoading(true, 'Cargando..');
             consultList(constants.TEAM_FOR_EMPLOYEE);
             consultDataSelect(constants.LIST_REGIONS);
+            getMasterDataFields([constants.EXPIRATION_TYPE, constants.LINE_OF_BUSINESS]);
             clearFilter().then((data) => {
                 showLoading(false, null);
                 if (!validateResponse(data)) {
                     swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
                 }
             });
-            updateTitleNavBar(titleModule);
+            getNameAlert().then(resolve => {
+                if(resolve.payload.data != 500) {
+                    updateTitleNavBar(resolve.payload.data.data);
+                } else  {
+                    swtShowMessage('error', 'Error consultando el nombre del componente', 'Señor usuario, ocurrió un error consultanto el nombre del componente configurado.');
+                    updateTitleNavBar(titleModule);
+                }
+            });
         }
     }
 
@@ -119,13 +126,33 @@ class ClientsPendingUpdate extends Component {
         }
     }
 
+    onChangeType(value) {
+        const { fields: {type}, changeType } = this.props;
+
+        type.onChange(value);
+        changeType(value);
+
+        if (value)
+            this._handleClientsFind();
+    }
+
+    onChangeLine(value) {
+        const { fields: {line}, changeLine } = this.props;
+
+        line.onChange(value);
+        changeLine(value);
+
+        if (value)
+            this._handleClientsFind();
+    }
+
     _handleClientsFind() {
-        const {fields: {team, region, zone}, clientsPortfolioExpirationFindServer, alertPortfolioExpiration, changePage, showLoading, swtShowMessage} = this.props;
+        const {fields: {team, region, zone, type, line}, clientsPortfolioExpirationFindServer, alertPortfolioExpiration, changePage, showLoading, swtShowMessage} = this.props;
         const keyWordNameNit = alertPortfolioExpiration.get('keywordNameNit');
         const order = alertPortfolioExpiration.get('order');
         const columnOrder = alertPortfolioExpiration.get('columnOrder');
         showLoading(true, 'Cargando..');
-        clientsPortfolioExpirationFindServer(keyWordNameNit, team.value, region.value, zone.value, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
+        clientsPortfolioExpirationFindServer(keyWordNameNit, team.value, region.value, zone.value, 1, NUMBER_RECORDS, order, columnOrder, line.value, type.value).then((data) => {
             showLoading(false, null);
             if (!validateResponse(data)) {
                 swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
@@ -136,7 +163,7 @@ class ClientsPendingUpdate extends Component {
     render() {
         var visibleTable = 'none';
         var visibleMessage = 'block';
-        const {fields: {team, region, zone}, handleSubmit, reducerGlobal, alertPortfolioExpiration, selectsReducer} = this.props;
+        const {fields: {team, region, zone, type, line}, handleSubmit, reducerGlobal, alertPortfolioExpiration, selectsReducer} = this.props;
         if (_.size(alertPortfolioExpiration.get('responseClients')) !== 0) {
             visibleTable = 'block';
             visibleMessage = 'none';
@@ -145,10 +172,19 @@ class ClientsPendingUpdate extends Component {
         return (
             <div>
                 <form>
-                    <Row style={{borderBottom: "2px solid #D9DEDF", marginTop: "15px"}}>
+                    <Row style={{marginTop: "15px"}}>
                         <Col xs={12} sm={12} md={4} lg={4} style={{width: '60%'}}>
                             <SearchBarClient valueTeam={team.value} valueRegion={region.value} valueZone={zone.value}/>
                         </Col>
+                        <Col xs={12} sm={12} md={2} lg={2} style={{width: '100%'}}>
+                            <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
+                                    title="Limpiar búsqueda" style={{marginLeft: "17px"}}>
+                                <i className="erase icon"
+                                   style={{color: "white", margin: '0em', fontSize: '1.2em'}}></i>
+                            </button>
+                        </Col>
+                    </Row>
+                    <Row style={{paddingBottom: "10px", borderBottom: "1px solid #D9DEDF", marginTop: "12px", marginLeft: "13px"}}>
                         <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
                             <ComboBox
                                 name="celula"
@@ -191,15 +227,38 @@ class ClientsPendingUpdate extends Component {
                                 data={selectsReducer.get(constants.LIST_ZONES) || []}
                             />
                         </Col>
-                        <Col xs={12} sm={12} md={2} lg={2} style={{width: '100%'}}>
-                            <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
-                                    title="Limpiar búsqueda" style={{marginLeft: "17px"}}>
-                                <i className="erase icon"
-                                   style={{color: "white", margin: '0em', fontSize: '1.2em'}}></i>
-                            </button>
+
+                        <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
+                            <ComboBox
+                                name="type"
+                                labelInput="Tipo de vencimiento"
+                                {...type}
+                                onChange={value => this.onChangeType(value)}
+                                value={type.value}
+                                onBlur={type.onBlur}
+                                valueProp={'id'}
+                                textProp={'value'}
+                                searchClient={'client'}
+                                data={selectsReducer.get(constants.EXPIRATION_TYPE) || []}
+                            />
+                        </Col>
+
+                        <Col xs={12} sm={12} md={3} style={{width: '80%'}}>
+                            <MultipleSelect
+                                {...line}
+                                name="line"
+                                labelInput="Entidad / línea de negocio"
+                                valueProp={'id'}
+                                textProp={'value'}
+                                parentId="dashboardComponentScroll"
+                                data={selectsReducer.get(constants.LINE_OF_BUSINESS) || []}
+                                onChange={val => this.onChangeLine(val)}
+                                touched={true}
+                            />
                         </Col>
                     </Row>
                 </form>
+                
                 <Row style={{position: 'relative', heigth: '50px'}}>
                     <div style={{
                         marginTop: "18px",
@@ -256,6 +315,9 @@ function mapDispatchToProps(dispatch) {
         swtShowMessage,
         changeRegion,
         changeZone,
+        changeType,
+        changeLine,
+        getNameAlert,
         consultTeamsByRegionByEmployee
     }, dispatch);
 }
