@@ -258,6 +258,7 @@ class ClientsPendingUpdate extends Component {
                         </Col>
                     </Row>
                 </form>
+                
                 <Row style={{position: 'relative', heigth: '50px'}}>
                     <div style={{
                         marginTop: "18px",
