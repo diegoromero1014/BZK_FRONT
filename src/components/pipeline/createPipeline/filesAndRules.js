@@ -22,7 +22,7 @@ export const fieldsWithRules = {
     indexing: { rules: [] }, 
     need: { rules: [checkRequired] }, 
     observations: { rules: [] }, 
-    product: { rules: [] }, 
+    product: { rules: [checkRequired] }, 
     reviewedDate: { rules: [] }, 
     client: { rules: [] }, 
     documentStatus: { rules: [] }, 
