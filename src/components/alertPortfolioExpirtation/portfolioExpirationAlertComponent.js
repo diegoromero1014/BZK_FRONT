@@ -35,6 +35,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {formatLongDateToDateWithNameMonth, validateResponse} from '../../actionsGlobal';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import _ from 'lodash';
+import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
 
 const fields = ["team", "region", "zone", "line", "type"];
 const titleModule = 'Alerta de clientes de cartera vencida o próxima a vencer';
@@ -242,18 +243,18 @@ class ClientsPendingUpdate extends Component {
                             />
                         </Col>
 
-                        <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
-                            <ComboBox
-                                name="line"
-                                labelInput="Entidad"
+                        <Col xs={12} sm={12} md={3} style={{width: '80%'}}>
+                            <MultipleSelect
                                 {...line}
-                                onChange={value => this.onChangeLine(value)}
-                                value={line.value}
-                                onBlur={line.onBlur}
+                                name="line"
+                                labelInput="Entidad / línea de negocio"
                                 valueProp={'id'}
                                 textProp={'value'}
-                                searchClient={'client'}
+                                parentId="dashboardComponentScroll"
                                 data={selectsReducer.get(constants.LINE_OF_BUSINESS) || []}
+                                onChange={val => this.onChangeLine(val)}
+                                touched={true}
+                                maxSelections={10}
                             />
                         </Col>
                     </Row>
