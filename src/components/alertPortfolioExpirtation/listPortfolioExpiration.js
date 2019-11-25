@@ -94,7 +94,7 @@ class ListClientsPortfolioExpiration extends Component {
                 key: "daysOverdue"
             },
             {
-                title: "Entidad",
+                title: "Entidad / línea de negocio",
                 orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "entity")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "entity")}></i></span>,
                 key: "entity"
             },
