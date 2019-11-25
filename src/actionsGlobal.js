@@ -293,7 +293,7 @@ export function validateResponse(response) {
     } else {
         if ((_.get(response, 'payload.data.status') === constants.REQUEST_ERROR) ||
           (_.get(response, 'payload.data.status') === constants.REQUEST_ERROR_XSS)||
-          validateWhileListResponse(response)) {
+          !validateWhileListResponse(response)) {
             return false;
         }
     }
