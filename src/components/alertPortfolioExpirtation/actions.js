@@ -32,8 +32,8 @@ export function clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idR
             "idZone": idZone,
             "pageNum": pageNum,
             "maxRows": maxRows,
-            "order" : order,
-            "columnOrder" : columnOrder
+            "order" : order ? order : 1,
+            "columnOrder" : columnOrder !== "" ? columnOrder : "balanceOverdue"
         }
     };
 
@@ -81,8 +81,8 @@ export function clearFilter() {
             "idZone": null,
             "pageNum": 1,
             "maxRows": NUMBER_RECORDS,
-            "order" : 0,
-            "columnOrder" : null
+            "order" : 1,
+            "columnOrder" : 'balanceOverdue'
         }
     };
     const request = axios.post(APP_URL + "/getClientsPortfolioExpiration", json);
