@@ -6,8 +6,8 @@ import { getDetailAEC, clearDetailAEC, downloadPDF } from './actions';
 import { formatLongDateToDateWithNameMonth, formatCurrency, validateResponse } from '../../../actionsGlobal';
 import { MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
-import { AEC_STATUS, AEC_LEVEL } from '../../selectsComponent/constants';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
+import ModalClientName from '../../globalComponents/modalClientName/component';
 
 export class ModalDetailAEC extends Component {
     
@@ -37,15 +37,14 @@ export class ModalDetailAEC extends Component {
     }
 
     render() {
-        const { AECClient, selectsReducer } = this.props;
-        const detailAEC = AECClient.get('detailAEC');
-        const statesAEC = selectsReducer.get(AEC_STATUS);
-        const levelsAEC = selectsReducer.get(AEC_LEVEL);
-        const stateAEC = _.get(_.filter(statesAEC, ['id', parseInt(detailAEC.aecStatus)]), '[0].value');
-        const levelAEC = _.get(_.filter(levelsAEC, ['id', parseInt(detailAEC.aecLevel)]), '[0].value');
+        const { AECClient, clientInformacion } = this.props;
+        const detailAEC = AECClient.get('detailAEC');                
+        const infoClient = clientInformacion.get('responseClientInfo');        
         return (
             <div>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{ overflowX: 'hidden', maxHeight: '490px !important' }}>
+                    <br></br>
+                    <ModalClientName clientName={infoClient.clientName} typeDocument={infoClient.clientNameType} clientDocument={infoClient.clientIdNumber}></ModalClientName>                    
                     <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información del AEC</span></dt>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>
@@ -59,7 +58,7 @@ export class ModalDetailAEC extends Component {
                             </Col>
                             <Col xs={12} md={6} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Estado</dt>
-                                <dd style={{ minHeight: '26px' }}>{stateAEC}</dd>
+                                <dd style={{ minHeight: '26px' }}>{detailAEC.aecStatus}</dd>
                             </Col>
                             <Col xs={12} md={6} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Responsable</dt>
@@ -67,7 +66,7 @@ export class ModalDetailAEC extends Component {
                             </Col>
                             <Col xs={12} md={6} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Nivel de riesgo</dt>
-                                <dd style={{ minHeight: '26px' }}>{levelAEC}</dd>
+                                <dd style={{ minHeight: '26px' }}>{detailAEC.aecLevel}</dd>
                             </Col>
                             <Col xs={12} md={6} lg={4} >
                                 <dt style={{ paddingTop: '5px' }}>Días de mora</dt>
@@ -129,10 +128,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ AECClient, selectsReducer }) {
+function mapStateToProps({ AECClient, clientInformacion }) {
     return {
         AECClient,
-        selectsReducer
+        clientInformacion
     };
 }
 

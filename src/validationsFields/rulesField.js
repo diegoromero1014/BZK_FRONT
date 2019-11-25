@@ -66,10 +66,11 @@ import {
 } from './validationsMessages';
 
 import {
-    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, SUBSEGMENTS, PIPELINE_TYPE, PRODUCTS
+    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, SUBSEGMENTS, PIPELINE_TYPE, PRODUCTS, CLIENT_NEED
 } from '../components/selectsComponent/constants';
 
-import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO, FACTORING_BANCOLOMBIA_CONFIRMING, FACTORING_PLUS, TRIANGULAR_LINE } from "../components/pipeline/constants";
+import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO,
+    FACTORING_BANCOLOMBIA_CONFIRMING, FACTORING_PLUS, TRIANGULAR_LINE, NEED_FINANCING } from "../components/pipeline/constants";
 
 let globalCondition = false;
 export const setGlobalCondition = value => {
@@ -475,13 +476,9 @@ export const checkRegexHtmlInjection = value => {
     return message;
 }
 
-export const checkPipeLineOpportunityName = value => {
-    let message = null;
-    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfOpportunityName.test(value)) {
-        message = MESSAGE_WARNING_OPPORTUNITY_NAME;
-    }
-
-    return message;
+export const checkPipeLineOpportunityName = value => {        
+    const required = checkRequired(value);
+    return required ? required : (!patternOfOpportunityName.test(value) ? MESSAGE_WARNING_OPPORTUNITY_NAME : null);
 }
 
 export const checkRequiredPipelinePadre =  (value, fields, props) => {
@@ -563,6 +560,32 @@ export const checkRequiredPivotNit = (value, fields, props) => {
         },
         (value) => {
             return checkRequired(value) || checkNumberDocument(value) || checkFirstCharacter(value)
+        });
+}
+
+export const checkRequiredTermInMonths = (value, fields, props) => {
+    return checkReducerValue(value,
+        fields.need,
+        props.selectsReducer.get(CLIENT_NEED),
+        (value) => {
+            const productKey = value ? value : '';
+            return (productKey == NEED_FINANCING);
+        },
+        (value) => {
+            return checkRequired(value) || checkFirstCharacter(value)
+        });
+}
+
+export const checkRequiredTermInMonthsValue = (value, fields, props) => {
+    return checkReducerValue(value,
+        fields.need,
+        props.selectsReducer.get(CLIENT_NEED),
+        (value) => {
+            const productKey = value ? value : '';
+            return (productKey == NEED_FINANCING);
+        },
+        (value) => {
+            return checkRequired(value)
         });
 }
 

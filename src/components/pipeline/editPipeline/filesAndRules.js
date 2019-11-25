@@ -4,7 +4,8 @@ import {
     checkRequired, processRules, checkRequiredWithGlobalCondition,
     checkOnlyAlphabetical, checkPipeLineOpportunityName, 
     checkFirstCharacter, checkNumberLength,checkRequiredPipelineJustification,
-    checkNumberDocument, checkRequiredComercialOportunity, checkRequiredPivotNit
+    checkRequiredComercialOportunity, checkRequiredPivotNit, checkRequiredTermInMonths,
+    checkRequiredTermInMonthsValue
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -22,7 +23,7 @@ export const fieldsWithRules = {
     value: { rules: [checkRequired, checkNumberLength(15)] }, 
     commission: { rules: [checkNumberLength(10)] }, 
     roe: { rules: [checkNumberLength(10)] }, 
-    termInMonths: { rules: [checkRequired, checkNumberLength(4)] }, 
+    termInMonths: { rules: [checkRequiredTermInMonths, checkNumberLength(4)] },
     businessStatus: { rules: [] }, 
     businessCategory: { rules: [checkRequiredWithGlobalCondition] }, 
     currency: { rules: [checkRequired] }, 
@@ -36,13 +37,13 @@ export const fieldsWithRules = {
     probability: { rules: [] }, 
     amountDisbursed: { rules: [] }, 
     estimatedDisburDate: { rules: [] }, 
-    opportunityName: { rules: [checkRequired, checkPipeLineOpportunityName, checkFirstCharacter] }, 
+    opportunityName: { rules: [checkPipeLineOpportunityName, checkFirstCharacter] }, 
     productFamily: { rules: [checkRequired] }, 
     mellowingPeriod: { rules: [] }, 
     moneyDistribitionMarket: { rules: [] }, 
     areaAssets: { rules: [] }, 
     areaAssetsValue: { rules: [checkNumberLength(15)] }, 
-    termInMonthsValues: { rules: [checkRequired] },
+    termInMonthsValues: { rules: [checkRequiredTermInMonthsValue] },
     pendingDisbursementAmount: { rules: [checkNumberLength(15)] },
     pipelineType: { rules: [checkRequired] },
     commercialOportunity: { rules: [checkRequiredComercialOportunity] },

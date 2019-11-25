@@ -18,6 +18,7 @@ export const PIPELINE_STATUS = "pipelineStatus";
 export const LINE_OF_BUSINESS_LEASING = "Leasing Bancolombia";
 export const ORIGIN_PIPELIN_BUSINESS = "pipelineBusiness";
 
+export const NEED_FINANCING = "Financiación";
 export const BUSINESS_STATUS_COMPROMETIDO = "Comprometido";
 export const BUSINESS_STATUS_COTIZACION = "Cotización";
 export const BUSINESS_STATUS_NO_CONTACTADO = "no contactado";
@@ -27,16 +28,22 @@ export const HELP_PROBABILITY = "Período en que se espera cerrar el negocio.";
 //manejo de los planes de desembolso
 export const UPDATE_DISBURSEMENT_PLANS = "UPDATE_DISBURSEMENT_PLANS";
 export const CURRENCY_MESSAGE = "Señor usuario, mientras exista un plan de desembolso, no se puede editar la moneda ni el valor nominal. Si requiere editarlos debe eliminar los desembolsos.";
+export const PIPELINE_DISBURSEMENT_PLAN_MESSAGE = "Señor usuario, mientras exista un plan de desembolso, no puede modificar la necesidad del cliente, primero debe eliminar los planes de desembolso.";
 export const OPORTUNITIES_MANAGEMENT = "gestión de oportunidades";
 export const NUEVO_NEGOCIO = "inicio nuevo negocio";
 
 export const LEASING = 'leasing';
 export const FINANCIAL_LEASING = 'leasing financiero';
 export const OPERATING_LEASE = 'arrendamiento operativo';
+export const PLACEMENTS = 'colocaciones';
+export const CATCHMENTS = 'captaciones';
 export const IMPORTATION_LEASING = 'leasing de importación';
 export const FACTORING = 'factoring';
 export const FACTORING_BANCOLOMBIA_CONFIRMING = 'factoring bancolombia confirming';
 export const FACTORING_PLUS = 'factoring plus';
 export const TRIANGULAR_LINE = 'línea triangular';
-
-
+export const PIPELINE_INDEXING_FIELD = 'Indexación';
+export const PIPELINE_PENDING_DISBURSEMENT_AMOUNT = 'Pendiente por desembolsar';
+export const PIPELINE_TERM_IN_MONTHS_AND_VALUES = 'Plazo de la operación';
+export const PIPELINE_DISBURSEMENT_PLAN = 'Plan de desembolso';
+export const PIPELINE_NEED_CLIENT = 'Necesidad del cliente';

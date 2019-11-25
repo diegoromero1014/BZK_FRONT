@@ -15,7 +15,11 @@ describe('Test ModalObservation', () => {
         },
         handleSubmit: () => {},
         selectsReducer,
-        clientName: 'Algun cliente'        
+        client: {
+            clientName: 'Algun cliente',
+            typeDocument: 'CC',
+            document: 12323123         
+        }       
     };
     
 

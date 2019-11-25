@@ -21,11 +21,10 @@ import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans, changeM
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { clearLists, consultDataSelect, consultListWithParameterUbication, getClientNeeds, getMasterDataFields } from "../../selectsComponent/actions";
+import { clearLists, consultDataSelect, consultListWithParameterUbication, getClientNeeds, getMasterDataFields, consultListByCatalogType } from "../../selectsComponent/actions";
 import { consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, handleFocusValueNumber, nonValidateEnter } from "../../../actionsGlobal";
 
 import {
-  BUSINESS_CATEGORY,
   FILTER_ACTIVE,
   FILTER_COUNTRY,
   FILTER_MONEY_DISTRIBITION_MARKET,
@@ -36,7 +35,6 @@ import {
   PIPELINE_PRIORITY,
   PIPELINE_STATUS,
   PROBABILITY,
-  PRODUCT_FAMILY,
   PRODUCTS,
   PRODUCTS_MASK,
   TERM_IN_MONTHS_VALUES,
@@ -48,10 +46,12 @@ import {
   FILTER_MULTISELECT_FIELDS
 } from "../../selectsComponent/constants";
 import { BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY,
-  ORIGIN_PIPELIN_BUSINESS, PRODUCT_FAMILY_LEASING, CURRENCY_MESSAGE, OPORTUNITIES_MANAGEMENT,
+  ORIGIN_PIPELIN_BUSINESS, CURRENCY_MESSAGE, OPORTUNITIES_MANAGEMENT,
   BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO, LEASING, FINANCIAL_LEASING,
   OPERATING_LEASE, IMPORTATION_LEASING, FACTORING, FACTORING_BANCOLOMBIA_CONFIRMING,
-  FACTORING_PLUS, TRIANGULAR_LINE, NUEVO_NEGOCIO} from "../constants";
+  FACTORING_PLUS, TRIANGULAR_LINE, NUEVO_NEGOCIO, NEED_FINANCING,
+  PIPELINE_INDEXING_FIELD, PIPELINE_PENDING_DISBURSEMENT_AMOUNT, PIPELINE_TERM_IN_MONTHS_AND_VALUES,
+  PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS} from "../constants";
 import {
   ALLOWS_NEGATIVE_INTEGER,
   MESSAGE_ERROR,
@@ -110,6 +110,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     constructor(props) {
       super(props);
       thisForm = this;
+      this.pipelineStatusFiltered = null;
       this.state = {
         showMessageCreatePipeline: false,
         showConfirm: false,
@@ -125,13 +126,23 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         showFormAddDisbursementPlan: false,
         disbursementPlanRequired: false,
         products: [],
+        productsFamily: [],
+        businessCategories: [],
         showAlertCurrency: false,
         messageTooltipNominalValue: '',
         showJustificationField: false,
         showProbabilityField: true,
         showMellowingPeriodField: true,
         showPivotNitField: false,
-        pipelineStatus: []
+        pipelineStatus: [],
+        showInteresSpread: false,
+        showConfirmChangeNeed: false,
+        showAlertFinancingAndPlan: false,
+        showtermInMonthsField: false,
+        showindexingField: false,
+        showpendingDisbursementAmountField: false,
+        showComponentDisbursementPlan: false,
+        isFinancingNeed: false
       };
 
 
@@ -155,6 +166,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._closeCancelConfirmChanCurrency = this._closeCancelConfirmChanCurrency.bind(this);
       this._changeBusinessStatus = this._changeBusinessStatus.bind(this);
       this._changeProductFamily = this._changeProductFamily.bind(this);
+      this._changeProduct = this._changeProduct.bind(this);
       this.showFormDisbursementPlan = this.showFormDisbursementPlan.bind(this);
       this._changeValue = this._changeValue.bind(this);
       this.showAlertDisabledCurrency = this.showAlertDisabledCurrency.bind(this);
@@ -163,6 +175,19 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._changeAreaAssetsEnabledValue = this._changeAreaAssetsEnabledValue.bind(this);
       this._changeShowPivotNitField = this._changeShowPivotNitField.bind(this);
       this.setPipelineStatusValues = this.setPipelineStatusValues.bind(this);
+      this._showAlertFinancingAndPlan = this._showAlertFinancingAndPlan.bind(this);
+      this._changeNeedsClient = this._changeNeedsClient.bind(this);
+      this._changeCatalogProductFamily = this._changeCatalogProductFamily.bind(this);
+      this.showMessageChangeClientNeed = this.showMessageChangeClientNeed.bind(this);
+      this._cleanFieldsOfClientNeed = this._cleanFieldsOfClientNeed.bind(this);
+      this._closeCancelConfirmChanNeed = this._closeCancelConfirmChanNeed.bind(this);
+      this._closeConfirmChangeNeed = this._closeConfirmChangeNeed.bind(this);
+      this._getNeedById = this._getNeedById.bind(this);
+      this._validateShowFinancingNeedFields = this._validateShowFinancingNeedFields.bind(this);
+      this.changePipelineType = this.changePipelineType.bind(this);
+      this.getPipelineSelectedKey = this.getPipelineSelectedKey.bind(this);
+      this.getBusinessStatusKey = this.getBusinessStatusKey.bind(this);
+      this._nameDisbursementPlansInReducer = this._nameDisbursementPlansInReducer.bind(this);
     }
 
     showFormDisbursementPlan(isOpen) {
@@ -293,30 +318,37 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _onChangeBusinessCategory(val) {
-      const {  selectsReducer } = this.props;
+      const { fields: { commission } } = this.props;
+      let showLocalInteresSpread = false;      
+      const  keyBusinessCategory= _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key') ? _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key').toLowerCase() : '';
+      if(keyBusinessCategory == PLACEMENTS || keyBusinessCategory == CATCHMENTS){
+          showLocalInteresSpread=true;
+      }
       this.setState({
-          messageTooltipNominalValue: _.get(_.find(selectsReducer.get('businessCategory'), ['id', parseInt(val)]), 'description')
-      })
+          messageTooltipNominalValue: _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'description'),
+          showInteresSpread:showLocalInteresSpread
+      });
+      commission.onChange("");
     }
 
     _changeProductFamily(currencyValue) {
-      const { selectsReducer, fields: { areaAssets, product }, consultListWithParameterUbication } = this.props;
-      let _product_family = selectsReducer.get(PRODUCT_FAMILY)
-      areaAssets.onChange('');
-      this.setState({
-        areaAssetsEnabled: _product_family.filter(pFamily => {
-          return (
-            pFamily.id == currencyValue && pFamily.key == PRODUCT_FAMILY_LEASING
-          )
-        }).length > 0
-      });
+      const { fields: { areaAssets, product, businessCategory }, consultListByCatalogType } = this.props;      
+      areaAssets.onChange('');      
 
-      consultListWithParameterUbication(FILTER_MULTISELECT_FIELDS, currencyValue).then((data) => {
+      consultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {        
         this.setState({
           products: _.get(data, 'payload.data.data', [])
         });
       });
       product.onChange('');
+
+      consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "businessCategory").then((data) => {
+          this.setState({
+              businessCategories: _.get(data, 'payload.data.data', [])
+          });
+      });
+      
+      businessCategory.onChange('');
     }
 
     _changeAreaAssetsEnabledValue(value){      
@@ -332,11 +364,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeProduct(value) {
-      const { fields: { productFamily }, selectsReducer } = this.props;
-      let productFamilySelected = selectsReducer.get(PRODUCT_FAMILY).find((family) => family.id == productFamily.value);
+      const { fields: { productFamily } } = this.props;
+      let productFamilySelected = this.state.productsFamily.find((family) => family.id == productFamily.value);
       let products = this.state.products;
       let productSelected = products.find((product) => product.id == value);
-      if (productSelected) {
+      if (productFamilySelected && productSelected) {
         let productFamilySelectedKey = productFamilySelected.key ? productFamilySelected.key.toLowerCase()
           : (productFamilySelected.value ? productFamilySelected.value.toLowerCase() : '');
         let productSelectedKey = productSelected.key ? productSelected.key.toLowerCase()
@@ -417,36 +449,50 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       idCurrencyAux = currency.value;
     }
 
-    _pipelineTypeAndBusinessOnChange(value){            
-      const { fields:{ businessStatus }, selectsReducer} = this.props;       
-      let businessStatusSelectedKey = null;
-      let businessStatusSelected = null;      
-      let pipelineTypeSelectedKey = null;
+    getPipelineSelectedKey(value) {
+      const { selectsReducer } = this.props;
       const pipelineTypes = selectsReducer.get(PIPELINE_TYPE);      
       const pipelineTypeSelected = pipelineTypes.find((pipelineType) => pipelineType.id == value);                  
       if(pipelineTypeSelected){
-        pipelineTypeSelectedKey = pipelineTypeSelected.key ? pipelineTypeSelected.key.toLowerCase() : '';
+        return pipelineTypeSelected.key ? pipelineTypeSelected.key.toLowerCase() : '';
       }
-      
-      if(businessStatus.value.length){
-        businessStatusSelected = this._getBusinessStatusById(businessStatus.value);                  
-        businessStatusSelectedKey = businessStatusSelected.key ? businessStatusSelected.key.toLowerCase() : '';
-      }      
-
-      this._validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey); 
-      this.setPipelineStatusValues(pipelineTypeSelectedKey);
+      return "";
     }
 
-    setPipelineStatusValues(pipelineTypeSelectedKey) {
+    getBusinessStatusKey() {
+      const {fields: {businessStatus}} = this.props;
+      if(businessStatus.value){
+        const businessStatusSelected = this._getBusinessStatusById(businessStatus.value);                  
+        return businessStatusSelected.key ? businessStatusSelected.key.toLowerCase() : '';
+      }
+      return "";
+    }
 
-      const { selectsReducer } = this.props; 
+    changePipelineType(value) {
+      const pipelineTypeSelectedKey = this.getPipelineSelectedKey(value);
+      this.setPipelineStatusValues(pipelineTypeSelectedKey, this.getBusinessStatusKey());
+      this._pipelineTypeAndBusinessOnChange(value);
+    }
 
+    _pipelineTypeAndBusinessOnChange(value){                 
+      let businessStatusSelectedKey = this.getBusinessStatusKey();        
+      let pipelineTypeSelectedKey = this.getPipelineSelectedKey(value);
+      this._validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey); 
+    }
+
+    setPipelineStatusValues(pipelineTypeSelectedKey, businessStatusSelectedKey) {
+      const { selectsReducer, fields: {businessStatus} } = this.props; 
       if (pipelineTypeSelectedKey == NUEVO_NEGOCIO) {
-        this.setState({ pipelineStatus : selectsReducer.get(PIPELINE_STATUS).filter(value => value.key.toLowerCase() != BUSINESS_STATUS_NO_CONTACTADO ) })
+        if (!this.pipelineStatusFiltered) {
+          this.pipelineStatusFiltered = selectsReducer.get(PIPELINE_STATUS).filter(value => value.key.toLowerCase() != BUSINESS_STATUS_NO_CONTACTADO );
+        }
+        this.setState({ pipelineStatus : this.pipelineStatusFiltered });
+        if (businessStatusSelectedKey == BUSINESS_STATUS_NO_CONTACTADO) {
+          businessStatus.onChange('');
+        }
       } else {
         this.setState({ pipelineStatus: selectsReducer.get(PIPELINE_STATUS) })
       }
-
     }
 
     _getBusinessStatusById(id){
@@ -455,7 +501,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       return businessStatusList.find((status) => status.id == id);
     }
 
-    _validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey){      
+    _validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey){
+      const { fields: {justification} } = this.props;
       if(pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){
         this.setState({
           showMellowingPeriodField: false,
@@ -469,7 +516,107 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           showJustificationField: false
         });        
       }
+      justification.onChange("");
     }
+
+  _showAlertFinancingAndPlan(isEditableValue) {
+      this.setState({ showAlertFinancingAndPlan: isEditableValue });
+  }
+
+  _changeNeedsClient() {
+      const { pipelineReducer, fields: { need }, selectsReducer } = this.props;
+      let needSelectedKey = null;
+      let needSelected = null;
+      let newValueIsFinancing = null;
+
+      if(need.value != ''){
+          needSelected = this._getNeedById(need.value);
+          needSelectedKey = needSelected.key ? needSelected.key : '';
+      }
+
+      newValueIsFinancing = needSelectedKey === NEED_FINANCING;
+
+      if (!newValueIsFinancing && this.state.isFinancingNeed) {
+        if(pipelineReducer.get(this._nameDisbursementPlansInReducer()).length > 0) {
+              this._showAlertFinancingAndPlan(true);
+              need.onChange(_.get(_.filter(selectsReducer.get(CLIENT_NEED), ['key', NEED_FINANCING]), '[0].id', ""));
+          } else {
+              this.showMessageChangeClientNeed();
+          }
+      }
+
+      if((newValueIsFinancing && !this.state.isFinancingNeed) || (!newValueIsFinancing && !this.state.isFinancingNeed)) {
+          this._changeCatalogProductFamily(need.value);
+      }
+
+      if (newValueIsFinancing) {
+          this.setState({isFinancingNeed: true});
+          this._validateShowFinancingNeedFields(true);
+      }
+  }
+
+  _changeCatalogProductFamily(currencyValue){
+      const { fields: { productFamily }, consultListByCatalogType } = this.props;
+      consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "productFamily").then((data) => {
+          this.setState({
+              productsFamily: _.get(data, 'payload.data.data', [])
+          });
+        });
+        productFamily.onChange('');
+  }
+
+  showMessageChangeClientNeed() {
+      titleMessage = "Necesidad "+NEED_FINANCING;
+
+      message = `Señor usuario, si cambia la ${PIPELINE_NEED_CLIENT}, la información diligenciada en los campos ${PIPELINE_INDEXING_FIELD}, ${PIPELINE_PENDING_DISBURSEMENT_AMOUNT},
+      y ${PIPELINE_TERM_IN_MONTHS_AND_VALUES} se borrarán\n\n¿Está seguro que desea cambiar la ${PIPELINE_NEED_CLIENT}?`
+
+      this.setState({
+          showConfirmChangeNeed: true
+      });
+  }
+
+  _cleanFieldsOfClientNeed() {
+      const { fields: { termInMonths, termInMonthsValues, indexing, pendingDisbursementAmount } } = this.props;
+      termInMonths.onChange('');
+      termInMonthsValues.onChange('');
+      indexing.onChange('');
+      pendingDisbursementAmount.onChange('');
+  }
+
+  _closeCancelConfirmChanNeed() {
+      const {selectsReducer, fields: {need}} = this.props;
+      need.onChange(_.get(_.filter(selectsReducer.get(CLIENT_NEED), ['key', NEED_FINANCING]), '[0].id', ""));
+      this.setState({
+          showConfirmChangeNeed: false
+      });
+  }
+
+  _closeConfirmChangeNeed() {
+      const {fields: { need }} = this.props;
+      this._validateShowFinancingNeedFields(false);
+      this.setState({
+          showConfirmChangeNeed: false,
+          isFinancingNeed: false
+      });
+      this._changeCatalogProductFamily(need.value);
+      this._cleanFieldsOfClientNeed();
+  }
+
+  _getNeedById(id){
+      const {selectsReducer} = this.props;
+      const needList = selectsReducer.get(CLIENT_NEED);
+      return needList.find((need) => need.id == id);
+  }
+
+  _validateShowFinancingNeedFields(isFinancingNeed){
+      this.setState({
+          showtermInMonthsField: isFinancingNeed,
+          showindexingField: isFinancingNeed,
+          showpendingDisbursementAmountField: isFinancingNeed,
+          showComponentDisbursementPlan: isFinancingNeed
+      });
+  }
 
     _submitCreatePipeline() {
       const {
@@ -479,7 +626,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           pipelineType, commercialOportunity, justification, pivotNit
         }, createEditPipeline, swtShowMessage, changeStateSaveData, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
       } = this.props;
-
+      
       if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
         this.setState({
           employeeResponsible: true
@@ -693,7 +840,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         redirectUrl("/dashboard/clientInformation");
       } else {
         getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY,
-          PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, BUSINESS_CATEGORY, PRODUCT_FAMILY, MELLOWING_PERIOD,
+          PIPELINE_BUSINESS, PROBABILITY, LINE_OF_BUSINESS, MELLOWING_PERIOD,
           FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY,
           PIPELINE_TYPE, COMMERCIAL_OPORTUNITY, PIPELINE_JUSTIFICATION, CLIENT_NEED]);
 
@@ -708,6 +855,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       }
     }
 
+    _nameDisbursementPlansInReducer() {
+      return (origin === ORIGIN_PIPELIN_BUSINESS) ? 'childBusinessDisbursementPlans': 'disbursementPlans';
+    }
+
     render() {
       const { fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, pendingDisbursementAmount,
@@ -715,7 +866,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity, areaAssetsValue, termInMonthsValues, justification, pivotNit },
         selectsReducer, handleSubmit, reducerGlobal, pipelineReducer } = this.props;
 
-      const isEditableValue = _.size(pipelineReducer.get(nameDisbursementPlansInReducer)) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
+      const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
       const isPipelineChild = pipelineReducer.get("isPipelineChildOpen");      
 
       return (
@@ -744,7 +895,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     isChildren={origin === ORIGIN_PIPELIN_BUSINESS}
                     pipelineTypeName={pipelineTypeName}
                     commercialOportunityName={commercialOportunityName}
-                    pipelineTypeOnChange={this._pipelineTypeAndBusinessOnChange}
+                    pipelineTypeOnChange={this.changePipelineType}
                   />
               
               <Row className="pipeline__section" style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : {}}>
@@ -775,7 +926,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                     <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
                     <i className="browser icon" style={{ fontSize: "20px" }} />
-                    <span style={{ fontSize: "20px" }}> Datos de pipeline</span>
+                    <span style={{ fontSize: "20px" }}> Pipeline</span>
                   </div>
                 </Col>
               </Row>
@@ -793,6 +944,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name={nameNeed}
                       parentId="dashboardComponentScroll"
                       data={selectsReducer.get(CLIENT_NEED) || []}
+                      onChange={this._changeNeedsClient}
                     />
                   </div>
                 </Col>
@@ -808,7 +960,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...productFamily}
                       name={nameProductFamily}
                       parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(PRODUCT_FAMILY) || []}
+                      data={this.state.productsFamily}
                       onChange={val => this._changeProductFamily(val)}
                     />
                   </div>
@@ -844,7 +996,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       {...businessCategory}
                       name={nameBusinessCategory}
                       parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(BUSINESS_CATEGORY) || []}
+                      data={this.state.businessCategories}
                       onChange={key => this._onChangeBusinessCategory(key)}
                     />
                   </div>
@@ -863,6 +1015,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       parentId="dashboardComponentScroll"
                       data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
                       onChange={val => this._changeBusinessStatus(val)}
+                      filterData={true}
                     />
                   </div>
                 </Col>
@@ -985,7 +1138,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 </Col>
               </Row>
               <Row className="pipeline__section__fields">
-                <Col xs={6} md={3} lg={3}>
+                {this.state.showindexingField ?
+                  <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
                       <span>Indexación</span>
@@ -1001,6 +1155,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
+                : null}
+                {this.state.showInteresSpread ?
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -1017,6 +1173,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
+                :null}
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -1059,7 +1216,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     <dt>
                       <span>Valor nominal (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
-                    <ToolTip text={this.state.messageTooltipNominalValue}>
+                    <ToolTip text={this.state.messageTooltipNominalValue} rendertooltip={this.state.messageTooltipNominalValue}> 
                     <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
                       <Input
                         {...value}
@@ -1076,7 +1233,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     </ToolTip>
                   </div>
                 </Col>
-                <Col xs={6} md={3} lg={3}>
+                {this.state.showpendingDisbursementAmountField ?
+                  <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
                       <span>Pendiente por desembolsar </span>
@@ -1092,6 +1250,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
+                : null}
+                {this.state.showtermInMonthsField ?
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -1125,6 +1285,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     </div>
                   </div>
                 </Col>
+                : null}
                 {this.state.areaAssetsEnabled ?
                   <Col xs={6} md={3} lg={3}>
                     <div style={{ paddingRight: "15px" }}>
@@ -1182,6 +1343,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 }
               </Row>
 
+              {this.state.showComponentDisbursementPlan ?
               <ComponentDisbursementPlan
                 disbursementAmount={amountDisbursed}
                 estimatedDisburDate={estimatedDisburDate}
@@ -1193,6 +1355,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 origin={origin}
                 isEditable={true}
               />
+              : null}
 
               <Business origin={origin} disabled={true} />
               <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 23px 20px 20px" }}>
@@ -1268,6 +1431,18 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               onConfirm={this._closeConfirmChangeCurrency}
             />
             <SweetAlert
+              type="warning"
+              show={this.state.showConfirmChangeNeed}
+              title={titleMessage}
+              text={message}
+              confirmButtonColor='#DD6B55'
+              confirmButtonText='Sí, estoy seguro!'
+              cancelButtonText="Cancelar"
+              showCancelButton={true}
+              onCancel={this._closeCancelConfirmChanNeed}
+              onConfirm={this._closeConfirmChangeNeed}
+            />
+            <SweetAlert
               type="error"
               show={this.state.errorValidate}
               title='Campos obligatorios'
@@ -1287,6 +1462,13 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               title='Advertencia'
               text={CURRENCY_MESSAGE}
               onConfirm={() => this.setState({ showAlertCurrency: false })}
+            />
+            <SweetAlert
+              type="warning"
+              show={this.state.showAlertFinancingAndPlan}
+              title='Advertencia'
+              text={PIPELINE_DISBURSEMENT_PLAN_MESSAGE}
+              onConfirm={() => this.setState({ showAlertFinancingAndPlan: false })}
             />
             <div style={origin === ORIGIN_PIPELIN_BUSINESS ? {} : { display: "none" }} className="modalBt4-footer modal-footer">
               <button type="submit" className="btn btn-primary modal-button-edit"
@@ -1315,6 +1497,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       updateDisbursementPlans,
       swtShowMessage,
       consultListWithParameterUbication,
+      consultListByCatalogType,
       clearLists,
       consultDataSelect,
       setConfidential,
