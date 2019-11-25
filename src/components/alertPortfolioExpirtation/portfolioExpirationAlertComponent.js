@@ -254,7 +254,6 @@ class ClientsPendingUpdate extends Component {
                                 data={selectsReducer.get(constants.LINE_OF_BUSINESS) || []}
                                 onChange={val => this.onChangeLine(val)}
                                 touched={true}
-                                maxSelections={10}
                             />
                         </Col>
                     </Row>
