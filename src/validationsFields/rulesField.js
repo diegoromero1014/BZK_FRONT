@@ -66,7 +66,7 @@ import {
 } from './validationsMessages';
 
 import {
-    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, SUBSEGMENTS, PIPELINE_TYPE, PRODUCTS, CLIENT_NEED
+    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, SUBSEGMENTS, PIPELINE_TYPE, PRODUCTS, CLIENT_NEED, PRODUCTS_MASK
 } from '../components/selectsComponent/constants';
 
 import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO,
@@ -550,12 +550,12 @@ export const checkRequiredPipelineJustification = (value, fields, props) => {
     return null;
 }
 
-export const checkRequiredPivotNit = (value, fields, props) => {    
+export const checkRequiredPivotNit = (value, fields, props) => {        
     return checkReducerValue(value,
         fields.product,
-        props.selectsReducer.get(PRODUCTS),
+        props.selectsReducer.get(PRODUCTS_MASK),
         (value) => {
-            const productKey = value ? value.toLowerCase() : '';            
+            const productKey = value ? value.toLowerCase() : '';                 
             return (productKey == FACTORING_BANCOLOMBIA_CONFIRMING || productKey == FACTORING_PLUS || productKey == TRIANGULAR_LINE);
         },
         (value) => {
