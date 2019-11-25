@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import { Col, Row } from "react-flexbox-grid";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -23,14 +23,19 @@ import Notas from "./notas";
 import Products from "./product";
 
 import { changeAccordionValue, seletedButton, sendErrorsUpdate, validateContactShareholder } from "./actions";
-import { validatePermissionsByModule, shorterStringValue, onSessionExpire } from "../../actionsGlobal";
+import { onSessionExpire, shorterStringValue, validatePermissionsByModule } from "../../actionsGlobal";
 import { redirectUrl } from "../globalComponents/actions";
 import { showModalRiskGroup } from "../clientRiskGroup/actions";
 
 import { BUTTON_EDIT, BUTTON_UPDATE, CLOSE_TAB, OPEN_TAB } from "./constants";
 import {
-    EDITAR, ESTUDIO_DE_CREDITO, MODULE_CLIENTS, VINCULAR, INFO_ESTUDIO_CREDITO,
-    GRUPO_RIESGO, GESTION_DOCUMENTAL, MODULE_STUDY_CREDIT,VISUALIZAR
+    EDITAR,
+    GESTION_DOCUMENTAL,
+    GRUPO_RIESGO,
+    INFO_ESTUDIO_CREDITO,
+    MODULE_CLIENTS,
+    VINCULAR,
+    VISUALIZAR
 } from "../../constantsGlobal";
 
 class DetailsInfoClient extends Component {
@@ -45,7 +50,7 @@ class DetailsInfoClient extends Component {
     }
 
     componentWillMount() {
-        const { login, validatePermissionsByModule } = this.props;
+        const { validatePermissionsByModule } = this.props;
         if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
         }
@@ -77,7 +82,7 @@ class DetailsInfoClient extends Component {
     }
 
     _clickButtonClientUpdate() {
-        const { seletedButton, validateContactShareholder, updateClient, sendErrorsUpdate } = this.props;
+        const { seletedButton, validateContactShareholder } = this.props;
         seletedButton(BUTTON_UPDATE);
         //Valido si el cliente tiene un representante legal y accionistas
         validateContactShareholder().then((data) => {
