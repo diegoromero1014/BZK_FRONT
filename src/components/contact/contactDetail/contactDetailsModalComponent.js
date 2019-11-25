@@ -429,7 +429,7 @@ export class ContactDetailsModalComponent extends Component {
                     }
                 } else if (_.get(data, 'payload.data.status') === 422) {
                     const result = _.get(data, 'payload.data.data');
-                    updateCheckObservation.error = result[0].message;
+                    updateCheckObservation.error = result[0].detail[0].message[0];
                     updateCheckObservation.touched=true;
                     const val_ = updateCheckObservation.value;
                     updateCheckObservation.onChange(val_);
