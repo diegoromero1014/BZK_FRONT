@@ -11,7 +11,7 @@ const initialState = Immutable.Map({
     idTeam: null,
     idRegion: null,
     idZone: null,
-    type: null,
+    expirationType: null,
     line: null,
     pageNum: 1,
     order: 0,
@@ -49,7 +49,7 @@ export default (state = initialState, action = {}) => {
                     .set('idTeam', null)
                     .set('idRegion', null)
                     .set('idZone', null)
-                    .set('type', null)
+                    .set('expirationType', null)
                     .set('line', null)
                     .set('pageNum', 1)
                     .set('columnOrder', '')
@@ -75,12 +75,12 @@ export default (state = initialState, action = {}) => {
         case actions.CHANGE_TYPE:
             return state.withMutations(map => {
                 map
-                    .set('type', action.type);
+                    .set('expirationType', action.expirationType);
             });
         case actions.CHANGE_LINE:
             return state.withMutations(map => {
                 map
-                    .set('line', action.type);
+                    .set('line', action.line);
             });
         case actions.CLEAR_CLIENT_ORDER_PE:
             return state.withMutations(map => {

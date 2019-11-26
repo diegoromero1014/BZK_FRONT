@@ -36,7 +36,7 @@ import {swtShowMessage} from "../sweetAlertMessages/actions";
 import _ from 'lodash';
 import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
 
-const fields = ["team", "region", "zone", "line", "type"];
+const fields = ["team", "region", "zone", "line", "expirationType"];
 const titleModule = 'Alerta de clientes de cartera vencida o próxima a vencer';
 
 export class ClientsPendingUpdate extends Component {
@@ -128,9 +128,9 @@ export class ClientsPendingUpdate extends Component {
     }
 
     onChangeType(value) {
-        const { fields: {type}, dispatchChangeType } = this.props;
+        const { fields: { expirationType }, dispatchChangeType } = this.props;
 
-        type.onChange(value);
+        expirationType.onChange(value);
         dispatchChangeType(value);
 
         if (value)
@@ -143,17 +143,16 @@ export class ClientsPendingUpdate extends Component {
         line.onChange(value);
         dispatchChangeLine(value);
 
-        if (value)
-            this._handleClientsFind();
+        this._handleClientsFind();
     }
 
     _handleClientsFind() {
-        const {fields: {team, region, zone, type, line}, clientsPortfolioExpirationFindServer, alertPortfolioExpiration, dispatchShowLoading, swtShowMessage} = this.props;
+        const {fields: {team, region, zone, expirationType, line}, clientsPortfolioExpirationFindServer, alertPortfolioExpiration, dispatchShowLoading, swtShowMessage} = this.props;
         const keyWordNameNit = alertPortfolioExpiration.get('keywordNameNit');
         const order = alertPortfolioExpiration.get('order');
         const columnOrder = alertPortfolioExpiration.get('columnOrder');
         dispatchShowLoading(true, 'Cargando..');
-        clientsPortfolioExpirationFindServer(keyWordNameNit, team.value, region.value, zone.value, 1, NUMBER_RECORDS, order, columnOrder, line.value, type.value).then((data) => {
+        clientsPortfolioExpirationFindServer(keyWordNameNit, team.value, region.value, zone.value, 1, NUMBER_RECORDS, order, columnOrder, line.value, expirationType.value).then((data) => {
             dispatchShowLoading(false, null);
             if (!validateResponse(data)) {
                 swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
@@ -164,7 +163,7 @@ export class ClientsPendingUpdate extends Component {
     render() {
         var visibleTable = 'none';
         var visibleMessage = 'block';
-        const {fields: {team, region, zone, type, line}, alertPortfolioExpiration, selectsReducer} = this.props;
+        const {fields: {team, region, zone, expirationType, line}, alertPortfolioExpiration, selectsReducer} = this.props;
         if (_.size(alertPortfolioExpiration.get('responseClients')) !== 0) {
             visibleTable = 'block';
             visibleMessage = 'none';
@@ -231,12 +230,12 @@ export class ClientsPendingUpdate extends Component {
 
                         <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
                             <ComboBox
-                                name="type"
+                                name="expirationType"
                                 labelInput="Tipo de vencimiento"
-                                {...type}
+                                {...expirationType}
                                 onChange={this.onChangeType}
-                                value={type.value}
-                                onBlur={type.onBlur}
+                                value={expirationType.value}
+                                onBlur={expirationType.onBlur}
                                 valueProp={'id'}
                                 textProp={'value'}
                                 searchClient={'client'}
