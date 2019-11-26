@@ -48,6 +48,8 @@ export class ClientsPendingUpdate extends Component {
         this._onChangeZoneStatus = this._onChangeZoneStatus.bind(this);
         this._handleClientsFind = this._handleClientsFind.bind(this);
         this._cleanSearch = this._cleanSearch.bind(this);
+        this.onChangeType = this.onChangeType.bind(this);
+        this.onChangeLine = this.onChangeLine.bind(this);
     }
 
     componentWillMount() {
