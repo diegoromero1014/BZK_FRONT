@@ -18,9 +18,9 @@ export default class NotificationExpiredPortfolio extends Component {
         return (
             <div>
                 { !seeMore ?
-                    <center name="verMas"><p style={{ cursor: "pointer"}} onClick={() => this.setState({ seeMore: !seeMore}) }>Ver más...</p></center>
+                    <center name="verMas"><p style={{ cursor: "pointer", color: '#3498db' }} onClick={() => this.setState({ seeMore: !seeMore}) }>Ver más...</p></center>
                     :
-                    <center name="verMenos"><p style={{ cursor: "pointer"}} onClick={() => this.setState({ seeMore: !seeMore}) }>Ver menos...</p></center>
+                    <center name="verMenos"><p style={{ cursor: "pointer", color: '#3498db' }} onClick={() => this.setState({ seeMore: !seeMore}) }>Ver menos...</p></center>
                 }
                 <br/>
                 { seeMore &&
