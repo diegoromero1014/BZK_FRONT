@@ -153,18 +153,18 @@ export class ModalComponentDialog extends Component {
         const {origin, alertPortfolioExpiration, actions} = this.props;
         const alertPortfolioExp = _.find(alertPortfolioExpiration.get('responseClients'), (item) => {
             return _.isEqual(item.id, actions.id); 
-        });        
-        switch (origin) {
-            case views.ALERT_PORTFOLIO_EXPIRATION_LIST:                
-                return (                    
-                    <AlertPortfolioExpirationObservationsActionModal alertPortfolioExp={alertPortfolioExp} openModal={this.openModal}/>
-                )                        
-            default:
-                return (
+        });
+        
+        if (origin == views.ALERT_PORTFOLIO_EXPIRATION_LIST) {
+            return (                    
+                <AlertPortfolioExpirationObservationsActionModal alertPortfolioExp={alertPortfolioExp} openModal={this.openModal}/>
+            )
+        } else {
+            return (
                 <button className="btn btn-primary btn-sm" onClick={this.openModal}>
                     <i className="zoom icon" style={{ margin: '0em', fontSize: '1.2em' }} />
                 </button>
-                )                
+                )
         }
     }
 
