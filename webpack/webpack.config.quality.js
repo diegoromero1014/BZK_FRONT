@@ -20,7 +20,8 @@ var webpack = require('webpack'),
         entry: {
             'main': [
                 'babel-polyfill',
-                './src/index.js'
+                './src/index.js',
+                './src/resources/recaptcha/api.js'
             ]
         },
         output: {
