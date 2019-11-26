@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { GRECAPTCHA_PUBLIC_KEY } from '../../constantsGlobal';
-import Recaptcha from 'react-recaptcha';
 
 export default class ReCaptcha extends Component {
 
@@ -11,7 +10,7 @@ export default class ReCaptcha extends Component {
     render() {
         return (
             <div>
-                <Recaptcha sitekey={GRECAPTCHA_PUBLIC_KEY}/>
+                <div className="g-recaptcha recaptcha" data-sitekey={GRECAPTCHA_PUBLIC_KEY}></div>
             </div>
         )
     }
