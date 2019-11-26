@@ -14,7 +14,7 @@ import WorkerSetup from '../../worker/WorkerSetup';
 import { consultParameterServer } from '../../actionsGlobal';
 import { RANGO_PASO_PRODUCCION } from '../../constantsParameters';
 
-moment.tz.setDefault('America/Bogota');
+/* moment.tz.setDefault('America/Bogota'); */
 
 class Dashboard extends Component {
   constructor(props) {

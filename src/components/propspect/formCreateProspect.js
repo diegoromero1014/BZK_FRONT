@@ -486,10 +486,10 @@ class FormCreateProspect extends Component {
                         </Col>
                         <Col xs>
                             <div style={{ paddingLeft: "20px", paddingRight: "10px", marginTop: "10px" }}>
-                                <dt><span>Departamento</span></dt>
+                                <dt><span>Departamento/Provincia</span></dt>
                                 <ComboBox
                                     name="province"
-                                    labelInput="Departamento"
+                                    labelInput="Departamento/Provincia"
                                     onChange={val => this._onChangeProvince(val)}
                                     value={province.value}
                                     onBlur={province.onBlur}

@@ -9,3 +9,4 @@ require('react-widgets/lib/less/react-widgets.less');
 require('react-vis/dist/main.scss');
 require('./biztrack/scheduler.scss');
 require('style!css!react-big-calendar/lib/css/react-big-calendar.css');
+require('style!css!animate.css/animate.min.css');

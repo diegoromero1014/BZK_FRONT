@@ -19,6 +19,9 @@ import {get,indexOf,has} from 'lodash';
 import {showLoading} from '../loading/actions';
 import {clientsPortfolioExpirationFindServer} from './actions';
 import {NUMBER_RECORDS} from './constants';
+import { ALERT_PORTFOLIO_EXPECTATIONS } from '../selectsComponent/constants';
+import { getMasterDataFields } from "../../components/selectsComponent/actions";
+import { ALERT_PORTFOLIO_EXPIRATION_LIST } from '../modal/constants';
 
 class ListClientsPortfolioExpiration extends Component {
 
@@ -34,10 +37,12 @@ class ListClientsPortfolioExpiration extends Component {
     }
 
     componentWillMount() {
+        const {getMasterDataFields} = this.props;
         this.state = {
             orderA: 'none',
             orderD: 'inline-block'
         }
+        getMasterDataFields([ALERT_PORTFOLIO_EXPECTATIONS])
     }
 
     _orderColumn(orderClients, columnClients) {
@@ -84,12 +89,12 @@ class ListClientsPortfolioExpiration extends Component {
                 key: "groupTotalBalance"
             },
             {
-                title: "Días vencidos",
+                title: "Días mora proyectados",
                 orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "daysOverdue")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "daysOverdue")}></i></span>,
                 key: "daysOverdue"
             },
             {
-                title: "Entidad",
+                title: "Entidad / línea de negocio",
                 orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "entity")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "entity")}></i></span>,
                 key: "entity"
             },
@@ -99,7 +104,7 @@ class ListClientsPortfolioExpiration extends Component {
                 key: "responsible"
             },
             {
-                title: "Observaciones",
+                title: "Diligenciar Observaciones",
                 key: "actions"
             }
         ];
@@ -115,7 +120,7 @@ class ListClientsPortfolioExpiration extends Component {
         const data = alertPortfolioExpiration.get('responseClients');
         return (
             <div className="horizontal-scroll-wrapper" style={{overflow: 'scroll', background: '#fff'}}>
-                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle="Observaciones"/>
+                <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle="Diligenciar Observaciones" origin={ALERT_PORTFOLIO_EXPIRATION_LIST}/>
             </div>
         );
     }
@@ -128,6 +133,7 @@ function mapDispatchToProps(dispatch) {
         clearClientPagination,
         orderColumnClientPortfolioExpiration,
         clientsPortfolioExpirationFindServer,
+        getMasterDataFields,
         showLoading
     }, dispatch);
 }

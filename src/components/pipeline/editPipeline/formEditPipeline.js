@@ -1065,7 +1065,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Producto</span>
+                                        <span>Producto</span> (<span style={{ color: "red" }}>*</span>)
                                         </dt>
                                         <ComboBox
                                             labelInput="Seleccione..."
@@ -1108,7 +1108,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Estado (</span><span style={{ color: "red" }}>*</span>)
+                                            <span>Estado del negocio (</span><span style={{ color: "red" }}>*</span>)
                                         </dt>
                                         <ComboBox
                                             labelInput="Seleccione..."
@@ -1144,39 +1144,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     </Col>
                                     : null}                                    
                             </Row>
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Empleado responsable (</span><span style={{ color: "red" }}>*</span>)
-                                        </dt>
-                                        <div className={`ui search ${participantBanc} fluid`}>
-                                            <ComboBoxFilter
-                                                className="prompt"
-                                                id={inputParticipantBanc}
-                                                style={{ borderRadius: "3px" }}
-                                                autoComplete="off"
-                                                type="text"
-                                                {...nameUsuario}
-                                                value={nameUsuario.value}
-                                                onChange={(val) => { if (idUsuario.value) { idUsuario.onChange(null) } nameUsuario.onChange(val) }}
-                                                placeholder="Ingrese un criterio de búsqueda..."
-                                                onKeyPress={val => this.updateKeyValueUsersBanco(val)}
-                                                onSelect={val => this._updateValue(val)}
-                                                disabled={this.state.isEditable ? '' : 'disabled'}
-                                                error={nameUsuario.error || idUsuario.error}
-                                            />
-                                        </div>
-                                        {
-                                            this.state.employeeResponsible &&
-                                            <div>
-                                                <div className="ui pointing red basic label">
-                                                    Debe seleccionar un empleado del banco
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
-                                </Col>
+                            <Row style={{ padding: "0px 10px 20px 20px" }}>                                
                                 {this.state.showMellowingPeriodField ?
                                     <Col xs={12} md={6} lg={6}>
                                         <div style={{ paddingRight: "15px" }}>
@@ -1199,24 +1167,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             />
                                         </div>
                                     </Col>
-                                    : null}
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Libros</span>
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            {...moneyDistribitionMarket}
-                                            name={nameMoneyDistribitionMarket}
-                                            parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(FILTER_MONEY_DISTRIBITION_MARKET) || []}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                        />
-                                    </div>
-                                </Col>
+                                    : null}                                
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
                                 {this.state.showProbabilityField ?
@@ -1470,6 +1421,55 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         </div>
                                     </Col>
                                 : null}
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Libros</span>
+                                        </dt>
+                                        <ComboBox
+                                            labelInput="Seleccione..."
+                                            valueProp={'id'}
+                                            textProp={'value'}
+                                            {...moneyDistribitionMarket}
+                                            name={nameMoneyDistribitionMarket}
+                                            parentId="dashboardComponentScroll"
+                                            data={selectsReducer.get(FILTER_MONEY_DISTRIBITION_MARKET) || []}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Empleado responsable (</span><span style={{ color: "red" }}>*</span>)
+                                        </dt>
+                                        <div className={`ui search ${participantBanc} fluid`}>
+                                            <ComboBoxFilter
+                                                className="prompt"
+                                                id={inputParticipantBanc}
+                                                style={{ borderRadius: "3px" }}
+                                                autoComplete="off"
+                                                type="text"
+                                                {...nameUsuario}
+                                                value={nameUsuario.value}
+                                                onChange={(val) => { if (idUsuario.value) { idUsuario.onChange(null) } nameUsuario.onChange(val) }}
+                                                placeholder="Ingrese un criterio de búsqueda..."
+                                                onKeyPress={val => this.updateKeyValueUsersBanco(val)}
+                                                onSelect={val => this._updateValue(val)}
+                                                disabled={this.state.isEditable ? '' : 'disabled'}
+                                                error={nameUsuario.error || idUsuario.error}
+                                            />
+                                        </div>
+                                        {
+                                            this.state.employeeResponsible &&
+                                            <div>
+                                                <div className="ui pointing red basic label">
+                                                    Debe seleccionar un empleado del banco
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </Col>
                             </Row>
                             {this.state.showComponentDisbursementPlan ?
                             <ComponentDisbursementPlan
