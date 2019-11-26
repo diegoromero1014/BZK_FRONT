@@ -26,22 +26,32 @@ export default class NotificationExpiredPortfolio extends Component {
                 { seeMore &&
                     <div name='content' className="animated zoomIn">
                         <Row>
+<<<<<<< Updated upstream
                             <Col xs={4}><strong>Entidad</strong></Col>
+=======
+                            <Col xs={5} style={{ textAlign: 'left'}}><strong>Línea de Negocio</strong></Col>
+>>>>>>> Stashed changes
                             <Col xs={4}><strong>Saldo Vencido</strong></Col>
-                            <Col xs={4}><strong>Días</strong></Col>
+                            <Col xs={3}><strong>Días</strong></Col>
                         </Row>
-                        { 
-                            data.map(item => (
-                                <div key={item.idAlert}>
-                                    <Row>
-                                        <Col xs={4}>{ item.entityName }</Col>
-                                        <Col xs={4}>{ item.overdueBalance }</Col>
-                                        <Col xs={4}>{ item.daysArrears }</Col>
-                                    </Row>
-                                    <hr style={{ marginTop: "0px", marginBottom: "0px" }}/>
-                                </div>
-                            ))
-                        }
+                        <div style={{
+                            overflowY: 'auto',
+                            overflowX: 'hidden',
+                            maxHeight: '215px'
+                        }}>
+                            { 
+                                data.map(item => (
+                                    <div key={item.idAlert} style={{ padding: 5 }}>
+                                        <Row>
+                                            <Col xs={5} style={{ textAlign: 'left'}}>{ item.entityName }</Col>
+                                            <Col xs={4}>{ item.overdueBalance }</Col>
+                                            <Col xs={3}>{ item.daysArrears }</Col>
+                                        </Row>
+                                        <hr style={{ marginTop: "0px", marginBottom: "0px" }}/>
+                                    </div>
+                                ))
+                            }
+                        </div>
                     </div>
                 }
             </div>
