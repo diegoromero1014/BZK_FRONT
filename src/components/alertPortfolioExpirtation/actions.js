@@ -118,7 +118,7 @@ export function changeZone(idZone) {
 export function changeType(type) {
     return {
         type: CHANGE_TYPE,
-        type
+        expirationType: type
     }
 }
 
