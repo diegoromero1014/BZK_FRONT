@@ -24,11 +24,11 @@ import { clearValuesAdressessKeys } from '../selectsComponent/actions';
 
 import * as views from './constants';
 
-import { get } from 'lodash';
+import _ from 'lodash';
 import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
 import AlertPortfolioExpirationObservationsActionModal from '../alertPortfolioExpirtation/alertPortfolioExpirationObservationsActionModal';
 
-class ModalComponentDialog extends Component {
+export class ModalComponentDialog extends Component {
     constructor(props) {
         super(props);
         this.closeModal = this.closeModal.bind(this);
@@ -171,7 +171,7 @@ class ModalComponentDialog extends Component {
 
     render() {
         const {actions} = this.props;
-        const modalSize = get(actions, 'modalSize', 'lg');   
+        const modalSize = _.get(actions, 'modalSize', 'lg');   
                        
         return (
             <td style={{ padding: '10px', textAlign: 'center' }}>

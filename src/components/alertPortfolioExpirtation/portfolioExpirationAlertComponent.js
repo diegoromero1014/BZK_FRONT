@@ -4,7 +4,6 @@ import {bindActionCreators} from 'redux';
 import {
     clientsPortfolioExpirationFindServer,
     clearFilter,
-    changePage,
     changeKeyword,
     changeTeam,
     changeRegion,
@@ -40,7 +39,7 @@ import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
 const fields = ["team", "region", "zone", "line", "type"];
 const titleModule = 'Alerta de clientes de cartera vencida o próxima a vencer';
 
-class ClientsPendingUpdate extends Component {
+export class ClientsPendingUpdate extends Component {
     constructor(props) {
         super(props);
         momentLocalizer(moment);
@@ -52,22 +51,22 @@ class ClientsPendingUpdate extends Component {
     }
 
     componentWillMount() {
-        const {showLoading, getMasterDataFields, getNameAlert } = this.props;
+        const {dispatchShowLoading, dispatchGetMasterDataFields, dispatchGetNameAlert } = this.props;
         if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
             const {clearFilter, consultList, consultDataSelect, updateTitleNavBar, swtShowMessage} = this.props;
-            showLoading(true, 'Cargando..');
+            dispatchShowLoading(true, 'Cargando..');
             consultList(constants.TEAM_FOR_EMPLOYEE);
             consultDataSelect(constants.LIST_REGIONS);
-            getMasterDataFields([constants.EXPIRATION_TYPE, constants.LINE_OF_BUSINESS]);
+            dispatchGetMasterDataFields([constants.EXPIRATION_TYPE, constants.LINE_OF_BUSINESS]);
             clearFilter().then((data) => {
-                showLoading(false, null);
+                dispatchShowLoading(false, null);
                 if (!validateResponse(data)) {
                     swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
                 }
             });
-            getNameAlert().then(resolve => {
+            dispatchGetNameAlert().then(resolve => {
                 if(resolve.payload.data != 500) {
                     updateTitleNavBar(resolve.payload.data.data);
                 } else  {
@@ -83,12 +82,12 @@ class ClientsPendingUpdate extends Component {
     }
 
     _cleanSearch() {
-        const {resetForm, showLoading, clearFilter, consultList, swtShowMessage} = this.props;
-        showLoading(true, 'Cargando..');
+        const {resetForm, dispatchShowLoading, clearFilter, consultList, swtShowMessage} = this.props;
+        dispatchShowLoading(true, 'Cargando..');
         resetForm();
         clearFilter();
         consultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
-            showLoading(false, null);
+            dispatchShowLoading(false, null);
             if (!_.has(data, 'payload.data')) {
                 swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
             }
@@ -127,33 +126,33 @@ class ClientsPendingUpdate extends Component {
     }
 
     onChangeType(value) {
-        const { fields: {type}, changeType } = this.props;
+        const { fields: {type}, dispatchChangeType } = this.props;
 
         type.onChange(value);
-        changeType(value);
+        dispatchChangeType(value);
 
         if (value)
             this._handleClientsFind();
     }
 
     onChangeLine(value) {
-        const { fields: {line}, changeLine } = this.props;
+        const { fields: {line}, dispatchChangeLine } = this.props;
 
         line.onChange(value);
-        changeLine(value);
+        dispatchChangeLine(value);
 
         if (value)
             this._handleClientsFind();
     }
 
     _handleClientsFind() {
-        const {fields: {team, region, zone, type, line}, clientsPortfolioExpirationFindServer, alertPortfolioExpiration, changePage, showLoading, swtShowMessage} = this.props;
+        const {fields: {team, region, zone, type, line}, clientsPortfolioExpirationFindServer, alertPortfolioExpiration, dispatchShowLoading, swtShowMessage} = this.props;
         const keyWordNameNit = alertPortfolioExpiration.get('keywordNameNit');
         const order = alertPortfolioExpiration.get('order');
         const columnOrder = alertPortfolioExpiration.get('columnOrder');
-        showLoading(true, 'Cargando..');
+        dispatchShowLoading(true, 'Cargando..');
         clientsPortfolioExpirationFindServer(keyWordNameNit, team.value, region.value, zone.value, 1, NUMBER_RECORDS, order, columnOrder, line.value, type.value).then((data) => {
-            showLoading(false, null);
+            dispatchShowLoading(false, null);
             if (!validateResponse(data)) {
                 swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
             }
@@ -163,7 +162,7 @@ class ClientsPendingUpdate extends Component {
     render() {
         var visibleTable = 'none';
         var visibleMessage = 'block';
-        const {fields: {team, region, zone, type, line}, handleSubmit, reducerGlobal, alertPortfolioExpiration, selectsReducer} = this.props;
+        const {fields: {team, region, zone, type, line}, alertPortfolioExpiration, selectsReducer} = this.props;
         if (_.size(alertPortfolioExpiration.get('responseClients')) !== 0) {
             visibleTable = 'block';
             visibleMessage = 'none';
@@ -233,7 +232,7 @@ class ClientsPendingUpdate extends Component {
                                 name="type"
                                 labelInput="Tipo de vencimiento"
                                 {...type}
-                                onChange={value => this.onChangeType(value)}
+                                onChange={this.onChangeType}
                                 value={type.value}
                                 onBlur={type.onBlur}
                                 valueProp={'id'}
@@ -252,7 +251,7 @@ class ClientsPendingUpdate extends Component {
                                 textProp={'value'}
                                 parentId="dashboardComponentScroll"
                                 data={selectsReducer.get(constants.LINE_OF_BUSINESS) || []}
-                                onChange={val => this.onChangeLine(val)}
+                                onChange={this.onChangeLine}
                                 touched={true}
                             />
                         </Col>
@@ -271,7 +270,7 @@ class ClientsPendingUpdate extends Component {
                             {formatLongDateToDateWithNameMonth(alertPortfolioExpiration.get("lastUploadDate"))}
                         </span>
                     </div>
-                    <div style={{padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%'}}>
+                    <div className="numero-clientes-encontrados" style={{padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%'}}>
                         Total: {numberTotalClientFiltered}
                     </div>
                 </Row>
@@ -303,31 +302,29 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         clientsPortfolioExpirationFindServer,
         clearFilter,
-        getMasterDataFields,
-        changePage,
+        dispatchGetMasterDataFields: getMasterDataFields,
         changeKeyword,
         consultList,
         updateTitleNavBar,
         consultListWithParameterUbication,
         consultDataSelect,
-        showLoading,
+        dispatchShowLoading: showLoading,
         changeTeam,
         swtShowMessage,
         changeRegion,
         changeZone,
-        changeType,
-        changeLine,
-        getNameAlert,
+        dispatchChangeType: changeType,
+        dispatchChangeLine: changeLine,
+        dispatchGetNameAlert: getNameAlert,
         consultTeamsByRegionByEmployee
     }, dispatch);
 }
 
-function mapStateToProps({alertPortfolioExpiration, selectsReducer, navBar, reducerGlobal}, {fields}) {
+function mapStateToProps({alertPortfolioExpiration, selectsReducer, navBar}, {fields}) {
     return {
         alertPortfolioExpiration,
         selectsReducer,
-        navBar,
-        reducerGlobal
+        navBar
     };
 }
 

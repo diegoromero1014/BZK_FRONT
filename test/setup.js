@@ -57,6 +57,7 @@ global.window.open = () => {}
 global.window.dataLayer = [];
 global.window.Object = Object;
 global.window.Math = Math;
+
 // ------------------
 // Helpers
 // ------------------
@@ -65,6 +66,12 @@ global.itRenders = Component => {
     expect(shallow(Component).length).to.eql(1);
     return wrapper;
 };
+
+global.itRendersChildComponent = (parent, child, num = 1) => {
+    const wrapper = shallow(parent);
+    expect(wrapper.find(child)).to.have.length(num);
+    return wrapper;
+}
 
 /*
   Disable webpack-specific 'loaders' for tests
