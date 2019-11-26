@@ -26,11 +26,7 @@ export default class NotificationExpiredPortfolio extends Component {
                 { seeMore &&
                     <div name='content' className="animated zoomIn">
                         <Row>
-<<<<<<< Updated upstream
-                            <Col xs={4}><strong>Entidad</strong></Col>
-=======
                             <Col xs={5} style={{ textAlign: 'left'}}><strong>Línea de Negocio</strong></Col>
->>>>>>> Stashed changes
                             <Col xs={4}><strong>Saldo Vencido</strong></Col>
                             <Col xs={3}><strong>Días</strong></Col>
                         </Row>
