@@ -98,6 +98,7 @@
     "webpack-isomorphic-tools": "^2.2.43"
   },
   "dependencies": {
+    "animate.css": "^3.7.2",
     "axios": "^0.15.3",
     "babel-plugin-transform-class-properties": "^6.23.0",
     "babel-polyfill": "^6.23.0",

@@ -11,8 +11,10 @@ const initialState = Immutable.Map({
     idTeam: null,
     idRegion: null,
     idZone: null,
+    expirationType: null,
+    line: null,
     pageNum: 1,
-    order: 0,
+    order: 1,
     columnOrder: '',
     responseClients: [],
     totalClientsByFiltered: 0,
@@ -47,10 +49,12 @@ export default (state = initialState, action = {}) => {
                     .set('idTeam', null)
                     .set('idRegion', null)
                     .set('idZone', null)
+                    .set('expirationType', null)
+                    .set('line', null)
                     .set('pageNum', 1)
                     .set('columnOrder', '')
                     .set('totalClientsByFiltered', get(response2, 'rowCount',0))
-                    .set('responseClients', get(response2, 'rows',[]))
+                    .set('responseClients', get(response2, 'rows', []))
                     .set('lastUploadDate', get(uploadDate2, 'lastUploadDate'));;
             });
         case actions.CHANGE_TEAM_PE:
@@ -67,6 +71,16 @@ export default (state = initialState, action = {}) => {
             return state.withMutations(map => {
                 map
                     .set('idZone', action.idZone);
+            });
+        case actions.CHANGE_TYPE:
+            return state.withMutations(map => {
+                map
+                    .set('expirationType', action.expirationType);
+            });
+        case actions.CHANGE_LINE:
+            return state.withMutations(map => {
+                map
+                    .set('line', action.line);
             });
         case actions.CLEAR_CLIENT_ORDER_PE:
             return state.withMutations(map => {

@@ -173,7 +173,7 @@ export class Ubicacion extends React.Component {
     const {origin, isEditable} = this.props;
     if(origin === 'clientInformation' || origin === 'createContact'){
       return (<Col xs={12} sm={12} md={3} lg={3}>
-      <Tooltip text="Al activar el campo, se copiará la información de ubicación de la sede principal del cliente seleccionado (dirección, país, ciudad, departamento y barrio)">
+      <Tooltip text="Al activar el campo, se copiará la información de ubicación de la sede principal del cliente seleccionado (dirección, país, ciudad, departamento/provincia y barrio)">
         <Checkbox
           onClick={this.changeCheckBox}
           checked={this.state.checked}
@@ -232,7 +232,7 @@ export class Ubicacion extends React.Component {
             </Col>
             <Col xs={12} sm={12} md={6} lg={4}>
               <dt>
-                <span>{"Departamento ("}</span>
+                <span>{"Departamento/Provincia ("}</span>
                 <span style={{ color: "red" }}>{"*"}</span>
                 <span>{")"}</span>
               </dt>
