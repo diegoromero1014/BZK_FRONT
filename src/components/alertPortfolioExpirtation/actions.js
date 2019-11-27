@@ -32,8 +32,8 @@ export function clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idR
             "idZone": idZone,
             "pageNum": pageNum,
             "maxRows": maxRows,
-            "order" : order ? order : 1,
-            "columnOrder" : columnOrder !== "" ? columnOrder : "balanceOverdue",
+            "order" : order,
+            "columnOrder" : columnOrder,
             "businessLine": line,
             "expirationType": type,
         }
@@ -61,7 +61,6 @@ export function changeKeyword(keyword) {
 }
 
 export function clearFilter() {
-
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionTokenFront'),
