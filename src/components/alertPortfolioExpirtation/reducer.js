@@ -14,7 +14,7 @@ const initialState = Immutable.Map({
     expirationType: null,
     line: null,
     pageNum: 1,
-    order: 0,
+    order: 1,
     columnOrder: '',
     responseClients: [],
     totalClientsByFiltered: 0,
@@ -54,7 +54,7 @@ export default (state = initialState, action = {}) => {
                     .set('pageNum', 1)
                     .set('columnOrder', '')
                     .set('totalClientsByFiltered', get(response2, 'rowCount',0))
-                    .set('responseClients', get(response2, 'rows',[]))
+                    .set('responseClients', get(response2, 'rows', []))
                     .set('lastUploadDate', get(uploadDate2, 'lastUploadDate'));;
             });
         case actions.CHANGE_TEAM_PE:

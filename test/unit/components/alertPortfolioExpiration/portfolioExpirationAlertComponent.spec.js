@@ -8,7 +8,7 @@ describe('Test PorfolioExpirationAlertComponent', () => {
 
     let stubRedirect;
 
-    let fields = createFieldsFromArray(["team", "region", "zone", "type", "line"]);
+    let fields = createFieldsFromArray(["team", "region", "zone", "expirationType", "line"]);
     let defaultProps;
 
     beforeEach(() => {
