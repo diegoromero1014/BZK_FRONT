@@ -86,13 +86,14 @@ export class ClientsPendingUpdate extends Component {
     _cleanSearch() {
         const {resetForm, dispatchShowLoading, clearFilter, consultList, swtShowMessage} = this.props;
         dispatchShowLoading(true, 'Cargando..');
-        resetForm();
-        clearFilter();
-        consultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
-            dispatchShowLoading(false, null);
-            if (!_.has(data, 'payload.data')) {
-                swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
-            }
+        clearFilter().then(resolve =>  {
+            resetForm();
+            consultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
+                dispatchShowLoading(false, null);
+                if (!_.has(data, 'payload.data')) {
+                    swtShowMessage('error', 'Error consultando las alertas', 'Señor usuario, ocurrió un error consultanto las alertas.');
+                }
+            });
         });
     }
 

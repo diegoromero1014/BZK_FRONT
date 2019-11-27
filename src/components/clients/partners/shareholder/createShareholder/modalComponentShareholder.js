@@ -474,7 +474,7 @@ class ModalComponentShareholder extends Component {
                 />
               </Col>
               <Col xs={12} md={4} lg={4}>
-                <dt><span>Departamento</span></dt>
+                <dt><span>Departamento/Provincia</span></dt>
                 <ComboBox name="departamento"
                   {...departamento}
                   valueProp={'id'}
