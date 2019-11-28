@@ -28,8 +28,8 @@ export default class NotificationExpiredPortfolio extends Component {
                     <div name='content' className="animated zoomIn" style={{ marginBottom: 30 }}>
                         <Row>
                             <Col xs={5} style={{ textAlign: 'left'}}><strong>Línea de Negocio</strong></Col>
-                            <Col xs={4}><strong>Saldo Vencido</strong></Col>
-                            <Col xs={3}><strong>Días</strong></Col>
+                            <Col xs={4} style={{ textAlign: 'right'}}><strong>Saldo Vencido</strong></Col>
+                            <Col xs={3} style={{ textAlign: 'right'}}><strong>Días</strong></Col>
                         </Row>
                         <div style={{
                             overflowY: 'auto',
@@ -39,10 +39,10 @@ export default class NotificationExpiredPortfolio extends Component {
                             { 
                                 data.map(item => (
                                     <div key={item.idAlert} style={{ padding: 5 }}>
-                                        <Row>
+                                        <Row style={{ marginBottom: '10px'}}>
                                             <Col xs={5} style={{ textAlign: 'left'}}>{ item.entityName }</Col>
-                                            <Col xs={4}>{ formatNumeral(item.overdueBalance,'$0,0[.]00') }</Col>
-                                            <Col xs={3}>{ item.daysArrears }</Col>
+                                            <Col xs={4} style={{ textAlign: 'right'}}>{ formatNumeral(item.overdueBalance,'$0,0[.]00') }</Col>
+                                            <Col xs={3} style={{ textAlign: 'right'}}>{ item.daysArrears }</Col>
                                         </Row>
                                         <hr style={{ marginTop: "0px", marginBottom: "0px" }}/>
                                     </div>
