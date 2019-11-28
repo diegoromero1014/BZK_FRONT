@@ -134,6 +134,7 @@ class ModalComponentEconomicGroup extends Component {
         $('.ui.search.clientRelationship').toggleClass('loading');
         clientsFindServer(nameClient, 0, 150, "", "", null, null, null, null).then((data) => {
           clients = _.get(data, 'payload.data.data.rows', []);
+
           $('.ui.search.clientRelationship')
             .search({
               cache: false,
