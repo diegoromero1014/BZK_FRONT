@@ -33,7 +33,8 @@ export default class NotificationComponent extends Component {
                     borderColor: "#d3d3d3", 
                     borderRadius: "5px", 
                     borderBottom: `10px solid ${option[0].color}`, 
-                    backgroundColor: "#F3F3F3", color: "grey"
+                    backgroundColor: "#F3F3F3", color: "grey",
+                    overflow: 'hidden',
                 }}
                 >
                 <Row>
