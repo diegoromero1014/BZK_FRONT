@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
+import { formatNumeral } from '../../actionsGlobal';
 
 export default class NotificationExpiredPortfolio extends Component {
 
@@ -24,7 +25,7 @@ export default class NotificationExpiredPortfolio extends Component {
                 }
                 <br/>
                 { seeMore &&
-                    <div name='content' className="animated zoomIn" style={{ marginBottom: 100 }}>
+                    <div name='content' className="animated zoomIn" style={{ marginBottom: 30 }}>
                         <Row>
                             <Col xs={5} style={{ textAlign: 'left'}}><strong>Línea de Negocio</strong></Col>
                             <Col xs={4}><strong>Saldo Vencido</strong></Col>
@@ -33,15 +34,14 @@ export default class NotificationExpiredPortfolio extends Component {
                         <div style={{
                             overflowY: 'auto',
                             overflowX: 'hidden',
-                            maxHeight: '50vh',
-                            height: '30vh'
+                            maxHeight: '30vh'
                         }}>
                             { 
                                 data.map(item => (
                                     <div key={item.idAlert} style={{ padding: 5 }}>
                                         <Row>
                                             <Col xs={5} style={{ textAlign: 'left'}}>{ item.entityName }</Col>
-                                            <Col xs={4}>{ item.overdueBalance }</Col>
+                                            <Col xs={4}>{ formatNumeral(item.overdueBalance,'$0,0[.]00') }</Col>
                                             <Col xs={3}>{ item.daysArrears }</Col>
                                         </Row>
                                         <hr style={{ marginTop: "0px", marginBottom: "0px" }}/>
