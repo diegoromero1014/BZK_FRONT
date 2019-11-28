@@ -24,7 +24,7 @@ export default class NotificationExpiredPortfolio extends Component {
                 }
                 <br/>
                 { seeMore &&
-                    <div name='content' className="animated zoomIn">
+                    <div name='content' className="animated zoomIn" style={{ marginBottom: 100 }}>
                         <Row>
                             <Col xs={5} style={{ textAlign: 'left'}}><strong>Línea de Negocio</strong></Col>
                             <Col xs={4}><strong>Saldo Vencido</strong></Col>
@@ -33,7 +33,8 @@ export default class NotificationExpiredPortfolio extends Component {
                         <div style={{
                             overflowY: 'auto',
                             overflowX: 'hidden',
-                            maxHeight: '215px'
+                            maxHeight: '50vh',
+                            height: '30vh'
                         }}>
                             { 
                                 data.map(item => (
