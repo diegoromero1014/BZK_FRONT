@@ -10,15 +10,25 @@ describe('Test PorfolioExpirationAlertComponent', () => {
 
     let fields = createFieldsFromArray(["team", "region", "zone", "expirationType", "line"]);
     let defaultProps;
+    let dispatchChangeLine;
+    let dispatchShowLoading;
+    let clientsPortfolioExpirationFindServer;
 
     beforeEach(() => {
+        dispatchChangeLine = sinon.fake();
+        dispatchShowLoading = sinon.fake();
+        clientsPortfolioExpirationFindServer = sinon.stub();
+        clientsPortfolioExpirationFindServer.resolves("");
         stubRedirect = sinon.stub(actionsGlobalComponents, 'redirectUrl');
         defaultProps = {
             fields: fields,
             alertPortfolioExpiration: Immutable.Map({
                 totalClientsByFiltered: 5
             }),
-            selectsReducer: Immutable.Map({})
+            selectsReducer: Immutable.Map({}),
+            dispatchChangeLine,
+            dispatchShowLoading,
+            clientsPortfolioExpirationFindServer
         }
     });
 
@@ -40,5 +50,15 @@ describe('Test PorfolioExpirationAlertComponent', () => {
             <ClientsPendingUpdate {...defaultProps} />,
             ListClientsAlertPortfolioExp
         )
-    })
+    });
+
+    it('Should call handleClientsFind when change line', () => {
+        
+        const wrapper = shallow(
+            <ClientsPendingUpdate {...defaultProps}
+        />);
+        wrapper.instance().onChangeLine("val");
+        expect(dispatchChangeLine.callCount).to.equal(1);
+        expect(clientsPortfolioExpirationFindServer.callCount).to.equal(1);
+    });
 })
