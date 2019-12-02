@@ -264,27 +264,16 @@ class ModalComponentShareholder extends Component {
       } else {
         if ((_.get(data, 'payload.data.status') === 200)) {
           if (_.get(data, 'payload.data.data') !== null && _.get(data, 'payload.data.data') !== undefined) {
-            var valoresResponse = (_.get(data, 'payload.data.data')).split("_");
-            if (valoresResponse[0] === "exceedPorcentaje") {
-              typeMessage = "error";
-              titleMessage = "Porcentaje excedido";
-              message = "Señor usuario, la suma de los accionistas directos excede el 100%. El valor máximo que puede ingresar es: " + valoresResponse[1] + "%";
-            } else {
-              typeMessage = "success";
-              titleMessage = "Creación de accionista";
-              message = "Señor usuario, el accionista se creó de forma exitosa.";
-              shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "sh.sharePercentage", 1, "", "");
-            }
-          } else {
             typeMessage = "success";
             titleMessage = "Creación de accionista";
             message = "Señor usuario, el accionista se creó de forma exitosa.";
             shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "sh.sharePercentage", 1, "", "");
           }
-        } else {
+        } else if (_.get(data, 'payload.data.status') === 500){
+          console.log("data",data);
           typeMessage = "error";
           titleMessage = "Error creando accionista";
-          message = "Señor usuario, ocurrió un error creando el accionista.";
+          message = _.get(data, 'payload.data.data');
         }
       }
       this.setState({ showMessage: true });
