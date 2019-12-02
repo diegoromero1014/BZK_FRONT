@@ -107,7 +107,7 @@ class ListBusiness extends Component {
                                     <tr>
                                         <th></th>
                                         <th>Producto</th>
-                                        <th>Estado</th>
+                                        <th>Estado del negocio</th>
                                         <th></th>
                                     </tr>
                                 </thead>

@@ -1,3 +1,4 @@
+export const ALERT_PORTFOLIO_EXPECTATIONS = "alertPortfolioExpirationExpectatives";
 export const ALL_BUSINESS_CATEGORIES = "allBusinessCategories";
 export const ALL_PRODUCT_FAMILIES = "allProductFamilies";
 export const CLIENT_TYPE = "clientType";
@@ -96,4 +97,5 @@ export const FILTER_PROVINCE_CLIENT = 'provinceClient';
 export const FILTER_CITY_CLIENT = 'cityClient';
 export const CURRENCY = 'currency';
 export const CLIENT_NEED = 'clientNeed';
+export const EXPIRATION_TYPE = 'expirationRate';
 //FIN

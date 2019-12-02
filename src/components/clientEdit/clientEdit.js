@@ -1418,7 +1418,7 @@ class clientEdit extends Component {
                     </Col>
                     <Col xs={12} md={4} lg={4}>
                         <div style={{ paddingLeft: "20px", paddingRight: "10px" }}>
-                            <dt><span>Departamento {drawRequiredField(!isMethodEditClient)}</span></dt>
+                            <dt><span>Departamento/Provincia {drawRequiredField(!isMethodEditClient)}</span></dt>
                             <ComboBox
                                 name="province"
                                 labelInput="Seleccione departamento..."

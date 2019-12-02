@@ -65,8 +65,10 @@ class SearchBarClient extends Component{
             const idZone = alertPortfolioExpiration.get('idZone');
             const order = alertPortfolioExpiration.get('order');
             const columnOrder = alertPortfolioExpiration.get('columnOrder');
+            const line = alertPortfolioExpiration.get('line');
+            const type = alertPortfolioExpiration.get('expirationType');
             showLoading(true, 'Cargando..');
-            clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idRegion, idZone, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
+            clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idRegion, idZone, 1, NUMBER_RECORDS, order, columnOrder, line, type).then((data) => {
                 if (_.has(data, 'payload.data.data.pagination')) {
                     showLoading(false, null);
                     changePage(1);
