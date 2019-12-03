@@ -1,8 +1,8 @@
 import _ from "lodash";
-
 import numeral from "numeral";
 
 import { htmlToText } from './../actionsGlobal';
+
 import {
     OTHER, EXCLIENT, RESPONSE_INFO, MARK_GEREN, BUTTON_EDIT,
     PERMISSIONSCLIENTS,
@@ -21,7 +21,7 @@ import {
     patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
     patternOfInventoryPolice, patternOfControlLinkedPayments, patternOfNameEntity, patternOfNoOperatingInCome,
     patternOfOnlyAlphabeticalAndSlash, patternOfRiskGroupName, patternOfObservationRiskGroup, patternOfJustificationsRiskGroup,
-    patternOfRiskExternalClientName, patternOfExternalClientNumberDocument, patternOfTaskObservation, patternOfOriginCityResources, regexHtmlInjection
+    patternOfExternalClientNumberDocument, patternOfTaskObservation, patternOfOriginCityResources, regexHtmlInjection
 } from './patternsToValidateField';
 
 import {
@@ -56,7 +56,6 @@ import {
     MESSAGE_WARNING_GROUP_NAME,
     MESSAGE_WARNING_OBSERVATIONS_RISK_GROUP,
     MESSAGE_WARNING_JUSTIFICATIONS_RISK_GROUP,
-    MESSAGE_WARNING_EXTERNAL_CLIENT_NAME,
     MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT,
     MESSAGE_REQUIRED_EMPLOYEE,
     MESSAGE_WARNING_TASK_OBSERVATIONS,
@@ -66,7 +65,7 @@ import {
 } from './validationsMessages';
 
 import {
-    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, SUBSEGMENTS, PIPELINE_TYPE, PRODUCTS, CLIENT_NEED, PRODUCTS_MASK
+    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, SUBSEGMENTS, PIPELINE_TYPE, CLIENT_NEED, PRODUCTS_MASK
 } from '../components/selectsComponent/constants';
 
 import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO,
@@ -165,7 +164,6 @@ export const checkForValueIdSubCiiuEditClient = (value, fields, props) => {
 
     return message;
 }
-
 
 export const checkForValueReasonTransfer = (value, fields, props) => {
     let message = null;
@@ -326,8 +324,6 @@ export const checkControlLinkedPaymentsRequired = (value, fields, props) => {
     return message;
 }
 
-
-
 export const checkForValueIsExClient = (value, fields, props) => {
     let message = null;
     let isExClientValue = props.clientInformacion.get(RESPONSE_INFO);
@@ -467,6 +463,7 @@ export const checkContactRelevantFeatures = value => {
 
     return message;
 }
+
 export const checkRegexHtmlInjection = value => {
     let message = null;
     if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && regexHtmlInjection.test(value)) {
@@ -479,14 +476,6 @@ export const checkRegexHtmlInjection = value => {
 export const checkPipeLineOpportunityName = value => {        
     const required = checkRequired(value);
     return required ? required : (!patternOfOpportunityName.test(value) ? MESSAGE_WARNING_OPPORTUNITY_NAME : null);
-}
-
-export const checkRequiredPipelinePadre =  (value, fields, props) => {
-    let isPipelineChild = props.pipelineReducer.get("isPipelineChildOpen");
-    if (!isPipelineChild) {
-        return checkRequired(value);
-    }
-    return null;
 }
 
 /**
@@ -876,15 +865,6 @@ export const checkJustificationsRiskGroup = value => {
     return message;
 }
 
-export const checkGroupExternalClientName = value => {
-    let message = null;
-
-    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfRiskExternalClientName.test(value)) {
-        message = MESSAGE_WARNING_EXTERNAL_CLIENT_NAME;
-    }
-
-    return message;
-}
 export const checkGroupExternalClientNumberDocument = value => {
     let message = null;
 
@@ -894,9 +874,9 @@ export const checkGroupExternalClientNumberDocument = value => {
 
     return message;
 }
+
 export const checkRequiredEmployee = value => {
-    let message = null;
-    if(_.isNull(value)||_.isUndefined(value)){ 
+    if(_.isNull(value)||_.isUndefined(value)){
         return MESSAGE_REQUIRED_EMPLOYEE
     }
     return null;
