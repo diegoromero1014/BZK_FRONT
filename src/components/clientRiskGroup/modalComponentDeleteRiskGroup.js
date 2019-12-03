@@ -15,7 +15,7 @@ import { fields, validations as validate } from './fieldsAndRulesForDeleteRiskGr
 
 
 let thisForm;
-class modalComponentDeleteRiskGroup extends Component {
+export class modalComponentDeleteRiskGroup extends Component {
     constructor(props) {
         super(props);
         this.state = {
