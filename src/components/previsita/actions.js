@@ -1,12 +1,21 @@
 import { APP_URL, NAME_REPORT_PREVISIT } from '../../constantsGlobal';
 import axios from 'axios';
 import * as constants from './constants';
+import { generatePDF } from '../reports/pdf/actions';
 import { validateIsNullOrUndefined } from '../../actionsGlobal';
 
 
-export function pdfDescarga(idclient, idPrevisit) {
-  window.open(APP_URL + "/pdfReportPreVisit?idClient=" + idclient + "&idPrevisit=" + idPrevisit + "&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionTokenFront'));
-}
+export function pdfDescarga(changeStateSaveData, idPrevisit) {
+    const requestBody = {
+      "name": "reportPreVisit.pdf",
+      "route": "BiztrackReports/reportPreVisit.jrxml",
+      "params": {
+        "P_ID_PREVISIT": Number(idPrevisit)
+      },
+      "source": []
+    };
+  generatePDF(changeStateSaveData, requestBody);
+ }
 
 export function createPrevisit(jsonVisit) {
   const json = {

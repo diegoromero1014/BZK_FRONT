@@ -320,8 +320,8 @@ class FormEditPrevisita extends Component {
     }
 
     _onClickPDF() {
-        const { pdfDescarga, id } = this.props;
-        pdfDescarga(window.sessionStorage.getItem('idClientSelected'), id);
+        const {changeStateSaveData, pdfDescarga, id } = this.props;
+        pdfDescarga(changeStateSaveData, id);
     }
 
     _closeMessageCreatePreVisit() {
