@@ -270,7 +270,6 @@ class ModalComponentShareholder extends Component {
             shareholdersByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "sh.sharePercentage", 1, "", "");
           }
         } else if (_.get(data, 'payload.data.status') === 500){
-          console.log("data",data);
           typeMessage = "error";
           titleMessage = "Error creando accionista";
           message = _.get(data, 'payload.data.data');
