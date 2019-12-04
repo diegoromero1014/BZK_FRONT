@@ -15,7 +15,7 @@ import { fields, validations as validate } from './fieldsAndRulesForDeleteRiskGr
 
 
 let thisForm;
-export class modalComponentDeleteRiskGroup extends Component {
+export class ModalComponentDeleteRiskGroup extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -149,4 +149,4 @@ export default reduxForm({
     onSubmitFail: errors => {
         thisForm.setState({showErrorForm: true});
     }
-}, mapStateToProps, mapDispatchToProps)(modalComponentDeleteRiskGroup);
+}, mapStateToProps, mapDispatchToProps)(ModalComponentDeleteRiskGroup);
