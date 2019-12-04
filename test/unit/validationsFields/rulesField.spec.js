@@ -813,4 +813,9 @@ describe('Test checkRegexHtmlInjection white list validation', () => {
         const expectedMessage = MESSAGE_ERROR_INJECTION_HTML;
         expect(checkRegexHtmlInjection(value)).equal(expectedMessage);
     });
+    it('should throw null when value is an ampersand html injection checkRegexHtmlInjection', () => {
+        const value = '&ltp&gt&lt/p&gt';
+        const expectedMessage = MESSAGE_ERROR_INJECTION_HTML;
+        expect(checkRegexHtmlInjection(value)).equal(expectedMessage);
+    });
 });
