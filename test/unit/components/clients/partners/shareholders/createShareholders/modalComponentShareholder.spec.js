@@ -34,7 +34,7 @@ describe('Test ModalComponentShareholder', ()=>{
         stubRedirect = sinon.stub(actions, "redirectUrl");
 
 
-        const success = { payload:{sataus:500, data:{data:{}}}}
+        const success = { payload:{ data:{status:500,validateLogin:true,data:"msj"}}};
         createShareholder.resolves(success);
 
         defaultProps = {
@@ -53,7 +53,7 @@ describe('Test ModalComponentShareholder', ()=>{
 
     afterEach(() => {
         stubRedirect.restore();
-    })
+    });
 
     it('Should render ModalComponentShareholder', ()=>{
 

@@ -39,7 +39,7 @@ var message = "Señor usuario, debe ingresar los campos marcados con asterisco."
 var valueTypeShareholder;
 
 
-class ComponentShareHolderDetail extends Component {
+export class ComponentShareHolderDetail extends Component {
 
   constructor(props) {
     super(props);
