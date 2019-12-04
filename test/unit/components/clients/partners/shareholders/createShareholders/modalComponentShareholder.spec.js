@@ -32,7 +32,10 @@ describe('Test ModalComponentShareholder', ()=>{
         changeStateSaveData = sinon.fake();
         createShareholder = sinon.stub();
         stubRedirect = sinon.stub(actions, "redirectUrl");
-        createShareholder.resolves("");
+
+
+        const success = { payload:{sataus:500, data:{data:{}}}}
+        createShareholder.resolves(success);
 
         defaultProps = {
             fields: fields,
