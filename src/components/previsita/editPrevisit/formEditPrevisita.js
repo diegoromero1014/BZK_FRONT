@@ -157,7 +157,7 @@ const stylesButtons = {
     }
 };
 
-class FormEditPrevisita extends Component {
+export class FormEditPrevisita extends Component {
 
     constructor(props) {
         super(props);

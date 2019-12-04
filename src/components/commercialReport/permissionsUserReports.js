@@ -31,7 +31,7 @@ const validate = values => {
 var disabledButtonCreate = '';
 var usersPermission = [];
 
-class PermissionUserReports extends Component {
+export class PermissionUserReports extends Component {
     constructor(props) {
         super(props);
         this.state = {
