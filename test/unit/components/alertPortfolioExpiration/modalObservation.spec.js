@@ -4,11 +4,10 @@ import { ModalObservation } from '../../../../src/components/alertPortfolioExpir
 import Textarea from '../../../../src/ui/textarea/textareaComponent';
 import ComboBox from '../../../../src/ui/comboBox/comboBoxComponent';
 import { createFieldsFromArray } from '../../../helpers/ReduxFormField';
-import * as swtActions from '../../../../src/components/sweetAlertMessages/actions';
 
 const selectsReducer = Immutable.Map({});
 
-describe('Test ModalObservation', () => {
+    describe('Test ModalObservation', () => {
 
     let fields = createFieldsFromArray(["observations", "expectations"]);
     let swtShowMessage;
