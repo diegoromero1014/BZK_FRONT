@@ -1,84 +1,91 @@
 import { ModaltrackingCovenant } from "../../../../../../src/components/risksManagement/covenants/createTracking/modalTrackingCovenant";
 import Immutable from 'immutable';
-
-
-const clearCovenant = () => {};
-const changeStatusCreate = () => {};
-const changeStateSaveData = () => {};
-const getInfoCovenant = () => {
-    return new Promise((data) => {return true}, (err) => {return false});
-};
-
-let defaultProps = {
-    clearCovenant,
-    changeStatusCreate,
-    changeStateSaveData,
-    getInfoCovenant,
-    covenantId: 123,
-    covenant: Immutable.Map({
-        covenantInfo: {
-            idCovenant: 123,
-            strCovenant: 'Algún tipo de covenant',       
-            referenceValue: 312394,     
-            productDetail: 'Este es el detalle del producto'            
-        }        
-    })
-};
+import * as globalActions from "../../../../../../src/components/globalComponents/actions";
 
 describe('Test Covenant/modalTrackingCovenant', () => {
 
-    it('should render Col Covenant', () => {
-        const wrapper = shallow(<ModaltrackingCovenant {...defaultProps}></ModaltrackingCovenant>);
-        expect(wrapper.find('Col.covenant')).to.have.lengthOf(1);
+    let clearCovenant;
+    let changeStatusCreate;
+    let changeStateSaveData;
+    let getInfoCovenant;
+    let defaultProps;
+    let stubRedirectUrl;
+
+    afterEach(() => {
+        stubRedirectUrl.restore();
     });
 
-    it('should render Col Id Covenant', () => {
-        const wrapper = shallow(<ModaltrackingCovenant {...defaultProps}></ModaltrackingCovenant>);
-        expect(wrapper.find('Col.idCovenant')).to.have.lengthOf(1);
+    beforeEach(() => {    
+
+        stubRedirectUrl = sinon.stub(globalActions, "redirectUrl");
+        clearCovenant = sinon.fake();
+        changeStatusCreate = sinon.fake();
+        changeStateSaveData = sinon.fake();
+        getInfoCovenant = sinon.stub();
+        getInfoCovenant.resolves(true);
+
+        defaultProps = {
+            clearCovenant,
+            changeStatusCreate,
+            changeStateSaveData,
+            getInfoCovenant,
+            covenantId: 123,
+            covenant: Immutable.Map({
+                covenantInfo: {
+                    idCovenant: 123,
+                    strCovenant: 'Algún tipo de covenant',       
+                    referenceValue: 312394,     
+                    productDetail: 'Este es el detalle del producto'            
+                }        
+            })
+        };
     });
 
-    it('should render Col Valor de Referencia', () => {
-        const wrapper = shallow(<ModaltrackingCovenant {...defaultProps}></ModaltrackingCovenant>);
-        expect(wrapper.find('Col.referenceValue')).to.have.lengthOf(1);
+    it('should render component', () => {
+        itRenders(<ModaltrackingCovenant {...defaultProps}/>);
     });
 
-    it('should render Col Descripción covenant', () => {
-        const wrapper = shallow(<ModaltrackingCovenant {...defaultProps}></ModaltrackingCovenant>);
-        expect(wrapper.find('Col.description')).to.have.lengthOf(1);
+    it('should render Col Covenant', () => {        
+        itRendersChildComponent(<ModaltrackingCovenant {...defaultProps}/>, 'Col.covenant');
     });
 
-    it('should render Col Detalle del Producto', () => {
-        const wrapper = shallow(<ModaltrackingCovenant {...defaultProps}></ModaltrackingCovenant>);
-        expect(wrapper.find('Col.productDetail')).to.have.lengthOf(1);
+    it('should render Col Id Covenant', () => {        
+        itRendersChildComponent(<ModaltrackingCovenant {...defaultProps}/>, 'Col.idCovenant');
     });
 
-    it('should render Col Frecuencia de Revision', () => {
-        const wrapper = shallow(<ModaltrackingCovenant {...defaultProps}></ModaltrackingCovenant>);
-        expect(wrapper.find('Col.revisionFrequency')).to.have.lengthOf(1);
+    it('should render Col Valor de Referencia', () => {        
+        itRendersChildComponent(<ModaltrackingCovenant {...defaultProps}/>, 'Col.referenceValue');
     });
 
-    it('should render Col Linea de negocio', () => {
-        const wrapper = shallow(<ModaltrackingCovenant {...defaultProps}></ModaltrackingCovenant>);
-        expect(wrapper.find('Col.lineOfBusiness')).to.have.lengthOf(1);
+    it('should render Col Descripción covenant', () => {        
+        itRendersChildComponent(<ModaltrackingCovenant {...defaultProps}/>, 'Col.description');
     });
 
-    it('should render Col Acta o contrato', () => {
-        const wrapper = shallow(<ModaltrackingCovenant {...defaultProps}></ModaltrackingCovenant>);
-        expect(wrapper.find('Col.agreement')).to.have.lengthOf(1);
+    it('should render Col Detalle del Producto', () => {        
+        itRendersChildComponent(<ModaltrackingCovenant {...defaultProps}/>, 'Col.productDetail');
     });
 
-    it('should render Col Gerente responsable', () => {
-        const wrapper = shallow(<ModaltrackingCovenant {...defaultProps}></ModaltrackingCovenant>);
-        expect(wrapper.find('Col.manager')).to.have.lengthOf(1);
+    it('should render Col Frecuencia de Revision', () => {        
+        itRendersChildComponent(<ModaltrackingCovenant {...defaultProps}/>, 'Col.revisionFrequency');
     });
 
-    it('should render Col Fecha de creación', () => {
-        const wrapper = shallow(<ModaltrackingCovenant {...defaultProps}></ModaltrackingCovenant>);
-        expect(wrapper.find('Col.creationDate')).to.have.lengthOf(1);
+    it('should render Col Linea de negocio', () => {        
+        itRendersChildComponent(<ModaltrackingCovenant {...defaultProps}/>, 'Col.lineOfBusiness');
     });
 
-    it('should render Col Fecha de expiración', () => {
-        const wrapper = shallow(<ModaltrackingCovenant {...defaultProps}></ModaltrackingCovenant>);
-        expect(wrapper.find('Col.expirationDate')).to.have.lengthOf(1);
+    it('should render Col Acta o contrato', () => {        
+        itRendersChildComponent(<ModaltrackingCovenant {...defaultProps}/>, 'Col.agreement');
+    });
+
+    it('should render Col Gerente responsable', () => {        
+        itRendersChildComponent(<ModaltrackingCovenant {...defaultProps}/>, 'Col.manager');
+    });
+
+    it('should render Col Fecha de creación', () => {        
+        itRendersChildComponent(<ModaltrackingCovenant {...defaultProps}/>, 'Col.creationDate');
+    });
+
+    it('should render Col Fecha de expiración', () => {        
+        itRendersChildComponent(<ModaltrackingCovenant {...defaultProps}/>, 'Col.expirationDate');
     });
 })
