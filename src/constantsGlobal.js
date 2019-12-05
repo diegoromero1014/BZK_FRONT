@@ -163,7 +163,7 @@ if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
     API_URL = "https://biztrack.bancolombia.corp/Centricity";
     GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcN9rMUAAAAAAA6mSV4rn_7BHZvOVlQlWBIXLeB';
   } else if (WP_VAR_ENVIRONMENT === 'development') {
-    API_URL = "https://was-biztrackqa.apps.ambientesbc.com/Centricity";
+    API_URL = "https://was-biztrackdev.apps.ambientesbc.com/Centricity";
     GOOGLE_RECAPTCHA_PUBLIC_KEY = '6Lf39bMUAAAAANetoQ4U_xpWh1pNHdANtBM7Mc-5';
   } else if (WP_VAR_ENVIRONMENT === 'quality') {
     API_URL = "https://was-biztrackqa.apps.ambientesbc.com/Centricity";
