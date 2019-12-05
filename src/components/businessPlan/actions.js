@@ -1,6 +1,8 @@
 import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
 import * as constants from './constants';
+import { generatePDF } from '../reports/pdf/actions';
+
 
 export function businessPlanByClientFindServer(clientId, pageNum, maxRows, columnOrder, order, statusDocumentId, businessStatus) {
   const json = {
@@ -183,8 +185,16 @@ export function changeOwnerDraft(ownerDraft){
   };
 }
 
-export function pdfDescarga(clientId, businessPlanId) {
-  window.open(APP_URL + "/pdfReportBusinessPlan?clientId=" + clientId + "&businessPlanId=" + businessPlanId + "&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionTokenFront'));
+export function pdfDescarga(changeStateSaveData, businessPlanId) {
+  const requestBody = {
+    "name": "ReportBusinessPlan.pdf",
+    "route": "BiztrackReports/ReportBusinessPlan.jrxml",
+    "params": {
+      "P_ID_BUSINESS_PLAN": Number(businessPlanId)
+    },
+    "source": []
+  };
+  generatePDF(changeStateSaveData, requestBody);
 }
 
 export function validateRangeDates(startDate, endDate, idBusinessPlan){
