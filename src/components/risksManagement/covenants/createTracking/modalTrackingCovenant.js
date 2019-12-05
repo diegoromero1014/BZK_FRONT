@@ -13,7 +13,7 @@ import { mapDateValueFromTaskByFormat } from '../../../../actionsGlobal';
 
 import { MESSAGE_LOAD_DATA } from '../../../../constantsGlobal';
 
-class ModaltrackingCovenant extends Component {
+export class ModaltrackingCovenant extends Component {
     constructor(props) {
         super(props);
     }
@@ -33,7 +33,7 @@ class ModaltrackingCovenant extends Component {
 
     render() {
         const { covenant, isOpen } = this.props;
-        const infoCovenant = covenant.get('covenantInfo');
+        const infoCovenant = covenant.get('covenantInfo');        
 
         const dateCreate = _.isUndefined(infoCovenant.creationTimestamp) || _.isNull(infoCovenant.creationTimestamp) ? "" : mapDateValueFromTaskByFormat(infoCovenant.creationTimestamp.split(" ")[0], 'DD MMM YYYY');
         const dateExpiration = _.isUndefined(infoCovenant.expirationTimestamp) || _.isNull(infoCovenant.expirationTimestamp) ? "" : mapDateValueFromTaskByFormat(infoCovenant.expirationTimestamp.split(" ")[0], 'DD MMM YYYY');
@@ -43,43 +43,58 @@ class ModaltrackingCovenant extends Component {
                     <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información del covenant</span></dt>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>
-                            <Col xs={12} md={4} lg={4} >
+                            <Col xs={4} md={4} lg={4} className="covenant">
                                 <dt style={{ paddingTop: '5px' }}>Covenant</dt>
                                 <dd style={{ textAlign: 'justify' }}>{infoCovenant.strCovenant}</dd>
                             </Col>
-                            <Col xs={12} md={8} lg={8} >
-                                <dt style={{ paddingTop: '5px' }}>Descripción Covenant</dt>
-                                <dd style={{ textAlign: 'justify' }}>{infoCovenant.description}</dd>
-                            </Col>
-                            <Col xs={12} md={6} lg={4} >
+                            <Col xs={4} md={4} lg={4} className="idCovenant">
                                 <dt style={{ paddingTop: '5px' }}>Id covenant</dt>
                                 <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.idCovenant) ? "" : infoCovenant.idCovenant}</dd>
                             </Col>
-                            <Col xs={12} md={6} lg={4} >
+                            <Col xs={4} md={4} lg={4} className="referenceValue">
                                 <dt style={{ paddingTop: '5px' }}>Valor de referencia</dt>
                                 <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.referenceValue) ? "" : infoCovenant.referenceValue}</dd>
                             </Col>
-                            <Col xs={12} md={6} lg={4} >
+                        </Row>
+                        <Row>
+                            <Col xs={12} md={12} lg={12} className="description">
+                                <dt style={{ paddingTop: '5px' }}>Descripción covenant</dt>
+                                <dd style={{ textAlign: 'justify', whiteSpace: 'pre-line' }}>{infoCovenant.description}</dd>
+                            </Col>  
+                        </Row>
+                        <Row>
+                            <Col xs={12} md={12} lg={12} className="productDetail">
+                                <dt style={{ paddingTop: '5px' }}>Detalle del producto</dt>
+                                {infoCovenant.productDetail ? 
+                                    <dd style={{ textAlign: 'justify', whiteSpace: 'pre-line' }}>{infoCovenant.productDetail}</dd> : 
+                                    <dd style={{ textAlign: 'justify', fontStyle: 'italic' }}>Sin información</dd>    
+                                }                                
+                            </Col>  
+                        </Row>                         
+                        <Row>                             
+                            <Col xs={4} md={4} lg={4} className="revisionFrequency">
                                 <dt style={{ paddingTop: '5px' }}>Frecuencia de revisión</dt>
                                 <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.revisionFrequencyName) ? "" : infoCovenant.revisionFrequencyName}</dd>
                             </Col>
-                            <Col xs={12} md={6} lg={4} >
+                            <Col xs={4} md={4} lg={4} className="lineOfBusiness">
                                 <dt style={{ paddingTop: '5px' }}>Entidad/Línea de negocio</dt>
                                 <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.lineOfBusinessName) ? "" : infoCovenant.lineOfBusinessName}</dd>
                             </Col>
-                            <Col xs={12} md={6} lg={4} >
+                            <Col xs={4} md={4} lg={4} className="agreement">
                                 <dt style={{ paddingTop: '5px' }}>Acta o contrato</dt>
                                 <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.agreement) ? "" : infoCovenant.agreement}</dd>
                             </Col>
-                            <Col xs={12} md={6} lg={4} >
+                        </Row>
+                        <Row>
+                            <Col xs={4} md={4} lg={4} className="manager">
                                 <dt style={{ paddingTop: '5px' }}>Gerente responsable</dt>
                                 <dd style={{ minHeight: '26px' }}>{_.isUndefined(infoCovenant.managerUsername) ? "" : infoCovenant.managerUsername}</dd>
                             </Col>
-                            <Col xs={12} md={6} lg={4} >
+                            <Col xs={4} md={4} lg={4} className="creationDate">
                                 <dt style={{ paddingTop: '5px' }}>Fecha de creación</dt>
                                 <dd style={{ minHeight: '26px' }}>{dateCreate}</dd>
                             </Col>
-                            <Col xs={12} md={6} lg={4} >
+                            <Col xs={4} md={4} lg={4} className="expirationDate">
                                 <dt style={{ paddingTop: '5px' }}>Fecha próximo seguimiento</dt>
                                 <dd style={{ minHeight: '26px' }}>{dateExpiration}</dd>
                             </Col>

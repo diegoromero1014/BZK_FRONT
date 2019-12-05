@@ -38,7 +38,7 @@ let isNaturePerson = false;
 
 var valueTypeShareholder;
 
-class ModalComponentShareholder extends Component {
+export class ModalComponentShareholder extends Component {
   constructor(props) {
     super(props);
     this._searchShareholder = this._searchShareholder.bind(this);
