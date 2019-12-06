@@ -317,8 +317,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       value.onChange(val);
     }
 
-    _onChangeBusinessCategory(val) {      
-      let showLocalInteresSpread = false;
+    _onChangeBusinessCategory(val) {
+      const { fields: { commission } } = this.props;
+      let showLocalInteresSpread = false;      
       const  keyBusinessCategory= _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key') ? _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key').toLowerCase() : '';
       if(keyBusinessCategory == PLACEMENTS || keyBusinessCategory == CATCHMENTS){
           showLocalInteresSpread=true;
@@ -326,7 +327,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.setState({
           messageTooltipNominalValue: _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'description'),
           showInteresSpread:showLocalInteresSpread
-      })
+      });
+      commission.onChange("");
     }
 
     _changeProductFamily(currencyValue) {
@@ -499,7 +501,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       return businessStatusList.find((status) => status.id == id);
     }
 
-    _validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey){      
+    _validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey){
+      const { fields: {justification} } = this.props;
       if(pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){
         this.setState({
           showMellowingPeriodField: false,
@@ -513,6 +516,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           showJustificationField: false
         });        
       }
+      justification.onChange("");
     }
 
   _showAlertFinancingAndPlan(isEditableValue) {
@@ -622,7 +626,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           pipelineType, commercialOportunity, justification, pivotNit
         }, createEditPipeline, swtShowMessage, changeStateSaveData, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
       } = this.props;
-
+      
       if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
         this.setState({
           employeeResponsible: true
@@ -922,7 +926,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                     <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
                     <i className="browser icon" style={{ fontSize: "20px" }} />
-                    <span style={{ fontSize: "20px" }}> Datos de pipeline</span>
+                    <span style={{ fontSize: "20px" }}> Pipeline</span>
                   </div>
                 </Col>
               </Row>
@@ -947,7 +951,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={12} md={6} lg={6}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>Familia de productos (</span><span style={{ color: "red" }}>*</span>)
+                      <span>Familia de productos</span> (<span style={{ color: "red" }}>*</span>)
                     </dt>
                     <ComboBox
                       labelInput="Seleccione..."
@@ -964,7 +968,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={12} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>Producto</span>
+                      <span>Producto</span> (<span style={{ color: "red" }}>*</span>)
                     </dt>
                     <ComboBox
                       labelInput="Seleccione..."
@@ -1000,7 +1004,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
-                      <span>Estado (</span><span style={{ color: "red" }}>*</span>)
+                      <span>Estado del negocio (</span><span style={{ color: "red" }}>*</span>)
                     </dt>                    
                     <ComboBox
                       labelInput="Seleccione..."
@@ -1034,38 +1038,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   </Col>
                 : null}                
               </Row>
-              <Row style={{ padding: "0px 10px 20px 20px" }}>
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{ paddingRight: "15px" }}>
-                    <dt>
-                      <span>Empleado responsable (</span><span style={{ color: "red" }}>*</span>)
-                    </dt>
-                    <div className={`ui search ${participantBanc} fluid`}>
-                      <ComboBoxFilter
-                        className="prompt"
-                        id={inputParticipantBanc}
-                        style={{ borderRadius: "3px" }}
-                        autoComplete="off"
-                        type="text"
-                        {...nameUsuario}
-                        value={nameUsuario.value}
-                        onChange={(val) => { if (idUsuario.value) { idUsuario.onChange(null) } nameUsuario.onChange(val) }}
-                        placeholder="Ingrese un criterio de búsqueda..."
-                        onKeyPress={val => this.updateKeyValueUsersBanco(val)}
-                        onSelect={val => this._updateValue(val)}
-                        error={nameUsuario.error || idUsuario.error}
-                      />
-                    </div>
-                    {
-                      this.state.employeeResponsible &&
-                      <div>
-                        <div className="ui pointing red basic label">
-                          Debe seleccionar un empleado del banco
-                          </div>
-                      </div>
-                    }
-                  </div>
-                </Col>
+              <Row style={{ padding: "0px 10px 20px 20px" }}>               
                 {this.state.showMellowingPeriodField ?
                   <Col xs={6} md={3} lg={3}>
                     <div style={{ paddingRight: "15px" }}>
@@ -1087,23 +1060,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       />
                     </div>
                   </Col>
-                 : null}                
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{ paddingRight: "15px" }}>
-                    <dt>
-                      <span>Libros</span>
-                    </dt>
-                    <ComboBox
-                      labelInput="Seleccione..."
-                      valueProp={'id'}
-                      textProp={'value'}
-                      {...moneyDistribitionMarket}
-                      name={nameMoneyDistribitionMarket}
-                      parentId="dashboardComponentScroll"
-                      data={selectsReducer.get(FILTER_MONEY_DISTRIBITION_MARKET) || []}
-                    />
-                  </div>
-                </Col>
+                 : null}                                
               </Row>
               
               <Row style={{ padding: "0px 10px 20px 20px" }}>
@@ -1337,6 +1294,53 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   </Col>
                   : null
                 }
+                <Col xs={6} md={3} lg={3}>
+                  <div style={{ paddingRight: "15px" }}>
+                    <dt>
+                      <span>Libros</span>
+                    </dt>
+                    <ComboBox
+                      labelInput="Seleccione..."
+                      valueProp={'id'}
+                      textProp={'value'}
+                      {...moneyDistribitionMarket}
+                      name={nameMoneyDistribitionMarket}
+                      parentId="dashboardComponentScroll"
+                      data={selectsReducer.get(FILTER_MONEY_DISTRIBITION_MARKET) || []}
+                    />
+                  </div>
+                </Col>
+                <Col xs={6} md={3} lg={3}>
+                  <div style={{ paddingRight: "15px" }}>
+                    <dt>
+                      <span>Empleado responsable (</span><span style={{ color: "red" }}>*</span>)
+                    </dt>
+                    <div className={`ui search ${participantBanc} fluid`}>
+                      <ComboBoxFilter
+                        className="prompt"
+                        id={inputParticipantBanc}
+                        style={{ borderRadius: "3px" }}
+                        autoComplete="off"
+                        type="text"
+                        {...nameUsuario}
+                        value={nameUsuario.value}
+                        onChange={(val) => { if (idUsuario.value) { idUsuario.onChange(null) } nameUsuario.onChange(val) }}
+                        placeholder="Ingrese un criterio de búsqueda..."
+                        onKeyPress={val => this.updateKeyValueUsersBanco(val)}
+                        onSelect={val => this._updateValue(val)}
+                        error={nameUsuario.error || idUsuario.error}
+                      />
+                    </div>
+                    {
+                      this.state.employeeResponsible &&
+                      <div>
+                        <div className="ui pointing red basic label">
+                          Debe seleccionar un empleado del banco
+                          </div>
+                      </div>
+                    }
+                  </div>
+                </Col>
               </Row>
 
               {this.state.showComponentDisbursementPlan ?

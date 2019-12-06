@@ -3,6 +3,7 @@ import axios from 'axios';
 import { APP_URL } from '../../constantsGlobal';
 import * as constants from './constants';
 import { downloadReport } from '../../utils';
+import { generatePDF } from '../reports/pdf/actions';
 
 export function pipelineByClientFindServer(clientId, pageNum, maxRows, columnOrder, order, statusDocumentId, pipelineStatus) {
   const json = {
@@ -155,33 +156,16 @@ export function getPipelineById(pipelineId) {
   };
 }
 
-export function pdfDescarga(changeStateSaveData, idPipeline) {
-  const name = "Pipeline.pdf";
-
-  const payload = {
-    "messageHeader": {
-        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-        "timestamp": new Date().getTime(),
-        "service": "",
-        "status": "0",
-        "language": "es",
-        "displayErrorMessage": "",
-        "technicalErrorMessage": "",
-        "applicationVersion": "",
-        "debug": true,
-        "isSuccessful": true
+export function pdfDescarga(changeStateSaveData, idPipeline) {  
+  const requestBody = {
+    "name": "Pipeline.pdf",
+    "route": "BiztrackReports/pipeline2.jrxml",
+    "params": {
+      "P_ID_PIPELINE": Number(idPipeline)
     },
-    "messageBody": {
-        "name": name,
-        "route": "BiztrackReports/pipeline2.jrxml",
-        "params": {
-          "P_ID_PIPELINE": Number(idPipeline)
-        },
-        "source": []
-    }
-  };
-
-  downloadReport(payload, "/generate/PDF", name, changeStateSaveData);
+    "source": []
+  }
+  generatePDF(changeStateSaveData, requestBody);
 }
 
 export function changeOwnerDraftPipeline(ownerDraft) {

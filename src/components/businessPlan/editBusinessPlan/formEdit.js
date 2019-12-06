@@ -91,8 +91,8 @@ export class FormEdit extends Component {
     }
 
     _onClickPDF() {
-        const { pdfDescarga, id } = this.props;
-        pdfDescarga(window.sessionStorage.getItem('idClientSelected'), id);
+        const {  dispatchChangeStateSaveData, pdfDescarga, id } = this.props;
+        pdfDescarga( dispatchChangeStateSaveData, id);
     }
 
     _closeConfirmClose() {
@@ -320,7 +320,7 @@ export class FormEdit extends Component {
     //Método que valida las fechas ingresadas, que la inicial no sea mayor que la final y que el rango no se encuentre registrado ya
     //Además realiza la acción de guardado si el parámetro makeSaveBusiness llega en true
     _onSelectFieldDate(valueInitialDate, valueFinalDate, fieldDate, makeSaveBusiness, businessJson) {
-        const { swtShowMessage, validateRangeDates, businessPlanReducer, changeStateSaveData, createBusiness } = this.props;
+        const { swtShowMessage, validateRangeDates, businessPlanReducer,  dispatchChangeStateSaveData, createBusiness } = this.props;
         const initialDate = _.isNil(valueInitialDate) || _.isEmpty(valueInitialDate) ? null : valueInitialDate;
         const finalDate = _.isNil(valueFinalDate) || _.isEmpty(valueFinalDate) ? null : valueFinalDate;
         if (!_.isNull(initialDate) && !_.isNull(finalDate)) {
@@ -340,9 +340,9 @@ export class FormEdit extends Component {
                     if (response.status === REQUEST_ERROR) {
                         swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', response.data);
                     } else if (makeSaveBusiness) {
-                        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+                         dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
                         createBusiness(businessJson).then((data) => {
-                            changeStateSaveData(false, "");
+                             dispatchChangeStateSaveData(false, "");
                             if ((_.get(data, 'payload.data.validateLogin') === 'false')) {
                                 onSessionExpire();
                             } else {
@@ -353,7 +353,7 @@ export class FormEdit extends Component {
                                     this.setState({ showMessageCreateBusiness: true });
                                 } else {
                                     if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
-                                        const validationsErrorFromServer = _.get(data, 'payload.data.data');
+                                        const validationsErrorFromServer = _.get(data, 'payload.data.data[0].detail');
                                         _.forEach(validationsErrorFromServer, (field) => {
                                             this.processValidation(field);
                                         });
@@ -367,7 +367,7 @@ export class FormEdit extends Component {
                                 }
                             }
                         }, (reason) => {
-                            changeStateSaveData(false, "");
+                             dispatchChangeStateSaveData(false, "");
                             typeMessage = "error";
                             titleMessage = "Edición plan de negocio";
                             message = "Señor usuario, ocurrió un error editando el plan de negocio.";
@@ -390,8 +390,8 @@ export class FormEdit extends Component {
     }
 
     processValidation(field) {
-        if (field && field.fieldName && field.fieldName == "opportunitiesAndThreats") {
-            this.setState({ opportunitiesError: field.message });
+        if (field && field.field && field.field  == "opportunitiesAndThreats") {
+            this.setState({ opportunitiesError: field.message[0] });
         }
     }
 
@@ -682,7 +682,7 @@ function mapDispatchToProps(dispatch) {
         addArea,
         createBusiness,
         pdfDescarga,
-        changeStateSaveData,
+        dispatchChangeStateSaveData: changeStateSaveData,
         nonValidateEnter,
         showLoading,
         validateRangeDates,

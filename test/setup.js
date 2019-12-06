@@ -6,6 +6,7 @@ import sinon from 'sinon';
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const { document } = new JSDOM('<!doctype html><html><body></body></html>').window;
+document['getElementById'] = () => { return {} };
 global.document = document;
 global.window = document.defaultView;
 global.requestAnimationFrame = callback => {
@@ -56,6 +57,7 @@ global.window.open = () => {}
 global.window.dataLayer = [];
 global.window.Object = Object;
 global.window.Math = Math;
+
 // ------------------
 // Helpers
 // ------------------
@@ -64,6 +66,12 @@ global.itRenders = Component => {
     expect(shallow(Component).length).to.eql(1);
     return wrapper;
 };
+
+global.itRendersChildComponent = (parent, child, num = 1) => {
+    const wrapper = shallow(parent);
+    expect(wrapper.find(child)).to.have.length(num);
+    return wrapper;
+}
 
 /*
   Disable webpack-specific 'loaders' for tests

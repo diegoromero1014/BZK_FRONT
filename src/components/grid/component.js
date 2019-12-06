@@ -38,7 +38,7 @@ class GridComponent extends Component {
       if (value.key === ACTION_CHECK) {
         const info = _.get(row, ACTION_CHECK, {});
         cell = <CheckComponent key={idx} fn={info.fn} args={info.argsFn} isChecked={info.isChecked} />
-      } else if (value.key === 'actions') {        
+      } else if (value.key === 'actions') {                 
         cell = <ModalComponent key={idx} idModal={_.uniqueId()} modalTitle={modalTitle} actions={_.get(row, value.key)} origin={origin} />
       } else if (value.key === 'trafficLight') {
         cell = <TrafficLightComponent key={idx} colorTraffict={_.get(row, value.key)} />
@@ -104,7 +104,7 @@ class GridComponent extends Component {
     const headers = this.props.headers;
     const data = this.props.data;
     const modalTitle = this.props.modalTitle;
-    const origin = this.props.origin;
+    const origin = this.props.origin;    
     return (
       <table width="100%" className="tableBt4 tableBt4-striped has-column-selection dataTable no-footer" id="datagrid-container" role="grid" aria-describedby="datagrid-container_info">
         <thead style={{ color: '#4c5360' }}>

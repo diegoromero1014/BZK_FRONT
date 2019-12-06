@@ -444,7 +444,7 @@ describe('Test checkPipeLineOpportunityName white list validation', () => {
 
     it('should throw null when value is empty', () => {
         const value = '';
-        const expectedMessage = null;
+        const expectedMessage = MESSAGE_REQUIRED_VALUE;
         expect(checkPipeLineOpportunityName(value)).equal(expectedMessage);
     });
 
@@ -810,6 +810,11 @@ describe('Test checkRegexHtmlInjection white list validation', () => {
     });
     it('should throw null when value is incorrect checkRegexHtmlInjection', () => {
         const value = '<p></p>';
+        const expectedMessage = MESSAGE_ERROR_INJECTION_HTML;
+        expect(checkRegexHtmlInjection(value)).equal(expectedMessage);
+    });
+    it('should throw null when value is an ampersand html injection checkRegexHtmlInjection', () => {
+        const value = '&ltp&gt&lt/p&gt';
         const expectedMessage = MESSAGE_ERROR_INJECTION_HTML;
         expect(checkRegexHtmlInjection(value)).equal(expectedMessage);
     });

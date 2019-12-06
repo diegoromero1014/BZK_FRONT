@@ -34,7 +34,7 @@ class UbicationCorrespondence extends Component{
               <thead>
                 <tr>
                   <th><span style={{fontWeight: "bold", color: "#4C5360"}}>País</span></th>
-                  <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Departamento</span></th>
+                  <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Departamento/Provincia</span></th>
                   <th><span style={{fontWeight: "bold", color: "#4C5360"}}>Ciudad</span></th>
                 </tr>
               </thead>

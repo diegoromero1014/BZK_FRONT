@@ -37,7 +37,8 @@ import WalletShare from "./components/transactional/walletShareComponent";
 import ControlDashboard from "./components/transactional/controlDashComponent";
 import LinkingRequests from "./components/myPendings/linkingRequests/componentLinkingRequests";
 import Sheduler from "./components/sheduler/shedulerComponent";
-import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderConstruction"; 
+import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderConstruction";
+import PageNotFound from "./components/notFoundPage/PageNotFound";
 import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
     CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST, 
     LINKINGREQUESTS, MODALDRAFTDOCUMENTS, MODALCOMPONENTPENDING, ALERTCOVENANTS, 
@@ -204,6 +205,7 @@ export default (
         <Redirect from="/" to="/login" />
         <Route path="/" component={App}>
             <Route path="login" component={LoginComponent}></Route>
+            <Route path="logout" component={LoginComponent}></Route>
             <Route path="pageUnderConstruction" component={pageUnderConstructor} />
             <Route path="dashboard" component={DashboardComponent}>
                 <Route path="clients" component={ClientsFind}></Route>
@@ -243,6 +245,7 @@ export default (
                 <Route path="controlDashboard" component={ControlDashboard}></Route>
                 <Route path="sheduler" component={Sheduler}></Route>
             </Route>
+            <Route path="*" component={PageNotFound}/>
         </Route>
     </Grid>
 );
