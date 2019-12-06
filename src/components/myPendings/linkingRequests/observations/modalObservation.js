@@ -21,7 +21,7 @@ import {
     checkRegexHtmlInjection
 } from '../../../../validationsFields/rulesField';
 
-class ModalObservation extends Component {
+export class ModalObservation extends Component {
 
     constructor(props) {
         super(props);
