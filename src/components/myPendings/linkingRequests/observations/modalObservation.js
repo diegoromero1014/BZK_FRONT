@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
-import _ from 'lodash';
-import { validateResponse, stringValidate } from '../../../../actionsGlobal';
+import { validateResponse } from '../../../../actionsGlobal';
 import {
     getListObservactionsByIdLink, clearListObservations, saveObservationLinkingRequest
 } from '../actions';
@@ -15,7 +14,12 @@ import ItemObservation from './itemObservation';
 import Textarea from "../../../../ui/textarea/textareaComponent";
 import { changeStateSaveData } from '../../../dashboard/actions';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
-import { checkRequired, checkFirstCharacter, checkObservations } from '../../../../validationsFields/rulesField';
+import {
+    checkRequired,
+    checkFirstCharacter,
+    checkObservations,
+    checkRegexHtmlInjection
+} from '../../../../validationsFields/rulesField';
 
 class ModalObservation extends Component {
 
@@ -36,7 +40,7 @@ class ModalObservation extends Component {
 
     _validatewhiteList(e) {
         this.setState({ observation: e });
-        let error = checkRequired(e) || checkFirstCharacter(e) || checkObservations(e);
+        let error = checkRequired(e) || checkFirstCharacter(e) || checkObservations(e) || checkRegexHtmlInjection(e);
         this.setState({ errors: error });
     }
 
