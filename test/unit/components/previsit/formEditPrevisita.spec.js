@@ -2,10 +2,9 @@ import React from 'react';
 import Immutable from 'immutable';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store'
-import { Col, Row } from "react-flexbox-grid";
 
 import FormEditPrevisita from './../../../../src/components/previsita/editPrevisit/formEditPrevisita';
-import PermissionUserReports from "./../../../../src/components/commercialReport/permissionsUserReports";
+
 const middleWares = [thunk];
 const mockStore = configureStore(middleWares);
 const validateEnter = true;
@@ -28,7 +27,7 @@ describe('Test formEditPrevisita', () => {
     let store;
     beforeEach(() => {
         const selectsReducer = Immutable.Map({ previsitType });
-        const handleSubmit = () => {};
+        const handleSubmit = sinon.fake();
         const reducerGlobal = Immutable.Map({ validateEnter, permissionsPrevisits});
         const previsitReducer = Immutable.Map({ detailPrevisit , ownerDraft});
         const viewBottons =true;
