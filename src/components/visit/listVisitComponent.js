@@ -1,14 +1,12 @@
 import React, {
-  Component,
-  PropTypes
+  Component
 } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {visitByClientFindServer,orderColumnVisit,clearVisitOrder,clearVisitPaginator} from './actions';
 import GridComponent from '../grid/component';
-import {NUMBER_RECORDS,DELETE_TYPE_VISIT} from './constants';
+import {NUMBER_RECORDS,DELETE_TYPE_VISIT, getRequestBodyDownloadPDF} from './constants';
 import moment from 'moment';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {ELIMINAR} from '../../constantsGlobal';
 import { MODULE_VISIT } from '../grid/constants';
 
@@ -127,9 +125,9 @@ class ListVisitComponent extends Component {
               component : "VIEW_VISIT"
             });
             if(value.idPrevisit !== null && value.idPrevisit !== 0){
-              _.set(value, 'actionsPdf', {
+              _.set(value, "actionsPdf", {
                 title: "Ver >>",
-                urlRedirect: "/pdfReportPreVisit?idClient="+window.sessionStorage.getItem('idClientSelected')+"&idPrevisit="+value.idPrevisit+"&language=es" + "&sessionToken=" + window.localStorage.getItem('sessionTokenFront')
+                requestBody: getRequestBodyDownloadPDF(value.idPrevisit)
               });
             }
             var dateVisitFormat = moment(value.dateVisit).locale('es');
