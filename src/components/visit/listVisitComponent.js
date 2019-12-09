@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {visitByClientFindServer,orderColumnVisit,clearVisitOrder,clearVisitPaginator} from './actions';
 import GridComponent from '../grid/component';
-import {NUMBER_RECORDS,DELETE_TYPE_VISIT, getRequestBodyDownloadPDF} from './constants';
+import {NUMBER_RECORDS,DELETE_TYPE_VISIT, getRequestBodyDownloadPrevisitPDF} from './constants';
 import moment from 'moment';
 import {ELIMINAR} from '../../constantsGlobal';
 import { MODULE_VISIT } from '../grid/constants';
@@ -127,7 +127,7 @@ class ListVisitComponent extends Component {
             if(value.idPrevisit !== null && value.idPrevisit !== 0){
               _.set(value, "actionsPdf", {
                 title: "Ver >>",
-                requestBody: getRequestBodyDownloadPDF(value.idPrevisit)
+                requestBody: getRequestBodyDownloadPrevisitPDF(value.idPrevisit)
               });
             }
             var dateVisitFormat = moment(value.dateVisit).locale('es');
