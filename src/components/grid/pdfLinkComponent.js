@@ -2,9 +2,12 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import {APP_URL} from '../../constantsGlobal';
+import {connect} from 'react-redux';
+import { generatePDF } from '../../components/reports/pdf/actions';
+import { changeStateSaveData } from '../../components/dashboard/actions';
+import {bindActionCreators } from 'redux';
 
-class PdfLinkComponent extends Component {
+export class PdfLinkComponent extends Component {
 
   constructor(props){
       super(props);
@@ -12,8 +15,8 @@ class PdfLinkComponent extends Component {
   }
 
   _viewPdf(){
-    const {actionsPdf} = this.props;
-    window.open(APP_URL + actionsPdf.urlRedirect);
+    const {actionsPdf, dispatchChangeStateSaveData, dispatchGeneratePDF} = this.props;
+    dispatchGeneratePDF(dispatchChangeStateSaveData, actionsPdf.requestBody);
   }
 
   render(){
@@ -27,5 +30,10 @@ class PdfLinkComponent extends Component {
 PdfLinkComponent.propTypes = {
    actionsPdf: PropTypes.object
 };
-
-export default PdfLinkComponent;
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators ({
+    dispatchChangeStateSaveData: changeStateSaveData,
+    dispatchGeneratePDF: generatePDF
+  },dispatch)
+}
+export default connect(null, mapDispatchToProps) (PdfLinkComponent);

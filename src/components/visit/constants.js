@@ -1,6 +1,6 @@
 export const NUMBER_RECORDS = 10;
-export const FILTER_STATUS_VISIT_ID = 'FILTER_STATUS_VISIT_ID';
-export const DELETE_TYPE_VISIT= 'DELETE_TYPE_VISIT';
+export const FILTER_STATUS_VISIT_ID = "FILTER_STATUS_VISIT_ID";
+export const DELETE_TYPE_VISIT = "DELETE_TYPE_VISIT";
 export const CHANGE_PAGE = "CHANGE_PAGE";
 export const LIMITE_INF = "LIMITE_INF";
 export const ORDER_COLUMN_VISIT = "ORDER_COLUMN_VISIT";
@@ -19,3 +19,13 @@ export const GET_CSV_VISIT_BY_CLIENT = "GET_CSV_VISIT_BY_CLIENT";
 export const KEY_TYPE_VISIT = "Visita";
 export const TAB_VISIT = 2;
 export const CHANGE_PAGE_ASSOCIATE__VISIT = "CHANGE_PAGE_ASSOCIATE__VISIT";
+export function getRequestBodyDownloadPrevisitPDF(id) {
+  return {
+    name: "reportPreVisit.pdf",
+    route: "BiztrackReports/reportPreVisit.jrxml",
+    params: {
+      P_ID_PREVISIT: id
+    },
+    source: []
+  };
+}

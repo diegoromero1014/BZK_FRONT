@@ -45,11 +45,19 @@ const resolveData = () => {
     )
 }
 
-const defaultProps = { fields: fields, selectsReducer, handleSubmit, businessPlanReducer, reducerGlobal, nonValidateEnter,
-                        setConfidential, clientInformacion, getMasterDataFields, showLoading, swtShowMessage, changeStateSaveData };
 
 describe('Test BusinessPlan/editBusinessPlan/formEdit', () => {
+    let pdfDescarga;
+    let defaultProps;
+    let dispatchChangeStateSaveData;
+    beforeEach(() =>{
+        pdfDescarga = sinon.fake();
+        dispatchChangeStateSaveData = sinon.fake();
+        let id =1;
+        defaultProps = { fields: fields, selectsReducer, handleSubmit, businessPlanReducer, reducerGlobal, nonValidateEnter,
+                        setConfidential, clientInformacion, getMasterDataFields, showLoading, swtShowMessage, changeStateSaveData, detailBusiness: resolveData, pdfDescarga, dispatchChangeStateSaveData, id };
 
+    })
     it('should render PermissionUserReports', () => {
         const wrapper = shallow(<FormEdit {...defaultProps} createBusiness={resolveData} detailBusiness={resolveData} />);
         expect(wrapper.find(PermissionUserReports)).to.have.length(1);
@@ -117,6 +125,12 @@ describe('Test BusinessPlan/editBusinessPlan/formEdit', () => {
 
         wrapper.instance()._onSelectFieldDate("10/08/2019", "09/08/2019", defaultProps.fields['initialValidityDate'], false);
         expect(wrapper.state().finalDateError).equal(false);
+    });
+
+    it("should call onClickPDF", () => {
+            const wrapper = shallow(<FormEdit {...defaultProps} />);
+            wrapper.instance()._onClickPDF()
+            expect(pdfDescarga.callCount).to.equals(1);
     });
 
 });
