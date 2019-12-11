@@ -46,8 +46,7 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     EDITFORMPIPELINE, CREATEFORMPIPELINE, VISITEDIT, VISIT, EDITPREVISITA, 
     PREVISITA, CLIENTCERTIFY, CLIENTSFIND, CLIENTEDIT, CREATEPROPSPECT, STUDYCREDIT, 
     COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, VIEWMANAGEMENT, DASHBOARDCOMPONENT, 
-    LOGINCOMPONENT, 
-    aec,
+    LOGINCOMPONENT,     
     LoginComponentURL,
     DashboardComponentURL,
     ViewManagementURL,
@@ -88,6 +87,7 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     ADMINALERTCLIENTSPENDINGUPDATE,
     SHEDULER,
     DEFAULT} from "./constantsAnalytics";
+import PrevisitPage from "./components/previsita/previsitPage";
 
 class App extends Component {
    
@@ -216,7 +216,9 @@ export default (
                 <Route path="createPropspect" component={CreatePropspect}></Route>
                 <Route path="clientEdit" component={ClientEdit}></Route>
                 <Route path="certifyClient" component={ClientCertify}></Route>
-                <Route path="previsita" component={Previsita}></Route>
+                <Route path="previsita" component={PrevisitPage}>
+                    <Route path=":id" component={PrevisitPage}></Route>                    
+                </Route>
                 <Route path="previsitaEditar/:id" component={EditPrevisita}></Route>
                 <Route path="visita" component={Visit}></Route>
                 <Route path="visitaEditar/:id" component={VisitEdit}></Route>

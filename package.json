@@ -105,6 +105,7 @@
     "classnames": "^2.2.3",
     "flexboxgrid": "^6.3.0",
     "formatjs": "^0.1.1",
+    "formik": "^1.5.8",
     "history": "^2.1.0",
     "immutable": "^3.7.6",
     "jquery": "^3.1.1",
@@ -137,6 +138,7 @@
     "rxjs": "^5.2.0",
     "semantic-ui": "2.3.3",
     "semantic-ui-react": "0.61.4",
-    "sweetalert-react": "^0.4.4"
+    "sweetalert-react": "^0.4.4",
+    "yup": "^0.27.0"
   }
 }
