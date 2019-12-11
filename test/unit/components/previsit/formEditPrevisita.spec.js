@@ -69,7 +69,7 @@ describe('Test formEditPrevisita', () => {
           { tipoParticipante: "banco", idParticipante: 123, order: 1 },
           { tipoParticipante: "client", idParticipante: 1234, order: 2 },
           { tipoParticipante: "other", nombreParticipante:"john doe",cargo:"abogado",empresa:"firma de abogados",idParticipante: 123345, order: 3 }
-        );
+        )
         let confidentialReducer = Immutable.Map({ confidential :true});
         let usersPermission = Immutable.List.of({permiso:""});
         let validateDatePreVisit = sinon.stub().resolves(response);
@@ -97,7 +97,7 @@ describe('Test formEditPrevisita', () => {
             constructiveTension: "a",
             constructiveTensionTouch: false,
             constructiveTensionError: null
-        });
+        })
         wrapper.instance()._submitCreatePrevisita();
         expect(validateDatePreVisit.callCount).to.equals(1);
     })
