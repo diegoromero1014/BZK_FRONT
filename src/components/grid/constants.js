@@ -24,3 +24,5 @@ export const MODULE_VISIT = "visita";
 export const MODULE_PREVISIT = "previsita";
 export const MODULE_PIPELINE = "pipeline";
 export const MODULE_BUSINESS_PLAN = "businessPlan";
+//Tipo de celdas
+export const DATE_CELL = "DATE_CELL";
