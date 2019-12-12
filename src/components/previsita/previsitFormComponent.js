@@ -68,9 +68,9 @@ export class PrevisitFormComponent extends Component {
 
    render() {      
      const { fields: { type, date, duration, place }, activeItemTabClient, activeItemTabBanc, activeItemTabOther } = this.state;
-     
+     const { previsitTypes } = this.props;
       return (
-         <div>
+         <div>            
             <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>  
               <Row style={{ padding: "10px 10px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
@@ -98,7 +98,7 @@ export class PrevisitFormComponent extends Component {
                                     setFieldValue(name, val, false);
                                   }}
                                   onBlur={onBlur}
-                                  data={[]}
+                                  data={previsitTypes}
                                   className='field-input'
                               />
                               <ErrorMessage name="typeVisit" component={'div'} >

@@ -10,6 +10,8 @@ import { showLoading } from '../loading/actions';
 import { TIME_REQUEST_BLOCK_REPORT, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, EDITAR } from '../../constantsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { Row, Col } from 'react-flexbox-grid';
+import { PREVISIT_TYPE } from '../selectsComponent/constants';
+import { getMasterDataFields } from '../selectsComponent/actions';
 
 export class PrevisitPage extends Component {
 
@@ -25,7 +27,8 @@ export class PrevisitPage extends Component {
       shouldRedirect: false,
       intervalId: null,
       isMounted: false,
-      renderForm: false
+      renderForm: false,
+      previsitTypes: []
    };
 
    componentWillMount() {
@@ -36,7 +39,8 @@ export class PrevisitPage extends Component {
          redirectUrl(ComponentClientInformationURL)
       } */
 
-      this.getPrevisitData(id);
+      this.getPrevisitTypes();
+      this.getPrevisitData(id);            
    }
 
    componentDidMount() {
@@ -60,23 +64,30 @@ export class PrevisitPage extends Component {
       dispatchClearPrevisitDetail();
    }
 
-   getPrevisitData = id => {
+   getPrevisitData = async (id)=> {
       const { dispatchDetailPrevisit } = this.props;
       if (id) {
          showLoading(true, "Cargando...");
-         dispatchDetailPrevisit(id).then(() => {
-            showLoading(false, null);
-            this.setState({
-               isEditable: true,    
-               renderForm: true           
-            });
+         await dispatchDetailPrevisit(id);
+         showLoading(false, null);
+         this.setState({
+            isEditable: true,    
+            renderForm: true           
          });
       }else{
          this.setState({
             isEditable: false,    
             renderForm: true           
          });
-      }
+      }      
+   }
+
+   getPrevisitTypes = async () => {
+      const {dispatchGetMasterDataFields, selectsReducer} = this.props;
+      await dispatchGetMasterDataFields([PREVISIT_TYPE]);
+      this.setState({
+         previsitTypes: selectsReducer.get(PREVISIT_TYPE) || []
+      });
    }
 
    validatePermissionsPrevisits = () => {
@@ -171,12 +182,13 @@ export class PrevisitPage extends Component {
                      }
                   </Col>
                </Row>
-            </div>
+            </div>            
             {
                this.state.renderForm && previsitReducer ?
                   <PrevisitFormComponent 
                      previsitData={previsitReducer.get('detailPrevisit') ? 
                         previsitReducer.get('detailPrevisit').data : null} 
+                     previsitTypes={this.state.previsitTypes}
                      isEditable={this.state.isEditable} 
                      onSubmit={this.submitForm}/>
                : null
@@ -193,15 +205,17 @@ function mapDispatchToProps(dispatch) {
       dispatchCanEditPrevisita: canEditPrevisita,
       dispatchSwtShowMessage: swtShowMessage,
       dispatchDisabledBlockedReport: disableBlockedReport,
-      dispatchClearPrevisitDetail: clearPrevisitDetail
+      dispatchClearPrevisitDetail: clearPrevisitDetail,
+      dispatchGetMasterDataFields: getMasterDataFields
    }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer }) {
+function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, selectsReducer }) {
    return {
       clientInformacion,
       previsitReducer,
-      reducerGlobal
+      reducerGlobal,
+      selectsReducer
    };
 }
 
