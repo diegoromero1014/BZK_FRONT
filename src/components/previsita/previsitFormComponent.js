@@ -7,6 +7,7 @@ import Tooltip from "../toolTip/toolTipComponent";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import '../../../styles/field/main.scss';
+import Participants from './participants';
 
 export class PrevisitFormComponent extends Component {
     constructor(props) {
@@ -16,7 +17,7 @@ export class PrevisitFormComponent extends Component {
           type: {
             name: 'Tipo de visita',
             nullable: false,
-            message: ''
+            message: 'asdasdasd'
           },
           date: {
             name: 'Fecha',
@@ -34,10 +35,7 @@ export class PrevisitFormComponent extends Component {
             nullable: false,
             message: null
           },
-        },
-        activeItemTabClient: 'active',
-        activeItemTabBanc: '',
-        activeItemTabOther: ''
+        }
       }
    }
 
@@ -181,61 +179,9 @@ export class PrevisitFormComponent extends Component {
                   </Col>
                </Row>
               
-              <Row style={{ padding: "20px 23px 20px 20px" }}>
+              <Row style={{ paddingTop: 70 }}>
                 <Col xs>
-                    <div className="ui top attached tabular menu" style={{ width: "100%" }}>
-                        <a 
-                          className={`${activeItemTabClient} item`} 
-                          style={{ width: "33%" }}
-                          data-tab="first" 
-                          onClick={() => 
-                            this.setState({ 
-                              activeItemTabClient: 'active', 
-                              activeItemTabBanc: '', 
-                              activeItemTabOther: '' 
-                            })
-                          }
-                        >
-                          Participantes en la reunión por parte del cliente
-                          <Tooltip text={"TITLE_CLIENT_PARTICIPANTS"}>
-                              <i className="help circle icon blue" style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
-                          </Tooltip>
-                        </a>
-                        <a 
-                          className={`${activeItemTabBanc} item`} 
-                          style={{ width: "40%" }}
-                          data-tab="second" 
-                          onClick={() => 
-                            this.setState({ 
-                              activeItemTabClient: '', 
-                              activeItemTabBanc: 'active', 
-                              activeItemTabOther: '' 
-                            })
-                          }
-                        >
-                          Participantes en la reunión por parte del Grupo Bancolombia
-                          <Tooltip text={"TITLE_BANC_PARTICIPANTS"}>
-                              <i className="help circle icon blue" style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
-                          </Tooltip>
-                        </a>
-                        <a 
-                          className={`${activeItemTabOther} item`} 
-                          style={{ width: "26%" }}
-                          data-tab="third" 
-                          onClick={() => 
-                            this.setState({ 
-                              activeItemTabBanc: '', 
-                              activeItemTabClient: '', 
-                              activeItemTabOther: 'active' 
-                              }) 
-                          }
-                        >
-                          Otros participantes en la reunión
-                          <Tooltip text={"TITLE_OTHERS_PARTICIPANTS"}>
-                              <i className="help circle icon blue" style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
-                          </Tooltip>
-                        </a>
-                    </div>
+                  <Participants />
                 </Col>
               </Row>
             </Form>
