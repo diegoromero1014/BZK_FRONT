@@ -39,8 +39,4 @@ export const patternOfRiskGroupName = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s&/\\,;.#"°()'
 export const patternOfObservationRiskGroup = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
 export const patternOfJustificationsRiskGroup = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡':´+\[\]_]+$/;
 export const patternOfExternalClientNumberDocument = /^[a-zA-Z0-9\-Á-Úá-úÑñÜü]+$/;
-<<<<<<< HEAD
-export const regexHtmlInjection = /(.*(<|&lt;|&lt)\s*\/[\w\s]*(>|&gt|&gt;))|(.*(<|&lt;|&lt)[\w\s]*\/\s*(>|&gt|&gt;))/;
-=======
 export const regexHtmlInjection = /(.*(\<|&lt;|&lt)\s*\/.*(\>|&gt|&gt;))|(.*(\<|&lt;|&lt).*\/\s*(\>|&gt|&gt;))/;
->>>>>>> 5257ff8a2b259dcc562d4d767ac13ea6e69224b8
