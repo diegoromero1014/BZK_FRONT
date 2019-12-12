@@ -13,6 +13,10 @@ import { Row, Col } from 'react-flexbox-grid';
 
 export class PrevisitPage extends Component {
 
+   constructor(props){
+      super(props);      
+   }
+
    state = {
       isEditable: false,
       showErrorBlockedPreVisit: false,
@@ -43,7 +47,7 @@ export class PrevisitPage extends Component {
 
    componentWillUnmount() {
       const { dispatchDisabledBlockedReport, dispatchClearPrevisitDetail, params: { id } } = this.props;
-            
+
       // Detener envio de peticiones para bloquear el informe
       clearInterval(this.state.intervalId)
       this.setState({
@@ -80,13 +84,13 @@ export class PrevisitPage extends Component {
       return _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) && this.state.isEditable;
    }
 
-   canUserEditPrevisita(myUserName) {
+   canUserEditPrevisita = (myUserName) => {          
       const { dispatchCanEditPrevisita, params: { id }, dispatchSwtShowMessage } = this.props;
       dispatchCanEditPrevisita(id).then((success) => {
          const username = success.payload.data.data.username
          const name = success.payload.data.data.name
 
-         if (!this.isMounted) {
+         if (!this.state.isMounted) {
             clearInterval(this.state.intervalId);            
          }
 
@@ -103,12 +107,12 @@ export class PrevisitPage extends Component {
             dispatchSwtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);            
          } else if (username.toUpperCase() === myUserName.toUpperCase()) {
             // Usuario pidiendo permiso es el mismo que esta bloqueando
-            if (!this.state.isEditable) {
+            if (this.state.isEditable) {
                // Tengo permiso de editar y no estoy editando
                this.setState({
                   showErrorBlockedPreVisit: false,
                   showMessage: false,
-                  isEditable: true,
+                  isEditable: false,
                   intervalId: setInterval(
                      () => { this.canUserEditPrevisita(myUserName) },
                      TIME_REQUEST_BLOCK_REPORT
@@ -136,16 +140,20 @@ export class PrevisitPage extends Component {
       });
    }
 
-   editPrevisit = () => {
+   editPrevisit = () => {            
       showLoading(true, "Cargando...");
-      const usernameSession = window.localStorage.getItem('userNameFront');
-      this.canUserEditPrevisita(usernameSession);
+      const usernameSession = window.localStorage.getItem('userNameFront');      
+      this.canUserEditPrevisita(usernameSession);      
+   }
+
+   submitForm = (data) => {
+
    }
 
    render() {
       const { previsitReducer } = this.props;
       return (
-         <div>
+         <div>            
             <HeaderPrevisita />
             <div style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
                <Row style={{ padding: "5px 10px 0px 20px" }}>
@@ -155,7 +163,7 @@ export class PrevisitPage extends Component {
                   <Col xs={2} sm={2} md={2} lg={2}>
                      {
                         this.validatePermissionsPrevisits() && this.state.isEditable &&
-                        <button type="button" onClick={this.editPreVisit}
+                        <button type="button" onClick={this.editPrevisit}
                            className={'btn btn-primary modal-button-edit'}
                            style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>
                            Editar <i className={'icon edit'}></i>
@@ -165,8 +173,12 @@ export class PrevisitPage extends Component {
                </Row>
             </div>
             {
-               this.state.renderForm ?
-                  <PrevisitFormComponent previsitReducer={previsitReducer} isEditable={this.state.isEditable} />
+               this.state.renderForm && previsitReducer ?
+                  <PrevisitFormComponent 
+                     previsitData={previsitReducer.get('detailPrevisit') ? 
+                        previsitReducer.get('detailPrevisit').data : null} 
+                     isEditable={this.state.isEditable} 
+                     onSubmit={this.submitForm}/>
                : null
             }            
          </div>

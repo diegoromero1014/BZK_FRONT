@@ -8,9 +8,6 @@ export class PrevisitFormComponent extends Component {
   
   constructor(props) {
       super(props);
-      this.state = {
-        isEditable: false
-      };
    }
 
    componentWillMount() {
@@ -22,9 +19,10 @@ export class PrevisitFormComponent extends Component {
     </div>
   );
 
-   render() {      
+   render() {       
+      const {isEditable, previsitData} = this.props;       
       return (
-         <div>
+         <div>                  
             <Form>               
                <Row>
                   <Col>
@@ -38,6 +36,7 @@ export class PrevisitFormComponent extends Component {
                               type="text"
                               onChange={onChange}
                               onBlur={onBlur}
+                              disabled={!isEditable ? '' : 'disabled'}                              
                             />
                           <ErrorMessage name="campo" component={'div'} style={{color: 'red', marginTop: 3}}>
                             {message => this.renderMessageError(message)}
@@ -58,10 +57,7 @@ export default withFormik({
    handleSubmit: () => {},
 
    mapPropsToValues: (props) => {
-      const { previsitReducer } = props;
-
-      const previsitData = previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null;
-
+      const { previsitData } = props;            
       if (previsitData) {
          return {
             campo: previsitData.id
