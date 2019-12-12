@@ -157,7 +157,7 @@ const stylesButtons = {
     }
 };
 
-class FormEditPrevisita extends Component {
+export class FormEditPrevisita extends Component {
 
     constructor(props) {
         super(props);
@@ -320,8 +320,8 @@ class FormEditPrevisita extends Component {
     }
 
     _onClickPDF() {
-        const { pdfDescarga, id } = this.props;
-        pdfDescarga(window.sessionStorage.getItem('idClientSelected'), id);
+        const {dispatchChangeStateSaveData, pdfDescarga, id } = this.props;
+        pdfDescarga(dispatchChangeStateSaveData, id);
     }
 
     _closeMessageCreatePreVisit() {
@@ -579,7 +579,7 @@ class FormEditPrevisita extends Component {
 
     _submitCreatePrevisita() {
         const {
-            participants, createPrevisit, changeStateSaveData, id, validateDatePreVisit, swtShowMessage, usersPermission, confidentialReducer
+            participants, createPrevisit, dispatchChangeStateSaveData, id, validateDatePreVisit, swtShowMessage, usersPermission, confidentialReducer
         } = this.props;
 
         let errorInForm = false;
@@ -779,9 +779,9 @@ class FormEditPrevisita extends Component {
                         swtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', response.data);
                     } else {
                         const that = this;
-                        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+                        dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
                         createPrevisit(previsitJson).then((data) => {
-                            changeStateSaveData(false, "");
+                            dispatchChangeStateSaveData(false, "");
                             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                                 redirectUrl("/login");
                             } else {
@@ -804,7 +804,7 @@ class FormEditPrevisita extends Component {
                                 }
                             }
                         }, (reason) => {
-                            changeStateSaveData(false, "");
+                            dispatchChangeStateSaveData(false, "");
                             typeMessage = "error";
                             swtShowMessage('error', 'Edición previsita', 'Señor usuario, ocurrió un error editando la previsita.', { onConfirmCallback: this._closeMessageCreatePreVisit });
                         });
@@ -1436,7 +1436,7 @@ function mapDispatchToProps(dispatch) {
         createPrevisit,
         validateDatePreVisit,
         consultParameterServer,
-        changeStateSaveData,
+        dispatchChangeStateSaveData: changeStateSaveData,
         nonValidateEnter,
         showLoading,
         addListParticipant,

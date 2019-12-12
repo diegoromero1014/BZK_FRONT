@@ -1,11 +1,11 @@
 import _ from 'lodash';
 import {
     processRules, checkRequired, checkMaxLength, checkFirstCharacter, checkGroupName,
-    checkJustificationsRiskGroup
+    checkJustificationsRiskGroup, checkRegexHtmlInjection
 } from './../../validationsFields/rulesField';
 
 const fieldsWithRules = {
-    justification: { rules: [checkRequired, checkMaxLength(1000), checkFirstCharacter, checkJustificationsRiskGroup] }
+    justification: { rules: [checkRequired, checkMaxLength(1000), checkFirstCharacter, checkJustificationsRiskGroup, checkRegexHtmlInjection] }
 };
 
 export const fields = _.keys(fieldsWithRules);

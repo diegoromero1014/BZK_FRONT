@@ -31,16 +31,16 @@ class ListClientsPortfolioExpiration extends Component {
         this._renderHeaders = this._renderHeaders.bind(this);
         this._orderColumn = this._orderColumn.bind(this);
         this.state = {
-            orderA: 'none',
-            orderD: 'inline-block'
+            orderD: 'none',
+            orderA: 'inline-block'
         }
     }
 
     componentWillMount() {
         const {getMasterDataFields} = this.props;
         this.state = {
-            orderA: 'none',
-            orderD: 'inline-block'
+            orderD: 'none',
+            orderA: 'inline-block'
         }
         getMasterDataFields([ALERT_PORTFOLIO_EXPECTATIONS])
     }
@@ -69,38 +69,66 @@ class ListClientsPortfolioExpiration extends Component {
         const headersTable = [
             {
                 title: "Número documento",
-                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "idNumberClient")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "idNumberClient")}></i></span>,
+                orderColumn: 
+                    <span>
+                        <i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "idNumberClient")}></i>
+                        <i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "idNumberClient")}></i>
+                    </span>,
                 key: "idNumberClient"
             },
             {
                 title: "Nombre/Razón social",
-                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "clientName")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "clientName")}></i></span>,
+                orderColumn: 
+                    <span>
+                        <i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "clientName")}></i>
+                        <i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "clientName")}></i>
+                    </span>,
                 key: "clientNameLink",
                 showLink :has(this.props.reducerGlobal.get('permissionsClients'), indexOf(this.props.reducerGlobal.get('permissionsClients'), VISUALIZAR), false)
             },
             {
                 title: "Saldo vencido",
-                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "balanceOverdue")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "balanceOverdue")}></i></span>,
+                orderColumn: 
+                    <span>
+                        <i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "balanceOverdue")}></i>
+                        <i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "balanceOverdue")}></i>
+                    </span>,
                 key: "balanceOverdue"
             },
             {
                 title: "Saldo total grupo",
-                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "groupTotalBalance")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "groupTotalBalance")}></i></span>,
+                orderColumn: 
+                    <span>
+                        <i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "groupTotalBalance")}></i>
+                        <i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "groupTotalBalance")}></i>
+                    </span>,
                 key: "groupTotalBalance"
             },
             {
                 title: "Días mora proyectados",
-                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "daysOverdue")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "daysOverdue")}></i></span>,
+                orderColumn: 
+                    <span>
+                        <i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "daysOverdue")}></i>
+                        <i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "daysOverdue")}></i>
+                    </span>,
                 key: "daysOverdue"
             },
             {
                 title: "Entidad / línea de negocio",
-                orderColumn: <span><i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "entity")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "entity")}></i></span>,
+                orderColumn: 
+                    <span>
+                        <i className="caret down icon" style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "entity")}></i>
+                        <i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}} onClick={() => this._orderColumn(0, "entity")}></i>
+                    </span>,
                 key: "entity"
             },
             {
                 title: "Responsable",
-                orderColumn: <span><i className="caret down icon"style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "responsible")}></i><i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "responsible")}></i></span>,
+                orderColumn: 
+                    <span>
+                        <i className="caret down icon"style={{cursor: 'pointer', display: this.state.orderD}} onClick={() => this._orderColumn(1, "responsible")}></i>
+                        <i className="caret up icon" style={{cursor: 'pointer', display: this.state.orderA}}onClick={() => this._orderColumn(0, "responsible")}></i>
+                    </span>,
                 key: "responsible"
             },
             {

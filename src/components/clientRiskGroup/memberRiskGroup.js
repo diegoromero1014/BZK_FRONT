@@ -1,24 +1,23 @@
 import React, { Component } from "react";
 import { Col, Row } from "react-flexbox-grid";
 import { reduxForm } from "redux-form";
+import { bindActionCreators } from "redux";
+import _ from "lodash";
+
 import Input from "../../ui/input/inputComponent";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import Textarea from "../../ui/textarea/textareaComponent";
-
 import SweetAlert from "../sweetalertFocus";
-import { swtShowMessage } from "../sweetAlertMessages/actions";
-import { SESSION_EXPIRED} from "../../constantsGlobal";
-import { formValidateKeyEnter, nonValidateEnter, validateResponse, onSessionExpire } from "../../actionsGlobal";
-import { bindActionCreators } from "redux";
-import { addClientRiskGroup, getClientsRiskGroup } from "./actions";
-import * as constants from "../selectsComponent/constants";
-import { consultDataSelect } from "../selectsComponent/actions";
-import { showLoading } from "../loading/actions";
-import _ from "lodash";
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 
+import { swtShowMessage } from "../sweetAlertMessages/actions";
+import { addClientRiskGroup, getClientsRiskGroup } from "./actions";
+import { consultDataSelect } from "../selectsComponent/actions";
+import { formValidateKeyEnter, nonValidateEnter, onSessionExpire, validateResponse } from "../../actionsGlobal";
+import { showLoading } from "../loading/actions";
 
-
+import { SESSION_EXPIRED } from "../../constantsGlobal";
+import * as constants from "../selectsComponent/constants";
 
 let thisForm;
 class memberRiskGroup extends Component {
@@ -72,7 +71,7 @@ class memberRiskGroup extends Component {
     }
 
     render() {
-        const { fields: { clientName, conformationReasonId, segmentClient, justification }, handleSubmit, clientsBasicInfo } = this.props;
+        const { fields: { clientName, conformationReasonId, segmentClient, justification }, clientsBasicInfo } = this.props;
         const { selectsReducer } = this.props;
         return <form id={"submitMemberForm"}
             onKeyPress={val => formValidateKeyEnter(val, true)} style={{ width: "100%" }}>
@@ -140,12 +139,11 @@ class memberRiskGroup extends Component {
     }
 }
 const constHandlerSubmitGroup = () => {
-    const { fields: { clientName, conformationReasonId, segmentClient, justification }, riskGroup,
-        swtShowMessage, isOpen, clientsBasicInfo, documentType, documentNumber, clientType,
-        addClientRiskGroup, getClientsRiskGroup, clientInformacion, validateHasRiskGroup
+    const { fields: { clientName, conformationReasonId, justification }, riskGroup, swtShowMessage, isOpen, clientsBasicInfo,
+      documentType, documentNumber, clientType, addClientRiskGroup, getClientsRiskGroup, clientInformacion, validateHasRiskGroup
     } = thisForm.props;
+
     validateHasRiskGroup(() => {
-        // thisForm.requestAddMemberRiskGroup();
 
         const jsonUpdateGroup = {
             idClient: clientsBasicInfo.idClient,

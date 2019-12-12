@@ -16,8 +16,9 @@ import CheckComponent from './checkComponent';
 import TdConfidentialComponent from './tdConfidentialComponent';
 import TdParticularityComponent from './tdParticularityComponent';
 import TdUpdatedInfoComponent from './tdUpdatedInfoComponent';
+import {mapDateValueFromTask} from '../../actionsGlobal';
 
-import { ACTION_CHECK } from './constants';
+import { ACTION_CHECK, DATE_CELL } from './constants';
 
 class GridComponent extends Component {
 
@@ -30,6 +31,14 @@ class GridComponent extends Component {
 
   _renderHeader(header, idx) {
     return <HeaderComponent key={idx} titleColumn={header.title} orderColumn={header.orderColumn} width={header.width} />;
+  }
+
+  getCellFromType(row, value, idx) {
+    let columnRow = _.get(row, value.key)
+    if (value.type == DATE_CELL) {
+      columnRow = mapDateValueFromTask(columnRow);
+    }
+    return <TdComponent key={idx} columnRow={columnRow} toolTip={_.get(row, 'toolTip')} headerToolTip={_.get(row, 'headerTooltip')} styles={value.style} />
   }
 
   _renderCell(row, headers, modalTitle, origin) {    
@@ -82,7 +91,7 @@ class GridComponent extends Component {
       } else if (value.key === 'updatedInfo'){ 
         cell = <TdUpdatedInfoComponent key={idx} columnRow={_.get(row, value.key)  ? '' : _.get(row, 'updatedInfoDesc')} styles={value.style}/>
       } else {
-        cell = <TdComponent key={idx} columnRow={_.get(row, value.key)} toolTip={_.get(row, 'toolTip')} headerToolTip={_.get(row, 'headerTooltip')} styles={value.style} />
+        cell = this.getCellFromType(row, value, idx);
       } 
       return (
         cell

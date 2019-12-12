@@ -288,7 +288,7 @@ class ClientsFind extends Component {
             filters.decisionCenter, filters.levelAEC).then((data) => {
                 showLoading(false, "");
                 if (!validateResponse(data)) {
-                    swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
+                    swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, _.get(data, "payload.data.data"));
                 }
             });
         changePage(1);
