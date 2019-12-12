@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 import { Form, Field, ErrorMessage, withFormik } from 'formik';
-import { Input } from 'semantic-ui-react';
+import Input from "../../ui/input/inputComponent";
 import { schema } from './previsitSchema';
 
 export class PrevisitFormComponent extends Component {
-
-   state = {
-      isEditable: false
-   };
-
-   constructor(props) {
+  
+  constructor(props) {
       super(props);
+      this.state = {
+        isEditable: false
+      };
    }
 
    componentWillMount() {
@@ -31,19 +30,19 @@ export class PrevisitFormComponent extends Component {
                   <Col>
                      <Field type="text" name="campo" placeholder="Campo">
                         {({ field: { value, onChange, onBlur }, form: { errors, touched } }) =>
-                           <div>
-                              <Input
-                                 name="campo"
-                                 value={value}
-                                 placeholder="Duración previsita"
-                                 error={errors.campo && touched.campo}
-                                 type="text"
-                                 onChange={onChange}
-                                 onBlur={onBlur} />
-                              <ErrorMessage name="campo" component={'div'} >
-                                {message => this.renderMessageError(message)}
-                              </ErrorMessage>
-                           </div>
+                        <div>
+                          <Input
+                              name="campo"
+                              value={value}                                                
+                              placeholder="Duración previsita"
+                              type="text"
+                              onChange={onChange}
+                              onBlur={onBlur}
+                            />
+                          <ErrorMessage name="campo" component={'div'} style={{color: 'red', marginTop: 3}}>
+                            {message => this.renderMessageError(message)}
+                          </ErrorMessage>                    
+                        </div>
                         }
 
                      </Field>
@@ -75,6 +74,6 @@ export default withFormik({
    },
 
    validationSchema: schema,
-   
+
    displayName: 'PrevisitForm'
 })(PrevisitFormComponent);
