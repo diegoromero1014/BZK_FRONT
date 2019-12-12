@@ -5,7 +5,7 @@ import { redirectUrl } from '../globalComponents/actions';
 import { ComponentClientInformationURL } from '../../constantsAnalytics';
 import HeaderPrevisita from './headerPrevisita';
 import PrevisitFormComponent from './previsitFormComponent'
-import { detailPrevisit, canEditPrevisita } from "./actions";
+import { detailPrevisit, canEditPrevisita, disableBlockedReport, clearPrevisitDetail } from "./actions";
 import { showLoading } from '../loading/actions';
 import { TIME_REQUEST_BLOCK_REPORT, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, EDITAR } from '../../constantsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
@@ -18,8 +18,10 @@ export class PrevisitPage extends Component {
       showErrorBlockedPreVisit: false,
       showMessage: false,
       userEditingPrevisita: "",
-      shouldRedirect: false, 
+      shouldRedirect: false,
       intervalId: null,
+      isMounted: false,
+      renderForm: false
    };
 
    componentWillMount() {
@@ -33,52 +35,76 @@ export class PrevisitPage extends Component {
       this.getPrevisitData(id);
    }
 
+   componentDidMount() {
+      this.setState({
+         isMounted: true
+      });
+   }
+
    componentWillUnmount() {
+      const { dispatchDisabledBlockedReport, dispatchClearPrevisitDetail, params: { id } } = this.props;
+            
+      // Detener envio de peticiones para bloquear el informe
+      clearInterval(this.state.intervalId)
+      this.setState({
+         isMounted: false
+      });
+
+      if (this.state.isEditable) {         
+         dispatchDisabledBlockedReport(id);         
+      }
+      dispatchClearPrevisitDetail();
    }
 
    getPrevisitData = id => {
       const { dispatchDetailPrevisit } = this.props;
       if (id) {
+         showLoading(true, "Cargando...");
          dispatchDetailPrevisit(id).then(() => {
+            showLoading(false, null);
             this.setState({
-               isEditable: true
+               isEditable: true,    
+               renderForm: true           
             });
+         });
+      }else{
+         this.setState({
+            isEditable: false,    
+            renderForm: true           
          });
       }
    }
 
    validatePermissionsPrevisits = () => {
-      const { reducerGlobal } = this.props;
-      return _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) && (!this.state.isEditable);
+      const { reducerGlobal } = this.props;      
+      return _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) && this.state.isEditable;
    }
 
    canUserEditPrevisita(myUserName) {
       const { dispatchCanEditPrevisita, params: { id }, dispatchSwtShowMessage } = this.props;
+      dispatchCanEditPrevisita(id).then((success) => {
+         const username = success.payload.data.data.username
+         const name = success.payload.data.data.name
 
-      return dispatchCanEditPrevisita(id).then((success) => {
-         let username = success.payload.data.data.username
-         let name = success.payload.data.data.name
-
-         if (!this._ismounted) {
-            clearInterval(this.state.intervalId);
-            return;
+         if (!this.isMounted) {
+            clearInterval(this.state.intervalId);            
          }
 
          if (success.payload.data.data == null) {
             clearInterval(this.state.intervalId);
-            this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: "Error", shouldRedirect: true })
-            return;
+            this.setState({ 
+               showErrorBlockedPreVisit: true, 
+               userEditingPrevisita: "Error", 
+               shouldRedirect: true 
+            });            
          }
 
-         if (_.isNull(username)) {
-            // Error servidor
-            dispatchSwtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
-            return Promise.reject(new Error('Error interno del servidor'))
+         if (_.isNull(username)) {            
+            dispatchSwtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);            
          } else if (username.toUpperCase() === myUserName.toUpperCase()) {
             // Usuario pidiendo permiso es el mismo que esta bloqueando
             if (!this.state.isEditable) {
                // Tengo permiso de editar y no estoy editando
-
                this.setState({
                   showErrorBlockedPreVisit: false,
                   showMessage: false,
@@ -91,40 +117,29 @@ export class PrevisitPage extends Component {
             }
          } else {
             // El reporte esta siendo editado por otra persona
-
             if (this.state.isEditable) {
                // Estoy editando pero no tengo permisos
                // Salir de edicion y detener intervalo
                this.setState({
-                  showErrorBlockedPreVisit: true, 
+                  showErrorBlockedPreVisit: true,
                   userEditingPrevisita: name,
-                  shouldRedirect: true, 
+                  shouldRedirect: true,
                   isEditable: false
                });
-
                clearInterval(this.state.intervalId);
             } else {
                // Mostar mensaje de el usuario que tiene bloqueado el informe
                this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
-            }
-
-            return Promise.reject(new Error('el reporte se encuentra bloqueado por otro usuario'));
+            }            
          }
-
-         return success
-      })
-
+         showLoading(false, null);
+      });
    }
 
    editPrevisit = () => {
       showLoading(true, "Cargando...");
-      const usernameSession = window.localStorage.getItem('userNameFront')
-
-      this.canUserEditPrevisita(usernameSession).then(() => {
-         showLoading(false, null);
-      }).catch(() => {
-         showLoading(false, null);
-      })
+      const usernameSession = window.localStorage.getItem('userNameFront');
+      this.canUserEditPrevisita(usernameSession);
    }
 
    render() {
@@ -139,7 +154,7 @@ export class PrevisitPage extends Component {
                   </Col>
                   <Col xs={2} sm={2} md={2} lg={2}>
                      {
-                        this.validatePermissionsPrevisits() &&
+                        this.validatePermissionsPrevisits() && this.state.isEditable &&
                         <button type="button" onClick={this.editPreVisit}
                            className={'btn btn-primary modal-button-edit'}
                            style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>
@@ -150,9 +165,10 @@ export class PrevisitPage extends Component {
                </Row>
             </div>
             {
-               previsitReducer.get('detailPrevisit') ?
-                  <PrevisitFormComponent previsitReducer={previsitReducer} isEditable={this.state.isEditable} /> : null
-            }
+               this.state.renderForm ?
+                  <PrevisitFormComponent previsitReducer={previsitReducer} isEditable={this.state.isEditable} />
+               : null
+            }            
          </div>
       )
    }
@@ -163,7 +179,9 @@ function mapDispatchToProps(dispatch) {
       dispatchDetailPrevisit: detailPrevisit,
       dispatchShowLoading: showLoading,
       dispatchCanEditPrevisita: canEditPrevisita,
-      dispatchSwtShowMessage: swtShowMessage
+      dispatchSwtShowMessage: swtShowMessage,
+      dispatchDisabledBlockedReport: disableBlockedReport,
+      dispatchClearPrevisitDetail: clearPrevisitDetail
    }, dispatch);
 }
 
