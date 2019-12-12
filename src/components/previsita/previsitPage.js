@@ -31,10 +31,10 @@ export class PrevisitPage extends Component {
    componentWillMount() {
       const { params: { id }, clientInformacion } = this.props;
       const infoClient = clientInformacion.get('responseClientInfo');
-
+/* 
       if (_.isEmpty(infoClient)) {
          redirectUrl(ComponentClientInformationURL)
-      }
+      } */
 
       this.getPrevisitData(id);
    }

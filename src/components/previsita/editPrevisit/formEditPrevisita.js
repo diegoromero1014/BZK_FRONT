@@ -401,8 +401,7 @@ export class FormEditPrevisita extends Component {
     }
 
     _changeTypePreVisit(value) {
-        if (value !== undefined && value !== "" && value !== null && value !== idTypeVisitAuxTwo &&
-            !contollerErrorChangeType && firstLoadInfo) {
+        if (value !== undefined && value !== "" && value !== null && value !== idTypeVisitAuxTwo && !contollerErrorChangeType && firstLoadInfo) {
 
             if (valueTypePrevisit === PROPUEST_OF_BUSINESS) {
                 contollerErrorChangeType = true;
