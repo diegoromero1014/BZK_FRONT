@@ -3,16 +3,13 @@ import { Row, Col } from 'react-flexbox-grid';
 import { Form, Field, ErrorMessage, withFormik } from 'formik';
 import { Input } from 'semantic-ui-react';
 import { schema } from './previsitSchema';
-import '../../../styles/field/main.scss';
 import Tooltip from "../toolTip/toolTipComponent";
+import ComboBox from "../../ui/comboBox/comboBoxComponent";
+
+import '../../../styles/field/main.scss';
 
 export class PrevisitFormComponent extends Component {
-
-   state = {
-      isEditable: false
-   };
-
-   constructor(props) {
+    constructor(props) {
       super(props);
       this.state = {
         fields: {
@@ -66,7 +63,7 @@ export class PrevisitFormComponent extends Component {
                <Row style={{ width: '99%', paddingLeft: 20 }}>
                   <Col xs={3}>
                      <Field type="text" name="typeVisit" placeholder="Campo">
-                        {({ field: { value, onChange, onBlur } }) =>
+                        {({ field: { value, name, onBlur }, form: { setFieldValue } }) =>
                            <div>
                               {this.renderLabel(type)}
                               <ComboBox
@@ -75,7 +72,9 @@ export class PrevisitFormComponent extends Component {
                                   valueProp={'id'}
                                   textProp={'value'}
                                   value={value}
-                                  onChange={val => this._changeTypePreVisit(val)}
+                                  onChange={val => {
+                                    setFieldValue(name, val, false);
+                                  }}
                                   onBlur={onBlur}
                                   data={[]}
                               />
