@@ -5,7 +5,7 @@ import { Input } from 'semantic-ui-react';
 import { schema } from './previsitSchema';
 import Tooltip from "../toolTip/toolTipComponent";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
-
+import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import '../../../styles/field/main.scss';
 
 export class PrevisitFormComponent extends Component {
@@ -17,8 +17,27 @@ export class PrevisitFormComponent extends Component {
             name: 'Tipo de visita',
             nullable: false,
             message: ''
-          }
-        }
+          },
+          date: {
+            name: 'Fecha',
+            nullable: false,
+            message: null
+          },
+          duration: {
+            name: 'Duración previsita - horas',
+            nullable: false,
+            message: null
+          },
+
+          place: {
+            name: 'Lugar',
+            nullable: false,
+            message: null
+          },
+        },
+        activeItemTabClient: 'active',
+        activeItemTabBanc: '',
+        activeItemTabOther: ''
       }
    }
 
@@ -33,19 +52,22 @@ export class PrevisitFormComponent extends Component {
 
   renderLabel = ({name, message, nullable}) => (
     <div style={{ display: 'flex', 'flex-direction': 'row', 'justify-content': 'space-between' }}>
-        <strong>
+        <strong style={{ marginBottom: 10 }}>
             <span>{`${name}  ${!nullable ? '(' : ''} `} </span>
             {!nullable && <span style={{ color: 'red' }}>*</span>} 
             {!nullable && ' )' }
         </strong>
-        <Tooltip text={message}>
+
+        {message !== null && 
+          <Tooltip text={message}>
             <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
-        </Tooltip>
+          </Tooltip>
+        }
     </div>
   );
 
    render() {      
-     const { fields: { type } } = this.state;
+     const { fields: { type, date, duration, place }, activeItemTabClient, activeItemTabBanc, activeItemTabOther } = this.state;
      
       return (
          <div>
@@ -62,7 +84,7 @@ export class PrevisitFormComponent extends Component {
               </Row>             
                <Row style={{ width: '99%', paddingLeft: 20 }}>
                   <Col xs={3}>
-                     <Field type="text" name="typeVisit" placeholder="Campo">
+                     <Field type="text" name="typeVisit">
                         {({ field: { value, name, onBlur }, form: { setFieldValue } }) =>
                            <div>
                               {this.renderLabel(type)}
@@ -77,6 +99,7 @@ export class PrevisitFormComponent extends Component {
                                   }}
                                   onBlur={onBlur}
                                   data={[]}
+                                  className='field-input'
                               />
                               <ErrorMessage name="typeVisit" component={'div'} >
                                 {message => this.renderMessageError(message)}
@@ -88,19 +111,21 @@ export class PrevisitFormComponent extends Component {
                   </Col>
 
                   <Col xs={3}>
-                     <Field type="text" name="campo" placeholder="Campo">
+                     <Field type="text" name="date">
                         {({ field: { value, onChange, onBlur } }) =>
                            <div>
-                              <Input
-                                 name="campo"
-                                 value={value}
-                                 placeholder="Duración previsita"
-                                 type="text"
-                                 onChange={onChange}
-                                 onBlur={onBlur} 
-                                 className='field-input'
+                              {this.renderLabel(date)}
+                              <DateTimePickerUi
+                                  culture='es'
+                                  format={"DD/MM/YYYY hh:mm a"}
+                                  time={true}
+                                  value={value}
+                                  onChange={onChange}
+                                  onBlur={onBlur}
+                                  placeholder='DD/MM/YYYY'
+                                  className='field-input'
                               />
-                              <ErrorMessage name="campo" component={'div'} >
+                              <ErrorMessage name="date" component={'div'} >
                                 {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
@@ -110,19 +135,20 @@ export class PrevisitFormComponent extends Component {
                   </Col>
 
                   <Col xs={3}>
-                     <Field type="text" name="campo" placeholder="Campo">
+                     <Field type="text" name="duration">
                         {({ field: { value, onChange, onBlur } }) =>
                            <div>
+                              {this.renderLabel(duration)}
                               <Input
-                                 name="campo"
-                                 value={value}
-                                 placeholder="Duración previsita"
-                                 type="text"
-                                 onChange={onChange}
-                                 onBlur={onBlur} 
-                                 className='field-input'
+                                  name="duration"
+                                  value={value}
+                                  placeholder="Duración previsita"
+                                  type="text"
+                                  onChange={onChange}
+                                  onBlur={onBlur}
+                                  className='field-input'
                               />
-                              <ErrorMessage name="campo" component={'div'} >
+                              <ErrorMessage name="duration" component={'div'} >
                                 {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
@@ -132,19 +158,20 @@ export class PrevisitFormComponent extends Component {
                   </Col>
 
                   <Col xs={3}>
-                     <Field type="text" name="campo" placeholder="Campo">
+                     <Field type="text" name="place">
                         {({ field: { value, onChange, onBlur } }) =>
                            <div>
+                              {this.renderLabel(place)}
                               <Input
-                                 name="campo"
-                                 value={value}
-                                 placeholder="Duración previsita"
-                                 type="text"
-                                 onChange={onChange}
-                                 onBlur={onBlur} 
-                                 className='field-input'
+                                value={value}
+                                name="place"
+                                type="text"
+                                onChange={onChange}
+                                placeholder="Lugar"
+                                onBlur={onBlur}
+                                className='field-input'
                               />
-                              <ErrorMessage name="campo" component={'div'} >
+                              <ErrorMessage name="place" component={'div'} >
                                 {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
@@ -153,6 +180,64 @@ export class PrevisitFormComponent extends Component {
                      </Field>
                   </Col>
                </Row>
+              
+              <Row style={{ padding: "20px 23px 20px 20px" }}>
+                <Col xs>
+                    <div className="ui top attached tabular menu" style={{ width: "100%" }}>
+                        <a 
+                          className={`${activeItemTabClient} item`} 
+                          style={{ width: "33%" }}
+                          data-tab="first" 
+                          onClick={() => 
+                            this.setState({ 
+                              activeItemTabClient: 'active', 
+                              activeItemTabBanc: '', 
+                              activeItemTabOther: '' 
+                            })
+                          }
+                        >
+                          Participantes en la reunión por parte del cliente
+                          <Tooltip text={"TITLE_CLIENT_PARTICIPANTS"}>
+                              <i className="help circle icon blue" style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
+                          </Tooltip>
+                        </a>
+                        <a 
+                          className={`${activeItemTabBanc} item`} 
+                          style={{ width: "40%" }}
+                          data-tab="second" 
+                          onClick={() => 
+                            this.setState({ 
+                              activeItemTabClient: '', 
+                              activeItemTabBanc: 'active', 
+                              activeItemTabOther: '' 
+                            })
+                          }
+                        >
+                          Participantes en la reunión por parte del Grupo Bancolombia
+                          <Tooltip text={"TITLE_BANC_PARTICIPANTS"}>
+                              <i className="help circle icon blue" style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
+                          </Tooltip>
+                        </a>
+                        <a 
+                          className={`${activeItemTabOther} item`} 
+                          style={{ width: "26%" }}
+                          data-tab="third" 
+                          onClick={() => 
+                            this.setState({ 
+                              activeItemTabBanc: '', 
+                              activeItemTabClient: '', 
+                              activeItemTabOther: 'active' 
+                              }) 
+                          }
+                        >
+                          Otros participantes en la reunión
+                          <Tooltip text={"TITLE_OTHERS_PARTICIPANTS"}>
+                              <i className="help circle icon blue" style={{ fontSize: "18px", cursor: "pointer", marginLeft: "5px" }} />
+                          </Tooltip>
+                        </a>
+                    </div>
+                </Col>
+              </Row>
             </Form>
          </div>
       )
