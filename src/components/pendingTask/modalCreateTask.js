@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
-import {Button} from 'semantic-ui-react';
+import _ from 'lodash';
+import $ from 'jquery';
+import moment from 'moment';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../ui/comboBoxFilter/comboBoxFilter';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import Textarea from '../../ui/textarea/textareaComponent';
 import { filterUsersBanco } from '../participantsVisitPre/actions';
 import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
@@ -17,10 +19,7 @@ import { redirectUrl } from '../globalComponents/actions';
 import { NUMBER_RECORDS } from './constants';
 import { changeStateSaveData } from '../dashboard/actions';
 import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator, updateUserNameTask } from '../myPendings/myTasks/actions';
-import _ from 'lodash';
-import $ from 'jquery';
-import moment from 'moment';
-import { validateValue,formatLongDateToDateWithNameMonth } from '../../actionsGlobal';
+import { validateValue } from '../../actionsGlobal';
 import RichText from '../richText/richTextComponent';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import { fields, validations as validate } from './createPendingTask/fieldsAndRulesForReduxForm';
@@ -35,7 +34,6 @@ import {
 
 
 var usersBanco = [];
-var idUsuario, nameUsuario;
 let nameEntity;
 
 
@@ -265,7 +263,7 @@ export class ModalCreateTask extends Component {
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll"
           style={{ paddingBottom: "20px" }}>
           <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-            <p style={{ paddingTop: "10px", marginBottom: "0px" }} >Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</p>
+            <p style={{ paddingTop: "10px", marginBottom: "0px" }} >Los campos marcados con asterisco sisas (<span style={{ color: "red" }}>*</span>) son obligatorios.</p>
             <Row style={{ padding: "0px 10px 0px 0px" }}>
               <Col xs={12} md={4} lg={4}>
                 <dt><span>Fecha de cierre - DD/MM/YYYY (<span style={{ color: "red" }}>*</span>)</span></dt>
