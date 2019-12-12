@@ -35,6 +35,11 @@ export class PrevisitFormComponent extends Component {
             nullable: false,
             message: null
           },
+          objectiveMeeting: {
+            name: 'Objetivo de la reunión ',
+            nullable: false,
+            message: null
+          }
         }
       }
    }
@@ -63,9 +68,8 @@ export class PrevisitFormComponent extends Component {
         }
     </div>
   );
-
    render() {      
-     const { fields: { type, date, duration, place }, activeItemTabClient, activeItemTabBanc, activeItemTabOther } = this.state;
+     const { fields: { type, date, duration, place, objectiveMeeting } } = this.state;
      
       return (
          <div>
@@ -183,6 +187,23 @@ export class PrevisitFormComponent extends Component {
                 <Col xs>
                   <Participants />
                 </Col>
+              </Row>
+
+              <Row style={{ padding: "20px 23px 20px 20px" }}>
+                  <Col xs={12} md={12} lg={12}>
+                      <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                          <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
+                            <i className="book icon" style={{ fontSize: "18px" }} />
+                            
+                            <span>{`${objectiveMeeting.name}  ${!objectiveMeeting.nullable ? '(' : ''} `} </span>
+                            {!objectiveMeeting.nullable && <span style={{ color: 'red' }}>*</span>} 
+                            {!objectiveMeeting.nullable && ' )' }
+                            
+                            <Tooltip text={objectiveMeeting.message}>
+                              <i className="help circle icon blue" style={{ fontSize: "18px", cursor: "pointer", marginLeft: "0px" }} />
+                            </Tooltip>
+                      </div>
+                  </Col>
               </Row>
             </Form>
          </div>
