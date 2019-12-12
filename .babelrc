@@ -4,7 +4,8 @@
     "es2015"
   ],
   "plugins": [
-    ["transform-class-properties", { "spec": true }],
+    ["transform-class-properties", { "spec": true }],    
+    ["transform-async-to-generator"],
     "transform-object-assign","babel-plugin-root-import"
   ]
 }
