@@ -41,7 +41,7 @@ export default (state = initialState, action) => {
         case GET_DETAIL_PREVISIT:
             return state.set('detailPrevisit', action.payload.data);
         case CLEAR_PREVISIT_DETAIL:
-            return state.set('detailPrevisit', null);
+            return state.set('detailPrevisit', {});
         case CLEAR_PREVISIT:
             return state.withMutations(map => {
                 map.set('page', 1)
