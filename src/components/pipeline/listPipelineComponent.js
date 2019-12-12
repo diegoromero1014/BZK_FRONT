@@ -8,7 +8,7 @@ import { pipelineByClientFindServer, orderColumnPipeline, clearPipelineOrder, cl
 
 import { NUMBER_RECORDS, DELETE_TYPE_PIPELINE } from './constants';
 import { ELIMINAR } from '../../constantsGlobal';
-import { MODULE_PIPELINE } from '../grid/constants';
+import { MODULE_PIPELINE, DATE_CELL } from '../grid/constants';
 
 let v1 = "";
 let v2 = "";
@@ -65,6 +65,11 @@ class ListPipelineComponent extends Component {
       {
         title: "Nombre de la oportunidad",
         key: "opportunityName"
+      },
+      {
+        type: DATE_CELL,
+        title: "Fecha de creación",
+        key: "createDate"
       },
       {
         title: "Estado del negocio",
