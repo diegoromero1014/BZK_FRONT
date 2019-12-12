@@ -20,6 +20,12 @@ export class PrevisitFormComponent extends Component {
   componentWillMount() {
   }
 
+  renderMessageError = err => (
+    <div>
+        <div className="ui pointing red basic label"> {err} </div>
+    </div>
+  );
+
   render() {
     const {reducerGlobal} = this.props;
     return (
@@ -45,14 +51,16 @@ export class PrevisitFormComponent extends Component {
                       {({field: {value, onChange, onBlur}, form: {errors, touched}}) => 
                         <div>
                           <Input
-                            name="campo"
-                            value={value}                                                
-                            placeholder="Duración previsita"
-                            error={errors.campo && touched.campo}
-                            type="text"
-                            onChange={onChange}
-                            onBlur={onBlur}/>
-                          <ErrorMessage name="campo" component={'span'} style={{color: 'red', marginTop: 3}}></ErrorMessage>                    
+                              name="campo"
+                              value={value}                                                
+                              placeholder="Duración previsita"
+                              type="text"
+                              onChange={onChange}
+                              onBlur={onBlur}
+                            />
+                          <ErrorMessage name="campo" component={'div'} style={{color: 'red', marginTop: 3}}>
+                            {message => this.renderMessageError(message)}
+                          </ErrorMessage>                    
                         </div>
                       }
                       
