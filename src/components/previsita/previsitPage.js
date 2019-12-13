@@ -40,7 +40,10 @@ export class PrevisitPage extends Component {
       } */
 
       this.getPrevisitTypes();
-      this.getPrevisitData(id);            
+      this.getPrevisitData(id);  
+      this.setState({
+         renderForm: true
+      })          
    }
 
    componentDidMount() {
@@ -68,16 +71,14 @@ export class PrevisitPage extends Component {
       const { dispatchDetailPrevisit } = this.props;
       if (id) {
          showLoading(true, "Cargando...");
-         await dispatchDetailPrevisit(id);
+         await dispatchDetailPrevisit(id); 
          showLoading(false, null);
          this.setState({
-            isEditable: true,    
-            renderForm: true           
+            isEditable: true      
          });
       }else{
          this.setState({
-            isEditable: false,    
-            renderForm: true           
+            isEditable: false           
          });
       }      
    }
