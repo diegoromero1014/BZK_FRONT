@@ -31,7 +31,7 @@ export class PrevisitPage extends Component {
       previsitTypes: []
    };
 
-   componentWillMount() {
+   async componentWillMount() {
       const { params: { id }, clientInformacion } = this.props;
       const infoClient = clientInformacion.get('responseClientInfo');
 /* 
@@ -39,11 +39,11 @@ export class PrevisitPage extends Component {
          redirectUrl(ComponentClientInformationURL)
       } */
 
-      this.getPrevisitTypes();
-      this.getPrevisitData(id);  
+      await this.getPrevisitTypes();
+      await this.getPrevisitData(id);  
       this.setState({
          renderForm: true
-      })          
+      });          
    }
 
    componentDidMount() {
@@ -187,8 +187,7 @@ export class PrevisitPage extends Component {
             {
                this.state.renderForm && previsitReducer ?
                   <PrevisitFormComponent 
-                     previsitData={previsitReducer.get('detailPrevisit') ? 
-                        previsitReducer.get('detailPrevisit').data : null} 
+                     previsitData={previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null} 
                      previsitTypes={this.state.previsitTypes}
                      isEditable={this.state.isEditable} 
                      onSubmit={this.submitForm}/>
