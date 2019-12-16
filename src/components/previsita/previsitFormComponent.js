@@ -6,71 +6,87 @@ import { schema } from './previsitSchema';
 import Tooltip from "../toolTip/toolTipComponent";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
-import '../../../styles/field/main.scss';
+import RichText from '../richText/richTextComponent';
 import Participants from './participants';
 
+import { TITLE_MESSAGE_TARGET } from './constants';
+
+import '../../../styles/field/main.scss'; 
+
 export class PrevisitFormComponent extends Component {
-    constructor(props) {
+   constructor(props) {
       super(props);
       this.state = {
-        fields: {
-          type: {
-            name: 'Tipo de visita',
-            nullable: false,
-            message: 'asdasdasd'
-          },
-          date: {
-            name: 'Fecha',
-            nullable: false,
-            message: null
-          },
-          duration: {
-            name: 'Duración previsita - horas',
-            nullable: false,
-            message: null
-          },
+         fields: {
+            type: {
+               name: 'Tipo de visita',
+               nullable: false,
+               message: 'asdasdasd'
+            },
 
-          place: {
-            name: 'Lugar',
-            nullable: false,
-            message: null
-          },
-          objectiveMeeting: {
-            name: 'Objetivo de la reunión ',
-            nullable: false,
-            message: null
-          }
-        }
+            date: {
+               name: 'Fecha',
+               nullable: false,
+               message: null
+            },
+
+            duration: {
+               name: 'Duración previsita - horas',
+               nullable: false,
+               message: null
+            },
+
+            place: {
+               name: 'Lugar',
+               nullable: false,
+               message: null
+            },
+            objective: {
+               name: 'Objectivo de la reunión', 
+               nulltable: true,
+               message: TITLE_MESSAGE_TARGET
+            }
+         }
       }
    }
 
-   componentWillMount() {
-   }
-
    renderMessageError = err => (
-    <div>
-        <div className="ui pointing red basic label"> {err} </div>
-    </div>
-  );
+      <div>
+         <div className="ui pointing red basic label"> {err} </div>
+      </div>
+   );
 
-  renderLabel = ({name, message, nullable}) => (
-    <div style={{ display: 'flex', 'flex-direction': 'row', 'justify-content': 'space-between' }}>
-        <strong style={{ marginBottom: 10 }}>
-            <span>{`${name}  ${!nullable ? '(' : ''} `} </span>
+   renderLabel = ({name, message, nullable}) => (
+      <div style={{ display: 'flex', 'flex-direction': 'row', 'justify-content': 'space-between' }}>
+         <strong style={{ marginBottom: 10 }}>
+               <span>{`${name}  ${!nullable ? '(' : ''} `} </span>
+               {!nullable && <span style={{ color: 'red' }}>*</span>} 
+               {!nullable && ' )' }
+         </strong>
+
+         {message !== null && 
+            <Tooltip text={message}>
+               <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
+            </Tooltip>
+         }
+      </div>
+   );
+
+   renderTitle = ({name, message, nullable}) => (
+      <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+         <span>{`${name}  ${!nullable ? '(' : ''} `} </span>
             {!nullable && <span style={{ color: 'red' }}>*</span>} 
             {!nullable && ' )' }
-        </strong>
+         
+         <Tooltip text={message}>
+            <i className="help circle icon blue" style={{ fontSize: "18px", cursor: "pointer", marginLeft: "10px" }} />
+         </Tooltip>
+      </div>
+   );
 
-        {message !== null && 
-          <Tooltip text={message}>
-            <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
-          </Tooltip>
-        }
-    </div>
-  );
    render() {      
-     const { fields: { type, date, duration, place, objectiveMeeting } } = this.state;
-     const { previsitTypes } = this.props;
+      const { fields: { type, date, duration, place, objective } } = this.state;
+      const { previsitTypes } = this.props;
      
       return (
          <div>                   
@@ -104,7 +120,7 @@ export class PrevisitFormComponent extends Component {
                                   data={previsitTypes}
                                   className='field-input'
                               />
-                              <ErrorMessage name="typeVisit" component={'div'} >
+                              <ErrorMessage name=" " component={'div'} >
                                 {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
@@ -114,8 +130,8 @@ export class PrevisitFormComponent extends Component {
                   </Col>
 
                   <Col xs={3}>
-                     <Field type="text" name="date">
-                        {({ field: { value, onChange, onBlur } }) =>
+                     <Field type="date" name="date">
+                        {({ field: { value, name, onBlur }, form: { setFieldValue } }) =>
                            <div>
                               {this.renderLabel(date)}
                               <DateTimePickerUi
@@ -123,10 +139,11 @@ export class PrevisitFormComponent extends Component {
                                   format={"DD/MM/YYYY hh:mm a"}
                                   time={true}
                                   value={value}
-                                  onChange={onChange}
+                                  onChange={val => setFieldValue(name, val, false) }
                                   onBlur={onBlur}
                                   placeholder='DD/MM/YYYY'
                                   className='field-input'
+                                  name="date"
                               />
                               <ErrorMessage name="date" component={'div'} >
                                 {message => this.renderMessageError(message)}
@@ -184,7 +201,7 @@ export class PrevisitFormComponent extends Component {
                   </Col>
                </Row>
               
-              <Row style={{ paddingTop: 70 }}>
+              <Row style={{ paddingTop: 70, width: '99%', paddingLeft: 20 }}>
                 <Col xs>
                   <Participants />
                 </Col>
@@ -192,20 +209,36 @@ export class PrevisitFormComponent extends Component {
 
               <Row style={{ padding: "20px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
-                      <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                          <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
-                            <i className="book icon" style={{ fontSize: "18px" }} />
-                            
-                            <span>{`${objectiveMeeting.name}  ${!objectiveMeeting.nullable ? '(' : ''} `} </span>
-                            {!objectiveMeeting.nullable && <span style={{ color: 'red' }}>*</span>} 
-                            {!objectiveMeeting.nullable && ' )' }
-                            
-                            <Tooltip text={objectiveMeeting.message}>
-                              <i className="help circle icon blue" style={{ fontSize: "18px", cursor: "pointer", marginLeft: "0px" }} />
-                            </Tooltip>
-                      </div>
+                     {this.renderTitle(objective)}
                   </Col>
               </Row>
+
+              <Row style={{ padding: "0px 23px 20px 20px" }}>
+                  <Col xs={12} md={12} lg={12}>
+                     <Field type="text" name="targetPrevisit">
+                        {({ field: { value, name }, form: { setFieldValue } }) =>
+                           <div>
+                              <RichText
+                                 name="targetPrevisit"
+                                 id="targetPrevisit"
+                                 value={value}
+                                 onChange={val => setFieldValue(name, val, false) }
+                                 title="Ingrese el objetivo de la reunión"
+                                 style={{ width: '100%', height: '178px' }}
+                                 readOnly={false}
+                              />
+                              <ErrorMessage name="targetPrevisit" component={'div'} >
+                                 {message => this.renderMessageError(message)}
+                              </ErrorMessage>
+                           </div>
+                        }
+                     </Field>
+                  </Col>
+               </Row>
+
+               <Row style={{ padding: "0px 23px 20px 20px" }}>
+                  <button type="submit">Prueba</button>
+               </Row>
             </Form>
          </div>
       )
@@ -213,21 +246,21 @@ export class PrevisitFormComponent extends Component {
 }
 
 export default withFormik({
-   handleSubmit: () => {
-      /**TODO: Submit del formulario */
+   handleSubmit: (values, { setSubmitting }) => {
+      console.log(values);
+      debugger;
    },
    mapPropsToValues: (props) => {
       const { previsitData } = props;                  
-      if (previsitData) {
+      
          return {
-            campo: previsitData.id
+            typeVisit: '',
+            date: new Date(),
+            duration: '',
+            place: '',
+            targetPrevisit: ''
          }
-      } else {
-         return {
-            campo: ''
-         }
-      }
+      
    },
-   validationSchema: schema,
-   displayName: 'PrevisitForm'
+   validationSchema: schema
 })(PrevisitFormComponent);
