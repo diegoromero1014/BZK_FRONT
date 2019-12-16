@@ -638,7 +638,7 @@ class FormPrevisita extends Component {
         const infoClient = clientInformacion.get('responseClientInfo');
         valueTypePrevisit = null;
         if (_.isEmpty(infoClient)) {
-            redirectUrl("/dashboard/clientInformation");
+            /* redirectUrl("/dashboard/clientInformation"); */
         } else {
             getMasterDataFields([PREVISIT_TYPE]);
             consultParameterServer(LAST_PREVISIT_REVIEW).then((data) => {

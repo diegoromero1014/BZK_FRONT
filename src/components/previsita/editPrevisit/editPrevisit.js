@@ -16,9 +16,9 @@ class EditPrevisit extends Component {
   componentWillMount() {
     const { clientInformacion } = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
-    if (_.isEmpty(infoClient)) {
+    /* if (_.isEmpty(infoClient)) {
       redirectUrl("/dashboard/clientInformation");
-    }
+    } */
   }
 
   render() {
