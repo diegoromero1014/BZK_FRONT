@@ -9,7 +9,7 @@ import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import RichText from '../richText/richTextComponent';
 import Participants from './participants';
 
-import { TITLE_MESSAGE_TARGET } from './constants';
+import { TITLE_MESSAGE_TARGET, TITLE_MESSAGE_PENDIENT } from './constants';
 
 import '../../../styles/field/main.scss'; 
 
@@ -43,10 +43,16 @@ export class PrevisitFormComponent extends Component {
             },
             objective: {
                name: 'Objectivo de la reunión', 
-               nulltable: true,
+               nullable: false,
                message: TITLE_MESSAGE_TARGET
+            },
+            pending: {
+               name: 'Pendientes, quejas y reclamos',
+               nullable: true,
+               message: TITLE_MESSAGE_PENDIENT
             }
-         }
+         },
+         type: null
       }
    }
 
@@ -85,7 +91,7 @@ export class PrevisitFormComponent extends Component {
    );
 
    render() {      
-      const { fields: { type, date, duration, place, objective } } = this.state;
+      const { fields: { type, date, duration, place, objective, pending } } = this.state;
       const { previsitTypes } = this.props;
      
       return (
@@ -113,14 +119,14 @@ export class PrevisitFormComponent extends Component {
                                   valueProp={'id'}
                                   textProp={'value'}
                                   value={value}
-                                  onChange={val => {
-                                    setFieldValue(name, val, false);
+                                  onChange={(id, val) => {
+                                       setFieldValue(name, id, false);
                                   }}
                                   onBlur={onBlur}
                                   data={previsitTypes}
                                   className='field-input'
                               />
-                              <ErrorMessage name=" " component={'div'} >
+                              <ErrorMessage name="typeVisit" component={'div'} >
                                 {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
@@ -236,6 +242,34 @@ export class PrevisitFormComponent extends Component {
                   </Col>
                </Row>
 
+               <Row style={{ padding: "20px 23px 20px 20px" }}>
+                    <Col xs={12} md={12} lg={12}>
+                        {this.renderTitle(pending)}
+                    </Col>
+                </Row>
+                <Row style={{ padding: "0px 23px 20px 20px" }}>
+                    <Col xs={12} md={12} lg={12}>
+                        <Field type="text" name="pendingPrevisit">
+                           {({ field: { value, name }, form: { setFieldValue } }) =>
+                              <div>
+                                 <RichText
+                                    name="pendingPrevisit"
+                                    id="pendingPrevisit"
+                                    value={value}
+                                    onChange={val => setFieldValue(name, val, false) }
+                                    title="Ingrese pendientes, quejas y reclamos"
+                                    style={{ width: '100%', height: '178px' }}
+                                    readOnly={false}
+                                 />
+                                 <ErrorMessage name="pendingPrevisit" component={'div'} >
+                                    {message => this.renderMessageError(message)}
+                                 </ErrorMessage>
+                              </div>
+                           }
+                        </Field>
+                    </Col>
+                </Row>
+
                <Row style={{ padding: "0px 23px 20px 20px" }}>
                   <button type="submit">Prueba</button>
                </Row>
@@ -258,7 +292,8 @@ export default withFormik({
             date: new Date(),
             duration: '',
             place: '',
-            targetPrevisit: ''
+            targetPrevisit: '',
+            pendingPrevisit: ''
          }
       
    },

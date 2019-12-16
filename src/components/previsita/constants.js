@@ -25,4 +25,6 @@ export const TITLE_MESSAGE_TARGET = "En este campo deberá registrar de manera c
 "c. ¿Cómo esta enseñanza conduce hacia una solución que tiene el Grupo Bancolombia?\n\n" +
 "2. ¿Cuáles son los resultados esperados y en cuánto tiempo se verán materializados?";
 
+export const TITLE_MESSAGE_PENDIENT = "En este campo se deberá registrar los pendientes quejas o reclamos que tenga el cliente y que podrán ser motivo de conversación en la reunión.";
+
 
