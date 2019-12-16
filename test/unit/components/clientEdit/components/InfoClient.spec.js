@@ -15,13 +15,14 @@ class ReduxFormField {
     }
 }
 
-const clientInformacion = Immutable.Map({ 'responseClientInfo': {} });
-const consultListByCatalogType = () => { };
+const getMasterDataFields = () => {};
+const clientInformacion = Immutable.Map({ 'responseClientInfo': { segment: 1} });
+const response = {payload: {data:{data:{id: 123, value: 'Grande', key: 'Grande', field: 'subSegment', description: ''}}}};
 const selectsReducer = Immutable.Map({'segment': [{id: 1, value: 'Constructor Pyme', key: 'Constructor Pyme'}, {id: 2, value: 'Otra cosa', key: 'Otra Cosa'}]});
 
 const segment = {
     onChange: () => { },
-    value: ''
+    value: 1
 }
 const idTypeClient = {
     onChange: () => { },
@@ -33,17 +34,27 @@ const idNumber = {
 }
 const subSegment = {
     onChange: () => { },
-    value: ''
+    value: 2
 }
 const description = {
     onChange: () => { },
     value: ''
 }
 
-const defaultProps = { clientInformacion, selectsReducer, segment, 
-    idTypeClient, idNumber, subSegment, description, consultListByCatalogType };
-
 describe('Test ClientEdit/InfoClient', () => {
+    let deleteRiskGroup;
+    let defaultProps;
+    let consultListByCatalogType;
+    beforeEach(() => {
+        consultListByCatalogType = sinon.stub();
+        consultListByCatalogType.resolves(response);
+        defaultProps = {
+            deleteRiskGroup,
+            clientInformacion, selectsReducer, segment,
+            idTypeClient, idNumber, subSegment, description, consultListByCatalogType, getMasterDataFields
+        };
+    });
+
     it('should render ClientTypology', () => {
         const wrapper = shallow(<InfoClient {...defaultProps} />);
         expect(wrapper.find(ClientTypology)).to.have.length(1);
@@ -72,5 +83,23 @@ describe('Test ClientEdit/InfoClient', () => {
     it('should render Descripcion', () => {
         const wrapper = shallow(<InfoClient {...defaultProps} />);
         expect(wrapper.find(Textarea).find({name: 'description'})).to.have.length(1);
+    });
+
+    it('should not clear subSegment when segment did not change', () => {
+        const wrapper = shallow(<InfoClient {...defaultProps} />);
+
+        wrapper.instance()._changeCatalogSubsegment(segment, subSegment, false);
+        expect(consultListByCatalogType.called).equal(true);
+    });
+
+    it('should clear subSegments when segment was changed', () => {
+        const segment = {
+            onChange: () => { },
+            value: 3
+        }
+        const wrapper = shallow(<InfoClient segment={segment} {...defaultProps} />);
+
+        wrapper.instance()._changeCatalogSubsegment(segment, subSegment, true);
+        expect(consultListByCatalogType.called).equal(true);
     });
 });

@@ -13,14 +13,16 @@ import * as constants from "../../selectsComponent/constants";
 import { getMasterDataFields, consultListWithParameterUbication, consultListByCatalogType } from '../../selectsComponent/actions';
 
 import { TITLE_DESCRIPTION, GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../constants';
-import { BUTTON_EDIT } from "../../clientDetailsInfo/constants";
-
 
 export class InfoClient extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            subSegments : []
+        }
 
+        this._changeCatalogSubsegment = this._changeCatalogSubsegment.bind(this);
         this._changeSegment = this._changeSegment.bind(this);
         this._checkSubSegmentRender = this._checkSubSegmentRender.bind(this);
 
@@ -46,10 +48,27 @@ export class InfoClient extends React.Component {
         this._checkSubSegmentRender();
     }
 
+    _changeCatalogSubsegment(segment, subSegment, firstConsult){
+        const { consultListByCatalogType, clientInformacion } = this.props;
+        consultListByCatalogType(constants.SUBSEGMENTS, segment.value, constants.SUBSEGMENTS).then((data) => {
+            this.setState({
+                subSegments: _.get(data, 'payload.data.data', [])
+            });
+        });
+
+        if (!_.isEqual(clientInformacion.get('responseClientInfo').segment, segment.value)) {
+            subSegment.onChange('');
+        } else {
+            subSegment.onChange(firstConsult ? subSegment : '');
+        }
+    }
+
     _changeSegment(idSegment, firstConsult) {
-        const { segment, subSegment, customerTypology, selectsReducer, getMasterDataFields, consultListWithParameterUbication, consultListByCatalogType } = this.props;
+        const { segment, subSegment, customerTypology, selectsReducer, getMasterDataFields, consultListWithParameterUbication } = this.props;
         const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
         segment.onChange(idSegment);
+
+        this._changeCatalogSubsegment(segment, subSegment, firstConsult);
 
         if (!_.isUndefined(value)) {
             if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {
@@ -60,9 +79,6 @@ export class InfoClient extends React.Component {
             if (!firstConsult) {
                 customerTypology.onChange('');
             }
-
-            consultListByCatalogType(constants.SUBSEGMENTS, idSegment, constants.SUBSEGMENTS);
-            subSegment.onChange(firstConsult ? subSegment : '');
         }
     }
 
@@ -145,7 +161,7 @@ export class InfoClient extends React.Component {
                                 valueProp={'id'}
                                 textProp={'value'}
                                 parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.SUBSEGMENTS)}
+                                data={this.state.subSegments}
                                 touched={true}
                                 showEmptyObject={true}
                             />
