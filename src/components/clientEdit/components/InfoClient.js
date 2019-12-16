@@ -51,9 +51,6 @@ export class InfoClient extends React.Component {
         const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
         segment.onChange(idSegment);
 
-        consultListByCatalogType(constants.SUBSEGMENTS, idSegment, constants.SUBSEGMENTS);
-        subSegment.onChange(firstConsult ? subSegment : '');
-
         if (!_.isUndefined(value)) {
             if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {
                 consultListWithParameterUbication(constants.CUSTOMER_TYPOLOGY, idSegment);
@@ -63,6 +60,9 @@ export class InfoClient extends React.Component {
             if (!firstConsult) {
                 customerTypology.onChange('');
             }
+
+            consultListByCatalogType(constants.SUBSEGMENTS, idSegment, constants.SUBSEGMENTS);
+            subSegment.onChange(firstConsult ? subSegment : '');
         }
     }
 
