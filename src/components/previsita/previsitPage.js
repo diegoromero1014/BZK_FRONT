@@ -11,7 +11,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import { PREVISIT_TYPE } from '../selectsComponent/constants';
 import { getMasterDataFields } from '../selectsComponent/actions';
 import { redirectUrl } from '../globalComponents/actions';
-import { PermissionUserReports } from '../commercialReport/permissionsUserReports';
+import PermissionUserReports from "../commercialReport/permissionsUserReports";
 import { buildJsoncommercialReport } from '../commercialReport/functionsGenerics';
 import moment from 'moment';
 
@@ -183,9 +183,13 @@ export class PrevisitPage extends Component {
                "endTime": previsit.durationPreVisit,
                "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), isDraft)
             };            
+
             dispatchShowLoading(true, MESSAGE_SAVE_DATA);
+
             const responseCreatePrevisit = await dispatchCreatePrevisit(previsitRequest);
+
             dispatchShowLoading(false, "");
+
             if (!_.get(responseCreatePrevisit, 'payload.data.validateLogin') || _.get(responseCreatePrevisit, 'payload.data.validateLogin') === 'false') {
                redirectUrl("/login");
             } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_SUCCESS) {
@@ -201,7 +205,7 @@ export class PrevisitPage extends Component {
       }
    }
 
-   validateDatePrevisit = async (previsit) => {
+   validateDatePrevisit = async previsit => {
       const { dispatchValidateDatePrevisit, dispatchSwtShowMessage } = this.props;
       let visitTime = parseInt(moment(previsit.visitTime).startOf('minute').format('x'));
       let endVisitTime = parseInt(moment(previsit.visitTime).add(previsit.endTime, 'h').startOf('minute').format('x'));
