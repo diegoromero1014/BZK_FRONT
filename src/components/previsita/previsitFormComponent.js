@@ -14,62 +14,79 @@ import { TITLE_MESSAGE_TARGET } from './constants';
 import '../../../styles/field/main.scss'; 
 
 export class PrevisitFormComponent extends Component {
-    constructor(props) {
+   constructor(props) {
       super(props);
       this.state = {
-        fields: {
-          type: {
-            name: 'Tipo de visita',
-            nullable: false,
-            message: 'asdasdasd'
-          },
-          date: {
-            name: 'Fecha',
-            nullable: false,
-            message: null
-          },
-          duration: {
-            name: 'Duración previsita - horas',
-            nullable: false,
-            message: null
-          },
+         fields: {
+            type: {
+               name: 'Tipo de visita',
+               nullable: false,
+               message: 'asdasdasd'
+            },
 
-          place: {
-            name: 'Lugar',
-            nullable: false,
-            message: null
-          }
-        }
+            date: {
+               name: 'Fecha',
+               nullable: false,
+               message: null
+            },
+
+            duration: {
+               name: 'Duración previsita - horas',
+               nullable: false,
+               message: null
+            },
+
+            place: {
+               name: 'Lugar',
+               nullable: false,
+               message: null
+            },
+            objective: {
+               name: 'Objectivo de la reunión', 
+               nulltable: true,
+               message: TITLE_MESSAGE_TARGET
+            }
+         }
       }
    }
 
-   componentWillMount() {
-   }
-
    renderMessageError = err => (
-    <div>
-        <div className="ui pointing red basic label"> {err} </div>
-    </div>
-  );
+      <div>
+         <div className="ui pointing red basic label"> {err} </div>
+      </div>
+   );
 
-  renderLabel = ({name, message, nullable}) => (
-    <div style={{ display: 'flex', 'flex-direction': 'row', 'justify-content': 'space-between' }}>
-        <strong style={{ marginBottom: 10 }}>
-            <span>{`${name}  ${!nullable ? '(' : ''} `} </span>
+   renderLabel = ({name, message, nullable}) => (
+      <div style={{ display: 'flex', 'flex-direction': 'row', 'justify-content': 'space-between' }}>
+         <strong style={{ marginBottom: 10 }}>
+               <span>{`${name}  ${!nullable ? '(' : ''} `} </span>
+               {!nullable && <span style={{ color: 'red' }}>*</span>} 
+               {!nullable && ' )' }
+         </strong>
+
+         {message !== null && 
+            <Tooltip text={message}>
+               <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
+            </Tooltip>
+         }
+      </div>
+   );
+
+   renderTitle = ({name, message, nullable}) => (
+      <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+         <span>{`${name}  ${!nullable ? '(' : ''} `} </span>
             {!nullable && <span style={{ color: 'red' }}>*</span>} 
             {!nullable && ' )' }
-        </strong>
+         
+         <Tooltip text={message}>
+            <i className="help circle icon blue" style={{ fontSize: "18px", cursor: "pointer", marginLeft: "10px" }} />
+         </Tooltip>
+      </div>
+   );
 
-        {message !== null && 
-          <Tooltip text={message}>
-            <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
-          </Tooltip>
-        }
-    </div>
-  );
    render() {      
-     const { fields: { type, date, duration, place } } = this.state;
-     const { previsitTypes } = this.props;
+      const { fields: { type, date, duration, place, objective } } = this.state;
+      const { previsitTypes } = this.props;
      
       return (
          <div>                   
@@ -103,7 +120,7 @@ export class PrevisitFormComponent extends Component {
                                   data={previsitTypes}
                                   className='field-input'
                               />
-                              <ErrorMessage name="typeVisit" component={'div'} >
+                              <ErrorMessage name=" " component={'div'} >
                                 {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
@@ -192,15 +209,7 @@ export class PrevisitFormComponent extends Component {
 
               <Row style={{ padding: "20px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
-                      <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                          <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
-                          <i className="book icon" style={{ fontSize: "18px" }} />
-                          <span style={{ fontSize: "20px" }}> Objetivo de la reunión (<span style={{ color: "red" }}>*</span>)</span>
-                          
-                          <Tooltip text={TITLE_MESSAGE_TARGET}>
-                            <i className="help circle icon blue" style={{ fontSize: "18px", cursor: "pointer", marginLeft: "0px" }} />
-                          </Tooltip>
-                      </div>
+                     {this.renderTitle(objective)}
                   </Col>
               </Row>
 
@@ -220,7 +229,7 @@ export class PrevisitFormComponent extends Component {
                                  style={{ width: '100%', height: '178px' }}
                                  readOnly={false}
                               />
-                              <ErrorMessage name="place" component={'div'} >
+                              <ErrorMessage name="targetPrevisit" component={'div'} >
                                  {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
@@ -247,12 +256,13 @@ export default withFormik({
       const { previsitData } = props;                  
       
          return {
-            typeVisit: undefined,
+            typeVisit: '',
             date: new Date(),
             duration: '',
             place: '',
             targetPrevisit: ''
          }
       
-   }
+   },
+   validationSchema: schema
 })(PrevisitFormComponent);
