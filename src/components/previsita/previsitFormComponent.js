@@ -218,8 +218,6 @@ export class PrevisitFormComponent extends Component {
                      <Field type="text" name="targetPrevisit">
                         {({ field: { value, name }, form: { setFieldValue } }) =>
                            <div>
-                              {this.renderLabel(place)}
-                              
                               <RichText
                                  name="targetPrevisit"
                                  id="targetPrevisit"
