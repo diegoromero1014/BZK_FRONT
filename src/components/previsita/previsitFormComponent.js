@@ -96,7 +96,7 @@ export class PrevisitFormComponent extends Component {
      
       return (
          <div>                   
-            <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>  
+            <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>               
               <Row style={{ padding: "10px 10px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
                       <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
