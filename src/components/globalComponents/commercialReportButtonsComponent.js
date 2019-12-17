@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SAVE_DRAFT, SAVE_PUBLISHED, AFIRMATIVE_ANSWER, CANCEL } from '../../constantsGlobal';
+import { SAVE_DRAFT, SAVE_PUBLISHED } from '../../constantsGlobal';
 
 class CommercialReportButtonsComponent extends Component {
 
@@ -8,7 +8,7 @@ class CommercialReportButtonsComponent extends Component {
     }
 
     render() {
-        const {onClickSave, cancel} = this.props;
+        const { onClickSave, cancel } = this.props;
         return (
             <div style={{
                 position: "fixed",

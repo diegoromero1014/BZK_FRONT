@@ -5,7 +5,7 @@ import HeaderPrevisita from './headerPrevisita';
 import PrevisitFormComponent from './previsitFormComponent'
 import { detailPrevisit, canEditPrevisita, disableBlockedReport, clearPrevisitDetail, validateDatePreVisit, createPrevisit } from "./actions";
 import { showLoading } from '../loading/actions';
-import { TIME_REQUEST_BLOCK_REPORT, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, EDITAR, REQUEST_ERROR, MESSAGE_SAVE_DATA, REQUEST_INVALID_INPUT, REQUEST_SUCCESS } from '../../constantsGlobal';
+import { TIME_REQUEST_BLOCK_REPORT, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, EDITAR, REQUEST_ERROR, MESSAGE_SAVE_DATA, REQUEST_INVALID_INPUT, REQUEST_SUCCESS, AFIRMATIVE_ANSWER, CANCEL } from '../../constantsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { Row, Col } from 'react-flexbox-grid';
 import { PREVISIT_TYPE } from '../selectsComponent/constants';
@@ -17,28 +17,30 @@ import moment from 'moment';
 import _ from 'lodash';
 import { ComponentClientInformationURL, LoginComponentURL } from '../../constantsAnalytics';
 import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure } from './participantsActions';
-import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_CREATE_ERROR, TITLE_PREVISIT_EDIT, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_INVALID_INPUT } from './constants';
+import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_CREATE_ERROR, TITLE_PREVISIT_EDIT, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_INVALID_INPUT, TITLE_EXIT_CONFIRMATION, MESSAGE_EXIT_CONFIRMATION } from './constants';
 import { setConfidential, addUsers } from '../commercialReport/actions';
 import CommercialReportButtonsComponent from '../globalComponents/commercialReportButtonsComponent';
+import SweetAlert from "../sweetalertFocus";
 
 export class PrevisitPage extends Component {
 
    constructor(props) {
       super(props);
+      
+      this.state = {
+         isEditable: false,
+         showErrorBlockedPreVisit: false,
+         showMessage: false,
+         userEditingPrevisita: "",
+         shouldRedirect: false,
+         intervalId: null,
+         isMounted: false,
+         renderForm: false,
+         previsitTypes: [],
+         showConfirmationCancelPrevisit: false,
+         documentDraft: null,
+      };
    }
-
-   state = {
-      isEditable: false,
-      showErrorBlockedPreVisit: false,
-      showMessage: false,
-      userEditingPrevisita: "",
-      shouldRedirect: false,
-      intervalId: null,
-      isMounted: false,
-      renderForm: false,
-      previsitTypes: [],
-      showConfirmationCancelPrevisit: false
-   };
 
    componentWillMount() {
       const { clientInformacion } = this.props;
@@ -191,7 +193,7 @@ export class PrevisitPage extends Component {
       return previsitParticipants;
    }
 
-   submitForm = async (previsit, documentStatus) => {
+   submitForm = async (previsit) => {      
       const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer } = this.props;
       const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);      
       if (validateDatePrevisitResponse) {                  
@@ -215,9 +217,9 @@ export class PrevisitPage extends Component {
             "adaptMessage": previsit.adaptMessage,
             "controlConversation": previsit.controlConversation,
             "constructiveTension": previsit.constructiveTension,
-            "documentStatus": documentStatus,
+            "documentStatus": this.state.documentDraft,
             "endTime": previsit.duration,
-            "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), documentStatus)
+            "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), this.state.documentDraft)
          };         
          dispatchShowLoading(true, MESSAGE_SAVE_DATA);
          const responseCreatePrevisit = await dispatchCreatePrevisit(previsitRequest);
@@ -233,10 +235,6 @@ export class PrevisitPage extends Component {
             dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertError(id));
          }
       }
-   }
-
-   onClickSaveCommercialReport = (isDraft) => {
-      this.submitForm({}, isDraft);
    }
 
    onClickCancelCommercialReport = () => {
@@ -275,11 +273,19 @@ export class PrevisitPage extends Component {
 
    renderForm = () => {
       const { previsitReducer, selectsReducer } = this.props;
-      return <PrevisitFormComponent
-               previsitData={previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null}
-               previsitTypes={selectsReducer.get(PREVISIT_TYPE)}
-               isEditable={this.state.isEditable}
-               onSubmit={this.submitForm} />;
+      return (
+         <PrevisitFormComponent
+            previsitData={previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null}
+            previsitTypes={selectsReducer.get(PREVISIT_TYPE)}
+            isEditable={this.state.isEditable}
+            onSubmit={this.submitForm} 
+         >
+            <CommercialReportButtonsComponent 
+               onClickSave={draft => this.setState({ documentDraft: draft })} 
+               cancel={this.onClickCancelCommercialReport}
+            />
+         </PrevisitFormComponent>
+      )
    }
 
    render() {
@@ -311,9 +317,6 @@ export class PrevisitPage extends Component {
             {
                this.state.renderForm ? this.renderForm() : null
             }
-            <div>
-               <CommercialReportButtonsComponent onClickSave={this.onClickSaveCommercialReport} cancel={this.onClickCancelCommercialReport}/>
-            </div>
             <SweetAlert
                type="warning"
                show={this.state.showConfirmationCancelPrevisit}
