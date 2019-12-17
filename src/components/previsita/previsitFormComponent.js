@@ -320,19 +320,7 @@ export class PrevisitFormComponent extends Component {
                         </button>
                     </div>
                 </div>
-            </Form>
-
-            <SweetAlert
-               type="warning"
-               show={this.state.showConfirmationCancelPrevisit}
-               title={TITLE_EXIT_CONFIRMATION}
-               text={MESSAGE_EXIT_CONFIRMATION}
-               confirmButtonColor='#DD6B55'
-               confirmButtonText={AFIRMATIVE_ANSWER}
-               cancelButtonText={CANCEL}
-               showCancelButton={true}
-               onCancel={() => this.setState({ showConfirmationCancelPrevisit: false })}
-               onConfirm={this.redirectToClientInformation} />
+            </Form>            
          </div>         
       )
    }

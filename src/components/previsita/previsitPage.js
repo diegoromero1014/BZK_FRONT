@@ -19,6 +19,7 @@ import { ComponentClientInformationURL, LoginComponentURL } from '../../constant
 import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure } from './participantsActions';
 import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_CREATE_ERROR, TITLE_PREVISIT_EDIT, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_INVALID_INPUT } from './constants';
 import { setConfidential, addUsers } from '../commercialReport/actions';
+import CommercialReportButtonsComponent from '../globalComponents/commercialReportButtonsComponent';
 
 export class PrevisitPage extends Component {
 
@@ -35,7 +36,8 @@ export class PrevisitPage extends Component {
       intervalId: null,
       isMounted: false,
       renderForm: false,
-      previsitTypes: []
+      previsitTypes: [],
+      showConfirmationCancelPrevisit: false
    };
 
    componentWillMount() {
@@ -233,6 +235,20 @@ export class PrevisitPage extends Component {
       }
    }
 
+   onClickSaveCommercialReport = (isDraft) => {
+      this.submitForm({}, isDraft);
+   }
+
+   onClickCancelCommercialReport = () => {
+      this.setState({ showConfirmationCancelPrevisit: true });
+   }
+
+   redirectToClientInformation = () => {
+      this.setState({ showConfirmationCancelPrevisit: false });
+      redirectUrl(ComponentClientInformationURL);
+   }
+
+
    renderTitleSubmitAlert = (id) => {      
       return id ? TITLE_PREVISIT_EDIT : TITLE_PREVISIT_CREATE;
    }
@@ -295,6 +311,20 @@ export class PrevisitPage extends Component {
             {
                this.state.renderForm ? this.renderForm() : null
             }
+            <div>
+               <CommercialReportButtonsComponent onClickSave={this.onClickSaveCommercialReport} cancel={this.onClickCancelCommercialReport}/>
+            </div>
+            <SweetAlert
+               type="warning"
+               show={this.state.showConfirmationCancelPrevisit}
+               title={TITLE_EXIT_CONFIRMATION}
+               text={MESSAGE_EXIT_CONFIRMATION}
+               confirmButtonColor='#DD6B55'
+               confirmButtonText={AFIRMATIVE_ANSWER}
+               cancelButtonText={CANCEL}
+               showCancelButton={true}
+               onCancel={() => this.setState({ showConfirmationCancelPrevisit: false })}
+               onConfirm={this.redirectToClientInformation} />
          </div>
       )
    }
