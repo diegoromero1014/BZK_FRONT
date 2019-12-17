@@ -12,8 +12,13 @@ import { PREVISIT_TYPE } from '../selectsComponent/constants';
 import { getMasterDataFields } from '../selectsComponent/actions';
 import { redirectUrl } from '../globalComponents/actions';
 import PermissionUserReports from "../commercialReport/permissionsUserReports";
-import { buildJsoncommercialReport } from '../commercialReport/functionsGenerics';
+import { buildJsoncommercialReport, fillUsersPermissions } from '../commercialReport/functionsGenerics';
 import moment from 'moment';
+import _ from 'lodash';
+import { ComponentClientInformationURL, LoginComponentURL } from '../../constantsAnalytics';
+import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure } from './participantsActions';
+import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_CREATE_ERROR, TITLE_PREVISIT_EDIT, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_INVALID_INPUT } from './constants';
+import { setConfidential, addUsers } from '../commercialReport/actions';
 
 export class PrevisitPage extends Component {
 
@@ -35,7 +40,7 @@ export class PrevisitPage extends Component {
 
    componentWillMount() {
       const { clientInformacion } = this.props;
-      const infoClient = clientInformacion.get('responseClientInfo');
+      const infoClient = clientInformacion.get('responseClientInfo');      
       /* 
             if (_.isEmpty(infoClient)) {
                redirectUrl(ComponentClientInformationURL)
@@ -56,7 +61,7 @@ export class PrevisitPage extends Component {
    }
 
    componentWillUnmount() {
-      const { dispatchDisabledBlockedReport, dispatchClearPrevisitDetail, params: { id } } = this.props;
+      const { dispatchDisabledBlockedReport, dispatchClearPrevisitDetail, dispatchSetConfidential, params: { id } } = this.props;
 
       // Detener envio de peticiones para bloquear el informe
       clearInterval(this.state.intervalId)
@@ -68,16 +73,20 @@ export class PrevisitPage extends Component {
          dispatchDisabledBlockedReport(id);
       }
       dispatchClearPrevisitDetail();
+      dispatchSetConfidential(false);
    }
 
    getPrevisitData = async (id) => {
-      const { dispatchDetailPrevisit } = this.props;
+      const { dispatchDetailPrevisit, dispatchSetConfidential, dispatchAddUsers } = this.props;
       if (id) {
-         await dispatchDetailPrevisit(id);
+         const previsitDetail = await dispatchDetailPrevisit(id);
+         dispatchSetConfidential(previsitDetail.payload.data.data.commercialReport.isConfidential);         
+         fillUsersPermissions(previsitDetail.payload.data.data.commercialReport.usersWithPermission, dispatchAddUsers);
          this.setState({
             isEditable: true
          });
       } else {
+         dispatchSetConfidential(false);
          this.setState({
             isEditable: false
          });
@@ -158,60 +167,91 @@ export class PrevisitPage extends Component {
       dispatchShowLoading(false, "");
    }
 
-   submitForm = async (previsit, isDraft) => {
-      const { dispatchShowLoading, dispatchCreatePrevisit, usersPermission, confidentialReducer } = this.props;
+   getPrevisitParticipants = () => {
+      const { participants } = this.props;
+      const participantsList = participants ? participants.toArray() : [];
+      let previsitParticipants = {
+         clientParticipants: [],
+         bankParticipants: [],
+         otherParticipants: []
+      };
+      previsitParticipants.clientParticipants = participantsList
+         .filter(participantIsClient)
+         .map(changeParticipantClientDataStructure);
+
+      previsitParticipants.bankParticipants = participantsList
+         .filter(participantIsBank)
+         .map(changeParticipantBankDataStructure);
+
+      previsitParticipants.otherParticipants = participantsList
+         .filter(participantIsOther)
+         .map(changeParticipantOtherDataStructure);      
+      return previsitParticipants;
+   }
+
+   submitForm = async (previsit, documentStatus) => {
+      const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer } = this.props;
       const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);      
-
-      try {
-         if (validateDatePrevisitResponse) {
-            const previsitRequest = {
-               "id": null,
-               "client": window.sessionStorage.getItem('idClientSelected'),
-               "visitTime": parseInt(moment(previsit.datePreVisit).format('x')),
-               "participatingContacts": previsit.dataClient.length === 0 ? null : dataClient,
-               "participatingEmployees": previsit.dataBanco.length === 0 ? null : dataBanco,
-               "relatedEmployees": previsit.dataOthers.length === 0 ? null : dataOthers,
-               "principalObjective": previsit.targetPrevisit,
-               "documentType": previsit.typePreVisit,
-               "visitLocation": previsit.lugarPrevisit,
-               "observations": previsit.pendingPrevisit,
-               "clientTeach": previsit.clientTeach,
-               "adaptMessage": previsit.adaptMessage,
-               "controlConversation": previsit.controlConversation,
-               "constructiveTension": previsit.constructiveTension,
-               "documentStatus": typeButtonClick,
-               "endTime": previsit.durationPreVisit,
-               "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), isDraft)
-            };            
-
-            dispatchShowLoading(true, MESSAGE_SAVE_DATA);
-
-            const responseCreatePrevisit = await dispatchCreatePrevisit(previsitRequest);
-
-            dispatchShowLoading(false, "");
-
-            if (!_.get(responseCreatePrevisit, 'payload.data.validateLogin') || _.get(responseCreatePrevisit, 'payload.data.validateLogin') === 'false') {
-               redirectUrl("/login");
-            } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_SUCCESS) {
-               swtShowMessage('success', "Creación previsita", "Señor usuario, la previsita se creó de forma exitosa.", { onConfirmCallback: redirectUrl("/dashboard/clientInformation") });
-            } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_INVALID_INPUT) {
-               swtShowMessage('error', "Creación previsita", "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.");
-            } else {
-               swtShowMessage('error', "Creación previsita", "Señor usuario, ocurrió un error creando la previsita.");
-            }
+      if (validateDatePrevisitResponse) {                  
+         const previsitParticipants = this.getPrevisitParticipants();         
+         if(!previsitParticipants.bankParticipants.length){
+            dispatchSwtShowMessage('error', TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS);
+            return; 
          }
-      } catch (error) {
-         swtShowMessage('error', "Creación previsita", "Señor usuario, ocurrió un error creando la previsita.");
+         const previsitRequest = {
+            "id": id,
+            "client": window.sessionStorage.getItem('idClientSelected'),
+            "visitTime": parseInt(moment(previsit.date).format('x')),
+            "participatingContacts": previsitParticipants.clientParticipants.length ? previsitParticipants.clientParticipants : null,
+            "participatingEmployees": previsitParticipants.bankParticipants.length ? previsitParticipants.bankParticipants : null,
+            "relatedEmployees": previsitParticipants.otherParticipants.length ? previsitParticipants.otherParticipants : null,
+            "principalObjective": previsit.targetPrevisit,
+            "documentType": previsit.typeVisit,
+            "visitLocation": previsit.place,
+            "observations": previsit.pendingPrevisit,
+            "clientTeach": previsit.clientTeach,
+            "adaptMessage": previsit.adaptMessage,
+            "controlConversation": previsit.controlConversation,
+            "constructiveTension": previsit.constructiveTension,
+            "documentStatus": documentStatus,
+            "endTime": previsit.duration,
+            "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), documentStatus)
+         };         
+         dispatchShowLoading(true, MESSAGE_SAVE_DATA);
+         const responseCreatePrevisit = await dispatchCreatePrevisit(previsitRequest);
+         dispatchShowLoading(false, "");
+
+         if (!_.get(responseCreatePrevisit, 'payload.data.validateLogin') || _.get(responseCreatePrevisit, 'payload.data.validateLogin') === 'false') {
+            redirectUrl(LoginComponentURL);
+         } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_SUCCESS) {
+            dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertSuccess(id), { onConfirmCallback: redirectUrl(ComponentClientInformationURL) });
+         } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_INVALID_INPUT) {
+            dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), MESSAGE_PREVISIT_INVALID_INPUT);
+         } else {
+            dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertError(id));
+         }
       }
+   }
+
+   renderTitleSubmitAlert = (id) => {      
+      return id ? TITLE_PREVISIT_EDIT : TITLE_PREVISIT_CREATE;
+   }
+
+   renderMessageSubmitAlertSuccess = (id) => {
+      return id ? MESSAGE_PREVISIT_EDIT_SUCCESS : MESSAGE_PREVISIT_CREATE_SUCCESS;
+   }
+
+   renderMessageSubmitAlertError = (id) => {
+      return id ? MESSAGE_PREVISIT_EDIT_ERROR : MESSAGE_PREVISIT_CREATE_ERROR;
    }
 
    validateDatePrevisit = async previsit => {
       const { dispatchValidateDatePrevisit, dispatchSwtShowMessage } = this.props;
-      let visitTime = parseInt(moment(previsit.visitTime).startOf('minute').format('x'));
-      let endVisitTime = parseInt(moment(previsit.visitTime).add(previsit.endTime, 'h').startOf('minute').format('x'));
+      let visitTime = parseInt(moment(previsit.date).startOf('minute').format('x'));
+      let endVisitTime = parseInt(moment(visitTime).add(previsit.duration, 'h').startOf('minute').format('x'));
       const response = await dispatchValidateDatePrevisit(visitTime, endVisitTime);
-      if (response.status == REQUEST_ERROR) {
-         dispatchSwtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', response.data);
+      if (response.payload.data.status == REQUEST_ERROR) {
+         dispatchSwtShowMessage(MESSAGE_ERROR, 'Vigencia de fechas', response.payload.data.data);
          return false;
       }
       return true;
@@ -219,27 +259,17 @@ export class PrevisitPage extends Component {
 
    renderForm = () => {
       const { previsitReducer, selectsReducer } = this.props;
-      return (
-         <div>            
-            <PrevisitFormComponent
+      return <PrevisitFormComponent
                previsitData={previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null}
                previsitTypes={selectsReducer.get(PREVISIT_TYPE)}
                isEditable={this.state.isEditable}
-               onSubmit={this.submitForm} />
-         </div>);
+               onSubmit={this.submitForm} />;
    }
 
    render() {
       return (
          <div>
             <HeaderPrevisita />
-            <div>
-               <Row>
-                  <Col xs={12} md={12} lg={12}>
-                     <PermissionUserReports />
-                  </Col>
-               </Row>
-            </div>
             <div style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
                <Row style={{ padding: "5px 10px 0px 20px" }}>
                   <Col xs={10} sm={10} md={10} lg={10}>
@@ -255,8 +285,13 @@ export class PrevisitPage extends Component {
                         </button>
                      }
                   </Col>
-               </Row>               
-            </div>            
+               </Row>
+               <Row>
+                  <Col xs={12} md={12} lg={12}>
+                     <PermissionUserReports />
+                  </Col>
+               </Row>
+            </div>
             {
                this.state.renderForm ? this.renderForm() : null
             }
@@ -275,18 +310,21 @@ function mapDispatchToProps(dispatch) {
       dispatchClearPrevisitDetail: clearPrevisitDetail,
       dispatchGetMasterDataFields: getMasterDataFields,
       dispatchValidateDatePrevisit: validateDatePreVisit,
-      dispatchCreatePrevisit: createPrevisit
+      dispatchCreatePrevisit: createPrevisit,
+      dispatchSetConfidential: setConfidential,
+      dispatchAddUsers: addUsers
    }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, selectsReducer, usersPermission, confidentialReducer }) {
+function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, selectsReducer, usersPermission, confidentialReducer, participants }) {
    return {
       clientInformacion,
       previsitReducer,
       reducerGlobal,
       selectsReducer,
       usersPermission,
-      confidentialReducer
+      confidentialReducer,
+      participants
    };
 }
 

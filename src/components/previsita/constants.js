@@ -27,4 +27,20 @@ export const TITLE_MESSAGE_TARGET = "En este campo deberá registrar de manera c
 
 export const TITLE_MESSAGE_PENDIENT = "En este campo se deberá registrar los pendientes quejas o reclamos que tenga el cliente y que podrán ser motivo de conversación en la reunión.";
 
+export const TITLE_EXIT_CONFIRMATION = 'Confirmación salida';
+export const MESSAGE_EXIT_CONFIRMATION = '¿Está seguro que desea salir de la pantalla de creación de previsita?';
+
+export const TITLE_ERROR_PARTICIPANTS = 'Error participantes';
+export const MESSAGE_ERROR_PARTICIPANTS = "Señor usuario, para guardar una previsita como mínimo debe agregar un participante por parte del Grupo Bancolombia.";
+
+export const TITLE_PREVISIT_CREATE = "Creación previsita";
+export const TITLE_PREVISIT_EDIT = "Edición previsita";
+
+export const MESSAGE_PREVISIT_CREATE_SUCCESS = "Señor usuario, la previsita se creó de forma exitosa.";
+export const MESSAGE_PREVISIT_EDIT_SUCCESS = "Señor usuario, la previsita se editó de forma exitosa.";
+
+export const MESSAGE_PREVISIT_INVALID_INPUT = "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.";
+
+export const MESSAGE_PREVISIT_CREATE_ERROR = "Señor usuario, ocurrió un error creando la previsita.";
+export const MESSAGE_PREVISIT_EDIT_ERROR = "Señor usuario, ocurrió un error editando la previsita.";
 

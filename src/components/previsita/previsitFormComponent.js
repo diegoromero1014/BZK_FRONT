@@ -9,9 +9,16 @@ import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import RichText from '../richText/richTextComponent';
 import Participants from './participants';
 
-import { TITLE_MESSAGE_TARGET, TITLE_MESSAGE_PENDIENT } from './constants';
+import { TITLE_MESSAGE_TARGET, TITLE_MESSAGE_PENDIENT, TITLE_EXIT_CONFIRMATION, MESSAGE_EXIT_CONFIRMATION } from './constants';
 
 import '../../../styles/field/main.scss'; 
+import { SAVE_DRAFT, SAVE_PUBLISHED, AFIRMATIVE_ANSWER, CANCEL } from '../../constantsGlobal';
+import {ComponentClientInformationURL} from "../../constantsAnalytics";
+import SweetAlert from '../sweetalertFocus';
+import { redirectUrl } from '../globalComponents/actions';
+
+
+let documentStatus = null;
 
 export class PrevisitFormComponent extends Component {
    constructor(props) {
@@ -52,8 +59,9 @@ export class PrevisitFormComponent extends Component {
                message: TITLE_MESSAGE_PENDIENT
             }
          },
-         type: null
-      }
+         type: null,         
+         showConfirmationCancelPrevisit: false
+      };
    }
 
    renderMessageError = err => (
@@ -89,6 +97,15 @@ export class PrevisitFormComponent extends Component {
          </Tooltip>
       </div>
    );
+
+   cancelSavePrevisit = () => {
+      this.setState({ showConfirmationCancelPrevisit: true });
+   };
+
+   redirectToClientInformation = () => {
+      this.setState({ showConfirmationCancelPrevisit: false });
+      redirectUrl(ComponentClientInformationURL);
+   }
 
    render() {      
       const { fields: { type, date, duration, place, objective, pending } } = this.state;
@@ -270,19 +287,60 @@ export class PrevisitFormComponent extends Component {
                     </Col>
                 </Row>
 
-               <Row style={{ padding: "0px 23px 20px 20px" }}>
-                  <button type="submit">Prueba</button>
-               </Row>
+                <div style={{
+                    position: "fixed",
+                    border: "1px solid #C2C2C2",
+                    bottom: "0px",
+                    width: "100%",
+                    marginBottom: "0px",
+                    backgroundColor: "#F8F8F8",
+                    height: "50px",
+                    background: "rgba(255,255,255,0.75)"
+                }}>
+                    <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
+                        <button className="btn" type="submit" onClick={() => documentStatus = SAVE_DRAFT} style={{
+                            float: "right",
+                            margin: "8px 0px 0px 8px",
+                            position: "fixed",
+                            backgroundColor: "#00B5AD"
+                        }}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
+                        </button>
+                        <button className="btn" type="submit" onClick={() => documentStatus = SAVE_PUBLISHED}
+                            style={{ float: "right", margin: "8px 0px 0px 250px", position: "fixed" }}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
+                        </button>
+                        <button className="btn" type="button" onClick={() => this.cancelSavePrevisit()} style={{
+                            float: "right",
+                            margin: "8px 0px 0px 450px",
+                            position: "fixed",
+                            backgroundColor: "rgb(193, 193, 193)"
+                        }}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
+                        </button>
+                    </div>
+                </div>
             </Form>
-         </div>
+
+            <SweetAlert
+               type="warning"
+               show={this.state.showConfirmationCancelPrevisit}
+               title={TITLE_EXIT_CONFIRMATION}
+               text={MESSAGE_EXIT_CONFIRMATION}
+               confirmButtonColor='#DD6B55'
+               confirmButtonText={AFIRMATIVE_ANSWER}
+               cancelButtonText={CANCEL}
+               showCancelButton={true}
+               onCancel={() => this.setState({ showConfirmationCancelPrevisit: false })}
+               onConfirm={this.redirectToClientInformation} />
+         </div>         
       )
    }
 }
 
 export default withFormik({
-   handleSubmit: (values, { setSubmitting }) => {
-      console.log(values);
-      debugger;
+   handleSubmit: (values, { props, setSubmitting }) => {
+      props.onSubmit(values, documentStatus);
    },
    mapPropsToValues: (props) => {
       const { previsitData } = props;                  
