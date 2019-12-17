@@ -48,7 +48,7 @@ export class InfoClient extends React.Component {
         this._checkSubSegmentRender();
     }
 
-    _changeCatalogSubsegment(segment, subSegment, firstConsult){
+    _changeCatalogSubsegment(segment, subSegment){
         const { consultListByCatalogType, clientInformacion } = this.props;
         consultListByCatalogType(constants.SUBSEGMENTS, segment.value, constants.SUBSEGMENTS).then((data) => {
             this.setState({
@@ -59,7 +59,7 @@ export class InfoClient extends React.Component {
         if (!_.isEqual(clientInformacion.get('responseClientInfo').segment, segment.value)) {
             subSegment.onChange('');
         } else {
-            subSegment.onChange(firstConsult ? subSegment : '');
+            subSegment.onChange(subSegment.value);
         }
     }
 
@@ -68,7 +68,7 @@ export class InfoClient extends React.Component {
         const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
         segment.onChange(idSegment);
 
-        this._changeCatalogSubsegment(segment, subSegment, firstConsult);
+        this._changeCatalogSubsegment(segment, subSegment);
 
         if (!_.isUndefined(value)) {
             if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {

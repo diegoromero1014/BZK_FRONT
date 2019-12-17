@@ -88,7 +88,7 @@ describe('Test ClientEdit/InfoClient', () => {
     it('should not clear subSegment when segment did not change', () => {
         const wrapper = shallow(<InfoClient {...defaultProps} />);
 
-        wrapper.instance()._changeCatalogSubsegment(segment, subSegment, false);
+        wrapper.instance()._changeCatalogSubsegment(segment, subSegment);
         expect(consultListByCatalogType.called).equal(true);
     });
 
@@ -99,7 +99,7 @@ describe('Test ClientEdit/InfoClient', () => {
         }
         const wrapper = shallow(<InfoClient segment={segment} {...defaultProps} />);
 
-        wrapper.instance()._changeCatalogSubsegment(segment, subSegment, true);
+        wrapper.instance()._changeCatalogSubsegment(segment, subSegment);
         expect(consultListByCatalogType.called).equal(true);
     });
 });
