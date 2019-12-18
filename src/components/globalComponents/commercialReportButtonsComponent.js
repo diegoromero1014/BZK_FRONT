@@ -8,7 +8,7 @@ class CommercialReportButtonsComponent extends Component {
     }
 
     render() {
-        const { onClickSave, cancel } = this.props;
+        const { onClickSave, onClickDownloadPDF, cancel } = this.props;
         return (
             <div style={{
                 position: "fixed",
@@ -20,23 +20,25 @@ class CommercialReportButtonsComponent extends Component {
                 height: "50px",
                 background: "rgba(255,255,255,0.75)"
             }}>
-                <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
-                    <button className="btn" type="submit" onClick={() => onClickSave(SAVE_DRAFT)} style={{
-                        float: "right",
-                        margin: "8px 0px 0px 8px",
-                        position: "fixed",
+                <div style={{ width: "700px", height: "100%", position: "fixed", right: "0px", textAlign: "end" }}>
+                    <button className="btn" type="submit" onClick={() => onClickSave(SAVE_DRAFT)} style={{                        
+                        margin: "8px 10px 0px 8px",                        
                         backgroundColor: "#00B5AD"
                     }}>
                         <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
                     </button>
                     <button className="btn" type="submit" onClick={() => onClickSave(SAVE_PUBLISHED)}
-                        style={{ float: "right", margin: "8px 0px 0px 250px", position: "fixed" }}>
+                        style={{ margin: "8px 10px 0px 0px"}}>
                         <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
                     </button>
-                    <button className="btn" type="button" onClick={() => cancel()} style={{
-                        float: "right",
-                        margin: "8px 0px 0px 450px",
-                        position: "fixed",
+                    {onClickDownloadPDF ? 
+                        <button className="btn" type="button" onClick={onClickDownloadPDF} 
+                            style={{margin: "8px 10px 0px 0px", backgroundColor: "#eb984e"}}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Descargar pdf</span>
+                        </button> : null    
+                    }                    
+                    <button className="btn" type="button" onClick={cancel} style={{                        
+                        margin: "8px 10px 0px 0px",                        
                         backgroundColor: "rgb(193, 193, 193)"
                     }}>
                         <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>

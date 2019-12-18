@@ -30,6 +30,8 @@ export const TITLE_MESSAGE_PENDIENT = "En este campo se deberá registrar los pe
 export const TITLE_EXIT_CONFIRMATION = 'Confirmación salida';
 export const MESSAGE_EXIT_CONFIRMATION = '¿Está seguro que desea salir de la pantalla de creación de previsita?';
 
+export const TITLE_ERROR_VALIDITY_DATES = 'Vigencia de fechas';
+
 export const TITLE_ERROR_PARTICIPANTS = 'Error participantes';
 export const MESSAGE_ERROR_PARTICIPANTS = "Señor usuario, para guardar una previsita como mínimo debe agregar un participante por parte del Grupo Bancolombia.";
 

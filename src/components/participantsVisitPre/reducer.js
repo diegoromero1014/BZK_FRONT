@@ -35,7 +35,7 @@ export default (state = initialState, action) => {
             return state.clear();
         case contants.FILTER_USER_BANCO:
             return state;
-        case contants.ADD_LIST_PARTICIPANT:
+        case contants.ADD_LIST_PARTICIPANT:            
             return Immutable.List(action.listParticipant);
         default:
             return state;
