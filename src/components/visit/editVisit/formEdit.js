@@ -22,7 +22,7 @@ import PermissionUserReports from "../../commercialReport/permissionsUserReports
 import { redirectUrl } from "../../globalComponents/actions";
 import { createVisti, detailVisit, pdfDescarga, clearIdPrevisit, changeIdPrevisit } from "../actions";
 import { consultDataSelect, consultList, getMasterDataFields } from "../../selectsComponent/actions";
-import { addParticipant, filterUsersBanco, addListParticipant } from "../../participantsVisitPre/actions";
+import { addParticipant, filterUsersBanco, addListParticipant, clearParticipants } from "../../participantsVisitPre/actions";
 import { downloadFilePdf } from "../../clientInformation/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { addTask } from "../tasks/actions";
@@ -485,6 +485,11 @@ class FormEdit extends Component {
             });
             showLoading(false, null);
         });
+    }
+
+    componentWillUnmount() {
+        const { clearParticipants } = this.props;
+        clearParticipants();
     }
 
     _consultInfoPrevisit() {
@@ -989,7 +994,8 @@ function mapDispatchToProps(dispatch) {
         detailPrevisit,
         changeIdPrevisit,
         addUsers,
-        setConfidential
+        setConfidential,
+        clearParticipants
     }, dispatch);
 }
 

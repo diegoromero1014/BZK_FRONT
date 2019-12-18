@@ -89,7 +89,7 @@ class ParticipantesCliente extends Component {
     componentWillMount() {
         const { contactsByClientFindServer, clearParticipants, validatePermissionsByModule } = this.props;
         
-        clearParticipants();
+        //clearParticipants();
         this.props.resetForm();
         contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_CONTACTS, "", 0, "", "", "", "", "");
         validatePermissionsByModule(MODULE_CONTACTS).then((data) => {

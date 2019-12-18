@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import HeaderPrevisita from './headerPrevisita';
 import PrevisitFormComponent from './previsitFormComponent'
-import { detailPrevisit, canEditPrevisita, disableBlockedReport, clearPrevisitDetail, validateDatePreVisit, createPrevisit } from "./actions";
+import { detailPrevisit, canEditPrevisita, disableBlockedReport, clearPrevisitDetail, validateDatePreVisit, createPrevisit, pdfDescarga } from "./actions";
 import { showLoading } from '../loading/actions';
 import { TIME_REQUEST_BLOCK_REPORT, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, EDITAR, REQUEST_ERROR, MESSAGE_SAVE_DATA, REQUEST_INVALID_INPUT, REQUEST_SUCCESS, AFIRMATIVE_ANSWER, CANCEL } from '../../constantsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
@@ -16,11 +16,14 @@ import { buildJsoncommercialReport, fillUsersPermissions } from '../commercialRe
 import moment from 'moment';
 import _ from 'lodash';
 import { ComponentClientInformationURL, LoginComponentURL } from '../../constantsAnalytics';
-import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure } from './participantsActions';
+import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure, fillParticipants } from './participantsActions';
 import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_CREATE_ERROR, TITLE_PREVISIT_EDIT, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_INVALID_INPUT, TITLE_EXIT_CONFIRMATION, MESSAGE_EXIT_CONFIRMATION } from './constants';
 import { setConfidential, addUsers } from '../commercialReport/actions';
 import CommercialReportButtonsComponent from '../globalComponents/commercialReportButtonsComponent';
 import SweetAlert from "../sweetalertFocus";
+import { addListParticipant, clearParticipants } from '../participantsVisitPre/actions';
+import { changeStateSaveData } from '../dashboard/actions';
+import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from '../participantsVisitPre/constants';
 
 export class PrevisitPage extends Component {
 
@@ -65,7 +68,13 @@ export class PrevisitPage extends Component {
    }
 
    componentWillUnmount() {
-      const { dispatchDisabledBlockedReport, dispatchClearPrevisitDetail, dispatchSetConfidential, params: { id } } = this.props;
+      const { 
+         dispatchDisabledBlockedReport, 
+         dispatchClearPrevisitDetail,
+         dispatchSetConfidential,  
+         dispatchClearParticipants,         
+         params: { id } 
+      } = this.props;
 
       // Detener envio de peticiones para bloquear el informe
       clearInterval(this.state.intervalId)
@@ -77,18 +86,28 @@ export class PrevisitPage extends Component {
          dispatchDisabledBlockedReport(id);
       }
       dispatchClearPrevisitDetail();
-      dispatchSetConfidential(false);
+      dispatchSetConfidential(false);    
+      dispatchClearParticipants();  
    }
 
    getPrevisitData = async (id) => {
-      const { dispatchDetailPrevisit, dispatchSetConfidential, dispatchAddUsers } = this.props;
+      const { dispatchDetailPrevisit, dispatchSetConfidential, dispatchAddUsers, dispatchAddListParticipant } = this.props;
       if (id) {
-         const previsitDetail = await dispatchDetailPrevisit(id);
-         dispatchSetConfidential(previsitDetail.payload.data.data.commercialReport.isConfidential);         
-         fillUsersPermissions(previsitDetail.payload.data.data.commercialReport.usersWithPermission, dispatchAddUsers);
+         const response = await dispatchDetailPrevisit(id);
+         const previsitDetail = response.payload.data.data;  
+         let participantsList = [];                
+         let participants = fillParticipants(
+            participantsList.concat(
+               previsitDetail.participatingContacts.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_CLIENT })),
+               previsitDetail.participatingEmployees.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_BANCO })),
+               previsitDetail.relatedEmployees.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_OTHER }))
+         ));         
+         dispatchAddListParticipant(participants);         
+         dispatchSetConfidential(previsitDetail.commercialReport.isConfidential);         
+         fillUsersPermissions(previsitDetail.commercialReport.usersWithPermission, dispatchAddUsers);
          this.setState({
             isEditable: true
-         });
+         });         
       } else {
          dispatchSetConfidential(false);
          this.setState({
@@ -241,6 +260,11 @@ export class PrevisitPage extends Component {
       this.setState({ showConfirmationCancelPrevisit: true });
    }
 
+   onClickDownloadPDF = () => {
+      const {dispatchChangeStateSaveData, dispatchPdfDescarga, params: { id } } = this.props;
+      dispatchPdfDescarga(dispatchChangeStateSaveData, id);
+   }
+
    redirectToClientInformation = () => {
       this.setState({ showConfirmationCancelPrevisit: false });
       redirectUrl(ComponentClientInformationURL);
@@ -272,16 +296,16 @@ export class PrevisitPage extends Component {
    }
 
    renderForm = () => {
-      const { previsitReducer, selectsReducer } = this.props;
+      const { params: { id }, previsitReducer, selectsReducer } = this.props;
       return (
          <PrevisitFormComponent
             previsitData={previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null}
             previsitTypes={selectsReducer.get(PREVISIT_TYPE)}
             isEditable={this.state.isEditable}
-            onSubmit={this.submitForm} 
-         >
+            onSubmit={this.submitForm}>
             <CommercialReportButtonsComponent 
                onClickSave={draft => this.setState({ documentDraft: draft })} 
+               onClickDownloadPDF={id ? this.onClickDownloadPDF : null}
                cancel={this.onClickCancelCommercialReport}
             />
          </PrevisitFormComponent>
@@ -345,7 +369,11 @@ function mapDispatchToProps(dispatch) {
       dispatchValidateDatePrevisit: validateDatePreVisit,
       dispatchCreatePrevisit: createPrevisit,
       dispatchSetConfidential: setConfidential,
-      dispatchAddUsers: addUsers
+      dispatchAddUsers: addUsers,
+      dispatchAddListParticipant: addListParticipant,      
+      dispatchPdfDescarga: pdfDescarga,
+      dispatchChangeStateSaveData: changeStateSaveData,
+      dispatchClearParticipants: clearParticipants
    }, dispatch);
 }
 
