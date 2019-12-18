@@ -8,12 +8,10 @@ import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import RichText from '../richText/richTextComponent';
 import Participants from './participants';
-
+import Challenger from '../challenger/challenger';
 import { TITLE_MESSAGE_TARGET, TITLE_MESSAGE_PENDIENT } from './constants';
 
 import '../../../styles/field/main.scss'; 
-import {ComponentClientInformationURL} from "../../constantsAnalytics";
-import { redirectUrl } from '../globalComponents/actions';
 
 export class PrevisitFormComponent extends Component {
    constructor(props) {
@@ -54,8 +52,7 @@ export class PrevisitFormComponent extends Component {
                message: TITLE_MESSAGE_PENDIENT
             }
          },
-         type: null,         
-         showConfirmationCancelPrevisit: false
+         type: null
       };
    }
 
@@ -92,15 +89,6 @@ export class PrevisitFormComponent extends Component {
          </Tooltip>
       </div>
    );
-
-   cancelSavePrevisit = () => {
-      this.setState({ showConfirmationCancelPrevisit: true });
-   };
-
-   redirectToClientInformation = () => {
-      this.setState({ showConfirmationCancelPrevisit: false });
-      redirectUrl(ComponentClientInformationURL);
-   }
 
    render() {      
       const { fields: { type, date, duration, place, objective, pending } } = this.state;
@@ -256,9 +244,16 @@ export class PrevisitFormComponent extends Component {
 
                <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
+                        <Challenger />
+                    </Col>
+                </Row>
+
+               <Row style={{ padding: "20px 23px 20px 20px" }}>
+                    <Col xs={12} md={12} lg={12}>
                         {this.renderTitle(pending)}
                     </Col>
                 </Row>
+
                 <Row style={{ padding: "0px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <Field type="text" name="pendingPrevisit">
@@ -291,18 +286,18 @@ export class PrevisitFormComponent extends Component {
 
 export default withFormik({
    handleSubmit: (values, { props, setSubmitting }) => {
+      setSubmitting(false);
       props.onSubmit(values);
    },
    mapPropsToValues: (props) => {
-      const { previsitData } = props;                  
-      
          return {
             typeVisit: '',
             date: new Date(),
             duration: '',
             place: '',
             targetPrevisit: '',
-            pendingPrevisit: ''
+            pendingPrevisit: '',
+            clientTeach: ''
          }
       
    },
