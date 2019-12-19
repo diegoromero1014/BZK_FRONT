@@ -24,7 +24,8 @@ import SweetAlert from "../sweetalertFocus";
 import { addListParticipant, clearParticipants } from '../participantsVisitPre/actions';
 import { changeStateSaveData } from '../dashboard/actions';
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from '../participantsVisitPre/constants';
-import { getAnswerQuestionRelationship } from '../challenger/actions';
+import { clearAnswer, addAnswer } from '../challenger/actions';
+import { getAnswerQuestionRelationship } from '../challenger/challengerActions';
 
 export class PrevisitPage extends Component {
 
@@ -72,7 +73,8 @@ export class PrevisitPage extends Component {
          dispatchDisabledBlockedReport, 
          dispatchClearPrevisitDetail,
          dispatchSetConfidential,  
-         dispatchClearParticipants,         
+         dispatchClearParticipants,     
+         dispatchClearAnswer,    
          params: { id } 
       } = this.props;
 
@@ -88,10 +90,11 @@ export class PrevisitPage extends Component {
       dispatchClearPrevisitDetail();
       dispatchSetConfidential(false);    
       dispatchClearParticipants();  
+      dispatchClearAnswer();
    }
 
    getPrevisitData = async (id) => {
-      const { dispatchDetailPrevisit, dispatchSetConfidential, dispatchAddUsers, dispatchAddListParticipant } = this.props;
+      const { dispatchDetailPrevisit, dispatchSetConfidential, dispatchAddUsers, dispatchAddListParticipant, dispatchAddAnswer } = this.props;
       if (id) {
          const response = await dispatchDetailPrevisit(id);
          const previsitDetail = response.payload.data.data;  
@@ -105,6 +108,11 @@ export class PrevisitPage extends Component {
          dispatchAddListParticipant(participants);         
          dispatchSetConfidential(previsitDetail.commercialReport.isConfidential);         
          fillUsersPermissions(previsitDetail.commercialReport.usersWithPermission, dispatchAddUsers);         
+
+         previsitDetail.answers.forEach(element => {
+            dispatchAddAnswer(null, { id: element.id, [element.field]: element.answer });
+         });
+
          this.setState({
             isEditable: true
          });         
@@ -211,14 +219,14 @@ export class PrevisitPage extends Component {
    }
 
    submitForm = async (previsit) => {      
-      const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions, dispatchGetAnswerQuestionRelationship } = this.props;
+      const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions } = this.props;
       const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);      
       if (validateDatePrevisitResponse) {                  
          const previsitParticipants = this.getPrevisitParticipants();         
          if(!previsitParticipants.bankParticipants.length){
             dispatchSwtShowMessage('error', TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS);
             return; 
-         }                    
+         }                           
          const previsitRequest = {
             "id": id,
             "client": window.sessionStorage.getItem('idClientSelected'),
@@ -237,8 +245,8 @@ export class PrevisitPage extends Component {
             "documentStatus": this.state.documentDraft,
             "endTime": previsit.duration,
             "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), this.state.documentDraft),
-            "answers": dispatchGetAnswerQuestionRelationship(answers, questions)
-         };         
+            "answers": getAnswerQuestionRelationship(answers, questions)
+         };                
          dispatchShowLoading(true, MESSAGE_SAVE_DATA);
          const responseCreatePrevisit = await dispatchCreatePrevisit(previsitRequest);
          dispatchShowLoading(false, "");
@@ -373,7 +381,8 @@ function mapDispatchToProps(dispatch) {
       dispatchPdfDescarga: pdfDescarga,
       dispatchChangeStateSaveData: changeStateSaveData,
       dispatchClearParticipants: clearParticipants,
-      dispatchGetAnswerQuestionRelationship: getAnswerQuestionRelationship
+      dispatchClearAnswer: clearAnswer,
+      dispatchAddAnswer: addAnswer
    }, dispatch);
 }
 

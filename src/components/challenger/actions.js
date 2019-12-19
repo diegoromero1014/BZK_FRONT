@@ -13,13 +13,6 @@ export const getAllQuestions = () => {
     return { type: GET_ALL_QUESTIONS, payload: axios.post(APP_URL + "/questions/getAll", json) }
 }
 
-export const addAnswer = payload => ({ type: ADD_ANSWER , payload });
-
-export const getAnswerQuestionRelationship = (answers, questions) => {         
-    return Object.keys(answers).map(key => ({
-        id: questions.filter(question => question.field === key)[0].id,
-        answer: answers[key]
-    }))
-}
+export const addAnswer = (oldAnswer, newAnswer) => ({ type: ADD_ANSWER , payload: { oldAnswer, newAnswer } });
 
 export const clearAnswer = () => ({ type: CLEAR_ANSWER })
