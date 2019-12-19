@@ -219,7 +219,7 @@ export default (
                 <Route path="previsita" component={PrevisitPage}>
                     <Route path=":id" component={PrevisitPage}></Route>                    
                 </Route>
-                <Route path="previsitaEditar/:id" component={Previsita}></Route>
+                <Route path="previsitaEditar/:id" component={EditPrevisita}></Route>
                 <Route path="visita" component={Visit}></Route>
                 <Route path="visitaEditar/:id" component={VisitEdit}></Route>
                 <Route path="pipeline" component={createFormPipeline('pipelineCreate')}></Route>
