@@ -1,56 +1,40 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import $ from 'jquery';
 import RichText from '../richText/richTextComponent';
 import ToolTip from "../toolTip/toolTipComponent";
-import { TITLE_CLIENT_TEACH } from './constants';
+import { getAllQuestions, addAnswer } from './actions';
 
 class Challenger extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            questions: [
-                {
-                    field: 'clientTeach',
-                    name: '¿Qué le enseñará al cliente?',
-                    nullable: false,
-                    message: TITLE_CLIENT_TEACH,
-                    placeholder: 'placeholder'
-                },
-                {
-                    field: 'clientTeach1',
-                    name: '¿Qué le enseñará al cliente?',
-                    nullable: false,
-                    message: TITLE_CLIENT_TEACH,
-                    placeholder: 'placeholder'
-                },
-                {
-                    field: 'clientTeach2',
-                    name: '¿Qué le enseñará al cliente?',
-                    nullable: false,
-                    message: TITLE_CLIENT_TEACH,
-                    placeholder: 'placeholder'
-                }
-            ],
-            values: {}
-        }
     }
 
+    componentWillMount() {
+        const { getAllQuestions } = this.props;
+
+        getAllQuestions();
+    }
+    
     seletedTabActive = e => $(`.${e.target.classList[1]}`).toggleClass('active');
 
     onChange = (value, field) => {
-        this.setState(({ values }) => ({ values:  Object.assign(values, { [field]: value }) }));
+        const { addAnswer } = this.props;
+
+        if(value)
+            addAnswer({ [field]: value });
     }
 
     renderQuestions = values => {
-        const { questions } = this.state;
-
-        return questions.map(({field, name, nullable, message, placeholder}) => 
+        const { questions } = this.props;
+        
+        return questions.map(({field, title, nullable, message, placeholder}) => 
             <div>
                 <div className={`title ${field} active`} onClick={this.seletedTabActive}>
                     <i className="dropdown icon"></i>
                     
-                    <span>{`${name}  ${!nullable ? '(' : ''} `} </span> {!nullable && <span style={{ color: 'red' }}>*</span>}  {!nullable && ' )' }
+                    <span>{`${title}  ${!nullable ? '(' : ''} `} </span> {!nullable && <span style={{ color: 'red' }}>*</span>}  {!nullable && ' )' }
                     
                     {message && 
                         <ToolTip text={message}>
@@ -75,15 +59,27 @@ class Challenger extends Component {
     }
 
     render() {
-        const { values } = this.state;
+        const { answers } = this.props;
 
         return (
             <div className="ui styled accordion" style={{ width: "100%" }}>
-                {this.renderQuestions(values)}
-                <button onClick={this.onChange}>asdasda</button>
+                {this.renderQuestions(answers)}
             </div>
         );
     }
 }
 
-export default Challenger;
+
+const mapStateToProps = ({ QuestionsReducer: { questions, answers } }) => ({
+    questions,
+    answers
+});
+ 
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators({
+        getAllQuestions,
+        addAnswer
+    }, dispatch)
+};
+ 
+export default connect(mapStateToProps, mapDispatchToProps)(Challenger)
