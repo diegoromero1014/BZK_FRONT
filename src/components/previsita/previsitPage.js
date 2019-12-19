@@ -101,14 +101,14 @@ export class PrevisitPage extends Component {
                previsitDetail.participatingContacts.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_CLIENT })),
                previsitDetail.participatingEmployees.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_BANCO })),
                previsitDetail.relatedEmployees.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_OTHER }))
-         ));         
+         ));                  
          dispatchAddListParticipant(participants);         
          dispatchSetConfidential(previsitDetail.commercialReport.isConfidential);         
-         fillUsersPermissions(previsitDetail.commercialReport.usersWithPermission, dispatchAddUsers);
+         fillUsersPermissions(previsitDetail.commercialReport.usersWithPermission, dispatchAddUsers);         
          this.setState({
             isEditable: true
          });         
-      } else {
+      } else {         
          dispatchSetConfidential(false);
          this.setState({
             isEditable: false

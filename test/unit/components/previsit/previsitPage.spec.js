@@ -7,7 +7,7 @@ import PrevisitFormComponent from '../../../../src/components/previsita/previsit
 import SweetAlert from '../../../../src/components/sweetalertFocus';
 import { TITLE_PREVISIT_EDIT, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_CREATE_ERROR } from '../../../../src/components/previsita/constants';
 import * as globalActions from '../../../../src/components/globalComponents/actions';
-import { EDITAR } from '../../../../src/constantsGlobal';
+import { EDITAR, REQUEST_SUCCESS } from '../../../../src/constantsGlobal';
 
 
 const validateEnter = true;
@@ -31,6 +31,10 @@ let dispatchValidateDatePrevisit;
 let dispatchSwtShowMessage;
 let dispatchPdfDescarga;
 let dispatchCanEditPrevisita;
+let dispatchDetailPrevisit;
+let dispatchAddListParticipant;
+let dispatchAddUsers;
+let dispatchCreatePrevisit;
 let defaultProps = {};
 let redirectUrl;
 let stubLocalStorage;
@@ -39,11 +43,24 @@ describe('Test previsitPage', () => {
 
     beforeEach(() => {                    
         dispatchShowLoading = spy(sinon.fake());
-        dispatchSetConfidential = sinon.fake();
+        dispatchSetConfidential = spy(sinon.fake());
         dispatchSwtShowMessage = sinon.fake();
         dispatchPdfDescarga = sinon.fake();
-        dispatchCanEditPrevisita = sinon.stub();        
-        dispatchGetMasterDataFields = sinon.stub();
+        dispatchAddUsers = sinon.fake();
+        dispatchAddListParticipant = spy(sinon.fake());
+        dispatchCanEditPrevisita = sinon.stub();   
+        dispatchDetailPrevisit = sinon.stub();
+        dispatchCreatePrevisit = sinon.stub();
+        dispatchCreatePrevisit.resolves({
+            payload: {
+                data: {
+                    validateLogin: true,
+                    status: REQUEST_SUCCESS
+                }
+            }
+        });
+        
+        dispatchGetMasterDataFields = sinon.stub();        
         dispatchGetMasterDataFields.resolves({
             masterDataDetailEntries: [
                 {"id":1,"field":"previsitType","value":"Propuesta de negocio","parentId":null,"key":"Propuesta","description":""},
@@ -65,6 +82,9 @@ describe('Test previsitPage', () => {
             dispatchSetConfidential,
             dispatchSwtShowMessage,
             dispatchPdfDescarga,
+            dispatchDetailPrevisit,
+            dispatchAddListParticipant,
+            dispatchAddUsers,
             participants: []
         }        
     });
@@ -81,7 +101,7 @@ describe('Test previsitPage', () => {
         it('should redirectUrl when render previsitPage', () => {
             defaultProps.clientInformacion = Immutable.Map({responseClientInfo: {}});
             itRenders(<PrevisitPage {...defaultProps}/>);                                                              
-            expect(redirectUrl.never).to.equal(true);
+            sinon.assert.called(redirectUrl);
         });
     
         it('should render HeaderPrevisita', () => {
@@ -306,8 +326,83 @@ describe('Test previsitPage', () => {
             expect(dispatchShowLoading).to.have.been.called.twice;
             expect(dispatchCanEditPrevisita.called).to.equal(true);
         });    
+
+        it('getPrevisitData should call service getDetailPrevisit', async () => {            
+            dispatchDetailPrevisit.resolves({
+                payload: {
+                    data: {
+                        data: {
+                            participatingContacts: [],
+                            participatingEmployees: [],
+                            relatedEmployees: [],
+                            commercialReport: {
+                                isConfidential: false,
+                                usersWithPermission: []
+                            }
+                        }
+                    }
+                }
+            });
+            defaultProps.dispatchDetailPrevisit = dispatchDetailPrevisit;            
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);                        
+            await wrapper.instance().getPrevisitData(1234);                        
+            expect(dispatchSetConfidential).to.have.been.called.twice;            
+            expect(wrapper.state().isEditable).to.equal(true);
+        });
         
-        
+        it('getPrevisitData shouldnt call service getDetailPrevisit', async () => {            
+            dispatchDetailPrevisit.resolves({
+                payload: {
+                    data: {
+                        data: {
+                            participatingContacts: [],
+                            participatingEmployees: [],
+                            relatedEmployees: [],
+                            commercialReport: {
+                                isConfidential: false,
+                                usersWithPermission: []
+                            }
+                        }
+                    }
+                }
+            });
+            defaultProps.dispatchDetailPrevisit = dispatchDetailPrevisit;            
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);                        
+            await wrapper.instance().getPrevisitData();                        
+            expect(dispatchSetConfidential).to.have.been.called.twice;            
+            expect(wrapper.state().isEditable).to.equal(false);            
+        });
+
+        it('submitForm shouldnt call savePrevisit service when bankParticipants quantity is equal to zero', async () => {
+            const request = {
+                id: 1,
+                visitTime: new Date(),
+                endTime: '1',
+                documentType: 312312,
+                visitLocation: 'CEOH'
+            };
+            dispatchValidateDatePrevisit = sinon.stub();
+            dispatchValidateDatePrevisit.resolves({
+                payload: {
+                    data: {
+                        status: 200
+                    }
+                }
+            });
+            defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.instance().getPrevisitParticipants = () =>{
+                return {
+                    clientParticipants: [],
+                    bankParticipants: [],
+                    otherParticipants: []
+                }
+            };
+            wrapper.update();
+            await wrapper.instance().submitForm(request);
+            sinon.assert.notCalled(dispatchCreatePrevisit);
+
+        });
     });
     
 });
