@@ -109,12 +109,12 @@ export class PrevisitFormComponent extends Component {
               </Row>             
                <Row style={{ width: '99%', paddingLeft: 20 }}>
                   <Col xs={3}>
-                     <Field type="text" name="typeVisit">
+                     <Field type="text" name="documentType">
                         {({ field: { value, name, onBlur }, form: { setFieldValue } }) =>
                            <div>
                               {this.renderLabel(type)}
                               <ComboBox
-                                  name="typeVisit"
+                                  name="documentType"
                                   labelInput="Seleccione..."
                                   valueProp={'id'}
                                   textProp={'value'}
@@ -126,7 +126,7 @@ export class PrevisitFormComponent extends Component {
                                   data={previsitTypes}
                                   className='field-input'
                               />
-                              <ErrorMessage name="typeVisit" component={'div'} >
+                              <ErrorMessage name="documentType" component={'div'} >
                                 {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
@@ -136,7 +136,7 @@ export class PrevisitFormComponent extends Component {
                   </Col>
 
                   <Col xs={3}>
-                     <Field type="date" name="date">
+                     <Field type="date" name="visitTime">
                         {({ field: { value, name, onBlur }, form: { setFieldValue } }) =>
                            <div>
                               {this.renderLabel(date)}
@@ -149,9 +149,9 @@ export class PrevisitFormComponent extends Component {
                                   onBlur={onBlur}
                                   placeholder='DD/MM/YYYY'
                                   className='field-input'
-                                  name="date"
+                                  name="visitTime"
                               />
-                              <ErrorMessage name="date" component={'div'} >
+                              <ErrorMessage name="visitTime" component={'div'} >
                                 {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
@@ -161,12 +161,12 @@ export class PrevisitFormComponent extends Component {
                   </Col>
 
                   <Col xs={3}>
-                     <Field type="text" name="duration">
+                     <Field type="text" name="endTime">
                         {({ field: { value, onChange, onBlur } }) =>
                            <div>
                               {this.renderLabel(duration)}
                               <Input
-                                  name="duration"
+                                  name="endTime"
                                   value={value}
                                   placeholder="Duración previsita"
                                   type="text"
@@ -174,7 +174,7 @@ export class PrevisitFormComponent extends Component {
                                   onBlur={onBlur}
                                   className='field-input'
                               />
-                              <ErrorMessage name="duration" component={'div'} >
+                              <ErrorMessage name="endTime" component={'div'} >
                                 {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
@@ -184,20 +184,20 @@ export class PrevisitFormComponent extends Component {
                   </Col>
 
                   <Col xs={3}>
-                     <Field type="text" name="place">
+                     <Field type="text" name="visitLocation">
                         {({ field: { value, onChange, onBlur } }) =>
                            <div>
                               {this.renderLabel(place)}
                               <Input
                                 value={value}
-                                name="place"
+                                name="visitLocation"
                                 type="text"
                                 onChange={onChange}
                                 placeholder="Lugar"
                                 onBlur={onBlur}
                                 className='field-input'
                               />
-                              <ErrorMessage name="place" component={'div'} >
+                              <ErrorMessage name="visitLocation" component={'div'} >
                                 {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
@@ -221,19 +221,19 @@ export class PrevisitFormComponent extends Component {
 
               <Row style={{ padding: "0px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
-                     <Field type="text" name="targetPrevisit">
+                     <Field type="text" name="principalObjective">
                         {({ field: { value, name }, form: { setFieldValue } }) =>
                            <div>
                               <RichText
-                                 name="targetPrevisit"
-                                 id="targetPrevisit"
+                                 name="principalObjective"
+                                 id="principalObjective"
                                  value={value}
                                  onChange={val => setFieldValue(name, val, false) }
                                  title="Ingrese el objetivo de la reunión"
                                  style={{ width: '100%', height: '178px' }}
                                  readOnly={false}
                               />
-                              <ErrorMessage name="targetPrevisit" component={'div'} >
+                              <ErrorMessage name="principalObjective" component={'div'} >
                                  {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
@@ -256,19 +256,19 @@ export class PrevisitFormComponent extends Component {
 
                 <Row style={{ padding: "0px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
-                        <Field type="text" name="pendingPrevisit">
+                        <Field type="text" name="observations">
                            {({ field: { value, name }, form: { setFieldValue } }) =>
                               <div>
                                  <RichText
-                                    name="pendingPrevisit"
-                                    id="pendingPrevisit"
+                                    name="observations"
+                                    id="observations"
                                     value={value}
                                     onChange={val => setFieldValue(name, val, false) }
                                     title="Ingrese pendientes, quejas y reclamos"
                                     style={{ width: '100%', height: '178px' }}
                                     readOnly={false}
                                  />
-                                 <ErrorMessage name="pendingPrevisit" component={'div'} >
+                                 <ErrorMessage name="observations" component={'div'} >
                                     {message => this.renderMessageError(message)}
                                  </ErrorMessage>
                               </div>
@@ -290,16 +290,29 @@ export default withFormik({
       props.onSubmit(values);
    },
    mapPropsToValues: (props) => {
+      const { previsitData } = props;
+
+      if(previsitData) {
+         const { documentType, visitTime, endTime, visitLocation, principalObjective, observations } = previsitData;
+
          return {
-            typeVisit: '',
-            date: new Date(),
-            duration: '',
-            place: '',
-            targetPrevisit: '',
-            pendingPrevisit: '',
-            clientTeach: ''
+            documentType,
+            visitTime: new Date(visitTime),
+            endTime,
+            visitLocation,
+            principalObjective,
+            observations
          }
-      
+      } else {
+         return {
+            documentType: '',
+            visitTime: new Date(),
+            endTime: '',
+            visitLocation: '',
+            principalObjective: '',
+            observations: '',
+         }
+      }
    },
    validationSchema: schema
 })(PrevisitFormComponent);
