@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
@@ -16,7 +16,7 @@ import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
 
 import { createProspect } from './actions';
 import { changeStateSaveData } from '../dashboard/actions';
-import { getMasterDataFields } from '../selectsComponent/actions';
+import { getMasterDataFields, consultListByCatalogType } from '../selectsComponent/actions';
 import {
     consultDataSelect,
     consultList,
@@ -27,10 +27,8 @@ import {
 import * as constants from '../selectsComponent/constants';
 import { SEGMENTS, SUBSEGMENTS } from '../selectsComponent/constants';
 import {
-    MESSAGE_SAVE_DATA, OPTION_REQUIRED, VALUE_REQUIERED,
-    VALUE_XSS_INVALID
+    MESSAGE_SAVE_DATA
 } from '../../constantsGlobal';
-import { CONSTRUCT_PYME } from '../clientEdit/constants';
 import * as constantsPropect from './constants';
 
 import { fields, validations as validate } from './fieldsAndRules';
@@ -46,7 +44,7 @@ let typeConfirm = "create";
 
 let isNature = false;
 
-class FormCreateProspect extends Component {
+export class FormCreateProspect extends Component {
     constructor(props) {
         super(props);
         momentLocalizer(moment);
@@ -221,13 +219,16 @@ class FormCreateProspect extends Component {
 
 
     _changeSegment(idSegment) {
-        const { fields: { segment } } = this.props;
+        const { fields: { segment, subSegment }, consultListByCatalogType } = this.props;
         segment.onChange(idSegment);
+
+        consultListByCatalogType(SUBSEGMENTS, idSegment, SUBSEGMENTS);
+        subSegment.onChange('');
     }
 
     componentWillMount() {
         const { consultList, consultDataSelect, getMasterDataFields } = this.props;
-        getMasterDataFields([SEGMENTS, SUBSEGMENTS]);
+        getMasterDataFields([SEGMENTS]);
         consultList(constants.TEAM_FOR_EMPLOYEE);
         consultList(constants.CIIU);
         consultDataSelect(constants.FILTER_COUNTRY);
@@ -270,16 +271,13 @@ class FormCreateProspect extends Component {
     render() {
         const {
             fields: {
-                razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
-                address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
-                nonOperatingIncome, expenses, dateSalesAnnuals, idCelula, segment, subSegment, firstName, middleName, lastName, middleLastName, occupation
-            },
-            error, handleSubmit, selectsReducer, navBar, clientType
+                razonSocial, descriptionCompany, reportVirtual, extractsVirtual, idCIIU, idSubCIIU,
+                address, telephone, district, country, city, province, annualSales, assets, liabilities, operatingIncome,
+                nonOperatingIncome, expenses, dateSalesAnnuals, idCelula, segment, subSegment },
+            handleSubmit, selectsReducer, clientType
         } = this.props;
-        const { propspectReducer, reducerGlobal } = this.props
 
         isNature = clientType ? clientType.key == constantsPropect.NATURE_PERSON : false;
-
 
         return (
             <form onSubmit={handleSubmit(this._submitFormCreateProspect)}>
@@ -745,7 +743,8 @@ function mapDispatchToProps(dispatch) {
         consultListWithParameter,
         consultListWithParameterUbication,
         changeStateSaveData,
-        getMasterDataFields
+        getMasterDataFields,
+        consultListByCatalogType
     }, dispatch);
 }
 
