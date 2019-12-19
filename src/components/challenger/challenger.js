@@ -20,7 +20,7 @@ class Challenger extends Component {
     seletedTabActive = e => $(`.${e.target.classList[1]}`).toggleClass('active');
 
     onChange = (value, field) => {
-        const { addAnswer } = this.props;
+        const { addAnswer, answers } = this.props;
 
         if(value)
             addAnswer({ [field]: value });
