@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { APP_URL } from '../../constantsGlobal';
-import { GET_ALL_QUESTIONS, ADD_ANSWER } from './constants';
+import { GET_ALL_QUESTIONS, ADD_ANSWER, CLEAR_ANSWER } from './constants';
 
 export const getAllQuestions = () => {
     const json = {
@@ -21,3 +21,5 @@ export const getAnswerQuestionRelationship = (answers, questions) => {
         answer: answers[key]
     }))
 }
+
+export const clearAnswer = () => ({ type: CLEAR_ANSWER })

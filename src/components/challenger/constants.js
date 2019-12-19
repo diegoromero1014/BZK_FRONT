@@ -1,5 +1,6 @@
 export const GET_ALL_QUESTIONS = "GET_ALL_QUESTIONS";
 export const ADD_ANSWER = "ADD_ANSWER";
+export const CLEAR_ANSWER = "CLEAR_ANSWER";
 
 export const TITLE_CLIENT_TEACH = 'Desarrolle la Investigación Mesurada: Construye el 333  y la DOFA. Luego, construya y valide su Insight Comercial Challenger y utilice la Coreografía Challenger para llevar un hilo conductor en el diálogo.';
 export const TITLE_ADAPT_MESSAGE = 'Considere las 4 esferas de la adaptación (Sector, Empresa, Cargo, Individuo) y trabaje ante los diferentes estilos sociales (Amable, Orientado a la acción, Analítico, Expresivo).';
