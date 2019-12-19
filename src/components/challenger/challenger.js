@@ -22,13 +22,23 @@ class Challenger extends Component {
     onChange = (value, field) => {
         const { addAnswer, answers } = this.props;
 
+        const old = answers.filter(value => value[field])[0];
+
         if(value)
-            addAnswer({ [field]: value });
+            addAnswer(old,  { id: old ? old.id : null, [field]: value });
     }
 
-    renderQuestions = values => {
+    getValue = field => {
+        const { answers } = this.props;
+
+        const value = answers.filter(value => value[field]);
+
+        return value.length ? value[0][field] : ''
+    }
+
+    renderQuestions = () => {
         const { questions } = this.props;
-        
+
         return questions.map(({field, title, nullable, message, placeholder}, index) => 
             <div key={index}>
                 <div className={`title ${field} active`} onClick={this.seletedTabActive}>
@@ -45,7 +55,7 @@ class Challenger extends Component {
 
                 <div className={`content ${field} active`}>
                     <RichText
-                        value={values[field]}
+                        value={this.getValue(field)}
                         name={field}
                         id={field}
                         style={{ width: '100%', height: '130pt', marginBottom: '10pt' }}
@@ -59,11 +69,9 @@ class Challenger extends Component {
     }
 
     render() {
-        const { answers } = this.props;
-
         return (
             <div className="ui styled accordion" style={{ width: "100%" }}>
-                {this.renderQuestions(answers)}
+                {this.renderQuestions()}
             </div>
         );
     }

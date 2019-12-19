@@ -24,7 +24,7 @@ import SweetAlert from "../sweetalertFocus";
 import { addListParticipant, clearParticipants } from '../participantsVisitPre/actions';
 import { changeStateSaveData } from '../dashboard/actions';
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from '../participantsVisitPre/constants';
-import { getAnswerQuestionRelationship } from '../challenger/actions';
+import { getAnswerQuestionRelationship, clearAnswer, addAnswer } from '../challenger/actions';
 
 export class PrevisitPage extends Component {
 
@@ -91,7 +91,7 @@ export class PrevisitPage extends Component {
    }
 
    getPrevisitData = async (id) => {
-      const { dispatchDetailPrevisit, dispatchSetConfidential, dispatchAddUsers, dispatchAddListParticipant } = this.props;
+      const { dispatchDetailPrevisit, dispatchSetConfidential, dispatchAddUsers, dispatchAddListParticipant, dispatchClearAnswer, dispatchAddAnswer } = this.props;
       if (id) {
          const response = await dispatchDetailPrevisit(id);
          const previsitDetail = response.payload.data.data;  
@@ -105,6 +105,12 @@ export class PrevisitPage extends Component {
          dispatchAddListParticipant(participants);         
          dispatchSetConfidential(previsitDetail.commercialReport.isConfidential);         
          fillUsersPermissions(previsitDetail.commercialReport.usersWithPermission, dispatchAddUsers);
+         dispatchClearAnswer();
+
+         previsitDetail.answers.forEach(element => {
+            dispatchAddAnswer(null, { id: element.id, [element.field]: element.answer });
+         });
+
          this.setState({
             isEditable: true
          });         
@@ -373,7 +379,9 @@ function mapDispatchToProps(dispatch) {
       dispatchPdfDescarga: pdfDescarga,
       dispatchChangeStateSaveData: changeStateSaveData,
       dispatchClearParticipants: clearParticipants,
-      dispatchGetAnswerQuestionRelationship: getAnswerQuestionRelationship
+      dispatchGetAnswerQuestionRelationship: getAnswerQuestionRelationship,
+      dispatchClearAnswer: clearAnswer,
+      dispatchAddAnswer: addAnswer
    }, dispatch);
 }
 
