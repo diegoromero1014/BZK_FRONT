@@ -14,3 +14,10 @@ export const getAllQuestions = () => {
 }
 
 export const addAnswer = payload => ({ type: ADD_ANSWER , payload });
+
+export const getAnswerQuestionRelationship = (answers, questions) => {         
+    return Object.keys(answers).map(key => ({
+        id: questions.filter(question => question.field === key)[0].id,
+        answer: answers[key]
+    }))
+}

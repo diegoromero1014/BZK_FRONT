@@ -24,6 +24,7 @@ import SweetAlert from "../sweetalertFocus";
 import { addListParticipant, clearParticipants } from '../participantsVisitPre/actions';
 import { changeStateSaveData } from '../dashboard/actions';
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from '../participantsVisitPre/constants';
+import { getAnswerQuestionRelationship } from '../challenger/actions';
 
 export class PrevisitPage extends Component {
 
@@ -210,14 +211,14 @@ export class PrevisitPage extends Component {
    }
 
    submitForm = async (previsit) => {      
-      const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer } = this.props;
+      const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions, dispatchGetAnswerQuestionRelationship } = this.props;
       const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);      
       if (validateDatePrevisitResponse) {                  
          const previsitParticipants = this.getPrevisitParticipants();         
          if(!previsitParticipants.bankParticipants.length){
             dispatchSwtShowMessage('error', TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS);
             return; 
-         }
+         }                    
          const previsitRequest = {
             "id": id,
             "client": window.sessionStorage.getItem('idClientSelected'),
@@ -235,7 +236,8 @@ export class PrevisitPage extends Component {
             "constructiveTension": previsit.constructiveTension,
             "documentStatus": this.state.documentDraft,
             "endTime": previsit.duration,
-            "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), this.state.documentDraft)
+            "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), this.state.documentDraft),
+            "answers": dispatchGetAnswerQuestionRelationship(answers, questions)
          };         
          dispatchShowLoading(true, MESSAGE_SAVE_DATA);
          const responseCreatePrevisit = await dispatchCreatePrevisit(previsitRequest);
@@ -284,7 +286,7 @@ export class PrevisitPage extends Component {
       const { dispatchValidateDatePrevisit, dispatchSwtShowMessage } = this.props;
       let visitTime = parseInt(moment(previsit.date).startOf('minute').format('x'));
       let endVisitTime = parseInt(moment(visitTime).add(previsit.duration, 'h').startOf('minute').format('x'));
-      const response = await dispatchValidateDatePrevisit(visitTime, endVisitTime);      
+      const response = await dispatchValidateDatePrevisit(visitTime, endVisitTime, id);      
       if (response.payload.data.status == REQUEST_ERROR) {
          dispatchSwtShowMessage(MESSAGE_ERROR, TITLE_ERROR_VALIDITY_DATES, response.payload.data.data);
          return false;
@@ -370,11 +372,12 @@ function mapDispatchToProps(dispatch) {
       dispatchAddListParticipant: addListParticipant,      
       dispatchPdfDescarga: pdfDescarga,
       dispatchChangeStateSaveData: changeStateSaveData,
-      dispatchClearParticipants: clearParticipants
+      dispatchClearParticipants: clearParticipants,
+      dispatchGetAnswerQuestionRelationship: getAnswerQuestionRelationship
    }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, selectsReducer, usersPermission, confidentialReducer, participants }) {
+function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, selectsReducer, usersPermission, confidentialReducer, participants, questionsReducer: {answers, questions} }) {
    return {
       clientInformacion,
       previsitReducer,
@@ -382,7 +385,9 @@ function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, se
       selectsReducer,
       usersPermission,
       confidentialReducer,
-      participants
+      participants,
+      answers,
+      questions
    };
 }
 
