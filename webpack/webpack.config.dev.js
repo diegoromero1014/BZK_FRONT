@@ -72,7 +72,7 @@ var path = require('path'),
                 }
             ]
         },
-        plugins: [
+        plugins: [            
             new ExtractTextPlugin('styles.css', { allChunks: true }),  // compiled css (single file only)
             new webpack.HotModuleReplacementPlugin(),
             new webpack.DefinePlugin({

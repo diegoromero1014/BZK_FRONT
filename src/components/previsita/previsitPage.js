@@ -47,11 +47,10 @@ export class PrevisitPage extends Component {
 
    componentWillMount() {
       const { clientInformacion } = this.props;
-      const infoClient = clientInformacion.get('responseClientInfo');      
-      /* 
-            if (_.isEmpty(infoClient)) {
-               redirectUrl(ComponentClientInformationURL)
-            } */
+      const infoClient = clientInformacion.get('responseClientInfo');            
+      if (_.isEmpty(infoClient)) {
+         redirectUrl(ComponentClientInformationURL)
+      }
    }
 
    componentDidMount() {
@@ -117,7 +116,7 @@ export class PrevisitPage extends Component {
    }
 
    getPrevisitTypes = async () => {
-      const { dispatchGetMasterDataFields } = this.props;
+      const { dispatchGetMasterDataFields } = this.props;      
       await dispatchGetMasterDataFields([PREVISIT_TYPE]);
    }
 
@@ -128,6 +127,7 @@ export class PrevisitPage extends Component {
 
    canUserEditPrevisita = (myUserName) => {
       const { dispatchCanEditPrevisita, params: { id }, dispatchSwtShowMessage, dispatchShowLoading } = this.props;
+      dispatchShowLoading(true, "Cargando...");
       dispatchCanEditPrevisita(id).then((success) => {
          const username = success.payload.data.data.username
          const name = success.payload.data.data.name
@@ -182,16 +182,13 @@ export class PrevisitPage extends Component {
       });
    }
 
-   editPrevisit = () => {
-      const { dispatchShowLoading } = this.props;
-      dispatchShowLoading(true, "Cargando...");
-      const usernameSession = window.localStorage.getItem('userNameFront');
-      this.canUserEditPrevisita(usernameSession);
-      dispatchShowLoading(false, "");
+   editPrevisit = () => {        
+      const usernameSession = window.localStorage.getItem('userNameFront');      
+      this.canUserEditPrevisita(usernameSession);      
    }
 
    getPrevisitParticipants = () => {
-      const { participants } = this.props;
+      const { participants } = this.props;      
       const participantsList = participants ? participants.toArray() : [];
       let previsitParticipants = {
          clientParticipants: [],
@@ -287,7 +284,7 @@ export class PrevisitPage extends Component {
       const { dispatchValidateDatePrevisit, dispatchSwtShowMessage } = this.props;
       let visitTime = parseInt(moment(previsit.date).startOf('minute').format('x'));
       let endVisitTime = parseInt(moment(visitTime).add(previsit.duration, 'h').startOf('minute').format('x'));
-      const response = await dispatchValidateDatePrevisit(visitTime, endVisitTime);
+      const response = await dispatchValidateDatePrevisit(visitTime, endVisitTime);      
       if (response.payload.data.status == REQUEST_ERROR) {
          dispatchSwtShowMessage(MESSAGE_ERROR, TITLE_ERROR_VALIDITY_DATES, response.payload.data.data);
          return false;
@@ -296,7 +293,7 @@ export class PrevisitPage extends Component {
    }
 
    renderForm = () => {
-      const { params: { id }, previsitReducer, selectsReducer } = this.props;
+      const { params: { id }, previsitReducer, selectsReducer } = this.props;      
       return (
          <PrevisitFormComponent
             previsitData={previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null}

@@ -2,15 +2,15 @@ import _ from 'lodash';
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from '../participantsVisitPre/constants';
 
 export function participantIsClient(participant){
-    return participant.tipoParticipante === 'client';
+    return participant.tipoParticipante === KEY_PARTICIPANT_CLIENT;
 }
 
 export function participantIsBank(participant){
-    return participant.tipoParticipante === 'banco';
+    return participant.tipoParticipante === KEY_PARTICIPANT_BANCO;
 }
 
 export function participantIsOther(participant){
-    return participant.tipoParticipante === 'other';
+    return participant.tipoParticipante === KEY_PARTICIPANT_OTHER;
 }
 
 export function changeParticipantClientDataStructure(participant){
