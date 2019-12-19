@@ -7,10 +7,10 @@ import PrevisitFormComponent from '../../../../src/components/previsita/previsit
 import SweetAlert from '../../../../src/components/sweetalertFocus';
 import { TITLE_PREVISIT_EDIT, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_CREATE_ERROR } from '../../../../src/components/previsita/constants';
 import * as globalActions from '../../../../src/components/globalComponents/actions';
+import { EDITAR } from '../../../../src/constantsGlobal';
 
 
 const validateEnter = true;
-const permissionsPrevisits = "Editar";
 const ownerDraft = true;
 const previsitType = "";
 const detailPrevisit = {
@@ -33,10 +33,11 @@ let dispatchPdfDescarga;
 let dispatchCanEditPrevisita;
 let defaultProps = {};
 let redirectUrl;
+let stubLocalStorage;
 
-describe('Test previsitPage', () => {    
-    beforeEach(() => {
-        window.localStorage.setItem('userNameFront', 'daniel');
+describe('Test previsitPage', () => {        
+
+    beforeEach(() => {                    
         dispatchShowLoading = spy(sinon.fake());
         dispatchSetConfidential = sinon.fake();
         dispatchSwtShowMessage = sinon.fake();
@@ -53,7 +54,10 @@ describe('Test previsitPage', () => {
             params: {},
             clientInformacion: Immutable.Map({responseClientInfo: {name: 'daniel'}}),
             previsitReducer: Immutable.Map({ detailPrevisit , ownerDraft}),
-            reducerGlobal: Immutable.Map({ validateEnter, permissionsPrevisits}),      
+            reducerGlobal: Immutable.Map({ 
+                validateEnter, 
+                permissionsPrevisits: [EDITAR]
+            }),      
             selectsReducer: Immutable.Map({ previsitType }),            
             confidentialReducer: Immutable.Map({ }),
             dispatchShowLoading,
@@ -66,13 +70,19 @@ describe('Test previsitPage', () => {
     });
 
     afterEach(() => {
-        redirectUrl.restore();        
+        redirectUrl.restore();               
     })
 
     describe('Rendering unit test', () => {
         it('should render previsitPage', () => {
             itRenders(<PrevisitPage {...defaultProps}/>)
         });    
+
+        it('should redirectUrl when render previsitPage', () => {
+            defaultProps.clientInformacion = Immutable.Map({responseClientInfo: {}});
+            itRenders(<PrevisitPage {...defaultProps}/>);                                                              
+            expect(redirectUrl.never).to.equal(true);
+        });
     
         it('should render HeaderPrevisita', () => {
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
@@ -252,7 +262,32 @@ describe('Test previsitPage', () => {
             expect(dispatchGetMasterDataFields.called).to.equal(true);
         });
 
-        it('editPrevisit should call canUserEditPrevisita', () => {            
+        it('validatePermissionsPrevisits should return true when isEditable state is true', () => {
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.setState({isEditable: true});
+            const result = wrapper.instance().validatePermissionsPrevisits();
+            expect(result).to.equal(true);
+        });
+
+        it('validatePermissionsPrevisits should return false when isEditale state is false', () => {
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.setState({isEditable: false});
+            const result = wrapper.instance().validatePermissionsPrevisits();
+            expect(result).to.equal(false);
+        });
+
+        it('validatePermissionsPrevisits should return false when permissionsPrevisits doesnt contains Editar', () => {
+            defaultProps.reducerGlobal = Immutable.Map({ 
+                validateEnter, 
+                permissionsPrevisits: []
+            }); 
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>); 
+            wrapper.setState({isEditable: true});
+            const result = wrapper.instance().validatePermissionsPrevisits();
+            expect(result).to.equal(false);
+        });
+
+        it('editPrevisit should call canUserEditPrevisita', () => {                   
             dispatchCanEditPrevisita.resolves({
                 payload: {
                     data:{
@@ -265,10 +300,14 @@ describe('Test previsitPage', () => {
             });
             defaultProps.dispatchCanEditPrevisita = dispatchCanEditPrevisita;
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);            
+            stubLocalStorage = sinon.stub(window.localStorage, 'getItem').returns("daegalle");
             wrapper.instance().editPrevisit();
+            stubLocalStorage.restore();     
             expect(dispatchShowLoading).to.have.been.called.twice;
             expect(dispatchCanEditPrevisita.called).to.equal(true);
-        });        
+        });    
+        
+        
     });
     
 });

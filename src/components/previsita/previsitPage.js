@@ -122,7 +122,7 @@ export class PrevisitPage extends Component {
    }
 
    validatePermissionsPrevisits = () => {
-      const { reducerGlobal } = this.props;
+      const { reducerGlobal } = this.props;      
       return _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) && this.state.isEditable;
    }
 
@@ -184,7 +184,7 @@ export class PrevisitPage extends Component {
    }
 
    editPrevisit = () => {        
-      const usernameSession = window.localStorage.getItem('userNameFront');      
+      const usernameSession = window.localStorage.getItem('userNameFront');          
       this.canUserEditPrevisita(usernameSession);      
    }
 
@@ -283,7 +283,7 @@ export class PrevisitPage extends Component {
    }
 
    validateDatePrevisit = async previsit => {
-      const { dispatchValidateDatePrevisit, dispatchSwtShowMessage } = this.props;
+      const { params: { id }, dispatchValidateDatePrevisit, dispatchSwtShowMessage } = this.props;
       let visitTime = parseInt(moment(previsit.date).startOf('minute').format('x'));
       let endVisitTime = parseInt(moment(visitTime).add(previsit.duration, 'h').startOf('minute').format('x'));
       const response = await dispatchValidateDatePrevisit(visitTime, endVisitTime, id);      
