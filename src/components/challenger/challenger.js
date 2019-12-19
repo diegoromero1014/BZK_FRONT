@@ -70,7 +70,7 @@ class Challenger extends Component {
 }
 
 
-const mapStateToProps = ({ QuestionsReducer: { questions, answers } }) => ({
+const mapStateToProps = ({ questionsReducer: { questions, answers } }) => ({
     questions,
     answers
 });

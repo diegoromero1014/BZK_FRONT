@@ -10,7 +10,6 @@ export default (state = initialState, { type, payload }) => {
         case GET_ALL_QUESTIONS:
             return Object.assign(state, { questions: payload.data.data });
         case ADD_ANSWER:
-            debugger;
             return Object.assign({}, state, { answers: Object.assign({}, state.answers, payload) });
         default:
             return state;
