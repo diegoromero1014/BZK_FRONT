@@ -41,6 +41,7 @@ import {
 } from '../../../constantsGlobal';
 
 import PermissionUserReports from "../../commercialReport/permissionsUserReports"
+import AñadirListaObjetos from "../../listaObjetos/AñadirListaObjetos";
 
 
 var datePrevisitLastReview;
@@ -638,7 +639,7 @@ class FormPrevisita extends Component {
         const infoClient = clientInformacion.get('responseClientInfo');
         valueTypePrevisit = null;
         if (_.isEmpty(infoClient)) {
-            redirectUrl("/dashboard/clientInformation");
+            /* redirectUrl("/dashboard/clientInformation"); */
         } else {
             getMasterDataFields([PREVISIT_TYPE]);
             consultParameterServer(LAST_PREVISIT_REVIEW).then((data) => {
@@ -794,6 +795,9 @@ class FormPrevisita extends Component {
                         </div>
                     </Col>
                 </Row>
+
+                {/* habilitador objeitvos y estrategias - 1246349 */}
+                <AñadirListaObjetos titulo="Objetivos del cliente"/>
 
                 <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
