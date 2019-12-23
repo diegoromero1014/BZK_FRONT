@@ -22,7 +22,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { createBusiness, validateRangeDates } from '../actions';
 import {
-    consultParameterServer, formValidateKeyEnter, htmlToText, validateResponse,
+    consultParameterServer, formValidateKeyEnter, htmlToText,
     onSessionExpire
 } from '../../../actionsGlobal';
 

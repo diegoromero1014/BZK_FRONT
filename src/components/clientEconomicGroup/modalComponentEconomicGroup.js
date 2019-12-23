@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid';
-import { redirectUrl } from '../globalComponents/actions';
-import { reduxForm } from 'redux-form';
+
+
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS, TAB_INFO } from '../../constantsGlobal';
 import { stringValidate, validateIsNullOrUndefined, validateResponse, onSessionExpire } from '../../actionsGlobal';

@@ -1,9 +1,9 @@
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
+
 
 import GridComponent from '../grid/component';
 

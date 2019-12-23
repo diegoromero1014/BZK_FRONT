@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {Row, Grid, Col} from 'react-flexbox-grid';
+
 import Modal from 'react-modal';
 import ModalComponentEconomicGroup from './modalComponentEconomicGroup';
 import {BLUE_COLOR} from '../../constantsGlobal';

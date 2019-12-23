@@ -9,7 +9,7 @@ import { showLoading } from '../loading/actions';
 import SearchBarClient from './searchCovenants';
 import { FORM_FILTER_ALERT_COVENANT, NUMBER_RECORDS } from './constants';
 import Pagination from './pagination';
-import { redirectUrl } from '../globalComponents/actions';
+
 import { reduxForm } from 'redux-form';
 import { updateTitleNavBar } from '../navBar/actions';
 import ListAlertCovenants from './listAlertCovenants';

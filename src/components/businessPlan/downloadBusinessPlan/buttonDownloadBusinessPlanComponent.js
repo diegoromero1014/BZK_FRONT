@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {getCsvBusinessPlan, getCsvBusinessPlanByClient} from '../actions';
-import {TAB_BUSINESS} from '../../viewManagement/constants';
+
 import {APP_URL, MESSAGE_DOWNLOAD_DATA} from '../../../constantsGlobal';
 import {changeStateSaveData} from '../../dashboard/actions';
 

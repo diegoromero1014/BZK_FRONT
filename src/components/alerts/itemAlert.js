@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {reset} from 'redux-form';
 import {connect} from 'react-redux';
-import {Grid, Row, Col} from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import moment from 'moment';
 import {redirectUrl} from '../globalComponents/actions';
 import _ from 'lodash';

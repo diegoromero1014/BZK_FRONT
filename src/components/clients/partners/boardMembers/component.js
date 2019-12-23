@@ -4,16 +4,16 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import SearchBoardMembers from './searchBoardMembers';
 import { getBoardMembers, clearFilters, changeKeyword } from './actions';
-import { FIRST_PAGE, NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from './constants';
+import { NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from './constants';
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT,
-    MESSAGE_SAVE_DATA, CREAR, MODULE_BOARD_MEMBERS
+    CREAR, MODULE_BOARD_MEMBERS
 } from '../../../../constantsGlobal';
 import { validateResponse, validatePermissionsByModule } from '../../../../actionsGlobal';
 import { changeStateSaveData } from '../../../dashboard/actions';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 import _ from 'lodash';
-import moment from 'moment';
+
 import { getMasterDataFields } from '../../../selectsComponent/actions';
 import * as constantsSelects from '../../../selectsComponent/constants';
 import ListBoardMembers from './listBoardMembers';
