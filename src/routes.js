@@ -39,6 +39,9 @@ import LinkingRequests from "./components/myPendings/linkingRequests/componentLi
 import Sheduler from "./components/sheduler/shedulerComponent";
 import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderConstruction";
 import PageNotFound from "./components/notFoundPage/PageNotFound";
+
+import Padre from './components/Prueba/Padre';
+
 import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
     CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST, 
     LINKINGREQUESTS, MODALDRAFTDOCUMENTS, MODALCOMPONENTPENDING, ALERTCOVENANTS, 
@@ -245,6 +248,7 @@ export default (
                 <Route path="controlDashboard" component={ControlDashboard}></Route>
                 <Route path="sheduler" component={Sheduler}></Route>
             </Route>
+            <Route path="prueba" component={Padre}></Route>
             <Route path="*" component={PageNotFound}/>
         </Route>
     </Grid>
