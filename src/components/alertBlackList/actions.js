@@ -1,7 +1,4 @@
-/**
- * Created by Andres Hurtado on 01/03/2017.
- */
-import {APP_URL} from '../../constantsGlobal';
+import { APP_URL } from '../../constantsGlobal';
 import * as constant from './constants';
 import axios from 'axios';
 
