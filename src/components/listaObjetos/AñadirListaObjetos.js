@@ -4,9 +4,6 @@ import ToolTip from "../toolTip/toolTipComponent";
 import ToolTipComponent from "../toolTip/toolTipComponent";
 import SweetAlert from "../sweetalertFocus";
 
-const helpObjetivoscliente =
-  "En este campo debe agregar los objetivos del cliente de mira a la previsita.";
-
 export class AñadirListaObjetos extends Component {
   state = {
     objetivo: {
@@ -23,47 +20,65 @@ export class AñadirListaObjetos extends Component {
     idModifica: ""
   };
 
-  //funcion que me permite abrir el campo para ingresar el objetivo
   abrirCampoObjetivo = event => {
     this.setState({
       campoObjetivo: true
     });
   };
 
-  //funcion que me permite cerrar el campo objetivo.
   cerrarCampoObjetivo = () => {
     const { objetivo } = this.state.objetivo.objetivo;
-
     this.setState({
       campoObjetivo: false,
-      campoVacio: false
+      campoVacio: false,
+      switchGuardarEditar: false
     });
     if (objetivo !== "") {
       this.setState({
         objetivo: {
+          id: "",
           objetivo: ""
         }
       });
     }
   };
 
-  //funcion que nos permite agregar un objetivo a la lista de objetivos
+  modificarObjetivo = () => {
+    const { objetivo } = this.state;
+    const listaObjetos = this.state.objetivos;
+
+    listaObjetos.map((elemento, index) => {
+      if (elemento.id === objetivo.id) {
+        listaObjetos[index].objetivo = objetivo.objetivo;
+      }
+    });
+
+    this.setState({
+      objetivo: {
+        id: "",
+        objetivo: ""
+      },
+      objetivos: listaObjetos,
+      campoObjetivo: false,
+      switchGuardarEditar: false
+    });
+  };
+
   agregarObjetivoLista = () => {
     const id = (Math.random() * 10000).toFixed();
     const { objetivo } = this.state;
-    objetivo.id = id ; 
+    objetivo.id = id;
     const campoVacio = this.state.objetivo.objetivo;
-    const objetivos = [...this.state.objetivos, objetivo];
 
     if (campoVacio !== "") {
-      this.setState({
-        objetivos
-      });
+      const objetivos = [...this.state.objetivos, objetivo];
       this.cerrarCampoObjetivo();
       this.setState({
         objetivo: {
+          id: "",
           objetivo: ""
-        }
+        },
+        objetivos
       });
     } else {
       this.setState({
@@ -79,7 +94,6 @@ export class AñadirListaObjetos extends Component {
     });
   };
 
-  // funcion que nos permite eliminar el objetivo seleccionado.
   eliminarObjetivo = id => {
     const objetivos = this.state.objetivos.filter(
       elemento => elemento.id !== id
@@ -92,33 +106,24 @@ export class AñadirListaObjetos extends Component {
     });
   };
 
-  // funcion que nos permite editar el objetivo del cliente
-  editarObjetivo = (id, objetivo) => {
-    // se abre el campo objetivo y se cambia el nombre del boton guardar por modificar
-    const idModifica = id;
+  editarObjetivo = elemento => {
+    const { id, objetivo } = elemento;
     this.setState({
-      campoObjetivo: true,
-      switchGuardarEditar: true,
       objetivo: {
         id,
         objetivo
       },
-      idModifica
+      campoObjetivo: true,
+      switchGuardarEditar: true
     });
   };
 
-  // funcion para modificar un objetivo de la lista
-  // modificarObjetivo = () => {
-  //   const {}
-  // }
-
-  //funcion que nos permite guardar en el estado el objetivo que se ingresa en el input
   newObjetivo = event => {
     const { name, value } = event.target;
-    // const id = (Math.random() * 10000).toFixed();
+    const { id } = this.state.objetivo;
     this.setState({
       objetivo: {
-        // id,
+        id,
         [name]: value
       }
     });
@@ -126,7 +131,7 @@ export class AñadirListaObjetos extends Component {
   };
 
   render() {
-    //destructuring de las propiedades del state
+    const { titulo } = this.props;
     const {
       objetivos,
       campoObjetivo,
@@ -136,6 +141,11 @@ export class AñadirListaObjetos extends Component {
       switchGuardarEditar
     } = this.state;
     const textButon = switchGuardarEditar ? "Modificar" : "Guardar";
+    const functionButton = switchGuardarEditar
+      ? this.modificarObjetivo
+      : this.agregarObjetivoLista;
+
+    const helpObjetivoscliente = "En este campo debe agregar los/las " + titulo + " del cliente.";
 
     return (
       <div>
@@ -160,7 +170,8 @@ export class AñadirListaObjetos extends Component {
                 <div>
                   <i className="book icon" style={{ fontSize: "18px" }} />
                   <span style={{ fontSize: "20px" }}>
-                    {this.props.titulo}(<span style={{ color: "red" }}>*</span>)
+                    {`${titulo} del cliente`}(
+                    <span style={{ color: "red" }}>*</span>)
                   </span>
                   <ToolTip text={helpObjetivoscliente}>
                     <i
@@ -188,7 +199,7 @@ export class AñadirListaObjetos extends Component {
                     padding: "10px 10px"
                   }}
                 >
-                  <ToolTipComponent text="Agregar objetivo del cliente">
+                  <ToolTipComponent text={`"Agregar ${titulo} del cliente"`}>
                     <i
                       className="plus white icon"
                       style={{ padding: "3px 0 0 5px" }}
@@ -218,15 +229,14 @@ export class AñadirListaObjetos extends Component {
                   name="objetivo"
                   onChange={this.newObjetivo}
                   style={{ width: "750px" }}
-                  placeholder="Objetivo..."
-                  // cuando el boton editar se oprimido se debe mostrar en el input el valor del campo a editar
+                  placeholder={`${titulo}...`}
                   value={this.state.objetivo.objetivo}
                 />
                 <div>
                   <button
-                    title="Guardar Objetivo"
+                    title={`${textButon} ${titulo}`}
                     type="button"
-                    onClick={this.agregarObjetivoLista}
+                    onClick={functionButton}
                     style={{
                       padding: "10px 20px",
                       border: "none",
@@ -259,7 +269,7 @@ export class AñadirListaObjetos extends Component {
               </div>
               {campoVacio && (
                 <div className="ui pointing red basic label">
-                  Para guardar debe ingresar un objetivo del cliente!
+                  {`Para guardar debe ingresar ${titulo} del cliente!`}
                 </div>
               )}
             </Col>
@@ -280,19 +290,16 @@ export class AñadirListaObjetos extends Component {
                       <td className="collapsing">
                         <i
                           className="zoom icon"
-                          title="Editar objetivo del cliente"
+                          title={`Editar ${titulo} del cliente`}
                           style={{ cursor: "pointer" }}
-                          onClick={() =>
-                            this.editarObjetivo(elemento.id, elemento.objetivo)
-                          }
+                          onClick={() => this.editarObjetivo(elemento)}
                         />
                       </td>
-                      <td>{elemento.id}</td>
                       <td>{elemento.objetivo}</td>
                       <td className="collapsing">
                         <i
                           className="trash icon"
-                          title="Eliminar objetivo del cliente"
+                          title={`Eliminar ${titulo} del cliente`}
                           style={{ cursor: "pointer" }}
                           onClick={() => this.mostrarModalEliminar(elemento.id)}
                         />
@@ -301,13 +308,11 @@ export class AñadirListaObjetos extends Component {
                   ))}
                 </thead>
               </table>
-              {/* Componente que nos permite confirmar borrar un objetivo */}
-              {/* El titulo y el texto deben ser dinamicos segun sea Objetivo - Estrategia */}
               <SweetAlert
                 type="warning"
                 show={modalEliminar}
                 title="Confirmar Eliminacion"
-                text="Señor usuario, ¿Está seguro que desea eliminar el canal de distribución?"
+                text={`Señor usuario, ¿Está seguro que desea eliminar el/la ${titulo} del cliente?`}
                 confirmButtonColor="#DD6B55"
                 confirmButtonText="Sí, estoy seguro!"
                 cancelButtonText="Cancelar"
@@ -336,7 +341,7 @@ export class AñadirListaObjetos extends Component {
                     }}
                   >
                     <h3 style={{ textAlign: "center" }}>
-                      Aún no se han adicionado objetivos por parte del cliente
+                      {`Aún no se han adicionado ${titulo} por parte del cliente`}
                     </h3>
                   </tr>
                 </thead>

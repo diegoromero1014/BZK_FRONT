@@ -797,7 +797,7 @@ class FormPrevisita extends Component {
                 </Row>
 
                 {/* habilitador objeitvos y estrategias - 1246349 */}
-                <AñadirListaObjetos titulo="Objetivos del cliente"/>
+                <AñadirListaObjetos titulo="Objetivos"/>
 
                 <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
