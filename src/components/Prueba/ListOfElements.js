@@ -43,6 +43,12 @@ export default class ListOfElements extends React.Component {
 
     addElement = () => {
         const { updateElements, elements } = this.props;
+
+        if (_.isEmpty(this.state.fields)) {
+            alert("Ingrese valores");
+            return
+        }
+
         const element = this.addIdToElement(this.state.fields);
         const newElements = this.mergeElements(elements, element);
 
