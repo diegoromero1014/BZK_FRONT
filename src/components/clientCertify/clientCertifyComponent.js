@@ -37,7 +37,13 @@ import {
 } from "../selectsComponent/actions";
 import { sendErrorsUpdate, updateErrorsNotes } from "../clientDetailsInfo/actions";
 import { MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA } from '../../constantsGlobal';
-import { KEY_DESMONTE, KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME } from "../clientEdit/constants";
+import {
+    CERTIFY_METHOD,
+    KEY_DESMONTE,
+    KEY_EXCEPCION,
+    KEY_EXCEPCION_NO_GERENCIADO,
+    KEY_EXCEPCION_NO_NECESITA_LME
+} from "../clientEdit/constants";
 
 import { fields, validations as validate } from './fieldsAndRulesCertifyClient';
 
@@ -309,7 +315,8 @@ export class ClientCertify extends React.Component {
                 "otherOperationsForeign": infoClient.otherOperationsForeign,
                 "operationsForeigns": infoClient.operationsForeigns,
                 "idCustomerTypology": infoClient.idCustomerTypology,
-                "clientType" : infoClient.clientType                               
+                "clientType" : infoClient.clientType,
+                "saveMethod": CERTIFY_METHOD
             };
             const { createProspect } = this.props;
             changeStateSaveData(true, MESSAGE_SAVE_DATA);
