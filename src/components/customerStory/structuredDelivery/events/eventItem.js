@@ -1,6 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
-import ComboBox from '../../../../ui/comboBox/comboBoxComponent';
 import DateTimePickerUi from '../../../../ui/dateTimePicker/dateTimePickerComponent';
 import Input from '../../../../ui/input/inputComponent';
 import { bindActionCreators } from 'redux';

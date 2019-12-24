@@ -1,6 +1,5 @@
 import Immutable from 'immutable';
 import _ from 'lodash';
-
 import { UPDATE, CREATE, DELETE, SET, CLEAR } from './constants';
 
 const initialState = Immutable.List();

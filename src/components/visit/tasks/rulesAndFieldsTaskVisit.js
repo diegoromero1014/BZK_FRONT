@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import {processRules, checkRequiredResponsible, checkRequired
+import {
+    processRules, checkRequiredResponsible, checkRequired
 } from './../../../validationsFields/rulesField';
 
 const fieldsWithRules= {

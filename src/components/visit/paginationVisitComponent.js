@@ -1,9 +1,8 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {visitByClientFindServer,changePage,limitiInf,clearVisit,clearVisitOrder} from './actions';
-import {NUMBER_RECORDS} from './constants';
-
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { visitByClientFindServer, changePage, limitiInf, clearVisit, clearVisitOrder } from './actions';
+import { NUMBER_RECORDS } from './constants';
 
 let v1 = "";
 

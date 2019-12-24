@@ -3,19 +3,16 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
 import $ from 'jquery';
-
 import SearchShareholderComponent from './searchShareholderComponent';
 import BotonCreateShareholderComponent from './createShareholder/botonCreateShareholderComponent';
 import PaginationShareholderComponent from './paginationShareholderComponent';
 import ListShareholderComponent from './listShareholderComponent';
 import SelectFilterContact from '../../../selectsComponent/selectFilterContact/selectFilterComponent';
 import AlertWithoutPermissions from '../../../globalComponents/alertWithoutPermissions';
-
 import { clearShareholder, shareholdersByClientFindServer, updateCertificateNoShareholder } from './actions';
 import { changeCheckInfoClient } from '../../../clientInformation/actions';
 import { redirectUrl } from '../../../globalComponents/actions';
 import { validatePermissionsByModule, onSessionExpire } from '../../../../actionsGlobal';
-
 import { NUMBER_RECORDS, SHAREHOLDER_KIND } from './constants';
 import { MODULE_SHAREHOLDERS, CREAR, EDITAR } from '../../../../constantsGlobal';
 import { CLIENT_TYPE } from '../../../selectsComponent/constants';

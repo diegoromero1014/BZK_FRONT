@@ -1,6 +1,4 @@
 import * as constants from './constants';
-import { APP_URL } from '../../../constantsGlobal';
-import axios from 'axios';
 
 export function deleteNeed(index) {
   return {

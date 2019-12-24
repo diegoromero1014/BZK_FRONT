@@ -6,7 +6,6 @@ import {
   clearShareholderOrder
 } from './actions';
 import { NUMBER_RECORDS } from './constants';
-import * as constants from '../../../../constantsGlobal';
 
 let v1 = "";
 let v2 = "";

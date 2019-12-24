@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
-import ComboBox from '../../../../ui/comboBox/comboBoxComponent';
 import _ from 'lodash';
 import { addEvent } from './actions';
 import {IMPORTANT_DATES_RELATIONSHIP} from '../constants';

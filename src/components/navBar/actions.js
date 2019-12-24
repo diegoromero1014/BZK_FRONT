@@ -1,6 +1,5 @@
 import * as actions from './constants';
-import axios from 'axios';
-import {APP_URL, FRONT_APP} from '../../constantsGlobal';
+import { FRONT_APP } from '../../constantsGlobal';
 
 import {catchAction} from '../../utils/catchRequest'
 

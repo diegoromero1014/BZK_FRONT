@@ -1,8 +1,4 @@
-import React, {Component, PropTypes} from 'react';
-import * as constants from '../login/constants';
-import ImageLogoApp from '../../../img/svg/logo_bancolombia.svg';
-import {redirectUrl} from './actions';
-import {changeErrorYearSeleted} from '../viewManagement/actions';
+import React, {Component} from 'react';
 import SweetAlert from '../sweetalertFocus';
 
 class AlertErrorYearNoSeleted extends Component{

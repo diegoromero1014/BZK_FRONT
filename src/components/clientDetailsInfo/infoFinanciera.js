@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from 'react';
 import moment from 'moment';
-import numeral from 'numeral';
 import { formatCurrency } from '../../actionsGlobal';
 
 class InfoFinanciera extends Component{

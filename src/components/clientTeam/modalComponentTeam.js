@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Row, Grid, Col} from 'react-flexbox-grid';
+import {Row, Col} from 'react-flexbox-grid';
 import _ from 'lodash';
 import {bindActionCreators} from 'redux';
 import {

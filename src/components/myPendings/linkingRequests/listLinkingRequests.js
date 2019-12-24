@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { NUMBER_RECORDS, PAGE_INITIAL } from './constants';
-import GridComponent from '../../grid/component';
-import {
-    MESSAGE_SAVE_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_ERROR,
-    VISUALIZAR
-} from '../../../constantsGlobal';
-import { shorterStringValue } from '../../../actionsGlobal';
 import moment from "moment";
+import { has, indexOf } from 'lodash';
+
+import GridComponent from '../../grid/component';
+
+import { shorterStringValue } from '../../../actionsGlobal';
+
 import { VIEW_OBSERVATIONS_LINKING_REQUESTS } from '../../modal/constants';
-import { has, get, indexOf } from 'lodash';
+import { VISUALIZAR } from '../../../constantsGlobal';
 
 class ListLinkingRequests extends Component {
 

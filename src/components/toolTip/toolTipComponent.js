@@ -1,10 +1,6 @@
-/**
- * Created by Andres Hurtado on 22/05/2017.
- */
-import React, {Component, PropTypes} from 'react';
-import {Popup} from 'semantic-ui-react'
-import {isUndefined} from 'lodash';
-import { debug } from 'util';
+import React, { Component, PropTypes } from 'react';
+import { Popup } from 'semantic-ui-react'
+import { isUndefined } from 'lodash';
 
 export const TOOLTIP_SIZE = {
     mini: 'mini',

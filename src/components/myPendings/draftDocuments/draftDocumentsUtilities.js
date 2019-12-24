@@ -1,7 +1,3 @@
-import moment from 'moment';
-import get from 'lodash/get';
-import flow from 'lodash/flow';
-import {REVIEWED_DATE_FORMAT} from '../../../constantsGlobal';
 import {shorterStringValue, mapDateValueFromTask} from '../../../actionsGlobal';
 import {DELETE_TYPE_PREVISIT} from '../../previsita/constants';
 import {DELETE_TYPE_VISIT} from '../../visit/constants';

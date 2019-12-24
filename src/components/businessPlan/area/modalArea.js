@@ -6,19 +6,16 @@ import { Col, Row } from "react-flexbox-grid";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import _ from "lodash";
 import $ from "jquery";
-
 import Input from "../../../ui/input/inputComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import RichText from "../../richText/richTextComponent";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import { getMasterDataFields } from "../../selectsComponent/actions";
 import { addArea, editArea, validateWhiteListOnArea } from "./actions";
 import { htmlToText } from "../../../actionsGlobal";
-
 import { STATUS_AREAS } from "./constants";
 import { MESSAGE_ERROR } from '../../../constantsGlobal';
 

@@ -3,7 +3,7 @@ import {
     GET_SURVEY_QUALITATIVE, SAVE_ANSWER, CLEAR_SURVEY, FIELDS_EDITABLES, CAHNGE_VALUE_MODAL,
     GET_ALLOW_SURVEY_QUALITATIVE, GET_EXIST_PDF_VC
 } from './constants';
-import { get, sortBy, clone, remove } from 'lodash';
+import { get, sortBy, clone } from 'lodash';
 import { validateValueExist } from '../../../actionsGlobal';
 
 const initialState = Immutable.Map({

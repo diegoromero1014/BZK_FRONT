@@ -20,7 +20,7 @@ import { IMPORT } from '../../clientDetailsInfo/constants';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 import {
-    checkRequired, processRules, checkClientDescription,
+    checkRequired, checkClientDescription,
     checkNumberInRange, checkFirstCharacter
 } from '../../../validationsFields/rulesField';
 

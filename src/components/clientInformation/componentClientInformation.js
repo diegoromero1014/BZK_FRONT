@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid';
 import _ from 'lodash';
-
 import RaitingInternal from './ratingInternal';
 import TabClientInfo from './tabClientInfo';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
@@ -12,7 +11,6 @@ import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGrou
 import ButtonClientVisorComponent from '../clientVisor/buttonClientVisorComponent';
 import NotificationComponent from '../notification/notificationComponent';
 import NotificationExpiredPortfolio from '../alertPortfolioExpirtation/notificationExpiredPortfolio';
-
 import { consultInfoClient } from './actions';
 import { validateExpiredPortfolio } from './actions';
 import { updateTitleNavBar, viewAlertClient } from '../navBar/actions';
@@ -21,7 +19,6 @@ import { clearEntities } from '../clientDetailsInfo/linkingClient/LinkEntitiesCo
 import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
 import { updateTabSeletedCS } from '../customerStory/actions';
-
 import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS, MODULE_STUDY_CREDIT, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
 import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
 import { TAB_STORY } from '../customerStory/constants';

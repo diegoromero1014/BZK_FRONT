@@ -1,6 +1,3 @@
-/**
- * Created by ahurtado on 11/29/2016.
- */
 import Immutable from 'immutable';
 import {get} from 'lodash';
 export const SHOW_LOADING = "SHOW_LOADING";

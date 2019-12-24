@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { redirectUrl } from '../../globalComponents/actions';
 import { Row, Col } from 'react-flexbox-grid';
 import { changeValueModalIsOpen, pdfDescarga, saveClientSurvey, getExistPdfVC } from './actions';
 import { formatCurrency } from '../../../actionsGlobal';
 import Modal from 'react-modal';
-import { get, concat, groupBy, map, mapValues, sum, find, mapKeys, size, sumBy, indexOf, isEqual } from 'lodash';
+import { get, concat, groupBy, map, mapValues, sum, find, size, sumBy, indexOf, isEqual } from 'lodash';
 import { GENERATE_PDF, APP_URL, MESSAGE_REPLACE_PDF } from '../../../constantsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-
 
 const STYLE_TD = {
     borderLeft: '1px solid gray',

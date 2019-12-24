@@ -73,6 +73,7 @@ import PermissionUserReports from "../../commercialReport/permissionsUserReports
 import { buildJsoncommercialReport } from "../../commercialReport/functionsGenerics";
 import { setConfidential } from "../../commercialReport/actions";
 
+let thisForm;
 let typeMessage = "success";
 let titleMessage = "";
 let message = "";
@@ -81,8 +82,6 @@ let datePipelineLastReview;
 let idCurrencyAux = null;
 let contollerErrorChangeType = false;
 let nameDisbursementPlansInReducer = "disbursementPlans";
-let thisForm;
-let isChildren = false;
 
 export default function createFormPipeline(name, origin, functionCloseModal) {
 

@@ -4,26 +4,21 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import numeral from 'numeral';
-
 import SweetAlert from '../../sweetalertFocus';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
 import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
-
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import { addProduct, updateProduct } from './actions';
-
 import { CLIENT_TYPE_PRODUCT, FILTER_COUNTRY } from '../../selectsComponent/constants';
 import * as constants from '../../../constantsGlobal';
 import _ from "lodash";
-
 import {
   MESSAGE_REQUIRED_VALUE, MESSAGE_WARNING_NUMBER_DOCUMENT, MESSAGE_WARNING_NUMBER_LENGTH,
   MESSAGE_WARNING_NAME_ENTITY, MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_FORBIDDEN_CHARACTER,
   MESSAGE_WARNING_MAX_LENGTH
 } from '../../../validationsFields/validationsMessages';
-
 import {
   patternOfNameEntity, patternOfNumberDocument, patternOfOnlyAlphabetical, patternOfForbiddenCharacter
 } from '../../../validationsFields/patternsToValidateField';

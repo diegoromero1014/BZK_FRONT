@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import { Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import ModalAddByFunctionOrType from './modalAddByFunctionOrType';
 import Tooltip from '../../../toolTip/toolTipComponent';

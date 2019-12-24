@@ -1,9 +1,9 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {consultDataSelect} from '../actions';
-import {Combobox} from 'react-widgets';
-import {CLIENT_ID_TYPE} from '../constants';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { consultDataSelect } from '../actions';
+import { Combobox } from 'react-widgets';
+import { CLIENT_ID_TYPE } from '../constants';
 
 class ComponentTypeDocument extends Component{
   componentWillMount(){

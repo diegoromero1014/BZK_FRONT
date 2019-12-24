@@ -1,6 +1,3 @@
-/**
- * Created by ahurtado on 15/02/2016.
- */
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
@@ -9,7 +6,7 @@ import { updateTitleNavBar } from '../../../navBar/actions';
 import SearchGroup from '../searchGroup';
 import ListGroup from '../listGroups';
 import Pagination from '../pagination';
-import { NUMBER_RECORDS, TITTLE_MODAL_GROUP } from '../constants';
+import { TITTLE_MODAL_GROUP } from '../constants';
 import { clearFilterGroup } from '../actions';
 import { showLoading } from '../../../loading/actions';
 import Modal from 'react-modal';

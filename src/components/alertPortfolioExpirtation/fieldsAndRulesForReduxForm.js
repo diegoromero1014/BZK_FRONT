@@ -1,8 +1,7 @@
 import _ from 'lodash';
-
 import {
         processRules, checkFirstCharacter, checkObservations, checkRequired
-}from './../../validationsFields/rulesField';
+} from './../../validationsFields/rulesField';
 
 /**
  * Validaciones de listas blancas para el campo de Observaciones de modalObservation
