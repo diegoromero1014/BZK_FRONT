@@ -1,6 +1,3 @@
-/**
- * Created by user- on 12/6/2016.
- */
 import { shorterStringValue, formatNumeral } from '../../actionsGlobal';
 import {VIEW_OBSERVATION} from '../modal/constants';
 

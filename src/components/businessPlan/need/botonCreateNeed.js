@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import _ from 'lodash';
-
 import ModalNeed from './modalNeed';
 import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
 

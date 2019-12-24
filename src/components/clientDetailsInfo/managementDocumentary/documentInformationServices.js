@@ -10,7 +10,6 @@ import {shorterStringValue} from '../../../actionsGlobal';
 import Tooltip from '../../toolTip/toolTipComponent';
 import _ from 'lodash';
 
-
 class DocumentInformationServices extends Component {
 
     constructor(props) {

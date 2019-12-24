@@ -18,9 +18,7 @@ import RichText from "../../richText/richTextComponent";
 import { htmlToText, shorterStringValue } from "../../../actionsGlobal";
 import { MESSAGE_ERROR } from '../../../constantsGlobal';
 import { TASK_STATUS } from '../../selectsComponent/constants';
-
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-
 
 const fields = ["idEmployee", "needType", "descriptionNeed", "productFamily", "needProduct", "needImplementation", "needTask", "needBenefits", "needResponsable", "needDate", "statusNeed"];
 const errors = {};

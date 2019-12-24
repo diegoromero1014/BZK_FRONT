@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-
 import {showHideModalErros, sendErrorsUpdate} from '../clientDetailsInfo/actions';
 import Modal from 'react-modal';
 

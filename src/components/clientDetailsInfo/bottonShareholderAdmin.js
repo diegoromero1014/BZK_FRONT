@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
 import Modal from 'react-modal';
 import ShareholderInfo from '../clients/partners/shareholder/component';
-
 import { MODULE_SHAREHOLDERS } from '../../constantsGlobal';
 import SweetAlert from '../sweetalertFocus';
 

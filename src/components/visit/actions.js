@@ -1,9 +1,10 @@
-import {APP_URL} from '../../constantsGlobal';
-import {CHANGE_IDPREVISIT,CLEAR_VISIT_PAGINATOR,CLEAR_VISIT,CLEAR_VISIT_ORDER,GET_VISIT_LIST_CLIENT,
-  CHANGE_PAGE,LIMITE_INF,ORDER_COLUMN_VISIT, CREATE_VISIT, GET_DETAIL_VISIT, OWNER_DRAFT,
-  GET_CSV_VISIT_BY_CLIENT, CLEAR_IDPREVISIT, CHANGE_PAGE_ASSOCIATE__VISIT } from './constants';
+import { APP_URL } from '../../constantsGlobal';
+import {
+  CHANGE_IDPREVISIT, CLEAR_VISIT_PAGINATOR, CLEAR_VISIT, CLEAR_VISIT_ORDER, GET_VISIT_LIST_CLIENT,
+  CHANGE_PAGE, LIMITE_INF, ORDER_COLUMN_VISIT, CREATE_VISIT, GET_DETAIL_VISIT, OWNER_DRAFT,
+  GET_CSV_VISIT_BY_CLIENT, CLEAR_IDPREVISIT, CHANGE_PAGE_ASSOCIATE__VISIT
+} from './constants';
 import axios from 'axios';
-import { downloadReport } from '../../utils';
 import { generatePDF } from '../reports/pdf/actions';
 
 export function createVisti(jsonVisit){

@@ -81,8 +81,6 @@ let datePipelineLastReview;
 let idCurrencyAux = null;
 let contollerErrorChangeType = false;
 let nameDisbursementPlansInReducer = "disbursementPlans";
-let thisForm;
-let isChildren = false;
 
 export default function createFormPipeline(name, origin, functionCloseModal) {
 

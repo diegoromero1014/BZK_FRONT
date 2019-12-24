@@ -1,6 +1,6 @@
-import React, {Component, PropTypes} from 'react';
-import {Combobox} from 'react-widgets';
-import {TYPE_YEAR} from '../constants';
+import React, { Component, PropTypes } from 'react';
+import { Combobox } from 'react-widgets';
+import { TYPE_YEAR } from '../constants';
 import moment from 'moment';
 
 class SelectYearComponent extends Component{

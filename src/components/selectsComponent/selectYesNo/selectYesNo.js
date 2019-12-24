@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react';
-import {Combobox} from 'react-widgets';
+import React, { Component, PropTypes } from 'react';
+import { Combobox } from 'react-widgets';
 
 const valores = [
   {'id': true, 'value': "Si"},

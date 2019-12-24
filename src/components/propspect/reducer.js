@@ -1,6 +1,5 @@
 import Immutable from 'immutable';
-import { VALIDATE_PROSPECT_EXISTS, CLEAR_STATE_PROSPECT, CLEAR_ALL_PROSPECT, CREATE_PROSPECT, VALIDATE_NEED } from './constants';
-
+import { VALIDATE_PROSPECT_EXISTS, CLEAR_STATE_PROSPECT, CLEAR_ALL_PROSPECT, CREATE_PROSPECT } from './constants';
 
 const initialState = Immutable.Map({
   status: "OK",

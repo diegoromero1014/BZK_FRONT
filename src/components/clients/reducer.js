@@ -2,7 +2,6 @@ import Immutable from 'immutable';
 import * as actions from './constants';
 import _ from 'lodash';
 
-
 const initialState = Immutable.Map({
   status: "withoutProcessing",
   keyword: "",

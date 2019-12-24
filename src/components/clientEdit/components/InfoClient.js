@@ -2,16 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import _ from "lodash";
-
 import { Col, Row } from "react-flexbox-grid";
 import Input from "../../../ui/input/inputComponent";
 import Textarea from "../../../ui/textarea/textareaComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ClientTypology from "../../contextClient/clientTypology";
 import * as constants from "../../selectsComponent/constants";
-
 import { getMasterDataFields, consultListWithParameterUbication, consultListByCatalogType } from '../../selectsComponent/actions';
-
 import { TITLE_DESCRIPTION, GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../constants';
 
 export class InfoClient extends React.Component {

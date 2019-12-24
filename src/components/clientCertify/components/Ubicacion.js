@@ -2,11 +2,9 @@ import React from 'react'
 import { bindActionCreators } from "redux";
 import {connect} from 'react-redux'
 import {Col, Row} from "react-flexbox-grid";
-
 import Textarea from "../../../ui/textarea/textareaComponent";
 import Input from "../../../ui/input/inputComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
-
 import {consultListWithParameterUbication} from '../../selectsComponent/actions'
 import * as selectConstants from "../../selectsComponent/constants";
 

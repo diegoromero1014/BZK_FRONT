@@ -3,8 +3,6 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Icon, Popup, Grid} from 'semantic-ui-react';
 import {get, set, size} from 'lodash';
-
-
 import {GREEN_COLOR, RED_COLOR} from '../../constantsGlobal';
 import _ from 'lodash';
 

@@ -4,9 +4,7 @@ import { reduxForm } from 'redux-form';
 import { Col, Row } from 'react-flexbox-grid';
 import _ from "lodash";
 import moment from 'moment';
-
 import { TooltipGeneratePDF } from './../tooltipGeneratePDF/tooltipGeneratePDF';
-
 import SweetAlert from '../../sweetalertFocus';
 import ClientTypology from '../../contextClient/clientTypology';
 import ContextEconomicActivity from '../../contextClient/contextEconomicActivity';
@@ -22,7 +20,6 @@ import ButtonShareholderAdmin from '../../clientDetailsInfo/bottonShareholderAdm
 import ButtonContactAdmin from '../../clientDetailsInfo/bottonContactAdmin';
 import ButtonBoardMembersAdmin from '../../clientDetailsInfo/buttonBoardMembersAdmin';
 import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
-
 import { updateTitleNavBar } from '../../navBar/actions';
 import * as globalActions from '../../globalComponents/actions';
 import { consultListWithParameterUbication, getMasterDataFields } from '../../selectsComponent/actions';
@@ -37,7 +34,6 @@ import {
     updateNotApplyCreditContact,
     validateInfoCreditStudy
 } from './actions';
-
 import {
     DISTRIBUTION_CHANNEL,
     INT_OPERATIONS,
@@ -82,7 +78,6 @@ import {
     SUCCESS_MESSAGE_FOR_BOARD_MEMBERS,
     SUCCESS_MESSAGE_FOR_SHAREHOLDER
 } from './constants';
-
 import { fields, validations as validate } from './fieldsAndRules';
 
 var errorMessageForShareholders = SUCCESS_MESSAGE_FOR_SHAREHOLDER;

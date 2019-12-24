@@ -5,13 +5,10 @@ import { Row, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import ModalArea from './modalArea';
 import _ from 'lodash';
-
 import BotonCreateArea from './botonCreateArea';
 import SweetAlert from '../../sweetalertFocus';
 import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
-
 import { deleteArea } from './actions';
-
 import { DELETE_AREA_VIEW } from './constants';
 
 var arrayValueArea = [];

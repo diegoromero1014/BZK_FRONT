@@ -1,5 +1,5 @@
-import {browserHistory as browserHistoryDev, useRouterHistory} from 'react-router';
-import {createHistory} from 'history';
+import { browserHistory as browserHistoryDev, useRouterHistory } from 'react-router';
+import { createHistory } from 'history';
 const browserHistoryProd = useRouterHistory(createHistory)({
     basename: '/biztrack'
 });

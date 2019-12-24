@@ -13,7 +13,6 @@ import { validateResponse, validatePermissionsByModule } from '../../../../actio
 import { changeStateSaveData } from '../../../dashboard/actions';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 import _ from 'lodash';
-
 import { getMasterDataFields } from '../../../selectsComponent/actions';
 import * as constantsSelects from '../../../selectsComponent/constants';
 import ListBoardMembers from './listBoardMembers';

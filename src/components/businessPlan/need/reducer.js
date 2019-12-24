@@ -2,7 +2,6 @@ import Immutable from 'immutable';
 import * as constants from './constants';
 import _ from 'lodash';
 
-
 const initialState = Immutable.List();
 
 export default (state = initialState, action) => {

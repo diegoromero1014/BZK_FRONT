@@ -1,7 +1,5 @@
 import moment from 'moment';
 import {COLOR_RED, COLOR_ORANGE, COLOR_GREEN} from '../../clientInformation/constants';
-import {REVIEWED_DATE_FORMAT} from '../../../constantsGlobal';
-import get from 'lodash/get';
 import flow from 'lodash/flow';
 import {mapDateValueFromTask} from '../../../actionsGlobal';
 import {VIEW_TASK_ADMIN} from '../../modal/constants';

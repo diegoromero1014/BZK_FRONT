@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
 import Modal from 'react-modal';
 import ContactInfo from '../contact/component';
-
 import { MODULE_CONTACTS } from '../../constantsGlobal';
 import SweetAlert from '../sweetalertFocus';
 

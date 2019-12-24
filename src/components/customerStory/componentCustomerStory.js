@@ -17,7 +17,7 @@ import { redirectUrl } from '../globalComponents/actions';
 import { changeStateSaveData } from '../dashboard/actions';
 
 import { TAB_STORY, TAB_CUSTOMER_DELIVERY } from './constants';
-import { VALUES_APROVE, OPTION_REQUIRED, MESSAGE_SAVE_DATA, REVIEWED_DATE_FORMAT, ENTREGA_ESTRUCTURADA } from '../../constantsGlobal';
+import { VALUES_APROVE, OPTION_REQUIRED, MESSAGE_SAVE_DATA, ENTREGA_ESTRUCTURADA } from '../../constantsGlobal';
 
 import _ from 'lodash';
 import moment from 'moment';

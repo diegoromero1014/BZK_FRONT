@@ -1,5 +1,5 @@
 export const nombreflujoAnalytics ="biztrack";
-/**EMPIEZA MIS CLIENTES */
+
 export const BIZTRACK_MY_CLIENTS = "BIZTRACK_MY_CLIENTS_";
 export const _PIPELINE = "PIPELINE";
 export const _BUSINESS_PLAN = "BUSINESSPLAN";
@@ -19,7 +19,7 @@ export const _CUSTOMER_DELIVERY_STORY = "CUSTOMERDELIVERYSTORY";
 export const _PREVISIT = "PREVISIT";
 export const _VISIT = "VISIT";
 export const _TASK = "TASK";
-/**TERMINA MIS CLIENTES */
+
 export const LOGINCOMPONENT ="LOGINCOMPONENT";
 export const DASHBOARDCOMPONENT ="DASHBOARDCOMPONENT";
 export const VIEWMANAGEMENT ="VIEWMANAGEMENT";
@@ -57,9 +57,7 @@ export const CONTROLDASHBOARD="CONTROLDASHBOARD";
 export const SHEDULER="SHEDULER";
 export const BIZTRACK_="BIZTRACK_";
 export const DEFAULT="";
-/** 
- * constantes para identificar donde se hace el eevento para llevar el evento en el datalayer
-*/
+
 export const LoginComponentURL ="/login";
 export const DashboardComponentURL ="/dashboard";
 export const ViewManagementURL ="/dashboard/viewManagement";

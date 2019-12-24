@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { getContactDetails } from '../../contact/contactDetail/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
-import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
+import { formValidateKeyEnter } from '../../../actionsGlobal';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { changeValueOpenModal, updateRelationshipClientcontact } from '../actions';

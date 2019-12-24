@@ -29,7 +29,7 @@ import { getMasterDataFields } from '../../selectsComponent/actions';
 import { createPrevisit, validateDatePreVisit } from '../actions';
 import { changeStateSaveData } from '../../dashboard/actions';
 import {
-    consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateResponse
+    consultParameterServer, formValidateKeyEnter, nonValidateEnter
 } from '../../../actionsGlobal';
 
 import { PREVISIT_TYPE } from '../../selectsComponent/constants';
@@ -41,7 +41,6 @@ import {
 } from '../../../constantsGlobal';
 
 import PermissionUserReports from "../../commercialReport/permissionsUserReports"
-
 
 var datePrevisitLastReview;
 var titleMethodologyChallenger = "Enseñanza (Oportunidades – Retos): Diligencie de manera resumida los siguientes " +

@@ -3,7 +3,6 @@ import axios from 'axios';
 import * as constants from './constants';
 import { generatePDF } from '../reports/pdf/actions';
 
-
 export function businessPlanByClientFindServer(clientId, pageNum, maxRows, columnOrder, order, statusDocumentId, businessStatus) {
   const json = {
     "messageHeader": {

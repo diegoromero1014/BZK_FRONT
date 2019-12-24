@@ -11,15 +11,6 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {toggleMenu} from '../navBar/actions';
 import {MENU_OPENED} from '../navBar/constants';
 
-var styles = {
-    minHeight: "30px",
-    height: "30px",
-    margin: "0px",
-    padding: "7px",
-    minWidth: "30px",
-    width: "150px"
-};
-
 class ItemAlert extends Component {
 
     constructor(props) {

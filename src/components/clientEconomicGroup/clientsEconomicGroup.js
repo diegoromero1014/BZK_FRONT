@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
-
 import SweetAlert from '../sweetalertFocus';
 import { getClientsEconomicGroup, deleteRelationEconomicGroup } from './actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';

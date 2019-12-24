@@ -2,7 +2,6 @@ import {APP_URL} from '../../constantsGlobal';
 import axios from 'axios';
 import * as constants from './constants';
 
-
 export function contactsFindServer(keyword, searchIntoAllContacts, limInf, limSup) {
     const json = {
         "messageHeader": {

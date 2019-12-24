@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
 import Modal from 'react-modal';
 import BoardMembersInfo from '../clients/partners/boardMembers/component';
-
 import { MODULE_BOARD_MEMBERS } from '../../constantsGlobal';
 import SweetAlert from '../sweetalertFocus';
 

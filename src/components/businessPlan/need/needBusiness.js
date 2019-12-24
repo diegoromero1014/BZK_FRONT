@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
-
 import ListNeed from './listNeed';
-
 import { clearNeed } from './actions';
 
 class NeedBusiness extends Component {

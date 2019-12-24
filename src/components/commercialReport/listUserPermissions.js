@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
-
 import SweetAlert from '../sweetalertFocus';
-
 import { deleteUser } from './actions';
-
 import { DELETE_PARTICIPANT_VIEW, KEY_PARTICIPANT_BANCO } from './constants';
 
 class ListUserPermissions extends Component {

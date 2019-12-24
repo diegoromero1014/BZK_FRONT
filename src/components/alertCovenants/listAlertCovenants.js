@@ -1,6 +1,3 @@
-/**
- * Created by ahurtado on 11/28/2016.
- */
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';

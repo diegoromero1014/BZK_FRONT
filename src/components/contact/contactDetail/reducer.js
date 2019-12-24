@@ -1,6 +1,5 @@
 import Immutable from 'immutable';
 import _ from 'lodash';
-
 import {
     GET_CONTACT_DETAILS, CLEAR_EDIT_CONTACT, SET_ARRAY_DELETE_CLIENT_CONTACT,
     DELETE_RELATOINSHIP_SERVER

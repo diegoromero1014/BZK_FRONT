@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -19,7 +19,6 @@ import { validatePermissionsByModule } from '../../../actionsGlobal';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import { mapDataGrid } from './pendingTaskUtilities';
-import { TASK_STATUS } from '../../selectsComponent/constants';
 import { has, get, indexOf } from 'lodash';
 import { showLoading } from '../../loading/actions';
 

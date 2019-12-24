@@ -4,9 +4,7 @@ import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import moment from 'moment';
-
 import Ubicacion from './ubicacion';
-
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import { Checkbox, Message } from 'semantic-ui-react';
 import Input from '../../../ui/input/inputComponent';
@@ -29,7 +27,6 @@ import {
     getMasterDataFields,
     consultListWithParameterUbication
 } from '../../selectsComponent/actions';
-
 import { NUMBER_RECORDS } from '../constants';
 import {
     CONTACT_ID_TYPE,

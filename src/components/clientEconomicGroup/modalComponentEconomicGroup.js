@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid';
-
-
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import { REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS, TAB_INFO } from '../../constantsGlobal';
+import { REQUEST_ERROR, ERROR_MESSAGE_REQUEST, TAB_INFO } from '../../constantsGlobal';
 import { stringValidate, validateIsNullOrUndefined, validateResponse, onSessionExpire } from '../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import { getClientsEconomicGroup, updateEconomicGroupClient } from './actions';
@@ -13,9 +11,7 @@ import { clientsFindServer } from '../clients/actions';
 import ComboBoxFilter from '../../ui/comboBoxFilter/comboBoxFilter';
 import { showLoading } from '../loading/actions';
 import { consultInfoClient } from '../clientInformation/actions';
-
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
-
 import _ from 'lodash';
 import $ from 'jquery';
 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
-import { redirectUrl } from '../../globalComponents/actions';
 import { setArrayDeleteClientContact, deleteRelationshipServer, getContactDetails } from '../../contact/contactDetail/actions';
 import { changeValueOpenModal, setEditRelationship, modifyClientRelationship } from '../actions';
 import { OPEN_CREATE_MODAL, OPEN_EDIT_MODAL } from '../constants';

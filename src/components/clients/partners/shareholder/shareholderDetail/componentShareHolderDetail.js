@@ -4,13 +4,11 @@ import { reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 import { fields, validations as validate } from './filesAndRules';
-
 import SweetAlert from '../../../../sweetalertFocus';
 import ComboBox from '../../../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../../../ui/input/inputComponent';
 import Textarea from '../../../../../ui/textarea/textareaComponent';
 import AuditFiles from '../../../../globalComponents/auditFiles';
-
 import { shareholdersByClientFindServer, clearShareholderCreate, clearShareholderOrder } from '../actions';
 import { getDetailShareHolder, toggleModalShareholder } from './actions';
 import { consultDataSelect, consultListWithParameterUbication, getMasterDataFields } from '../../../../selectsComponent/actions';
@@ -20,7 +18,6 @@ import { formValidateKeyEnter, nonValidateEnter, validateResponse } from '../../
 import { redirectUrl } from '../../../../globalComponents/actions';
 import { showLoading } from '../../../../loading/actions';
 import { swtShowMessage } from '../../../../sweetAlertMessages/actions';
-
 import { NUMBER_RECORDS } from '../constants';
 import {
   CONTACT_ID_TYPE, CLIENT_TYPE, CLIENT_ID_TYPE, FILTER_COUNTRY, FILTER_PROVINCE, FILTER_CITY, SHAREHOLDER_TYPE,
@@ -30,8 +27,6 @@ import {
   NATURAL_PERSON, JURIDICAL_PERSON, MESSAGE_SAVE_DATA, EDITAR, MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT,
   MESSAGE_ERROR_SWEET_ALERT
 } from '../../../../../constantsGlobal';
-
-const errors = {}
 
 var typeMessage = "error";
 var titleMessage = "Campos obligatorios";

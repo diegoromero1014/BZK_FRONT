@@ -5,10 +5,8 @@ import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
 import numeral from "numeral";
 import { Col, Row } from "react-flexbox-grid";
-
 import * as constants from "../selectsComponent/constants";
 import _ from 'lodash';
-
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import ModalErrorsUpdateClient from "../clientEdit/modalErrorsUpdateClient";
@@ -20,7 +18,6 @@ import ActividadEconomica from './components/ActividadEconomica';
 import Ubicacion from './components/Ubicacion';
 import InfoFinanciera from './components/InfoFinanciera';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
-
 import { goBack, redirectUrl } from "../globalComponents/actions";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { changeStateSaveData } from "../dashboard/actions";
@@ -38,7 +35,6 @@ import {
 import { sendErrorsUpdate, updateErrorsNotes } from "../clientDetailsInfo/actions";
 import { MESSAGE_LOAD_DATA, MESSAGE_SAVE_DATA } from '../../constantsGlobal';
 import { KEY_DESMONTE, KEY_EXCEPCION, KEY_EXCEPCION_NO_GERENCIADO, KEY_EXCEPCION_NO_NECESITA_LME } from "../clientEdit/constants";
-
 import { fields, validations as validate } from './fieldsAndRulesCertifyClient';
 
 //Data para los select de respuesta "Si" - "No"

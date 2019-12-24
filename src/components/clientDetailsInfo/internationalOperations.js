@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 import _ from 'lodash';
-
 import { YES, NO } from '../../constantsGlobal';
 import { IMPORT, EXPORT } from './constants';
 import { validateValueExist } from '../../actionsGlobal';

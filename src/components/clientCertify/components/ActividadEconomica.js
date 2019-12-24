@@ -1,7 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { bindActionCreators } from "redux";
-
 import {Col, Row} from "react-flexbox-grid";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import * as constants from "../../selectsComponent/constants";

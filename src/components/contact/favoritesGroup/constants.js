@@ -1,4 +1,3 @@
-
 export const FIND_GROUP_FAVORITE_CONTACTS = "FIND_GROUP_FAVORITE_CONTACTS";
 export const FIRST_PAGE = 1;
 export const NUMBER_RECORDS = 10;

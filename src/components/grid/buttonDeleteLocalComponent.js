@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import SweetAlert from '../sweetalertFocus';
-import { clearFilterGroup } from '../contact/favoritesGroup/actions';
 import { ACTION_BUTTON, ACTION_ICON } from './constants';
 
 class ButtonDeleteLocalComponent extends Component {
