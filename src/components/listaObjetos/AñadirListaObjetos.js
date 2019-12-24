@@ -6,79 +6,77 @@ import SweetAlert from "../sweetalertFocus";
 
 export class AñadirListaObjetos extends Component {
   state = {
-    objetivo: {
+    objeto: {
       id: "",
-      objetivo: ""
+      texto: ""
     },
-    objetivos: [],
-    campoObjetivo: false,
+    objetos: [],
+    campoObjeto: false,
     campoVacio: false,
-    idObjetivoEliminar: "",
+    idObjetoEliminar: "",
     modalEliminar: false,
     switchGuardarEditar: false,
-
-    idModifica: ""
   };
 
-  abrirCampoObjetivo = event => {
+  abrirCampoObjeto = event => {
     this.setState({
-      campoObjetivo: true
+      campoObjeto: true
     });
   };
 
-  cerrarCampoObjetivo = () => {
-    const { objetivo } = this.state.objetivo.objetivo;
+  cerrarCampoObjeto = () => {
+    const { texto } = this.state.objeto;
     this.setState({
-      campoObjetivo: false,
+      campoObjeto: false,
       campoVacio: false,
       switchGuardarEditar: false
     });
-    if (objetivo !== "") {
+    if (texto !== "") {
       this.setState({
-        objetivo: {
+        objeto: {
           id: "",
-          objetivo: ""
+          texto: ""
         }
       });
     }
   };
 
-  modificarObjetivo = () => {
-    const { objetivo } = this.state;
-    const listaObjetos = this.state.objetivos;
+  modificarObjeto = () => {
+    const { objeto } = this.state;
+    const listaObjetos = this.state.objetos;
 
     listaObjetos.map((elemento, index) => {
-      if (elemento.id === objetivo.id) {
-        listaObjetos[index].objetivo = objetivo.objetivo;
+      if (elemento.id === objeto.id) {
+        listaObjetos[index].texto = objeto.texto;
       }
     });
 
     this.setState({
-      objetivo: {
+      objeto: {
         id: "",
-        objetivo: ""
+        texto: ""
       },
-      objetivos: listaObjetos,
-      campoObjetivo: false,
+      objetos: listaObjetos,
+      campoObjeto: false,
       switchGuardarEditar: false
     });
   };
 
-  agregarObjetivoLista = () => {
+  agregarObjetoLista = () => {
     const id = (Math.random() * 10000).toFixed();
-    const { objetivo } = this.state;
-    objetivo.id = id;
-    const campoVacio = this.state.objetivo.objetivo;
+    const { objeto } = this.state;
+    objeto.id = id;
+    const campoVacio = this.state.objeto.texto;
 
     if (campoVacio !== "") {
-      const objetivos = [...this.state.objetivos, objetivo];
-      this.cerrarCampoObjetivo();
+      const objetos = [...this.state.objetos, objeto];
+      this.cerrarCampoObjeto();
       this.setState({
-        objetivo: {
+        objeto: {
           id: "",
-          objetivo: ""
+          texto: ""
         },
-        objetivos
+        objetos
       });
     } else {
       this.setState({
@@ -89,66 +87,65 @@ export class AñadirListaObjetos extends Component {
 
   mostrarModalEliminar = id => {
     this.setState({
-      idObjetivoEliminar: id,
+      idObjetoEliminar: id,
       modalEliminar: true
     });
   };
 
-  eliminarObjetivo = id => {
-    const objetivos = this.state.objetivos.filter(
+  eliminarObjeto = id => {
+    const objetos = this.state.objetos.filter(
       elemento => elemento.id !== id
     );
     this.setState({
       modalEliminar: false
     });
     this.setState({
-      objetivos
+      objetos
     });
   };
 
-  editarObjetivo = elemento => {
-    const { id, objetivo } = elemento;
+  editarObjeto = elemento => {
+    const { id, texto } = elemento;
     this.setState({
-      objetivo: {
+      objeto: {
         id,
-        objetivo
+        texto
       },
-      campoObjetivo: true,
+      campoObjeto: true,
       switchGuardarEditar: true
     });
   };
 
-  newObjetivo = event => {
+  newObjeto = event => {
     const { name, value } = event.target;
-    const { id } = this.state.objetivo;
+    const { id } = this.state.objeto;
     this.setState({
-      objetivo: {
+      objeto: {
         id,
         [name]: value
       }
     });
-    // NOTA: Debo corregir esta guardando uno despues - alinearlo - ajustarlo
   };
 
   render() {
     const { titulo } = this.props;
     const {
-      objetivos,
-      campoObjetivo,
+      objetos,
+      campoObjeto,
       campoVacio,
-      idObjetivoEliminar,
+      idObjetoEliminar,
       modalEliminar,
       switchGuardarEditar
     } = this.state;
     const textButon = switchGuardarEditar ? "Modificar" : "Guardar";
     const functionButton = switchGuardarEditar
-      ? this.modificarObjetivo
-      : this.agregarObjetivoLista;
+      ? this.modificarObjeto
+      : this.agregarObjetoLista;
 
-    const helpObjetivoscliente = "En este campo debe agregar los/las " + titulo + " del cliente.";
+    const helpObjetos = "En este campo debe agregar los/las " + titulo;
 
     return (
-      <div>
+      <div style={{width: "100%"}}>
         <Row style={{ padding: "20px 23px 20px 20px" }}>
           <Col xs={12} md={12} lg={12}>
             <div
@@ -170,10 +167,10 @@ export class AñadirListaObjetos extends Component {
                 <div>
                   <i className="book icon" style={{ fontSize: "18px" }} />
                   <span style={{ fontSize: "20px" }}>
-                    {`${titulo} del cliente`}(
+                    {`${titulo}`}(
                     <span style={{ color: "red" }}>*</span>)
                   </span>
-                  <ToolTip text={helpObjetivoscliente}>
+                  <ToolTip text={helpObjetos}>
                     <i
                       className="help circle icon blue"
                       style={{
@@ -187,7 +184,7 @@ export class AñadirListaObjetos extends Component {
                 <button
                   type="button"
                   className="btn-abrirCampo"
-                  onClick={this.abrirCampoObjetivo}
+                  onClick={this.abrirCampoObjeto}
                   style={{
                     marginRight: "10px",
                     border: "none",
@@ -209,7 +206,7 @@ export class AñadirListaObjetos extends Component {
               </div>
             </div>
           </Col>
-          {campoObjetivo && (
+          {campoObjeto && (
             <Col
               ms={12}
               md={12}
@@ -226,11 +223,11 @@ export class AñadirListaObjetos extends Component {
               >
                 <input
                   type="text"
-                  name="objetivo"
-                  onChange={this.newObjetivo}
-                  style={{ width: "750px" }}
+                  name="texto"
+                  onChange={this.newObjeto}
+                  style={{ width: "63%" }}
                   placeholder={`${titulo}...`}
-                  value={this.state.objetivo.objetivo}
+                  value={this.state.objeto.texto}
                 />
                 <div>
                   <button
@@ -251,7 +248,7 @@ export class AñadirListaObjetos extends Component {
                   </button>
                   <button
                     type="button"
-                    onClick={this.cerrarCampoObjetivo}
+                    onClick={this.cerrarCampoObjeto}
                     style={{
                       marginLeft: "10px",
                       padding: "10px 20px",
@@ -275,7 +272,7 @@ export class AñadirListaObjetos extends Component {
             </Col>
           )}
         </Row>
-        {objetivos.length !== 0 ? (
+        {objetos.length !== 0 ? (
           <Row style={{ padding: "5px 23px 5px 20px" }}>
             <Col
               xs={12}
@@ -285,17 +282,17 @@ export class AñadirListaObjetos extends Component {
             >
               <table className="ui striped table">
                 <thead>
-                  {objetivos.map(elemento => (
+                  {objetos.map(elemento => (
                     <tr>
                       <td className="collapsing">
                         <i
-                          className="zoom icon"
+                          className="edit icon"
                           title={`Editar ${titulo} del cliente`}
                           style={{ cursor: "pointer" }}
-                          onClick={() => this.editarObjetivo(elemento)}
+                          onClick={() => this.editarObjeto(elemento)}
                         />
                       </td>
-                      <td>{elemento.objetivo}</td>
+                      <td>{elemento.texto}</td>
                       <td className="collapsing">
                         <i
                           className="trash icon"
@@ -312,13 +309,13 @@ export class AñadirListaObjetos extends Component {
                 type="warning"
                 show={modalEliminar}
                 title="Confirmar Eliminacion"
-                text={`Señor usuario, ¿Está seguro que desea eliminar el/la ${titulo} del cliente?`}
+                text={`Señor usuario, ¿Está seguro que desea eliminar la ${titulo} del cliente?`}
                 confirmButtonColor="#DD6B55"
                 confirmButtonText="Sí, estoy seguro!"
                 cancelButtonText="Cancelar"
                 showCancelButton={true}
                 onCancel={() => this.setState({ modalEliminar: false })}
-                onConfirm={() => this.eliminarObjetivo(idObjetivoEliminar)}
+                onConfirm={() => this.eliminarObjeto(idObjetoEliminar)}
               />
             </Col>
           </Row>
@@ -341,7 +338,7 @@ export class AñadirListaObjetos extends Component {
                     }}
                   >
                     <h3 style={{ textAlign: "center" }}>
-                      {`Aún no se han adicionado ${titulo} por parte del cliente`}
+                      {`Aún no se han adicionado ${titulo}.`}
                     </h3>
                   </tr>
                 </thead>

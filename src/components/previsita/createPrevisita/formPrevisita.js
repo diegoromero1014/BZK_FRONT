@@ -41,7 +41,6 @@ import {
 } from '../../../constantsGlobal';
 
 import PermissionUserReports from "../../commercialReport/permissionsUserReports"
-import AñadirListaObjetos from "../../listaObjetos/AñadirListaObjetos";
 
 
 var datePrevisitLastReview;
@@ -795,9 +794,6 @@ class FormPrevisita extends Component {
                         </div>
                     </Col>
                 </Row>
-
-                {/* habilitador objeitvos y estrategias - 1246349 */}
-                <AñadirListaObjetos titulo="Objetivos"/>
 
                 <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
