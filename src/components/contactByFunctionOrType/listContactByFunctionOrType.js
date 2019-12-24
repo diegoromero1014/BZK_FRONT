@@ -1,7 +1,4 @@
-/**
- * Created by ahurtado on 12/06/2016.
- */
-import React, {Component, PropTypes} from 'react';
+import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {
@@ -15,7 +12,7 @@ import {redirectUrl} from '../globalComponents/actions'
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {mapDataGrid} from './contactByFunctionOrTypeUtilities';
-import {get, indexOf, has} from 'lodash';
+import { has} from 'lodash';
 import {showLoading} from '../loading/actions';
 import {NUMBER_RECORDS} from './constants';
 import {MODULE_CONTACTS, VISUALIZAR, ELIMINAR} from '../../constantsGlobal';

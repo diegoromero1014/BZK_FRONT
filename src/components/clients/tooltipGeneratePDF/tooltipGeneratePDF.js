@@ -1,6 +1,5 @@
 import React from 'react';
 import { Popup, List } from 'semantic-ui-react';
-
 import '../../../../styles/modules/client/tooltipGeneratePDF.scss';
 
 const styleTooltip = {

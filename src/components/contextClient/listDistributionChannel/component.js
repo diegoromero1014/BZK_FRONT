@@ -15,10 +15,9 @@ import { DISTRIBUTION_CHANNEL, MESSAGE_DISTRIBUTION_CHANNEL } from '../constants
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 import {
-    checkRequired, processRules, checkClientDescription,
+    checkRequired, checkClientDescription,
     checkNumberInRange, checkMaxLength, checkFirstCharacter
 } from '../../../validationsFields/rulesField';
-
 
 export class ComponentListDistributionChannel extends Component {
     constructor(props) {

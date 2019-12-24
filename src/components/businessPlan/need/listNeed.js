@@ -1,18 +1,15 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import _ from 'lodash';
-
 import BotonCreateNeed from './botonCreateNeed';
 import SweetAlert from '../../sweetalertFocus';
 import ModalNeed from './modalNeed';
 import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
-
 import { deleteNeed } from './actions';
 import { shorterStringValue } from '../../../actionsGlobal';
-
 import { DELETE_NEED_VIEW } from './constants';
 
 var arrayValueNeed = [];

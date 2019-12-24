@@ -1,10 +1,8 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Row, Grid, Col} from 'react-flexbox-grid';
-import {redirectUrl} from '../globalComponents/actions';
-import {reduxForm} from 'redux-form';
-import {bindActionCreators} from 'redux';
-import {changeValueActiveLog, consultValueActiveLog} from '../../actionsGlobal';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Row, Col } from 'react-flexbox-grid';
+import { bindActionCreators } from 'redux';
+import { changeValueActiveLog, consultValueActiveLog } from '../../actionsGlobal';
 import _ from 'lodash';
 import $ from 'jquery';
 

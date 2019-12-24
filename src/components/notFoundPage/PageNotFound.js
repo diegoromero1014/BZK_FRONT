@@ -4,7 +4,6 @@ import brand from '../../../img/pageUnderConstruction/biztract.svg';
 import '../../../styles/stylePageNotFound/pageNotFound.scss';
 import { Link } from 'react-router';
 
-
 const PageNotFound = () => {
     return (
         <div className="page-not-found">

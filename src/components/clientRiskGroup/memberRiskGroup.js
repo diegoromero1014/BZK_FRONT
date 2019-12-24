@@ -3,19 +3,16 @@ import { Col, Row } from "react-flexbox-grid";
 import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
 import _ from "lodash";
-
 import Input from "../../ui/input/inputComponent";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import Textarea from "../../ui/textarea/textareaComponent";
 import SweetAlert from "../sweetalertFocus";
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
-
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { addClientRiskGroup, getClientsRiskGroup } from "./actions";
 import { consultDataSelect } from "../selectsComponent/actions";
 import { formValidateKeyEnter, nonValidateEnter, onSessionExpire, validateResponse } from "../../actionsGlobal";
 import { showLoading } from "../loading/actions";
-
 import { SESSION_EXPIRED } from "../../constantsGlobal";
 import * as constants from "../selectsComponent/constants";
 

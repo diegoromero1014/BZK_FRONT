@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { groupFindServer, changePage, changeKeyword } from './actions';
 import AlertWithoutPermissions from '../../globalComponents/alertWithoutPermissions';
 import { NUMBER_RECORDS } from './constants';
-import { redirectUrl } from '../../globalComponents/actions';
 import SweetAlert from '../../sweetalertFocus';
 import { showLoading } from '../../loading/actions';
 import _ from 'lodash';

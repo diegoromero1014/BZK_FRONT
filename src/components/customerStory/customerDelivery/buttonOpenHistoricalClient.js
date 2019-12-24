@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
 
 import StructuredDelivery from '../structuredDelivery/componentStructuredDelivery';

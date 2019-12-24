@@ -1,11 +1,9 @@
-import { APP_URL, INIT_INPUT_EVENTS, STOP_INPUT_EVENTS, UPDATE_INPUT_EVENT, SEND_INPUT_EVENT, CLEAN_INPUT_EVENT } from '../../constantsGlobal';
-import {redirectUrl} from '../globalComponents/actions';
+import { APP_URL, INIT_INPUT_EVENTS, STOP_INPUT_EVENTS, SEND_INPUT_EVENT, CLEAN_INPUT_EVENT } from '../../constantsGlobal';
 import get from 'lodash/get';
 import moment from 'moment';
 import * as Rx from 'rxjs';
 import axios from 'axios';
-import { last } from 'rxjs/operator/last';
-import {onSessionExpire} from '../../actionsGlobal'
+import { onSessionExpire } from '../../actionsGlobal'
 
 // Cuantos minutos antes de terminar sesion se desea enviar el mensaje de alerta
 const MINUTES_BEFORE = 7;

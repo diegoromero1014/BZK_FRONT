@@ -1,6 +1,3 @@
-/**
- * Created by ahurtado on 11/23/2016.
- */
 export const FIND_ALERT_COVENANTS = "FIND_ALERT_COVENANTS";
 export const NUMBER_RECORDS = 10;
 export const CHANGE_PAGE_FOR_COVENANTS = "CHANGE_PAGE_FOR_COVENANTS";

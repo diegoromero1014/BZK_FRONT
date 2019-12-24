@@ -1,10 +1,8 @@
 import _ from "lodash";
-
 import {
     checkRequired, processRules, checkClientDescription,
     checkValueClientInformacion, checkFirstCharacter
 } from '../../../validationsFields/rulesField';
-
 import {
     noAppliedControlLinkedPayments
 } from '../../../constantsReducer';

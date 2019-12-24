@@ -11,7 +11,6 @@ import SweetAlert from '../../sweetalertFocus';
 import _ from 'lodash';
 import ModalProduct from './modalProduct';
 import Modal from 'react-modal';
-
 import {
   checkRequired, checkFirstCharacter, checkNameEntityProduct, checkOnlyAlphabetical, checkNumberLength
 } from '../../../validationsFields/rulesField';

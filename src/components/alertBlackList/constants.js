@@ -1,6 +1,3 @@
-/**
- * Created by Andres Hurtado on 01/03/2017.
- */
 export const FIND_ALERT_BLACK_LIST = "FIND_ALERT_COVENANTS";
 export const NUMBER_RECORDS = 10;
 export const CHANGE_PAGE_FOR_BLACK_LIST = "CHANGE_PAGE_FOR_COVENANTS";

@@ -1,6 +1,3 @@
-/**
- * Created by ahurtado on 12/06/2016.
- */
 import {APP_URL} from '../../constantsGlobal';
 import {
     FIND_CLIENTS_PORTFOLIO_EXPIRATION, CHANGE_PAGE_FOR_ALERT_PORTFOLIO_EXPIRATION,

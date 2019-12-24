@@ -1,6 +1,3 @@
-/**
- * Created by Andres Hurtado on 02/03/2017.
- */
 import {shorterStringValue} from '../../actionsGlobal';
 
 export const mapDataGrid = (data = []) => {

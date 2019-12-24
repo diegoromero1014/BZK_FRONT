@@ -4,7 +4,6 @@ import { bindActionCreators } from "redux";
 import { Col, Row } from "react-flexbox-grid";
 import moment from "moment";
 import _ from "lodash";
-
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import NeedBusiness from "../need/needBusiness";
@@ -14,19 +13,17 @@ import Tooltip from "../../toolTip/toolTipComponent";
 import RichText from "../../richText/richTextComponent";
 import BlockingComponent from '../../blockingComponent/blockingComponent';
 import PermissionUserReports from "../../commercialReport/permissionsUserReports";
-
 import { redirectUrl } from "../../globalComponents/actions";
 import { getMasterDataFields } from "../../selectsComponent/actions";
 import { addUsers, setConfidential } from "../../commercialReport/actions";
 import { buildJsoncommercialReport, fillUsersPermissions } from '../../commercialReport/functionsGenerics';
-import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, validateResponse, onSessionExpire } from "../../../actionsGlobal";
+import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, onSessionExpire } from "../../../actionsGlobal";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { createBusiness, detailBusiness, pdfDescarga, validateRangeDates } from "../actions";
 import { addNeed } from "../need/actions";
 import { addArea } from "../area/actions";
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-
 import {
     EDITAR, MESSAGE_SAVE_DATA, SAVE_DRAFT, SAVE_PUBLISHED, TITLE_OPPORTUNITY_BUSINESS, DATE_FORMAT, MESSAGE_ERROR, REQUEST_INVALID_INPUT, REQUEST_SUCCESS
 } from "../../../constantsGlobal";

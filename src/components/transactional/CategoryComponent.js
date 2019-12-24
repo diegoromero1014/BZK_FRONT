@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { Icon } from "semantic-ui-react";
 import ReportsCardsComponent from './ReportsCardsComponent';
 
-
 class CategoryComponent extends Component {
 
     componentDidMount() {

@@ -1,9 +1,9 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {consultListWithParameter} from '../actions';
-import {DropdownList} from 'react-widgets';
-import {SUB_CIIU} from '../constants';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { consultListWithParameter } from '../actions';
+import { DropdownList } from 'react-widgets';
+import { SUB_CIIU } from '../constants';
 
 var parentIdOld = null;
 

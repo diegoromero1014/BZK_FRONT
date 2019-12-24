@@ -4,21 +4,17 @@ import { Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import _ from 'lodash';
 import { fields, validations as validate } from './filesAndRules';
-
-
 import SweetAlert from '../../../../sweetalertFocus';
 import ComboBox from '../../../../../ui/comboBox/comboBoxComponent';
 import InputComponent from '../../../../../ui/input/inputComponent';
 import Textarea from '../../../../../ui/textarea/textareaComponent';
 import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
-
 import { redirectUrl } from '../../../../globalComponents/actions';
 import { toggleModalShareholder, clearSearchShareholder, searchShareholder, createShareholder } from './actions';
 import { shareholdersByClientFindServer, clearShareholderOrder, clearShareholderCreate } from '../actions';
 import { consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess } from '../../../../selectsComponent/actions';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../../../actionsGlobal';
 import { changeStateSaveData } from '../../../../dashboard/actions';
-
 import { NUMBER_RECORDS, NATURE_PERSON } from '../constants';
 import {
   MESSAGE_SAVE_DATA
@@ -28,13 +24,9 @@ import {
   SHAREHOLDER_ID_TYPE, SHAREHOLDER_KIND, GENDER, CLIENT_ID_TYPE, CLIENT_TYPE
 } from '../../../../selectsComponent/constants';
 
-const errors = {};
-
 var typeMessage = "error";
 var titleMessage = "Campos obligatorios";
 var message = "Señor usuario, debe seleccionar el tipo de documento e ingresar el documento del accionista.";
-
-let isNaturePerson = false;
 
 var valueTypeShareholder;
 

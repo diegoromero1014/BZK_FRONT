@@ -17,7 +17,6 @@ export const CHANGE_MAIN_PIPELINE = "CHANGE_MAIN_PIPELINE";
 export const PIPELINE_STATUS = "pipelineStatus";
 export const LINE_OF_BUSINESS_LEASING = "Leasing Bancolombia";
 export const ORIGIN_PIPELIN_BUSINESS = "pipelineBusiness";
-
 export const NEED_FINANCING = "Financiación";
 export const BUSINESS_STATUS_COMPROMETIDO = "Comprometido";
 export const BUSINESS_STATUS_COTIZACION = "Cotización";
@@ -25,13 +24,11 @@ export const BUSINESS_STATUS_NO_CONTACTADO = "no contactado";
 export const BUSINESS_STATUS_PERDIDO = "perdido";
 export const PRODUCT_FAMILY_LEASING = "Leasing";
 export const HELP_PROBABILITY = "Período en que se espera cerrar el negocio.";
-//manejo de los planes de desembolso
 export const UPDATE_DISBURSEMENT_PLANS = "UPDATE_DISBURSEMENT_PLANS";
 export const CURRENCY_MESSAGE = "Señor usuario, mientras exista un plan de desembolso, no se puede editar la moneda ni el valor nominal. Si requiere editarlos debe eliminar los desembolsos.";
 export const PIPELINE_DISBURSEMENT_PLAN_MESSAGE = "Señor usuario, mientras exista un plan de desembolso, no puede modificar la necesidad del cliente, primero debe eliminar los planes de desembolso.";
 export const OPORTUNITIES_MANAGEMENT = "gestión de oportunidades";
 export const NUEVO_NEGOCIO = "inicio nuevo negocio";
-
 export const LEASING = 'leasing';
 export const FINANCIAL_LEASING = 'leasing financiero';
 export const OPERATING_LEASE = 'arrendamiento operativo';

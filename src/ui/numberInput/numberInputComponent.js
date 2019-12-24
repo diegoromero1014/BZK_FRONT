@@ -1,5 +1,4 @@
-import React, {Component, PropTypes} from 'react';
-import $ from 'jquery';
+import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 import NumberInput from 'react-number-input';
 

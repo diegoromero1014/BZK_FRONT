@@ -1,6 +1,3 @@
-/**
- * Created by Andres Hurtado on 23/03/2017.
- */
 export const CONSULT_BLACK_LIST_CLIENT = "CONSULT_BLACK_LIST_CLIENT";
 export const UPDATE_VALUES_BLACKLIST = "UPDATE_VALUES_BLACKLIST";
 import {APP_URL} from '../../../constantsGlobal';

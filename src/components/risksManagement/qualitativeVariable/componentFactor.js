@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
-import { bindActionCreators } from 'redux';
 import ComponentVariable from './componentVariable';
 import { validateValueExist } from '../../../actionsGlobal';
 import { connect } from 'react-redux';

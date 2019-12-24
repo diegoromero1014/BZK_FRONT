@@ -10,7 +10,6 @@ import {
   CLEAR_PENDING_TASK_TEAM,
   CLEAR_MY_PENDINGS_TEAM_ORDER,
   ORDER_COLUMN_MY_PENDING_TEAM,
-  GET_XLS_TASK,
   GET_DOWNLOAD_MY_PENDINGS_TASKS
 } from './constants';
 import axios from 'axios';

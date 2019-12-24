@@ -5,7 +5,7 @@ import { CONTROL_DASHBOARD_TITLE,CONTROL_DASHBOARD_URL_PARAMETER } from './const
 import { redirectUrl } from '../globalComponents/actions';
 import { updateTitleNavBar } from '../navBar/actions';
 import { setUrlParameter } from './actions';
-import {consultParameterServer} from '../../actionsGlobal';
+import { consultParameterServer } from '../../actionsGlobal';
 
 class ControlDashboard extends Component {
     constructor(props) {

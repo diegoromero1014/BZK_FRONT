@@ -7,7 +7,6 @@ import { deleteParticipant } from './actions';
 import SweetAlert from '../sweetalertFocus';
 import _ from 'lodash';
 
-
 class ListParticipantesOtros extends Component {
 
   constructor(props) {

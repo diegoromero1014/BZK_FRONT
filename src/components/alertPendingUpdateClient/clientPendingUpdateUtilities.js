@@ -1,6 +1,5 @@
 import {shorterStringValue, mapDateValueFromTask} from '../../actionsGlobal';
 
-
 export const mapDataGrid = (data = []) => {
 
     return data.map((client, idx) => ({
