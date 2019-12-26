@@ -648,6 +648,8 @@ class FormPrevisita extends Component {
                 }
             });
         }
+
+        getMasterDataFields([PREVISIT_TYPE]);
     }
 
     render() {
@@ -825,7 +827,7 @@ class FormPrevisita extends Component {
                     </Col>
                 </Row>
 
-                {valueTypePrevisit === PROPUEST_OF_BUSINESS &&
+                
                     <div>
                         <Row style={{ padding: "10px 10px 20px 20px" }}>
                             <Col xs={12} md={12} lg={12}>
@@ -865,7 +867,6 @@ class FormPrevisita extends Component {
                             </Col>
                         </Row>
                     </div>
-                }
                 <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
