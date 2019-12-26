@@ -9,7 +9,7 @@ import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import RichText from '../richText/richTextComponent';
 import Participants from './participants';
 import Challenger from '../challenger/challenger';
-import { TITLE_MESSAGE_TARGET, TITLE_MESSAGE_PENDIENT } from './constants';
+import { TITLE_MESSAGE_TARGET } from './constants';
 
 import '../../../styles/field/main.scss'; 
 
@@ -46,10 +46,10 @@ export class PrevisitFormComponent extends Component {
                nullable: false,
                message: TITLE_MESSAGE_TARGET
             },
-            pending: {
-               name: 'Pendientes, quejas y reclamos',
+            challenger: {
+               name: 'Construcción de la Propuesta de Negocio',
                nullable: true,
-               message: TITLE_MESSAGE_PENDIENT
+               message: null
             }
          },
          type: null  
@@ -79,14 +79,16 @@ export class PrevisitFormComponent extends Component {
    );
 
    renderTitle = ({name, message, nullable}) => (
-      <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+      <div style={{ fontSize: "23px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px",  display: "-webkit-inline-box" }}>
          <span>{`${name}  ${!nullable ? '(' : ''} `} </span>
             {!nullable && <span style={{ color: 'red' }}>*</span>} 
             {!nullable && ' )' }
          
-         <Tooltip text={message}>
-            <i className="help circle icon blue" style={{ fontSize: "18px", cursor: "pointer", marginLeft: "10px" }} />
-         </Tooltip>
+         {message && 
+            <Tooltip text={message}>
+               <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
+            </Tooltip>
+         }
       </div>
    );
 
@@ -96,14 +98,14 @@ export class PrevisitFormComponent extends Component {
    }
 
    render() {      
-      const { fields: { type, date, duration, place, objective, pending } } = this.state;
+      const { fields: { type, date, duration, place, objective, challenger } } = this.state;
       const { previsitTypes, commercialReportButtons, showChallengerSection } = this.props;
- 
+     
       return (
 
          <div>                   
             <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>               
-              <Row style={{ padding: "10px 10px 20px 20px" }}>
+               <Row style={{ padding: "10px 10px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
                       <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                           <div className="tab-content-row"
@@ -112,7 +114,8 @@ export class PrevisitFormComponent extends Component {
                           <span style={{ fontSize: "20px" }}> Datos de visita</span>
                       </div>
                   </Col>
-              </Row>                          
+               </Row> 
+            
                <Row style={{ width: '99%', paddingLeft: 20 }}>
                   <Col xs={3}>
                      <Field type="text" name="documentType">
@@ -246,19 +249,20 @@ export class PrevisitFormComponent extends Component {
                         }
                      </Field>
                   </Col>
-               </Row>                          
+               </Row>   
+
+               <Row style={{ padding: "20px 23px 20px 20px" }}>
+                    <Col xs={12} md={12} lg={12}>
+                        {this.renderTitle(challenger)}
+                    </Col>
+               </Row>                 
                {showChallengerSection &&
                   <Row style={{ padding: "20px 23px 20px 20px" }}>                     
                      <Col xs={12} md={12} lg={12}>
                         <Challenger />
                      </Col>                     
                   </Row>   
-               }               
-               <Row style={{ padding: "20px 23px 20px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        {this.renderTitle(pending)}
-                    </Col>
-                </Row>
+               }      
 
                 <Row style={{ padding: "0px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
