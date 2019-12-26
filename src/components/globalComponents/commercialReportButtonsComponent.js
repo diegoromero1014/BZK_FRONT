@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { SAVE_DRAFT, SAVE_PUBLISHED } from '../../constantsGlobal';
 
-class CommercialReportButtonsComponent extends Component {
+export default class CommercialReportButtonsComponent extends Component {
 
     constructor(props){
         super(props);
@@ -16,13 +16,14 @@ class CommercialReportButtonsComponent extends Component {
                     position: "fixed",
                     border: "1px solid #C2C2C2",
                     bottom: "0px",
-                    width: "100%",
+                    width: "calc(100% - 190px)",
                     marginBottom: "0px",
+                    padding: '0px 0 8px 0',
                     backgroundColor: "#F8F8F8",
-                    height: "50px",
+                    height: "60px",
                     background: "rgba(255,255,255,0.75)"
                 }}>
-                <div style={{ width: "700px", height: "100%", position: "fixed", right: "0px", textAlign: "end" }}>
+                <div style={{ width: "100%", height: "100%", right: "0px", display: 'flex', "justify-content": 'flex-end' }}>
                     <button
                         name="btnPreSave"
                         className="btn" type="submit" 
@@ -61,5 +62,3 @@ class CommercialReportButtonsComponent extends Component {
         );
     }
 }
-
-export default CommercialReportButtonsComponent;

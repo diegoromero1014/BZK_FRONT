@@ -22,7 +22,7 @@ import $ from 'jquery';
 import EditPrevisit from '../previsita/editPrevisit/editPrevisit';
 import { filterUsersBanco } from '../participantsVisitPre/actions';
 import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
-import { PrevisitPage } from '../previsita/previsitPage';
+import PrevisitPage from '../previsita/previsitPage';
 
 
 BigCalendar.momentLocalizer(moment);

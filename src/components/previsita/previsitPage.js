@@ -17,7 +17,8 @@ import moment from 'moment';
 import _ from 'lodash';
 import { ComponentClientInformationURL, LoginComponentURL } from '../../constantsAnalytics';
 import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure, fillParticipants } from './participantsActions';
-import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_CREATE_ERROR, TITLE_PREVISIT_EDIT, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_INVALID_INPUT, TITLE_EXIT_CONFIRMATION, MESSAGE_EXIT_CONFIRMATION, TITLE_ERROR_VALIDITY_DATES } from './constants';
+import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_CREATE_ERROR, TITLE_PREVISIT_EDIT, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_INVALID_INPUT, TITLE_EXIT_CONFIRMATION, MESSAGE_EXIT_CONFIRMATION, TITLE_ERROR_VALIDITY_DATES, PROPUEST_OF_BUSINESS,
+   TITLE_VISIT_TYPE, MESSAGE_VISIT_TYPE_CHANGED, TRACING } from './constants';
 import { setConfidential, addUsers } from '../commercialReport/actions';
 import CommercialReportButtonsComponent from '../globalComponents/commercialReportButtonsComponent';
 import SweetAlert from "../sweetalertFocus";
@@ -33,8 +34,7 @@ export class PrevisitPage extends Component {
       super(props);
       
       this.state = {
-         isEditable: false,
-         showErrorBlockedPreVisit: false,
+         isEditable: false,         
          showMessage: false,
          userEditingPrevisita: "",
          shouldRedirect: false,
@@ -42,8 +42,15 @@ export class PrevisitPage extends Component {
          isMounted: false,
          renderForm: false,
          previsitTypes: [],
+         showErrorBlockedPreVisit: false,
          showConfirmationCancelPrevisit: false,
+         showConfirmChangeTypeVisit: false,
+         showChallengerSection: false,
          documentDraft: null,
+         oldPrevisitTypeSelected: null,
+         oldPrevisitTypeSelectedId: null,
+         currentPrevisitTypeSelected: null,
+         setFieldValue: null     
       };
    }
 
@@ -94,7 +101,7 @@ export class PrevisitPage extends Component {
    }
 
    getPrevisitData = async (id) => {
-      const { dispatchDetailPrevisit, dispatchSetConfidential, dispatchAddUsers, dispatchAddListParticipant, dispatchAddAnswer } = this.props;
+      const { dispatchDetailPrevisit, dispatchSetConfidential, dispatchAddUsers, dispatchAddListParticipant, dispatchAddAnswer, selectsReducer } = this.props;
       if (id) {
          const response = await dispatchDetailPrevisit(id);
          const previsitDetail = response.payload.data.data;  
@@ -104,7 +111,8 @@ export class PrevisitPage extends Component {
                previsitDetail.participatingContacts.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_CLIENT })),
                previsitDetail.participatingEmployees.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_BANCO })),
                previsitDetail.relatedEmployees.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_OTHER }))
-         ));                  
+         ));            
+         const previsitTypeInfo = selectsReducer ? selectsReducer.get(PREVISIT_TYPE).find((previsit) => previsit.id == previsitDetail.documentType) : null;         
          dispatchAddListParticipant(participants);         
          dispatchSetConfidential(previsitDetail.commercialReport.isConfidential);         
          fillUsersPermissions(previsitDetail.commercialReport.usersWithPermission, dispatchAddUsers);         
@@ -114,7 +122,9 @@ export class PrevisitPage extends Component {
          });
 
          this.setState({
-            isEditable: true
+            isEditable: true,
+            oldPrevisitTypeSelected: null,
+            currentPrevisitTypeSelected: previsitTypeInfo ? previsitTypeInfo.key.toUpperCase() : ''
          });         
       } else {         
          dispatchSetConfidential(false);
@@ -290,6 +300,65 @@ export class PrevisitPage extends Component {
       return id ? MESSAGE_PREVISIT_EDIT_ERROR : MESSAGE_PREVISIT_CREATE_ERROR;
    }
 
+   showChallengerSection = async (previsitTypeId, setFieldValue) => {
+      const {selectsReducer} = this.props;      
+      const previsitTypeInfo = selectsReducer.get(PREVISIT_TYPE).find((previsit) => previsit.id == previsitTypeId);      
+      const oldPrevisitTypeKeySelected = this.state.oldPrevisitTypeSelected ? this.state.oldPrevisitTypeSelected.toUpperCase() : null;
+      const previsitTypeKeySelected = previsitTypeInfo.key.toUpperCase();   
+      const previsitTypeIdSelected = previsitTypeInfo.id;   
+
+      this.setState({
+         setFieldValue
+      });
+
+      if(oldPrevisitTypeKeySelected == null){         
+         this.setState({
+            oldPrevisitTypeSelected: previsitTypeKeySelected,
+            oldPrevisitTypeSelectedId: previsitTypeIdSelected            
+         });
+         this.validateSelectionPrevisitType(previsitTypeKeySelected);
+      }else if(oldPrevisitTypeKeySelected != previsitTypeKeySelected){
+         this.setState({
+            currentPrevisitTypeSelected: previsitTypeKeySelected,
+            oldPrevisitTypeSelected: previsitTypeKeySelected
+         });
+         if(oldPrevisitTypeKeySelected == PROPUEST_OF_BUSINESS.toUpperCase()){
+            this.setState({
+               showConfirmChangeTypeVisit: true
+            });
+         }else{
+            this.validateSelectionPrevisitType(previsitTypeKeySelected);                   
+         }           
+      }            
+   }
+
+   validateSelectionPrevisitType = (previsitTypeKey) => {           
+      if(previsitTypeKey === PROPUEST_OF_BUSINESS.toUpperCase()){   
+         this.setState({
+            showChallengerSection: true
+         });
+      }else{
+         this.setState({
+            showChallengerSection: false
+         });
+      }
+   }
+
+   confirmChangeTypePrevisit = () => { 
+      this.validateSelectionPrevisitType(this.state.currentPrevisitTypeSelected);
+      this.setState({
+         showConfirmChangeTypeVisit: false
+      });      
+   }
+
+   cancelChangeTypePrevisit = () => {      
+      const {setFieldValue, oldPrevisitTypeSelectedId} = this.state;      
+      this.setState({
+         showConfirmChangeTypeVisit: false
+      });
+      setFieldValue("documentType", oldPrevisitTypeSelectedId, false);                        
+   }   
+
    validateDatePrevisit = async previsit => {
       const { params: { id }, dispatchValidateDatePrevisit, dispatchSwtShowMessage } = this.props;
       let visitTime = parseInt(moment(previsit.date).startOf('minute').format('x'));
@@ -308,20 +377,22 @@ export class PrevisitPage extends Component {
          <PrevisitFormComponent
             previsitData={previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null}
             previsitTypes={selectsReducer.get(PREVISIT_TYPE)}
+            onChangeShowChallengerSection={this.showChallengerSection}
+            showChallengerSection={this.state.showChallengerSection}
             isEditable={this.state.isEditable}
-            onSubmit={this.submitForm}>
-            <CommercialReportButtonsComponent 
+            onSubmit={this.submitForm}
+            commercialReportButtons={
+               <CommercialReportButtonsComponent 
                onClickSave={draft => this.setState({ documentDraft: draft })} 
                onClickDownloadPDF={id ? this.onClickDownloadPDF : null}
                cancel={this.onClickCancelCommercialReport}
-            />
-         </PrevisitFormComponent>
+            />}/>                     
       )
    }
 
    render() {
       return (
-         <div>
+         <div className='previsit-container'>
             <HeaderPrevisita />
             <div style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
                <Row style={{ padding: "5px 10px 0px 20px" }}>
@@ -359,6 +430,17 @@ export class PrevisitPage extends Component {
                showCancelButton={true}
                onCancel={() => this.setState({ showConfirmationCancelPrevisit: false })}
                onConfirm={this.redirectToClientInformation} />
+            <SweetAlert
+               type="warning"
+               show={this.state.showConfirmChangeTypeVisit}
+               title={TITLE_VISIT_TYPE}
+               text={MESSAGE_VISIT_TYPE_CHANGED}
+               confirmButtonColor='#DD6B55'
+               confirmButtonText={AFIRMATIVE_ANSWER}
+               cancelButtonText={CANCEL}
+               showCancelButton={true}
+               onCancel={this.cancelChangeTypePrevisit}
+               onConfirm={this.confirmChangeTypePrevisit} />
          </div>
       )
    }

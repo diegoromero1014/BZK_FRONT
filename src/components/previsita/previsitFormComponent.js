@@ -52,7 +52,7 @@ export class PrevisitFormComponent extends Component {
                message: TITLE_MESSAGE_PENDIENT
             }
          },
-         type: null
+         type: null  
       };
    }
 
@@ -90,11 +90,17 @@ export class PrevisitFormComponent extends Component {
       </div>
    );
 
+   changeTypePrevisit = (previsitTypeId) => {
+      const { onChangeShowChallengerSection, setFieldValue } = this.props;
+      onChangeShowChallengerSection(previsitTypeId, setFieldValue);     
+   }
+
    render() {      
       const { fields: { type, date, duration, place, objective, pending } } = this.state;
-      const { previsitTypes, children } = this.props;
-     
+      const { previsitTypes, commercialReportButtons, showChallengerSection } = this.props;
+ 
       return (
+
          <div>                   
             <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>               
               <Row style={{ padding: "10px 10px 20px 20px" }}>
@@ -106,7 +112,7 @@ export class PrevisitFormComponent extends Component {
                           <span style={{ fontSize: "20px" }}> Datos de visita</span>
                       </div>
                   </Col>
-              </Row>             
+              </Row>                          
                <Row style={{ width: '99%', paddingLeft: 20 }}>
                   <Col xs={3}>
                      <Field type="text" name="documentType">
@@ -119,8 +125,9 @@ export class PrevisitFormComponent extends Component {
                                   valueProp={'id'}
                                   textProp={'value'}
                                   value={value}
-                                  onChange={(id, val) => {
-                                       setFieldValue(name, id, false);
+                                  onChange={(id, val) => {                                                               
+                                    setFieldValue(name, id, false);                                                                                                               
+                                    this.changeTypePrevisit(id);                                                                        
                                   }}
                                   onBlur={onBlur}
                                   data={previsitTypes}
@@ -130,8 +137,7 @@ export class PrevisitFormComponent extends Component {
                                 {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
-                        }
-
+                        }                        
                      </Field>
                   </Col>
 
@@ -240,14 +246,14 @@ export class PrevisitFormComponent extends Component {
                         }
                      </Field>
                   </Col>
-               </Row>
-
-               <Row style={{ padding: "20px 23px 20px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
+               </Row>                          
+               {showChallengerSection &&
+                  <Row style={{ padding: "20px 23px 20px 20px" }}>                     
+                     <Col xs={12} md={12} lg={12}>
                         <Challenger />
-                    </Col>
-                </Row>
-
+                     </Col>                     
+                  </Row>   
+               }               
                <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         {this.renderTitle(pending)}
@@ -276,8 +282,7 @@ export class PrevisitFormComponent extends Component {
                         </Field>
                     </Col>
                </Row>
-               
-               {children}
+               {commercialReportButtons}
             </Form>            
          </div>         
       )
