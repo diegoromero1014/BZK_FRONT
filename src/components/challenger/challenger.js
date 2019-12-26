@@ -44,12 +44,10 @@ class Challenger extends Component {
                 <div className={`title ${field}`} onClick={this.seletedTabActive}>
                     <i className="dropdown icon"></i>
                     
-                    <div style={{ display: "inline-flex"}} >
-                        <span 
-                            onClick={e => 
-                                $(`.${e.target.parentElement.parentElement.classList[1]}`).toggleClass('active')
-                            } 
-                        >{`${title}  ${!nullable ? '(' : ''} `} </span> {!nullable && <span style={{ color: 'red' }}>*</span>}  {!nullable && ' )' }
+                    <div style={{ display: "inline-flex"}}>
+                        <span onClick={e => $(`.${e.target.parentElement.parentElement.classList[1]}`).toggleClass('active')}>
+                            {`${title}  ${!nullable ? '(' : ''} `} 
+                        </span> {!nullable && <span style={{ color: 'red' }}>*</span>}  {!nullable && ' )' }
                         <br />
                         {message && 
                             <ToolTip text={message}>
@@ -59,12 +57,7 @@ class Challenger extends Component {
                     </div>
 
                     {subtitle &&
-                        <span 
-                            onClick={e => 
-                                $(`.${e.target.parentElement.classList[1]}`).toggleClass('active')
-                            } 
-                            style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}
-                        >{subtitle}</span>
+                        <span onClick={e => $(`.${e.target.parentElement.classList[1]}`).toggleClass('active')} style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}</span>
                     }
                 </div>
 
