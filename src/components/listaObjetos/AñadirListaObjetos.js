@@ -4,6 +4,12 @@ import ToolTip from "../toolTip/toolTipComponent";
 import ToolTipComponent from "../toolTip/toolTipComponent";
 import SweetAlert from "../sweetalertFocus";
 
+/** La funcion updateElements debe recibirse como propiedad por parte del 
+    componente padre, se le envia la lista de objetos, para luego 
+    guardar los datos en el componente padre (redux-context-state) para 
+    comunicacion con el back - BD
+*/
+
 export class AñadirListaObjetos extends Component {
   state = {
     objeto: {
@@ -15,7 +21,7 @@ export class AñadirListaObjetos extends Component {
     campoVacio: false,
     idObjetoEliminar: "",
     modalEliminar: false,
-    switchGuardarEditar: false,
+    switchGuardarEditar: false
   };
 
   abrirCampoObjeto = event => {
@@ -41,35 +47,65 @@ export class AñadirListaObjetos extends Component {
     }
   };
 
+  mostrarModalEliminar = id => {
+    this.setState({
+      idObjetoEliminar: id,
+      modalEliminar: true
+    });
+  };
+
+  editarObjeto = elemento => {
+    const { id, texto } = elemento;
+    this.setState({
+      objeto: {
+        id,
+        texto
+      },
+      campoObjeto: true,
+      switchGuardarEditar: true
+    });
+  };
+
   modificarObjeto = () => {
     const { objeto } = this.state;
     const listaObjetos = this.state.objetos;
+    const campoVacio = this.state.objeto.texto;
+    // const { updateElements } = this.props;
 
-    listaObjetos.map((elemento, index) => {
-      if (elemento.id === objeto.id) {
-        listaObjetos[index].texto = objeto.texto;
-      }
-    });
-
-    this.setState({
-      objeto: {
-        id: "",
-        texto: ""
-      },
-      objetos: listaObjetos,
-      campoObjeto: false,
-      switchGuardarEditar: false
-    });
+    if (campoVacio !== "") {
+      listaObjetos.map((elemento, index) => {
+        if (elemento.id === objeto.id) {
+          listaObjetos[index].texto = objeto.texto;
+        }
+      });
+      // updateElements(listaObjetos);
+      this.setState({
+        objeto: {
+          id: "",
+          texto: ""
+        },
+        objetos: listaObjetos,
+        campoVacio: false,
+        campoObjeto: false,
+        switchGuardarEditar: false
+      });
+    } else {
+      this.setState({
+        campoVacio: true
+      });
+    }
   };
 
   agregarObjetoLista = () => {
     const id = (Math.random() * 10000).toFixed();
     const { objeto } = this.state;
+    // const { updateElements } = this.props;
     objeto.id = id;
     const campoVacio = this.state.objeto.texto;
 
     if (campoVacio !== "") {
       const objetos = [...this.state.objetos, objeto];
+      // updateElements(objetos);
       this.cerrarCampoObjeto();
       this.setState({
         objeto: {
@@ -85,34 +121,15 @@ export class AñadirListaObjetos extends Component {
     }
   };
 
-  mostrarModalEliminar = id => {
-    this.setState({
-      idObjetoEliminar: id,
-      modalEliminar: true
-    });
-  };
-
   eliminarObjeto = id => {
-    const objetos = this.state.objetos.filter(
-      elemento => elemento.id !== id
-    );
+    // const { updateElements } = this.props;
+    const objetos = this.state.objetos.filter(elemento => elemento.id !== id);
+    // updateElements(objetos);
     this.setState({
       modalEliminar: false
     });
     this.setState({
       objetos
-    });
-  };
-
-  editarObjeto = elemento => {
-    const { id, texto } = elemento;
-    this.setState({
-      objeto: {
-        id,
-        texto
-      },
-      campoObjeto: true,
-      switchGuardarEditar: true
     });
   };
 
@@ -137,7 +154,7 @@ export class AñadirListaObjetos extends Component {
       modalEliminar,
       switchGuardarEditar
     } = this.state;
-    const textButon = switchGuardarEditar ? "Modificar" : "Guardar";
+    const textButon = switchGuardarEditar ? "Modificar" : "Agregar";
     const functionButton = switchGuardarEditar
       ? this.modificarObjeto
       : this.agregarObjetoLista;
@@ -145,7 +162,7 @@ export class AñadirListaObjetos extends Component {
     const helpObjetos = "En este campo debe agregar los/las " + titulo;
 
     return (
-      <div style={{width: "100%"}}>
+      <div style={{ width: "100%" }}>
         <Row style={{ padding: "20px 23px 20px 20px" }}>
           <Col xs={12} md={12} lg={12}>
             <div
@@ -167,8 +184,7 @@ export class AñadirListaObjetos extends Component {
                 <div>
                   <i className="book icon" style={{ fontSize: "18px" }} />
                   <span style={{ fontSize: "20px" }}>
-                    {`${titulo}`}(
-                    <span style={{ color: "red" }}>*</span>)
+                    {`${titulo}`}(<span style={{ color: "red" }}>*</span>)
                   </span>
                   <ToolTip text={helpObjetos}>
                     <i
@@ -196,7 +212,7 @@ export class AñadirListaObjetos extends Component {
                     padding: "10px 10px"
                   }}
                 >
-                  <ToolTipComponent text={`"Agregar ${titulo} del cliente"`}>
+                  <ToolTipComponent text={`Agregar ${titulo}`}>
                     <i
                       className="plus white icon"
                       style={{ padding: "3px 0 0 5px" }}
@@ -221,11 +237,11 @@ export class AñadirListaObjetos extends Component {
                   justifyContent: "space-between"
                 }}
               >
-                <input
+                <textarea
                   type="text"
                   name="texto"
                   onChange={this.newObjeto}
-                  style={{ width: "63%" }}
+                  style={{ width: "63%", height: "100px" }}
                   placeholder={`${titulo}...`}
                   value={this.state.objeto.texto}
                 />
@@ -264,11 +280,17 @@ export class AñadirListaObjetos extends Component {
                   </button>
                 </div>
               </div>
-              {campoVacio && (
-                <div className="ui pointing red basic label">
-                  {`Para guardar debe ingresar ${titulo} del cliente!`}
-                </div>
-              )}
+              {campoVacio ? (
+                switchGuardarEditar ? (
+                  <div className="ui pointing red basic label">
+                    {`Para modificar debe ingresar ${titulo}`}
+                  </div>
+                ) : (
+                  <div className="ui pointing red basic label">
+                    {`Para agregar debe ingresar ${titulo}`}
+                  </div>
+                )
+              ) : null}
             </Col>
           )}
         </Row>
@@ -287,7 +309,7 @@ export class AñadirListaObjetos extends Component {
                       <td className="collapsing">
                         <i
                           className="edit icon"
-                          title={`Editar ${titulo} del cliente`}
+                          title={`Editar ${titulo}`}
                           style={{ cursor: "pointer" }}
                           onClick={() => this.editarObjeto(elemento)}
                         />
@@ -296,7 +318,7 @@ export class AñadirListaObjetos extends Component {
                       <td className="collapsing">
                         <i
                           className="trash icon"
-                          title={`Eliminar ${titulo} del cliente`}
+                          title={`Eliminar ${titulo}`}
                           style={{ cursor: "pointer" }}
                           onClick={() => this.mostrarModalEliminar(elemento.id)}
                         />
@@ -309,7 +331,7 @@ export class AñadirListaObjetos extends Component {
                 type="warning"
                 show={modalEliminar}
                 title="Confirmar Eliminacion"
-                text={`Señor usuario, ¿Está seguro que desea eliminar la ${titulo} del cliente?`}
+                text={`Señor usuario, ¿Está seguro que desea eliminar ${titulo}?`}
                 confirmButtonColor="#DD6B55"
                 confirmButtonText="Sí, estoy seguro!"
                 cancelButtonText="Cancelar"
