@@ -41,7 +41,7 @@ export class PrevisitFormComponent extends Component {
                message: null
             },
             objective: {
-               name: 'Objectivo de la reunión', 
+               name: 'Objetivo de la reunión', 
                nullable: false,
                message: TITLE_MESSAGE_TARGET
             },
@@ -51,7 +51,7 @@ export class PrevisitFormComponent extends Component {
                message: null
             }
          },
-         type: null
+         type: null  
       };
    }
 
@@ -91,11 +91,17 @@ export class PrevisitFormComponent extends Component {
       </div>
    );
 
+   changeTypePrevisit = (previsitTypeId) => {
+      const { onChangeShowChallengerSection, setFieldValue } = this.props;
+      onChangeShowChallengerSection(previsitTypeId, setFieldValue);     
+   }
+
    render() {      
       const { fields: { type, date, duration, place, objective, challenger } } = this.state;
-      const { previsitTypes, children } = this.props;
+      const { previsitTypes, commercialReportButtons, showChallengerSection } = this.props;
      
       return (
+
          <div>                   
             <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>               
                <Row style={{ padding: "10px 10px 20px 20px" }}>
@@ -121,8 +127,9 @@ export class PrevisitFormComponent extends Component {
                                   valueProp={'id'}
                                   textProp={'value'}
                                   value={value}
-                                  onChange={(id, val) => {
-                                       setFieldValue(name, id, false);
+                                  onChange={(id, val) => {                                                               
+                                    setFieldValue(name, id, false);                                                                                                               
+                                    this.changeTypePrevisit(id);                                                                        
                                   }}
                                   onBlur={onBlur}
                                   data={previsitTypes}
@@ -132,8 +139,7 @@ export class PrevisitFormComponent extends Component {
                                 {message => this.renderMessageError(message)}
                               </ErrorMessage>
                            </div>
-                        }
-
+                        }                        
                      </Field>
                   </Col>
 
@@ -235,6 +241,7 @@ export class PrevisitFormComponent extends Component {
                                  style={{ width: '100%', height: '178px' }}
                                  readOnly={false}
                               />
+                              <br></br>
                               <ErrorMessage name="principalObjective" component={'div'} >
                                  {message => this.renderMessageError(message)}
                               </ErrorMessage>
@@ -242,21 +249,44 @@ export class PrevisitFormComponent extends Component {
                         }
                      </Field>
                   </Col>
-               </Row>
+               </Row>   
 
                <Row style={{ padding: "20px 23px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         {this.renderTitle(challenger)}
                     </Col>
-               </Row>
-
-               <Row style={{ padding: "0px 23px 20px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
+               </Row>                 
+               {showChallengerSection &&
+                  <Row style={{ padding: "20px 23px 20px 20px" }}>                     
+                     <Col xs={12} md={12} lg={12}>
                         <Challenger />
-                    </Col>
-                </Row>
+                     </Col>                     
+                  </Row>   
+               }      
 
-               {children}
+                <Row style={{ padding: "0px 23px 20px 20px" }}>
+                    <Col xs={12} md={12} lg={12}>
+                        <Field type="text" name="observations">
+                           {({ field: { value, name }, form: { setFieldValue } }) =>
+                              <div>
+                                 <RichText
+                                    name="observations"
+                                    id="observations"
+                                    value={value}
+                                    onChange={val => setFieldValue(name, val, false) }
+                                    title="Ingrese pendientes, quejas y reclamos"
+                                    style={{ width: '100%', height: '178px' }}
+                                    readOnly={false}
+                                 />
+                                 <ErrorMessage name="observations" component={'div'} >
+                                    {message => this.renderMessageError(message)}
+                                 </ErrorMessage>
+                              </div>
+                           }
+                        </Field>
+                    </Col>
+               </Row>
+               {commercialReportButtons}
             </Form>            
          </div>         
       )

@@ -1,4 +1,5 @@
 export const PROPUEST_OF_BUSINESS = "Propuesta";
+export const TRACING = "Seguimiento";
 export const CREATE_PREVISIT = "CREATE_PREVISIT";
 export const NUMBER_RECORDS = 10;
 export const GET_PREVISIT_LIST = 'GET_PREVISIT_LIST';
@@ -37,9 +38,11 @@ export const MESSAGE_ERROR_PARTICIPANTS = "Señor usuario, para guardar una prev
 
 export const TITLE_PREVISIT_CREATE = "Creación previsita";
 export const TITLE_PREVISIT_EDIT = "Edición previsita";
+export const TITLE_VISIT_TYPE = "Tipo de visita";
 
 export const MESSAGE_PREVISIT_CREATE_SUCCESS = "Señor usuario, la previsita se creó de forma exitosa.";
 export const MESSAGE_PREVISIT_EDIT_SUCCESS = "Señor usuario, la previsita se editó de forma exitosa.";
+export const MESSAGE_VISIT_TYPE_CHANGED = "Señor usuario, si cambia el “Tipo de visita” la información diligenciada en la sección Metodología Challenger se borrará. ¿Está seguro que desea cambiar el Tipo de visita?";
 
 export const MESSAGE_PREVISIT_INVALID_INPUT = "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.";
 

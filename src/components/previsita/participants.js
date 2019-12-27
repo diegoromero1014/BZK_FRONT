@@ -4,6 +4,7 @@ import { TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, TITLE_OTHERS_PARTIC
 import ParticipantesCliente from "../participantsVisitPre/participantesCliente";
 import ParticipantesBancolombia from "../participantsVisitPre/participantesBancolombia";
 import ParticipantesOtros from "../participantsVisitPre/participantesOtros";
+import ParticipantsByClient from '../participants/ParticipantsByClient';
 
 const handleToggleClass = index => {
     let elements = Array.from(document.getElementsByClassName("item-tab"));
@@ -62,7 +63,9 @@ const Participants = () => {
 
             
             <div className={`ui bottom attached active tab segment segment-item`} data-tab="first">
-                <ParticipantesCliente />
+                <ParticipantsByClient />
+
+                {/* <ParticipantesCliente /> */}
             </div>
             
             <div className={`ui bottom attached tab segment segment-item`} data-tab="second">

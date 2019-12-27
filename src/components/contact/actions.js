@@ -38,6 +38,29 @@ export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,
   }
 }
 
+export function findContactsByClient(clientId, maxRows) {
+  const json = {
+      "messageHeader": {
+        "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+      },
+      "messageBody": {
+        "clientId": clientId,
+        "groupId":"",
+        "pageNum": 0,
+        "maxRows" : maxRows,
+        "searchTerm" : "",
+        "columnOrder": "",
+        "order": 0,
+        "functionId" : "",
+        "lobId" : "",
+        "typeOfContactId": "",
+        "outdatedContact": "",
+    }
+  }
+  
+  return { type: GET_CONTACT_LIST_CLIENT, payload: axios.post(APP_URL + "/listClientContacts", json) }
+}
+
 export function downloadFilePDF(idFileDownload){
   window.open(APP_URL + "/downloadFilePDF/" + idFileDownload, '_blank', '');
 }
