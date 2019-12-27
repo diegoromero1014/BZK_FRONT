@@ -61,13 +61,6 @@ class ParticipantsByClient extends Component {
         }
     }
 
-    handleOnKeyDown = event => {
-        if(event.key === 'Enter') {
-            this.addContact();
-        }
-    }
-
-
     render() {
         const { contacts, participants } = this.props;
 
@@ -77,11 +70,15 @@ class ParticipantsByClient extends Component {
         return (
              <div className='participants-client'>
                 <Row style={{ marginTop: 20, marginLeft: 7 }}>
-                    <Col xs={12} md={12} lg={12} onKeyDown={this.handleOnKeyDown}>
+                    <Col xs={12} md={12} lg={12} >
                         <ComboBox
                             name="txtContactoCliente"
                             labelInput="Seleccione..."
-                            onChange={value => this.setState({ selectedContact: value })}
+                            onChange={value => {
+                                this.setState({ selectedContact: value });
+                                this.addContact();
+                            }}
+                            value={this.state.selectedContact}
                             valueProp={'id'}
                             textProp={'additional'}
                             data={contacts}
