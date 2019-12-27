@@ -1,14 +1,22 @@
 import React from 'react';
-import _ from 'lodash';
+import { uniqueId, isEmpty } from 'lodash';
+import { Row, Col } from 'react-flexbox-grid';
 
-export default class ListOfElements extends React.Component {
+import ToolTipComponent from '../tooltip/toolTipComponent';
+
+class ListOfElements extends React.Component {
 
     state = {
         showAddSection: false,
-        fields: {}
+        fields: {},
+        isEditing: false
     }
-    
+
     toogleAddSection = () => {
+        const { listenAddSection } = this.props;
+        if (typeof listenAddSection === 'function') {
+            listenAddSection();
+        }
         this.clearFields();
         this.setState({
             showAddSection: !this.state.showAddSection
@@ -31,7 +39,7 @@ export default class ListOfElements extends React.Component {
     addIdToElement = (fields) => {
         let modifiedFiels = Object.assign({}, fields);
         if (!fields.hasOwnProperty("id")) {
-            modifiedFiels["id"] = _.uniqueId();
+            modifiedFiels["id"] = uniqueId();
         }
         return modifiedFiels;
     }
@@ -42,9 +50,13 @@ export default class ListOfElements extends React.Component {
     }
 
     addElement = () => {
-        const { updateElements, elements } = this.props;
+        const { updateElements, elements, handleOnAdd } = this.props;
 
-        if (_.isEmpty(this.state.fields)) {
+        if (typeof handleOnAdd === 'function') {
+            handleOnAdd();
+        }
+
+        if (isEmpty(this.state.fields)) {
             alert("Ingrese valores");
             return
         }
@@ -52,7 +64,11 @@ export default class ListOfElements extends React.Component {
         const element = this.addIdToElement(this.state.fields);
         const newElements = this.mergeElements(elements, element);
 
-        updateElements(newElements);
+        this.setState({
+            isEditing: false
+        })
+
+        updateElements(newElements, element.id);
         this.toogleAddSection();
     }
 
@@ -64,9 +80,14 @@ export default class ListOfElements extends React.Component {
     }
 
     editElement = (element) => {
-        this.toogleAddSection();
+        const { handleOnEdit } = this.props;
+        if (typeof handleOnEdit === 'function') {
+            handleOnEdit(element.id);
+        }
         this.setState({
-            fields: element
+            fields: element,
+            showAddSection: true,
+            isEditing: true
         });
     }
 
@@ -74,27 +95,66 @@ export default class ListOfElements extends React.Component {
         if (!this.state.showAddSection) {
             return;
         }
+
+        const botonAddText = this.state.isEditing ? "Modificar" : "Agregar";
+
         return (
             <div>
-                <button onClick={this.toogleAddSection}>Cancelar</button>
-                <button onClick={this.addElement}>Agregar</button>
+                <button style={{ marginRight: "15px" }} className="btn btn-secondary" type="button" onClick={this.addElement}>Agregar</button>
+                <button className="btn section-btn-cancel" type="button" onClick={this.toogleAddSection}>Cancelar</button>
             </div>
         )
+    }
+
+    renderElements = () => {
+        const { elements, renderElement, title } = this.props;
+
+        if (elements && elements.length) {
+            return renderElement(elements, this.removeElement, this.editElement);
+        }
+
+        return (
+            <Col xs={12} md={12} lg={12}>
+                <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                    <span className="form-item">No se han adicionado {title} </span>
+                </div>
+            </Col>
+        )
+
     }
 
     render() {
-        const {elements, title} = this.props; 
+        const { shouldRenderAddCancelButton } = this.props;
 
         return (
             <div>
-                <h1>{title}</h1>
-                { !this.state.showAddSection && <button onClick={this.toogleAddSection} >Add</button>}
-                { this.state.showAddSection && this.props.renderAddSection(this.state.fields, this.handleChange) }
-                { this.renderButtonsAddSection() }
-                { elements && elements.length > 0 && this.props.renderElement(elements, this.removeElement, this.editElement) }
+                <div style={{ position: "relative", marginBottom: "25px" }}>
+                    {this.props.renderTitle}
+                    {!this.state.showAddSection && <div style={{ position: "absolute", top: "10px", right: "10px" }} >
+                        <button className="btn" onClick={this.toogleAddSection}>
+                            <ToolTipComponent text="Agregar cliente principal">
+                                <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
+                            </ToolTipComponent>
+                        </button>
+                    </div>}
+                </div>
+                {this.state.showAddSection && <Row>
+                    <Col md={12} sm={12} >
+                        {this.props.renderAddSection(this.state.fields, this.handleChange, this.addElement, this.toogleAddSection)}
+                    </Col>
+                </Row>}
+                {shouldRenderAddCancelButton && this.renderButtonsAddSection()}
+                <div className="section-list-container" style={{ marginTop: "10px" }}>
+                    {this.renderElements()}
+                </div>
+                
             </div>
         )
-        
     }
-
 }
+
+ListOfElements.defaultProps = {
+    shouldRenderAddCancelButton: true
+}
+
+export default ListOfElements;

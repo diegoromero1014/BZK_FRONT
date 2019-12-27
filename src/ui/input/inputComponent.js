@@ -27,10 +27,14 @@ class inputComponent extends Component {
     }
 
     _onBlur(e, event) {
-        const { onChange, onBlur } = this.props;
+        const { onChange, onBlur, onChangeEvent } = this.props;
 
         let trimmed = this.state.value.trim();
         this.inputFocus = false;
+
+        if (typeof onChangeEvent === 'function') {
+            onChangeEvent(e);
+        }
 
         onChange(trimmed);
         onBlur(trimmed);
