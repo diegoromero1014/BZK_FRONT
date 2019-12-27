@@ -249,8 +249,8 @@ export class PrevisitFormComponent extends Component {
                                  onChange={val => setFieldValue(name, val, false) }
                                  title="Ingrese el objetivo de la reunión"
                                  style={{ width: '100%', height: '178px' }}
-                                 readOnly={false}
-                                 disabled={isEditable ? 'disabled' : ''}
+                                 readOnly={isEditable}
+                                 disabled={!isEditable ? '' : 'disabled'}
                               />
                               <br></br>
                               <ErrorMessage name="principalObjective" component={'div'} >
@@ -271,12 +271,11 @@ export class PrevisitFormComponent extends Component {
                      </Row>                 
                      <Row style={{ padding: "20px 23px 20px 20px" }}>                     
                         <Col xs={12} md={12} lg={12}>
-                           <Challenger />
+                           <Challenger isEditable={isEditable}/>
                         </Col>                     
                      </Row>   
                   </div>
                }      
-
                {commercialReportButtons}
             </Form>            
          </div>         
