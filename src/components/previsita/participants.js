@@ -22,7 +22,7 @@ const handleToggleClass = index => {
     segments[index].classList.add("active");
 }
 
-const Participants = () => {
+const Participants = disabled => {
     return (
         <div>
             <div className="ui top attached tabular menu" style={{ width: "100%" }}>
@@ -63,7 +63,7 @@ const Participants = () => {
 
             
             <div className={`ui bottom attached active tab segment segment-item`} data-tab="first">
-                <ParticipantsByClient />
+                <ParticipantsByClient disabled={disabled} />
 
                 {/* <ParticipantesCliente /> */}
             </div>
