@@ -74,7 +74,7 @@ export class PrevisitFormComponent extends Component {
                <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
             </Tooltip>
          }
-      </div>
+      </div >
    );
 
    renderTitle = ({name, message, nullable}) => (
@@ -96,9 +96,13 @@ export class PrevisitFormComponent extends Component {
       onChangeShowChallengerSection(previsitTypeId, setFieldValue);     
    }
 
+   componentDidMount() {
+      this.forceUpdate();
+   }
+
    render() {      
       const { fields: { type, date, duration, place, objective, challenger } } = this.state;
-      const { previsitTypes, commercialReportButtons, showChallengerSection } = this.props;
+      const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable } = this.props;
      
       return (
 
@@ -110,7 +114,7 @@ export class PrevisitFormComponent extends Component {
                           <div className="tab-content-row"
                               style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
                           <i className="browser icon" style={{ fontSize: "20px" }} />
-                          <span style={{ fontSize: "20px" }}> Datos de visita</span>
+                          <span style={{ fontSize: "20px" }}> Datos de visita</span>                          
                       </div>
                   </Col>
                </Row> 
@@ -131,10 +135,13 @@ export class PrevisitFormComponent extends Component {
                                     setFieldValue(name, id, false);                                                                                                               
                                     this.changeTypePrevisit(id);                                                                        
                                   }}
-                                  onBlur={onBlur}
-                                  data={previsitTypes}
+                                  data={previsitTypes || []}
                                   className='field-input'
+                                  disabled={isEditable ? 'disabled' : ''}
+                                  parentId="dashboardComponentScroll"
+                                  filterData={true}
                               />
+
                               <ErrorMessage name="documentType" component={'div'} >
                                 {message => this.renderMessageError(message)}
                               </ErrorMessage>
@@ -158,6 +165,7 @@ export class PrevisitFormComponent extends Component {
                                   placeholder='DD/MM/YYYY'
                                   className='field-input'
                                   name="visitTime"
+                                  disabled={isEditable ? 'disabled' : ''}
                               />
                               <ErrorMessage name="visitTime" component={'div'} >
                                 {message => this.renderMessageError(message)}
@@ -181,6 +189,7 @@ export class PrevisitFormComponent extends Component {
                                   onChange={onChange}
                                   onBlur={onBlur}
                                   className='field-input'
+                                  disabled={isEditable ? 'disabled' : ''}
                               />
                               <ErrorMessage name="endTime" component={'div'} >
                                 {message => this.renderMessageError(message)}
@@ -204,6 +213,7 @@ export class PrevisitFormComponent extends Component {
                                 placeholder="Lugar"
                                 onBlur={onBlur}
                                 className='field-input'
+                                disabled={isEditable ? 'disabled' : ''}
                               />
                               <ErrorMessage name="visitLocation" component={'div'} >
                                 {message => this.renderMessageError(message)}
@@ -240,6 +250,7 @@ export class PrevisitFormComponent extends Component {
                                  title="Ingrese el objetivo de la reunión"
                                  style={{ width: '100%', height: '178px' }}
                                  readOnly={false}
+                                 disabled={isEditable ? 'disabled' : ''}
                               />
                               <br></br>
                               <ErrorMessage name="principalObjective" component={'div'} >
@@ -251,17 +262,19 @@ export class PrevisitFormComponent extends Component {
                   </Col>
                </Row>   
 
-               <Row style={{ padding: "20px 23px 20px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        {this.renderTitle(challenger)}
-                    </Col>
-               </Row>                 
                {showChallengerSection &&
-                  <Row style={{ padding: "20px 23px 20px 20px" }}>                     
-                     <Col xs={12} md={12} lg={12}>
-                        <Challenger />
-                     </Col>                     
-                  </Row>   
+                  <div>
+                     <Row style={{ padding: "20px 23px 20px 20px" }}>
+                        <Col xs={12} md={12} lg={12}>
+                           {this.renderTitle(challenger)}
+                        </Col>
+                     </Row>                 
+                     <Row style={{ padding: "20px 23px 20px 20px" }}>                     
+                        <Col xs={12} md={12} lg={12}>
+                           <Challenger />
+                        </Col>                     
+                     </Row>   
+                  </div>
                }      
 
                {commercialReportButtons}
