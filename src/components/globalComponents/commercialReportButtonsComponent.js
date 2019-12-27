@@ -8,7 +8,7 @@ export default class CommercialReportButtonsComponent extends Component {
     }
 
     render() {
-        const { onClickSave, onClickDownloadPDF, cancel, fromModal } = this.props;
+        const { onClickSave, onClickDownloadPDF, cancel, fromModal, isEditable, documentDraft, creatingReport } = this.props;
         return (
             <div 
                 name="mainContainer"
@@ -24,22 +24,26 @@ export default class CommercialReportButtonsComponent extends Component {
                     background: "rgba(255,255,255,0.75)"
                 }}>
                 <div style={{ width: "100%", height: "100%", right: "0px", display: 'flex', "justify-content": 'flex-end' }}>
-                    <button
-                        name="btnPreSave"
-                        className="btn" type="submit" 
-                        onClick={() => onClickSave(SAVE_DRAFT)} 
-                        style={{ margin: "8px 10px 0px 8px", backgroundColor: "#00B5AD" }}>
-                        <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
-                    </button>
-                    <button
-                        name="btnSave"
-                        className="btn" 
-                        type="submit" 
-                        onClick={() => onClickSave(SAVE_PUBLISHED)}
-                        style={{ margin: "8px 10px 0px 0px" }}>
-                        <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
-                    </button>
-                    { onClickDownloadPDF ? 
+                    {!documentDraft && !isEditable &&
+                        <button
+                            name="btnPreSave"
+                            className="btn" type="submit" 
+                            onClick={() => onClickSave(SAVE_DRAFT)} 
+                            style={{ margin: "8px 10px 0px 8px", backgroundColor: "#00B5AD" }}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
+                        </button>
+                    }
+                    {(!isEditable || creatingReport) && 
+                        <button
+                            name="btnSave"
+                            className="btn" 
+                            type="submit" 
+                            onClick={() => onClickSave(SAVE_PUBLISHED)}
+                            style={{ margin: "8px 10px 0px 0px" }}>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
+                        </button>
+                    }                                        
+                    { onClickDownloadPDF && !creatingReport &&
                         <button 
                             name="btnDownloadPDF"
                             className="btn" 
@@ -47,7 +51,7 @@ export default class CommercialReportButtonsComponent extends Component {
                             onClick={onClickDownloadPDF} 
                             style={{ margin: "8px 10px 0px 0px", backgroundColor: "#eb984e" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Descargar PDF</span>
-                        </button> : null    
+                        </button> 
                     }                    
                     <button
                         name="btnCancel"
