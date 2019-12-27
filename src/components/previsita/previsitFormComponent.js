@@ -13,7 +13,7 @@ import RichText from '../richText/richTextComponent';
 import Participants from './participants';
 import Challenger from '../challenger/challenger';
 
-import { TITLE_MESSAGE_TARGET } from './constants';
+import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER } from './constants';
 
 export class PrevisitFormComponent extends Component {
    constructor(props) {
@@ -48,7 +48,7 @@ export class PrevisitFormComponent extends Component {
             challenger: {
                name: 'Construcción de la Propuesta de Negocio',
                nullable: true,
-               message: null
+               message: TITLE_CHALLENGER
             }
          },
          type: null  

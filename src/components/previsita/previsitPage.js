@@ -450,7 +450,7 @@ export class PrevisitPage extends Component {
 
    render() {
       const { params: { id } } = this.props;
-      const { documentCreatedInfo } = this.state;
+      const { documentCreatedInfo, isEditable } = this.state;
       return (
          <div className='previsit-container'>
             <HeaderPrevisita />
@@ -461,7 +461,7 @@ export class PrevisitPage extends Component {
                   </Col>
                   <Col xs={2} sm={2} md={2} lg={2}>
                      {
-                        this.validatePermissionsPrevisits() && this.state.isEditable &&
+                        this.validatePermissionsPrevisits() && isEditable &&
                         <button type="button" onClick={this.editPrevisit}
                            className={'btn btn-primary modal-button-edit'}
                            style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>
@@ -472,7 +472,7 @@ export class PrevisitPage extends Component {
                </Row>
                <Row>
                   <Col xs={12} md={12} lg={12}>
-                     <PermissionUserReports />
+                     <PermissionUserReports disabled={isEditable ? 'disabled' : ''}/>
                   </Col>
                </Row>
             </div>
