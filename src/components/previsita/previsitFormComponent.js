@@ -318,13 +318,13 @@ export default withFormik({
          return Object.assign({}, fields,  { documentType: '', visitTime: new Date(), endTime: '', visitLocation: '', principalObjective: ''});
       }
    },
-   validationSchema: props => {
-      const { questions } = props;
-
+   validationSchema: ({questions, showChallengerSection}) => {
       const object = {};
    
-      questions.forEach(element => object[element.field] = Yup.string().required('Esto es obligatorio') );
-
+      if(showChallengerSection) {
+         questions.forEach(element => object[element.field] = Yup.string().required('Esto es obligatorio') );
+      }
+      
       const objectSchema = Object.assign({}, schema, object); 
    
       return Yup.object().shape(objectSchema);

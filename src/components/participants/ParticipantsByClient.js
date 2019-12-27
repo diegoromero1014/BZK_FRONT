@@ -20,7 +20,6 @@ class ParticipantsByClient extends Component {
 
         this.state = {
             selectedContact: null,
-            open: false
         }
     }
 
@@ -62,52 +61,37 @@ class ParticipantsByClient extends Component {
         }
     }
 
-
     render() {
         const { contacts, participants } = this.props;
-        const { open } = this.state;
 
         let data = _.chain(participants.toArray()).map(participant => participant).filter(participant => _.isEqual(participant.tipoParticipante, KEY_PARTICIPANT_CLIENT)).value();
-
+        const { disabled: {disabled} } = this.props;
+        
         return (
              <div className='participants-client'>
-                <Row>
-                    <Col xs={12} md={12} lg={12}>
-                        <div className='icon-add' onClick={() => this.setState({ open: true })}>
-                            <Icon name='add square' size='huge'  />
-                        </div>
+                <Row style={{ marginTop: 20, marginLeft: 7 }}>
+                    <Col xs={12} md={12} lg={12} >
+                        <ComboBox
+                            name="txtContactoCliente"
+                            labelInput="Seleccione..."
+                            onChange={value => {
+                                this.setState({ selectedContact: value });
+                                this.addContact();
+                            }}
+                            value={this.state.selectedContact}
+                            valueProp={'id'}
+                            textProp={'additional'}
+                            data={contacts}
+                            disabled={disabled ? 'disabled' : ''}
+                        />
                     </Col>
                 </Row> 
-
-                {open && 
-                    <div>
-                        <Row style={{ marginTop: 50 }}>
-                            <Col xs={12} md={12} lg={12}>
-                                <ComboBox
-                                    name="txtContactoCliente"
-                                    labelInput="Seleccione..."
-                                    onChange={value => this.setState({ selectedContact: value })}
-                                    valueProp={'id'}
-                                    textProp={'nameComplet'}
-                                    data={contacts}
-                                />
-                            </Col>
-                        </Row> 
-
-                        <Row>
-                            <Col xs={12} md={12} lg={12}>
-                                <button className="btn btn-primary" onClick={this.addContact} type="button" title="Adicionar participante, máximo 10" style={{ marginTop: "20px" }}>
-                                    <i className="white plus icon" /> Agregar participante
-                                </button>
-                            </Col>
-                        </Row>
-                    </div>
-                }   
+                    
 
                 <div className='participants-client-list'>
                     <Row>
                         {data.length > 0 ?
-                            <Col xs={12} md={12} lg={12} style={{ paddingLeft: "5px", paddingTop: "10px" }}>
+                            <Col xs={12} md={12} lg={12}>
                                 <ListParticipantsByClient data={data} disabled={this.props.disabled} />
                             </Col> 
                         :
@@ -119,7 +103,7 @@ class ParticipantsByClient extends Component {
                         }
                     </Row>
                 </div>
-             </div>   
+            </div>   
         );
     }
 }
