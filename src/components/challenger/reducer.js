@@ -8,7 +8,7 @@ const initialState = {
 export default (state = initialState, { type, payload }) => {
     switch (type) {
         case GET_ALL_QUESTIONS:
-            return Object.assign(state, { questions: payload.data.data });
+            return Object.assign({}, state, { questions: payload.data.data });
         case ADD_ANSWER:
             let answers = state.answers;
 

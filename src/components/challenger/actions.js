@@ -15,11 +15,4 @@ export const getAllQuestions = () => {
 
 export const addAnswer = (oldAnswer, newAnswer) => ({ type: ADD_ANSWER , payload: { oldAnswer, newAnswer } });
 
-export const getAnswerQuestionRelationship = (answers, questions) => {         
-    return Object.keys(answers).map(key => ({
-        id: questions.filter(question => question.field === key)[0].id,
-        answer: answers[key]
-    }))
-}
-
 export const clearAnswer = () => ({ type: CLEAR_ANSWER })
