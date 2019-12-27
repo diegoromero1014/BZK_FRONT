@@ -20,7 +20,14 @@ class Challenger extends Component {
         getAllQuestions();
     }
     
-    seletedTabActive = e => $(`.${e.target.classList[1]}`).forEach(element => element.toggleClass('active')); 
+    seletedTabActive = (e, field) => {
+        debugger;
+
+        $(`.${field}`).forEach(element => {
+            element.toggleClass('active');    
+        });
+        
+    }; 
     
     onChange = (value, field) => {
         const { addAnswer, answers } = this.props;
@@ -44,11 +51,11 @@ class Challenger extends Component {
 
         return questions.map(({ field, title, nullable, message, placeholder, subtitle }, index) => 
             <div key={index}>
-                <div className={`title ${field}`} onClick={this.seletedTabActive}>
+                <div className={`title ${field}`} onClick={event => this.seletedTabActive(event, field)}>
                     <i className="dropdown icon"></i>
                     
                     <div style={{ display: "inline-flex"}}>
-                        <span onClick={e => $(`.${e.target.parentElement.parentElement.classList[1]}`).toggleClass('active')}>
+                        <span onClick={e => $(`.${field}`).toggleClass('active')}>
                             {`${title}  ${!nullable ? '(' : ''} `} 
                         </span> {!nullable && <span style={{ color: 'red' }}>*</span>}  {!nullable && ' )' }
                         <br />
@@ -60,7 +67,7 @@ class Challenger extends Component {
                     </div>
 
                     {subtitle &&
-                        <span onClick={e => $(`.${e.target.parentElement.classList[1]}`).toggleClass('active')} 
+                        <span onClick={e => $(`.${field}`).toggleClass('active')} 
                             style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}
                         </span>
                     }
