@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { deleteNote, updateNote, addNote } from './actions';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import { updateErrorsNotes } from '../../clientDetailsInfo/actions';
-import { CLIENT_ID_TYPE, TYPE_NOTES } from '../../selectsComponent/constants';
+import { TYPE_NOTES } from '../../selectsComponent/constants';
 import Note from './noteItem';
 import _ from 'lodash';
 import {patternNotesClient, patternOfForbiddenCharacter} from '../../../validationsFields/patternsToValidateField';

@@ -2,24 +2,16 @@ import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 import { reduxForm } from 'redux-form';
 import Textarea from '../../ui/textarea/textareaComponent';
-
 import SweetAlert from '../sweetalertFocus';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import {
-    REQUEST_ERROR, ERROR_MESSAGE_REQUEST, MESSAGE_USER_WITHOUT_PERMISSIONS, MESSAGE_LOAD_DATA, VALUE_REQUIERED,
-    VALUE_XSS_INVALID
-} from '../../constantsGlobal';
 import {
     validateResponse, formValidateKeyEnter, nonValidateEnter
 } from '../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import { getClientsRiskGroup, removeClientRiskGroup } from './actions';
 import { showLoading } from '../loading/actions';
-
 import _ from 'lodash';
 import { fields, validations as validate } from './fieldsAndRulesForRemoveMember';
-
-
 
 var thisForm;
 class modalComponentRemoveMember extends Component {

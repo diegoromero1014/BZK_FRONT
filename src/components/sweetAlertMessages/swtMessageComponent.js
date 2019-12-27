@@ -1,7 +1,4 @@
-/**
- * Created by Andres Hurtado on 21/03/2017.
- */
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { swtCloseMessage } from './actions';
 import { connect } from 'react-redux';

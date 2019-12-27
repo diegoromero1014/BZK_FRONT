@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
-
 import ListArea from './listArea';
-
 import { clearArea } from './actions';
 
 class AreaBusiness extends Component {

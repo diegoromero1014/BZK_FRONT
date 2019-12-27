@@ -4,13 +4,10 @@ import { Checkbox } from "semantic-ui-react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
-
 import { swtShowMessage } from "../../sweetAlertMessages/actions";
-
 import Tooltip from "../../toolTip/toolTipComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import Textarea from "../../../ui/textarea/textareaComponent";
-
 import {
   FILTER_COUNTRY,
   FILTER_PROVINCE,

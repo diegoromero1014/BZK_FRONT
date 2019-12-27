@@ -1,10 +1,6 @@
-/**
- * Created by user- on 11/22/2016.
- */
 import {APP_URL} from '../../constantsGlobal';
 import {GET_ALERT_BY_USER,OPEN_MODAL_ALERTS,CLEAR_MODAL_ALERTS} from './constants';
 import axios from 'axios';
-
 
 export function getAlertsByUser(){
 

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-
 import GridComponent from '../grid/component';
-
 import { VIEW_OBSERVATIONS_BY_RISK_GROUP } from '../modal/constants';
 
 class ListNoveltiesRiskGroup extends Component {

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import BoardMembersInfo from '../clients/partners/boardMembers/component';
-import { redirectUrl } from '../globalComponents/actions';
 import { MODULE_BOARD_MEMBERS } from '../../constantsGlobal';
 import SweetAlert from '../sweetalertFocus';
 

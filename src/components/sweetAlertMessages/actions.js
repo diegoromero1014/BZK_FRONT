@@ -1,6 +1,3 @@
-/**
- * Created by Andres Hurtado on 21/03/2017.
- */
 export const CLOSE_SWT_MESSAGE = "CLOSE_SWT_MESSAGE";
 export const SHOW_SWT_MESSAGE = "SHOW_SWT_MESSAGE";
 

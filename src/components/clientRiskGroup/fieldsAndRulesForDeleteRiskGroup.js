@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {
-    processRules, checkRequired, checkMaxLength, checkFirstCharacter, checkGroupName,
+    processRules, checkRequired, checkMaxLength, checkFirstCharacter,
     checkJustificationsRiskGroup, checkRegexHtmlInjection
 } from './../../validationsFields/rulesField';
 

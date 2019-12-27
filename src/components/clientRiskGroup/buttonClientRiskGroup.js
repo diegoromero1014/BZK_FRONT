@@ -2,15 +2,12 @@ import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import Modal from "react-modal";
-
 import ModalComponentRiskGroup from "./modalComponentRiskGroup";
 import { _CLIENT_RISK_GROUP, BIZTRACK_MY_CLIENTS, nombreflujoAnalytics } from "../../constantsAnalytics";
-
 import { hasClientRequest, showModalRiskGroup } from "./actions";
 import { showLoading } from "../loading/actions";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { updateFieldInfoClient } from '../clientInformation/actions';
-
 import { GRAY_COLOR, MESSAGE_LOAD_DATA } from "../../constantsGlobal";
 import { validateResponse } from "../../actionsGlobal";
 

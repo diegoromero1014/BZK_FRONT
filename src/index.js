@@ -4,7 +4,7 @@ import Root from './components/root/root';
 import configureStore from './store/store';
 import Routes from './routes';
 import Router from './historyRouter';
-import {syncHistoryWithStore} from 'react-router-redux';
+import { syncHistoryWithStore } from 'react-router-redux';
 
 export const store = configureStore();
 

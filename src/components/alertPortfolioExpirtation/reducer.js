@@ -1,6 +1,3 @@
-/**
- * Created by ahurtado on 12/06/2016.
- */
 import Immutable from 'immutable';
 import * as actions from './constants';
 import {get} from 'lodash';

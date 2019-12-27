@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {Row, Grid, Col} from 'react-flexbox-grid';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
+import {Row, Col} from 'react-flexbox-grid';
 import {getCsvBusinessPlanByClient} from '../actions';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';

@@ -8,7 +8,6 @@ import { bindActionCreators } from 'redux';
 import LoadingComponent from '../loading/loadingComponent';
 import { loadObservablesLeftTimer } from '../login/actions';
 import SweetAlert from "../sweetalertFocus";
-import moment from 'moment';
 import Worker from '../../worker/Worker';
 import WorkerSetup from '../../worker/WorkerSetup';
 import { consultParameterServer } from '../../actionsGlobal';

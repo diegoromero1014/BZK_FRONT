@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { showLoading } from '../../loading/actions';
 import { groupFindServer, changePage } from './actions';
 import { NUMBER_RECORDS } from './constants';
-import { has } from 'lodash';
 import { MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
 
 class Pagination extends Component {

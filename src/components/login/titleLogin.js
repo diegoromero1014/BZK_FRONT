@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Row, Grid, Col} from 'react-flexbox-grid';
+import {Col} from 'react-flexbox-grid';
 
 class TitleLogin extends Component{
   render(){

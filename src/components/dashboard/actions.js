@@ -8,7 +8,6 @@ import {
 import axios from 'axios';
 import { APP_URL } from '../../constantsGlobal';
 
-
 export function changeStateSaveData(value, message) {
   return {
     type: SAVE_DATA_LOADING,
