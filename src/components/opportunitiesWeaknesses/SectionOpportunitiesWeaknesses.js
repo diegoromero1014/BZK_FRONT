@@ -1,15 +1,15 @@
 import React, { Component } from "react";
-import AñadirListaObjetos from "../listaObjetos/AñadirListaObjetos";
+import ListaObjetos from "../listaObjetos/ListaObjetos";
 
 class SectionOpportunitiesWeaknesses extends Component {
   render() {
     return (
       <div style={{ width: "100%", display: "flex" }}>
         <div style={{ width: "50%" }}>
-          <AñadirListaObjetos titulo="Oportunidades" />
+          <ListaObjetos titulo="Oportunidades" />
         </div>
         <div style={{ width: "50%" }}>
-          <AñadirListaObjetos titulo="Debilidades" />
+          <ListaObjetos titulo="Debilidades" />
         </div>
       </div>
     );

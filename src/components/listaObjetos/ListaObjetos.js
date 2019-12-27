@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col } from "react-flexbox-grid";
 import ToolTip from "../toolTip/toolTipComponent";
-import ToolTipComponent from "../toolTip/toolTipComponent";
 import SweetAlert from "../sweetalertFocus";
 
 /** La funcion updateElements debe recibirse como propiedad por parte del 
@@ -9,9 +8,9 @@ import SweetAlert from "../sweetalertFocus";
     guardar los datos en el componente padre (redux-context-state) para 
     comunicacion con el back - BD
 */
-import "./AñadirListaObjetos.scss"; 
+import "./styleListaObjetos.scss";
 
-export class AñadirListaObjetos extends Component {
+class AñadirListaObjetos extends Component {
   state = {
     objeto: {
       id: "",
@@ -184,9 +183,9 @@ export class AñadirListaObjetos extends Component {
                   className="button-openField"
                   onClick={this.abrirCampoObjeto}
                 >
-                  <ToolTipComponent text={`Agregar ${titulo}`}>
+                  <ToolTip text={`Agregar ${titulo}`}>
                     <i className="plus white icon" />
-                  </ToolTipComponent>
+                  </ToolTip>
                 </button>
               </div>
             </div>
