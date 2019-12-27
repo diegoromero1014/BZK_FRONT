@@ -20,14 +20,7 @@ class Challenger extends Component {
         getAllQuestions();
     }
     
-    seletedTabActive = (e, field) => {
-        debugger;
-
-        $(`.${field}`).forEach(element => {
-            element.toggleClass('active');    
-        });
-        
-    }; 
+    seletedTabActive = e => $(`.challenger-dropdown-${e.target.classList[1]}`).toggleClass('active'); 
     
     onChange = (value, field) => {
         const { addAnswer, answers } = this.props;
@@ -51,7 +44,7 @@ class Challenger extends Component {
 
         return questions.map(({ field, title, nullable, message, placeholder, subtitle }, index) => 
             <div key={index}>
-                <div className={`title ${field}`} onClick={event => this.seletedTabActive(event, field)}>
+                <div className={`title ${field} challenger-dropdown-${field}`} onClick={this.seletedTabActive}>
                     <i className="dropdown icon"></i>
                     
                     <div style={{ display: "inline-flex"}}>
@@ -73,7 +66,7 @@ class Challenger extends Component {
                     }
                 </div>
 
-                <div className={`content ${field}`}>
+                <div className={`content ${field} challenger-dropdown-${field}`}>
                     <Field type="text" name={field}>
                         {({ field: { name }, form: { setFieldValue, errors } }) =>
                            <div>
