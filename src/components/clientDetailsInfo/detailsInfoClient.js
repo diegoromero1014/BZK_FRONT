@@ -21,7 +21,7 @@ import ButtonLinkClient from "./linkingClient/buttonLinkClientComponent";
 import ComponentAccordion from "../accordion/componentAccordion";
 import Notas from "./notas";
 import Products from "./product";
-import SectionOpportunitiesWeaknesses from "../opportunitiesWeaknesses/SectionOpportunitiesWeaknesses";
+import SectionOpportunitiesWeaknesses from "../opportunitiesWeaknesses/SectionOpportunitiesWeaknesses"; 
 
 import { changeAccordionValue, seletedButton, sendErrorsUpdate, validateContactShareholder } from "./actions";
 import { onSessionExpire, shorterStringValue, validatePermissionsByModule } from "../../actionsGlobal";
@@ -241,7 +241,7 @@ class DetailsInfoClient extends Component {
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('opportunitiesWeaknesses')}
                         codSection={accordion.opportunitiesWeaknesses} title="Oportunidades y debilidades" icon="payment"
-                        componentView={<SectionOpportunitiesWeaknesses />} />
+                        componentView={<h1>Hola mundo</h1>} />
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('economicActivity')}
                         codSection={accordion.economicActivity} title="Actividad económica" icon="payment"

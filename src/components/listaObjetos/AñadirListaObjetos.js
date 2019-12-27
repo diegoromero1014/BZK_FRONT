@@ -9,8 +9,7 @@ import SweetAlert from "../sweetalertFocus";
     guardar los datos en el componente padre (redux-context-state) para 
     comunicacion con el back - BD
 */
-import "./AñadirListaObjetos";
-
+import "./AñadirListaObjetos.scss"; 
 
 export class AñadirListaObjetos extends Component {
   state = {
@@ -150,8 +149,8 @@ export class AñadirListaObjetos extends Component {
     const { titulo } = this.props;
     const {
       objetos,
-      campoObjeto,  
-      campoVacio, 
+      campoObjeto,
+      campoVacio,
       idObjetoEliminar,
       modalEliminar,
       switchGuardarEditar
@@ -168,23 +167,25 @@ export class AñadirListaObjetos extends Component {
         <Row style={{ padding: "20px 23px 20px 20px" }}>
           <Col xs={12} md={12} lg={12}>
             <div className="header-component">
-              <div className="line-topComponent"/>
+              <div className="line-topComponent" />
               <div className="container-titleHelpPlus">
                 <div>
-                  <i className="book icon"/>
+                  <i className="book icon" />
                   <span className="title-component">
-                    {`${titulo}`}(<span className="icon-obligatoriedad">*</span>)
+                    {`${titulo}`}(<span className="icon-obligatoriedad">*</span>
+                    )
                   </span>
                   <ToolTip text={helpObjetos}>
-                    <i className="help circle icon blue"/>
+                    <i className="help circle icon blue" />
                   </ToolTip>
                 </div>
                 <button
                   type="button"
                   className="button-openField"
-                  onClick={this.abrirCampoObjeto}>
+                  onClick={this.abrirCampoObjeto}
+                >
                   <ToolTipComponent text={`Agregar ${titulo}`}>
-                    <i className="plus white icon"/>
+                    <i className="plus white icon" />
                   </ToolTipComponent>
                 </button>
               </div>
@@ -211,13 +212,15 @@ export class AñadirListaObjetos extends Component {
                     className="button-add"
                     title={`${textButon} ${titulo}`}
                     type="button"
-                    onClick={functionButton}>
+                    onClick={functionButton}
+                  >
                     {textButon}
                   </button>
-                  <button  
+                  <button
                     className="button-cancel"
                     type="button"
-                    onClick={this.cerrarCampoObjeto}>
+                    onClick={this.cerrarCampoObjeto}
+                  >
                     Cancelar
                   </button>
                 </div>
@@ -252,7 +255,6 @@ export class AñadirListaObjetos extends Component {
                         <i
                           className="edit icon"
                           title={`Editar ${titulo}`}
-                          style={{ cursor: "pointer" }}
                           onClick={() => this.editarObjeto(elemento)}
                         />
                       </td>
@@ -261,7 +263,6 @@ export class AñadirListaObjetos extends Component {
                         <i
                           className="trash icon"
                           title={`Eliminar ${titulo}`}
-                          style={{ cursor: "pointer" }}
                           onClick={() => this.mostrarModalEliminar(elemento.id)}
                         />
                       </td>
@@ -293,14 +294,7 @@ export class AñadirListaObjetos extends Component {
             >
               <table className="ui striped table">
                 <thead>
-                  <tr
-                    style={{
-                      height: "30px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center"
-                    }}
-                  >
+                  <tr className="tr-void">
                     <span style={{ textAlign: "center" }}>
                       {`Aún no se han adicionado ${titulo}.`}
                     </span>
