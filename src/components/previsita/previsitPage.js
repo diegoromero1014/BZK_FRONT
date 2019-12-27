@@ -67,7 +67,7 @@ export class PrevisitPage extends Component {
       const { clientInformacion } = this.props;
       const infoClient = clientInformacion.get('responseClientInfo');            
       if (_.isEmpty(infoClient)) {
-         redirectUrl(ComponentClientInformationURL)
+         /* redirectUrl(ComponentClientInformationURL) */
       }
    }
 
