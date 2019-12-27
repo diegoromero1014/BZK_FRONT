@@ -20,12 +20,7 @@ class Challenger extends Component {
         getAllQuestions();
     }
     
-    seletedTabActive = (e, field) => {        
-        $(`.${field}`).forEach(element => {
-            element.toggleClass('active');    
-        });
-        
-    }; 
+    seletedTabActive = field => $(`.challenger-dropdown-${field}`).toggleClass('active'); 
     
     onChange = (value, field) => {
         const { addAnswer, answers } = this.props;
@@ -49,11 +44,11 @@ class Challenger extends Component {
 
         return questions.map(({ field, title, nullable, message, placeholder, subtitle }, index) => 
             <div key={index}>
-                <div className={`title ${field}`} onClick={event => this.seletedTabActive(event, field)}>
+                <div className={`title ${field} challenger-dropdown-${field}`} onClick={() => this.seletedTabActive(field)}>
                     <i className="dropdown icon"></i>
                     
                     <div style={{ display: "inline-flex"}}>
-                        <span onClick={e => $(`.${field}`).toggleClass('active')}>
+                        <span onClick={() => this.seletedTabActive(field)}>
                             {`${title}  ${!nullable ? '(' : ''} `} 
                         </span> {!nullable && <span style={{ color: 'red' }}>*</span>}  {!nullable && ' )' }
                         <br />
@@ -65,13 +60,11 @@ class Challenger extends Component {
                     </div>
 
                     {subtitle &&
-                        <span onClick={e => $(`.${field}`).toggleClass('active')} 
-                            style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}
-                        </span>
+                        <span onClick={() => this.seletedTabActive(field)} style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}</span>
                     }
                 </div>
 
-                <div className={`content ${field}`}>
+                <div className={`content ${field} challenger-dropdown-${field}`}>
                     <Field type="text" name={field}>
                         {({ field: { name }, form: { setFieldValue, errors } }) =>
                            <div>

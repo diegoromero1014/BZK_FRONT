@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import CardComponent from '../cards';
-import { Card, Image } from 'semantic-ui-react';
+import { Card, Image, Icon } from 'semantic-ui-react';
 import user from '../../../img/icon/user.png';
 
 class ListParticipantsByClient extends Component {
 
-    handleRenderParticipants = () => {
+    handleRenderParticipants = disabled => {
         const { data } = this.props;
 
         return data.map(({nombreParticipante, cargo, estiloSocial, actitudBanco}) => (
@@ -16,24 +16,29 @@ class ListParticipantsByClient extends Component {
                 content= {
                     <div>
                         <Card.Header className='title-content-participants-list'>{ nombreParticipante }</Card.Header>
-
-                        <Card.Meta>
-                            <span className='date'>Joined in 2015</span>
-                        </Card.Meta>
-
                         <Card.Description>
-                            Matthew is a musician living in Nashville.
+                            <span>{cargo}</span><br />
+                            <span>{estiloSocial}</span> <br />
+                            <span>{actitudBanco}</span>
                         </Card.Description>
                     </div>
+                }
+                footer={
+                    !disabled &&
+                        <a>
+                            <Icon name='delete' />
+                            Eliminar
+                        </a>
                 }
             />
         ))
     }
 
     render() {
+        const { disabled: { disabled }} = this.props;
         return (
             <div className='list-participants-container'>
-                {this.handleRenderParticipants()}
+                {this.handleRenderParticipants(disabled)}
             </div>                
         );
     }

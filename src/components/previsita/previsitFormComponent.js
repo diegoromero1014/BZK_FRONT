@@ -49,11 +49,6 @@ export class PrevisitFormComponent extends Component {
                name: 'Construcción de la Propuesta de Negocio',
                nullable: true,
                message: null
-            },
-            pqr: {
-               name: 'Pendientes, quejas y reclamos',
-               nullable: true,
-               message: null
             }
          },
          type: null  
@@ -106,7 +101,7 @@ export class PrevisitFormComponent extends Component {
    }
 
    render() {      
-      const { fields: { type, date, duration, place, objective, challenger, pqr } } = this.state;
+      const { fields: { type, date, duration, place, objective, challenger } } = this.state;
       const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable } = this.props;
      
       return (
@@ -232,7 +227,7 @@ export class PrevisitFormComponent extends Component {
               
               <Row style={{ paddingTop: 70, width: '99%', paddingLeft: 20 }}>
                 <Col xs>
-                  <Participants />
+                  <Participants disabled={isEditable} />
                 </Col>
               </Row>
 
@@ -291,35 +286,6 @@ export class PrevisitFormComponent extends Component {
                      </Row>   
                   </div>
                }      
-
-               <Row style={{ padding: "20px 23px 20px 20px" }}>
-                  <Col xs={12} md={12} lg={12}>
-                     {this.renderTitle(pqr)}
-                  </Col>
-               </Row>
-                <Row style={{ padding: "0px 23px 20px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <Field type="text" name="observations">
-                           {({ field: { value, name }, form: { setFieldValue } }) =>
-                              <div>
-                                 <RichText
-                                    name="observations"
-                                    id="observations"
-                                    value={value}
-                                    onChange={val => setFieldValue(name, val, false) }
-                                    title="Ingrese pendientes, quejas y reclamos"
-                                    style={{ width: '100%', height: '178px' }}                                    
-                                    readOnly={isEditable}
-                                    disabled={!isEditable ? '' : 'disabled'}
-                                 />
-                                 <ErrorMessage name="observations" component={'div'} >
-                                    {message => this.renderMessageError(message)}
-                                 </ErrorMessage>
-                              </div>
-                           }
-                        </Field>
-                    </Col>
-               </Row>
                {commercialReportButtons}
             </Form>            
          </div>         
