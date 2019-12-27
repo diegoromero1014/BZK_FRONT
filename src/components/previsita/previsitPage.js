@@ -111,8 +111,8 @@ export class PrevisitPage extends Component {
                previsitDetail.participatingContacts.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_CLIENT })),
                previsitDetail.participatingEmployees.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_BANCO })),
                previsitDetail.relatedEmployees.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_OTHER }))
-         ));            
-         const previsitTypeInfo = selectsReducer ? selectsReducer.get(PREVISIT_TYPE).find((previsit) => previsit.id == previsitDetail.documentType) : null;         
+         ));                              
+         const previsitTypeInfo = _.find(selectsReducer.get(PREVISIT_TYPE), ['id', previsitDetail.documentType]);
          dispatchAddListParticipant(participants);         
          dispatchSetConfidential(previsitDetail.commercialReport.isConfidential);         
          fillUsersPermissions(previsitDetail.commercialReport.usersWithPermission, dispatchAddUsers);         
@@ -229,7 +229,8 @@ export class PrevisitPage extends Component {
    }
 
    submitForm = async (previsit) => {      
-      const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions } = this.props;
+      const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions,
+         fromModal, closeModal } = this.props;
       const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);      
       if (validateDatePrevisitResponse) {                  
          const previsitParticipants = this.getPrevisitParticipants();         
@@ -240,20 +241,20 @@ export class PrevisitPage extends Component {
          const previsitRequest = {
             "id": id,
             "client": window.sessionStorage.getItem('idClientSelected'),
-            "visitTime": parseInt(moment(previsit.date).format('x')),
+            "visitTime": parseInt(moment(previsit.visitTime).format('x')),
             "participatingContacts": previsitParticipants.clientParticipants.length ? previsitParticipants.clientParticipants : null,
             "participatingEmployees": previsitParticipants.bankParticipants.length ? previsitParticipants.bankParticipants : null,
             "relatedEmployees": previsitParticipants.otherParticipants.length ? previsitParticipants.otherParticipants : null,
-            "principalObjective": previsit.targetPrevisit,
-            "documentType": previsit.typeVisit,
-            "visitLocation": previsit.place,
-            "observations": previsit.pendingPrevisit,
+            "principalObjective": previsit.principalObjective,
+            "documentType": previsit.documentType,
+            "visitLocation": previsit.visitLocation,
+            "observations": previsit.observations,
             "clientTeach": previsit.clientTeach,
             "adaptMessage": previsit.adaptMessage,
             "controlConversation": previsit.controlConversation,
             "constructiveTension": previsit.constructiveTension,
             "documentStatus": this.state.documentDraft,
-            "endTime": previsit.duration,
+            "endTime": previsit.endTime,
             "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), this.state.documentDraft),
             "answers": getAnswerQuestionRelationship(answers, questions)
          };                
@@ -262,7 +263,11 @@ export class PrevisitPage extends Component {
          dispatchShowLoading(false, "");
 
          if (!_.get(responseCreatePrevisit, 'payload.data.validateLogin') || _.get(responseCreatePrevisit, 'payload.data.validateLogin') === 'false') {
-            redirectUrl(LoginComponentURL);
+            if(fromModal){
+               closeModal();
+            }else{
+               redirectUrl(LoginComponentURL);
+            }            
          } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_SUCCESS) {
             dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertSuccess(id), { onConfirmCallback: redirectUrl(ComponentClientInformationURL) });
          } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_INVALID_INPUT) {
@@ -273,8 +278,8 @@ export class PrevisitPage extends Component {
       }
    }
 
-   onClickCancelCommercialReport = () => {
-      this.setState({ showConfirmationCancelPrevisit: true });
+   onClickCancelCommercialReport = () => {      
+      this.setState({ showConfirmationCancelPrevisit: true });      
    }
 
    onClickDownloadPDF = () => {
@@ -282,9 +287,14 @@ export class PrevisitPage extends Component {
       dispatchPdfDescarga(dispatchChangeStateSaveData, id);
    }
 
-   redirectToClientInformation = () => {
+   onClickConfirmCancelCommercialReport = () => {
+      const {fromModal, closeModal} = this.props;
       this.setState({ showConfirmationCancelPrevisit: false });
-      redirectUrl(ComponentClientInformationURL);
+      if(fromModal){
+         closeModal();
+      }else{
+         redirectUrl(ComponentClientInformationURL);
+      }
    }
 
 
@@ -361,8 +371,8 @@ export class PrevisitPage extends Component {
 
    validateDatePrevisit = async previsit => {
       const { params: { id }, dispatchValidateDatePrevisit, dispatchSwtShowMessage } = this.props;
-      let visitTime = parseInt(moment(previsit.date).startOf('minute').format('x'));
-      let endVisitTime = parseInt(moment(visitTime).add(previsit.duration, 'h').startOf('minute').format('x'));
+      let visitTime = parseInt(moment(previsit.visitTime).startOf('minute').format('x'));
+      let endVisitTime = parseInt(moment(visitTime).add(previsit.endTime, 'h').startOf('minute').format('x'));
       const response = await dispatchValidateDatePrevisit(visitTime, endVisitTime, id);      
       if (response.payload.data.status == REQUEST_ERROR) {
          dispatchSwtShowMessage(MESSAGE_ERROR, TITLE_ERROR_VALIDITY_DATES, response.payload.data.data);
@@ -372,7 +382,7 @@ export class PrevisitPage extends Component {
    }
 
    renderForm = () => {
-      const { params: { id }, previsitReducer, selectsReducer } = this.props;      
+      const { params: { id }, previsitReducer, selectsReducer, fromModal } = this.props;      
       return (
          <PrevisitFormComponent
             previsitData={previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null}
@@ -383,9 +393,10 @@ export class PrevisitPage extends Component {
             onSubmit={this.submitForm}
             commercialReportButtons={
                <CommercialReportButtonsComponent 
-               onClickSave={draft => this.setState({ documentDraft: draft })} 
-               onClickDownloadPDF={id ? this.onClickDownloadPDF : null}
-               cancel={this.onClickCancelCommercialReport}
+                  onClickSave={draft => this.setState({ documentDraft: draft })} 
+                  onClickDownloadPDF={id ? this.onClickDownloadPDF : null}
+                  cancel={this.onClickCancelCommercialReport}
+                  fromModal={fromModal}
             />}/>                     
       )
    }
@@ -428,8 +439,8 @@ export class PrevisitPage extends Component {
                confirmButtonText={AFIRMATIVE_ANSWER}
                cancelButtonText={CANCEL}
                showCancelButton={true}
-               onCancel={() => this.setState({ showConfirmationCancelPrevisit: false })}
-               onConfirm={this.redirectToClientInformation} />
+               onCancel={this.onClickCancelCommercialReport}
+               onConfirm={this.onClickConfirmCancelCommercialReport} />
             <SweetAlert
                type="warning"
                show={this.state.showConfirmChangeTypeVisit}

@@ -8,15 +8,15 @@ export default class CommercialReportButtonsComponent extends Component {
     }
 
     render() {
-        const { onClickSave, onClickDownloadPDF, cancel } = this.props;
+        const { onClickSave, onClickDownloadPDF, cancel, fromModal } = this.props;
         return (
             <div 
                 name="mainContainer"
                 style={{
-                    position: "fixed",
+                    position: fromModal ? "absolute" : "fixed",
                     border: "1px solid #C2C2C2",
                     bottom: "0px",
-                    width: "calc(100% - 190px)",
+                    width: fromModal ? "100%" : "calc(100% - 190px)",
                     marginBottom: "0px",
                     padding: '0px 0 8px 0',
                     backgroundColor: "#F8F8F8",

@@ -42,7 +42,7 @@ export class PrevisitFormComponent extends Component {
                message: null
             },
             objective: {
-               name: 'Objectivo de la reunión', 
+               name: 'Objetivo de la reunión', 
                nullable: false,
                message: TITLE_MESSAGE_TARGET
             },
@@ -242,6 +242,7 @@ export class PrevisitFormComponent extends Component {
                                  style={{ width: '100%', height: '178px' }}
                                  readOnly={false}
                               />
+                              <br></br>
                               <ErrorMessage name="principalObjective" component={'div'} >
                                  {message => this.renderMessageError(message)}
                               </ErrorMessage>
@@ -301,7 +302,7 @@ export default withFormik({
    mapPropsToValues: (props) => {
       const { previsitData } = props;
 
-      if(previsitData) {
+      if(previsitData) {         
          const { documentType, visitTime, endTime, visitLocation, principalObjective, observations } = previsitData;
 
          return {
@@ -322,6 +323,6 @@ export default withFormik({
             observations: '',
          }
       }
-   },
+   },   
    validationSchema: schema
 })(PrevisitFormComponent);
