@@ -162,7 +162,7 @@ describe('Test previsitPage', () => {
     
         it('should render SweetAlert child component', () => {
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);            
-            expect(wrapper.find(SweetAlert)).to.have.lengthOf(1);
+            expect(wrapper.find(SweetAlert)).to.have.lengthOf(2);
         });    
 
         it('should render title previsit edit', () => {
@@ -253,9 +253,9 @@ describe('Test previsitPage', () => {
             expect(dispatchValidateDatePrevisit.calledOnce).to.equal(true);
         });
 
-        it('redirectToClientInformation should call redirectUrl and change showConfirmationCancelPrevisit to false', () => {
+        it('onClickConfirmCancelCommercialReport should call redirectUrl and change showConfirmationCancelPrevisit to false', () => {
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);                          
-            wrapper.instance().redirectToClientInformation();               
+            wrapper.instance().onClickConfirmCancelCommercialReport();               
             expect(wrapper.state().showConfirmationCancelPrevisit).to.equal(false);
             expect(redirectUrl.calledOnce).to.equal(true);
         });

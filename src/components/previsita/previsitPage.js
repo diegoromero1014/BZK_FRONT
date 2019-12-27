@@ -50,7 +50,15 @@ export class PrevisitPage extends Component {
          oldPrevisitTypeSelected: null,
          oldPrevisitTypeSelectedId: null,
          currentPrevisitTypeSelected: null,
-         setFieldValue: null     
+         setFieldValue: null,
+         documentCreatedInfo: {
+            createdBy: null,
+            updatedBy: null,
+            positionCreatedBy: null,
+            positionUpdatedBy: null,
+            createdTimestamp: null,
+            updatedTimestamp: null            
+         }
       };
    }
 
@@ -58,7 +66,7 @@ export class PrevisitPage extends Component {
       const { clientInformacion } = this.props;
       const infoClient = clientInformacion.get('responseClientInfo');            
       if (_.isEmpty(infoClient)) {
-         /* redirectUrl(ComponentClientInformationURL) */
+         redirectUrl(ComponentClientInformationURL)
       }
    }
 
@@ -71,7 +79,7 @@ export class PrevisitPage extends Component {
             renderForm: true,
             isMounted: true
          });
-         dispatchShowLoading(false, "");
+         dispatchShowLoading(false, "");         
       });
    }
 
@@ -113,6 +121,7 @@ export class PrevisitPage extends Component {
                previsitDetail.relatedEmployees.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_OTHER }))
          ));                              
          const previsitTypeInfo = _.find(selectsReducer.get(PREVISIT_TYPE), ['id', previsitDetail.documentType]);
+                  
          dispatchAddListParticipant(participants);         
          dispatchSetConfidential(previsitDetail.commercialReport.isConfidential);         
          fillUsersPermissions(previsitDetail.commercialReport.usersWithPermission, dispatchAddUsers);         
@@ -120,12 +129,19 @@ export class PrevisitPage extends Component {
          previsitDetail.answers.forEach(element => {
             dispatchAddAnswer(null, { id: element.id, [element.field]: element.answer });
          });
-
+         this.setDatesOnPrevisitDetailState(previsitDetail);
          this.setState({
             isEditable: true,
             oldPrevisitTypeSelected: null,
-            currentPrevisitTypeSelected: previsitTypeInfo ? previsitTypeInfo.key.toUpperCase() : ''
-         });         
+            currentPrevisitTypeSelected: previsitTypeInfo ? previsitTypeInfo.key.toUpperCase() : '',
+            documentDraft: previsitDetail.documentStatus,
+            documentCreatedInfo: Object.assign({}, this.state.documentCreatedInfo, {
+               createdBy: previsitDetail.createdByName,
+               updatedBy: previsitDetail.updatedByName,
+               positionCreatedBy: previsitDetail.positionCreatedBy,
+               positionUpdatedBy: previsitDetail.positionUpdatedBy
+            }) 
+         });                           
       } else {         
          dispatchSetConfidential(false);
          this.setState({
@@ -354,6 +370,28 @@ export class PrevisitPage extends Component {
       }
    }
 
+   setDatesOnPrevisitDetailState = (previsitDetail) => {
+      let createdTimestamp = null;
+      let updatedTimestamp = null;
+
+      if(previsitDetail.createdTimestamp){
+         createdTimestamp = moment(detailPrevisit.createdTimestamp).locale('es');
+         createdTimestamp = createdTimestamp.format("DD") + " " + createdTimestamp.format("MMM") + " " + createdTimestamp.format("YYYY") + ", " + createdTimestamp.format("hh:mm a");
+      }
+
+      if(previsitDetail.updatedTimestamp){
+         updatedTimestamp = moment(detailPrevisit.updatedTimestamp).locale('es');
+         updatedTimestamp = updatedTimestamp.format("DD") + " " + updatedTimestamp.format("MMM") + " " + updatedTimestamp.format("YYYY") + ", " + updatedTimestamp.format("hh:mm a");
+      }
+      
+      this.setState({
+         documentCreatedInfo: {
+            createdTimestamp: createdTimestamp,
+            updatedTimestamp
+         }         
+      });
+   }
+
    confirmChangeTypePrevisit = () => { 
       this.validateSelectionPrevisitType(this.state.currentPrevisitTypeSelected);
       this.setState({
@@ -383,9 +421,10 @@ export class PrevisitPage extends Component {
 
    renderForm = () => {
       const { params: { id }, previsitReducer, selectsReducer, fromModal } = this.props;      
+      const previsitDetail = previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null;      
       return (
          <PrevisitFormComponent
-            previsitData={previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null}
+            previsitData={previsitDetail}
             previsitTypes={selectsReducer.get(PREVISIT_TYPE)}
             onChangeShowChallengerSection={this.showChallengerSection}
             showChallengerSection={this.state.showChallengerSection}
@@ -397,11 +436,16 @@ export class PrevisitPage extends Component {
                   onClickDownloadPDF={id ? this.onClickDownloadPDF : null}
                   cancel={this.onClickCancelCommercialReport}
                   fromModal={fromModal}
+                  isEditable={this.state.isEditable}
+                  documentDraft={this.state.documentDraft}
+                  creatingReport={id ? false : true}
             />}/>                     
       )
    }
 
    render() {
+      const {params: { id }} = this.props;
+      const {documentCreatedInfo: {createdBy, updatedBy, positionCreatedBy, positionUpdatedBy, createdTimestamp, updatedTimestamp}} = this.state;
       return (
          <div className='previsit-container'>
             <HeaderPrevisita />
@@ -429,7 +473,50 @@ export class PrevisitPage extends Component {
             </div>
             {
                this.state.renderForm ? this.renderForm() : null
-            }
+            }                           
+            {id && 
+            <div>
+               <Row style={{ padding: "10px 10px 0px 20px" }}>
+                  <Col xs={6} md={3} lg={3}>
+                     <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
+                  </Col>
+                  <Col xs={6} md={3} lg={3}>
+                     <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
+                  </Col>
+                  <Col xs={6} md={3} lg={3}>
+                     {updatedBy !== null ?
+                           <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
+                           : ''}
+                  </Col>
+                  <Col xs={6} md={3} lg={3}>
+                     {updatedBy !== null ?
+                           <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
+                           : ''}
+                  </Col>
+               </Row>               
+               <Row style={{ padding: "5px 10px 0px 20px" }}>
+                  <Col xs={6} md={3} lg={3}>
+                     <span style={{ marginLeft: "0px", color: "#818282" }}>{createdBy}</span>
+                  </Col>
+                  <Col xs={6} md={3} lg={3}>
+                     <span style={{ marginLeft: "0px", color: "#818282" }}>{createdTimestamp}</span>
+                  </Col>
+                  <Col xs={6} md={3} lg={3}>
+                     <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
+                  </Col>
+                  <Col xs={6} md={3} lg={3}>
+                     <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedTimestamp}</span>
+                  </Col>
+               </Row>
+               <Row style={{ padding: "0px 10px 20px 20px" }}>
+                  <Col xs={6} md={6} lg={6}>
+                     <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionCreatedBy}</span>
+                  </Col>
+                  <Col xs={6} md={6} lg={6}>
+                     <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionUpdatedBy}</span>
+                  </Col>
+               </Row>
+            </div>}         
             <SweetAlert
                type="warning"
                show={this.state.showConfirmationCancelPrevisit}
@@ -439,7 +526,7 @@ export class PrevisitPage extends Component {
                confirmButtonText={AFIRMATIVE_ANSWER}
                cancelButtonText={CANCEL}
                showCancelButton={true}
-               onCancel={this.onClickCancelCommercialReport}
+               onCancel={() => this.setState({ showConfirmationCancelPrevisit: false })}
                onConfirm={this.onClickConfirmCancelCommercialReport} />
             <SweetAlert
                type="warning"
