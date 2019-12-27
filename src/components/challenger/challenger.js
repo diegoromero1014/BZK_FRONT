@@ -43,7 +43,7 @@ class Challenger extends Component {
         const { questions } = this.props;
 
         return questions.map(({ field, title, nullable, message, placeholder, subtitle }, index) => 
-            <div key={index} onClick={() => this.seletedTabActive(field)}>
+            <div key={index}>
                 <div className={`title ${field} challenger-dropdown-${field}`} onClick={() => this.seletedTabActive(field)}>
                     <i className="dropdown icon"></i>
                     

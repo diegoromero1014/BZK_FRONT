@@ -44,10 +44,10 @@ class ParticipantsByClient extends Component {
                     tipoParticipante: KEY_PARTICIPANT_CLIENT,
                     idParticipante: contact.id,
                     nombreParticipante: contact.nameComplet,
-                    cargo: !contact.contactPosition ? '' : ' - ' + contact.contactPosition,
+                    cargo: !contact.contactPosition ? '' : contact.contactPosition,
                     empresa: '',
-                    estiloSocial: !contact.contactSocialStyle ? '' : ' - ' + contact.contactSocialStyle,
-                    actitudBanco: !contact.contactActitudeCompany ? '' : ' - ' + contact.contactActitudeCompany,
+                    estiloSocial: !contact.contactSocialStyle ? '' : contact.contactSocialStyle,
+                    actitudBanco: !contact.contactActitudeCompany ? '' : contact.contactActitudeCompany,
                     fecha: Date.now(),
                     uuid: _.uniqueId('participanClient_')
                 }
@@ -108,7 +108,7 @@ class ParticipantsByClient extends Component {
                     <Row>
                         {data.length > 0 ?
                             <Col xs={12} md={12} lg={12} style={{ paddingLeft: "5px", paddingTop: "10px" }}>
-                                <ListParticipantsByClient data={data} />
+                                <ListParticipantsByClient data={data} disabled={this.props.disabled} />
                             </Col> 
                         :
                             <Col xs={12} md={12} lg={12}>

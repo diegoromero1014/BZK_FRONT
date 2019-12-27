@@ -227,7 +227,7 @@ export class PrevisitFormComponent extends Component {
               
               <Row style={{ paddingTop: 70, width: '99%', paddingLeft: 20 }}>
                 <Col xs>
-                  <Participants />
+                  <Participants disabled={isEditable} />
                 </Col>
               </Row>
 

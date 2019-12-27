@@ -5,7 +5,7 @@ import user from '../../../img/icon/user.png';
 
 class ListParticipantsByClient extends Component {
 
-    handleRenderParticipants = () => {
+    handleRenderParticipants = disabled => {
         const { data } = this.props;
 
         return data.map(({nombreParticipante, cargo, estiloSocial, actitudBanco}) => (
@@ -17,27 +17,28 @@ class ListParticipantsByClient extends Component {
                     <div>
                         <Card.Header className='title-content-participants-list'>{ nombreParticipante }</Card.Header>
                         <Card.Description>
-                            {cargo}
-                            {estiloSocial}
-                            {actitudBanco}
+                            <span>{cargo}</span><br />
+                            <span>{estiloSocial}</span> <br />
+                            <span>{actitudBanco}</span>
                         </Card.Description>
                     </div>
                 }
-
                 footer={
-                    <a>
-                        <Icon name='delete' />
-                        Eliminar
-                    </a>
+                    !disabled &&
+                        <a>
+                            <Icon name='delete' />
+                            Eliminar
+                        </a>
                 }
             />
         ))
     }
 
     render() {
+        const { disabled: { disabled }} = this.props;
         return (
             <div className='list-participants-container'>
-                {this.handleRenderParticipants()}
+                {this.handleRenderParticipants(disabled)}
             </div>                
         );
     }

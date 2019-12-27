@@ -13,7 +13,7 @@ const CardComponent = ({header, content, footer}) => {
                 {content}
             </Card.Content>
                 
-            <Card.Content extra>
+            <Card.Content extra style={{ zIndex: 100 }}>
                 {footer}
             </Card.Content>
         </Card>
