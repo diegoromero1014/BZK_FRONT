@@ -20,9 +20,7 @@ class Challenger extends Component {
         getAllQuestions();
     }
     
-    seletedTabActive = (e, field) => {
-        debugger;
-
+    seletedTabActive = (e, field) => {        
         $(`.${field}`).forEach(element => {
             element.toggleClass('active');    
         });
@@ -47,7 +45,7 @@ class Challenger extends Component {
     }
 
     renderQuestions = () => {
-        const { questions } = this.props;
+        const { questions, isEditable } = this.props;
 
         return questions.map(({ field, title, nullable, message, placeholder, subtitle }, index) => 
             <div key={index}>
@@ -78,18 +76,19 @@ class Challenger extends Component {
                         {({ field: { name }, form: { setFieldValue, errors } }) =>
                            <div>
                               <RichText
-                                  value={this.getValue(field)}
-                                  name={field}
-                                  id={field}
-                                  style={{ width: '100%', height: '130pt', marginBottom: '10pt' }}
-                                  placeholder={placeholder}
-                                  readOnly={false}
-                                  onChange={value => {
+                                value={this.getValue(field)}
+                                name={field}
+                                id={field}
+                                style={{ width: '100%', height: '130pt', marginBottom: '10pt' }}
+                                placeholder={placeholder}
+                                readOnly={isEditable}
+                                disabled={!isEditable ? '' : 'disabled'}
+                                onChange={value => {
                                     this.onChange(value, field);
                                     if(value) {
                                         setFieldValue(name, value, false);
                                     }
-                                  }}
+                                }}
                               />
 
                                 {errors[field] && <div style={{ marginTop: 10 }}>
