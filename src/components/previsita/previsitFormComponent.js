@@ -264,28 +264,6 @@ export class PrevisitFormComponent extends Component {
                   </Row>   
                }      
 
-                <Row style={{ padding: "0px 23px 20px 20px" }}>
-                    <Col xs={12} md={12} lg={12}>
-                        <Field type="text" name="observations">
-                           {({ field: { value, name }, form: { setFieldValue } }) =>
-                              <div>
-                                 <RichText
-                                    name="observations"
-                                    id="observations"
-                                    value={value}
-                                    onChange={val => setFieldValue(name, val, false) }
-                                    title="Ingrese pendientes, quejas y reclamos"
-                                    style={{ width: '100%', height: '178px' }}
-                                    readOnly={false}
-                                 />
-                                 <ErrorMessage name="observations" component={'div'} >
-                                    {message => this.renderMessageError(message)}
-                                 </ErrorMessage>
-                              </div>
-                           }
-                        </Field>
-                    </Col>
-               </Row>
                {commercialReportButtons}
             </Form>            
          </div>         

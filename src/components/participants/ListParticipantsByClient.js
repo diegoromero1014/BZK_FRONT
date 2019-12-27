@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CardComponent from '../cards';
-import { Card, Image } from 'semantic-ui-react';
+import { Card, Image, Icon } from 'semantic-ui-react';
 import user from '../../../img/icon/user.png';
 
 class ListParticipantsByClient extends Component {
@@ -16,15 +16,19 @@ class ListParticipantsByClient extends Component {
                 content= {
                     <div>
                         <Card.Header className='title-content-participants-list'>{ nombreParticipante }</Card.Header>
-
-                        <Card.Meta>
-                            <span className='date'>Joined in 2015</span>
-                        </Card.Meta>
-
                         <Card.Description>
-                            Matthew is a musician living in Nashville.
+                            {cargo}
+                            {estiloSocial}
+                            {actitudBanco}
                         </Card.Description>
                     </div>
+                }
+
+                footer={
+                    <a>
+                        <Icon name='delete' />
+                        Eliminar
+                    </a>
                 }
             />
         ))

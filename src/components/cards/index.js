@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Icon, Image } from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 import '../../../styles/cards/main.scss';
 
 const CardComponent = ({header, content, footer}) => {
@@ -14,10 +14,7 @@ const CardComponent = ({header, content, footer}) => {
             </Card.Content>
                 
             <Card.Content extra>
-                <a>
-                    <Icon name='delete' />
-                    Eliminar
-                </a>
+                {footer}
             </Card.Content>
         </Card>
     );
