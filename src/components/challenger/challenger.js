@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import $ from 'jquery';
+import { Field } from 'formik';
+
 import RichText from '../richText/richTextComponent';
 import ToolTip from "../toolTip/toolTipComponent";
+
 import { getAllQuestions, addAnswer } from './actions';
 
 class Challenger extends Component {
@@ -17,7 +20,14 @@ class Challenger extends Component {
         getAllQuestions();
     }
     
-    seletedTabActive = e => $(`.${e.target.classList[1]}`).toggleClass('active');
+    seletedTabActive = (e, field) => {
+        debugger;
+
+        $(`.${field}`).forEach(element => {
+            element.toggleClass('active');    
+        });
+        
+    }; 
     
     onChange = (value, field) => {
         const { addAnswer, answers } = this.props;
@@ -41,11 +51,11 @@ class Challenger extends Component {
 
         return questions.map(({ field, title, nullable, message, placeholder, subtitle }, index) => 
             <div key={index}>
-                <div className={`title ${field}`} onClick={this.seletedTabActive}>
+                <div className={`title ${field}`} onClick={event => this.seletedTabActive(event, field)}>
                     <i className="dropdown icon"></i>
                     
                     <div style={{ display: "inline-flex"}}>
-                        <span onClick={e => $(`.${e.target.parentElement.parentElement.classList[1]}`).toggleClass('active')}>
+                        <span onClick={e => $(`.${field}`).toggleClass('active')}>
                             {`${title}  ${!nullable ? '(' : ''} `} 
                         </span> {!nullable && <span style={{ color: 'red' }}>*</span>}  {!nullable && ' )' }
                         <br />
@@ -57,20 +67,37 @@ class Challenger extends Component {
                     </div>
 
                     {subtitle &&
-                        <span onClick={e => $(`.${e.target.parentElement.classList[1]}`).toggleClass('active')} style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}</span>
+                        <span onClick={e => $(`.${field}`).toggleClass('active')} 
+                            style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}
+                        </span>
                     }
                 </div>
 
                 <div className={`content ${field}`}>
-                    <RichText
-                        value={this.getValue(field)}
-                        name={field}
-                        id={field}
-                        style={{ width: '100%', height: '130pt', marginBottom: '10pt' }}
-                        placeholder={placeholder}
-                        readOnly={false}
-                        onChange={value => this.onChange(value, field)}
-                    />
+                    <Field type="text" name={field}>
+                        {({ field: { name }, form: { setFieldValue, errors } }) =>
+                           <div>
+                              <RichText
+                                  value={this.getValue(field)}
+                                  name={field}
+                                  id={field}
+                                  style={{ width: '100%', height: '130pt', marginBottom: '10pt' }}
+                                  placeholder={placeholder}
+                                  readOnly={false}
+                                  onChange={value => {
+                                    this.onChange(value, field);
+                                    if(value) {
+                                        setFieldValue(name, value, false);
+                                    }
+                                  }}
+                              />
+
+                                {errors[field] && <div style={{ marginTop: 10 }}>
+                                    <div className="ui pointing red basic label"> {errors[field]} </div>
+                                </div>}
+                           </div>
+                        }
+                     </Field>
                 </div>
             </div>
         );
@@ -84,7 +111,6 @@ class Challenger extends Component {
         );
     }
 }
-
 
 const mapStateToProps = ({ questionsReducer: { questions, answers } }) => ({
     questions,

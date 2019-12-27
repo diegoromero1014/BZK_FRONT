@@ -2,16 +2,18 @@ import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 import { Form, Field, ErrorMessage, withFormik } from 'formik';
 import { Input } from 'semantic-ui-react';
-import { schema } from './previsitSchema';
+import '../../../styles/field/main.scss'; 
+import * as Yup from 'yup';
+
+import { schema  } from './previsitSchema';
 import Tooltip from "../toolTip/toolTipComponent";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import RichText from '../richText/richTextComponent';
 import Participants from './participants';
 import Challenger from '../challenger/challenger';
-import { TITLE_MESSAGE_TARGET } from './constants';
 
-import '../../../styles/field/main.scss'; 
+import { TITLE_MESSAGE_TARGET } from './constants';
 
 export class PrevisitFormComponent extends Component {
    constructor(props) {
@@ -23,19 +25,16 @@ export class PrevisitFormComponent extends Component {
                nullable: false,
                message: 'asdasdasd'
             },
-
             date: {
                name: 'Fecha',
                nullable: false,
                message: null
             },
-
             duration: {
                name: 'Duración previsita - horas',
                nullable: false,
                message: null
             },
-
             place: {
                name: 'Lugar',
                nullable: false,
@@ -324,29 +323,34 @@ export default withFormik({
       props.onSubmit(values);
    },
    mapPropsToValues: (props) => {
-      const { previsitData } = props;
+      const { previsitData, questions } = props;
+      const fields = {};
+      
+      questions.forEach(element => fields[element.field] = '' );
 
-      if(previsitData) {         
-         const { documentType, visitTime, endTime, visitLocation, principalObjective, observations } = previsitData;
-
+      if(previsitData) {
+         const { documentType, visitTime, endTime, visitLocation, principalObjective } = previsitData;
+         
          return {
             documentType,
             visitTime: new Date(visitTime),
             endTime,
             visitLocation,
-            principalObjective,
-            observations
+            principalObjective
          }
       } else {
-         return {
-            documentType: '',
-            visitTime: new Date(),
-            endTime: '',
-            visitLocation: '',
-            principalObjective: '',
-            observations: '',
-         }
+         return Object.assign({}, fields,  { documentType: '', visitTime: new Date(), endTime: '', visitLocation: '', principalObjective: ''});
       }
-   },   
-   validationSchema: schema
+   },
+   validationSchema: props => {
+      const { questions } = props;
+
+      const object = {};
+   
+      questions.forEach(element => object[element.field] = Yup.string().required('Esto es obligatorio') );
+
+      const objectSchema = Object.assign({}, schema, object); 
+   
+      return Yup.object().shape(objectSchema);
+   }
 })(PrevisitFormComponent);
