@@ -1,30 +1,33 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import _ from 'lodash';
+import moment from 'moment';
+import { Row, Col } from 'react-flexbox-grid';
+import SweetAlert from "../sweetalertFocus";
+
 import HeaderPrevisita from './headerPrevisita';
 import PrevisitFormComponent from './previsitFormComponent'
-import { detailPrevisit, canEditPrevisita, disableBlockedReport, clearPrevisitDetail, validateDatePreVisit, createPrevisit, pdfDescarga } from "./actions";
-import { showLoading } from '../loading/actions';
-import { TIME_REQUEST_BLOCK_REPORT, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, EDITAR, REQUEST_ERROR, MESSAGE_SAVE_DATA, REQUEST_INVALID_INPUT, REQUEST_SUCCESS, AFIRMATIVE_ANSWER, CANCEL } from '../../constantsGlobal';
-import { swtShowMessage } from '../sweetAlertMessages/actions';
-import { Row, Col } from 'react-flexbox-grid';
-import { PREVISIT_TYPE } from '../selectsComponent/constants';
-import { getMasterDataFields } from '../selectsComponent/actions';
-import { redirectUrl } from '../globalComponents/actions';
 import PermissionUserReports from "../commercialReport/permissionsUserReports";
 import { buildJsoncommercialReport, fillUsersPermissions } from '../commercialReport/functionsGenerics';
-import moment from 'moment';
-import _ from 'lodash';
-import { ComponentClientInformationURL, LoginComponentURL } from '../../constantsAnalytics';
-import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure, fillParticipants } from './participantsActions';
-import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_CREATE_ERROR, TITLE_PREVISIT_EDIT, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_INVALID_INPUT, TITLE_EXIT_CONFIRMATION, MESSAGE_EXIT_CONFIRMATION, TITLE_ERROR_VALIDITY_DATES } from './constants';
-import { setConfidential, addUsers } from '../commercialReport/actions';
 import CommercialReportButtonsComponent from '../globalComponents/commercialReportButtonsComponent';
-import SweetAlert from "../sweetalertFocus";
+
+import { detailPrevisit, canEditPrevisita, disableBlockedReport, clearPrevisitDetail, validateDatePreVisit, createPrevisit, pdfDescarga } from "./actions";
+import { TIME_REQUEST_BLOCK_REPORT, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, EDITAR, REQUEST_ERROR, MESSAGE_SAVE_DATA, REQUEST_INVALID_INPUT, REQUEST_SUCCESS, AFIRMATIVE_ANSWER, CANCEL } from '../../constantsGlobal';
+import { showLoading } from '../loading/actions';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
+import { getMasterDataFields } from '../selectsComponent/actions';
+import { redirectUrl } from '../globalComponents/actions';
+import { setConfidential, addUsers } from '../commercialReport/actions';
 import { addListParticipant, clearParticipants } from '../participantsVisitPre/actions';
 import { changeStateSaveData } from '../dashboard/actions';
-import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from '../participantsVisitPre/constants';
 import { getAnswerQuestionRelationship, clearAnswer, addAnswer } from '../challenger/actions';
+
+import { PREVISIT_TYPE } from '../selectsComponent/constants';
+import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from '../participantsVisitPre/constants';
+import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_CREATE_ERROR, TITLE_PREVISIT_EDIT, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_INVALID_INPUT, TITLE_EXIT_CONFIRMATION, MESSAGE_EXIT_CONFIRMATION, TITLE_ERROR_VALIDITY_DATES } from './constants';
+import { ComponentClientInformationURL, LoginComponentURL } from '../../constantsAnalytics';
+import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure, fillParticipants } from './participantsActions';
 
 export class PrevisitPage extends Component {
 
@@ -301,13 +304,15 @@ export class PrevisitPage extends Component {
    }
 
    renderForm = () => {
-      const { params: { id }, previsitReducer, selectsReducer } = this.props;      
+      const { params: { id }, previsitReducer, selectsReducer, questions } = this.props;      
       return (
          <PrevisitFormComponent
             previsitData={previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null}
             previsitTypes={selectsReducer.get(PREVISIT_TYPE)}
             isEditable={this.state.isEditable}
-            onSubmit={this.submitForm}>
+            onSubmit={this.submitForm}
+            questions={questions}
+         >
             <CommercialReportButtonsComponent 
                onClickSave={draft => this.setState({ documentDraft: draft })} 
                onClickDownloadPDF={id ? this.onClickDownloadPDF : null}
