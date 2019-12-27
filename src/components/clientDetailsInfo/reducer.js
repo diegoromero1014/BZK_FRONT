@@ -18,6 +18,7 @@ const initialState = Immutable.Map({
     errorEditLinkEntitiesClient: false,
     listDocumentsManagementDocumentary: null,
     accordion: {
+        opportunitiesWeaknesses: OPEN_TAB,
         economicActivity: OPEN_TAB,
         inventoryPolicy: OPEN_TAB,
         controlLinkedPayments: OPEN_TAB,
@@ -74,6 +75,7 @@ export default (state = initialState, action) => {
             });
         case RESET_ACCORDION:
             const resetAccordion = {
+                opportunitiesWeaknesses: OPEN_TAB,
                 economicActivity: OPEN_TAB,
                 inventoryPolicy: OPEN_TAB,
                 mainCustomer: OPEN_TAB,

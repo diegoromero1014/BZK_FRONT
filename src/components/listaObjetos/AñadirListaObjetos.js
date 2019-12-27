@@ -9,6 +9,8 @@ import SweetAlert from "../sweetalertFocus";
     guardar los datos en el componente padre (redux-context-state) para 
     comunicacion con el back - BD
 */
+import "./AñadirListaObjetos";
+
 
 export class AñadirListaObjetos extends Component {
   state = {
@@ -148,8 +150,8 @@ export class AñadirListaObjetos extends Component {
     const { titulo } = this.props;
     const {
       objetos,
-      campoObjeto,
-      campoVacio,
+      campoObjeto,  
+      campoVacio, 
       idObjetoEliminar,
       modalEliminar,
       switchGuardarEditar
@@ -165,58 +167,24 @@ export class AñadirListaObjetos extends Component {
       <div style={{ width: "100%" }}>
         <Row style={{ padding: "20px 23px 20px 20px" }}>
           <Col xs={12} md={12} lg={12}>
-            <div
-              style={{
-                fontSize: "25px",
-                color: "#CEA70B",
-                marginTop: "5px",
-                marginBottom: "0px"
-              }}
-            >
-              <div
-                style={{
-                  borderTop: "1px dotted #cea70b",
-                  width: "100%",
-                  marginBottom: "10px"
-                }}
-              />
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div className="header-component">
+              <div className="line-topComponent"/>
+              <div className="container-titleHelpPlus">
                 <div>
-                  <i className="book icon" style={{ fontSize: "18px" }} />
-                  <span style={{ fontSize: "20px" }}>
-                    {`${titulo}`}(<span style={{ color: "red" }}>*</span>)
+                  <i className="book icon"/>
+                  <span className="title-component">
+                    {`${titulo}`}(<span className="icon-obligatoriedad">*</span>)
                   </span>
                   <ToolTip text={helpObjetos}>
-                    <i
-                      className="help circle icon blue"
-                      style={{
-                        fontSize: "18px",
-                        cursor: "pointer",
-                        marginLeft: "0px"
-                      }}
-                    />
+                    <i className="help circle icon blue"/>
                   </ToolTip>
                 </div>
                 <button
                   type="button"
-                  className="btn-abrirCampo"
-                  onClick={this.abrirCampoObjeto}
-                  style={{
-                    marginRight: "10px",
-                    border: "none",
-                    backgroundColor: "#2671D7",
-                    color: "white",
-                    borderRadius: "3px",
-                    cursor: "pointer",
-                    fontSize: "15px",
-                    padding: "10px 10px"
-                  }}
-                >
+                  className="button-openField"
+                  onClick={this.abrirCampoObjeto}>
                   <ToolTipComponent text={`Agregar ${titulo}`}>
-                    <i
-                      className="plus white icon"
-                      style={{ padding: "3px 0 0 5px" }}
-                    ></i>
+                    <i className="plus white icon"/>
                   </ToolTipComponent>
                 </button>
               </div>
@@ -229,53 +197,27 @@ export class AñadirListaObjetos extends Component {
               lg={12}
               style={{ paddingRight: "15px", marginTop: "15px" }}
             >
-              <div
-                style={{
-                  marginTop: "10px",
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "space-between"
-                }}
-              >
+              <div className="container-fieldButtons">
                 <textarea
+                  className="field-textArea"
                   type="text"
                   name="texto"
                   onChange={this.newObjeto}
-                  style={{ width: "63%", height: "100px" }}
                   placeholder={`${titulo}...`}
                   value={this.state.objeto.texto}
                 />
-                <div>
+                <div className="container-buttons">
                   <button
+                    className="button-add"
                     title={`${textButon} ${titulo}`}
                     type="button"
-                    onClick={functionButton}
-                    style={{
-                      padding: "10px 20px",
-                      border: "none",
-                      backgroundColor: "#2671D7",
-                      color: "white",
-                      borderRadius: "3px",
-                      fontSize: "16px",
-                      cursor: "pointer"
-                    }}
-                  >
+                    onClick={functionButton}>
                     {textButon}
                   </button>
-                  <button
+                  <button  
+                    className="button-cancel"
                     type="button"
-                    onClick={this.cerrarCampoObjeto}
-                    style={{
-                      marginLeft: "10px",
-                      padding: "10px 20px",
-                      border: "none",
-                      backgroundColor: "#C1C1C1",
-                      color: "white",
-                      borderRadius: "3px",
-                      fontSize: "16px",
-                      cursor: "pointer"
-                    }}
-                  >
+                    onClick={this.cerrarCampoObjeto}>
                     Cancelar
                   </button>
                 </div>
@@ -353,15 +295,15 @@ export class AñadirListaObjetos extends Component {
                 <thead>
                   <tr
                     style={{
-                      height: "40px",
+                      height: "30px",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center"
                     }}
                   >
-                    <h3 style={{ textAlign: "center" }}>
+                    <span style={{ textAlign: "center" }}>
                       {`Aún no se han adicionado ${titulo}.`}
-                    </h3>
+                    </span>
                   </tr>
                 </thead>
               </table>

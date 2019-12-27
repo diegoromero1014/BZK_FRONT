@@ -1,0 +1,102 @@
+:root{
+    --colorBlue: #2671D7;
+    --colorGray: #C1C1C1;
+    --colorWhite: white;
+    --colorTitlesLines: #CEA70B;
+}
+
+.header-component{
+    font-size: 25px;
+    color: var(--colorTitlesLines);
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+.line-topComponent{
+    border-top: 1px dotted var(--colorTitlesLines);
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.container-titleHelpPlus{
+    display: flex;
+    justify-content: space-between;
+}
+
+.book{
+    font-size: 18px;
+}
+
+.title-component{
+    font-size: 20px;
+}
+
+.icon-obligatoriedad{
+    color: var(--colorBlue);
+}
+
+.help{
+    font-size: 18px;
+    margin-left: 0;
+    cursor: pointer;
+}
+
+.button-openField{
+    margin-right: 10px;
+    border: none;
+    background-color: var(--colorBlue);
+    color: var(--colorWhite);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 10px;
+}
+
+.plus{
+    padding: 3px 0 0 5px;
+}
+
+// hover para el boton + 
+
+.container-fieldButtons{
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.field-textArea{
+    width: 73%;
+    height: 100px;
+}
+
+.container-buttons{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.button-add{
+    width: 8rem;
+    padding: 10px 20px;
+    border: none;
+    background-color: var(--colorBlue);
+    color: var(--colorWhite);
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+// hover para el boton agregar 
+
+.button-cancel{
+    widows: 8rem;
+    padding: 10px 20px;
+    border: none;
+    background-color:  var(--colorGray);
+    color: var(--colorWhite);
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
