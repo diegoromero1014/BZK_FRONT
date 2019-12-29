@@ -11,7 +11,7 @@ export default class CommercialReportButtonsComponent extends Component {
         const { onClickSave, onClickDownloadPDF, cancel, fromModal, isEditable, documentDraft, creatingReport } = this.props;
         return (
             <div 
-                name="mainContainer"
+                name="commercialReportButtons"
                 style={{
                     position: fromModal ? "absolute" : "fixed",
                     border: "1px solid #C2C2C2",

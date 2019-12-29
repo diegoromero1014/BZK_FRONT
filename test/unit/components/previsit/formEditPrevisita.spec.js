@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import thunk from 'redux-thunk';
-import configureStore from 'redux-mock-store'
+import configureStore from 'redux-mock-store';
 
 import FormEditPrevisita from './../../../../src/components/previsita/editPrevisit/formEditPrevisita';
 
@@ -30,7 +30,7 @@ describe('Test formEditPrevisita', () => {
         const handleSubmit = sinon.fake();
         const reducerGlobal = Immutable.Map({ validateEnter, permissionsPrevisits});
         const previsitReducer = Immutable.Map({ detailPrevisit , ownerDraft});
-        const viewBottons =true;
+        const viewBottons = true;
         store = mockStore({ selectsReducer, handleSubmit, reducerGlobal, previsitReducer, viewBottons });
     });
     it('should render formEditPrevisita', () => {

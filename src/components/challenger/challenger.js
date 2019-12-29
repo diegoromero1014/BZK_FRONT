@@ -9,7 +9,7 @@ import ToolTip from "../toolTip/toolTipComponent";
 
 import { getAllQuestions, addAnswer } from './actions';
 
-class Challenger extends Component {
+export class Challenger extends Component {
     constructor(props) {
         super(props);
     }
@@ -54,11 +54,11 @@ class Challenger extends Component {
         const { questions, isEditable } = this.props;
 
         return questions.map(({ field, title, nullable, message, placeholder, subtitle }, index) => 
-            <div key={index}>
+            <div name="mainContainer" key={index}>
                 <div className={`title ${field} challenger-dropdown-${field}`} onClick={() => this.seletedTabActive(field)}>
                     <i className="dropdown icon"></i>
                     
-                    <div style={{ display: "inline-flex"}}>
+                    <div name={`title${field}`} style={{ display: "inline-flex"}}>
                         <span onClick={() => this.seletedTabActive(field)}>
                             {`${title}  ${!nullable ? '(' : ''} `} 
                         </span> {!nullable && <span style={{ color: 'red' }}>*</span>}  {!nullable && ' )' }
@@ -71,7 +71,7 @@ class Challenger extends Component {
                     </div>
 
                     {subtitle &&
-                        <span onClick={() => this.seletedTabActive(field)} style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}</span>
+                        <span name={`subtitle${field}`} onClick={() => this.seletedTabActive(field)} style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}</span>
                     }
                 </div>
 

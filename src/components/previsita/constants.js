@@ -26,6 +26,10 @@ export const TITLE_MESSAGE_TARGET = "En este campo deberá registrar de manera c
 "c. ¿Cómo esta enseñanza conduce hacia una solución que tiene el Grupo Bancolombia?\n\n" +
 "2. ¿Cuáles son los resultados esperados y en cuánto tiempo se verán materializados?";
 
+export const TITLE_CHALLENGER = "Enseñanza (Oportunidades – Retos): Diligencie de manera resumida los siguientes " +
+"campos. Recuerde que lo importante es la necesidad del cliente, por lo cual no debe hablar de Bancolombia hasta cuando se expone la solución a la situación del cliente.\n" +
+"No es necesario haber asistido previamente a la formación Challenger, el formato entrega las herramientas necesarias para su construcción.";
+
 export const TITLE_MESSAGE_PENDIENT = "En este campo se deberá registrar los pendientes quejas o reclamos que tenga el cliente y que podrán ser motivo de conversación en la reunión.";
 
 export const TITLE_EXIT_CONFIRMATION = 'Confirmación salida';

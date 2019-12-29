@@ -13,7 +13,7 @@ import RichText from '../richText/richTextComponent';
 import Participants from './participants';
 import Challenger from '../challenger/challenger';
 
-import { TITLE_MESSAGE_TARGET } from './constants';
+import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER } from './constants';
 
 export class PrevisitFormComponent extends Component {
    constructor(props) {
@@ -48,7 +48,7 @@ export class PrevisitFormComponent extends Component {
             challenger: {
                name: 'Construcción de la Propuesta de Negocio',
                nullable: true,
-               message: null
+               message: TITLE_CHALLENGER
             }
          },
          type: null  
@@ -79,9 +79,9 @@ export class PrevisitFormComponent extends Component {
 
    renderTitle = ({name, message, nullable}) => (
       <div style={{ fontSize: "23px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px",  display: "-webkit-inline-box" }}>
-         <span>{`${name}  ${!nullable ? '(' : ''} `} </span>
+         <span>{`${name} ${!nullable ? '(' : ''}`}</span>
             {!nullable && <span style={{ color: 'red' }}>*</span>} 
-            {!nullable && ' )' }
+            {!nullable && ')' }
          
          {message && 
             <Tooltip text={message}>
@@ -231,11 +231,16 @@ export class PrevisitFormComponent extends Component {
                 </Col>
               </Row>
 
-              <Row style={{ padding: "20px 23px 20px 20px" }}>
+               <Row style={{ padding: "20px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
-                     {this.renderTitle(objective)}
+                     <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                           <div className="tab-content-row"
+                              style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
+                           <i className="book icon" style={{ fontSize: "18px" }} />
+                           <span style={{ fontSize: "20px" }}>{this.renderTitle(objective)}</span>                           
+                     </div>
                   </Col>
-              </Row>
+               </Row>
 
               <Row style={{ padding: "0px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
@@ -264,11 +269,16 @@ export class PrevisitFormComponent extends Component {
 
                {showChallengerSection &&
                   <div>
-                     <Row style={{ padding: "20px 23px 20px 20px" }}>
+                     <Row style={{ padding: "10px 10px 20px 20px" }}>
                         <Col xs={12} md={12} lg={12}>
-                           {this.renderTitle(challenger)}
+                           <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "10px", marginBottom: "5px" }}>
+                              <div className="tab-content-row"
+                                    style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                              <i className="browser icon" style={{ fontSize: "20px" }} />
+                              <span style={{ fontSize: "20px" }}> {this.renderTitle(challenger)} </span>                              
+                           </div>
                         </Col>
-                     </Row>                 
+                     </Row>              
                      <Row style={{ padding: "20px 23px 20px 20px" }}>                     
                         <Col xs={12} md={12} lg={12}>
                            <Challenger isEditable={isEditable}/>

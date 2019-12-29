@@ -28,6 +28,7 @@ import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } 
 import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_CREATE_ERROR, TITLE_PREVISIT_EDIT, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_INVALID_INPUT, TITLE_EXIT_CONFIRMATION, MESSAGE_EXIT_CONFIRMATION, TITLE_ERROR_VALIDITY_DATES, TITLE_VISIT_TYPE, MESSAGE_VISIT_TYPE_CHANGED, PROPUEST_OF_BUSINESS } from './constants';
 import { ComponentClientInformationURL, LoginComponentURL } from '../../constantsAnalytics';
 import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure, fillParticipants } from './participantsActions';
+import CommercialReportInfoFooter from '../globalComponents/commercialReportInfoFooter';
 
 export class PrevisitPage extends Component {
 
@@ -58,7 +59,8 @@ export class PrevisitPage extends Component {
             positionCreatedBy: null,
             positionUpdatedBy: null,
             createdTimestamp: null,
-            updatedTimestamp: null            
+            updatedTimestamp: null,
+            datePrevisitLastReview: null            
          }
       };
    }
@@ -376,19 +378,20 @@ export class PrevisitPage extends Component {
       let updatedTimestamp = null;
 
       if(previsitDetail.createdTimestamp){
-         createdTimestamp = moment(detailPrevisit.createdTimestamp).locale('es');
+         createdTimestamp = moment(previsitDetail.createdTimestamp).locale('es');
          createdTimestamp = createdTimestamp.format("DD") + " " + createdTimestamp.format("MMM") + " " + createdTimestamp.format("YYYY") + ", " + createdTimestamp.format("hh:mm a");
       }
 
       if(previsitDetail.updatedTimestamp){
-         updatedTimestamp = moment(detailPrevisit.updatedTimestamp).locale('es');
+         updatedTimestamp = moment(previsitDetail.updatedTimestamp).locale('es');
          updatedTimestamp = updatedTimestamp.format("DD") + " " + updatedTimestamp.format("MMM") + " " + updatedTimestamp.format("YYYY") + ", " + updatedTimestamp.format("hh:mm a");
       }
       
       this.setState({
          documentCreatedInfo: {
-            createdTimestamp: createdTimestamp,
-            updatedTimestamp
+            createdTimestamp,
+            updatedTimestamp,
+            datePrevisitLastReview: moment(previsitDetail.reviewedDate, "x").locale('es').format("DD MMM YYYY")
          }         
       });
    }
@@ -446,8 +449,8 @@ export class PrevisitPage extends Component {
    }
 
    render() {
-      const {params: { id }} = this.props;
-      const {documentCreatedInfo: {createdBy, updatedBy, positionCreatedBy, positionUpdatedBy, createdTimestamp, updatedTimestamp}} = this.state;
+      const { params: { id } } = this.props;
+      const { documentCreatedInfo, isEditable } = this.state;
       return (
          <div className='previsit-container'>
             <HeaderPrevisita />
@@ -458,7 +461,7 @@ export class PrevisitPage extends Component {
                   </Col>
                   <Col xs={2} sm={2} md={2} lg={2}>
                      {
-                        this.validatePermissionsPrevisits() && this.state.isEditable &&
+                        this.validatePermissionsPrevisits() && isEditable &&
                         <button type="button" onClick={this.editPrevisit}
                            className={'btn btn-primary modal-button-edit'}
                            style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>
@@ -469,56 +472,14 @@ export class PrevisitPage extends Component {
                </Row>
                <Row>
                   <Col xs={12} md={12} lg={12}>
-                     <PermissionUserReports />
+                     <PermissionUserReports disabled={isEditable ? 'disabled' : ''}/>
                   </Col>
                </Row>
             </div>
             {
                this.state.renderForm ? this.renderForm() : null
             }                           
-            {id && 
-            <div>
-               <Row style={{ padding: "10px 10px 0px 20px" }}>
-                  <Col xs={6} md={3} lg={3}>
-                     <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
-                  </Col>
-                  <Col xs={6} md={3} lg={3}>
-                     <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
-                  </Col>
-                  <Col xs={6} md={3} lg={3}>
-                     {updatedBy !== null ?
-                           <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
-                           : ''}
-                  </Col>
-                  <Col xs={6} md={3} lg={3}>
-                     {updatedBy !== null ?
-                           <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
-                           : ''}
-                  </Col>
-               </Row>               
-               <Row style={{ padding: "5px 10px 0px 20px" }}>
-                  <Col xs={6} md={3} lg={3}>
-                     <span style={{ marginLeft: "0px", color: "#818282" }}>{createdBy}</span>
-                  </Col>
-                  <Col xs={6} md={3} lg={3}>
-                     <span style={{ marginLeft: "0px", color: "#818282" }}>{createdTimestamp}</span>
-                  </Col>
-                  <Col xs={6} md={3} lg={3}>
-                     <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedBy}</span>
-                  </Col>
-                  <Col xs={6} md={3} lg={3}>
-                     <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedTimestamp}</span>
-                  </Col>
-               </Row>
-               <Row style={{ padding: "0px 10px 20px 20px" }}>
-                  <Col xs={6} md={6} lg={6}>
-                     <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionCreatedBy}</span>
-                  </Col>
-                  <Col xs={6} md={6} lg={6}>
-                     <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionUpdatedBy}</span>
-                  </Col>
-               </Row>
-            </div>}         
+            {id && <CommercialReportInfoFooter documentCreatedInfo={documentCreatedInfo}/>}         
             <SweetAlert
                type="warning"
                show={this.state.showConfirmationCancelPrevisit}

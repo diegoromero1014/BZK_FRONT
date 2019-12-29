@@ -10,9 +10,9 @@ describe('Test globalComponents/commercialReportButtonsComponent', () => {
         itRenders(<CommercialReportButtonsComponent {...defaultProps} />)
     });
 
-    it('It should render once the main container.', () => {
+    it('It should render once the main container commercialReportButtons.', () => {
         const wrapper = shallow(<CommercialReportButtonsComponent {...defaultProps} />);
-        expect(wrapper.find('div[name="mainContainer"]')).to.have.length(1);
+        expect(wrapper.find('div[name="commercialReportButtons"]')).to.have.length(1);
     });
 
     it('It should render once the button to pre-save.', () => {
