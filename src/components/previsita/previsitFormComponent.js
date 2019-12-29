@@ -310,9 +310,9 @@ export default withFormik({
    },
    validationSchema: ({questions, showChallengerSection}) => {
       const object = {};
-   
+
       if(showChallengerSection) {
-         questions.forEach(element => object[element.field] = Yup.string().required('Esto es obligatorio') );
+         questions.forEach(element => object[element.field] = Yup.string().required('La pregunta ' + element.title + ' es obligatoria') );
       }
       
       const objectSchema = Object.assign({}, schema, object); 

@@ -39,6 +39,17 @@ class Challenger extends Component {
         return value.length ? value[0][field] : ''
     }
 
+    renderError = (err, field) => {
+        if(err[field]) {
+            this.seletedTabActive(field);
+            return (
+                <div style={{ marginTop: 10 }}>
+                    <div className="ui pointing red basic label"> {err[field]} </div>
+                </div>
+            )
+        }
+    }
+
     renderQuestions = () => {
         const { questions, isEditable } = this.props;
 
@@ -78,15 +89,14 @@ class Challenger extends Component {
                                 disabled={!isEditable ? '' : 'disabled'}
                                 onChange={value => {
                                     this.onChange(value, field);
+                                    
                                     if(value) {
                                         setFieldValue(name, value, false);
                                     }
                                 }}
                               />
 
-                                {errors[field] && <div style={{ marginTop: 10 }}>
-                                    <div className="ui pointing red basic label"> {errors[field]} </div>
-                                </div>}
+                              {this.renderError(errors, field)}                                
                            </div>
                         }
                      </Field>
