@@ -297,6 +297,7 @@ export default withFormik({
    handleSubmit: (values, { props, setSubmitting }) => {
       setSubmitting(false);
       props.onSubmit(values);
+      props.isFormValid(true);
    },
    mapPropsToValues: (props) => {
       const { previsitData, questions } = props;

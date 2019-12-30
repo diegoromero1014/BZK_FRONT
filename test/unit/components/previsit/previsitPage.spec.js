@@ -5,14 +5,14 @@ import HeaderPrevisita from '../../../../src/components/previsita/headerPrevisit
 import PermissionUserReports from '../../../../src/components/commercialReport/permissionsUserReports';
 import PrevisitFormComponent from '../../../../src/components/previsita/previsitFormComponent';
 import SweetAlert from '../../../../src/components/sweetalertFocus';
-import { TITLE_PREVISIT_EDIT, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_CREATE_ERROR } from '../../../../src/components/previsita/constants';
+import { TITLE_PREVISIT_EDIT, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_CREATE_ERROR, PROPUEST_OF_BUSINESS, TRACING } from '../../../../src/components/previsita/constants';
 import * as globalActions from '../../../../src/components/globalComponents/actions';
 import { EDITAR, REQUEST_SUCCESS, REQUEST_INVALID_INPUT, REQUEST_ERROR } from '../../../../src/constantsGlobal';
+import { PREVISIT_TYPE } from '../../../../src/components/selectsComponent/constants';
 
 
 const validateEnter = true;
 const ownerDraft = true;
-const previsitType = "";
 const detailPrevisit = {
     data:{
         createdByName:"",
@@ -24,6 +24,9 @@ const detailPrevisit = {
 
     }
 };
+const previsitTypes = [
+    {"id":1,"field":"previsitType","value":"Propuesta de negocio","parentId":null,"key":"Propuesta","description":""},
+    {"id":2,"field":"previsitType","value":"Seguimiento","parentId":null,"key":"Seguimiento","description":""}];
 let dispatchShowLoading;
 let dispatchGetMasterDataFields;
 let dispatchSetConfidential;
@@ -38,6 +41,9 @@ let dispatchCreatePrevisit;
 let defaultProps = {};
 let redirectUrl;
 let stubLocalStorage;
+let setFieldValue;
+let closeModal;
+let selectsReducer;
 
 describe('Test previsitPage', () => {        
 
@@ -50,7 +56,7 @@ describe('Test previsitPage', () => {
         dispatchAddListParticipant = spy(sinon.fake());
         dispatchCanEditPrevisita = sinon.stub();   
         dispatchDetailPrevisit = sinon.stub();
-        dispatchCreatePrevisit = sinon.stub();
+        dispatchCreatePrevisit = sinon.stub();        
         dispatchCreatePrevisit.resolves({
             payload: {
                 data: {
@@ -59,14 +65,15 @@ describe('Test previsitPage', () => {
                 }
             }
         });
+        selectsReducer = Immutable.Map({ previsitType: previsitTypes });
         
         dispatchGetMasterDataFields = sinon.stub();        
         dispatchGetMasterDataFields.resolves({
-            masterDataDetailEntries: [
-                {"id":1,"field":"previsitType","value":"Propuesta de negocio","parentId":null,"key":"Propuesta","description":""},
-                {"id":2,"field":"previsitType","value":"Seguimiento","parentId":null,"key":"Seguimiento","description":""}]
+            masterDataDetailEntries: previsitTypes
         });
-        redirectUrl = sinon.stub(globalActions, "redirectUrl");              
+        redirectUrl = sinon.stub(globalActions, "redirectUrl");      
+        setFieldValue = sinon.stub();        
+        closeModal = spy(sinon.fake());
         defaultProps = {
             params: {},
             answers: [],
@@ -78,7 +85,7 @@ describe('Test previsitPage', () => {
                 validateEnter, 
                 permissionsPrevisits: [EDITAR]
             }),      
-            selectsReducer: Immutable.Map({ previsitType }),            
+            selectsReducer,            
             confidentialReducer: Immutable.Map({ }),
             dispatchShowLoading,
             dispatchGetMasterDataFields,
@@ -89,8 +96,10 @@ describe('Test previsitPage', () => {
             dispatchAddListParticipant,
             dispatchAddUsers,
             dispatchCreatePrevisit,
-            participants: []
-        }        
+            participants: [],
+            fromModal: false,
+            closeModal
+        };      
     });
 
     afterEach(() => {
@@ -145,7 +154,7 @@ describe('Test previsitPage', () => {
     
         it('should render PermissionUserReports', () => {
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
-            expect(wrapper.contains(<PermissionUserReports/>)).to.equal(true);                  
+            expect(wrapper.contains(<PermissionUserReports disabled={''}/>)).to.equal(true);                  
         });
     
         it('should render PrevisitFormComponent when state renderForm is true', () => {
@@ -254,10 +263,19 @@ describe('Test previsitPage', () => {
         });
 
         it('onClickConfirmCancelCommercialReport should call redirectUrl and change showConfirmationCancelPrevisit to false', () => {
+            defaultProps.fromModal = false;
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);                          
             wrapper.instance().onClickConfirmCancelCommercialReport();               
             expect(wrapper.state().showConfirmationCancelPrevisit).to.equal(false);
             expect(redirectUrl.calledOnce).to.equal(true);
+        });
+
+        it('onClickConfirmCancelCommercialReport should call closeModal and change showConfirmationCancelPrevisit to false', () => {
+            defaultProps.fromModal = true;
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);                          
+            wrapper.instance().onClickConfirmCancelCommercialReport();               
+            expect(wrapper.state().showConfirmationCancelPrevisit).to.equal(false);
+            sinon.assert.notCalled(redirectUrl);
         });
 
         it('getPrevisitParticipants should return an object with participants lists', () => {            
@@ -394,7 +412,7 @@ describe('Test previsitPage', () => {
                     }
                 }
             });
-            defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
+            defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;            
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.instance().getPrevisitParticipants = () =>{
                 return {
@@ -407,7 +425,6 @@ describe('Test previsitPage', () => {
             await wrapper.instance().submitForm(request);
             sinon.assert.notCalled(dispatchCreatePrevisit);
             expect(dispatchSwtShowMessage).to.have.been.called.once;
-
         });
 
         it('submitForm shouldnt call savePrevisit service when validateDatePrevisitResponse is false', async () => {
@@ -458,6 +475,7 @@ describe('Test previsitPage', () => {
                 }
             });
             defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
+            defaultProps.fromModal = true;
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.instance().getPrevisitParticipants = () =>{
                 return {
@@ -469,7 +487,7 @@ describe('Test previsitPage', () => {
             wrapper.update();
             await wrapper.instance().submitForm(request);
             sinon.assert.calledOnce(dispatchCreatePrevisit);  
-            expect(dispatchShowLoading).to.have.been.called.exactly(4);         
+            expect(dispatchShowLoading).to.have.been.called.exactly(4);                
         });
 
         it('submitForm should call savePrevisit service and respond a validateLogin false', async () => {
@@ -499,6 +517,7 @@ describe('Test previsitPage', () => {
             });
             defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
             defaultProps.dispatchCreatePrevisit = dispatchCreatePrevisit;
+            defaultProps.fromModal = false;
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.instance().getPrevisitParticipants = () =>{
                 return {
@@ -534,7 +553,7 @@ describe('Test previsitPage', () => {
             dispatchCreatePrevisit.resolves({
                 payload: {
                     data: {
-                        validateLogin: false,
+                        validateLogin: true,
                         status: REQUEST_INVALID_INPUT
                     }
                 }
@@ -575,7 +594,7 @@ describe('Test previsitPage', () => {
             dispatchCreatePrevisit.resolves({
                 payload: {
                     data: {
-                        validateLogin: false,
+                        validateLogin: true,
                         status: REQUEST_ERROR
                     }
                 }
@@ -595,6 +614,78 @@ describe('Test previsitPage', () => {
             sinon.assert.calledOnce(dispatchCreatePrevisit);  
             expect(dispatchShowLoading).to.have.been.called.exactly(4);                     
         });
+
+        it('onClickSaveHandler should set state documentDraft in 1', () => {
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.setState({ formValid: true });
+            wrapper.instance().onClickSaveHandler(1);
+            expect(wrapper.state().documentDraft).to.equal(1);
+        });
+
+        it('onClickSaveHandler should set state documentDraft in 0', () => {
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.setState({ formValid: true });
+            wrapper.instance().onClickSaveHandler(0);
+            expect(wrapper.state().documentDraft).to.equal(0);
+        });
+
+        it('onClickSaveHandler shouldnt change state documentDraft', () => {
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.setState({ formValid: false, documentDraft: null });
+            wrapper.instance().onClickSaveHandler(0);
+            expect(wrapper.state().documentDraft).to.equal(null);
+        });
+
+        it('cancelChangeTypePrevisit should set state showConfirmChangeTypeVisit in false', () => {
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.setState({ showConfirmChangeTypeVisit: true, setFieldValue});
+            wrapper.instance().cancelChangeTypePrevisit();
+            expect(wrapper.state().showConfirmChangeTypeVisit).to.equal(false);
+            expect(wrapper.state().setFieldValue.called).to.equal(true);
+        });
+
+        it('confirmChangeTypePrevisit should set state showConfirmChangeTypeVisit in false', () => {
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.setState({ showConfirmChangeTypeVisit: true, setFieldValue});
+            wrapper.instance().confirmChangeTypePrevisit();
+            expect(wrapper.state().showConfirmChangeTypeVisit).to.equal(false);            
+        });
+
+        it('showChallengerSection should call validateSelectionPrevisitType when oldPrevisitTypeKeySelected is null', async () => {
+            const previsitTypeId = 1;
+            const setFieldValue = () => true;            
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);            
+            await wrapper.instance().showChallengerSection(previsitTypeId, setFieldValue);                 
+            expect(wrapper.state().oldPrevisitTypeSelectedId).to.equal(previsitTypes[0].id);
+            expect(wrapper.state().oldPrevisitTypeSelected).to.equal(PROPUEST_OF_BUSINESS.toUpperCase());
+        });
+
+        it('showChallengerSection should change showConfirmChangeTypeVisit state to true', async () => {
+            const previsitTypeId = 2;
+            const setFieldValue = () => true;                        
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);            
+            wrapper.setState({
+                oldPrevisitTypeSelected: PROPUEST_OF_BUSINESS
+            });
+            await wrapper.instance().showChallengerSection(previsitTypeId, setFieldValue);                 
+            expect(wrapper.state().currentPrevisitTypeSelected).to.equal(TRACING.toUpperCase());
+            expect(wrapper.state().oldPrevisitTypeSelected).to.equal(TRACING.toUpperCase());
+            expect(wrapper.state().showConfirmChangeTypeVisit).to.equal(true);
+        });
+
+        it('showChallengerSection should validateSelectionPrevisitType when oldPrevisitTypeKeySelected is TRACING', async () => {
+            const previsitTypeId = 1;
+            const setFieldValue = () => true;                        
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);            
+            wrapper.setState({
+                oldPrevisitTypeSelected: TRACING 
+            });
+            await wrapper.instance().showChallengerSection(previsitTypeId, setFieldValue);                 
+            expect(wrapper.state().currentPrevisitTypeSelected).to.equal(PROPUEST_OF_BUSINESS.toUpperCase());
+            expect(wrapper.state().oldPrevisitTypeSelected).to.equal(PROPUEST_OF_BUSINESS.toUpperCase());            
+        });
+
+        
     });
     
 });
