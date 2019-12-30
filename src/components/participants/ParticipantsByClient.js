@@ -25,18 +25,20 @@ class ParticipantsByClient extends Component {
 
     componentWillMount() {
         const { dispatchContactsByClient } = this.props;
-        
+
         dispatchContactsByClient(window.sessionStorage.getItem('idClientSelected'), NUMBER_CONTACTS);
     }
 
     addContact = () => {
-        const { dispatchAddParticipant, participants, contacts, dispatchShowAlert } = this.props; 
+        const { dispatchAddParticipant, participants, contacts, dispatchShowAlert, limitParticipantsByClient } = this.props;
         const { selectedContact } = this.state;
-
-        if(selectedContact) {
+        if (selectedContact) {
+            if (limitParticipantsByClient && participants.toArray().length > limitParticipantsByClient) {
+                dispatchShowAlert('error', "Límite de participantes", "Señor usuario, sólo se pueden agregar máximo 10 participantes por parte del cliente");
+                return;
+            }
             let existingContact = participants.find(element => element.idParticipante === Number(selectedContact));
-
-            if(!existingContact) {
+            if (!existingContact) {
                 let contact = contacts.filter(element => element.id === Number(selectedContact))[0];
 
                 let participant = {
@@ -52,23 +54,22 @@ class ParticipantsByClient extends Component {
                 }
 
                 dispatchAddParticipant(participant);
-                this.setState(({ open }) => ({ open: !open, selectedContact: null }));
+                this.setState({ selectedContact: '' });
             } else {
                 dispatchShowAlert('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
             }
-        } else {
-            dispatchShowAlert('error', "Error participante", "Señor usuario, para agregar un participante debe seleccionar un contacto");   
         }
+
     }
 
     render() {
         const { contacts, participants } = this.props;
 
         let data = _.chain(participants.toArray()).map(participant => participant).filter(participant => _.isEqual(participant.tipoParticipante, KEY_PARTICIPANT_CLIENT)).value();
-        const { disabled: {disabled} } = this.props;
-        
+        const { disabled: { disabled } } = this.props;
+
         return (
-             <div className='participants-client'>
+            <div className='participants-client'>
                 <Row style={{ marginTop: 20, marginLeft: 7 }}>
                     <Col xs={12} md={12} lg={12} >
                         <ComboBox
@@ -85,16 +86,16 @@ class ParticipantsByClient extends Component {
                             disabled={disabled ? 'disabled' : ''}
                         />
                     </Col>
-                </Row> 
-                    
+                </Row>
+
 
                 <div className='participants-client-list'>
                     <Row>
                         {data.length > 0 ?
                             <Col xs={12} md={12} lg={12}>
                                 <ListParticipantsByClient data={data} disabled={this.props.disabled} />
-                            </Col> 
-                        :
+                            </Col>
+                            :
                             <Col xs={12} md={12} lg={12}>
                                 <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
                                     <span className="form-item">Aún no se han adicionado participantes</span>
@@ -103,16 +104,16 @@ class ParticipantsByClient extends Component {
                         }
                     </Row>
                 </div>
-            </div>   
+            </div>
         );
     }
 }
 
 const mapStateToProps = ({ contactsByClient, participants }) => ({
-    contacts : contactsByClient.get('contacts'),
+    contacts: contactsByClient.get('contacts'),
     participants
 });
- 
+
 const mapDispatchToProps = dispatch => {
     return bindActionCreators({
         dispatchContactsByClient: findContactsByClient,
@@ -121,5 +122,5 @@ const mapDispatchToProps = dispatch => {
         dispatchShowAlert: swtShowMessage
     }, dispatch)
 };
- 
+
 export default connect(mapStateToProps, mapDispatchToProps)(ParticipantsByClient)
