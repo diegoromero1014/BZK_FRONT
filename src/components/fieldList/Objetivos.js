@@ -2,15 +2,17 @@ import React from "react";
 import { find } from 'lodash';
 import { Row, Col } from 'react-flexbox-grid';
 
-import ListOfElements from './ListOfElements';
 import Title from '../clientEdit/sections/title';
 import Input from '../../ui/input/inputComponent';
+import makeFieldList from './makeFieldList';
 
 import {
     renderFields as renderStrategyFields,
     renderElements as renderStrategyElements
 } from './Estrategias';
 
+const ListaObjetivos = makeFieldList("Objetivos", [{ name: "Estrategias", alias: "strategies" }]);
+const ListaEstrategias = makeFieldList("Estrategias");
 
 const styles = {
     main: {
@@ -24,49 +26,10 @@ const styles = {
 
 
 export default class Objetivos extends React.Component {
-    state = {
-        selectedId: null,
-        elements: [],
-        strategies: []
-    }
-
-    findById = (elements, elementId) => {
-        return find(elements, ({ id }) => id == elementId);
-    }
-
-    updateElements = (elements, elementId) => {
-        let element = this.findById(elements, elementId);
-        if (element) {
-            element["strategies"] = this.state.strategies;
-        }
-        this.setState({
-            elements
-        })
-    }
-
-    updateStrategies = (strategies) => {
-        this.setState({
-            strategies
-        })
-    }
-
-    listenAddSection = () => {
-        this.setState({
-            strategies: []
-        })
-    }
-
-    handleOnEdit = (id) => {
-        let element = this.findById(this.state.elements, id);
-        this.setState({
-            strategies: element.strategies
-        })
-    }
-
     render() {
         return (
             <div style={styles.main}>
-                <ListOfElements
+                <ListaObjetivos
                     renderTitle={
                         <Title
                             text="Objetivos del cliente"
@@ -94,7 +57,7 @@ export default class Objetivos extends React.Component {
                             </Col>
                             <Col md={12}>
                                 <div style={styles.main} className="section-list-container" >
-                                    <ListOfElements
+                                    <ListaEstrategias
                                         renderTitle={
                                             <Title
                                                 text="Estrategias"
@@ -104,8 +67,6 @@ export default class Objetivos extends React.Component {
                                         }
                                         title="Estrategias"
                                         renderAddSection={renderStrategyFields}
-                                        elements={this.state.strategies}
-                                        updateElements={this.updateStrategies}
                                         renderElement={renderStrategyElements}
                                         shouldRenderAddCancelButton={false}
                                     />
@@ -113,10 +74,7 @@ export default class Objetivos extends React.Component {
                             </Col>
                         </Row>
                     )}
-                    handleOnEdit={this.handleOnEdit}
                     listenAddSection={this.listenAddSection}
-                    elements={this.state.elements}
-                    updateElements={this.updateElements}
                     renderElement={renderElements}
                     shouldRenderAddCancelButton={false}
                 />
@@ -127,12 +85,8 @@ export default class Objetivos extends React.Component {
 
 export function renderElements(elements, removeElement, editElement) {
 
-    console.log(elements);
-
     return (
-
         <div>
-
             <Row>
                 <Col md={6} sm={12}>
                     <Title
@@ -150,10 +104,10 @@ export function renderElements(elements, removeElement, editElement) {
             {elements.map((objetivo) => (
                 <Row>
                     <Col md={12}>
-                        <div className="section-list-divider" style={{marginBottom: "1px solid bottom"}} >
+                        <div className="section-list-divider" style={{ marginBottom: "1px solid bottom" }} >
                             <Row>
                                 <Col md={6} sm={12} >
-                                    <div style={{padding: "10px", marginTop: "10px"}}>
+                                    <div style={{ padding: "10px", marginTop: "10px" }}>
                                         <Row>
                                             <Col md={1}>
                                                 <i
@@ -178,13 +132,13 @@ export function renderElements(elements, removeElement, editElement) {
                                     </div>
                                 </Col>
                                 <Col md={6} sm={12}>
-                                    <div style={{padding: "10px"}} className="section-list-parent">
+                                    <div style={{ padding: "10px" }} className="section-list-parent">
                                         {objetivo["strategies"] && objetivo["strategies"].map((strategy) => (
                                             <Row className="section-list-divider">
-                                                <div style={{margin: "10px 0 10px 0"}}>
-                                                <Col md={12}>
-                                                    {strategy.value}
-                                                </Col>
+                                                <div style={{ margin: "10px 0 10px 0" }}>
+                                                    <Col md={12}>
+                                                        {strategy.value}
+                                                    </Col>
                                                 </div>
                                             </Row>
                                         ))}

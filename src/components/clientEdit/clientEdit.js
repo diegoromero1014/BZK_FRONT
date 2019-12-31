@@ -32,7 +32,7 @@ import ComponentListIntOperations from "../contextClient/listInternationalOperat
 import ComponentInfoClient from './components/InfoClient';
 import ActividadEconomica from './components/ActividadEconomica';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
-import Objetivos from '../Prueba/Objetivos';
+import Objetivos from '../fieldList/Objetivos';
 
 import { clearProducts, setProducts } from "./products/actions";
 import { clearNotes, deleteNote, setNotes } from "./notes/actions";

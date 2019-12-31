@@ -1,94 +1,60 @@
 import React from 'react';
-import { uniqueId, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { Row, Col } from 'react-flexbox-grid';
 
-import ToolTipComponent from '../tooltip/toolTipComponent';
+import ToolTipComponent from '../toolTip/toolTipComponent';
 
 class ListOfElements extends React.Component {
 
-    state = {
-        showAddSection: false,
-        fields: {},
-        isEditing: false
-    }
-
     toogleAddSection = () => {
-        const { listenAddSection } = this.props;
+        const { listenAddSection, setListState, showAddSection } = this.props;
         if (typeof listenAddSection === 'function') {
             listenAddSection();
         }
         this.clearFields();
-        this.setState({
-            showAddSection: !this.state.showAddSection
-        })
+        setListState({
+            showAddSection: !showAddSection
+        });
     }
 
     clearFields = () => {
-        this.setState({
-            fields: {}
-        })
+        const { setFields } = this.props;
+        setFields({});
     }
 
     handleChange = (e) => {
-        let newFields = Object.assign({}, this.state.fields, { [e.target.name]: e.target.value });
-        this.setState({
-            fields: newFields
-        })
-    }
-
-    addIdToElement = (fields) => {
-        let modifiedFiels = Object.assign({}, fields);
-        if (!fields.hasOwnProperty("id")) {
-            modifiedFiels["id"] = uniqueId();
-        }
-        return modifiedFiels;
-    }
-
-    mergeElements = (elements, newElement) => {
-        const filterElements = elements.filter((element) => element.id !== newElement.id);
-        return [...filterElements, newElement];
+        const { addField } = this.props;
+        addField(e.target.name, e.target.value);
     }
 
     addElement = () => {
-        const { updateElements, elements, handleOnAdd } = this.props;
+        const { handleOnAdd, fields, setListState, updateElement } = this.props;
 
         if (typeof handleOnAdd === 'function') {
             handleOnAdd();
         }
 
-        if (isEmpty(this.state.fields)) {
+        if (isEmpty(fields)) {
             alert("Ingrese valores");
             return
         }
 
-        const element = this.addIdToElement(this.state.fields);
-        const newElements = this.mergeElements(elements, element);
-
-        this.setState({
+        setListState({
             isEditing: false
         })
 
-        updateElements(newElements, element.id);
+        updateElement(fields);
         this.toogleAddSection();
     }
 
     removeElement = (elementToDelete) => {
-        const { updateElements } = this.props;
-        updateElements(this.props.elements.filter(
-            (element) => element.id != elementToDelete.id
-        ));
+        const { removeElement } = this.props;
+        removeElement(elementToDelete)
     }
 
     editElement = (element) => {
         const { handleOnEdit } = this.props;
-        if (typeof handleOnEdit === 'function') {
-            handleOnEdit(element.id);
-        }
-        this.setState({
-            fields: element,
-            showAddSection: true,
-            isEditing: true
-        });
+        handleOnEdit(element);
     }
 
     renderButtonsAddSection = () => {
@@ -96,7 +62,7 @@ class ListOfElements extends React.Component {
             return;
         }
 
-        const botonAddText = this.state.isEditing ? "Modificar" : "Agregar";
+        const botonAddText = this.props.isEditing ? "Modificar" : "Agregar";
 
         return (
             <div>
@@ -124,13 +90,12 @@ class ListOfElements extends React.Component {
     }
 
     render() {
-        const { shouldRenderAddCancelButton } = this.props;
-
+        const { shouldRenderAddCancelButton, fields, showAddSection } = this.props;
         return (
             <div>
                 <div style={{ position: "relative", marginBottom: "25px" }}>
                     {this.props.renderTitle}
-                    {!this.state.showAddSection && <div style={{ position: "absolute", top: "10px", right: "10px" }} >
+                    {!showAddSection && <div style={{ position: "absolute", top: "10px", right: "10px" }} >
                         <button className="btn" onClick={this.toogleAddSection}>
                             <ToolTipComponent text="Agregar cliente principal">
                                 <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
@@ -138,9 +103,9 @@ class ListOfElements extends React.Component {
                         </button>
                     </div>}
                 </div>
-                {this.state.showAddSection && <Row>
+                {showAddSection && <Row>
                     <Col md={12} sm={12} >
-                        {this.props.renderAddSection(this.state.fields, this.handleChange, this.addElement, this.toogleAddSection)}
+                        {this.props.renderAddSection(fields, this.handleChange, this.addElement, this.toogleAddSection)}
                     </Col>
                 </Row>}
                 {shouldRenderAddCancelButton && this.renderButtonsAddSection()}

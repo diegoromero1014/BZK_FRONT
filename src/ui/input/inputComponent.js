@@ -36,8 +36,14 @@ class inputComponent extends Component {
             onChangeEvent(e);
         }
 
-        onChange(trimmed);
-        onBlur(trimmed);
+        if (typeof onChange === 'function') {
+            onChange(trimmed);
+        }   
+
+        if (typeof onBlur === 'function') {
+            onBlur(trimmed);
+        }
+        
     }
 
     _onFocus(e) {
