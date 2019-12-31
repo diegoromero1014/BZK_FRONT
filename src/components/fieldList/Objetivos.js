@@ -106,10 +106,7 @@ export function renderElements(elements, removeElement, editElement) {
                     <Col md={12}>
                         <div className="section-list-divider" style={{ marginBottom: "1px solid bottom" }} >
                             <Row>
-                                <Col md={6} sm={12} >
-                                    <div style={{ padding: "10px", marginTop: "10px" }}>
-                                        <Row>
-                                            <Col md={1}>
+                            <Col md={1} sm={12} style={{ padding: "10px", marginTop: "10px" }}>
                                                 <i
                                                     className="zoom icon"
                                                     title="Editar Objetivo"
@@ -117,21 +114,18 @@ export function renderElements(elements, removeElement, editElement) {
                                                     onClick={() => editElement(objetivo)}
                                                 />
                                             </Col>
-                                            <Col md={10}>
+                                <Col md={5} sm={12} >
+                                    <div style={{ padding: "10px", marginTop: "10px" }}>
+                                        <Row>
+                                            
+                                            <Col md={12}>
                                                 {objetivo.nombre}
                                             </Col>
-                                            <Col md={1}>
-                                                <i
-                                                    className="trash icon"
-                                                    title="Eliminar Objetivo"
-                                                    style={{ cursor: "pointer" }}
-                                                    onClick={() => removeElement(objetivo)}
-                                                />
-                                            </Col>
+                                            
                                         </Row>
                                     </div>
                                 </Col>
-                                <Col md={6} sm={12}>
+                                <Col md={5} sm={12}>
                                     <div style={{ padding: "10px" }} className="section-list-parent">
                                         {objetivo["strategies"] && objetivo["strategies"].map((strategy) => (
                                             <Row className="section-list-divider">
@@ -144,6 +138,14 @@ export function renderElements(elements, removeElement, editElement) {
                                         ))}
                                     </div>
                                 </Col>
+                                <Col md={1} sm={12} style={{ padding: "10px", marginTop: "10px" }}>
+                                                <i
+                                                    className="trash icon"
+                                                    title="Eliminar Objetivo"
+                                                    style={{ cursor: "pointer" }}
+                                                    onClick={() => removeElement(objetivo)}
+                                                />
+                                            </Col>
                             </Row>
                         </div>
                     </Col>
