@@ -43,6 +43,8 @@ export const MESSAGE_ERROR_PARTICIPANTS = "Señor usuario, para guardar una prev
 export const TITLE_PREVISIT_CREATE = "Creación previsita";
 export const TITLE_PREVISIT_EDIT = "Edición previsita";
 export const TITLE_VISIT_TYPE = "Tipo de visita";
+export const TITLE_ERROR_EDIT_PREVISIT = "Error al editar previsita";
+export const MESSAGE_ERROR_EDIT_PREVISIT = userEditingPrevisita => `Señor usuario, en este momento la previsita esta siendo editada por ${userEditingPrevisita}. Por favor intentar mas tarde`;
 
 export const MESSAGE_PREVISIT_CREATE_SUCCESS = "Señor usuario, la previsita se creó de forma exitosa.";
 export const MESSAGE_PREVISIT_EDIT_SUCCESS = "Señor usuario, la previsita se editó de forma exitosa.";

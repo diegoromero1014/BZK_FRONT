@@ -25,7 +25,7 @@ import { getAnswerQuestionRelationship, clearAnswer, addAnswer } from '../challe
 
 import { PREVISIT_TYPE } from '../selectsComponent/constants';
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from '../participantsVisitPre/constants';
-import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_CREATE_ERROR, TITLE_PREVISIT_EDIT, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_INVALID_INPUT, TITLE_EXIT_CONFIRMATION, MESSAGE_EXIT_CONFIRMATION, TITLE_ERROR_VALIDITY_DATES, TITLE_VISIT_TYPE, MESSAGE_VISIT_TYPE_CHANGED, PROPUEST_OF_BUSINESS } from './constants';
+import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_CREATE_ERROR, TITLE_PREVISIT_EDIT, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_INVALID_INPUT, TITLE_EXIT_CONFIRMATION, MESSAGE_EXIT_CONFIRMATION, TITLE_ERROR_VALIDITY_DATES, TITLE_VISIT_TYPE, MESSAGE_VISIT_TYPE_CHANGED, PROPUEST_OF_BUSINESS, TITLE_ERROR_EDIT_PREVISIT, MESSAGE_ERROR_EDIT_PREVISIT } from './constants';
 import { ComponentClientInformationURL, LoginComponentURL } from '../../constantsAnalytics';
 import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure, fillParticipants } from './participantsActions';
 import CommercialReportInfoFooter from '../globalComponents/commercialReportInfoFooter';
@@ -34,9 +34,9 @@ export class PrevisitPage extends Component {
 
    constructor(props) {
       super(props);
-      
+
       this.state = {
-         isEditable: false,         
+         isEditable: false,
          showMessage: false,
          userEditingPrevisita: "",
          shouldRedirect: false,
@@ -61,14 +61,14 @@ export class PrevisitPage extends Component {
             positionUpdatedBy: null,
             createdTimestamp: null,
             updatedTimestamp: null,
-            datePrevisitLastReview: null            
-         }         
+            datePrevisitLastReview: null
+         }
       };
    }
 
    componentWillMount() {
       const { clientInformacion } = this.props;
-      const infoClient = clientInformacion.get('responseClientInfo');            
+      const infoClient = clientInformacion.get('responseClientInfo');
       if (_.isEmpty(infoClient)) {
          redirectUrl(ComponentClientInformationURL)
       }
@@ -83,18 +83,18 @@ export class PrevisitPage extends Component {
             renderForm: true,
             isMounted: true
          });
-         dispatchShowLoading(false, "");         
+         dispatchShowLoading(false, "");
       });
    }
 
    componentWillUnmount() {
-      const { 
-         dispatchDisabledBlockedReport, 
+      const {
+         dispatchDisabledBlockedReport,
          dispatchClearPrevisitDetail,
-         dispatchSetConfidential,  
-         dispatchClearParticipants,     
-         dispatchClearAnswer,    
-         params: { id } 
+         dispatchSetConfidential,
+         dispatchClearParticipants,
+         dispatchClearAnswer,
+         params: { id }
       } = this.props;
 
       // Detener envio de peticiones para bloquear el informe
@@ -107,8 +107,8 @@ export class PrevisitPage extends Component {
          dispatchDisabledBlockedReport(id);
       }
       dispatchClearPrevisitDetail();
-      dispatchSetConfidential(false);    
-      dispatchClearParticipants();  
+      dispatchSetConfidential(false);
+      dispatchClearParticipants();
       dispatchClearAnswer();
    }
 
@@ -116,19 +116,19 @@ export class PrevisitPage extends Component {
       const { dispatchDetailPrevisit, dispatchSetConfidential, dispatchAddUsers, dispatchAddListParticipant, dispatchAddAnswer, selectsReducer } = this.props;
       if (id) {
          const response = await dispatchDetailPrevisit(id);
-         const previsitDetail = response.payload.data.data;  
-         let participantsList = [];                
+         const previsitDetail = response.payload.data.data;
+         let participantsList = [];
          let participants = fillParticipants(
             participantsList.concat(
                previsitDetail.participatingContacts.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_CLIENT })),
                previsitDetail.participatingEmployees.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_BANCO })),
                previsitDetail.relatedEmployees.map(value => Object.assign(value, { tipoParticipante: KEY_PARTICIPANT_OTHER }))
-         ));                              
+            ));
          const previsitTypeInfo = _.find(selectsReducer.get(PREVISIT_TYPE), ['id', previsitDetail.documentType]);
-                  
-         dispatchAddListParticipant(participants);         
-         dispatchSetConfidential(previsitDetail.commercialReport.isConfidential);         
-         fillUsersPermissions(previsitDetail.commercialReport.usersWithPermission, dispatchAddUsers);         
+
+         dispatchAddListParticipant(participants);
+         dispatchSetConfidential(previsitDetail.commercialReport.isConfidential);
+         fillUsersPermissions(previsitDetail.commercialReport.usersWithPermission, dispatchAddUsers);
 
          previsitDetail.answers.forEach(element => {
             dispatchAddAnswer(null, { id: element.id, [element.field]: element.answer });
@@ -145,9 +145,9 @@ export class PrevisitPage extends Component {
                updatedBy: previsitDetail.updatedByName,
                positionCreatedBy: previsitDetail.positionCreatedBy,
                positionUpdatedBy: previsitDetail.positionUpdatedBy
-            })          
-         });                           
-      } else {         
+            })
+         });
+      } else {
          dispatchSetConfidential(false);
          this.setState({
             isEditable: false
@@ -156,35 +156,33 @@ export class PrevisitPage extends Component {
    }
 
    getPrevisitTypes = async () => {
-      const { dispatchGetMasterDataFields } = this.props;      
+      const { dispatchGetMasterDataFields } = this.props;
       await dispatchGetMasterDataFields([PREVISIT_TYPE]);
    }
 
    validatePermissionsPrevisits = () => {
-      const { reducerGlobal } = this.props;      
+      const { reducerGlobal } = this.props;
       return _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) && this.state.isEditable;
    }
 
-   canUserEditPrevisita = (myUserName) => {
+   canUserEditPrevisita = async (myUserName) => {
       const { dispatchCanEditPrevisita, params: { id }, dispatchSwtShowMessage, dispatchShowLoading } = this.props;
       dispatchShowLoading(true, "Cargando...");
-      dispatchCanEditPrevisita(id).then((success) => {
-         const username = success.payload.data.data.username
-         const name = success.payload.data.data.name
+      const success = await dispatchCanEditPrevisita(id);
+      if (!this.state.isMounted) {
+         clearInterval(this.state.intervalId);
+      }
 
-         if (!this.state.isMounted) {
-            clearInterval(this.state.intervalId);
-         }
-
-         if (success.payload.data.data == null) {
-            clearInterval(this.state.intervalId);
-            this.setState({
-               showErrorBlockedPreVisit: true,
-               userEditingPrevisita: "Error",
-               shouldRedirect: true
-            });
-         }
-
+      if (success.payload.data.data == null) {
+         clearInterval(this.state.intervalId);
+         this.setState({
+            showErrorBlockedPreVisit: true,
+            userEditingPrevisita: "Error",
+            shouldRedirect: true
+         });
+      } else {
+         const username = success.payload.data.data.username;
+         const name = success.payload.data.data.name;
          if (_.isNull(username)) {
             dispatchSwtShowMessage(MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT);
          } else if (username.toUpperCase() === myUserName.toUpperCase()) {
@@ -218,17 +216,17 @@ export class PrevisitPage extends Component {
                this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
             }
          }
-         dispatchShowLoading(false, "");
-      });
+      }
+      dispatchShowLoading(false, "");
    }
 
-   editPrevisit = () => {        
-      const usernameSession = window.localStorage.getItem('userNameFront');          
-      this.canUserEditPrevisita(usernameSession);      
+   editPrevisit = async () => {
+      const usernameSession = window.localStorage.getItem('userNameFront');
+      await this.canUserEditPrevisita(usernameSession);
    }
 
    getPrevisitParticipants = () => {
-      const { participants } = this.props;      
+      const { participants } = this.props;
       const participantsList = participants ? participants.toArray() : [];
       let previsitParticipants = {
          clientParticipants: [],
@@ -245,20 +243,20 @@ export class PrevisitPage extends Component {
 
       previsitParticipants.otherParticipants = participantsList
          .filter(participantIsOther)
-         .map(changeParticipantOtherDataStructure);      
+         .map(changeParticipantOtherDataStructure);
       return previsitParticipants;
    }
 
-   submitForm = async (previsit) => {      
+   submitForm = async (previsit) => {
       const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions,
          fromModal, closeModal } = this.props;
-      const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);      
-      if (validateDatePrevisitResponse) {                  
-         const previsitParticipants = this.getPrevisitParticipants();         
-         if(!previsitParticipants.bankParticipants.length){
+      const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);
+      if (validateDatePrevisitResponse) {
+         const previsitParticipants = this.getPrevisitParticipants();
+         if (!previsitParticipants.bankParticipants.length) {
             dispatchSwtShowMessage('error', TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS);
-            return; 
-         }                           
+            return;
+         }
          const previsitRequest = {
             "id": id,
             "client": window.sessionStorage.getItem('idClientSelected'),
@@ -278,48 +276,48 @@ export class PrevisitPage extends Component {
             "endTime": previsit.endTime,
             "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), this.state.documentDraft),
             "answers": getAnswerQuestionRelationship(answers, questions)
-         };                
+         };
          dispatchShowLoading(true, MESSAGE_SAVE_DATA);
          const responseCreatePrevisit = await dispatchCreatePrevisit(previsitRequest);
-         dispatchShowLoading(false, "");         
+         dispatchShowLoading(false, "");
 
          if (!_.get(responseCreatePrevisit, 'payload.data.validateLogin') || _.get(responseCreatePrevisit, 'payload.data.validateLogin') === 'false') {
-            if(fromModal){
+            if (fromModal) {
                closeModal();
-            }else{
+            } else {
                redirectUrl(LoginComponentURL);
-            }            
+            }
          } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_SUCCESS) {
             dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertSuccess(id), { onConfirmCallback: redirectUrl(ComponentClientInformationURL) });
-         } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_INVALID_INPUT) {                        
+         } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_INVALID_INPUT) {
             dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), MESSAGE_PREVISIT_INVALID_INPUT);
-         } else {            
+         } else {
             dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertError(id));
          }
       }
    }
 
-   onClickCancelCommercialReport = () => {      
-      this.setState({ showConfirmationCancelPrevisit: true });      
+   onClickCancelCommercialReport = () => {
+      this.setState({ showConfirmationCancelPrevisit: true });
    }
 
    onClickDownloadPDF = () => {
-      const {dispatchChangeStateSaveData, dispatchPdfDescarga, params: { id } } = this.props;
+      const { dispatchChangeStateSaveData, dispatchPdfDescarga, params: { id } } = this.props;
       dispatchPdfDescarga(dispatchChangeStateSaveData, id);
    }
 
    onClickConfirmCancelCommercialReport = () => {
-      const {fromModal, closeModal} = this.props;
+      const { fromModal, closeModal } = this.props;
       this.setState({ showConfirmationCancelPrevisit: false });
-      if(fromModal){
+      if (fromModal) {
          closeModal();
-      }else{
+      } else {
          redirectUrl(ComponentClientInformationURL);
       }
    }
 
 
-   renderTitleSubmitAlert = (id) => {      
+   renderTitleSubmitAlert = (id) => {
       return id ? TITLE_PREVISIT_EDIT : TITLE_PREVISIT_CREATE;
    }
 
@@ -332,43 +330,43 @@ export class PrevisitPage extends Component {
    }
 
    showChallengerSection = async (previsitTypeId, setFieldValue) => {
-      const {selectsReducer} = this.props;      
-      const previsitTypeInfo = selectsReducer.get(PREVISIT_TYPE).find((previsit) => previsit.id == previsitTypeId);      
+      const { selectsReducer } = this.props;
+      const previsitTypeInfo = selectsReducer.get(PREVISIT_TYPE).find((previsit) => previsit.id == previsitTypeId);
       const oldPrevisitTypeKeySelected = this.state.oldPrevisitTypeSelected ? this.state.oldPrevisitTypeSelected.toUpperCase() : null;
-      const previsitTypeKeySelected = previsitTypeInfo.key.toUpperCase();   
-      const previsitTypeIdSelected = previsitTypeInfo.id;   
+      const previsitTypeKeySelected = previsitTypeInfo.key.toUpperCase();
+      const previsitTypeIdSelected = previsitTypeInfo.id;
 
       this.setState({
          setFieldValue
       });
 
-      if(oldPrevisitTypeKeySelected == null){         
+      if (oldPrevisitTypeKeySelected == null) {
          this.setState({
             oldPrevisitTypeSelected: previsitTypeKeySelected,
-            oldPrevisitTypeSelectedId: previsitTypeIdSelected            
-         });                  
+            oldPrevisitTypeSelectedId: previsitTypeIdSelected
+         });
          this.validateSelectionPrevisitType(previsitTypeKeySelected);
-      }else if(oldPrevisitTypeKeySelected != previsitTypeKeySelected){
+      } else if (oldPrevisitTypeKeySelected != previsitTypeKeySelected) {
          this.setState({
             currentPrevisitTypeSelected: previsitTypeKeySelected,
             oldPrevisitTypeSelected: previsitTypeKeySelected
          });
-         if(oldPrevisitTypeKeySelected == PROPUEST_OF_BUSINESS.toUpperCase()){            
+         if (oldPrevisitTypeKeySelected == PROPUEST_OF_BUSINESS.toUpperCase()) {
             this.setState({
                showConfirmChangeTypeVisit: true
             });
-         }else{            
-            this.validateSelectionPrevisitType(previsitTypeKeySelected);                   
-         }           
-      }            
+         } else {
+            this.validateSelectionPrevisitType(previsitTypeKeySelected);
+         }
+      }
    }
 
-   validateSelectionPrevisitType = (previsitTypeKey) => {           
-      if(previsitTypeKey === PROPUEST_OF_BUSINESS.toUpperCase()){   
+   validateSelectionPrevisitType = (previsitTypeKey) => {
+      if (previsitTypeKey === PROPUEST_OF_BUSINESS.toUpperCase()) {
          this.setState({
             showChallengerSection: true
          });
-      }else{
+      } else {
          this.setState({
             showChallengerSection: false
          });
@@ -379,62 +377,69 @@ export class PrevisitPage extends Component {
       let createdTimestamp = null;
       let updatedTimestamp = null;
 
-      if(previsitDetail.createdTimestamp){
+      if (previsitDetail.createdTimestamp) {
          createdTimestamp = moment(previsitDetail.createdTimestamp).locale('es');
          createdTimestamp = createdTimestamp.format("DD") + " " + createdTimestamp.format("MMM") + " " + createdTimestamp.format("YYYY") + ", " + createdTimestamp.format("hh:mm a");
       }
 
-      if(previsitDetail.updatedTimestamp){
+      if (previsitDetail.updatedTimestamp) {
          updatedTimestamp = moment(previsitDetail.updatedTimestamp).locale('es');
          updatedTimestamp = updatedTimestamp.format("DD") + " " + updatedTimestamp.format("MMM") + " " + updatedTimestamp.format("YYYY") + ", " + updatedTimestamp.format("hh:mm a");
       }
-      
+
       this.setState({
          documentCreatedInfo: {
             createdTimestamp,
             updatedTimestamp,
             datePrevisitLastReview: moment(previsitDetail.reviewedDate, "x").locale('es').format("DD MMM YYYY")
-         }         
+         }
       });
    }
 
-   confirmChangeTypePrevisit = () => { 
+   confirmChangeTypePrevisit = () => {
       this.validateSelectionPrevisitType(this.state.currentPrevisitTypeSelected);
       this.setState({
          showConfirmChangeTypeVisit: false
-      });      
+      });
    }
 
-   cancelChangeTypePrevisit = () => {      
-      const {setFieldValue, oldPrevisitTypeSelectedId} = this.state;      
+   cancelChangeTypePrevisit = () => {
+      const { setFieldValue, oldPrevisitTypeSelectedId } = this.state;
       this.setState({
          showConfirmChangeTypeVisit: false
       });
-      setFieldValue("documentType", oldPrevisitTypeSelectedId, false);                        
-   }   
+      setFieldValue("documentType", oldPrevisitTypeSelectedId, false);
+   }
 
    validateDatePrevisit = async previsit => {
       const { params: { id }, dispatchValidateDatePrevisit, dispatchSwtShowMessage } = this.props;
       let visitTime = parseInt(moment(previsit.visitTime).startOf('minute').format('x'));
       let endVisitTime = parseInt(moment(visitTime).add(previsit.endTime, 'h').startOf('minute').format('x'));
-      const response = await dispatchValidateDatePrevisit(visitTime, endVisitTime, id);      
+      const response = await dispatchValidateDatePrevisit(visitTime, endVisitTime, id);
       if (response.payload.data.status == REQUEST_ERROR) {
          dispatchSwtShowMessage(MESSAGE_ERROR, TITLE_ERROR_VALIDITY_DATES, response.payload.data.data);
          return false;
       }
       return true;
    }
-   
+
    onClickSaveHandler = (draft) => {
       const { formValid } = this.state;
-      if(formValid){
+      if (formValid) {
          this.setState({ documentDraft: draft });
       }
    }
 
+   closeShowErrorBlockedPrevisit = () => {
+      this.setState({ showErrorBlockedPreVisit: false })
+      if (this.state.shouldRedirect) {         
+         redirectUrl(ComponentClientInformationURL)
+      }
+   }
+
    renderForm = () => {
-      const { params: { id }, previsitReducer, selectsReducer, fromModal, questions } = this.props;            
-      const previsitDetail = previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null;      
+      const { params: { id }, previsitReducer, selectsReducer, fromModal, questions } = this.props;
+      const previsitDetail = previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null;
       return (
          <PrevisitFormComponent
             previsitData={previsitDetail}
@@ -443,18 +448,18 @@ export class PrevisitPage extends Component {
             showChallengerSection={this.state.showChallengerSection}
             isEditable={this.state.isEditable}
             onSubmit={this.submitForm}
-            isFormValid={valid => this.setState({formValid: valid})}
+            isFormValid={valid => this.setState({ formValid: valid })}
             questions={questions}
             commercialReportButtons={
-               <CommercialReportButtonsComponent 
-                  onClickSave={this.onClickSaveHandler} 
+               <CommercialReportButtonsComponent
+                  onClickSave={this.onClickSaveHandler}
                   onClickDownloadPDF={id ? this.onClickDownloadPDF : null}
                   cancel={this.onClickCancelCommercialReport}
                   fromModal={fromModal}
                   isEditable={this.state.isEditable}
                   documentDraft={this.state.documentDraft}
                   creatingReport={id ? false : true}
-            />}/>                     
+               />} />
       )
    }
 
@@ -482,14 +487,14 @@ export class PrevisitPage extends Component {
                </Row>
                <Row>
                   <Col xs={12} md={12} lg={12}>
-                     <PermissionUserReports disabled={isEditable ? 'disabled' : ''}/>
+                     <PermissionUserReports disabled={isEditable ? 'disabled' : ''} />
                   </Col>
                </Row>
             </div>
             {
                this.state.renderForm ? this.renderForm() : null
-            }                           
-            {id && <CommercialReportInfoFooter documentCreatedInfo={documentCreatedInfo}/>}         
+            }
+            {id && <CommercialReportInfoFooter documentCreatedInfo={documentCreatedInfo} />}
             <SweetAlert
                type="warning"
                show={this.state.showConfirmationCancelPrevisit}
@@ -512,6 +517,12 @@ export class PrevisitPage extends Component {
                showCancelButton={true}
                onCancel={this.cancelChangeTypePrevisit}
                onConfirm={this.confirmChangeTypePrevisit} />
+            <SweetAlert
+               type="error"
+               show={this.state.showErrorBlockedPreVisit}
+               title={TITLE_ERROR_EDIT_PREVISIT}
+               text={MESSAGE_ERROR_EDIT_PREVISIT(this.state.userEditingPrevisita)}
+               onConfirm={this.closeShowErrorBlockedPrevisit}/>
          </div>
       )
    }
@@ -530,7 +541,7 @@ function mapDispatchToProps(dispatch) {
       dispatchCreatePrevisit: createPrevisit,
       dispatchSetConfidential: setConfidential,
       dispatchAddUsers: addUsers,
-      dispatchAddListParticipant: addListParticipant,      
+      dispatchAddListParticipant: addListParticipant,
       dispatchPdfDescarga: pdfDescarga,
       dispatchChangeStateSaveData: changeStateSaveData,
       dispatchClearParticipants: clearParticipants,
@@ -539,7 +550,7 @@ function mapDispatchToProps(dispatch) {
    }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, selectsReducer, usersPermission, confidentialReducer, participants, questionsReducer: {answers, questions} }) {
+function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, selectsReducer, usersPermission, confidentialReducer, participants, questionsReducer: { answers, questions } }) {
    return {
       clientInformacion,
       previsitReducer,

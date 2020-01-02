@@ -8,8 +8,6 @@ import SweetAlert from '../../../../src/components/sweetalertFocus';
 import { TITLE_PREVISIT_EDIT, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_CREATE_ERROR, PROPUEST_OF_BUSINESS, TRACING } from '../../../../src/components/previsita/constants';
 import * as globalActions from '../../../../src/components/globalComponents/actions';
 import { EDITAR, REQUEST_SUCCESS, REQUEST_INVALID_INPUT, REQUEST_ERROR } from '../../../../src/constantsGlobal';
-import { PREVISIT_TYPE } from '../../../../src/components/selectsComponent/constants';
-
 
 const validateEnter = true;
 const ownerDraft = true;
@@ -171,7 +169,7 @@ describe('Test previsitPage', () => {
     
         it('should render SweetAlert child component', () => {
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);            
-            expect(wrapper.find(SweetAlert)).to.have.lengthOf(2);
+            expect(wrapper.find(SweetAlert)).to.have.lengthOf(3);
         });    
 
         it('should render title previsit edit', () => {
@@ -490,7 +488,50 @@ describe('Test previsitPage', () => {
             expect(dispatchShowLoading).to.have.been.called.exactly(4);                
         });
 
-        it('submitForm should call savePrevisit service and respond a validateLogin false', async () => {
+        it('submitForm should call savePrevisit service and respond a validateLogin false and fromModal is true', async () => {
+            const request = {
+                id: 1,
+                visitTime: new Date(),
+                endTime: '1',
+                documentType: 312312,
+                visitLocation: 'CEOH',
+                answers: []
+            };
+            dispatchValidateDatePrevisit = sinon.stub();
+            dispatchValidateDatePrevisit.resolves({
+                payload: {
+                    data: {
+                        status: 200
+                    }
+                }
+            });
+            dispatchCreatePrevisit.resolves({
+                payload: {
+                    data: {
+                        validateLogin: false,
+                        status: REQUEST_SUCCESS
+                    }
+                }
+            });
+            defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
+            defaultProps.dispatchCreatePrevisit = dispatchCreatePrevisit;
+            defaultProps.fromModal = true;
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.instance().getPrevisitParticipants = () =>{
+                return {
+                    clientParticipants: [],
+                    bankParticipants: [{ name: 'daniel'}],
+                    otherParticipants: []
+                }
+            };
+            wrapper.update();
+            await wrapper.instance().submitForm(request);
+            sinon.assert.calledOnce(dispatchCreatePrevisit);  
+            expect(dispatchShowLoading).to.have.been.called.exactly(4);     
+            sinon.assert.notCalled(redirectUrl);
+        });
+
+        it('submitForm should call savePrevisit service and respond a validateLogin false and fromModal is false', async () => {
             const request = {
                 id: 1,
                 visitTime: new Date(),
@@ -530,7 +571,7 @@ describe('Test previsitPage', () => {
             await wrapper.instance().submitForm(request);
             sinon.assert.calledOnce(dispatchCreatePrevisit);  
             expect(dispatchShowLoading).to.have.been.called.exactly(4);     
-            expect(redirectUrl.calledOnce).to.equal(true);    
+            sinon.assert.calledOnce(redirectUrl); 
         });
 
         it('submitForm should call savePrevisit service and response status 422', async () => {
@@ -685,7 +726,141 @@ describe('Test previsitPage', () => {
             expect(wrapper.state().oldPrevisitTypeSelected).to.equal(PROPUEST_OF_BUSINESS.toUpperCase());            
         });
 
-        
+        it('setDatesOnPrevisitDetailState should assign createdTimestamp and updatedTimestamp in state', () => {
+            const previsitDetail = {
+                createdTimestamp: new Date(),
+                updatedTimestamp: new Date(2019, 12, 10)
+            };
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.instance().setDatesOnPrevisitDetailState(previsitDetail);
+            expect(wrapper.state().documentCreatedInfo.createdTimestamp).not.to.equal(null);
+            expect(wrapper.state().documentCreatedInfo.updatedTimestamp).not.to.equal(null);
+        });
+
+        it('canUserEditPrevisita should clear interval', async () => {
+            dispatchCanEditPrevisita.resolves({
+                payload: {
+                    data:{
+                        data: {
+                            username: 'daegalle',
+                            name: 'daniel'
+                        }
+                    }
+                }
+            });
+            defaultProps.dispatchCanEditPrevisita = dispatchCanEditPrevisita;
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);    
+            wrapper.setState({isMounted: false});
+            await wrapper.instance().canUserEditPrevisita('daegalle');
+            expect(wrapper.state().showErrorBlockedPreVisit).to.equal(false);
+            expect(wrapper.state().intervalId).to.equal(null);
+        });
+
+        it('canUserEditPrevisita should change showErrorBlockedPrevisit, userEditingPrevisit and shouldRedirect state', async () => {
+            dispatchCanEditPrevisita.resolves({
+                payload: {
+                    data:{
+                        data: null
+                    }
+                }
+            });
+            defaultProps.dispatchCanEditPrevisita = dispatchCanEditPrevisita;
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);    
+            wrapper.setState({isMounted: true});
+            await wrapper.instance().canUserEditPrevisita('daegalle');
+
+            expect(wrapper.state().showErrorBlockedPreVisit).to.equal(true);
+            expect(wrapper.state().userEditingPrevisita).to.equal("Error");
+            expect(wrapper.state().shouldRedirect).to.equal(true);
+        });
+
+        it('canUserEditPrevisita should trigger Sweet Alert error', async () => {
+            dispatchCanEditPrevisita.resolves({
+                payload: {
+                    data:{
+                        data: {
+                            username: null,
+                            name: 'daniel'
+                        }
+                    }
+                }
+            });
+            defaultProps.dispatchCanEditPrevisita = dispatchCanEditPrevisita;
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);    
+            wrapper.setState({isMounted: true});
+            await wrapper.instance().canUserEditPrevisita('daegalle');            
+            expect(dispatchSwtShowMessage).to.have.been.called.once;
+        });
+
+        it('canUserEditPrevisita should change multiple variables in state when isEditable is true', async () => {
+            dispatchCanEditPrevisita.resolves({
+                payload: {
+                    data:{
+                        data: {
+                            username: 'daegalle',
+                            name: 'daniel'
+                        }
+                    }
+                }
+            });
+            defaultProps.dispatchCanEditPrevisita = dispatchCanEditPrevisita;
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);    
+            wrapper.setState({isMounted: true, isEditable: true});
+            await wrapper.instance().canUserEditPrevisita('daegalle');
+            expect(wrapper.state().showErrorBlockedPreVisit).to.equal(false);
+            expect(wrapper.state().showMessage).to.equal(false);
+            expect(wrapper.state().isEditable).to.equal(false);
+            expect(wrapper.state().intervalId).not.to.equal(null);
+        });
+
+        it('canUserEditPrevisita should change multiple variables in state when username and myUserName are not equal and isEditable is true', async () => {
+            dispatchCanEditPrevisita.resolves({
+                payload: {
+                    data:{
+                        data: {
+                            username: 'joagarci',
+                            name: 'joagarci'
+                        }
+                    }
+                }
+            });
+            defaultProps.dispatchCanEditPrevisita = dispatchCanEditPrevisita;
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);    
+            wrapper.setState({isMounted: true, isEditable: true});
+            await wrapper.instance().canUserEditPrevisita('daegalle');
+            expect(wrapper.state().showErrorBlockedPreVisit).to.equal(true);
+            expect(wrapper.state().userEditingPrevisita).to.equal('joagarci');
+            expect(wrapper.state().isEditable).to.equal(false);
+            expect(wrapper.state().shouldRedirect).to.equal(true);
+        });
+
+        it('canUserEditPrevisita should change multiple variables in state when username and myUserName are not equal and isEditable is false', async () => {
+            dispatchCanEditPrevisita.resolves({
+                payload: {
+                    data:{
+                        data: {
+                            username: 'joagarci',
+                            name: 'joagarci'
+                        }
+                    }
+                }
+            });
+            defaultProps.dispatchCanEditPrevisita = dispatchCanEditPrevisita;
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);    
+            wrapper.setState({isMounted: true, isEditable: false});
+            await wrapper.instance().canUserEditPrevisita('daegalle');
+            expect(wrapper.state().showErrorBlockedPreVisit).to.equal(true);
+            expect(wrapper.state().userEditingPrevisita).to.equal('joagarci');            
+            expect(wrapper.state().shouldRedirect).to.equal(false);
+        });
+
+        /*it('closeShowErrorBlockedPrevisit should change state showErrorBlockedPreVisit to false and redirect to clientInformacion', () => {            
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);    
+            wrapper.instance().closeShowErrorBlockedPrevisit();
+            wrapper.setState({shouldRedirect: true});
+            expect(wrapper.state().showErrorBlockedPreVisit).to.equal(false);
+            expect(redirectUrl.calledOnce).to.equal(true);
+        });*/
     });
     
 });
