@@ -86,7 +86,7 @@ class ParticipantsByClient extends Component {
                 </Row>
 
 
-                <div className='participants-client-list'>
+                <div className='participants-client-list'>                
                     <Row>
                         {data.length > 0 ?
                             <Col xs={12} md={12} lg={12}>

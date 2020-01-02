@@ -13,7 +13,7 @@ import RichText from '../richText/richTextComponent';
 import Participants from './participants';
 import Challenger from '../challenger/challenger';
 
-import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER } from './constants';
+import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER, TITLE_VISIT_TYPE } from './constants';
 
 export class PrevisitFormComponent extends Component {
    constructor(props) {
@@ -294,10 +294,9 @@ export class PrevisitFormComponent extends Component {
 }
 
 export default withFormik({
-   handleSubmit: (values, { props, setSubmitting }) => {
-      setSubmitting(false);
-      props.onSubmit(values);
+   handleSubmit: (values, { props }) => {      
       props.isFormValid(true);
+      props.onSubmit(values);      
    },
    mapPropsToValues: (props) => {
       const { previsitData, questions } = props;

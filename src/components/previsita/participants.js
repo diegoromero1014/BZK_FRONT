@@ -64,16 +64,16 @@ class Participants extends Component {
                 </div>
 
 
-                <div className={`ui bottom attached active tab segment segment-item`} data-tab="first">
+                <div className={`ui bottom attached active tab segment segment-item`} data-tab="first">                    
                     <ParticipantsByClient disabled={disabled} limitParticipantsByClient={limitParticipantsByClient} />
                 </div>
 
                 <div className={`ui bottom attached tab segment segment-item`} data-tab="second">
-                    <ParticipantesBancolombia />
+                    <ParticipantesBancolombia disabled={disabled ? 'disabled' : ''}/>
                 </div>
 
                 <div className={`ui bottom attached tab segment segment-item`} data-tab="third">
-                    <ParticipantesOtros />
+                    <ParticipantesOtros disabled={disabled ? 'disabled' : ''}/>
                 </div>
             </div>
         )
