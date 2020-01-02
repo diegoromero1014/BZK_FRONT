@@ -35,5 +35,5 @@ describe('Test formEditPrevisita', () => {
     });
     it('should render formEditPrevisita', () => {
         itRenders(<FormEditPrevisita store={store} />);
-    })
+    });
 })

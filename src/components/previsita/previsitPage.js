@@ -166,8 +166,7 @@ export class PrevisitPage extends Component {
    }
 
    canUserEditPrevisita = async (myUserName) => {
-      const { dispatchCanEditPrevisita, params: { id }, dispatchSwtShowMessage, dispatchShowLoading } = this.props;
-      dispatchShowLoading(true, "Cargando...");
+      const { dispatchCanEditPrevisita, params: { id }, dispatchSwtShowMessage } = this.props;      
       const success = await dispatchCanEditPrevisita(id);
       if (!this.state.isMounted) {
          clearInterval(this.state.intervalId);
@@ -216,8 +215,7 @@ export class PrevisitPage extends Component {
                this.setState({ showErrorBlockedPreVisit: true, userEditingPrevisita: name, shouldRedirect: false })
             }
          }
-      }
-      dispatchShowLoading(false, "");
+      }      
    }
 
    editPrevisit = async () => {
@@ -411,7 +409,7 @@ export class PrevisitPage extends Component {
       setFieldValue("documentType", oldPrevisitTypeSelectedId, false);
    }
 
-   validateDatePrevisit = async previsit => {
+   validateDatePrevisit = async (previsit) => {
       const { params: { id }, dispatchValidateDatePrevisit, dispatchSwtShowMessage } = this.props;
       let visitTime = parseInt(moment(previsit.visitTime).startOf('minute').format('x'));
       let endVisitTime = parseInt(moment(visitTime).add(previsit.endTime, 'h').startOf('minute').format('x'));

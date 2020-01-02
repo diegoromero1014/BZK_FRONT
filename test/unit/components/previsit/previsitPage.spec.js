@@ -8,6 +8,7 @@ import SweetAlert from '../../../../src/components/sweetalertFocus';
 import { TITLE_PREVISIT_EDIT, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_CREATE_ERROR, PROPUEST_OF_BUSINESS, TRACING } from '../../../../src/components/previsita/constants';
 import * as globalActions from '../../../../src/components/globalComponents/actions';
 import { EDITAR, REQUEST_SUCCESS, REQUEST_INVALID_INPUT, REQUEST_ERROR } from '../../../../src/constantsGlobal';
+import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from '../../../../src/components/participantsVisitPre/constants';
 
 const validateEnter = true;
 const ownerDraft = true;
@@ -36,6 +37,7 @@ let dispatchDetailPrevisit;
 let dispatchAddListParticipant;
 let dispatchAddUsers;
 let dispatchCreatePrevisit;
+let dispatchAddAnswer;
 let defaultProps = {};
 let redirectUrl;
 let stubLocalStorage;
@@ -54,7 +56,8 @@ describe('Test previsitPage', () => {
         dispatchAddListParticipant = spy(sinon.fake());
         dispatchCanEditPrevisita = sinon.stub();   
         dispatchDetailPrevisit = sinon.stub();
-        dispatchCreatePrevisit = sinon.stub();        
+        dispatchCreatePrevisit = sinon.stub();    
+        dispatchAddAnswer = sinon.stub();    
         dispatchCreatePrevisit.resolves({
             payload: {
                 data: {
@@ -94,6 +97,7 @@ describe('Test previsitPage', () => {
             dispatchAddListParticipant,
             dispatchAddUsers,
             dispatchCreatePrevisit,
+            dispatchAddAnswer,
             participants: [],
             fromModal: false,
             closeModal
@@ -343,7 +347,7 @@ describe('Test previsitPage', () => {
             stubLocalStorage = sinon.stub(window.localStorage, 'getItem').returns("daegalle");
             wrapper.instance().editPrevisit();
             stubLocalStorage.restore();     
-            expect(dispatchShowLoading).to.have.been.called.twice;
+            expect(dispatchShowLoading).to.have.been.called.exactly(1);   
             expect(dispatchCanEditPrevisita.called).to.equal(true);
         });    
 
@@ -352,14 +356,40 @@ describe('Test previsitPage', () => {
                 payload: {
                     data: {
                         data: {
-                            participatingContacts: [],
-                            participatingEmployees: [],
-                            relatedEmployees: [],
+                            participatingContacts: [
+                                {
+                                    id: 1,
+                                    contactName: 'Daniel',
+                                    tipoParticipante: KEY_PARTICIPANT_CLIENT
+                                }
+                            ],
+                            participatingEmployees: [
+                                {
+                                    id: 2,
+                                    contactName: 'John',
+                                    tipoParticipante: KEY_PARTICIPANT_BANCO
+                                }
+                            ],
+                            relatedEmployees: [
+                                {
+                                    id: 3,
+                                    contactName: 'Pedro',
+                                    tipoParticipante: KEY_PARTICIPANT_OTHER
+                                }
+                            ],
                             commercialReport: {
                                 isConfidential: false,
                                 usersWithPermission: []
                             },
-                            answers: []
+                            answers: [
+                                {
+                                    id: 1,
+                                    answer: 'Alguna respuesta',
+                                    question: '¿Esta es alguna pregunta?',
+                                    previsit: 1,
+                                    field: 'field1'
+                                }
+                            ]
                         }
                     }
                 }
@@ -367,7 +397,8 @@ describe('Test previsitPage', () => {
             defaultProps.dispatchDetailPrevisit = dispatchDetailPrevisit;            
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);                        
             await wrapper.instance().getPrevisitData(1234);                        
-            expect(dispatchSetConfidential).to.have.been.called.twice;            
+            expect(dispatchSetConfidential).to.have.been.called.twice; 
+            expect(dispatchAddAnswer.calledOnce).to.equal(true);           
             expect(wrapper.state().isEditable).to.equal(true);
         });
         
@@ -811,6 +842,7 @@ describe('Test previsitPage', () => {
             expect(wrapper.state().showMessage).to.equal(false);
             expect(wrapper.state().isEditable).to.equal(false);
             expect(wrapper.state().intervalId).not.to.equal(null);
+            clearInterval(wrapper.state().intervalId);
         });
 
         it('canUserEditPrevisita should change multiple variables in state when username and myUserName are not equal and isEditable is true', async () => {
@@ -832,6 +864,7 @@ describe('Test previsitPage', () => {
             expect(wrapper.state().userEditingPrevisita).to.equal('joagarci');
             expect(wrapper.state().isEditable).to.equal(false);
             expect(wrapper.state().shouldRedirect).to.equal(true);
+            clearInterval(wrapper.state().intervalId);
         });
 
         it('canUserEditPrevisita should change multiple variables in state when username and myUserName are not equal and isEditable is false', async () => {
@@ -852,15 +885,22 @@ describe('Test previsitPage', () => {
             expect(wrapper.state().showErrorBlockedPreVisit).to.equal(true);
             expect(wrapper.state().userEditingPrevisita).to.equal('joagarci');            
             expect(wrapper.state().shouldRedirect).to.equal(false);
+            clearInterval(wrapper.state().intervalId);
         });
 
-        /*it('closeShowErrorBlockedPrevisit should change state showErrorBlockedPreVisit to false and redirect to clientInformacion', () => {            
+        it('closeShowErrorBlockedPrevisit should change state showErrorBlockedPreVisit to false and redirect to clientInformacion', () => {            
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);    
-            wrapper.instance().closeShowErrorBlockedPrevisit();
             wrapper.setState({shouldRedirect: true});
-            expect(wrapper.state().showErrorBlockedPreVisit).to.equal(false);
+            wrapper.instance().closeShowErrorBlockedPrevisit();                        
             expect(redirectUrl.calledOnce).to.equal(true);
-        });*/
+        });
+
+        it('closeShowErrorBlockedPrevisit should change state showErrorBlockedPreVisit to false and redirect to clientInformacion', () => {            
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);    
+            wrapper.setState({shouldRedirect: false});
+            wrapper.instance().closeShowErrorBlockedPrevisit();                        
+            expect(redirectUrl.notCalled).to.equal(true);
+        });
     });
     
 });
