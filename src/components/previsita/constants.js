@@ -41,7 +41,8 @@ export const MESSAGE_ERROR_PARTICIPANTS = "Señor usuario, para guardar una prev
 
 export const TITLE_PREVISIT_CREATE = "Creación previsita";
 export const TITLE_PREVISIT_EDIT = "Edición previsita";
-export const TITLE_VISIT_TYPE = "En este campo se deberá indicar la razón de la visita si es: seguimiento (mantenimiento de la relación con el cliente) o propuesta comercial (cuando lleva un insight o enseñanza al cliente).\n" +
+export const TITLE_VISIT_TYPE = "Tipo de visita";
+export const HELP_VISIT_TYPE = "En este campo se deberá indicar la razón de la visita si es: seguimiento (mantenimiento de la relación con el cliente) o propuesta comercial (cuando lleva un insight o enseñanza al cliente).\n" +
     "Si el tipo de visita es propuesta comercial, se deberá responder la sección Metodología Challenger.";
 export const TITLE_ERROR_EDIT_PREVISIT = "Error al editar previsita";
 export const MESSAGE_ERROR_EDIT_PREVISIT = userEditingPrevisita => `Señor usuario, en este momento la previsita esta siendo editada por ${userEditingPrevisita}. Por favor intentar mas tarde`;

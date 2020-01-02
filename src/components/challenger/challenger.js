@@ -16,7 +16,6 @@ export class Challenger extends Component {
 
     componentWillMount() {
         const { getAllQuestions } = this.props;
-
         getAllQuestions();
     }
     
@@ -31,16 +30,12 @@ export class Challenger extends Component {
             addAnswer(old,  { id: old ? old.id : null, [field]: value });
     }
 
-    getValue = (field, err) => {
+    getValue = (field) => {
         const { answers } = this.props;
         
         const value = answers.filter(value => value[field]);
-        if(value.length) {
-            err[field] = null;
-            return value[0][field];
-        }
-
-        return '';
+        
+        return value.length ? value[0][field] : '';
     }
 
     renderError = (err, field) => {
@@ -87,7 +82,7 @@ export class Challenger extends Component {
                         {({ field: { name }, form: { setFieldValue, errors } }) =>
                            <div>
                               <RichText
-                                value={this.getValue(field, errors)}
+                                value={this.getValue(field)}
                                 name={field}
                                 id={field}
                                 style={{ width: '100%', height: '130pt', marginBottom: '10pt' }}

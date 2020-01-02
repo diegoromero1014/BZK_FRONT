@@ -13,7 +13,7 @@ import RichText from '../richText/richTextComponent';
 import Participants from './participants';
 import Challenger from '../challenger/challenger';
 
-import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER, TITLE_VISIT_TYPE } from './constants';
+import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER, HELP_VISIT_TYPE } from './constants';
 
 export class PrevisitFormComponent extends Component {
    constructor(props) {
@@ -23,7 +23,7 @@ export class PrevisitFormComponent extends Component {
             type: {
                name: 'Tipo de visita',
                nullable: false,
-               message: TITLE_VISIT_TYPE
+               message: HELP_VISIT_TYPE
             },
             date: {
                name: 'Fecha',
@@ -287,14 +287,15 @@ export class PrevisitFormComponent extends Component {
                   </div>
                }      
                {commercialReportButtons}
-            </Form>            
+            </Form>         
+
          </div>         
       )
    }
 }
 
 export default withFormik({
-   handleSubmit: (values, { props }) => {      
+   handleSubmit: (values, { props }) => {            
       props.isFormValid(true);
       props.onSubmit(values);      
    },
