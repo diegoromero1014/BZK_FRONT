@@ -23,7 +23,7 @@ export class PrevisitFormComponent extends Component {
             type: {
                name: 'Tipo de visita',
                nullable: false,
-               message: 'asdasdasd'
+               message: TITLE_VISIT_TYPE
             },
             date: {
                name: 'Fecha',

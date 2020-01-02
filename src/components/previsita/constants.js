@@ -26,9 +26,8 @@ export const TITLE_MESSAGE_TARGET = "En este campo deberá registrar de manera c
 "c. ¿Cómo esta enseñanza conduce hacia una solución que tiene el Grupo Bancolombia?\n\n" +
 "2. ¿Cuáles son los resultados esperados y en cuánto tiempo se verán materializados?";
 
-export const TITLE_CHALLENGER = "Enseñanza (Oportunidades – Retos): Diligencie de manera resumida los siguientes " +
-"campos. Recuerde que lo importante es la necesidad del cliente, por lo cual no debe hablar de Bancolombia hasta cuando se expone la solución a la situación del cliente.\n" +
-"No es necesario haber asistido previamente a la formación Challenger, el formato entrega las herramientas necesarias para su construcción.";
+export const TITLE_CHALLENGER = `Diligencie de manera resumida los siguientes campos. Recuerde que lo importante es la necesidad del cliente, 
+    por lo cual no debe hablar de Bancolombia hasta cuando se expone la situación del cliente.`;
 
 export const TITLE_MESSAGE_PENDIENT = "En este campo se deberá registrar los pendientes quejas o reclamos que tenga el cliente y que podrán ser motivo de conversación en la reunión.";
 
@@ -42,7 +41,8 @@ export const MESSAGE_ERROR_PARTICIPANTS = "Señor usuario, para guardar una prev
 
 export const TITLE_PREVISIT_CREATE = "Creación previsita";
 export const TITLE_PREVISIT_EDIT = "Edición previsita";
-export const TITLE_VISIT_TYPE = "Tipo de visita";
+export const TITLE_VISIT_TYPE = "En este campo se deberá indicar la razón de la visita si es: seguimiento (mantenimiento de la relación con el cliente) o propuesta comercial (cuando lleva un insight o enseñanza al cliente).\n" +
+    "Si el tipo de visita es propuesta comercial, se deberá responder la sección Metodología Challenger.";
 export const TITLE_ERROR_EDIT_PREVISIT = "Error al editar previsita";
 export const MESSAGE_ERROR_EDIT_PREVISIT = userEditingPrevisita => `Señor usuario, en este momento la previsita esta siendo editada por ${userEditingPrevisita}. Por favor intentar mas tarde`;
 

@@ -20,6 +20,7 @@ class ListParticipantsByClient extends Component {
     handleRenderParticipants = disabled => {
         const { data } = this.props;
 
+
         return data.map(({nombreParticipante, cargo, estiloSocial, actitudBanco, idParticipante }) => (
             <CardComponent 
                 header={
@@ -60,12 +61,12 @@ class ListParticipantsByClient extends Component {
     }
 
     render() {
-        const { disabled: { disabled }} = this.props;
+        const { disabled } = this.props;
         const { open } = this.state;
 
         return (
             <div className='list-participants-container'>
-                {this.handleRenderParticipants(disabled)}
+                {this.handleRenderParticipants(disabled)}                
 
                 <SweetAlert
                     type="warning"

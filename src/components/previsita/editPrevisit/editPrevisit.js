@@ -5,8 +5,6 @@ import { bindActionCreators } from 'redux';
 import HeaderPrevisita from '../headerPrevisita';
 import FormEditPrevisita from './formEditPrevisita';
 
-import { redirectUrl } from '../../globalComponents/actions';
-
 class EditPrevisit extends Component {
 
   constructor(props) {

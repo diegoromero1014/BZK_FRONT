@@ -31,17 +31,24 @@ export class Challenger extends Component {
             addAnswer(old,  { id: old ? old.id : null, [field]: value });
     }
 
-    getValue = field => {
+    getValue = (field, err) => {
         const { answers } = this.props;
-
+        
         const value = answers.filter(value => value[field]);
+        if(value.length) {
+            err[field] = null;
+            return value[0][field];
+        }
 
-        return value.length ? value[0][field] : ''
+        return '';
     }
 
     renderError = (err, field) => {
-        if(err[field]) {
-            this.seletedTabActive(field);
+        if(err[field] && !this.getValue(field).length) {
+            const fieldDropdown = $(`.challenger-dropdown-${field}`);
+            if(!fieldDropdown.hasClass('active')){
+                this.seletedTabActive(field);
+            }
             return (
                 <div style={{ marginTop: 10 }}>
                     <div className="ui pointing red basic label"> {err[field]} </div>
@@ -80,7 +87,7 @@ export class Challenger extends Component {
                         {({ field: { name }, form: { setFieldValue, errors } }) =>
                            <div>
                               <RichText
-                                value={this.getValue(field)}
+                                value={this.getValue(field, errors)}
                                 name={field}
                                 id={field}
                                 style={{ width: '100%', height: '130pt', marginBottom: '10pt' }}

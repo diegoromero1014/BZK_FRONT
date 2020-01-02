@@ -3,12 +3,10 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
-import { Icon } from 'semantic-ui-react';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import { findContactsByClient } from '../contact/actions';
 import { addParticipant, clearParticipants } from './actions';
 import { NUMBER_CONTACTS, KEY_PARTICIPANT_CLIENT } from './constants';
-import ListParticipantesCliente from '../participantsVisitPre/listParticipantesCliente';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 import '../../../styles/participants/participantsByClient.scss';
@@ -63,10 +61,9 @@ class ParticipantsByClient extends Component {
     }
 
     render() {
-        const { contacts, participants } = this.props;
+        const { contacts, participants, disabled } = this.props;
 
         let data = _.chain(participants.toArray()).map(participant => participant).filter(participant => _.isEqual(participant.tipoParticipante, KEY_PARTICIPANT_CLIENT)).value();
-        const { disabled: { disabled } } = this.props;
 
         return (
             <div className='participants-client'>
@@ -93,7 +90,7 @@ class ParticipantsByClient extends Component {
                     <Row>
                         {data.length > 0 ?
                             <Col xs={12} md={12} lg={12}>
-                                <ListParticipantsByClient data={data} disabled={this.props.disabled} />
+                                <ListParticipantsByClient data={data} disabled={disabled} />
                             </Col>
                             :
                             <Col xs={12} md={12} lg={12}>
