@@ -32,6 +32,7 @@ import ComponentListIntOperations from "../contextClient/listInternationalOperat
 import ComponentInfoClient from './components/InfoClient';
 import ActividadEconomica from './components/ActividadEconomica';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
+import SectionOpportunitiesWeaknesses from '../opportunitiesWeaknesses/SectionOpportunitiesWeaknesses';
 
 import { clearProducts, setProducts } from "./products/actions";
 import { clearNotes, deleteNote, setNotes } from "./notes/actions";
@@ -1311,6 +1312,8 @@ class clientEdit extends Component {
                     segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
                     idButton={idButton} isMethodEditClient={isMethodEditClient} isPersonaNatural={isPersonaNatural}
                 />
+                
+                <SectionOpportunitiesWeaknesses visual={true}/>
 
                 <ActividadEconomica idSubCIIU={idSubCIIU} idCIIU={idCIIU} taxNature={taxNature} isMethodEditClient={isMethodEditClient} />
 

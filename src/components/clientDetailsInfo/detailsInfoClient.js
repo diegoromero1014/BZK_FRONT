@@ -240,8 +240,8 @@ class DetailsInfoClient extends Component {
                     </table>
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('opportunitiesWeaknesses')}
-                        codSection={accordion.opportunitiesWeaknesses} title="Oportunidades y debilidades" icon="payment"
-                        componentView={<SectionOpportunitiesWeaknesses />} />
+                        codSection={accordion.opportunitiesWeaknesses} title="Oportunidades y debilidades" icon="lightbulb"
+                        componentView={<SectionOpportunitiesWeaknesses visual={false}/>} />
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('economicActivity')}
                         codSection={accordion.economicActivity} title="Actividad económica" icon="payment"

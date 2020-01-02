@@ -16,17 +16,40 @@ class AñadirListaObjetos extends Component {
       id: "",
       texto: ""
     },
-    objetos: [],
+    objetos: [
+      {
+        id: 1,
+        texto:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim egestas imperdiet. Nunc consequat viverra lacinia. Morbi posuere urna non commodo tempus. Duis fermentum est at mollis sagittis. Suspendisse et augue ornare, bibendum sem vel, condimentum sem. Sed sed auctor leo. Etiam at leo nec est sodales aliquet. Sed placerat dui eu ex hendrerit, a ultricies libero eleifend turpis duis."
+      },
+      {
+        id: 2,
+        texto:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim egestas imperdiet. Nunc consequat viverra lacinia. Morbi posuere urna non commodo tempus. Duis fermentum est at mollis sagittis. Suspendisse et augue ornare, bibendum sem vel, condimentum sem. Sed sed auctor leo. Etiam at leo nec est sodales aliquet. Sed placerat dui eu ex hendrerit, a ultricies libero eleifend turpis duis."
+      },
+      {
+        id: 3,
+        texto:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim egestas imperdiet. Nunc consequat viverra lacinia. Morbi posuere urna non commodo tempus. Duis fermentum est at mollis sagittis. Suspendisse et augue ornare, bibendum sem vel, condimentum sem. Sed sed auctor leo. Etiam at leo nec est sodales aliquet. Sed placerat dui eu ex hendrerit, a ultricies libero eleifend turpis duis."
+      },
+      {
+        id: 4,
+        texto:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim egestas imperdiet. Nunc consequat viverra lacinia. Morbi posuere urna non commodo tempus. Duis fermentum est at mollis sagittis. Suspendisse et augue ornare, bibendum sem vel, condimentum sem. Sed sed auctor leo. Etiam at leo nec est sodales aliquet. Sed placerat dui eu ex hendrerit, a ultricies libero eleifend turpis duis."
+      }
+    ],
     campoObjeto: false,
     campoVacio: false,
     idObjetoEliminar: "",
     modalEliminar: false,
-    switchGuardarEditar: false
+    switchGuardarEditar: false,
+    stylePlus: false
   };
 
   abrirCampoObjeto = event => {
     this.setState({
-      campoObjeto: true
+      campoObjeto: true,
+      stylePlus: true
     });
   };
 
@@ -35,7 +58,8 @@ class AñadirListaObjetos extends Component {
     this.setState({
       campoObjeto: false,
       campoVacio: false,
-      switchGuardarEditar: false
+      switchGuardarEditar: false,
+      stylePlus: false
     });
     if (texto !== "") {
       this.setState({
@@ -62,7 +86,8 @@ class AñadirListaObjetos extends Component {
         texto
       },
       campoObjeto: true,
-      switchGuardarEditar: true
+      switchGuardarEditar: true,
+      stylePlus: true
     });
   };
 
@@ -87,7 +112,8 @@ class AñadirListaObjetos extends Component {
         objetos: listaObjetos,
         campoVacio: false,
         campoObjeto: false,
-        switchGuardarEditar: false
+        switchGuardarEditar: false,
+        stylePlus: false
       });
     } else {
       this.setState({
@@ -112,7 +138,8 @@ class AñadirListaObjetos extends Component {
           id: "",
           texto: ""
         },
-        objetos
+        objetos,
+        stylePlus: false
       });
     } else {
       this.setState({
@@ -145,48 +172,69 @@ class AñadirListaObjetos extends Component {
   };
 
   render() {
-    const { titulo } = this.props;
+    const { titulo, visual } = this.props;
+
     const {
       objetos,
       campoObjeto,
       campoVacio,
       idObjetoEliminar,
       modalEliminar,
-      switchGuardarEditar
+      switchGuardarEditar,
+      stylePlus
     } = this.state;
+
     const textButon = switchGuardarEditar ? "Modificar" : "Agregar";
+
     const functionButton = switchGuardarEditar
       ? this.modificarObjeto
       : this.agregarObjetoLista;
 
+    const styleCheckedPlus = stylePlus
+      ? "button-openFieldChecked"
+      : "button-openField";
+
+    let iconTitle;
+    if (titulo === "Oportunidades") {
+      iconTitle = "thumbs up outline icon";
+    } else if (titulo === "Debilidades") {
+      iconTitle = "thumbs down outline icon";
+    } else {
+      iconTitle = "book icon";
+    }
+
     const helpObjetos = "En este campo debe agregar los/las " + titulo;
 
     return (
-      <div style={{ width: "100%" }}>
+      <div className="container-listaObjetos">
         <Row style={{ padding: "20px 23px 20px 20px" }}>
           <Col xs={12} md={12} lg={12}>
             <div className="header-component">
               <div className="line-topComponent" />
               <div className="container-titleHelpPlus">
                 <div>
-                  <i className="book icon" />
+                  <i className={iconTitle} />
                   <span className="title-component">
-                    {`${titulo}`}(<span className="icon-obligatoriedad">*</span>
-                    )
+                    {`${titulo}`}
+                    {visual && <span className="icon-obligatoriedad">*</span>}
                   </span>
-                  <ToolTip text={helpObjetos}>
-                    <i className="help circle icon blue" />
-                  </ToolTip>
+                  {visual && (
+                    <ToolTip text={helpObjetos}>
+                      <i className="help circle icon blue" />
+                    </ToolTip>
+                  )}
                 </div>
-                <button
-                  type="button"
-                  className="button-openField"
-                  onClick={this.abrirCampoObjeto}
-                >
-                  <ToolTip text={`Agregar ${titulo}`}>
-                    <i className="plus white icon" />
-                  </ToolTip>
-                </button>
+                {visual && (
+                  <button
+                    type="button"
+                    className={styleCheckedPlus}
+                    onClick={this.abrirCampoObjeto}
+                  >
+                    <ToolTip text={`Agregar ${titulo}`}>
+                      <i className="plus white icon" />
+                    </ToolTip>
+                  </button>
+                )}
               </div>
             </div>
           </Col>
@@ -250,21 +298,27 @@ class AñadirListaObjetos extends Component {
                 <thead>
                   {objetos.map(elemento => (
                     <tr>
-                      <td className="collapsing">
-                        <i
-                          className="edit icon"
-                          title={`Editar ${titulo}`}
-                          onClick={() => this.editarObjeto(elemento)}
-                        />
-                      </td>
+                      {visual && (
+                        <td className="collapsing">
+                          <i
+                            className="edit icon"
+                            title={`Editar ${titulo}`}
+                            onClick={() => this.editarObjeto(elemento)}
+                          />
+                        </td>
+                      )}
                       <td>{elemento.texto}</td>
-                      <td className="collapsing">
-                        <i
-                          className="trash icon"
-                          title={`Eliminar ${titulo}`}
-                          onClick={() => this.mostrarModalEliminar(elemento.id)}
-                        />
-                      </td>
+                      {visual && (
+                        <td className="collapsing">
+                          <i
+                            className="trash icon"
+                            title={`Eliminar ${titulo}`}
+                            onClick={() =>
+                              this.mostrarModalEliminar(elemento.id)
+                            }
+                          />
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </thead>
@@ -294,9 +348,7 @@ class AñadirListaObjetos extends Component {
               <table className="ui striped table">
                 <thead>
                   <tr className="tr-void">
-                    <span style={{ textAlign: "center" }}>
-                      {`Aún no se han adicionado ${titulo}.`}
-                    </span>
+                    <span>{`Aún no se han adicionado ${titulo}.`}</span>
                   </tr>
                 </thead>
               </table>
