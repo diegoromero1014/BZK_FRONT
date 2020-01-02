@@ -76,6 +76,7 @@ export default (state = initialState, action) => {
             const resetAccordion = {
                 economicActivity: OPEN_TAB,
                 inventoryPolicy: OPEN_TAB,
+                controlLinkedPayments: OPEN_TAB,
                 mainCustomer: OPEN_TAB,
                 mainSupplier: OPEN_TAB,
                 mainCompetition: OPEN_TAB,
