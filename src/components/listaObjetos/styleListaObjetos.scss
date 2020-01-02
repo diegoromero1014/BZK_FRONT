@@ -1,8 +1,9 @@
 :root{
     --colorBlue: #2671D7;
     --colorGray: #C1C1C1;
-    --colorWhite: white;
+    --colorWhite: #fff;
     --colorTitlesLines: #CEA70B;
+    --colorHover: #66778D;
 }
 
 .header-component{
@@ -52,6 +53,11 @@
     padding: 10px;
 }
 
+//estilo cuando este activo el button-openField
+.button-openField:checked{
+    background-color: var(--colorHover);
+}
+
 .plus{
     padding: 3px 0 0 5px;
 }
@@ -66,7 +72,7 @@
 }
 
 .field-textArea{
-    width: 73%;
+    width: 75%;
     height: 100px;
 }
 
@@ -78,7 +84,7 @@
 }
 
 .button-add{
-    width: 8rem;
+    width: 7rem;
     padding: 10px 20px;
     border: none;
     background-color: var(--colorBlue);
@@ -89,9 +95,12 @@
 }
 
 // hover para el boton agregar 
+.button-add:hover{
+    background-color: var(--colorHover);
+}
 
 .button-cancel{
-    widows: 8rem;
+    width: 7rem;
     padding: 10px 20px;
     border: none;
     background-color:  var(--colorGray);
