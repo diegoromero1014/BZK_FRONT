@@ -27,7 +27,7 @@ export default class CommercialReportButtonsComponent extends Component {
                     {!documentDraft && !isEditable &&
                         <button
                             name="btnPreSave"
-                            className="btn" type="submit" 
+                            className="btn" type="button" 
                             onClick={() => onClickSave(SAVE_DRAFT)} 
                             style={{ margin: "8px 10px 0px 8px", backgroundColor: "#00B5AD" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
@@ -37,7 +37,7 @@ export default class CommercialReportButtonsComponent extends Component {
                         <button
                             name="btnSave"
                             className="btn" 
-                            type="submit" 
+                            type="button" 
                             onClick={() => onClickSave(SAVE_PUBLISHED)}
                             style={{ margin: "8px 10px 0px 0px" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>

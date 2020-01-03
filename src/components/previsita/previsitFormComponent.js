@@ -103,7 +103,7 @@ export class PrevisitFormComponent extends Component {
 
    render() {      
       const { fields: { type, date, duration, place, objective, challenger } } = this.state;
-      const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue, setFieldTouched } = this.props;                              
+      const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue, setFieldTouched, submitForm } = this.props;                     
       return (
          <div>              
             <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>               
@@ -285,7 +285,7 @@ export class PrevisitFormComponent extends Component {
                      </Row>   
                   </div>
                }      
-               {commercialReportButtons}
+               {commercialReportButtons(submitForm)}
             </Form>         
 
          </div>         
@@ -294,9 +294,9 @@ export class PrevisitFormComponent extends Component {
 }
 
 export default withFormik({
-   handleSubmit: (values, { props }) => {                        
-      props.onSubmit(values);     
-      props.isFormValid(true);       
+   handleSubmit: (values, { props }) => {                          
+      props.isFormValid(true);
+      props.onSubmit(values);                  
    },
    mapPropsToValues: (props) => {
       const { previsitData, questions } = props;
