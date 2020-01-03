@@ -47,7 +47,7 @@ export function validateTypeDeleteJson(typeDocument){
 
 export function validateUrlRedirect(typeDocument){
   if( typeDocument === PREVISITA ){
-    return '/dashboard/previsitaEditar';
+    return '/dashboard/previsita';
   } else if( typeDocument === VISITA ){
     return '/dashboard/visitaEditar';
   } else if( typeDocument === PIPELINE ){

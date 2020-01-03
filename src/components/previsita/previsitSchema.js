@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import { patternOfPlaceOfPrevisit, patternDecimalNumbers } from '../../validationsFields/patternsToValidateField';
 import { MESSAGE_WARNING_PLACE_OF_PREVISIT, MESSAGE_WARNING_ONLY_NUMBERS, MESSAGE_WARNING_NUMBER_LENGTH, MESSAGE_WARNING_MAX_LENGTH } from '../../validationsFields/validationsMessages';
+import { checkRichTextRequiredBoolean } from '../../validationsFields/rulesField';
 
 export const schema = {
     documentType: Yup.string()
@@ -17,5 +18,6 @@ export const schema = {
         .required('El lugar es obligatorio')
         .matches(patternOfPlaceOfPrevisit, MESSAGE_WARNING_PLACE_OF_PREVISIT)
         .max(150, MESSAGE_WARNING_MAX_LENGTH(150)),
-    principalObjective: Yup.string().required('El objetivo es obligatorio'),
+    principalObjective: Yup.string()
+        .test('principalObjectiveRequired', 'El objetivo es obligatorio', value => checkRichTextRequiredBoolean(value)),
 };

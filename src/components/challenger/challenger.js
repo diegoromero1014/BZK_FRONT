@@ -7,41 +7,58 @@ import { Field } from 'formik';
 import RichText from '../richText/richTextComponent';
 import ToolTip from "../toolTip/toolTipComponent";
 
-import { getAllQuestions, addAnswer } from './actions';
+import { getAllQuestions, addAnswer, clearAnswer } from './actions';
+import { htmlToText } from '../../actionsGlobal';
 
 export class Challenger extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            isMounted: false
+        };
     }
 
     componentWillMount() {
-        const { getAllQuestions } = this.props;
-        getAllQuestions();
+        const { dispatchGetAllQuestions } = this.props;
+        dispatchGetAllQuestions();
     }
-    
-    seletedTabActive = field => $(`.challenger-dropdown-${field}`).toggleClass('active'); 
-    
-    onChange = (value, field) => {
-        const { addAnswer, answers } = this.props;
+
+    componentDidMount() {        
+        this.renderFieldValues();
+    }
+
+    seletedTabActive = field => $(`.challenger-dropdown-${field}`).toggleClass('active');
+
+    onChange = (value, field, index) => {
+        const { dispatchAddAnswer, answers } = this.props;
 
         const old = answers.filter(value => value[field])[0];
 
-        if(value)
-            addAnswer(old,  { id: old ? old.id : null, [field]: value });
+        if (value) {
+            dispatchAddAnswer(old, { id: old ? old.id : index, [field]: value });
+        }
     }
 
     getValue = (field) => {
         const { answers } = this.props;
-        
+
         const value = answers.filter(value => value[field]);
-        
+
         return value.length ? value[0][field] : '';
     }
 
+    renderFieldValues = () => {
+        const { questions, setFieldValue, setFieldTouched } = this.props;
+        questions.map(({ field }) => {
+            setFieldValue(field, this.getValue(field));
+            setFieldTouched(field, true, true);
+        });
+    }
+
     renderError = (err, field) => {
-        if(err[field] && !this.getValue(field).length) {
+        if (err[field] && !htmlToText(this.getValue(field)).length) {
             const fieldDropdown = $(`.challenger-dropdown-${field}`);
-            if(!fieldDropdown.hasClass('active')){
+            if (!fieldDropdown.hasClass('active')) {
                 this.seletedTabActive(field);
             }
             return (
@@ -54,56 +71,53 @@ export class Challenger extends Component {
 
     renderQuestions = () => {
         const { questions, isEditable } = this.props;
+        return questions.map(({ field, title, nullable, message, placeholder, subtitle }, index) => {
+            return (
+                <div name="mainContainer" key={index}>
+                    <div className={`title ${field} challenger-dropdown-${field}`} onClick={() => this.seletedTabActive(field)}>
+                        <i className="dropdown icon"></i>
 
-        return questions.map(({ field, title, nullable, message, placeholder, subtitle }, index) => 
-            <div name="mainContainer" key={index}>
-                <div className={`title ${field} challenger-dropdown-${field}`} onClick={() => this.seletedTabActive(field)}>
-                    <i className="dropdown icon"></i>
-                    
-                    <div name={`title${field}`} style={{ display: "inline-flex"}}>
-                        <span onClick={() => this.seletedTabActive(field)}>
-                            {`${title}  ${!nullable ? '(' : ''} `} 
-                        </span> {!nullable && <span style={{ color: 'red' }}>*</span>}  {!nullable && ' )' }
-                        <br />
-                        {message && 
-                            <ToolTip text={message}>
-                                <i className="help circle icon blue" style={{ cursor: "pointer", marginLeft: 10 }} />
-                            </ToolTip>
+                        <div name={`title${field}`} style={{ display: "inline-flex" }}>
+                            <span onClick={() => this.seletedTabActive(field)}>
+                                {`${title}  ${!nullable ? '(' : ''} `}
+                            </span> {!nullable && <span style={{ color: 'red' }}>*</span>}  {!nullable && ' )'}
+                            <br />
+                            {message &&
+                                <ToolTip text={message}>
+                                    <i className="help circle icon blue" style={{ cursor: "pointer", marginLeft: 10 }} />
+                                </ToolTip>
+                            }
+                        </div>
+
+                        {subtitle &&
+                            <span name={`subtitle${field}`} onClick={() => this.seletedTabActive(field)} style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}</span>
                         }
                     </div>
 
-                    {subtitle &&
-                        <span name={`subtitle${field}`} onClick={() => this.seletedTabActive(field)} style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}</span>
-                    }
-                </div>
-
-                <div className={`content ${field} challenger-dropdown-${field}`}>
-                    <Field type="text" name={field}>
-                        {({ field: { name }, form: { setFieldValue, errors } }) =>
-                           <div>
-                              <RichText
-                                value={this.getValue(field)}
-                                name={field}
-                                id={field}
-                                style={{ width: '100%', height: '130pt', marginBottom: '10pt' }}
-                                placeholder={placeholder}
-                                readOnly={isEditable}
-                                disabled={!isEditable ? '' : 'disabled'}
-                                onChange={value => {
-                                    this.onChange(value, field);
-                                    
-                                    if(value) {
-                                        setFieldValue(name, value, false);
-                                    }
-                                }}
-                              />
-
-                              {this.renderError(errors, field)}                                
-                           </div>
-                        }
-                     </Field>
-                </div>
-            </div>
+                    <div className={`content ${field} challenger-dropdown-${field}`}>
+                        <Field type="text" name={field}>
+                            {({ field: { name }, form: { setFieldValue, errors } }) =>
+                                <div>
+                                    <RichText
+                                        value={this.getValue(field)}
+                                        name={field}
+                                        id={field}
+                                        style={{ width: '100%', height: '130pt', marginBottom: '10pt' }}
+                                        placeholder={placeholder}
+                                        readOnly={isEditable}
+                                        disabled={!isEditable ? '' : 'disabled'}
+                                        onChange={value => {
+                                            this.onChange(value, field, index);
+                                            setFieldValue(name, value, true);
+                                        }}
+                                    />
+                                    {this.renderError(errors, field)}
+                                </div>
+                            }
+                        </Field>
+                    </div>
+                </div>)
+        }
         );
     }
 
@@ -120,12 +134,13 @@ const mapStateToProps = ({ questionsReducer: { questions, answers } }) => ({
     questions,
     answers
 });
- 
+
 const mapDispatchToProps = dispatch => {
     return bindActionCreators({
-        getAllQuestions,
-        addAnswer
+        dispatchGetAllQuestions: getAllQuestions,
+        dispatchAddAnswer: addAnswer,
+        dispatchClearAnswer: clearAnswer
     }, dispatch)
 };
- 
+
 export default connect(mapStateToProps, mapDispatchToProps)(Challenger)

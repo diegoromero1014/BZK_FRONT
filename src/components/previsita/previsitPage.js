@@ -436,7 +436,7 @@ export class PrevisitPage extends Component {
    }
 
    renderForm = () => {
-      const { params: { id }, previsitReducer, selectsReducer, fromModal, questions } = this.props;
+      const { params: { id }, previsitReducer, selectsReducer, fromModal, questions, answers } = this.props;
       const previsitDetail = previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null;
       return (
          <PrevisitFormComponent
@@ -448,6 +448,7 @@ export class PrevisitPage extends Component {
             onSubmit={this.submitForm}
             isFormValid={valid => this.setState({ formValid: valid })}
             questions={questions}
+            answers={answers}
             commercialReportButtons={
                <CommercialReportButtonsComponent
                   onClickSave={this.onClickSaveHandler}

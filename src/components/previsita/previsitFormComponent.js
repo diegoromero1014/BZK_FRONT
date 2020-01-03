@@ -14,6 +14,7 @@ import Participants from './participants';
 import Challenger from '../challenger/challenger';
 
 import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER, HELP_VISIT_TYPE } from './constants';
+import { checkRichTextRequiredBoolean } from '../../validationsFields/rulesField';
 
 export class PrevisitFormComponent extends Component {
    constructor(props) {
@@ -96,17 +97,15 @@ export class PrevisitFormComponent extends Component {
       onChangeShowChallengerSection(previsitTypeId, setFieldValue);     
    }
 
-   componentDidMount() {
+   componentDidMount() {             
       this.forceUpdate();
    }
 
    render() {      
       const { fields: { type, date, duration, place, objective, challenger } } = this.state;
-      const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable } = this.props;
-     
+      const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue, setFieldTouched } = this.props;                              
       return (
-
-         <div>                   
+         <div>              
             <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>               
                <Row style={{ padding: "10px 10px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
@@ -281,7 +280,7 @@ export class PrevisitFormComponent extends Component {
                      </Row>              
                      <Row style={{ padding: "20px 23px 20px 20px" }}>                     
                         <Col xs={12} md={12} lg={12}>
-                           <Challenger isEditable={isEditable}/>
+                           <Challenger isEditable={isEditable} setFieldValue={setFieldValue} setFieldTouched={setFieldTouched}/>
                         </Col>                     
                      </Row>   
                   </div>
@@ -295,9 +294,9 @@ export class PrevisitFormComponent extends Component {
 }
 
 export default withFormik({
-   handleSubmit: (values, { props }) => {            
-      props.isFormValid(true);
-      props.onSubmit(values);      
+   handleSubmit: (values, { props }) => {                        
+      props.onSubmit(values);     
+      props.isFormValid(true);       
    },
    mapPropsToValues: (props) => {
       const { previsitData, questions } = props;
@@ -320,14 +319,15 @@ export default withFormik({
       }
    },
    validationSchema: ({questions, showChallengerSection}) => {
-      const object = {};
-
-      if(showChallengerSection) {
-         questions.forEach(element => object[element.field] = Yup.string().required('La pregunta ' + element.title + ' es obligatoria') );
+      const object = {};      
+      if(showChallengerSection) {    
+         
+         questions.forEach(element => object[element.field] = Yup.string()
+            .test(`${element.title}richTextRequired`,`La pregunta ${element.title} es obligatoria`, value => checkRichTextRequiredBoolean(value)));
       }
       
-      const objectSchema = Object.assign({}, schema, object); 
+      const objectSchema = Object.assign({}, schema, object);       
    
-      return Yup.object().shape(objectSchema);
-   }
+      return Yup.object().shape(objectSchema);            
+   }      
 })(PrevisitFormComponent);

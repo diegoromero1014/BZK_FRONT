@@ -13,7 +13,7 @@ export default (state = initialState, { type, payload }) => {
             let answers = state.answers;
 
             if(payload.oldAnswer) {
-                answers = answers.filter(answer =>  answer !== payload.oldAnswer);    
+                answers = answers.filter(answer =>  answer.id !== payload.oldAnswer.id);    
             }
                 
             answers.push(payload.newAnswer);
