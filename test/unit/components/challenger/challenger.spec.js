@@ -2,11 +2,16 @@ import React from 'react';
 
 import { Challenger } from '../../../../src/components/challenger/challenger';
 import { Field } from 'formik';
+import { mount } from 'enzyme';
 
 let defaultProps = {
     isEsditable: true,
     questions: [],
-    getAllQuestions: () => {}
+    dispatchGetAllQuestions: () => {},
+    setFieldValue: () => {},
+    setFieldTouched: () => {},
+    dispatchGetAllQuestions: () => {},
+    answers: []
 }
 
 describe('Test challenger/challenger', () => {
@@ -46,5 +51,15 @@ describe('Test challenger/challenger', () => {
     it('It should render a Field.', () => {
         const wrapper = shallow(<Challenger {...defaultProps} />);
         expect(wrapper.find(<Field/>));
+    });
+
+    it('It should call function selectedTabActive.', () => {
+        defaultProps.questions = [{ field: 'field' }]
+        // console.log('asdfasdf');
+        const wrapper = mount(<Challenger {...defaultProps} />);
+        console.log(wrapper.html());
+        
+        wrapper.instance().selectedTabActive('any');
+        expect(prueba);
     });
 });

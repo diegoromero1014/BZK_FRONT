@@ -27,7 +27,7 @@ export class Challenger extends Component {
         this.renderFieldValues();
     }
 
-    seletedTabActive = field => $(`.challenger-dropdown-${field}`).toggleClass('active');
+    selectedTabActive = field => $(`.challenger-dropdown-${field}`).toggleClass('active');
 
     onChange = (value, field, index) => {
         const { dispatchAddAnswer, answers } = this.props;
@@ -59,7 +59,7 @@ export class Challenger extends Component {
         if (err[field] && !htmlToText(this.getValue(field)).length) {
             const fieldDropdown = $(`.challenger-dropdown-${field}`);
             if (!fieldDropdown.hasClass('active')) {
-                this.seletedTabActive(field);
+                this.selectedTabActive(field);
             }
             return (
                 <div style={{ marginTop: 10 }}>
@@ -74,11 +74,11 @@ export class Challenger extends Component {
         return questions.map(({ field, title, nullable, message, placeholder, subtitle }, index) => {
             return (
                 <div name="mainContainer" key={index}>
-                    <div className={`title ${field} challenger-dropdown-${field}`} onClick={() => this.seletedTabActive(field)}>
+                    <div className={`title ${field} challenger-dropdown-${field}`} onClick={() => this.selectedTabActive(field)}>
                         <i className="dropdown icon"></i>
 
                         <div name={`title${field}`} style={{ display: "inline-flex" }}>
-                            <span onClick={() => this.seletedTabActive(field)}>
+                            <span onClick={() => this.selectedTabActive(field)}>
                                 {`${title}  ${!nullable ? '(' : ''} `}
                             </span> {!nullable && <span style={{ color: 'red' }}>*</span>}  {!nullable && ' )'}
                             <br />
@@ -90,7 +90,7 @@ export class Challenger extends Component {
                         </div>
 
                         {subtitle &&
-                            <span name={`subtitle${field}`} onClick={() => this.seletedTabActive(field)} style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}</span>
+                            <span name={`subtitle${field}`} onClick={() => this.selectedTabActive(field)} style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}</span>
                         }
                     </div>
 
