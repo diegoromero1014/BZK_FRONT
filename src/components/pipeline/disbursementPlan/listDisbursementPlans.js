@@ -89,8 +89,8 @@ class ListDisbursementPlans extends Component {
             }
         });
         let arrEstimatedDisburDate = estimatedDisburDate.split("/");
-        let currentDate = new Date();
-        if(arrEstimatedDisburDate!=null && arrEstimatedDisburDate[0]<=(currentDate.getMonth() + 1)&& arrEstimatedDisburDate[1]<=currentDate.getFullYear()){
+        
+        if(this.shouldCalculatePendingDisbursementAmount(arrEstimatedDisburDate)){
             handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, _.sum([pendingDisbursementAmountNum, disbursementAmountItem]).toFixed(2), true, 2);
         }
         updateDisbursementPlans(newListPart, origin);
@@ -107,6 +107,24 @@ class ListDisbursementPlans extends Component {
         fnShowForm(false);
     }
 
+    shouldCalculatePendingDisbursementAmount(arrEstimatedDisburDate) {
+
+        let currentDate = new Date();
+        if (arrEstimatedDisburDate == null) {
+            return false;
+        }
+
+        if (arrEstimatedDisburDate[1]<currentDate.getFullYear()) {
+            return true;
+        }
+
+        if (arrEstimatedDisburDate[0]<=(currentDate.getMonth() + 1) && arrEstimatedDisburDate[1]<=currentDate.getFullYear()) {
+            return true;
+        }
+
+        return false;
+    }
+
     _validateInfo() {
         const { disbursementAmount, estimatedDisburDate, swtShowMessage, nominalValue, origin,
             updateDisbursementPlans, pipelineReducer, pendingDisbursementAmount } = this.props;
@@ -118,7 +136,7 @@ class ListDisbursementPlans extends Component {
                 swtShowMessage(MESSAGE_ERROR, 'Plan de desembolso', 'Señor usuario, debe seleccionar un valor válido para la fecha de desembolso.');
             } else {
                 let arrEstimatedDisburDate = estimatedDisburDate.value.split("/");
-                let currentDate = new Date();
+               
                 var nominalvalueNum= parseFloat((nominalValue.value.toString()).replace(/,/g, ""));
                 var listDisbursementPlans = pipelineReducer.get(this._getNameDisbursementPlansInReducer());
                 var totalDisbursementAmount = _.sumBy(listDisbursementPlans, 'disbursementAmount');
@@ -129,8 +147,7 @@ class ListDisbursementPlans extends Component {
                     var estimatedDisburDateSelected = _.get(_.filter(listDisbursementPlans, ['id', this.state.entitySeleted.id]), '[0].estimatedDisburDate'); 
                     let arrEstimatedDisburDateSelected = estimatedDisburDateSelected.split("/");
                  
-                    if(arrEstimatedDisburDateSelected!=null && arrEstimatedDisburDateSelected[0]<=(currentDate.getMonth() + 1)
-                            && arrEstimatedDisburDateSelected[1]<=currentDate.getFullYear()){
+                    if(this.shouldCalculatePendingDisbursementAmount(arrEstimatedDisburDateSelected)){
                         totalDisbursementAmount = _.subtract(totalDisbursementAmount, disbursementAmountEntitySelected);
                         pendingDisbursementAmountNum = _.sum([pendingDisbursementAmountNum, disbursementAmountEntitySelected]);
                         handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (pendingDisbursementAmountNum).toString(), true, 2);
@@ -150,7 +167,7 @@ class ListDisbursementPlans extends Component {
                             estimatedDisburDate: estimatedDisburDate.value
                         };
                         listDisbursementPlans.push(newDisbursementPlan);
-                        if(arrEstimatedDisburDate!=null && arrEstimatedDisburDate[0]<=(currentDate.getMonth() + 1)&& arrEstimatedDisburDate[1]<=currentDate.getFullYear()){
+                        if(this.shouldCalculatePendingDisbursementAmount(arrEstimatedDisburDate)){
                             disbursementAmountItem = _.subtract(pendingDisbursementAmountNum, newDisbursementPlan.disbursementAmount);
                             handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (disbursementAmountItem).toString(), true, 2);
                          }
@@ -163,7 +180,7 @@ class ListDisbursementPlans extends Component {
                         listDisbursementPlans = _.remove(listDisbursementPlans, (item) => {
                             return !_.isEqual(item.id, this.state.entitySeleted.id);
                         });
-                        if(arrEstimatedDisburDate!=null && arrEstimatedDisburDate[0]<=(currentDate.getMonth() + 1)&& arrEstimatedDisburDate[1]<=currentDate.getFullYear()){
+                        if(this.shouldCalculatePendingDisbursementAmount(arrEstimatedDisburDate)){
                             disbursementAmountItem = _.subtract(pendingDisbursementAmountNum, disbursementAmountNum).toFixed(2);
                             handleBlurValueNumber(ONLY_POSITIVE_INTEGER, pendingDisbursementAmount, (disbursementAmountItem).toString(), true, 2);
                         }
