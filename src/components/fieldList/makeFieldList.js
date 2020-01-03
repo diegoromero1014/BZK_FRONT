@@ -9,18 +9,30 @@ import {
     addFieldToList,
     setFieldsToList,
     changeListState,
-    removeElement,
-    updateElement,
-    editElement
+    removeElementFromList,
+    updateElementFromList,
+    editElementFromList
 } from './actions';
 
-export default function makeFieldList(listName, childrenList) {
+
+export default function makeFieldList(listName, childrenList=[]) {
+
+    const addField = addFieldToList(listName);
+    const setFields = setFieldsToList(listName);
+    const changeState = changeListState(listName);
+    const updateElement = updateElementFromList(listName);
+    const removeElement = removeElementFromList(listName);
+    const editElement = editElementFromList(listName);
 
     class StateImplementation extends React.Component {
 
         componentDidMount() {
             const { dispatchCreateList } = this.props;
             dispatchCreateList(listName, childrenList);
+            for (let index = 0; index < childrenList.length; index++) {
+                const child = childrenList[index];
+                dispatchCreateList(child.name);
+            }
         }
 
         render() {
@@ -57,11 +69,7 @@ export default function makeFieldList(listName, childrenList) {
     }
 
     function mapStateToProps({ formLists }) {
-
-       
-
         let values = formLists[listName];
-
         let fields = {};
         let elements = [];
         let showAddSection = false;
@@ -86,12 +94,12 @@ export default function makeFieldList(listName, childrenList) {
     function mapDispatchToProps(dispatch) {
         return bindActionCreators({
             dispatchCreateList: createList,
-            dispatchAddFieldToList: addFieldToList(listName),
-            dispatchSetFieldsToList: setFieldsToList(listName),
-            dispatchChangeListState: changeListState(listName),
-            dispatchUpdateElement: updateElement(listName),
-            dispatchRemoveElement: removeElement(listName),
-            dispatchEditElement: editElement(listName)
+            dispatchAddFieldToList: addField,
+            dispatchSetFieldsToList: setFields,
+            dispatchChangeListState: changeState,
+            dispatchUpdateElement: updateElement,
+            dispatchRemoveElement: removeElement,
+            dispatchEditElement: editElement
         }, dispatch)
     }
 

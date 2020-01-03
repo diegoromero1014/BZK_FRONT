@@ -41,7 +41,7 @@ export const changeListState = list => (newState) => {
     }
 }
 
-export const updateElement = list => (element) => {
+export const updateElementFromList = list => (element) => {
     return {
         type: UPDATE_ELEMENT_FROM_LIST,
         list,
@@ -49,7 +49,7 @@ export const updateElement = list => (element) => {
     }
 }
 
-export const removeElement = list => (elementToDelete) => {
+export const removeElementFromList = list => (elementToDelete) => {
     return {
         type: REMOVE_ELEMENT_FROM_LIST,
         list,
@@ -57,7 +57,7 @@ export const removeElement = list => (elementToDelete) => {
     }
 }
 
-export const editElement = list => element => {
+export const editElementFromList = list => element => {
     return {
         type: EDIT_ELEMENT_FROM_LIST,
         list,

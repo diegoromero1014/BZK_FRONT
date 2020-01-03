@@ -1,4 +1,4 @@
-import { uniqueId } from 'lodash'
+import { uniqueId, isEmpty } from 'lodash'
 
 import {
     CREATE_LIST,
@@ -9,7 +9,6 @@ import {
     UPDATE_ELEMENT_FROM_LIST,
     EDIT_ELEMENT_FROM_LIST
 } from './constants';
-import { act } from 'react-test-renderer';
 
 const ID = "fieldlist-id";
 
@@ -33,10 +32,10 @@ function addNewListToState(name, state, list) {
 
 function addIdToElement(element) {
     let modifiedFiels = Object.assign({}, element);
-        if (!element.hasOwnProperty(ID)) {
-            modifiedFiels[ID] = uniqueId();
-        }
-        return modifiedFiels;
+    if (!element.hasOwnProperty(ID)) {
+        modifiedFiels[ID] = uniqueId();
+    }
+    return modifiedFiels;
 }
 
 function mergeElements(elements, newElement) {
@@ -44,6 +43,12 @@ function mergeElements(elements, newElement) {
     return [...filterElements, newElement];
 }
 
+/**
+ * Añadir los elementos de la lista hija a la lista padre
+ * @param {*} state 
+ * @param {*} list 
+ * @param {*} element 
+ */
 function addChildrenList(state, list, element) {
     const childrenList = list.childrenList;
     for (let index = 0; index < childrenList.length; index++) {
@@ -66,16 +71,57 @@ function addElementsToChildrenState(state, list, element) {
         const childName = child.name;
         const childList = state[childName];
         childList.elements = element[child.alias];
+        childList.fields = {};
         state = addNewListToState(childName, state, childList);
     }
 }
 
+function saveParentList(state, listName) {
+    for (var key in state) {
+        if (!state.hasOwnProperty(key)) {
+            continue;
+        }
+        for (let child of state[key].childrenList) {
+            if (child.name === listName) {
+                state = addElementToList(state, key)
+            }
+        }
+    }
+}
+
+function clearElementsFromChild(state, list) {
+    const children = list.childrenList;
+    for (let index = 0; index < children.length; index++) {
+        const child = children[index];
+        const childName = child.name;
+        const childList = state[childName];
+        //Verificar que la lista este creada
+        if (!childList) {
+            return;
+        }
+        childList.elements = [];
+        childList.fields = {};
+        childList.showAddSection = true;
+        state = addNewListToState(childName, state, childList);
+    }
+}
+
+function addElementToList(state, listName) {
+    let list = state[listName];
+    const element = addIdToElement(list.fields);
+    addChildrenList(state, list, element);
+    const newElements = mergeElements(list.elements, element);
+    let newList = Object.assign({}, list, {
+        elements: newElements
+    });
+    return addNewListToState(listName, state, newList);
+}
 
 export default (state = initialState, action) => {
     switch (action.type) {
         case CREATE_LIST:
             //Lista ya se encuentra creada
-            if (state.hasOwnProperty(action.name)){
+            if (state.hasOwnProperty(action.name)) {
                 return state;
             }
             let newState = Object.assign({}, state);
@@ -94,6 +140,9 @@ export default (state = initialState, action) => {
         case SET_FIELDS_TO_LIST: {
             let list = state[action.list];
             let fields = Object.assign({}, action.fields);
+            if (isEmpty(action.fields)) {
+                clearElementsFromChild(state, list);
+            }
             let newList = Object.assign({}, list, {
                 fields
             });
@@ -105,14 +154,10 @@ export default (state = initialState, action) => {
             return addNewListToState(action.list, state, newList);
         }
         case UPDATE_ELEMENT_FROM_LIST: {
-            let list = state[action.list];
-            const element = addIdToElement(list.fields);
-            addChildrenList(state, list, element);
-            const newElements = mergeElements(list.elements, element);
-            let newList = Object.assign({}, list, {
-                elements: newElements
-            });
-            return addNewListToState(action.list, state, newList);
+            debugger;
+            let newState = addElementToList(state, action.list);
+            //saveParentList(state, action.list);
+            return newState;
         }
         case REMOVE_ELEMENT_FROM_LIST: {
             let list = state[action.list];
@@ -124,6 +169,7 @@ export default (state = initialState, action) => {
             });
             return addNewListToState(action.list, state, newList);
         }
+        // Click al boton editar (solo mostrar información, no se ha editado)
         case EDIT_ELEMENT_FROM_LIST: {
             let list = state[action.list];
             let newList = Object.assign({}, list, {

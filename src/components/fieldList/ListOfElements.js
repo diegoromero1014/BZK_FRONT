@@ -58,7 +58,7 @@ class ListOfElements extends React.Component {
     }
 
     renderButtonsAddSection = () => {
-        if (!this.state.showAddSection) {
+        if (!this.props.showAddSection) {
             return;
         }
 
