@@ -90,14 +90,14 @@ class ListOfElements extends React.Component {
     }
 
     render() {
-        const { shouldRenderAddCancelButton, fields, showAddSection } = this.props;
+        const { shouldRenderAddCancelButton, fields, showAddSection, title } = this.props;
         return (
             <div>
                 <div style={{ position: "relative", marginBottom: "25px" }}>
                     {this.props.renderTitle}
                     {!showAddSection && <div style={{ position: "absolute", top: "10px", right: "10px" }} >
                         <button className="btn" onClick={this.toogleAddSection}>
-                            <ToolTipComponent text="Agregar cliente principal">
+                            <ToolTipComponent text={"Agregar "+title}>
                                 <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                             </ToolTipComponent>
                         </button>
