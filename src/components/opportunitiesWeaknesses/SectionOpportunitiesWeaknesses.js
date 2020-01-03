@@ -37,10 +37,10 @@ class SectionOpportunitiesWeaknesses extends Component {
         )}
         <div style={{ width: "100%", display: "flex" }}>
           <div style={{ width: "50%" }}>
-            <ListaObjetos titulo="Oportunidades" visual={this.props.visual} />
+            <ListaObjetos titulo="Oportunidades" visual={visual} />
           </div>
           <div style={{ width: "50%" }}>
-            <ListaObjetos titulo="Debilidades" visual={this.props.visual} />
+            <ListaObjetos titulo="Debilidades" visual={visual} />
           </div>
         </div>
       </div>

@@ -216,11 +216,13 @@ class AñadirListaObjetos extends Component {
                   <i className={iconTitle} />
                   <span className="title-component">
                     {`${titulo}`}
+                    {visual && "("}
                     {visual && <span className="icon-obligatoriedad">*</span>}
+                    {visual && ")"}
                   </span>
                   {visual && (
                     <ToolTip text={helpObjetos}>
-                      <i className="help circle icon blue" />
+                      <i className="help circle icon blue"/>
                     </ToolTip>
                   )}
                 </div>

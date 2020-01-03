@@ -41,10 +41,10 @@
     color: red;
 }
 
-.help{
-    font-size: 18px;
-    margin-left: 0;
+.help.circle.icon.blue{
+    font-size: 15px;
     cursor: pointer;
+    margin-left: 2px;
 }
 
 .button-openField{
@@ -73,8 +73,6 @@
 .plus{
     padding: 3px 0 0 5px;
 }
-
-// hover para el boton + 
 
 .container-fieldButtons{
     margin-top: 10px;
@@ -106,7 +104,6 @@
     cursor: pointer;
 }
 
-// hover para el boton agregar 
 .button-add:hover{
     background-color: var(--colorHover);
 }
