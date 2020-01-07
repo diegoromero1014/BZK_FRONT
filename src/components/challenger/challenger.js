@@ -23,10 +23,6 @@ export class Challenger extends Component {
         dispatchGetAllQuestions();
     }
 
-    componentDidMount() {        
-        this.renderFieldValues();
-    }
-
     selectedTabActive = field => $(`.challenger-dropdown-${field}`).toggleClass('active');
 
     onChange = (value, field, index) => {
@@ -45,14 +41,6 @@ export class Challenger extends Component {
         const value = answers.filter(val => val[field]);
 
         return value.length ? value[0][field] : '';
-    }
-
-    renderFieldValues = () => {
-        const { questions, setFieldValue, setFieldTouched } = this.props;
-        questions.map(({ field }) => {
-            setFieldValue(field, this.getValue(field));
-            setFieldTouched(field, true, true);
-        });
     }
 
     renderError = (err, field) => {
