@@ -46,7 +46,7 @@ class AñadirListaObjetos extends Component {
     stylePlus: false
   };
 
-  abrirCampoObjeto = event => {
+  abrirCampoObjeto = () => {
     this.setState({
       campoObjeto: true,
       stylePlus: true
@@ -54,21 +54,16 @@ class AñadirListaObjetos extends Component {
   };
 
   cerrarCampoObjeto = () => {
-    const { texto } = this.state.objeto;
     this.setState({
+      objeto: {
+        id: "",
+        texto: ""
+      },
       campoObjeto: false,
       campoVacio: false,
       switchGuardarEditar: false,
       stylePlus: false
     });
-    if (texto !== "") {
-      this.setState({
-        objeto: {
-          id: "",
-          texto: ""
-        }
-      });
-    }
   };
 
   mostrarModalEliminar = id => {
@@ -172,7 +167,7 @@ class AñadirListaObjetos extends Component {
   };
 
   render() {
-    const { titulo, visual } = this.props;
+    const { titulo, ayuda, visual } = this.props;
 
     const {
       objetos,
@@ -195,15 +190,16 @@ class AñadirListaObjetos extends Component {
       : "button-openField";
 
     let iconTitle;
+    let tituloCompleto;
     if (titulo === "Oportunidades") {
       iconTitle = "thumbs up outline icon";
+      tituloCompleto = "Oportunidades externas";
     } else if (titulo === "Debilidades") {
       iconTitle = "thumbs down outline icon";
+      tituloCompleto = "Debilidades internas del cliente";
     } else {
       iconTitle = "book icon";
     }
-
-    const helpObjetos = "En este campo debe agregar los/las " + titulo;
 
     return (
       <div className="container-listaObjetos">
@@ -215,14 +211,14 @@ class AñadirListaObjetos extends Component {
                 <div>
                   <i className={iconTitle} />
                   <span className="title-component">
-                    {`${titulo}`}
+                    {`${tituloCompleto}`}
                     {visual && "("}
                     {visual && <span className="icon-obligatoriedad">*</span>}
                     {visual && ")"}
                   </span>
                   {visual && (
-                    <ToolTip text={helpObjetos}>
-                      <i className="help circle icon blue"/>
+                    <ToolTip text={ayuda}>
+                      <i className="help circle icon blue" />
                     </ToolTip>
                   )}
                 </div>
@@ -253,7 +249,7 @@ class AñadirListaObjetos extends Component {
                   type="text"
                   name="texto"
                   onChange={this.newObjeto}
-                  placeholder={`${titulo}...`}
+                  placeholder={ayuda}
                   value={this.state.objeto.texto}
                 />
                 <div className="container-buttons">
