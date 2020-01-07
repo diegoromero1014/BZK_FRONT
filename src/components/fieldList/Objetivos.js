@@ -39,7 +39,7 @@ export default class Objetivos extends React.Component {
                         />
                     }
                     title={"Objetivos"}
-                    renderAddSection={(fields, onChange, onAddElement, onCancel) => (
+                    renderAddSection={(fields, onChange, onAddElement, onCancel, isEditing) => (
                         <Row>
                             <Modal isOpen={true} className="modalBt3-fade modal fade contact-detail-modal in">
                                 <div className="modalBt4-dialog modalBt4-lg">
@@ -85,8 +85,8 @@ export default class Objetivos extends React.Component {
                                             </Col>
                                             <Col md={12} style={styles.buttonsDiv}>
                                                 <div style={styles.buttonsDiv}>
-                                                    <button style={{ marginRight: "15px" }} className="btn btn-secondary" type="button" onClick={onAddElement}>Agregar</button>
-                                                    <button className="btn btn-primary" type="button" onClick={onCancel}>Cancelar</button>
+                                                    <button style={{ marginRight: "15px" }} className="btn btn-secondary save-btn" type="button" onClick={onAddElement}>{isEditing ? "Guardar" : "Agregar"}</button>
+                                                    <button className="btn btn-primary cancel-btn" type="button" onClick={onCancel}>Cancelar</button>
                                                 </div>
                                             </Col>
                                         </div>
@@ -157,9 +157,6 @@ export function renderElements(elements, removeElement, editElement) {
                                         <Col md={12}>
                                             <div className="section-list-divider" style={{}} >
                                                 <Row>
-                                                    {/* <Col md={1} sm={12} style={{ padding: "10px", marginTop: "10px" }}>
-                                   
-                                </Col> */}
                                                     <Col md={6} sm={12} style={{ display: "flex", padding: "10px", marginTop: "10px" }} >
                                                         <div style={{}}>
 
@@ -190,9 +187,6 @@ export function renderElements(elements, removeElement, editElement) {
 
                                                         </div>
                                                     </Col>
-                                                    {/* <Col md={1} sm={12} style={{ padding: "10px", marginTop: "10px" }}>
-                                    
-                                </Col> */}
                                                 </Row>
                                             </div>
                                         </Col>
@@ -202,8 +196,6 @@ export function renderElements(elements, removeElement, editElement) {
                             </Row>
                         </div>
                     </Col>
-
-
                 </Row>
             ))}
         </div>

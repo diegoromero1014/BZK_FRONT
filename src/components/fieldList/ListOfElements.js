@@ -48,8 +48,21 @@ class ListOfElements extends React.Component {
     }
 
     removeElement = (elementToDelete) => {
-        const { removeElement } = this.props;
-        removeElement(elementToDelete)
+        const { removeElement, swtShowMessage } = this.props;
+        swtShowMessage(
+            "warning",
+            "Confirmar eliminación",
+            "Señor usuario, ¿Esta seguro que desea eliminar este elemento?",
+            {
+                onConfirmCallback: () => {
+                    removeElement(elementToDelete)
+                },
+                onCancelCallback: () => {}
+            },
+            {
+                confirmButtonText: 'Confirmar'
+            }
+        );
     }
 
     editElement = (element) => {
@@ -66,7 +79,7 @@ class ListOfElements extends React.Component {
 
         return (
             <div>
-                <button style={{ marginRight: "15px" }} className="btn btn-secondary" type="button" onClick={this.addElement}>Agregar</button>
+                <button style={{ marginRight: "15px" }} className="btn btn-secondary" type="button" onClick={this.addElement}>{botonAddText}</button>
                 <button className="btn section-btn-cancel" type="button" onClick={this.toogleAddSection}>Cancelar</button>
             </div>
         )
@@ -105,14 +118,13 @@ class ListOfElements extends React.Component {
                 </div>
                 {showAddSection && <Row>
                     <Col md={12} sm={12} >
-                        {this.props.renderAddSection(fields, this.handleChange, this.addElement, this.toogleAddSection)}
+                        {this.props.renderAddSection(fields, this.handleChange, this.addElement, this.toogleAddSection, this.props.isEditing)}
                     </Col>
                 </Row>}
                 {shouldRenderAddCancelButton && this.renderButtonsAddSection()}
                 <div className="section-list-container" style={{ marginTop: "10px" }}>
                     {this.renderElements()}
                 </div>
-                
             </div>
         )
     }

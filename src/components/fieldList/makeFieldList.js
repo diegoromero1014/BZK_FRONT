@@ -13,6 +13,7 @@ import {
     updateElementFromList,
     editElementFromList
 } from './actions';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 
 export default function makeFieldList(listName, childrenList=[]) {
@@ -24,7 +25,7 @@ export default function makeFieldList(listName, childrenList=[]) {
     const removeElement = removeElementFromList(listName);
     const editElement = editElementFromList(listName);
 
-    class StateImplementation extends React.Component {
+    class FieldList extends React.Component {
 
         componentDidMount() {
             const { dispatchCreateList } = this.props;
@@ -46,7 +47,8 @@ export default function makeFieldList(listName, childrenList=[]) {
                 dispatchUpdateElement,
                 dispatchRemoveElement,
                 dispatchEditElement,
-                showAddSection
+                showAddSection,
+                dispatchSwtShowMessage
             } = this.props;
 
             return (
@@ -62,6 +64,7 @@ export default function makeFieldList(listName, childrenList=[]) {
                     updateElement={dispatchUpdateElement}
                     removeElement={dispatchRemoveElement}
                     handleOnEdit={dispatchEditElement}
+                    swtShowMessage={dispatchSwtShowMessage}
                 />
             )
         }
@@ -99,10 +102,11 @@ export default function makeFieldList(listName, childrenList=[]) {
             dispatchChangeListState: changeState,
             dispatchUpdateElement: updateElement,
             dispatchRemoveElement: removeElement,
-            dispatchEditElement: editElement
+            dispatchEditElement: editElement,
+            dispatchSwtShowMessage: swtShowMessage
         }, dispatch)
     }
 
-    return connect(mapStateToProps, mapDispatchToProps)(StateImplementation);
+    return connect(mapStateToProps, mapDispatchToProps)(FieldList);
 
 }

@@ -51,7 +51,10 @@ class TextareaComponent extends Component {
             onChangeEvent(e);
         }
 
-        onChange(trimmed);
+        if (typeof onChange === 'function') {
+            onChange(trimmed);
+        }
+        
         nonValidateEnter(true);
     }
 

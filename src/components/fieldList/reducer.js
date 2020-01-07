@@ -76,19 +76,6 @@ function addElementsToChildrenState(state, list, element) {
     }
 }
 
-function saveParentList(state, listName) {
-    for (var key in state) {
-        if (!state.hasOwnProperty(key)) {
-            continue;
-        }
-        for (let child of state[key].childrenList) {
-            if (child.name === listName) {
-                state = addElementToList(state, key)
-            }
-        }
-    }
-}
-
 function clearElementsFromChild(state, list) {
     const children = list.childrenList;
     for (let index = 0; index < children.length; index++) {
@@ -154,9 +141,7 @@ export default (state = initialState, action) => {
             return addNewListToState(action.list, state, newList);
         }
         case UPDATE_ELEMENT_FROM_LIST: {
-            debugger;
             let newState = addElementToList(state, action.list);
-            //saveParentList(state, action.list);
             return newState;
         }
         case REMOVE_ELEMENT_FROM_LIST: {

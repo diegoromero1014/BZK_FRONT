@@ -12,11 +12,11 @@ const styles = {
 
 const helpText = "¿Que estrategias esta implementando el cliente para cumplir sus objetivos?"
 
-export function renderFields(fields, onChange, onAddElement, onCancel) {
+export function renderFields(fields, onChange, onAddElement, onCancel, isEditing) {
     return (
         <div>
             <Row>
-                <Col md={9} sm={12}>
+                <Col md={8} sm={12}>
                     <dt><span>{helpText}</span></dt>
                     <TextArea
                         onChangeEvent={onChange}
@@ -27,10 +27,10 @@ export function renderFields(fields, onChange, onAddElement, onCancel) {
                         max="700"
                     />
                 </Col>
-                <Col md={3} sm={12} style={styles.buttonsDiv}>
+                <Col md={4} sm={12} style={styles.buttonsDiv}>
                     <div style={styles.buttonsDiv}>
-                        <button style={{ marginRight: "15px" }} className="btn btn-secondary" type="button" onClick={onAddElement}>Agregar</button>
-                        <button className="btn btn-primary" type="button" onClick={onCancel}>Cancelar</button>
+                        <button style={{ marginRight: "15px" }} className="btn btn-secondary" type="button" onClick={onAddElement}>{isEditing ? "Guardar Estrategia" : "Agregar Estrategia"}</button>
+                        <button className="btn cancel-btn" type="button" onClick={onCancel}>Cancelar</button>
                     </div>
 
                 </Col>
