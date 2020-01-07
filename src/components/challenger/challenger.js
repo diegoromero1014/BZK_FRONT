@@ -27,7 +27,7 @@ export class Challenger extends Component {
         this.renderFieldValues();
     }
 
-    selectedTabActive = (field) => $(`.challenger-dropdown-${field}`).toggleClass('active');
+    selectedTabActive = field => $(`.challenger-dropdown-${field}`).toggleClass('active');
 
     onChange = (value, field, index) => {
         const { dispatchAddAnswer, answers } = this.props;

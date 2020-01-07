@@ -12,7 +12,7 @@ import { swtShowMessage } from '../sweetAlertMessages/actions';
 import '../../../styles/participants/participantsByClient.scss';
 import ListParticipantsByClient from './ListParticipantsByClient';
 
-class ParticipantsByClient extends Component {
+export class ParticipantsByClient extends Component {
     constructor(props) {
         super(props);
 
@@ -27,18 +27,17 @@ class ParticipantsByClient extends Component {
         dispatchContactsByClient(window.sessionStorage.getItem('idClientSelected'), NUMBER_CONTACTS);
     }
 
-    addContact = () => {
+    addContact = () => {        
         const { dispatchAddParticipant, participants, contacts, dispatchShowAlert, limitParticipantsByClient } = this.props;
-        const { selectedContact } = this.state;
-        if (selectedContact) {
+        const { selectedContact } = this.state;        
+        if (selectedContact) {            
             if (limitParticipantsByClient && participants.toArray().length > limitParticipantsByClient) {
                 dispatchShowAlert('error', "Límite de participantes", "Señor usuario, sólo se pueden agregar máximo 10 participantes por parte del cliente");
                 return;
             }
-            let existingContact = participants.find(element => element.idParticipante === Number(selectedContact));
+            let existingContact = participants.find(element => element.idParticipante === Number(selectedContact));            
             if (!existingContact) {
-                let contact = contacts.filter(element => element.id === Number(selectedContact))[0];
-
+                let contact = contacts.filter(element => element.id === Number(selectedContact))[0];                
                 let participant = {
                     tipoParticipante: KEY_PARTICIPANT_CLIENT,
                     idParticipante: contact.id,
@@ -53,7 +52,7 @@ class ParticipantsByClient extends Component {
 
                 dispatchAddParticipant(participant);
                 this.setState({ selectedContact: '' });
-            } else {
+            } else {                
                 dispatchShowAlert('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
             }
         }
