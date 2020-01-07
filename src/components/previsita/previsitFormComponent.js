@@ -301,19 +301,15 @@ export default withFormik({
    mapPropsToValues: (props) => {
       const { previsitData, questions } = props;
       const fields = {};
-      
-      questions.forEach(element => fields[element.field] = '' );
 
+      questions.forEach(element => fields[element.field] = '' );
+         
       if(previsitData) {
          const { documentType, visitTime, endTime, visitLocation, principalObjective } = previsitData;
+
+         previsitData.answers.forEach(element => fields[element.field] = element.answer);
          
-         return {
-            documentType,
-            visitTime: new Date(visitTime),
-            endTime,
-            visitLocation,
-            principalObjective
-         }
+         return Object.assign({}, fields, { documentType, visitTime: new Date(visitTime), endTime, visitLocation, principalObjective })
       } else {
          return Object.assign({}, fields,  { documentType: '', visitTime: new Date(), endTime: '', visitLocation: '', principalObjective: ''});
       }
