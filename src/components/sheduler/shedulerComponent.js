@@ -19,7 +19,6 @@ import { LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE_REGION_ZONE, TEAM_VALUE_OBJ
 import { bindActionCreators } from "redux";
 import _ from 'lodash';
 import $ from 'jquery';
-import EditPrevisit from '../previsita/editPrevisit/editPrevisit';
 import { filterUsersBanco } from '../participantsVisitPre/actions';
 import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
 import PrevisitPage from '../previsita/previsitPage';
@@ -386,8 +385,7 @@ class Sheduler extends Component {
                                     <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                                     <span className="sr-only">Close</span>
                                 </button>
-                            </div>      
-                            {/*<EditPrevisit params={{ id: this.state.idPrevisit }} viewBottons={true} closeModal={this.closeModal} />*/}
+                            </div>                                  
                            <PrevisitPage params={{ id: this.state.idPrevisit }} fromModal={true} closeModal={this.closeModal}></PrevisitPage>
                         </div>
                     </div>

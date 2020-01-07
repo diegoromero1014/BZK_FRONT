@@ -35,6 +35,8 @@ export class PrevisitPage extends Component {
    constructor(props) {
       super(props);
 
+      this.documentDraft = 0;
+
       this.state = {
          isEditable: false,
          showMessage: false,
@@ -48,7 +50,6 @@ export class PrevisitPage extends Component {
          showConfirmationCancelPrevisit: false,
          showConfirmChangeTypeVisit: false,
          showChallengerSection: false,
-         documentDraft: null,
          oldPrevisitTypeSelected: null,
          oldPrevisitTypeSelectedId: null,
          currentPrevisitTypeSelected: null,
@@ -134,11 +135,11 @@ export class PrevisitPage extends Component {
             dispatchAddAnswer(null, { id: element.id, [element.field]: element.answer });
          });
          this.setDatesOnPrevisitDetailState(previsitDetail);
+         this.documentDraft = previsitDetail.documentStatus;
          this.setState({
             isEditable: true,
             oldPrevisitTypeSelected: null,
             currentPrevisitTypeSelected: previsitTypeInfo ? previsitTypeInfo.key.toUpperCase() : '',
-            documentDraft: previsitDetail.documentStatus,
             formValid: true,
             documentCreatedInfo: Object.assign({}, this.state.documentCreatedInfo, {
                createdBy: previsitDetail.createdByName,
@@ -270,9 +271,9 @@ export class PrevisitPage extends Component {
             "adaptMessage": previsit.adaptMessage,
             "controlConversation": previsit.controlConversation,
             "constructiveTension": previsit.constructiveTension,
-            "documentStatus": this.state.documentDraft,
+            "documentStatus": this.documentDraft,
             "endTime": previsit.endTime,
-            "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), this.state.documentDraft),
+            "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), this.documentDraft),
             "answers": getAnswerQuestionRelationship(answers, questions)
          };
          dispatchShowLoading(true, MESSAGE_SAVE_DATA);
@@ -424,7 +425,7 @@ export class PrevisitPage extends Component {
    onClickSaveHandler = (draft) => {
       const { formValid } = this.state;
       if (formValid) {
-         this.setState({ documentDraft: draft });
+         this.documentDraft = draft;
       }
    }
 
@@ -448,17 +449,19 @@ export class PrevisitPage extends Component {
             onSubmit={this.submitForm}
             isFormValid={valid => this.setState({ formValid: valid })}
             questions={questions}
-            answers={answers}
-            commercialReportButtons={
+            answers={answers}            
+            commercialReportButtons={(submitForm) => (
                <CommercialReportButtonsComponent
-                  onClickSave={this.onClickSaveHandler}
+                  onClickSave={(draft) => {                     
+                     this.onClickSaveHandler(draft);
+                     submitForm()}}
                   onClickDownloadPDF={id ? this.onClickDownloadPDF : null}
                   cancel={this.onClickCancelCommercialReport}
                   fromModal={fromModal}
                   isEditable={this.state.isEditable}
-                  documentDraft={this.state.documentDraft}
+                  documentDraft={this.documentDraft}
                   creatingReport={id ? false : true}
-               />} />
+               />)} />
       )
    }
 

@@ -691,21 +691,21 @@ describe('Test previsitPage', () => {
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.setState({ formValid: true });
             wrapper.instance().onClickSaveHandler(1);
-            expect(wrapper.state().documentDraft).to.equal(1);
+            expect(wrapper.instance().documentDraft).to.equal(1);
         });
 
         it('onClickSaveHandler should set state documentDraft in 0', () => {
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.setState({ formValid: true });
             wrapper.instance().onClickSaveHandler(0);
-            expect(wrapper.state().documentDraft).to.equal(0);
+            expect(wrapper.instance().documentDraft).to.equal(0);
         });
 
         it('onClickSaveHandler shouldnt change state documentDraft', () => {
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
-            wrapper.setState({ formValid: false, documentDraft: null });
+            wrapper.setState({ formValid: false});
             wrapper.instance().onClickSaveHandler(0);
-            expect(wrapper.state().documentDraft).to.equal(null);
+            expect(wrapper.instance().documentDraft).to.equal(0);
         });
 
         it('cancelChangeTypePrevisit should set state showConfirmChangeTypeVisit in false', () => {
