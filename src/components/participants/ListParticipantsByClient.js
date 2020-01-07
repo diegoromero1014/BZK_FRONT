@@ -50,14 +50,14 @@ class ListParticipantsByClient extends Component {
     handleOnClickDelete = id => this.setState({ open: true, selectedRecord: id });
 
     handleDelete = () => {
-        const { data, deleteParticipant } = this.props;
+        const { data, dispatchDeleteParticipant } = this.props;
         const { selectedRecord } = this.state;
 
         let participant = data.findIndex(item => item.idParticipante === selectedRecord);
         
         this.setState({ open: false, selectedRecord: null });
 
-        deleteParticipant(participant, KEY_PARTICIPANT_CLIENT);
+        dispatchDeleteParticipant(participant, KEY_PARTICIPANT_CLIENT);
     }
 
     render() {
@@ -87,7 +87,7 @@ class ListParticipantsByClient extends Component {
 
 const mapDispatchToProps = dispatch => {
     return bindActionCreators({
-        deleteParticipant
+        dispatchDeleteParticipant: deleteParticipant
     }, dispatch)
 };
  
