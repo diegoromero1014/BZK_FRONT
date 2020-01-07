@@ -258,9 +258,6 @@ export class ComponentListMainClients extends Component {
                                 </ToolTipComponent>
                             </button>
                         </div>
-                        <ToolTipComponent text="Agregar cliente principal">
-                                    <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
-                                </ToolTipComponent>
                         {showFormMainClients &&
                             <Col xs={12} md={4} lg={3}>
                                 <div>

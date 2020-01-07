@@ -20,7 +20,8 @@ const defaultListState = {
     showAddSection: false,
     isEditing: false,
     editElement: {},
-    childrenList: []
+    childrenList: [],
+    errors: {}
 }
 
 function addNewListToState(name, state, list) {

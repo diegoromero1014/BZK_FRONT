@@ -2,14 +2,16 @@ import React from "react";
 import Modal from 'react-modal';
 import { Row, Col } from 'react-flexbox-grid';
 
-import Title from '../clientEdit/sections/title';
-import TextArea from '../../ui/textarea/textareaComponent'
-import makeFieldList from './makeFieldList';
+import Title from '../../clientEdit/sections/title';
+import TextArea from '../../../ui/textarea/textareaComponent'
+import makeFieldList from '../makeFieldList';
+import ObjetiveSchema from './ObjetiveSchema';
+import StrategySchema from '../Strategies/schema';
 
 import {
     renderFields as renderStrategyFields,
     renderElements as renderStrategyElements
-} from './Estrategias';
+} from '../Strategies/Strategies';
 
 const ListaObjetivos = makeFieldList("objectives", [{ name: "strategies", alias: "strategies" }]);
 const ListaEstrategias = makeFieldList("strategies");
@@ -26,6 +28,14 @@ const styles = {
 
 const helpText = "¿A donde quiere llegar el cliente? ¿Como se visualiza en algunos años?";
 
+const objectivesInitialValues = {
+    value: ""
+}
+
+const strategiesInitialValues = {
+    value: ""
+}
+
 export default class Objetivos extends React.Component {
     render() {
         return (
@@ -38,8 +48,10 @@ export default class Objetivos extends React.Component {
                             helpText={helpText}
                         />
                     }
+                    initialValues={objectivesInitialValues}
+                    schema={ObjetiveSchema}
                     title={"Objetivos"}
-                    renderAddSection={(fields, onChange, onAddElement, onCancel, isEditing) => (
+                    renderAddSection={({fields, onChange, onAddElement, onCancel, isEditing, errors}) => (
                         <Row>
                             <Modal isOpen={true} className="modalBt3-fade modal fade contact-detail-modal in">
                                 <div className="modalBt4-dialog modalBt4-lg">
@@ -54,14 +66,16 @@ export default class Objetivos extends React.Component {
                                         <div style={{ padding: "15px" }}>
                                             <Col md={12} sm={9} >
                                                 <div>
-                                                    <dt><span>{helpText}</span></dt>
+                                                    <dt><span>{helpText} (<span style={{color: 'red'}}>*</span>)</span></dt>
                                                     <TextArea
                                                         placeholder=""
                                                         onChangeEvent={onChange}
-                                                        nameInput="nombre"
-                                                        value={fields["nombre"] || ""}
+                                                        nameInput="value"
+                                                        value={fields["value"] || ""}
                                                         rows={7}
                                                         max="700"
+                                                        error={errors["value"]}
+                                                        touched={true}
                                                     />
                                                 </div>
                                             </Col>
@@ -76,6 +90,8 @@ export default class Objetivos extends React.Component {
                                                                 isSection={false}
                                                             />
                                                         }
+                                                        schema={StrategySchema}
+                                                        initialValues={strategiesInitialValues}
                                                         title="Estrategias"
                                                         renderAddSection={renderStrategyFields}
                                                         renderElement={renderStrategyElements}
@@ -165,7 +181,7 @@ export function renderElements(elements, removeElement, editElement) {
                                                             <Row>
 
                                                                 <Col md={12}>
-                                                                    {objetivo.nombre}
+                                                                    {objetivo.value}
                                                                 </Col>
 
                                                             </Row>

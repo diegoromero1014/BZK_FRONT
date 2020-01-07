@@ -2,7 +2,7 @@ import React from 'react';
 import { isEmpty } from 'lodash';
 import { Row, Col } from 'react-flexbox-grid';
 
-import TextArea from '../../ui/textarea/textareaComponent';
+import TextArea from '../../../ui/textarea/textareaComponent';
 
 const styles = {
     buttonsDiv: {
@@ -12,7 +12,7 @@ const styles = {
 
 const helpText = "¿Que estrategias esta implementando el cliente para cumplir sus objetivos?"
 
-export function renderFields(fields, onChange, onAddElement, onCancel, isEditing) {
+export function renderFields({fields, onChange, onAddElement, onCancel, isEditing, errors}) {
     return (
         <div>
             <Row>
@@ -25,6 +25,8 @@ export function renderFields(fields, onChange, onAddElement, onCancel, isEditing
                         placeholder=""
                         rows={7}
                         max="700"
+                        error={errors["value"]}
+                        touched={true}
                     />
                 </Col>
                 <Col md={4} sm={12} style={styles.buttonsDiv}>

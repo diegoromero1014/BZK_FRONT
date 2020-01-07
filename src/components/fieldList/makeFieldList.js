@@ -41,6 +41,7 @@ export default function makeFieldList(listName, childrenList=[]) {
                 fields,
                 elements,
                 isEditing,
+                errors,
                 dispatchAddFieldToList,
                 dispatchSetFieldsToList,
                 dispatchChangeListState,
@@ -65,6 +66,7 @@ export default function makeFieldList(listName, childrenList=[]) {
                     removeElement={dispatchRemoveElement}
                     handleOnEdit={dispatchEditElement}
                     swtShowMessage={dispatchSwtShowMessage}
+                    errors={errors}
                 />
             )
         }
@@ -77,12 +79,14 @@ export default function makeFieldList(listName, childrenList=[]) {
         let elements = [];
         let showAddSection = false;
         let isEditing = false;
+        let errors = {}
 
         if (values) {
             fields = values.fields;
             elements = values.elements;
             showAddSection = values.showAddSection;
             isEditing = values.isEditing
+            errors = values.errors
         }
 
         return {
@@ -90,7 +94,8 @@ export default function makeFieldList(listName, childrenList=[]) {
             fields,
             elements,
             showAddSection,
-            isEditing
+            isEditing,
+            errors
         }
     }
 

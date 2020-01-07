@@ -1,10 +1,17 @@
 import React from 'react';
-import { isEmpty } from 'lodash';
 import { Row, Col } from 'react-flexbox-grid';
+import { isEmpty, mapKeys } from 'lodash';
 
 import ToolTipComponent from '../toolTip/toolTipComponent';
+import { processRules } from '../../validationsFields/rulesField';
+
 
 class ListOfElements extends React.Component {
+
+    componentDidMount() {
+        const { setFields, initialValues } = this.props;
+        setFields(initialValues);
+    }
 
     toogleAddSection = () => {
         const { listenAddSection, setListState, showAddSection } = this.props;
@@ -18,8 +25,8 @@ class ListOfElements extends React.Component {
     }
 
     clearFields = () => {
-        const { setFields } = this.props;
-        setFields({});
+        const { setFields, initialValues } = this.props;
+        setFields(initialValues);
     }
 
     handleChange = (e) => {
@@ -27,24 +34,40 @@ class ListOfElements extends React.Component {
         addField(e.target.name, e.target.value);
     }
 
+    checkValidations = () => {
+        const { schema, fields, setListState } = this.props;
+        const fieldErrors = processRules(fields, schema);
+        let errors = []
+        mapKeys(fieldErrors, (value, _) => {
+            if (value) {
+                errors.push(value);
+            }
+        })
+
+        const isValid = errors.length === 0;
+
+        setListState({
+            errors: fieldErrors
+        })
+        return isValid;
+    }
+
     addElement = () => {
         const { handleOnAdd, fields, setListState, updateElement } = this.props;
-
+        debugger;
         if (typeof handleOnAdd === 'function') {
             handleOnAdd();
         }
 
-        if (isEmpty(fields)) {
-            alert("Ingrese valores");
-            return
+        const isValid = this.checkValidations();
+
+        if (isValid) {
+            setListState({
+                isEditing: false
+            });
+            updateElement(fields);
+            this.toogleAddSection();
         }
-
-        setListState({
-            isEditing: false
-        })
-
-        updateElement(fields);
-        this.toogleAddSection();
     }
 
     removeElement = (elementToDelete) => {
@@ -57,7 +80,7 @@ class ListOfElements extends React.Component {
                 onConfirmCallback: () => {
                     removeElement(elementToDelete)
                 },
-                onCancelCallback: () => {}
+                onCancelCallback: () => { }
             },
             {
                 confirmButtonText: 'Confirmar'
@@ -110,7 +133,7 @@ class ListOfElements extends React.Component {
                     {this.props.renderTitle}
                     {!showAddSection && <div style={{ position: "absolute", top: "10px", right: "10px" }} >
                         <button className="btn" onClick={this.toogleAddSection}>
-                            <ToolTipComponent text={"Agregar "+title}>
+                            <ToolTipComponent text={"Agregar " + title}>
                                 <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                             </ToolTipComponent>
                         </button>
@@ -118,7 +141,15 @@ class ListOfElements extends React.Component {
                 </div>
                 {showAddSection && <Row>
                     <Col md={12} sm={12} >
-                        {this.props.renderAddSection(fields, this.handleChange, this.addElement, this.toogleAddSection, this.props.isEditing)}
+                        {this.props.renderAddSection({
+                            fields,
+                            onChange: this.handleChange,
+                            onAddElement: this.addElement,
+                            onCancel: this.toogleAddSection,
+                            isEditing: this.props.isEditing,
+                            errors: this.props.errors || {}
+                        })
+                        }
                     </Col>
                 </Row>}
                 {shouldRenderAddCancelButton && this.renderButtonsAddSection()}

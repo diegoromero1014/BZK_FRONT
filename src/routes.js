@@ -40,7 +40,7 @@ import Sheduler from "./components/sheduler/shedulerComponent";
 import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderConstruction";
 import PageNotFound from "./components/notFoundPage/PageNotFound";
 
-import Objetivos from './components/fieldList/Objetivos';
+import Objetivos from './components/fieldList/Objetives/Objetives';
 
 import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
     CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST, 
