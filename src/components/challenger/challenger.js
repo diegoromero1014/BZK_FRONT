@@ -8,7 +8,7 @@ import RichText from '../richText/richTextComponent';
 import ToolTip from "../toolTip/toolTipComponent";
 
 import { getAllQuestions, addAnswer, clearAnswer } from './actions';
-import { htmlToText } from '../../actionsGlobal';
+import { htmlToTextRegex } from '../../actionsGlobal';
 
 export class Challenger extends Component {
     constructor(props) {
@@ -27,7 +27,7 @@ export class Challenger extends Component {
         this.renderFieldValues();
     }
 
-    selectedTabActive = (field) => $(`.challenger-dropdown-${field}`).toggleClass('active');
+    selectedTabActive = field => $(`.challenger-dropdown-${field}`).toggleClass('active');
 
     onChange = (value, field, index) => {
         const { dispatchAddAnswer, answers } = this.props;
@@ -56,13 +56,13 @@ export class Challenger extends Component {
     }
 
     renderError = (err, field) => {
-        if (err[field] && !htmlToText(this.getValue(field)).length) {
+        if (err[field] && !htmlToTextRegex(this.getValue(field)).length) {
             const fieldDropdown = $(`.challenger-dropdown-${field}`);
             if (!fieldDropdown.hasClass('active')) {
                 this.selectedTabActive(field);
             }
             return (
-                <div style={{ marginTop: 10 }}>
+                <div name={`error-${field}`} style={{ marginTop: 10 }}>
                     <div className="ui pointing red basic label"> {err[field]} </div>
                 </div>
             )

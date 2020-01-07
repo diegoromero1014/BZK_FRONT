@@ -79,14 +79,31 @@ describe('Test challenger/challenger', () => {
 
     it('getValue should get the value.', () => {
         defaultProps.questions = [{ field: 'field' }];
+        defaultProps.answers = [{ id: '', field: 'any value'}];
         const wrapper = shallow(<Challenger {...defaultProps} />);
         const result = wrapper.instance().getValue('field');
+        expect(result).equal('any value');
     });
 
-    /*it('renderFieldValues should render the field values.', () => {
+    it('getValue shouldn´t get the value.', () => {
         defaultProps.questions = [{ field: 'field' }];
+        defaultProps.answers = [{ id: '', field: ''}];
         const wrapper = shallow(<Challenger {...defaultProps} />);
-        wrapper.instance().renderFieldValues();
+        const result = wrapper.instance().getValue('field');
+        expect(result).equal('');
+    });
+    
+    it('renderError should render the errors.', () => {
+        defaultProps.questions = [{ field: 'field' }];
+        defaultProps.answers = [{ id: '', field: ''}];
+        const wrapper = shallow(<Challenger {...defaultProps} />);
+        const err = { field: 'any error' };
+        const result = wrapper.instance().renderError(err, 'field');
         
-    }); */
+        const expectValue = (<div name={`error-field`} style={{ marginTop: 10 }}>
+            <div className="ui pointing red basic label"> {err['field']} </div>
+        </div>);
+        
+        expect(result.props.name).equal(expectValue.props.name);
+    });
 });
