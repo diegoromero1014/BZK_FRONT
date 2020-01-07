@@ -32,7 +32,7 @@ export class Challenger extends Component {
     onChange = (value, field, index) => {
         const { dispatchAddAnswer, answers } = this.props;
 
-        const old = answers.filter(value => value[field])[0];
+        const old = answers.filter(val => val[field])[0];
 
         if (value) {
             dispatchAddAnswer(old, { id: old ? old.id : index, [field]: value });
@@ -42,7 +42,7 @@ export class Challenger extends Component {
     getValue = (field) => {
         const { answers } = this.props;
 
-        const value = answers.filter(value => value[field]);
+        const value = answers.filter(val => val[field]);
 
         return value.length ? value[0][field] : '';
     }
