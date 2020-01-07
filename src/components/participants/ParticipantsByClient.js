@@ -30,8 +30,9 @@ export class ParticipantsByClient extends Component {
     addContact = () => {        
         const { dispatchAddParticipant, participants, contacts, dispatchShowAlert, limitParticipantsByClient } = this.props;
         const { selectedContact } = this.state;        
-        if (selectedContact) {            
-            if (limitParticipantsByClient && participants.toArray().length > limitParticipantsByClient) {
+        if (selectedContact) {       
+                 
+            if (limitParticipantsByClient && participants.filter(participant => participant.tipoParticipante === KEY_PARTICIPANT_CLIENT).toArray().length >= limitParticipantsByClient) {
                 dispatchShowAlert('error', "Límite de participantes", "Señor usuario, sólo se pueden agregar máximo 10 participantes por parte del cliente");
                 return;
             }
