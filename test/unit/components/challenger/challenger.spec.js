@@ -2,15 +2,15 @@ import React from 'react';
 
 import { Challenger } from '../../../../src/components/challenger/challenger';
 import { Field } from 'formik';
-import { mount } from 'enzyme';
 
 let defaultProps = {
     isEsditable: true,
     questions: [],
-    dispatchGetAllQuestions: () => {},
-    setFieldValue: () => {},
-    setFieldTouched: () => {},
-    dispatchGetAllQuestions: () => {},
+    dispatchGetAllQuestions: sinon.fake(),
+    dispatchAddAnswer: spy(sinon.fake()),
+    setFieldValue: sinon.fake(),
+    setFieldTouched: sinon.fake(),
+    dispatchGetAllQuestions: sinon.fake(),
     answers: []
 }
 
@@ -53,13 +53,40 @@ describe('Test challenger/challenger', () => {
         expect(wrapper.find(<Field/>));
     });
 
-    it('It should call function selectedTabActive.', () => {
-        defaultProps.questions = [{ field: 'field' }]
-        // console.log('asdfasdf');
-        const wrapper = mount(<Challenger {...defaultProps} />);
-        console.log(wrapper.html());
-        
-        wrapper.instance().selectedTabActive('any');
-        expect(prueba);
+    it('selectedTabActive should setter Class-Style to the element.', () => {
+        defaultProps.questions = [{ field: 'field' }];        
+        const wrapper = shallow(<Challenger {...defaultProps} />);  
+        wrapper.instance().selectedTabActive = spy(sinon.fake());      
+        wrapper.update();
+        wrapper.find('span[name="titlefield"]').simulate('click');        
+        expect(wrapper.find('div[name="field"]')).to.have.length(1);
+        expect(wrapper.instance().selectedTabActive).to.have.been.called.once;
     });
+
+    it('onChange shouldn´t change the value.', () => {
+        defaultProps.questions = [{ field: 'field' }];
+        const wrapper = shallow(<Challenger {...defaultProps} />);
+        wrapper.instance().onChange('', 'field', 0);        
+        expect(defaultProps.dispatchAddAnswer).not.to.have.been.called;
+    });
+    
+    it('onChange should change the value.', () => {
+        defaultProps.questions = [{ field: 'field' }];
+        const wrapper = shallow(<Challenger {...defaultProps} />);
+        wrapper.instance().onChange('hola', 'field', 0);        
+        expect(defaultProps.dispatchAddAnswer).to.have.been.called.once;
+    });
+
+    it('getValue should get the value.', () => {
+        defaultProps.questions = [{ field: 'field' }];
+        const wrapper = shallow(<Challenger {...defaultProps} />);
+        const result = wrapper.instance().getValue('field');
+    });
+
+    /*it('renderFieldValues should render the field values.', () => {
+        defaultProps.questions = [{ field: 'field' }];
+        const wrapper = shallow(<Challenger {...defaultProps} />);
+        wrapper.instance().renderFieldValues();
+        
+    }); */
 });

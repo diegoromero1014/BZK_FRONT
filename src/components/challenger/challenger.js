@@ -27,7 +27,7 @@ export class Challenger extends Component {
         this.renderFieldValues();
     }
 
-    selectedTabActive = field => $(`.challenger-dropdown-${field}`).toggleClass('active');
+    selectedTabActive = (field) => $(`.challenger-dropdown-${field}`).toggleClass('active');
 
     onChange = (value, field, index) => {
         const { dispatchAddAnswer, answers } = this.props;
@@ -74,11 +74,11 @@ export class Challenger extends Component {
         return questions.map(({ field, title, nullable, message, placeholder, subtitle }, index) => {
             return (
                 <div name="mainContainer" key={index}>
-                    <div className={`title ${field} challenger-dropdown-${field}`} onClick={() => this.selectedTabActive(field)}>
+                    <div name={field} className={`title ${field} challenger-dropdown-${field}`} onClick={() => this.selectedTabActive(field)}>
                         <i className="dropdown icon"></i>
 
                         <div name={`title${field}`} style={{ display: "inline-flex" }}>
-                            <span onClick={() => this.selectedTabActive(field)}>
+                            <span name={`title${field}`} onClick={() => this.selectedTabActive(field)}>
                                 {`${title}  ${!nullable ? '(' : ''} `}
                             </span> {!nullable && <span style={{ color: 'red' }}>*</span>}  {!nullable && ' )'}
                             <br />
@@ -116,9 +116,9 @@ export class Challenger extends Component {
                             }
                         </Field>
                     </div>
-                </div>)
-        }
-        );
+                </div>
+            )
+        });
     }
 
     render() {
