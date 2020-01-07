@@ -5,7 +5,7 @@ const initialState = {
     answers: []
 }
 
-export default ({ type, payload }, state = initialState) => {
+export default (state = initialState, { type, payload }) => {
     switch (type) {
         case GET_ALL_QUESTIONS:
             return Object.assign({}, state, { questions: payload.data.data });
