@@ -58,7 +58,7 @@ describe('Test challenger/challenger', () => {
         const wrapper = shallow(<Challenger {...defaultProps} />);  
         wrapper.instance().selectedTabActive = spy(sinon.fake());      
         wrapper.update();
-        wrapper.find('span[name="titlefield"]').simulate('click');        
+        wrapper.find('a[name="field"]').simulate('click');        
         expect(wrapper.find('div[name="field"]')).to.have.length(1);
         expect(wrapper.instance().selectedTabActive).to.have.been.called.once;
     });

@@ -62,11 +62,11 @@ export class Challenger extends Component {
         return questions.map(({ field, title, nullable, message, placeholder, subtitle }, index) => {
             return (
                 <div name="mainContainer" key={index}>
-                    <div name={field} className={`title ${field} challenger-dropdown-${field}`} onClick={() => this.selectedTabActive(field)}>
+                    <div name={field} className={`title ${field} challenger-dropdown-${field}`} style={{position: 'relative'}}>
                         <i className="dropdown icon"></i>
 
                         <div name={`title${field}`} style={{ display: "inline-flex" }}>
-                            <span name={`title${field}`} onClick={() => this.selectedTabActive(field)}>
+                            <span name={`title${field}`} >
                                 {`${title}  ${!nullable ? '(' : ''} `}
                             </span> {!nullable && <span style={{ color: 'red' }}>*</span>}  {!nullable && ' )'}
                             <br />
@@ -78,8 +78,9 @@ export class Challenger extends Component {
                         </div>
 
                         {subtitle &&
-                            <span name={`subtitle${field}`} onClick={() => this.selectedTabActive(field)} style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}</span>
+                            <span name={`subtitle${field}`} style={{ marginLeft: 22, fontSize: 11, 'text-align': 'justify', display: 'table', width: '60%' }}>{subtitle}</span>
                         }
+                        <a name={field} className="clickableBox" onClick={() => this.selectedTabActive(field)}></a>
                     </div>
 
                     <div className={`content ${field} challenger-dropdown-${field}`}>
