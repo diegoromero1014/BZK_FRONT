@@ -40,7 +40,6 @@ import Sheduler from "./components/sheduler/shedulerComponent";
 import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderConstruction";
 import PageNotFound from "./components/notFoundPage/PageNotFound";
 
-import Objetivos from './components/fieldList/Objetives/Objetives';
 
 import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
     CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST, 
@@ -248,7 +247,6 @@ export default (
                 <Route path="controlDashboard" component={ControlDashboard}></Route>
                 <Route path="sheduler" component={Sheduler}></Route>
             </Route>
-            <Route path="prueba" component={Objetivos}></Route>
             <Route path="*" component={PageNotFound}/>
         </Route>
     </Grid>
