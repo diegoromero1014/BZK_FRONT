@@ -2,10 +2,10 @@ import React from 'react';
 import { Card } from 'semantic-ui-react';
 import '../../../styles/cards/main.scss';
 
-const CardComponent = ({header, content, footer}) => {
+const CardComponent = ({header, content, footer, handleOnClick}) => {
     
     return (
-        <Card className={'card-container'}>
+        <Card className={'card-container'} onClick={handleOnClick} style={{ color: 'black' }}>
             <div className='card-header' style={{ position: 'relative', width: '100%', overflow: 'hidden', maxWidth: '100%', maxHeight: '250px', display: 'flex', justifyContent: 'center' }}>
                 {header}
             </div>

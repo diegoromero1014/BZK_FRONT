@@ -35,7 +35,7 @@ export class Challenger extends Component {
         }
     }
 
-    getValue = (field) => {
+    getValue = field => {
         const { answers } = this.props;
 
         const value = answers.filter(val => val[field]);
@@ -46,9 +46,11 @@ export class Challenger extends Component {
     renderError = (err, field) => {
         if (err[field] && !htmlToTextRegex(this.getValue(field)).length) {
             const fieldDropdown = $(`.challenger-dropdown-${field}`);
+
             if (!fieldDropdown.hasClass('active')) {
                 this.selectedTabActive(field);
             }
+
             return (
                 <div name={`error-${field}`} style={{ marginTop: 10 }}>
                     <div className="ui pointing red basic label"> {err[field]} </div>
@@ -59,6 +61,7 @@ export class Challenger extends Component {
 
     renderQuestions = () => {
         const { questions, isEditable } = this.props;
+
         return questions.map(({ field, title, nullable, message, placeholder, subtitle }, index) => {
             return (
                 <div name="mainContainer" key={index}>

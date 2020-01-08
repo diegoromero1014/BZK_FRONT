@@ -280,7 +280,7 @@ export class PrevisitFormComponent extends Component {
                      </Row>              
                      <Row style={{ padding: "20px 23px 20px 20px" }}>                     
                         <Col xs={12} md={12} lg={12}>
-                           <Challenger isEditable={isEditable}/>
+                           <Challenger isEditable={isEditable} />
                         </Col>                     
                      </Row>   
                   </div>
@@ -297,6 +297,7 @@ export default withFormik({
    handleSubmit: (values, { props }) => {
       props.onSubmit(values);                  
    },
+
    mapPropsToValues: (props) => {
       const { previsitData, questions } = props;
       const fields = {};      

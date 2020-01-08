@@ -37,6 +37,8 @@ import LinkingRequests from "./components/myPendings/linkingRequests/componentLi
 import Sheduler from "./components/sheduler/shedulerComponent";
 import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderConstruction";
 import PageNotFound from "./components/notFoundPage/PageNotFound";
+import PrevisitPage from "./components/previsita/previsitPage";
+
 import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
     CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST, 
     LINKINGREQUESTS, MODALDRAFTDOCUMENTS, MODALCOMPONENTPENDING, ALERTCOVENANTS, 
@@ -85,7 +87,6 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     ADMINALERTCLIENTSPENDINGUPDATE,
     SHEDULER,
     DEFAULT} from "./constantsAnalytics";
-import PrevisitPage from "./components/previsita/previsitPage";
 
 class App extends Component {
    
