@@ -6,8 +6,11 @@ import { Row, Col } from 'react-flexbox-grid';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import { findContactsByClient } from '../contact/actions';
 import { addParticipant, clearParticipants } from './actions';
+import { validatePermissionsByModule } from '../../actionsGlobal';
 import { NUMBER_CONTACTS, KEY_PARTICIPANT_CLIENT } from './constants';
+import { CREAR, MODULE_CONTACTS } from '../../constantsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
+import BotonCreateContactComponent from '../contact/createContact/botonCreateContactComponent';
 
 import '../../../styles/participants/participantsByClient.scss';
 import ListParticipantsByClient from './ListParticipantsByClient';
@@ -22,9 +25,10 @@ export class ParticipantsByClient extends Component {
     }
 
     componentWillMount() {
-        const { dispatchContactsByClient } = this.props;
+        const { dispatchContactsByClient, dispatchValidatePermissionsByModule } = this.props;
 
         dispatchContactsByClient(window.sessionStorage.getItem('idClientSelected'), NUMBER_CONTACTS);
+        dispatchValidatePermissionsByModule(MODULE_CONTACTS);
     }
 
     addContact = () => {        
@@ -61,14 +65,14 @@ export class ParticipantsByClient extends Component {
     }
 
     render() {
-        const { contacts, participants, disabled } = this.props;
+        const { contacts, participants, disabled, reducerGlobal } = this.props;
 
         let data = _.chain(participants.toArray()).map(participant => participant).filter(participant => _.isEqual(participant.tipoParticipante, KEY_PARTICIPANT_CLIENT)).value();
 
         return (
             <div className='participants-client'>
                 <Row style={{ marginTop: 20, marginLeft: 7 }}>
-                    <Col xs={12} md={12} lg={12} >
+                    <Col xs={11} md={11} lg={11} style={{ maxWidth: '97%', flexBasis: '99.666667%' }}>
                         <ComboBox
                             name="txtContactoCliente"
                             labelInput="Seleccione..."
@@ -82,6 +86,12 @@ export class ParticipantsByClient extends Component {
                             data={contacts}
                             disabled={disabled ? 'disabled' : ''}
                         />
+                    </Col>
+
+                    <Col xs={1} md={1} lg={1} style={{ maxWidth: '2%' }}>
+                        {_.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), CREAR), false) &&
+                            <BotonCreateContactComponent typeButton={3} icon='ellipsis vertical' message='Crear contacto' disabled={disabled} />
+                        }
                     </Col>
                 </Row>
 
@@ -106,9 +116,10 @@ export class ParticipantsByClient extends Component {
     }
 }
 
-const mapStateToProps = ({ contactsByClient, participants }) => ({
+const mapStateToProps = ({ contactsByClient, participants, reducerGlobal }) => ({
     contacts: contactsByClient.get('contacts'),
-    participants
+    participants,
+    reducerGlobal
 });
 
 const mapDispatchToProps = dispatch => {
@@ -116,7 +127,8 @@ const mapDispatchToProps = dispatch => {
         dispatchContactsByClient: findContactsByClient,
         dispatchAddParticipant: addParticipant,
         dispatchClearParticipants: clearParticipants,
-        dispatchShowAlert: swtShowMessage
+        dispatchShowAlert: swtShowMessage,
+        dispatchValidatePermissionsByModule: validatePermissionsByModule
     }, dispatch)
 };
 
