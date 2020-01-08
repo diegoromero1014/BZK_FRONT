@@ -24,7 +24,7 @@ export default class CommercialReportButtonsComponent extends Component {
                     background: "rgba(255,255,255,0.75)"
                 }}>
                 <div style={{ width: "100%", height: "100%", right: "0px", display: 'flex', "justify-content": 'flex-end' }}>
-                    {((!isEditable && !documentDraft) || creatingReport ) &&
+                    {((!isEditable && !documentDraft) || creatingReport) &&
                         <button
                             name="btnPreSave"
                             className="btn" type="button" 

@@ -90,7 +90,7 @@ export class ParticipantsByClient extends Component {
 
                     <Col xs={1} md={1} lg={1} style={{ maxWidth: '2%' }}>
                         {_.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), CREAR), false) &&
-                            <BotonCreateContactComponent typeButton={3} icon='ellipsis vertical' message='Crear contacto' disabled={disabled} />
+                            <BotonCreateContactComponent typeButton={3} icon='plus circle' message='Crear contacto' disabled={disabled} />
                         }
                     </Col>
                 </Row>
