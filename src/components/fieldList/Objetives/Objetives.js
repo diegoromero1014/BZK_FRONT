@@ -51,6 +51,7 @@ export default class Objetivos extends React.Component {
                     initialValues={objectivesInitialValues}
                     schema={ObjetiveSchema}
                     title={"Objetivos"}
+                    maxLength={3}
                     renderAddSection={({fields, onChange, onAddElement, onCancel, isEditing, errors}) => (
                         <Row>
                             <Modal isOpen={true} className="modalBt3-fade modal fade contact-detail-modal in">
@@ -96,6 +97,7 @@ export default class Objetivos extends React.Component {
                                                         renderAddSection={renderStrategyFields}
                                                         renderElement={renderStrategyElements}
                                                         shouldRenderAddCancelButton={false}
+                                                        maxLength={3}
                                                     />
                                                 </div>
                                             </Col>

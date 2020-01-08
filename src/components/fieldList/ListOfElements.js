@@ -13,6 +13,23 @@ class ListOfElements extends React.Component {
         //setFields(initialValues);
     }
 
+    canAddElement = () => {
+        const { elements, maxLength, swtShowMessage, title } = this.props;
+        const isValid = elements && (elements.length < maxLength);
+
+        if (!isValid) {
+            swtShowMessage("error", "Erorr!", "Señor usuario, ya ha agregado el numero maximo de " + title);
+        }
+
+        return isValid;
+    }
+
+    openAddElement = () => {    
+        if (this.canAddElement()) {
+            this.toogleAddSection();
+        }
+    }
+
     toogleAddSection = () => {
         const { listenAddSection, setListState, showAddSection } = this.props;
         if (typeof listenAddSection === 'function') {
@@ -53,7 +70,12 @@ class ListOfElements extends React.Component {
     }
 
     addElement = () => {
-        const { handleOnAdd, fields, setListState, updateElement } = this.props;
+        const { handleOnAdd, fields, setListState, updateElement, isEditing } = this.props;
+
+        //Solo validar al momento de crear
+        if (!isEditing && !this.canAddElement()) {
+            return;
+        }
 
         if (typeof handleOnAdd === 'function') {
             handleOnAdd();
@@ -132,7 +154,7 @@ class ListOfElements extends React.Component {
                 <div style={{ position: "relative", marginBottom: "25px" }}>
                     {this.props.renderTitle}
                     {!showAddSection && <div style={{ position: "absolute", top: "10px", right: "10px" }} >
-                        <button className="btn" onClick={this.toogleAddSection}>
+                        <button className="btn" onClick={this.openAddElement}>
                             <ToolTipComponent text={"Agregar " + title}>
                                 <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                             </ToolTipComponent>
