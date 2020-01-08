@@ -252,8 +252,9 @@ export class PrevisitPage extends Component {
       const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);
       if (validateDatePrevisitResponse) {
          const previsitParticipants = this.getPrevisitParticipants();
-         if (!previsitParticipants.bankParticipants.length) {
+         if (!previsitParticipants.bankParticipants.length && this.documentDraft) {
             dispatchSwtShowMessage('error', TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS);
+            this.isFormValid(false);
             return;
          }
          const previsitRequest = {
@@ -293,6 +294,8 @@ export class PrevisitPage extends Component {
          } else {
             dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertError(id));
          }
+      }else{
+         this.isFormValid(false);
       }
    }
 
@@ -422,12 +425,7 @@ export class PrevisitPage extends Component {
       return true;
    }
 
-   onClickSaveHandler = (draft) => {
-      const { formValid } = this.state;
-      if (formValid) {
-         this.documentDraft = draft;
-      }
-   }
+   onClickSaveHandler = draft => this.documentDraft = draft;   
 
    closeShowErrorBlockedPrevisit = () => {
       this.setState({ showErrorBlockedPreVisit: false })
@@ -435,6 +433,8 @@ export class PrevisitPage extends Component {
          redirectUrl(ComponentClientInformationURL)
       }
    }
+
+  
 
    renderForm = () => {
       const { params: { id }, previsitReducer, selectsReducer, fromModal, questions, answers } = this.props;
@@ -447,12 +447,14 @@ export class PrevisitPage extends Component {
             showChallengerSection={this.state.showChallengerSection}
             isEditable={this.state.isEditable}
             onSubmit={this.submitForm}
-            isFormValid={valid => this.setState({ formValid: valid })}
+            isFormValid={valid => this.isFormValid(valid)}
             questions={questions}
             answers={answers}            
-            commercialReportButtons={(submitForm) => (
+            isDocumentDefinitive={this.documentDraft}    
+            commercialReportButtons={(submitForm, setFieldValue) => (
                <CommercialReportButtonsComponent
-                  onClickSave={(draft) => {                     
+                  onClickSave={(draft) => {   
+                     setFieldValue('documentStatus', draft, false);                  
                      this.onClickSaveHandler(draft);
                      submitForm()}}
                   onClickDownloadPDF={id ? this.onClickDownloadPDF : null}

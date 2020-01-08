@@ -103,7 +103,7 @@ export class PrevisitFormComponent extends Component {
 
    render() {      
       const { fields: { type, date, duration, place, objective, challenger } } = this.state;
-      const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue, setFieldTouched, submitForm } = this.props;                     
+      const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue, submitForm } = this.props;                     
       return (
          <div>              
             <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>               
@@ -280,12 +280,12 @@ export class PrevisitFormComponent extends Component {
                      </Row>              
                      <Row style={{ padding: "20px 23px 20px 20px" }}>                     
                         <Col xs={12} md={12} lg={12}>
-                           <Challenger isEditable={isEditable} setFieldValue={setFieldValue} setFieldTouched={setFieldTouched}/>
+                           <Challenger isEditable={isEditable}/>
                         </Col>                     
                      </Row>   
                   </div>
                }      
-               {commercialReportButtons(submitForm)}
+               {commercialReportButtons(submitForm, setFieldValue)}
             </Form>         
 
          </div>         
@@ -294,36 +294,32 @@ export class PrevisitFormComponent extends Component {
 }
 
 export default withFormik({
-   handleSubmit: (values, { props }) => {                          
-      props.isFormValid(true);
+   handleSubmit: (values, { props }) => {                     
       props.onSubmit(values);                  
    },
    mapPropsToValues: (props) => {
       const { previsitData, questions } = props;
-      const fields = {};
+      const fields = {};      
 
       questions.forEach(element => fields[element.field] = '' );
          
       if(previsitData) {
-         const { documentType, visitTime, endTime, visitLocation, principalObjective } = previsitData;
+         const { documentType, visitTime, endTime, visitLocation, principalObjective, documentStatus } = previsitData;
 
          previsitData.answers.forEach(element => fields[element.field] = element.answer);
          
-         return Object.assign({}, fields, { documentType, visitTime: new Date(visitTime), endTime, visitLocation, principalObjective })
+         return Object.assign({}, fields, { documentType, visitTime: new Date(visitTime), endTime, visitLocation, principalObjective, documentStatus })
       } else {
-         return Object.assign({}, fields,  { documentType: '', visitTime: new Date(), endTime: '', visitLocation: '', principalObjective: ''});
+         return Object.assign({}, fields,  { documentType: '', visitTime: new Date(), endTime: '', visitLocation: '', principalObjective: '', documentStatus: undefined });
       }
    },
-   validationSchema: ({questions, showChallengerSection}) => {
-      const object = {};      
-      if(showChallengerSection) {    
-         
+   validationSchema: ({questions, showChallengerSection, isDocumentDefinitive}) => {
+      const object = {};            
+      if(showChallengerSection && isDocumentDefinitive) {             
          questions.forEach(element => object[element.field] = Yup.string()
             .test(`${element.title}richTextRequired`,`La pregunta ${element.title} es obligatoria`, value => checkRichTextRequiredBoolean(value)));
-      }
-      
-      const objectSchema = Object.assign({}, schema, object);       
-   
+      }      
+      const objectSchema = Object.assign({}, schema, object);          
       return Yup.object().shape(objectSchema);            
    }      
 })(PrevisitFormComponent);

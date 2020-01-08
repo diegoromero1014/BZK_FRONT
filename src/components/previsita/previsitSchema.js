@@ -19,5 +19,9 @@ export const schema = {
         .matches(patternOfPlaceOfPrevisit, MESSAGE_WARNING_PLACE_OF_PREVISIT)
         .max(150, MESSAGE_WARNING_MAX_LENGTH(150)),
     principalObjective: Yup.string()
-        .test('principalObjectiveRequired', 'El objetivo es obligatorio', value => checkRichTextRequiredBoolean(value)),
+        .nullable()
+        .when("documentStatus", {
+            is: 1,
+            then: Yup.string().test('principalObjectiveRequired', 'El objetivo es obligatorio', value => checkRichTextRequiredBoolean(value))
+        })
 };
