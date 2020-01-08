@@ -9,8 +9,6 @@ import ComponentClientInformation from "./components/clientInformation/component
 import CreatePropspect from "./components/propspect/createPropspect";
 import ClientEdit from "./components/clientEdit/clientEdit";
 import ClientCertify from "./components/clientCertify/clientCertifyComponent";
-import Previsita from "./components/previsita/createPrevisita/createPrevisita";
-import EditPrevisita from "./components/previsita/editPrevisit/editPrevisit";
 import Visit from "./components/visit/createVisit/createVisit";
 import VisitEdit from "./components/visit/editVisit/editVisit";
 import ViewManagement from "./components/viewManagement/viewManagement";
@@ -39,7 +37,7 @@ import LinkingRequests from "./components/myPendings/linkingRequests/componentLi
 import Sheduler from "./components/sheduler/shedulerComponent";
 import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderConstruction";
 import PageNotFound from "./components/notFoundPage/PageNotFound";
-
+import PrevisitPage from "./components/previsita/previsitPage";
 
 import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
     CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST, 
@@ -48,8 +46,7 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     EDITFORMPIPELINE, CREATEFORMPIPELINE, VISITEDIT, VISIT, EDITPREVISITA, 
     PREVISITA, CLIENTCERTIFY, CLIENTSFIND, CLIENTEDIT, CREATEPROPSPECT, STUDYCREDIT, 
     COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, VIEWMANAGEMENT, DASHBOARDCOMPONENT, 
-    LOGINCOMPONENT, 
-    aec,
+    LOGINCOMPONENT,     
     LoginComponentURL,
     DashboardComponentURL,
     ViewManagementURL,
@@ -218,8 +215,9 @@ export default (
                 <Route path="createPropspect" component={CreatePropspect}></Route>
                 <Route path="clientEdit" component={ClientEdit}></Route>
                 <Route path="certifyClient" component={ClientCertify}></Route>
-                <Route path="previsita" component={Previsita}></Route>
-                <Route path="previsitaEditar/:id" component={EditPrevisita}></Route>
+                <Route path="previsita" component={PrevisitPage}>
+                    <Route path=":id" component={PrevisitPage}></Route>                    
+                </Route>                
                 <Route path="visita" component={Visit}></Route>
                 <Route path="visitaEditar/:id" component={VisitEdit}></Route>
                 <Route path="pipeline" component={createFormPipeline('pipelineCreate')}></Route>

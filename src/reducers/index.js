@@ -69,7 +69,11 @@ import menuReducer from '../components/menu/reducer';
 import transactionalReducer from '../components/transactional/reducer';
 import linkRequestsReducer from '../components/myPendings/linkingRequests/reducer';
 import schedulerPrevisitReduser from '../components/sheduler/reducer';
+<<<<<<< HEAD
 import formLists from '../components/fieldList/reducer';
+=======
+import questionsReducer from '../components/challenger/reducer';
+>>>>>>> cc1d14800e3a18fa2509f3a566986e30b63a9e98
 
 export default combineReducers({
     routing: routerReducer,
@@ -142,5 +146,6 @@ export default combineReducers({
     linkRequestsReducer,
     schedulerPrevisitReduser,
     confidentialReducer,
-    formLists
+    formLists,
+    questionsReducer
 });

@@ -26,11 +26,8 @@ export function filterUsers(filterUser) {
     }
 }
 
-export function clearUsers() {
-    return {
-        type: constants.CLEAR_USER
-    };
-}
+export const clearUsers = () => ({ type: constants.CLEAR_USER });
+
 
 export function addUsers(userPermission) {
     return {
