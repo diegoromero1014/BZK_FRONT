@@ -280,7 +280,7 @@ export class PrevisitFormComponent extends Component {
                      </Row>              
                      <Row style={{ padding: "20px 23px 20px 20px" }}>                     
                         <Col xs={12} md={12} lg={12}>
-                           <Challenger isEditable={isEditable} setFieldValue={setFieldValue} setFieldTouched={setFieldTouched}/>
+                           <Challenger isEditable={isEditable} />
                         </Col>                     
                      </Row>   
                   </div>
@@ -298,6 +298,7 @@ export default withFormik({
       props.isFormValid(true);
       props.onSubmit(values);                  
    },
+
    mapPropsToValues: (props) => {
       const { previsitData, questions } = props;
       const fields = {};
@@ -314,6 +315,7 @@ export default withFormik({
          return Object.assign({}, fields,  { documentType: '', visitTime: new Date(), endTime: '', visitLocation: '', principalObjective: ''});
       }
    },
+
    validationSchema: ({questions, showChallengerSection}) => {
       const object = {};      
       if(showChallengerSection) {    
