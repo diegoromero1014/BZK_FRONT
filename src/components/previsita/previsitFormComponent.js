@@ -285,7 +285,7 @@ export class PrevisitFormComponent extends Component {
                      </Row>   
                   </div>
                }      
-               {commercialReportButtons(submitForm, setFieldValue)}
+               {commercialReportButtons(setFieldValue)}
             </Form>         
 
          </div>         
@@ -294,7 +294,7 @@ export class PrevisitFormComponent extends Component {
 }
 
 export default withFormik({
-   handleSubmit: (values, { props }) => {                     
+   handleSubmit: (values, { props }) => {
       props.onSubmit(values);                  
    },
    mapPropsToValues: (props) => {
