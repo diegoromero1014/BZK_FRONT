@@ -314,11 +314,11 @@ export default withFormik({
       }
    },
    validationSchema: ({questions, showChallengerSection, isDocumentDefinitive}) => {
-      const object = {};            
+      const object = {};                  
       if(showChallengerSection && isDocumentDefinitive) {             
          questions.forEach(element => object[element.field] = Yup.string()
             .test(`${element.title}richTextRequired`,`La pregunta ${element.title} es obligatoria`, value => checkRichTextRequiredBoolean(value)));
-      }      
+      }
       const objectSchema = Object.assign({}, schema, object);          
       return Yup.object().shape(objectSchema);            
    }      

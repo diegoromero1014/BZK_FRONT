@@ -8,7 +8,7 @@ export default class CommercialReportButtonsComponent extends Component {
     }
 
     render() {
-        const { onClickSave, onClickDownloadPDF, cancel, fromModal, isEditable, documentDraft, creatingReport } = this.props;
+        const { onClickSave, onClickDownloadPDF, cancel, fromModal, isEditable, documentDraft, creatingReport, isFormValid } = this.props;
         return (
             <div 
                 name="commercialReportButtons"
@@ -23,8 +23,8 @@ export default class CommercialReportButtonsComponent extends Component {
                     height: "60px",
                     background: "rgba(255,255,255,0.75)"
                 }}>
-                <div style={{ width: "100%", height: "100%", right: "0px", display: 'flex', "justify-content": 'flex-end' }}>
-                    {((!isEditable && !documentDraft) || creatingReport) &&
+                <div style={{ width: "100%", height: "100%", right: "0px", display: 'flex', "justify-content": 'flex-end' }}>                
+                    {((!isEditable && !documentDraft) || (!isEditable && !isFormValid) || creatingReport) &&
                         <button
                             name="btnPreSave"
                             className="btn" type="button" 
