@@ -79,7 +79,7 @@ export const setGlobalCondition = value => {
 export const processRules = (formFields, fieldsWithRules, props) => {
     const errors = {};
     _.mapKeys(formFields, function (value, field) {
-        if (!_.isEmpty(fieldsWithRules[field].rules)) {
+        if (fieldsWithRules[field] && !_.isEmpty(fieldsWithRules[field].rules)) {
             _.forEach(fieldsWithRules[field].rules, function (rule) {
                 const message = rule(value, formFields, props);
                 if (!_.isEmpty(message)) {

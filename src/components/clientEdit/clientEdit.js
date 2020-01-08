@@ -31,6 +31,7 @@ import ComponentListIntOperations from "../contextClient/listInternationalOperat
 import ComponentInfoClient from './components/InfoClient';
 import ActividadEconomica from './components/ActividadEconomica';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
+import Objetivos from '../fieldList/Objetives/Objetives';
 import { clearProducts, setProducts } from "./products/actions";
 import { clearNotes, deleteNote, setNotes } from "./notes/actions";
 import { createProspect } from "../propspect/actions";
@@ -1309,6 +1310,9 @@ class clientEdit extends Component {
                 />
 
                 <ActividadEconomica idSubCIIU={idSubCIIU} idCIIU={idCIIU} taxNature={taxNature} isMethodEditClient={isMethodEditClient} />
+
+                
+                <Objetivos />
 
                 <Row>
 
