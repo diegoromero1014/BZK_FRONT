@@ -72,7 +72,8 @@ function addElementsToChildrenState(state, list, element) {
         const childName = child.name;
         const childList = state[childName];
         childList.elements = element[child.alias];
-        childList.fields = {};
+        childList.fields = childList.initialValues;
+        childList.errors = {};
         state = addNewListToState(childName, state, childList);
     }
 }
@@ -88,7 +89,8 @@ function clearElementsFromChild(state, list) {
             return;
         }
         childList.elements = [];
-        childList.fields = {};
+        childList.fields = childList.initialValues;
+        childList.errors = {}
         childList.showAddSection = true;
         state = addNewListToState(childName, state, childList);
     }
@@ -113,9 +115,7 @@ export default (state = initialState, action) => {
                 return state;
             }
             let newState = Object.assign({}, state);
-            newState[action.name] = Object.assign({}, defaultListState, {
-                childrenList: action.childrenList
-            });
+            newState[action.name] = Object.assign({}, defaultListState, action.defaultValues);
             return newState;
         case ADD_FIELD_TO_LIST: {
             let list = state[action.list];
@@ -128,11 +128,12 @@ export default (state = initialState, action) => {
         case SET_FIELDS_TO_LIST: {
             let list = state[action.list];
             let fields = Object.assign({}, action.fields);
-            if (isEmpty(action.fields)) {
+            if (isEmpty(action.fields) || action.fields == list.initialValues) {   
                 clearElementsFromChild(state, list);
             }
             let newList = Object.assign({}, list, {
-                fields
+                fields,
+                errors: {}
             });
             return addNewListToState(action.list, state, newList);
         }
@@ -159,6 +160,7 @@ export default (state = initialState, action) => {
         case EDIT_ELEMENT_FROM_LIST: {
             let list = state[action.list];
             let newList = Object.assign({}, list, {
+                errors: {},
                 fields: action.element,
                 showAddSection: true,
                 isEditing: true

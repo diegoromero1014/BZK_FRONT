@@ -28,11 +28,11 @@ export default function makeFieldList(listName, childrenList=[]) {
     class FieldList extends React.Component {
 
         componentDidMount() {
-            const { dispatchCreateList } = this.props;
-            dispatchCreateList(listName, childrenList);
+            const { dispatchCreateList, initialValues } = this.props;
+            dispatchCreateList(listName, {childrenList, initialValues});
             for (let index = 0; index < childrenList.length; index++) {
                 const child = childrenList[index];
-                dispatchCreateList(child.name);
+                dispatchCreateList(child.name, { initialValues: child.initialValues });
             }
         }
 

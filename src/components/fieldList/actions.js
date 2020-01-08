@@ -8,11 +8,13 @@ import {
     EDIT_ELEMENT_FROM_LIST
 } from './constants';
 
-export function createList(name, childrenList = []) {
+export function createList(name, defaultValues = {
+    childrenList: []
+}) {
     return {
         type: CREATE_LIST,
         name,
-        childrenList
+        defaultValues
     }
 }
 

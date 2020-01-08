@@ -9,8 +9,8 @@ import { processRules } from '../../validationsFields/rulesField';
 class ListOfElements extends React.Component {
 
     componentDidMount() {
-        const { setFields, initialValues } = this.props;
-        setFields(initialValues);
+        //const { setFields, initialValues } = this.props;
+        //setFields(initialValues);
     }
 
     toogleAddSection = () => {
@@ -54,7 +54,7 @@ class ListOfElements extends React.Component {
 
     addElement = () => {
         const { handleOnAdd, fields, setListState, updateElement } = this.props;
-        debugger;
+
         if (typeof handleOnAdd === 'function') {
             handleOnAdd();
         }
