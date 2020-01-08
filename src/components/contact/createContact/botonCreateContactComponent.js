@@ -38,7 +38,7 @@ class BotonCreateContactComponent extends Component {
             </button>
           : typeButton === 3 && icon && message ? 
             <ToolTip text={message}>
-                <Icon disabled={disabled} name={icon} style={{ cursor: 'pointer' }} size='huge' onClick={this.openModal}/>
+                <Icon disabled={disabled} name={icon} style={{ cursor: 'pointer' }} size='huge' onClick={() => !disabled && this.openModal()}/>
             </ToolTip>
           :
             <button className="btn btn-primary" type="button" title="Crear contacto" style={{ float: "right" }} onClick={this.openModal}>

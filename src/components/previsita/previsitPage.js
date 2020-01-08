@@ -35,7 +35,7 @@ export class PrevisitPage extends Component {
    constructor(props) {
       super(props);
 
-      this.documentDraft = 0;
+      this.documentDraft = 0;      
 
       this.state = {
          isEditable: false,
@@ -53,8 +53,8 @@ export class PrevisitPage extends Component {
          oldPrevisitTypeSelected: null,
          oldPrevisitTypeSelectedId: null,
          currentPrevisitTypeSelected: null,
-         setFieldValue: null,
-         formValid: false,
+         setFieldValue: null,     
+         formValid: false,    
          documentCreatedInfo: {
             createdBy: null,
             updatedBy: null,
@@ -135,12 +135,12 @@ export class PrevisitPage extends Component {
             dispatchAddAnswer(null, { id: element.id, [element.field]: element.answer });
          });
          this.setDatesOnPrevisitDetailState(previsitDetail);
-         this.documentDraft = previsitDetail.documentStatus;
+         this.documentDraft = previsitDetail.documentStatus;         
          this.setState({
             isEditable: true,
             oldPrevisitTypeSelected: null,
-            currentPrevisitTypeSelected: previsitTypeInfo ? previsitTypeInfo.key.toUpperCase() : '',
-            formValid: true,
+            currentPrevisitTypeSelected: previsitTypeInfo ? previsitTypeInfo.key.toUpperCase() : '',   
+            formValid: true,         
             documentCreatedInfo: Object.assign({}, this.state.documentCreatedInfo, {
                createdBy: previsitDetail.createdByName,
                updatedBy: previsitDetail.updatedByName,
@@ -246,16 +246,20 @@ export class PrevisitPage extends Component {
       return previsitParticipants;
    }
 
+   isFormValid = valid => this.setState({formValid: valid});
+
    submitForm = async (previsit) => {
       const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions,
          fromModal, closeModal } = this.props;
       const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);
       if (validateDatePrevisitResponse) {
          const previsitParticipants = this.getPrevisitParticipants();
-         if (!previsitParticipants.bankParticipants.length) {
+         if (!previsitParticipants.bankParticipants.length && this.documentDraft) {
             dispatchSwtShowMessage('error', TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS);
+            this.isFormValid(false);
             return;
          }
+         this.isFormValid(true);
          const previsitRequest = {
             "id": id,
             "client": window.sessionStorage.getItem('idClientSelected'),
@@ -290,10 +294,15 @@ export class PrevisitPage extends Component {
             dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertSuccess(id), { onConfirmCallback: redirectUrl(ComponentClientInformationURL) });
          } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_INVALID_INPUT) {
             dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), MESSAGE_PREVISIT_INVALID_INPUT);
+            this.isFormValid(false);
          } else {
             dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertError(id));
+            this.isFormValid(false);
          }
+      }else{
+         this.isFormValid(false);
       }
+      this.forceUpdate();
    }
 
    onClickCancelCommercialReport = () => {
@@ -422,12 +431,7 @@ export class PrevisitPage extends Component {
       return true;
    }
 
-   onClickSaveHandler = (draft) => {
-      const { formValid } = this.state;
-      if (formValid) {
-         this.documentDraft = draft;
-      }
-   }
+   onClickSaveHandler = draft => this.documentDraft = draft;   
 
    closeShowErrorBlockedPrevisit = () => {
       this.setState({ showErrorBlockedPreVisit: false })
@@ -446,14 +450,15 @@ export class PrevisitPage extends Component {
             onChangeShowChallengerSection={this.showChallengerSection}
             showChallengerSection={this.state.showChallengerSection}
             isEditable={this.state.isEditable}
-            onSubmit={this.submitForm}
-            isFormValid={valid => this.setState({ formValid: valid })}
+            onSubmit={this.submitForm}            
             questions={questions}
             answers={answers}            
-            commercialReportButtons={(submitForm) => (
+            isDocumentDefinitive={this.documentDraft}    
+            commercialReportButtons={(submitForm, setFieldValue) => (
                <CommercialReportButtonsComponent
-                  onClickSave={(draft) => {                     
+                  onClickSave={(draft) => {   
                      this.onClickSaveHandler(draft);
+                     setFieldValue('documentStatus', draft, false);                                       
                      submitForm()}}
                   onClickDownloadPDF={id ? this.onClickDownloadPDF : null}
                   cancel={this.onClickCancelCommercialReport}
@@ -461,6 +466,7 @@ export class PrevisitPage extends Component {
                   isEditable={this.state.isEditable}
                   documentDraft={this.documentDraft}
                   creatingReport={id ? false : true}
+                  isFormValid={this.state.formValid}
                />)} />
       )
    }
