@@ -7,8 +7,8 @@ import styleListaobjetos from "../listaObjetos/styleListaObjetos.scss";
 class SectionOpportunitiesWeaknesses extends Component {
   render() {
     const { visual } = this.props;
-    const ayudaOportunidades = `En el campo que le aparecera al darle click en el icono de + debera ingresar las oportunidades externas con el fin ...`;
-    const ayudaDebilidades = `En el campo que le aparecera al darle click en el icono de + debera ingresar las debilidades internas del cliente con el fin ...`;
+    const ayudaOportunidades = `Factores externos que representan posibles ingresos para el cliente. Pueden ser: cambios en el sector económico. Normativas, movimiento de la competencia, tendencia de sus consumidores, mercados geográficos. economía, tendencias del mercado, benchmarks. `;
+    const ayudaDebilidades = `Aspectos internos negativos del cliente que no le permiten  el crecimiento empresarial o que frenan el cumplimiento de sus objetivos y que debe controlarlos para superarlos. Pueden ser: Localizaciones, marca y reputación, idealización de los clientes, capital humano, tecnologías, canales, liderazgo, calidad del producto, situación financiera.`;
 
     return (
       <div>
@@ -31,6 +31,7 @@ class SectionOpportunitiesWeaknesses extends Component {
               titulo="Oportunidades"
               ayuda={ayudaOportunidades}
               visual={visual}
+              icon="thumbs up outline icon"
             />
           </div>
           <div style={{ width: "50%" }}>
@@ -38,6 +39,7 @@ class SectionOpportunitiesWeaknesses extends Component {
               titulo="Debilidades"
               ayuda={ayudaDebilidades}
               visual={visual}
+              icon="thumbs down outline icon"
             />
           </div>
         </div>

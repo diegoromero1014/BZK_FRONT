@@ -25,35 +25,27 @@ describe("Unit tests of the listaObjetos.js component", () => {
     visual: ""
   };
 
-  // pimer caso de prueba : que se renderize el componente
+  // caso de prueba : que se renderize el componente
   it("should render component", () => {
     itRenders(<ListaObjetos {...defaultProps} />);
   });
 
-  // segundo caso de prueba que renderize los componentes que se importan
-  it("should render <Row/> component", () => {
+  // caso de prueba que renderize los componentes que se importan
+  it("should render imports components", () => {
     itRenders(<Row />);
-  });
-
-  it("should render <Col/> component", () => {
     itRenders(<Col />);
-  });
-
-  it("should render <ToolTip/> component", () => {
     itRenders(<ToolTip />);
-  });
-
-  it("should render <SweetAlert/> component", () => {
     itRenders(<SweetAlert />);
   });
 
-  // tercer caso de prueba que se rendericen elementos dependiendo de las props que se le inyecten
-  // cuarto caso de prueba que se rendericen elementos dependiendo del valor de las variables del state
-
+  // caso de prueba para validar que si se renderice el titulo del componente
   it("render the title wrapper listaObjetos", () => {
     const wrapper = shallow(<ListaObjetos />);
     expect(wrapper.find(".title-component")).to.have.length(1);
   });
+
+  // tercer caso de prueba que se rendericen elementos dependiendo de las props que se le inyecten
+  // cuarto caso de prueba que se rendericen elementos dependiendo del valor de las variables del state
 
   // caso de prueba para metodo abrirCampoObjetivo
   it("onClick in abrirCampoObjetivo should change campoObjeto state to true", () => {
@@ -89,21 +81,105 @@ describe("Unit tests of the listaObjetos.js component", () => {
     expect(wrapper.state().stylePlus).to.equal(true);
   });
 
-    // caso de prueba para el metodo modificarObjeto
-    it("onClick in modificarObjeto se espera que edite el objeto", () => {
-        const objeto = {
-            id : 1343,
-            texto : "texto test oportunidades debilidades",
-        };
-        const listaObjetos = [
-          { id: 1343, texto: "texto test oportunidades debilidades" },
-          { id: 1245, texto: "texto test oportunidades debilidades" },
-          { id: 1478, texto: "texto test oportunidades debilidades" },
-        ];
-
-        const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-        wrapper.instance().modificarObjeto();
-        expect(wrapper.state()).to.;
-
+  // caso de prueba para el metodo modificarObjeto, cuando entra en el if
+  it("onClick in modificarObjeto expect me to edit the object", () => {
+    const objeto = {
+      id: 1,
+      texto: "Lorem ipsum dolor sit amet, consectetur adipiscing "
+    };
+    const listaObjetos = [
+      {
+        id: 1,
+        texto: "Lorem ipsum dolor sit amet, consectetur "
+      }
+    ];
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto,
+      objetos: listaObjetos
     });
+    wrapper.instance().modificarObjeto();
+    expect(wrapper.state().campoVacio).to.equal(false);
+    expect(wrapper.state().campoObjeto).to.equal(false);
+    expect(wrapper.state().switchGuardarEditar).to.equal(false);
+    expect(wrapper.state().stylePlus).to.equal(false);
+  });
+
+  // caso de prueba para el metodo modificarObjeto, cuando no entra al else.
+  it("onClick in modificarObjeto expect me not to edit the object", () => {
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto: { id: 1, texto: "" }
+    });
+    wrapper.instance().modificarObjeto();
+    expect(wrapper.state().campoVacio).to.equal(true);
+  });
+
+  // caso de pruebas para el metodo agregarObjetoLista
+  it("onClick in agregarObjetoLista agregue un objeto", () => {
+    const id = (Math.random() * 10000).toFixed();
+    const objeto = {
+      id: "",
+      texto: "test agregar objeto"
+    };
+    objeto.id = id;
+    const campoVacio = objeto.texto;
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto,
+      campoVacio
+    });
+    wrapper.instance().agregarObjetoLista();
+    wrapper.instance().cerrarCampoObjeto();
+    // expect(wrapper.state().objetos).to.have([
+    //   ...wrapper.state().objetos,
+    //   objeto
+    // ]);
+    expect(wrapper.state().campoObjeto).to.equal(false);
+  });
+
+  it("onClick in agregarObjetoLista con un objeto vacio", () => {
+    const id = (Math.random() * 10000).toFixed();
+    const objeto = {
+      id: "",
+      texto: ""
+    };
+    objeto.id = id;
+    const campoVacio = objeto.texto;
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.instance().agregarObjetoLista();
+    expect(wrapper.state().campoVacio).to.equal(true);
+  });
+
+  // caso de prueba para el metodo eliminarObjeto
+  it("onClick in eliminarObjeto se espera que elimine el objeto", () => {
+    const objeto = {
+      id: 1,
+      texto: "Lorem ipsum dolor sit amet, consectetur adipiscing "
+    };
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.instance().eliminarObjeto(objeto.id);
+    expect(wrapper.state().modalEliminar).to.equal(false);
+  });
+
+  // caso de prueba para la funcion newObject
+  it("test newObjeto function", () => {
+    const event = {
+      target: {
+        name: "texto",
+        value: "texto que describe el objeto"
+      }
+    };
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.instance().newObjeto(event);
+  });
+
+  // caso de prueba if para redefinir el titulo
+  // it("test if where the component title is Oportunidades", () => {
+  //   defaultProps.titulo = "Oportunidades";
+  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+  //   console.log(wrapper.props().titulo);
+
+  //   expect(wrapper.props().titulo).to.equal("Oportunidades");
+  // });
 });

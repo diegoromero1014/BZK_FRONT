@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { Row, Col } from "react-flexbox-grid";
 import ToolTip from "../toolTip/toolTipComponent";
 import SweetAlert from "../sweetalertFocus";
@@ -91,7 +93,6 @@ class AñadirListaObjetos extends Component {
     const listaObjetos = this.state.objetos;
     const campoVacio = this.state.objeto.texto;
     // const { updateElements } = this.props;
-
     if (campoVacio !== "") {
       listaObjetos.map((elemento, index) => {
         if (elemento.id === objeto.id) {
@@ -167,7 +168,7 @@ class AñadirListaObjetos extends Component {
   };
 
   render() {
-    const { titulo, ayuda, visual } = this.props;
+    const { titulo, ayuda, visual, icon } = this.props;
 
     const {
       objetos,
@@ -189,16 +190,11 @@ class AñadirListaObjetos extends Component {
       ? "button-openFieldChecked"
       : "button-openField";
 
-    let iconTitle;
     let tituloCompleto;
     if (titulo === "Oportunidades") {
-      iconTitle = "thumbs up outline icon";
       tituloCompleto = "Oportunidades externas";
     } else if (titulo === "Debilidades") {
-      iconTitle = "thumbs down outline icon";
       tituloCompleto = "Debilidades internas del cliente";
-    } else {
-      iconTitle = "book icon";
     }
 
     return (
@@ -209,7 +205,7 @@ class AñadirListaObjetos extends Component {
               <div className="line-topComponent" />
               <div className="container-titleHelpPlus">
                 <div>
-                  <i className={iconTitle} />
+                  <i className={icon} />
                   <span className="title-component">
                     {`${tituloCompleto}`}
                     {visual && "("}
@@ -251,6 +247,7 @@ class AñadirListaObjetos extends Component {
                   onChange={this.newObjeto}
                   placeholder={ayuda}
                   value={this.state.objeto.texto}
+                  maxLength={700}
                 />
                 <div className="container-buttons">
                   <button
@@ -346,7 +343,7 @@ class AñadirListaObjetos extends Component {
               <table className="ui striped table">
                 <thead>
                   <tr className="tr-void">
-                    <span>{`Aún no se han adicionado ${titulo}.`}</span>
+                    <span>{`Aún no se han adicionado ${tituloCompleto}.`}</span>
                   </tr>
                 </thead>
               </table>
@@ -358,4 +355,10 @@ class AñadirListaObjetos extends Component {
   }
 }
 
-export default AñadirListaObjetos;
+const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
+
+const mapStateToProps = ({ clientInformacion, listaObje }, ownerProps) => ({
+  clientInformacion
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AñadirListaObjetos);
