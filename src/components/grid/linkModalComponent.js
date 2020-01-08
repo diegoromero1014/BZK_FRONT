@@ -1,10 +1,6 @@
-/**
- * Created by ahurtado on 12/6/2016.
- */
 import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import * as views from '../../constantsGlobal';
 import ContactDetailsModalComponent from '../contact/contactDetail/contactDetailsModalComponent';
 import {clearClienEdit} from '../contact/contactDetail/actions';
 import Modal from 'react-modal';
@@ -12,7 +8,6 @@ import {get} from 'lodash';
 import {contactsByFunctionOrTypeFindServer} from '../contactByFunctionOrType/actions';
 import {VIEW_CONTACT,NUMBER_RECORDS,VIEW_LINK_GROUP} from './constants';
 import ModalComponentGroup from '../contact/favoritesGroup/createEdit/modalComponentGroup';
-
 
 class LinkModalComponent extends Component {
 

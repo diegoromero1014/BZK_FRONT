@@ -65,7 +65,7 @@ import {
 } from './validationsMessages';
 
 import {
-    SEGMENTS, REASON_TRANFER, MANAGEMENT_BRAND, SUBSEGMENTS, PIPELINE_TYPE, CLIENT_NEED, PRODUCTS_MASK
+    REASON_TRANFER, MANAGEMENT_BRAND, PIPELINE_TYPE, CLIENT_NEED, PRODUCTS_MASK
 } from '../components/selectsComponent/constants';
 
 import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO,
@@ -112,43 +112,6 @@ export const checkRequiredResponsible = (value, fields) => {
     if(_.isNull(value) || _.toString(value).length < 1 || _.isUndefined(value) || _.toString(valueIdEmployee).length < 1) {
         message = MESSAGE_REQUIRED_VALUE;
     }
-    return message;
-}
-
-const validSegments = {
-    "constructor corporativo" : [ "grande" ],
-    "constructor empresarial" : [ "mediana" ],
-    "constructor pyme" : [ "pequeña", "mediana", "grande", "plus" ],
-    "corporativo" : [ "pequeña", "mediana", "grande" ],
-    "empresarial" : [ "pequeña", "mediana", "grande" ],
-    "gobierno" : [ "grande" ],
-    "instituciones financieras" : [ "grande" ]
-}
-
-function isSubsegmentValid(subsegmento, fields, props) {
-    let segmentValue = _.get(_.find(props.selectsReducer.get(SEGMENTS), ['id', parseInt(fields.segment)]), 'value');
-    
-    if ( !segmentValue  || !subsegmento ) {
-        return true;
-    }
-
-    const segments = validSegments[segmentValue.toLowerCase()];
-
-    if (!segments) {
-        return !subsegmento;
-    }
-
-    return segments.includes(subsegmento.toLowerCase());
-}
-
-export const checkForValidSubSegment = (value, fields, props) => {
-    let message = null;
-    let subsegmentoValue = _.get(_.find(props.selectsReducer.get(SUBSEGMENTS), ['id', parseInt(value)]), 'value');
-    
-    if (!isSubsegmentValid(subsegmentoValue, fields, props)) {
-        message = "El subsegmento seleccionado no es válido para el segmento";
-    }
-    
     return message;
 }
 

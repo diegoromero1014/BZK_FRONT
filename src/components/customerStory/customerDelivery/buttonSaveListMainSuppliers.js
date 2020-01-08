@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import { reduxForm } from 'redux-form';
 

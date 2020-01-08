@@ -1,6 +1,3 @@
-/**
- * Created by Andres Hurtado on 01/03/2017.
- */
 import { Icon } from 'semantic-ui-react'
 import React from 'react';
 

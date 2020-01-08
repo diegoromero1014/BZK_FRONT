@@ -3,8 +3,8 @@ import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
 import _ from "lodash";
 import $ from 'jquery';
-
 import { Col, Grid, Row } from "react-flexbox-grid";
+
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import ListPendingTaskComponent from "./listMyPendingComponent";
 import ListMyPendingTeamComponent from "./listMyPendingTeamComponent";
@@ -15,12 +15,12 @@ import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 
 import { redirectUrl } from "../../globalComponents/actions";
-import { formValidateKeyEnter, onSessionExpire, validateResponse } from '../../../actionsGlobal';
 import { updateTitleNavBar } from "../../navBar/actions";
 import { swtShowMessage } from "../../sweetAlertMessages/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
 import { showLoading } from "../../loading/actions";
 import { filterUsersBanco } from '../../participantsVisitPre/actions';
+import { formValidateKeyEnter, onSessionExpire, validateResponse } from '../../../actionsGlobal';
 import {
     consultList,
     consultListWithParameter,

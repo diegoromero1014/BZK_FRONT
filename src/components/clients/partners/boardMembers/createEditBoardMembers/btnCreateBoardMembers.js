@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
-
 import ModalBoardMembers from './modalBoardMembers';
 import SecurityMessageComponent from '../../../../globalComponents/securityMessageComponent';
 

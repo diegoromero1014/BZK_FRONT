@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
-import { reduxForm } from 'redux-form';
-import { } from './actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import { MESSAGE_SAVE_DATA } from '../../constantsGlobal';
 import ModalComponentRemoveMember from './modalComponentRemoveMember';
-
 import Modal from 'react-modal';
-
 
 class clientsRiskGroup extends Component {
   constructor(props) {

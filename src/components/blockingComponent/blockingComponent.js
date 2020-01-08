@@ -2,7 +2,6 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-
 import {getUserBlockingReport,
     stopBlockToReport, validateIsNullOrUndefined} from '../../actionsGlobal';
 import {TIME_REQUEST_BLOCK_REPORT, BLOCK_BUSINESS_PLAN} from '../../constantsGlobal';

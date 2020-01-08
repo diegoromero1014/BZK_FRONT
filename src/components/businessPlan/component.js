@@ -2,18 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Grid, Col } from 'react-flexbox-grid';
-
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import ListBusinessPlanComponent from './listBusinessPlanComponent';
 import PaginationBusinessPlanComponent from './paginationBusinessPlanComponent';
 import ButtonDownloadBusinessPlanComponent from './downloadBusinessPlan/buttonDownloadBusinessPlanComponent';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
-
 import { redirectUrl } from '../globalComponents/actions';
 import { businessPlanByClientFindServer, clearBusinessPlan } from './actions';
 import { updateTitleNavBar } from '../navBar/actions';
 import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
-
 import { NUMBER_RECORDS, FILTER_STATUS_BUSINESS_PLAN_ID } from './constants';
 import { MODULE_BUSSINESS_PLAN, CREAR, DESCARGAR } from '../../constantsGlobal';
 

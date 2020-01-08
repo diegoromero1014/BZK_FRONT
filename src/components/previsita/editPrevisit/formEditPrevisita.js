@@ -36,7 +36,7 @@ import {
     changeOwnerDraftPrevisit
 } from "../actions";
 import {
-    consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateResponse
+    consultParameterServer, formValidateKeyEnter, nonValidateEnter
 } from "../../../actionsGlobal";
 
 import { PREVISIT_TYPE } from "../../selectsComponent/constants";

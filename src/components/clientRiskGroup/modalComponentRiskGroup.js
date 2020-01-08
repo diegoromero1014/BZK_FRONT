@@ -4,7 +4,6 @@ import { reduxForm } from "redux-form";
 import { bindActionCreators } from "redux";
 import Modal from "react-modal";
 import { Menu, Segment } from 'semantic-ui-react'
-
 import Input from "../../ui/input/inputComponent";
 import Textarea from "../../ui/textarea/textareaComponent";
 import SweetAlert from "../sweetalertFocus";
@@ -12,11 +11,9 @@ import ModalComponentDeleteRiskGroup from "./modalComponentDeleteRiskGroup";
 import ModalComponentMemberRiskGroup from "./modalComponentMemberRiskGroup";
 import ClientsRiskGroup from "./clientsRiskGroup";
 import ListNoveltiesRiskGroup from "./ListNoveltiesRiskGroup";
-
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { editNameRiskGroup, getClientsRiskGroup, updateValuesRiskGroup, getAllNoveltiesRiskGroup } from "./actions";
 import { showLoading } from "../loading/actions";
-
 import { MESSAGE_LOAD_DATA, MODULE_RISK_GROUP } from "../../constantsGlobal";
 import {
     formValidateKeyEnter,
@@ -25,13 +22,11 @@ import {
     validateResponse
 } from "../../actionsGlobal";
 import { OPTION_RISK_GROUP, OPTION_NOVELTY } from './constants';
-
 import _ from "lodash";
 import { fields, validations as validate } from './fieldsAndRulesForEditRiskGroup';
 
 export const EDITAR = "Editar";
 export const ELIMINAR = "Eliminar";
-
 
 const numberThumbsRow = 3;
 

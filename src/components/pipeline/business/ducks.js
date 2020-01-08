@@ -1,4 +1,4 @@
-import {Map} from 'immutable';
+import { Map } from 'immutable';
 
 export const ADD_BUSINESS = "ayax/pipeline-business/ADD";
 export const DELETE_BUSINESS = "ayax/pipeline-business/DELETE";

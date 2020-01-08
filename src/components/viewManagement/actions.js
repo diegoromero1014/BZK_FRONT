@@ -1,7 +1,7 @@
-import {APP_URL} from '../../constantsGlobal';
+import { APP_URL } from '../../constantsGlobal';
 import axios from 'axios';
-import {TAB_SELETED_ACTIVE, GET_CSV, LOAD_CHART, CHANGE_ERROR_YEAR} from './constants';
-import {downloadReport} from "../../utils";
+import { TAB_SELETED_ACTIVE, GET_CSV, LOAD_CHART, CHANGE_ERROR_YEAR } from './constants';
+import { downloadReport } from "../../utils";
 import moment from "moment";
 
 export function changeTabSeletedChartView(tabSeleted) {

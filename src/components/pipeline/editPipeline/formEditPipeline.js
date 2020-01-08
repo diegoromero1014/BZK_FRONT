@@ -40,7 +40,7 @@ import {
 import {
     BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
     MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS, PROBABILITY,
-    PRODUCTS, FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES,
+    FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES,
     PRODUCTS_MASK, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY, PIPELINE_JUSTIFICATION, CLIENT_NEED, FILTER_MULTISELECT_FIELDS, ALL_BUSINESS_CATEGORIES, ALL_PRODUCT_FAMILIES
 } from "../../selectsComponent/constants";
 import {
@@ -77,7 +77,6 @@ import '../pipeline.style.scss';
 let thisForm;
 let typeButtonClick = null;
 let nameDisbursementPlansInReducer = "disbursementPlans";
-
 
 export default function createFormPipeline(name, origin, pipelineBusiness, functionCloseModal, disabled) {
     let nameMellowingPeriod = _.uniqueId('mellowingPeriod_');

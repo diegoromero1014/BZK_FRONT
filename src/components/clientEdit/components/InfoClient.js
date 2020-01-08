@@ -2,25 +2,24 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import _ from "lodash";
-
 import { Col, Row } from "react-flexbox-grid";
 import Input from "../../../ui/input/inputComponent";
 import Textarea from "../../../ui/textarea/textareaComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ClientTypology from "../../contextClient/clientTypology";
 import * as constants from "../../selectsComponent/constants";
-
-import { getMasterDataFields, consultListWithParameterUbication } from '../../selectsComponent/actions';
-
+import { getMasterDataFields, consultListWithParameterUbication, consultListByCatalogType } from '../../selectsComponent/actions';
 import { TITLE_DESCRIPTION, GOVERNMENT, FINANCIAL_INSTITUTIONS } from '../constants';
-import { BUTTON_EDIT } from "../../clientDetailsInfo/constants";
-
 
 export class InfoClient extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            subSegments : []
+        }
 
+        this._changeCatalogSubsegment = this._changeCatalogSubsegment.bind(this);
         this._changeSegment = this._changeSegment.bind(this);
         this._checkSubSegmentRender = this._checkSubSegmentRender.bind(this);
 
@@ -44,13 +43,29 @@ export class InfoClient extends React.Component {
 
     componentDidUpdate() {
         this._checkSubSegmentRender();
+    }
 
+    _changeCatalogSubsegment(segment, subSegment){
+        const { consultListByCatalogType, clientInformacion } = this.props;
+        consultListByCatalogType(constants.SUBSEGMENTS, segment.value, constants.SUBSEGMENTS).then((data) => {
+            this.setState({
+                subSegments: _.get(data, 'payload.data.data', [])
+            });
+        });
+
+        if (!_.isEqual(clientInformacion.get('responseClientInfo').segment, segment.value)) {
+            subSegment.onChange('');
+        } else {
+            subSegment.onChange(subSegment.value);
+        }
     }
 
     _changeSegment(idSegment, firstConsult) {
-        const { segment, customerTypology, selectsReducer, getMasterDataFields, consultListWithParameterUbication } = this.props;
+        const { segment, subSegment, customerTypology, selectsReducer, getMasterDataFields, consultListWithParameterUbication } = this.props;
         const value = _.get(_.find(selectsReducer.get(constants.SEGMENTS), ['id', parseInt(idSegment)]), 'value');
         segment.onChange(idSegment);
+
+        this._changeCatalogSubsegment(segment, subSegment);
 
         if (!_.isUndefined(value)) {
             if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {
@@ -143,7 +158,7 @@ export class InfoClient extends React.Component {
                                 valueProp={'id'}
                                 textProp={'value'}
                                 parentId="dashboardComponentScroll"
-                                data={selectsReducer.get(constants.SUBSEGMENTS)}
+                                data={this.state.subSegments}
                                 touched={true}
                                 showEmptyObject={true}
                             />
@@ -191,7 +206,8 @@ function mapStateToProps({ selectsReducer, clientInformacion }) {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getMasterDataFields,
-        consultListWithParameterUbication
+        consultListWithParameterUbication,
+        consultListByCatalogType
     }, dispatch)
 }
 

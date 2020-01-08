@@ -1,6 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Icon } from 'semantic-ui-react';
-
 
 class TitleSectionComponent extends Component {
 

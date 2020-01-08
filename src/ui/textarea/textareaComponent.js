@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import $ from 'jquery';
 import _ from 'lodash';
 
 import { nonValidateEnter } from '../../actionsGlobal';

@@ -84,9 +84,9 @@ describe("componentCreditStudy", () => {
 
     it('isPDFGenerated should be the same that contextClient', () => {
         const data = {payload: { data: { data: {isPDFGenerated: true} } }};
-        let getContextClientData = (idClient) => {
+        let getContextClientData = () => {
             return new Promise(
-                (resolve, reject) => resolve(data)
+                (resolve) => resolve(data)
             )
         }
 
@@ -98,7 +98,7 @@ describe("componentCreditStudy", () => {
         const response = {payload: {data: {data: {filename: "prueba"}}}};
         const generatePDF = () => {
             return new Promise(
-                (resolve, reject) => resolve(response)
+                (resolve) => resolve(response)
             )
         }
 

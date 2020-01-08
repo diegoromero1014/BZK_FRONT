@@ -1,6 +1,3 @@
-/**
- * Created by Andres Hurtado on 23/03/2017.
- */
 import Immutable from 'immutable';
 import {CONSULT_BLACK_LIST_CLIENT,UPDATE_VALUES_BLACKLIST} from './actions';
 import _ from 'lodash';

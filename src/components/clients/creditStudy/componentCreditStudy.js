@@ -4,9 +4,7 @@ import { reduxForm } from 'redux-form';
 import { Col, Row } from 'react-flexbox-grid';
 import _ from "lodash";
 import moment from 'moment';
-
 import { TooltipGeneratePDF } from './../tooltipGeneratePDF/tooltipGeneratePDF';
-
 import SweetAlert from '../../sweetalertFocus';
 import ClientTypology from '../../contextClient/clientTypology';
 import ContextEconomicActivity from '../../contextClient/contextEconomicActivity';
@@ -22,7 +20,6 @@ import ButtonShareholderAdmin from '../../clientDetailsInfo/bottonShareholderAdm
 import ButtonContactAdmin from '../../clientDetailsInfo/bottonContactAdmin';
 import ButtonBoardMembersAdmin from '../../clientDetailsInfo/buttonBoardMembersAdmin';
 import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
-
 import { updateTitleNavBar } from '../../navBar/actions';
 import * as globalActions from '../../globalComponents/actions';
 import { consultListWithParameterUbication, getMasterDataFields } from '../../selectsComponent/actions';
@@ -37,7 +34,6 @@ import {
     updateNotApplyCreditContact,
     validateInfoCreditStudy
 } from './actions';
-
 import {
     DISTRIBUTION_CHANNEL,
     INT_OPERATIONS,
@@ -82,7 +78,6 @@ import {
     SUCCESS_MESSAGE_FOR_BOARD_MEMBERS,
     SUCCESS_MESSAGE_FOR_SHAREHOLDER
 } from './constants';
-
 import { fields, validations as validate } from './fieldsAndRules';
 
 var errorMessageForShareholders = SUCCESS_MESSAGE_FOR_SHAREHOLDER;
@@ -604,20 +599,9 @@ export class ComponentStudyCredit extends Component {
     }
 
     callGeneratePDF() {
-        const { generatePDF, swtShowMessage, showLoading } = this.props;
-
-        showLoading(true, 'Cargando..');
-
-        generatePDF().then((response) => {
-            swtShowMessage('success', 'Estudio de crédito', 'Señor usuario, el PDF ha sido generado correctamente');
-            window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
-
-            showLoading(false, null);
-            this.setState({ isPDFGenerated: true });
-        }).catch((error) => {
-            showLoading(false, null);
-            swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, ocurrió un error generando el PDF.');
-        })
+        const { dispatchChangeStateSaveData, generatePDF } = this.props;
+        generatePDF(dispatchChangeStateSaveData);
+        this.setState({ isPDFGenerated: true });
     }
 
     handleClickButtonPDF() {
@@ -1082,7 +1066,8 @@ export class ComponentStudyCredit extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
+    return bindActionCreators(
+      {
         updateTitleNavBar,
         getContextClient,
         existsPDFforTheSameDay,
@@ -1097,8 +1082,11 @@ function mapDispatchToProps(dispatch) {
         getUserBlockingReport,
         stopBlockToReport,
         showLoading,
-        consultParameterServer
-    }, dispatch);
+        consultParameterServer,
+        dispatchChangeStateSaveData: changeStateSaveData
+      },
+      dispatch
+    );
 }
 
 function mapStateToProps({ selectsReducer, clientInformacion, studyCreditReducer, reducerGlobal }, ownerProps) {

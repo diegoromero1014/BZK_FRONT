@@ -1,10 +1,9 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { formatDateFromDDMMYYY, shorterStringValue } from '../../../../actionsGlobal';
 import _ from 'lodash';
-import moment from 'moment';
 
 var arrayValueTracking = [];
 

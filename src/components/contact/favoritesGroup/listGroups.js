@@ -1,13 +1,10 @@
-/**
- * Created by ahurtado on 11/28/2016.
- */
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { groupFindServer } from './actions';
 import GridComponent from '../../grid/component';
 import { mapDataGrid } from './createEdit/groupsFavoriteContactsUtilities';
-import { NUMBER_RECORDS, MODAL_TITLE_EMAILS } from './constants';
+import { MODAL_TITLE_EMAILS } from './constants';
 
 class ListGroups extends Component {
 

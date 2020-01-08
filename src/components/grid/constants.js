@@ -14,15 +14,11 @@ export const VIEW_CONTACT = "VIEW_CONTACT";
 export const DELETE_GROUP = "DELETE_GROUP";
 export const VIEW_LINK_GROUP = "VIEW_LINK_GROUP";
 export const VIEW_EMAIL_CONTACTS = "VIEW_EMAIL_CONTACTS";
-//Tipo de componente que se coloca en la tabla
 export const ACTION_CHECK = "check";
-//se utilizan en el componente del botón de eliminación para
-//determinar si se coloca un botón o solo un icono para eliminar
 export const ACTION_ICON = "icon";
 export const ACTION_BUTTON = "button";
 export const MODULE_VISIT = "visita";
 export const MODULE_PREVISIT = "previsita";
 export const MODULE_PIPELINE = "pipeline";
 export const MODULE_BUSINESS_PLAN = "businessPlan";
-//Tipo de celdas
 export const DATE_CELL = "DATE_CELL";

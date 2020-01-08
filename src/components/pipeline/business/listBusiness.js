@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
@@ -11,7 +11,7 @@ import BtnEditBusiness from '../btnEditBusiness';
 
 import { shorterStringValue } from '../../../actionsGlobal';
 
-import { PRODUCTS_MASK, PIPELINE_BUSINESS, PIPELINE_STATUS, PRODUCTS } from '../../selectsComponent/constants';
+import { PRODUCTS_MASK, PIPELINE_STATUS, PRODUCTS } from '../../selectsComponent/constants';
 import { consultDataSelect } from "../../selectsComponent/actions";
 
 var idBusinessSeleted = null;
