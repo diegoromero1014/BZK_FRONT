@@ -45,7 +45,6 @@ class ListParticipantsByClient extends Component {
                             Eliminar
                         </a>
                 }
-                handleOnClick={() => this.setState({ openModal: true })}
             />
         ))
     }
