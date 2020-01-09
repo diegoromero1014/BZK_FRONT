@@ -100,7 +100,7 @@ export class PrevisitFormComponent extends Component {
                <Row style={{ width: '99%', paddingLeft: 20 }}>
                   <Col xs={3}>
                      <Field type="text" name="documentType">
-                        {({ field: { value, name, onBlur }, form: { setFieldValue } }) =>
+                        {({ field: { value, name, onBlur } }) =>
                            <div>
                               {renderLabel(type)}
                               <ComboBox
@@ -130,7 +130,7 @@ export class PrevisitFormComponent extends Component {
 
                   <Col xs={3}>
                      <Field type="date" name="visitTime">
-                        {({ field: { value, name, onBlur }, form: { setFieldValue } }) =>
+                        {({ field: { value, name, onBlur } }) =>
                            <div>
                               {renderLabel(date)}
                               <DateTimePickerUi
@@ -223,7 +223,7 @@ export class PrevisitFormComponent extends Component {
                <Row style={{ padding: "0px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
                      <Field type="text" name="principalObjective">
-                        {({ field: { value, name }, form: { setFieldValue } }) =>
+                        {({ field: { value, name } }) =>
                            <div>
                               <RichText
                                  name="principalObjective"
