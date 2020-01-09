@@ -553,7 +553,42 @@ describe('Test previsitPage', () => {
             wrapper.update();
             await wrapper.instance().submitForm(request);
             sinon.assert.calledOnce(dispatchCreatePrevisit);  
-            expect(dispatchShowLoading).to.have.been.called.exactly(4);                
+            expect(dispatchShowLoading).to.have.been.called.exactly(4);   
+            expect(dispatchSwtShowMessage).to.have.been.called.once;                        
+        });
+
+        it('submitForm should call savePrevisit service', async () => {
+            const request = {
+                id: 1,
+                visitTime: new Date(),
+                endTime: '1',
+                documentType: 312312,
+                visitLocation: 'CEOH',
+                answers: []
+            };
+            dispatchValidateDatePrevisit = sinon.stub();
+            dispatchValidateDatePrevisit.resolves({
+                payload: {
+                    data: {
+                        status: 200
+                    }
+                }
+            });
+            defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
+            defaultProps.fromModal = false;
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.instance().getPrevisitParticipants = () =>{
+                return {
+                    clientParticipants: [],
+                    bankParticipants: [{ name: 'daniel'}],
+                    otherParticipants: []
+                }
+            };
+            wrapper.update();
+            await wrapper.instance().submitForm(request);
+            sinon.assert.calledOnce(dispatchCreatePrevisit);  
+            expect(dispatchShowLoading).to.have.been.called.exactly(4);   
+            expect(dispatchSwtShowMessage).to.have.been.called.once;             
         });
 
         it('submitForm should call savePrevisit service and respond a validateLogin false and fromModal is true', async () => {
