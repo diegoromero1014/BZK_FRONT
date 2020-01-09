@@ -18,7 +18,7 @@ class ListOfElements extends React.Component {
         const isValid = elements && (elements.length < maxLength);
 
         if (!isValid) {
-            swtShowMessage("error", "Erorr!", "Señor usuario, ya ha agregado el numero maximo de " + title);
+            swtShowMessage("error", "Erorr!", "Señor usuario, el numero maximo de " + title + " permitidos son "+maxLength);
         }
 
         return isValid;
@@ -154,7 +154,7 @@ class ListOfElements extends React.Component {
                 <div style={{ position: "relative", marginBottom: "25px" }}>
                     {this.props.renderTitle}
                     {!showAddSection && <div style={{ position: "absolute", top: "10px", right: "10px" }} >
-                        <button className="btn" onClick={this.openAddElement}>
+                        <button className="btn" onClick={this.openAddElement} type="button">
                             <ToolTipComponent text={"Agregar " + title}>
                                 <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
                             </ToolTipComponent>

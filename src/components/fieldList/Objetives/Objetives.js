@@ -26,7 +26,7 @@ const styles = {
     }
 }
 
-const helpText = "¿A donde quiere llegar el cliente? ¿Como se visualiza en algunos años?";
+const helpText = "¿A dónde quiere llegar el cliente? ¿Cómo se visualiza en algunos años?";
 
 const objectivesInitialValues = {
     value: ""
@@ -50,7 +50,7 @@ export default class Objetivos extends React.Component {
                     }
                     initialValues={objectivesInitialValues}
                     schema={ObjetiveSchema}
-                    title={"Objetivos"}
+                    title={"Objetivos del cliente"}
                     maxLength={3}
                     renderAddSection={({fields, onChange, onAddElement, onCancel, isEditing, errors}) => (
                         <Row>
@@ -140,7 +140,7 @@ export function renderElements(elements, removeElement, editElement) {
                             float: "left"
                         }}>
                             <i
-                                className="zoom icon"
+                                className="pencil icon"
                                 title="Editar Objetivo"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => editElement(objetivo)}
