@@ -599,20 +599,11 @@ export class ComponentStudyCredit extends Component {
     }
 
     callGeneratePDF() {
-        const { generatePDF, swtShowMessage, showLoading } = this.props;
-
-        showLoading(true, 'Cargando..');
-
-        generatePDF().then((response) => {
-            swtShowMessage('success', 'Estudio de crédito', 'Señor usuario, el PDF ha sido generado correctamente');
-            window.open(APP_URL + '/getExcelReport?filename=' + response.payload.data.data.filename + '&id=' + response.payload.data.data.sessionToken, '_blank');
-
-            showLoading(false, null);
-            this.setState({ isPDFGenerated: true });
-        }).catch((error) => {
-            showLoading(false, null);
-            swtShowMessage('error', 'Estudio de crédito', 'Señor usuario, ocurrió un error generando el PDF.');
-        })
+        const { dispatchChangeStateSaveData, generatePDF, clientInformacion } = this.props;
+        const infoClient = clientInformacion.get('responseClientInfo');
+        const namePDf = infoClient.clientNameType +"_"+ infoClient.clientIdNumber +"_"+ moment(new Date()).format("YYYYMMDD")+"_EC"+".pdf";
+        generatePDF(dispatchChangeStateSaveData,namePDf);
+        this.setState({ isPDFGenerated: true });
     }
 
     handleClickButtonPDF() {
@@ -1077,7 +1068,8 @@ export class ComponentStudyCredit extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
+    return bindActionCreators(
+      {
         updateTitleNavBar,
         getContextClient,
         existsPDFforTheSameDay,
@@ -1092,8 +1084,11 @@ function mapDispatchToProps(dispatch) {
         getUserBlockingReport,
         stopBlockToReport,
         showLoading,
-        consultParameterServer
-    }, dispatch);
+        consultParameterServer,
+        dispatchChangeStateSaveData: changeStateSaveData
+      },
+      dispatch
+    );
 }
 
 function mapStateToProps({ selectsReducer, clientInformacion, studyCreditReducer, reducerGlobal }, ownerProps) {
