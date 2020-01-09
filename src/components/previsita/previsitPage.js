@@ -21,7 +21,7 @@ import { redirectUrl } from '../globalComponents/actions';
 import { setConfidential, addUsers } from '../commercialReport/actions';
 import { addListParticipant, clearParticipants } from '../participantsVisitPre/actions';
 import { changeStateSaveData } from '../dashboard/actions';
-import { getAnswerQuestionRelationship, clearAnswer, addAnswer } from '../challenger/actions';
+import { getAnswerQuestionRelationship, clearAnswer, addAnswer, getAllQuestions } from '../challenger/actions';
 
 import { PREVISIT_TYPE } from '../selectsComponent/constants';
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from '../participantsVisitPre/constants';
@@ -33,9 +33,7 @@ import CommercialReportInfoFooter from '../globalComponents/commercialReportInfo
 export class PrevisitPage extends Component {
 
    constructor(props) {
-      super(props);
-
-      this.documentDraft = 0;      
+      super(props);  
 
       this.state = {
          isEditable: false,
@@ -53,8 +51,7 @@ export class PrevisitPage extends Component {
          oldPrevisitTypeSelected: null,
          oldPrevisitTypeSelectedId: null,
          currentPrevisitTypeSelected: null,
-         setFieldValue: null,     
-         formValid: false,    
+         setFieldValue: null,              
          documentDraft: 0,
          documentCreatedInfo: {
             createdBy: null,
@@ -80,7 +77,7 @@ export class PrevisitPage extends Component {
       const { params: { id }, dispatchShowLoading } = this.props;
       dispatchShowLoading(true, "Cargando...");
 
-      Promise.all([this.getPrevisitTypes(), this.getPrevisitData(id)]).then(() => {
+      Promise.all([this.getPrevisitTypes(), this.getPrevisitData(id), this.getChallengerQuestions()]).then(() => {
          this.setState({
             renderForm: true,
             isMounted: true
@@ -162,6 +159,11 @@ export class PrevisitPage extends Component {
       await dispatchGetMasterDataFields([PREVISIT_TYPE]);
    }
 
+   getChallengerQuestions = async () => {
+      const { dispatchGetAllQuestions } = this.props;
+      await dispatchGetAllQuestions();
+   }
+
    validatePermissionsPrevisits = () => {
       const { reducerGlobal } = this.props;
       return _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), EDITAR), false) && this.state.isEditable;
@@ -220,8 +222,8 @@ export class PrevisitPage extends Component {
       }      
    }
 
-   editPrevisit = async () => {
-      const usernameSession = window.localStorage.getItem('userNameFront');
+   editPrevisit = async () => {      
+      const usernameSession = window.localStorage.getItem('userNameFront');      
       await this.canUserEditPrevisita(usernameSession);
    }
 
@@ -247,17 +249,14 @@ export class PrevisitPage extends Component {
       return previsitParticipants;
    }
 
-   isFormValid = valid => this.setState({formValid: valid});
-
    submitForm = async (previsit) => {
       const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions,
          fromModal, closeModal } = this.props;         
       const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);
       if (validateDatePrevisitResponse) {
          const previsitParticipants = this.getPrevisitParticipants();
-         if (!previsitParticipants.bankParticipants.length && this.state.documentDraft) {
-            dispatchSwtShowMessage('error', TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS);
-            this.isFormValid(false);
+         if (!previsitParticipants.bankParticipants.length && previsit.documentStatus) {
+            dispatchSwtShowMessage('error', TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS);            
             return;
          }         
          const previsitRequest = {
@@ -275,35 +274,38 @@ export class PrevisitPage extends Component {
             "adaptMessage": previsit.adaptMessage,
             "controlConversation": previsit.controlConversation,
             "constructiveTension": previsit.constructiveTension,
-            "documentStatus": this.state.documentDraft,
+            "documentStatus": previsit.documentStatus,
             "endTime": previsit.endTime,
-            "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), this.state.documentDraft),
+            "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), previsit.documentStatus),
             "answers": getAnswerQuestionRelationship(answers, questions)
          };
          dispatchShowLoading(true, MESSAGE_SAVE_DATA);
          const responseCreatePrevisit = await dispatchCreatePrevisit(previsitRequest);
          dispatchShowLoading(false, "");
 
-         if (!_.get(responseCreatePrevisit, 'payload.data.validateLogin') || _.get(responseCreatePrevisit, 'payload.data.validateLogin') === 'false') {
+         if (!_.get(responseCreatePrevisit, 'payload.data.validateLogin') || _.get(responseCreatePrevisit, 'payload.data.validateLogin') === 'false') {                        
             if (fromModal) {
                closeModal();
             } else {
                redirectUrl(LoginComponentURL);
             }
-         } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_SUCCESS) {
-            this.isFormValid(true);
-            dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertSuccess(id), { onConfirmCallback: redirectUrl(ComponentClientInformationURL) });
+         } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_SUCCESS) {    
+            this.redirectionAfterSubmit(id, ComponentClientInformationURL)            
          } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_INVALID_INPUT) {
-            dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), MESSAGE_PREVISIT_INVALID_INPUT);
-            this.isFormValid(false);
+            dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), MESSAGE_PREVISIT_INVALID_INPUT);            
          } else {
-            dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertError(id));
-            this.isFormValid(false);
+            dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertError(id));            
          }
-      }else{
-         this.isFormValid(false);
       }
-      this.forceUpdate();
+   }
+
+   redirectionAfterSubmit = (previsitId, url) => {
+      const {fromModal, closeModal, dispatchSwtShowMessage } = this.props;      
+      if (fromModal) {
+         dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(previsitId), this.renderMessageSubmitAlertSuccess(previsitId), { onConfirmCallback: () => closeModal() });         
+      } else {
+         dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(previsitId), this.renderMessageSubmitAlertSuccess(previsitId), { onConfirmCallback: () => redirectUrl(url) });
+      }
    }
 
    onClickCancelCommercialReport = () => {
@@ -432,10 +434,6 @@ export class PrevisitPage extends Component {
       return true;
    }
 
-   onClickSaveHandler = draft => {
-      this.setState({documentDraft: draft});      
-   };   
-
    closeShowErrorBlockedPrevisit = () => {
       this.setState({ showErrorBlockedPreVisit: false })
       if (this.state.shouldRedirect) {         
@@ -455,21 +453,16 @@ export class PrevisitPage extends Component {
             isEditable={this.state.isEditable}
             onSubmit={this.submitForm}            
             questions={questions}
-            answers={answers}            
-            isDocumentDefinitive={this.state.documentDraft}    
-            commercialReportButtons={(setFieldValue) => (
+            answers={answers}                                    
+            commercialReportButtons={(setFieldValue) => (               
                <CommercialReportButtonsComponent
-                  onClickSave={(draft) => {                        
-                     this.onClickSaveHandler(draft);
-                     setFieldValue('documentStatus', draft, true);
-                  }}
+                  onClickSave={draft => setFieldValue('documentStatus', draft, true)}
                   onClickDownloadPDF={id ? this.onClickDownloadPDF : null}
                   cancel={this.onClickCancelCommercialReport}
                   fromModal={fromModal}
                   isEditable={this.state.isEditable}
                   documentDraft={this.state.documentDraft}
-                  creatingReport={id ? false : true}
-                  isFormValid={this.state.formValid}
+                  creatingReport={id ? false : true}                  
                />)} />
       )
    }
@@ -557,7 +550,8 @@ function mapDispatchToProps(dispatch) {
       dispatchChangeStateSaveData: changeStateSaveData,
       dispatchClearParticipants: clearParticipants,
       dispatchClearAnswer: clearAnswer,
-      dispatchAddAnswer: addAnswer
+      dispatchAddAnswer: addAnswer,
+      dispatchGetAllQuestions: getAllQuestions
    }, dispatch);
 }
 
