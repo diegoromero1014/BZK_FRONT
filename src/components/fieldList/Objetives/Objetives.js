@@ -103,7 +103,7 @@ export default class Objetivos extends React.Component {
                                             </Col>
                                             <Col md={12} style={styles.buttonsDiv}>
                                                 <div style={styles.buttonsDiv}>
-                                                    <button style={{ marginRight: "15px" }} className="btn btn-secondary save-btn" type="button" onClick={onAddElement}>{isEditing ? "Guardar" : "Agregar"}</button>
+                                                    <button style={{ marginRight: "15px" }} className="btn btn-secondary save-btn" type="button" onClick={onAddElement}>{isEditing ? "Modificar" : "Agregar"}</button>
                                                     <button className="btn btn-primary cancel-btn" type="button" onClick={onCancel}>Cancelar</button>
                                                 </div>
                                             </Col>
@@ -140,7 +140,7 @@ export function renderElements(elements, removeElement, editElement) {
                             float: "left"
                         }}>
                             <i
-                                className="pencil icon"
+                                className="edit icon"
                                 title="Editar Objetivo"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => editElement(objetivo)}
