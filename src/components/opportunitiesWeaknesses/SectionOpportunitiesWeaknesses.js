@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Row, Col } from "react-flexbox-grid";
 import ListaObjetos from "../listaObjetos/ListaObjetos";
 
@@ -32,6 +33,7 @@ class SectionOpportunitiesWeaknesses extends Component {
               ayuda={ayudaOportunidades}
               visual={visual}
               icon="thumbs up outline icon"
+              initialObjects={[]}
             />
           </div>
           <div style={{ width: "50%" }}>
@@ -40,6 +42,7 @@ class SectionOpportunitiesWeaknesses extends Component {
               ayuda={ayudaDebilidades}
               visual={visual}
               icon="thumbs down outline icon"
+              initialObjects={[]}
             />
           </div>
         </div>
@@ -48,4 +51,10 @@ class SectionOpportunitiesWeaknesses extends Component {
   }
 }
 
-export default SectionOpportunitiesWeaknesses;
+function mapStateToProps({ clientInformation }) {
+  return {
+    clientInformation
+  };
+}
+
+export default connect(mapStateToProps, null)(SectionOpportunitiesWeaknesses);

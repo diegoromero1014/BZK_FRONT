@@ -4,48 +4,33 @@ import { bindActionCreators } from "redux";
 import { Row, Col } from "react-flexbox-grid";
 import ToolTip from "../toolTip/toolTipComponent";
 import SweetAlert from "../sweetalertFocus";
-
-/** La funcion updateElements debe recibirse como propiedad por parte del 
-    componente padre, se le envia la lista de objetos, para luego 
-    guardar los datos en el componente padre (redux-context-state) para 
-    comunicacion con el back - BD
-*/
+import { updateElementFromList } from "./actions";
 import "./styleListaObjetos.scss";
 
-class AñadirListaObjetos extends Component {
+export class ListaObjetos extends Component {
   state = {
     objeto: {
       id: "",
       texto: ""
     },
-    objetos: [
-      {
-        id: 1,
-        texto:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim egestas imperdiet. Nunc consequat viverra lacinia. Morbi posuere urna non commodo tempus. Duis fermentum est at mollis sagittis. Suspendisse et augue ornare, bibendum sem vel, condimentum sem. Sed sed auctor leo. Etiam at leo nec est sodales aliquet. Sed placerat dui eu ex hendrerit, a ultricies libero eleifend turpis duis."
-      },
-      {
-        id: 2,
-        texto:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim egestas imperdiet. Nunc consequat viverra lacinia. Morbi posuere urna non commodo tempus. Duis fermentum est at mollis sagittis. Suspendisse et augue ornare, bibendum sem vel, condimentum sem. Sed sed auctor leo. Etiam at leo nec est sodales aliquet. Sed placerat dui eu ex hendrerit, a ultricies libero eleifend turpis duis."
-      },
-      {
-        id: 3,
-        texto:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim egestas imperdiet. Nunc consequat viverra lacinia. Morbi posuere urna non commodo tempus. Duis fermentum est at mollis sagittis. Suspendisse et augue ornare, bibendum sem vel, condimentum sem. Sed sed auctor leo. Etiam at leo nec est sodales aliquet. Sed placerat dui eu ex hendrerit, a ultricies libero eleifend turpis duis."
-      },
-      {
-        id: 4,
-        texto:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim egestas imperdiet. Nunc consequat viverra lacinia. Morbi posuere urna non commodo tempus. Duis fermentum est at mollis sagittis. Suspendisse et augue ornare, bibendum sem vel, condimentum sem. Sed sed auctor leo. Etiam at leo nec est sodales aliquet. Sed placerat dui eu ex hendrerit, a ultricies libero eleifend turpis duis."
-      }
-    ],
+    objetos: [],
     campoObjeto: false,
     campoVacio: false,
     idObjetoEliminar: "",
     modalEliminar: false,
     switchGuardarEditar: false,
     stylePlus: false
+  };
+
+  componentDidMount() {
+    this.setStateInitialObjects();
+  }
+
+  setStateInitialObjects = () => {
+    const { initialObjects } = this.props;
+    this.setState({
+      objetos: initialObjects
+    });
   };
 
   abrirCampoObjeto = () => {
@@ -92,14 +77,15 @@ class AñadirListaObjetos extends Component {
     const { objeto } = this.state;
     const listaObjetos = this.state.objetos;
     const campoVacio = this.state.objeto.texto;
-    // const { updateElements } = this.props;
+    const { dispatchUpdateElementFromList, titulo } = this.props;
+
     if (campoVacio !== "") {
       listaObjetos.map((elemento, index) => {
         if (elemento.id === objeto.id) {
           listaObjetos[index].texto = objeto.texto;
         }
       });
-      // updateElements(listaObjetos);
+      dispatchUpdateElementFromList(titulo, listaObjetos);
       this.setState({
         objeto: {
           id: "",
@@ -121,14 +107,16 @@ class AñadirListaObjetos extends Component {
   agregarObjetoLista = () => {
     const id = (Math.random() * 10000).toFixed();
     const { objeto } = this.state;
-    // const { updateElements } = this.props;
+    const { dispatchUpdateElementFromList, titulo } = this.props;
     objeto.id = id;
     const campoVacio = this.state.objeto.texto;
 
     if (campoVacio !== "") {
       const objetos = [...this.state.objetos, objeto];
-      // updateElements(objetos);
       this.cerrarCampoObjeto();
+
+      dispatchUpdateElementFromList(titulo, objetos);
+
       this.setState({
         objeto: {
           id: "",
@@ -145,12 +133,12 @@ class AñadirListaObjetos extends Component {
   };
 
   eliminarObjeto = id => {
-    // const { updateElements } = this.props;
+    const { dispatchUpdateElementFromList, titulo } = this.props;
     const objetos = this.state.objetos.filter(elemento => elemento.id !== id);
-    // updateElements(objetos);
     this.setState({
       modalEliminar: false
     });
+    dispatchUpdateElementFromList(titulo, objetos);
     this.setState({
       objetos
     });
@@ -206,12 +194,7 @@ class AñadirListaObjetos extends Component {
               <div className="container-titleHelpPlus">
                 <div>
                   <i className={icon} />
-                  <span className="title-component">
-                    {`${tituloCompleto}`}
-                    {visual && "("}
-                    {visual && <span className="icon-obligatoriedad">*</span>}
-                    {visual && ")"}
-                  </span>
+                  <span className="title-component">{`${tituloCompleto}`}</span>
                   {visual && (
                     <ToolTip text={ayuda}>
                       <i className="help circle icon blue" />
@@ -220,6 +203,7 @@ class AñadirListaObjetos extends Component {
                 </div>
                 {visual && (
                   <button
+                    name="btn-agregar"
                     type="button"
                     className={styleCheckedPlus}
                     onClick={this.abrirCampoObjeto}
@@ -269,11 +253,17 @@ class AñadirListaObjetos extends Component {
               </div>
               {campoVacio ? (
                 switchGuardarEditar ? (
-                  <div className="ui pointing red basic label">
+                  <div
+                    name="msjErrorModificar"
+                    className="ui pointing red basic label"
+                  >
                     {`Para modificar debe ingresar ${titulo}`}
                   </div>
                 ) : (
-                  <div className="ui pointing red basic label">
+                  <div
+                    name="msjErrorAgregar"
+                    className="ui pointing red basic label"
+                  >
                     {`Para agregar debe ingresar ${titulo}`}
                   </div>
                 )
@@ -294,7 +284,7 @@ class AñadirListaObjetos extends Component {
                   {objetos.map(elemento => (
                     <tr>
                       {visual && (
-                        <td className="collapsing">
+                        <td name="td-edit" className="collapsing">
                           <i
                             className="edit icon"
                             title={`Editar ${titulo}`}
@@ -355,10 +345,20 @@ class AñadirListaObjetos extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      dispatchUpdateElementFromList: updateElementFromList
+    },
+    dispatch
+  );
 
-const mapStateToProps = ({ clientInformacion, listaObje }, ownerProps) => ({
-  clientInformacion
+const mapStateToProps = (
+  { objectListReducer, clientInformation },
+  ownerProps
+) => ({
+  objectListReducer,
+  clientInformation
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AñadirListaObjetos);
+export default connect(mapStateToProps, mapDispatchToProps)(ListaObjetos);
