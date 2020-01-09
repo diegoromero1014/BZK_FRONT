@@ -38,6 +38,11 @@ let dispatchAddListParticipant;
 let dispatchAddUsers;
 let dispatchCreatePrevisit;
 let dispatchAddAnswer;
+let dispatchGetAllQuestions;
+let dispatchClearPrevisitDetail;
+let dispatchClearParticipants;
+let dispatchClearAnswer;
+let dispatchDisabledBlockedReport;
 let defaultProps = {};
 let redirectUrl;
 let stubLocalStorage;
@@ -49,7 +54,7 @@ describe('Test previsitPage', () => {
 
     beforeEach(() => {                    
         dispatchShowLoading = spy(sinon.fake());
-        dispatchSetConfidential = spy(sinon.fake());
+        dispatchSetConfidential = spy(sinon.stub());
         dispatchSwtShowMessage = spy(sinon.fake());
         dispatchPdfDescarga = sinon.fake();
         dispatchAddUsers = sinon.fake();
@@ -58,6 +63,11 @@ describe('Test previsitPage', () => {
         dispatchDetailPrevisit = sinon.stub();
         dispatchCreatePrevisit = sinon.stub();    
         dispatchAddAnswer = sinon.stub();    
+        dispatchGetAllQuestions = sinon.stub();
+        dispatchClearPrevisitDetail = sinon.stub();
+        dispatchClearAnswer = sinon.fake();
+        dispatchClearParticipants = sinon.fake();
+        dispatchDisabledBlockedReport = sinon.fake();
         dispatchCreatePrevisit.resolves({
             payload: {
                 data: {
@@ -98,6 +108,11 @@ describe('Test previsitPage', () => {
             dispatchAddUsers,
             dispatchCreatePrevisit,
             dispatchAddAnswer,
+            dispatchClearPrevisitDetail,
+            dispatchClearAnswer,
+            dispatchClearParticipants,
+            dispatchGetAllQuestions,
+            dispatchDisabledBlockedReport,
             participants: [],
             fromModal: false,
             closeModal
@@ -117,6 +132,27 @@ describe('Test previsitPage', () => {
             defaultProps.clientInformacion = Immutable.Map({responseClientInfo: {}});
             itRenders(<PrevisitPage {...defaultProps}/>);                                                              
             sinon.assert.called(redirectUrl);
+        });
+
+        it('should unmount previsitPage component', () => {
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.instance().componentWillUnmount();      
+            sinon.assert.called(dispatchClearPrevisitDetail);     
+            sinon.assert.called(dispatchClearAnswer);
+            sinon.assert.called(dispatchClearParticipants); 
+            sinon.assert.notCalled(dispatchDisabledBlockedReport);
+            expect(dispatchSetConfidential).to.have.been.called.twice;
+        });
+
+        it('should unmount previsitPage component and call dispatchDisabledBlockedReport when isEditable state is true', () => {
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.setState({isEditable: true});
+            wrapper.instance().componentWillUnmount();      
+            sinon.assert.called(dispatchClearPrevisitDetail);     
+            sinon.assert.called(dispatchClearAnswer);
+            sinon.assert.called(dispatchClearParticipants); 
+            sinon.assert.called(dispatchDisabledBlockedReport);
+            expect(dispatchSetConfidential).to.have.been.called.twice;
         });
     
         it('should render HeaderPrevisita', () => {
@@ -431,7 +467,8 @@ describe('Test previsitPage', () => {
                 visitTime: new Date(),
                 endTime: '1',
                 documentType: 312312,
-                visitLocation: 'CEOH'
+                visitLocation: 'CEOH',
+                documentStatus: 1
             };
             dispatchValidateDatePrevisit = sinon.stub();
             dispatchValidateDatePrevisit.resolves({
@@ -685,27 +722,6 @@ describe('Test previsitPage', () => {
             await wrapper.instance().submitForm(request);
             sinon.assert.calledOnce(dispatchCreatePrevisit);  
             expect(dispatchShowLoading).to.have.been.called.exactly(4);                     
-        });
-
-        it('onClickSaveHandler should set state documentDraft in 1', () => {
-            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
-            wrapper.setState({ formValid: true });
-            wrapper.instance().onClickSaveHandler(1);
-            expect(wrapper.instance().documentDraft).to.equal(1);
-        });
-
-        it('onClickSaveHandler should set state documentDraft in 0', () => {
-            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
-            wrapper.setState({ formValid: true });
-            wrapper.instance().onClickSaveHandler(0);
-            expect(wrapper.instance().documentDraft).to.equal(0);
-        });
-
-        it('onClickSaveHandler shouldnt change state documentDraft', () => {
-            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
-            wrapper.setState({ formValid: false});
-            wrapper.instance().onClickSaveHandler(0);
-            expect(wrapper.instance().documentDraft).to.equal(0);
         });
 
         it('cancelChangeTypePrevisit should set state showConfirmChangeTypeVisit in false', () => {

@@ -6,6 +6,8 @@ let dispatchContactsByClient;
 let dispatchAddParticipant;
 let dispatchClearParticipants;
 let dispatchShowAlert;
+let dispatchValidatePermissionsByModule;
+let reducerGlobal;
 let contactsByClient;
 let participants;
 let limitParticipantsByClient;
@@ -19,8 +21,10 @@ describe('Test participants/participantsByClient', () => {
         dispatchAddParticipant = spy(sinon.fake());
         dispatchClearParticipants = sinon.fake();
         dispatchShowAlert = spy(sinon.fake());
+        dispatchValidatePermissionsByModule= sinon.fake();
         limitParticipantsByClient = 10;        
         contactsByClient = Immutable.Map({});
+        reducerGlobal = Immutable.Map({});
         contacts = [
             {
                 id: 1,
@@ -83,7 +87,9 @@ describe('Test participants/participantsByClient', () => {
             dispatchAddParticipant,
             dispatchClearParticipants,
             dispatchShowAlert,
+            dispatchValidatePermissionsByModule,
             contactsByClient,
+            reducerGlobal,
             participants,
             limitParticipantsByClient,
             contacts

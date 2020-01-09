@@ -18,11 +18,6 @@ export class Challenger extends Component {
         };
     }
 
-    componentWillMount() {
-        const { dispatchGetAllQuestions } = this.props;
-        dispatchGetAllQuestions();
-    }
-
     selectedTabActive = field => $(`.challenger-dropdown-${field}`).toggleClass('active');
 
     onChange = (value, field, index) => {
