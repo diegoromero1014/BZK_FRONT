@@ -12,6 +12,7 @@ import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import RichText from '../richText/richTextComponent';
 import Participants from './participants';
 import Challenger from '../challenger/challenger';
+import { renderLabel, renderMessageError }  from '../../functions';
 
 import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER, HELP_VISIT_TYPE } from './constants';
 import { checkRichTextRequiredBoolean } from '../../validationsFields/rulesField';
@@ -56,29 +57,7 @@ export class PrevisitFormComponent extends Component {
       };
    }
 
-   renderMessageError = err => (
-      <div>
-         <div className="ui pointing red basic label"> {err} </div>
-      </div>
-   );
-
-   renderLabel = ({ name, message, nullable }) => (
-      <div style={{ display: 'flex', 'flex-direction': 'row', 'justify-content': 'space-between' }}>
-         <strong style={{ marginBottom: 10 }}>
-            <span>{`${name}  ${!nullable ? '(' : ''} `} </span>
-            {!nullable && <span style={{ color: 'red' }}>*</span>}
-            {!nullable && ' )'}
-         </strong>
-
-         {message !== null &&
-            <Tooltip text={message}>
-               <i className="help circle icon blue" style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
-            </Tooltip>
-         }
-      </div >
-   );
-
-   renderTitle = ({ name, message, nullable }) => (
+  renderTitle = ({ name, message, nullable }) => (
       <div style={{ fontSize: "23px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px", display: "-webkit-inline-box" }}>
          <span>{`${name} ${!nullable ? '(' : ''}`}</span>
          {!nullable && <span style={{ color: 'red' }}>*</span>}
@@ -123,7 +102,7 @@ export class PrevisitFormComponent extends Component {
                      <Field type="text" name="documentType">
                         {({ field: { value, name, onBlur }, form: { setFieldValue } }) =>
                            <div>
-                              {this.renderLabel(type)}
+                              {renderLabel(type)}
                               <ComboBox
                                  name="documentType"
                                  labelInput="Seleccione..."
@@ -142,7 +121,7 @@ export class PrevisitFormComponent extends Component {
                               />
 
                               <ErrorMessage name="documentType" component={'div'} >
-                                 {message => this.renderMessageError(message)}
+                                 {message => renderMessageError(message)}
                               </ErrorMessage>
                            </div>
                         }
@@ -153,7 +132,7 @@ export class PrevisitFormComponent extends Component {
                      <Field type="date" name="visitTime">
                         {({ field: { value, name, onBlur }, form: { setFieldValue } }) =>
                            <div>
-                              {this.renderLabel(date)}
+                              {renderLabel(date)}
                               <DateTimePickerUi
                                  culture='es'
                                  format={"DD/MM/YYYY hh:mm a"}
@@ -167,7 +146,7 @@ export class PrevisitFormComponent extends Component {
                                  disabled={isEditable ? 'disabled' : ''}
                               />
                               <ErrorMessage name="visitTime" component={'div'} >
-                                 {message => this.renderMessageError(message)}
+                                 {message => renderMessageError(message)}
                               </ErrorMessage>
                            </div>
                         }
@@ -179,7 +158,7 @@ export class PrevisitFormComponent extends Component {
                      <Field type="text" name="endTime">
                         {({ field: { value, onChange, onBlur } }) =>
                            <div>
-                              {this.renderLabel(duration)}
+                              {renderLabel(duration)}
                               <Input
                                  name="endTime"
                                  value={value}
@@ -191,7 +170,7 @@ export class PrevisitFormComponent extends Component {
                                  disabled={isEditable ? 'disabled' : ''}
                               />
                               <ErrorMessage name="endTime" component={'div'} >
-                                 {message => this.renderMessageError(message)}
+                                 {message => renderMessageError(message)}
                               </ErrorMessage>
                            </div>
                         }
@@ -203,7 +182,7 @@ export class PrevisitFormComponent extends Component {
                      <Field type="text" name="visitLocation">
                         {({ field: { value, onChange, onBlur } }) =>
                            <div>
-                              {this.renderLabel(place)}
+                              {renderLabel(place)}
                               <Input
                                  value={value}
                                  name="visitLocation"
@@ -215,7 +194,7 @@ export class PrevisitFormComponent extends Component {
                                  disabled={isEditable ? 'disabled' : ''}
                               />
                               <ErrorMessage name="visitLocation" component={'div'} >
-                                 {message => this.renderMessageError(message)}
+                                 {message => renderMessageError(message)}
                               </ErrorMessage>
                            </div>
                         }
@@ -258,7 +237,7 @@ export class PrevisitFormComponent extends Component {
                               />
                               <br></br>
                               <ErrorMessage name="principalObjective" component={'div'} >
-                                 {message => this.renderMessageError(message)}
+                                 {message => renderMessageError(message)}
                               </ErrorMessage>
                            </div>
                         }

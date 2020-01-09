@@ -23,8 +23,8 @@ i.huge {
 
 .img-header-participants-list {
     img {
-        width: 170px;
-        height: 170px;
+        width: 120px;
+        height: 120px;
         margin-top: 10px;
         margin-bottom: 10px;
     }
@@ -45,4 +45,10 @@ i.huge {
     row-gap: 30px;
     display: flex;
     flex-flow: row wrap;
+}
+
+.ReactModal__Overlay--after-open {
+    opacity: 1 !important;
+    transition: opacity 150ms ease-out !important;
+    z-index: 100 !important;
 }

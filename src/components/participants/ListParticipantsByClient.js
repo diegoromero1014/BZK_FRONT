@@ -7,7 +7,7 @@ import user from '../../../img/icon/user.png';
 import SweetAlert from '../sweetalertFocus';
 import { deleteParticipant } from './actions';
 import { KEY_PARTICIPANT_CLIENT } from './constants';
-import Modal from 'react-modal';
+
 
 class ListParticipantsByClient extends Component {
     constructor(props) {
@@ -15,13 +15,11 @@ class ListParticipantsByClient extends Component {
 
         this.state = {
             open: false,
-            openModal: false
         }
     }
 
     handleRenderParticipants = disabled => {
-        const { data } = this.props;
-
+        const { data, handleOpenModal } = this.props;
 
         return data.map(({nombreParticipante, cargo, estiloSocial, actitudBanco, idParticipante }) => (
             <CardComponent 
@@ -45,7 +43,8 @@ class ListParticipantsByClient extends Component {
                             Eliminar
                         </a>
                 }
-                style={{ with: 230, color: 'black' }}
+                handleOnClick={() => handleOpenModal(idParticipante)}
+                style={{ width: 230, color: 'black' }}
             />
         ))
     }
@@ -63,12 +62,10 @@ class ListParticipantsByClient extends Component {
         dispatchDeleteParticipant(participant, KEY_PARTICIPANT_CLIENT);
     }
 
-    handleCloseModal = () => this.setState({ openModal: false });
-
-
+    
     render() {
         const { disabled } = this.props;
-        const { open, openModal } = this.state;
+        const { open } = this.state;
 
         return (
             <div className='list-participants-container'>
@@ -86,22 +83,6 @@ class ListParticipantsByClient extends Component {
                     onCancel={() => this.setState({ open: false })}
                     onConfirm={this.handleDelete} 
                 />
-
-                <Modal isOpen={openModal} onRequestClose={this.handleCloseModal} className="modalBt4-fade modal fade contact-detail-modal in" >
-                    <div className="modalBt4-dialog modalBt4-lg">
-                        <div className="modalBt4-content modal-content">
-                            <div className="modalBt4-header modal-header">
-                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Participante</h4>
-                                
-                                <button type="button" onClick={this.handleCloseModal} className="close" data-dismiss="modal" role="close">
-                                    <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
-                                    <span className="sr-only">Close</span>
-                                </button>
-                            </div>
-                            <h1>Hola</h1>
-                        </div>
-                    </div>
-                </Modal>
             </div>                
         );
     }
