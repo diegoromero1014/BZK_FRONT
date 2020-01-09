@@ -45,6 +45,7 @@ class ListParticipantsByClient extends Component {
                             Eliminar
                         </a>
                 }
+                style={{ with: 230, color: 'black' }}
             />
         ))
     }
