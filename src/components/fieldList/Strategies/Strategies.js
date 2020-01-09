@@ -61,7 +61,7 @@ export function renderElements(elements, removeElement, editElement) {
                     <Row>
                         <Col md={1}>
                             <i
-                                className="zoom icon"
+                                className="pencil icon"
                                 title="Editar Objetivo"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => editElement(element)}
