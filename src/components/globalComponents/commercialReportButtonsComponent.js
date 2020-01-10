@@ -21,7 +21,8 @@ export default class CommercialReportButtonsComponent extends Component {
                     padding: '0px 0 8px 0',
                     backgroundColor: "#F8F8F8",
                     height: "60px",
-                    background: "rgba(255,255,255,0.75)"
+                    background: "rgba(255,255,255,0.75)",
+                    zIndex: "9999"
                 }}>
                 <div style={{ width: "100%", height: "100%", right: "0px", display: 'flex', "justify-content": 'flex-end' }}>                
                     {((!isEditable && !documentDraft) || creatingReport) &&

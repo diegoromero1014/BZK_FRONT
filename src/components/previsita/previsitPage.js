@@ -283,19 +283,28 @@ export class PrevisitPage extends Component {
          const responseCreatePrevisit = await dispatchCreatePrevisit(previsitRequest);
          dispatchShowLoading(false, "");
 
-         if (!_.get(responseCreatePrevisit, 'payload.data.validateLogin') || _.get(responseCreatePrevisit, 'payload.data.validateLogin') === 'false') {
+         if (!_.get(responseCreatePrevisit, 'payload.data.validateLogin') || _.get(responseCreatePrevisit, 'payload.data.validateLogin') === 'false') {                        
             if (fromModal) {
                closeModal();
             } else {
                redirectUrl(LoginComponentURL);
             }
-         } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_SUCCESS) {            
-            dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertSuccess(id), { onConfirmCallback: redirectUrl(ComponentClientInformationURL) });
+         } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_SUCCESS) {    
+            this.redirectionAfterSubmit(id, ComponentClientInformationURL)            
          } else if (_.get(responseCreatePrevisit, 'payload.data.status') === REQUEST_INVALID_INPUT) {
             dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), MESSAGE_PREVISIT_INVALID_INPUT);            
          } else {
             dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), this.renderMessageSubmitAlertError(id));            
          }
+      }
+   }
+
+   redirectionAfterSubmit = (previsitId, url) => {
+      const {fromModal, closeModal, dispatchSwtShowMessage } = this.props;      
+      if (fromModal) {
+         dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(previsitId), this.renderMessageSubmitAlertSuccess(previsitId), { onConfirmCallback: () => closeModal() });         
+      } else {
+         dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(previsitId), this.renderMessageSubmitAlertSuccess(previsitId), { onConfirmCallback: () => redirectUrl(url) });
       }
    }
 

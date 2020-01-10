@@ -74,6 +74,7 @@ export class ParticipantsByClient extends Component {
                 this.setState({ selectedContact: '' });
             } else {                
                 dispatchShowAlert('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
+                this.setState({ selectedContact: '' });
             }
         }
 
@@ -90,7 +91,7 @@ export class ParticipantsByClient extends Component {
         return (
             <div className='participants-client'>
                 <Row style={{ marginTop: 20, marginLeft: 7 }}>
-                    <Col xs={11} md={11} lg={11} style={{ maxWidth: '97%', flexBasis: '99.666667%' }}>
+                    <Col xs={11} md={11} lg={11} style={{ maxWidth: '96%', flexBasis: '96.666667%' }}>
                         <ComboBox
                             name="txtContactoCliente"
                             labelInput="Seleccione..."
@@ -111,7 +112,7 @@ export class ParticipantsByClient extends Component {
                         />
                     </Col>
 
-                    <Col xs={1} md={1} lg={1} style={{ maxWidth: '2%' }}>
+                    <Col xs={1} md={1} lg={1} style={{ maxWidth: '3%', paddingRight: 20 }}>
                         {_.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), CREAR), false) &&
                             <BotonCreateContactComponent typeButton={3} icon='plus circle' message='Crear contacto' disabled={disabled} />
                         }
