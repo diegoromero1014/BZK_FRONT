@@ -59,8 +59,6 @@ class ParticipantesOtros extends Component {
   }
 
   componentWillMount() {
-    const { clearParticipants } = this.props;
-    clearParticipants();
     this.props.resetForm();
   }
 

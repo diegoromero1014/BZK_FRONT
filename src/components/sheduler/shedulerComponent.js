@@ -15,13 +15,13 @@ import { consultList, consultDataSelect, consultListWithParameterUbication, clea
 import { validatePermissionsByModule, validateValue, clearPrevisitPermissions } from "../../actionsGlobal";
 import { MODULE_PREVISITS } from "../../constantsGlobal";
 import { SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR } from "./constants";
-import { TEAM_FOR_EMPLOYEE, LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE_REGION_ZONE, TEAM_VALUE_OBJECTS } from "../selectsComponent/constants";
+import { LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE_REGION_ZONE, TEAM_VALUE_OBJECTS } from "../selectsComponent/constants";
 import { bindActionCreators } from "redux";
 import _ from 'lodash';
 import $ from 'jquery';
-import EditPrevisit from '../previsita/editPrevisit/editPrevisit';
 import { filterUsersBanco } from '../participantsVisitPre/actions';
 import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
+import PrevisitPage from '../previsita/previsitPage';
 
 
 BigCalendar.momentLocalizer(moment);
@@ -64,7 +64,7 @@ class Sheduler extends Component {
     }
 
     openModal(idClient, idPrevisit) {
-        const { clearPrevisitPermissions, validatePermissionsByModule, showLoading } = this.props;
+        const { validatePermissionsByModule, showLoading } = this.props;
         showLoading(true, 'Cargando..');
         validatePermissionsByModule(MODULE_PREVISITS).then((data) => {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
@@ -385,8 +385,8 @@ class Sheduler extends Component {
                                     <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                                     <span className="sr-only">Close</span>
                                 </button>
-                            </div>
-                            <EditPrevisit params={{ id: this.state.idPrevisit }} viewBottons={true} closeModal={this.closeModal} />
+                            </div>                                  
+                           <PrevisitPage params={{ id: this.state.idPrevisit }} fromModal={true} closeModal={this.closeModal}></PrevisitPage>
                         </div>
                     </div>
                 </Modal>

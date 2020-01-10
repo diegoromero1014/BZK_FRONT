@@ -27,8 +27,12 @@ global.navigator = {
 // ------------------
 // Chai
 // ------------------
-const chai = require('chai');
+const chai = require('chai')
+const spies = require('chai-spies');
+chai.use(spies);
 global.expect = chai.expect;
+global.should = chai.should();
+global.spy = (object) => chai.spy(object);
 
 // ------------------
 // Enzyme
