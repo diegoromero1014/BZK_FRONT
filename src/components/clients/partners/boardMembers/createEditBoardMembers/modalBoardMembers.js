@@ -5,7 +5,6 @@ import { bindActionCreators } from "redux";
 import { Col, Row } from "react-flexbox-grid";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 import _ from "lodash";
-
 import ComboBox from "../../../../../ui/comboBox/comboBoxComponent";
 import InputComponent from "../../../../../ui/input/inputComponent";
 import Textarea from "../../../../../ui/textarea/textareaComponent";
@@ -13,13 +12,11 @@ import ToolTip from "../../../../toolTip/toolTipComponent";
 import SweetAlert from '../../../../sweetalertFocus';
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 import { checkNumberDocument, checkFirstCharacter } from './../../../../../validationsFields/rulesField';
-
 import { getClientNeeds, getMasterDataFields } from "../../../../selectsComponent/actions";
 import { changeKeyword, clearFilters, getBoardMembers, saveBoardMember, validateExistsBoardMember } from "../actions";
 import { changeStateSaveData } from "../../../../dashboard/actions";
 import { stringValidate, validateResponse } from "../../../../../actionsGlobal";
 import { swtShowMessage } from "../../../../sweetAlertMessages/actions";
-
 import { CONTACT_ID_TYPE } from "../../../../selectsComponent/constants";
 import {
     LOWER_INITIAL_LIMIT,

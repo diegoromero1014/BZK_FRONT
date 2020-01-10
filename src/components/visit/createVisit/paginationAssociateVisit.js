@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { changePageAssociateVisit } from '../actions';
 import { NUMBER_RECORDS } from '../constants';
 
-
 class PaginationAssociateVisit extends Component {
 
     constructor(props) {

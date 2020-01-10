@@ -1,8 +1,5 @@
 import _ from 'lodash';
 import Router from '../../historyRouter';
-/* import axios from 'axios';
-import { APP_URL } from '../../constantsGlobal';
-import * as constants from './constants'; */
 
 const productionUse = process.env.NODE_ENV === 'production';
 

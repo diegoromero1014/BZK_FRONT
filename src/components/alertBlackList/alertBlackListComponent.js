@@ -1,6 +1,3 @@
-/**
- * Created by Andres Hurtado on 01/03/2017.
- */
 import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {bindActionCreators} from 'redux';
@@ -10,7 +7,6 @@ import SearchBarClient from './searchBarClient';
 import SearchBarEntityBlackList from './searchBarEntityBlackList';
 import {FORM_FILTER_ALERT_BLACK_LIST,NUMBER_RECORDS} from './constants';
 import Pagination from './pagination';
-import {redirectUrl} from '../globalComponents/actions';
 import {reduxForm} from 'redux-form';
 import {updateTitleNavBar} from '../navBar/actions';
 import ListAlertBlackList from './listAlertBlackList';

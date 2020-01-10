@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {
     processRules, checkAddress, checkFirstCharacter, checkMaxLength, checkForValueIsExClient,
     checkForValueIsNotExClient, checkForValueJustifyNoGeren, checkForValueJustifyNoLME, checkPhone,
-    checkNumberLength, checkNumbers, checkMinLength
+    checkNumberLength, checkMinLength
 } from './../../validationsFields/rulesField';
 
 const fieldsWithRules= {

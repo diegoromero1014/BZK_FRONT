@@ -1,15 +1,13 @@
-import React, {Component} from 'react';
-import {Row, Grid, Col} from 'react-flexbox-grid';
-import ComboBox from '../../../ui/comboBox/comboBoxComponent';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {TAB_PREVISIT} from '../../viewManagement/constants';
-import {getCsv} from '../../viewManagement/actions';
-import {APP_URL, MESSAGE_DOWNLOAD_DATA} from '../../../constantsGlobal';
-import {getCsvPreVisitsByClient} from '../actions';
+import React, { Component } from 'react';
+import { Row, Col } from 'react-flexbox-grid';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { TAB_PREVISIT } from '../../viewManagement/constants';
+import { getCsv } from '../../viewManagement/actions';
+import { APP_URL, MESSAGE_DOWNLOAD_DATA } from '../../../constantsGlobal';
+import { getCsvPreVisitsByClient } from '../actions';
 import moment from 'moment';
-import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import {changeStateSaveData} from '../../dashboard/actions';
+import { changeStateSaveData } from '../../dashboard/actions';
 
 class DownloadPrevisits extends Component {
 

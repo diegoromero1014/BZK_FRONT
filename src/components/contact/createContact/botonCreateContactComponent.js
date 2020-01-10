@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Col } from 'react-flexbox-grid';
+import { Icon } from 'semantic-ui-react';
 import Modal from 'react-modal';
-
+import ToolTip from '../../toolTip/toolTipComponent';
 import ModalComponentContact from './modalComponentContact';
-
 import { toggleModalContact } from './actions';
 
 class BotonCreateContactComponent extends Component {
@@ -28,17 +28,21 @@ class BotonCreateContactComponent extends Component {
   }
 
   render() {
-    const { typeButton } = this.props;
+    const { typeButton, icon, message, disabled } = this.props;
     return (
       <Col xs={2} sm={2} md={typeButton === 1 ? 4 : 1} lg={typeButton === 1 ? 4 : 1} style={typeButton === 1 ? { marginRight: '14px' } : {}}>
         {typeButton === 1 ?
           <button className="btn btn-primary" type="button" title="Crear contacto" style={typeButton === 1 ? { marginTop: "20px" } : { float: "right" }} onClick={this.openModal}>
             Crear contacto
             </button>
+          : typeButton === 3 && icon && message ? 
+            <ToolTip text={message}>
+                <Icon disabled={disabled} name={icon} style={{ cursor: 'pointer' }} size='huge' onClick={() => !disabled && this.openModal()}/>
+            </ToolTip>
           :
-          <button className="btn btn-primary" type="button" title="Crear contacto" style={{ float: "right" }} onClick={this.openModal}>
-            <i className="add user icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
-          </button>
+            <button className="btn btn-primary" type="button" title="Crear contacto" style={{ float: "right" }} onClick={this.openModal}>
+              <i className="add user icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+            </button>
         }
         <Modal
           isOpen={this.state.modalIsOpen}

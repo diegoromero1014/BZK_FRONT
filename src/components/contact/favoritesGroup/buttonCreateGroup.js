@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { toggleModalGroup } from './actions';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import { Col } from 'react-flexbox-grid';
 import ModalComponentGroup from './createEdit/modalComponentGroup';
 import Modal from 'react-modal';
 import { TITTLE_MODAL_GROUP } from './constants';

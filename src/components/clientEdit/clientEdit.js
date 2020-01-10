@@ -7,7 +7,6 @@ import numeral from "numeral";
 import _ from "lodash";
 import $ from "jquery";
 import moment from "moment";
-
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
@@ -66,7 +65,6 @@ import {
     economicGroupsByKeyword,
     getMasterDataFields
 } from "../selectsComponent/actions";
-
 import { BUTTON_EDIT, BUTTON_UPDATE, UPDATE } from "../clientDetailsInfo/constants";
 import * as constants from "../selectsComponent/constants";
 import {
@@ -100,7 +98,6 @@ import {
     MAIN_COMPETITOR,
     MAIN_SUPPLIER
 } from "../contextClient/constants";
-
 import { fields, validations as validate } from './fieldsAndRulesClientEditUpdate';
 
 

@@ -157,7 +157,7 @@ let GOOGLE_RECAPTCHA_PUBLIC_KEY;
 
 if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
   API_URL = "http://localhost:8084/Centricity";
-  GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcSM7AUAAAAAOgy56jmc06CPK7uDLZNiwzkG6Y8';
+  GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcpscUUAAAAAO2zIvHSyFrC4IS8Kfy72vWw7QD5';
 } else {
   if (WP_VAR_ENVIRONMENT === "production") {
     API_URL = "https://biztrack.bancolombia.corp/Centricity";
@@ -292,3 +292,6 @@ export const MESSAGE_SECURITY_FORM = "MENSAJE_SEGURIDAD_FORMULARIOS";
 
 //PARAMETRO DE DIAS HABILITADO PARA GENERAR PDF ESTUDIO DE CRÉDITO
 export const DIAS_HABILITADOS_PARA_GENERAR_PDF = "DIAS_HABILITADOS_PARA_GENERAR_PDF";
+
+export const AFIRMATIVE_ANSWER='Sí, estoy seguro';
+export const CANCEL='Cancelar';

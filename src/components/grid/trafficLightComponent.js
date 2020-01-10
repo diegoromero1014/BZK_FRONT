@@ -1,5 +1,4 @@
-import React, {Component,PropTypes} from 'react';
-import {APP_URL} from '../../constantsGlobal';
+import React, {Component} from 'react';
 
 class TrafficLightComponent extends Component {
 

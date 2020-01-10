@@ -14,12 +14,8 @@ import { validateValue, validateIsNullOrUndefined } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import SweetAlert from '../sweetalertFocus';
 import { showBrandConfidential } from '../navBar/actions';
-
-
 import { NUMBER_CONTACTS, MESSAGE_CONFIDENTIAL, TITLE_MESSAGE_ERR_USER_INVALID, MESSAGE_ERR_USER_INVALID } from './constants';
-
 import '../../../styles/modules/UserPermissions/Checkbox.scss'
-
 
 var self;
 const validate = values => {
@@ -27,9 +23,8 @@ const validate = values => {
     return errors
 };
 
-
-var disabledButtonCreate = '';
 var usersPermission = [];
+var disabledButtonCreate = '';
 
 export class PermissionUserReports extends Component {
     constructor(props) {

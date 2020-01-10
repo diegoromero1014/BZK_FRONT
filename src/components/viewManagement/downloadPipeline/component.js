@@ -1,23 +1,23 @@
-import React, {Component} from 'react';
-import {Col, Row} from 'react-flexbox-grid';
-import {getPipelineXls } from '../actions';
-import {bindActionCreators} from 'redux';
-import {reduxForm} from 'redux-form';
+import React, { Component } from 'react';
+import { Col, Row } from 'react-flexbox-grid';
+import { getPipelineXls } from '../actions';
+import { bindActionCreators } from 'redux';
+import { reduxForm } from 'redux-form';
 import moment from 'moment';
 
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
-import {swtShowMessage} from '../../sweetAlertMessages/actions';
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
-import {changeStateSaveData} from '../../dashboard/actions';
-import {getMasterDataFields} from '../../selectsComponent/actions';
+import { changeStateSaveData } from '../../dashboard/actions';
+import { getMasterDataFields } from '../../selectsComponent/actions';
 
 import {
     MESSAGE_ERROR,
     DATE_FORMAT,
     DATETIME_FORMAT
 } from '../../../constantsGlobal';
-import {TAB_PIPELINE} from '../../viewManagement/constants';
+import { TAB_PIPELINE } from '../../viewManagement/constants';
 
 
 const fields = ["initialValidityDate", "finalValidityDate", "taskStatus"];

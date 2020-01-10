@@ -7,7 +7,6 @@ import SearchBarClient from './searchClientAlertPendingUpdate';
 import Pagination from './pagination';
 import ListClientsPendingUpdate from './listClientPendingUpdate';
 import _ from 'lodash';
-
 import { changeKeyword, changePage, changeRegion, changeTeam, changeZone, clearFilter, clientsPendingUpdateFindServer } from './actions';
 import { showLoading } from '../loading/actions';
 import { redirectUrl } from '../globalComponents/actions';
@@ -16,7 +15,6 @@ import { onSessionExpire } from '../../actionsGlobal'
 import {
     consultDataSelect, consultList, consultListWithParameterUbication, consultTeamsByRegionByEmployee, getMasterDataFields
 } from '../selectsComponent/actions';
-
 import { FORM_FILTER_ALERT_PUC, NUMBER_RECORDS } from './constants';
 import * as constants from '../selectsComponent/constants';
 

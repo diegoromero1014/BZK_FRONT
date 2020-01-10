@@ -4,7 +4,6 @@ import * as constants from './constants';
 import { generatePDF } from '../reports/pdf/actions';
 import { validateIsNullOrUndefined } from '../../actionsGlobal';
 
-
 export function pdfDescarga(changeStateSaveData, idPrevisit) {
     const requestBody = {
       "name": "reportPreVisit.pdf",
@@ -145,6 +144,12 @@ export function detailPrevisit(idPrevisit) {
     type: constants.GET_DETAIL_PREVISIT,
     payload: request
   }
+}
+
+export function clearPrevisitDetail(){
+  return {
+    type: constants.CLEAR_PREVISIT_DETAIL
+  };
 }
 
 export function getCsvPreVisitsByClient(clientId, hasParticipatingContacts, hasParticipatingEmployees, hasRelatedEmployees) {

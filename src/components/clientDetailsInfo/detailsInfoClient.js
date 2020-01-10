@@ -4,7 +4,6 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import moment from "moment";
 import _ from 'lodash';
-
 import ActividadEconomica from "./actividadEconomica";
 import InventoryPolicy from "./inventoryPolicy";
 import ControlLinkedPayments from "./controlLinkedPayments";
@@ -27,7 +26,6 @@ import { changeAccordionValue, seletedButton, sendErrorsUpdate, validateContactS
 import { onSessionExpire, shorterStringValue, validatePermissionsByModule } from "../../actionsGlobal";
 import { redirectUrl } from "../globalComponents/actions";
 import { showModalRiskGroup } from "../clientRiskGroup/actions";
-
 import { BUTTON_EDIT, BUTTON_UPDATE, CLOSE_TAB, OPEN_TAB } from "./constants";
 import {
     EDITAR,

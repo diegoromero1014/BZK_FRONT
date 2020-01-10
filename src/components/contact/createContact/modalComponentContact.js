@@ -9,7 +9,6 @@ import _ from 'lodash';
 
 import Ubicacion from '../contactDetail/ubicacion';
 
-import {Checkbox} from 'semantic-ui-react';
 import SweetAlert from '../../sweetalertFocus';
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import Input from '../../../ui/input/inputComponent';
@@ -48,8 +47,6 @@ import {
 } from '../../../validationsFields/validationsMessages';
 
 import {
-    FILTER_CITY,
-    FILTER_PROVINCE,
     CONTACT_ID_TYPE,
     FILTER_CONTACT_POSITION,
     FILTER_TITLE,

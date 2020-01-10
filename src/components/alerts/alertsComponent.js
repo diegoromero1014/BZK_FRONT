@@ -1,11 +1,7 @@
-/**
- * Created by user- on 11/22/2016.
- */
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
-import Modal from 'react-modal';
 import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import { redirectUrl } from '../globalComponents/actions';
 import ItemAlert from './itemAlert';
 import { updateTitleNavBar } from '../navBar/actions';
@@ -20,7 +16,6 @@ import { CODE_ALERT_PENDING_UPDATE_CLIENT, CODE_ALERT_PORTFOLIO_EXPIRATION, CODE
 import * as constants from '../selectsComponent/constants';
 import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
 import { MODULE_ALERTS, MODULE_CLIENTS, BLUE_COLOR } from '../../constantsGlobal';
-import { COLOR_ITEMS_MENU } from '../menu/constants';
 import PortfolioExpirationIcon from '../Icons/PortfolioExpiration';
 import BlackListIcon from '../Icons/BlackListIcon';
 import { consultList } from '../selectsComponent/actions';

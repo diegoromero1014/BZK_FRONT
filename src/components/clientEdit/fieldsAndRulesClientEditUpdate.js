@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {processRules, checkIsUpdateClient, checkClientName, checkMaxLength,
-    checkNumberDocument, checkFirstCharacter, checkRequired, checkForValidSubSegment,
+    checkNumberDocument, checkFirstCharacter, checkRequired,
     checkClientDescription, checkForValueIdSubCiiuEditClient, checkClientContext, checkInventoryPolicy,
     checkControlLinkedPayments, checkControlLinkedPaymentsRequired, checkClientNeighborhood, checkNumbers,
     checkNumberLength, checkdetailNonOperatingIncome, checkForValueJustifyNoGerenEditClient, checkForValueJustifyNoLMEEditClient,
@@ -56,7 +56,7 @@ const fieldsWithRules= {
      idNumber: { rules: [checkRequired, checkNumberDocument, checkFirstCharacter, checkMaxLength(30)] },
      idTypeClient: { rules: [checkRequired] },
      segment: { rules: [checkRequired] },
-     subSegment: { rules: [checkForValidSubSegment] },
+     subSegment: { rules: [] },
      groupEconomic:{rules:[]},
      customerCoverageIntOpe:{rules:[]}
  };

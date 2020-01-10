@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {reset} from 'redux-form';
 import {connect} from 'react-redux';
-import {Grid, Row, Col} from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import moment from 'moment';
 import {redirectUrl} from '../globalComponents/actions';
 import _ from 'lodash';
@@ -10,15 +10,6 @@ import {openModalAlerts} from './actions';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import {toggleMenu} from '../navBar/actions';
 import {MENU_OPENED} from '../navBar/constants';
-
-var styles = {
-    minHeight: "30px",
-    height: "30px",
-    margin: "0px",
-    padding: "7px",
-    minWidth: "30px",
-    width: "150px"
-};
 
 class ItemAlert extends Component {
 

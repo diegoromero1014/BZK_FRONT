@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
 import { contactsByClientFindServer, changeKeywordContact, clearContactPaginator, clearContactOrder } from './actions';
-import * as constants from '../../constantsGlobal';
 import { NUMBER_RECORDS } from './constants';
 
 let v1 = "";

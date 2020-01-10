@@ -1,10 +1,9 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {consultDataSelect, getMasterDataFields} from '../actions';
-import {Multiselect} from 'react-widgets';
-import {FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_HOBBIES, FILTER_SPORTS} from '../constants';
-
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { consultDataSelect } from '../actions';
+import { Multiselect } from 'react-widgets';
+import { FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_HOBBIES, FILTER_SPORTS } from '../constants';
 
 class MultiSelectComponent extends Component{
 

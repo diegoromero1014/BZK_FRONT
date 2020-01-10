@@ -3,11 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import { indexOf, has } from 'lodash';
-
 import GridComponent from '../grid/component';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import { mapDataGrid } from './clientPendingUpdateUtilities';
-
 import { redirectUrl } from '../globalComponents/actions'
 import { validatePermissionsByModule } from "../../actionsGlobal";
 import { showLoading } from '../loading/actions';
@@ -17,7 +15,6 @@ import {
     clearClientPagination,
     orderColumnClientPendingUpdate
 } from './actions';
-
 import { VISUALIZAR, EDITAR, MODULE_CLIENTS } from '../../constantsGlobal';
 import { NUMBER_RECORDS } from './constants';
 

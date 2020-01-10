@@ -1,9 +1,8 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {pipelineByClientFindServer,changePage,limitiInf,clearPipeline,clearPipelineOrder} from './actions';
-import {NUMBER_RECORDS} from './constants';
-
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { pipelineByClientFindServer, changePage, limitiInf, clearPipeline, clearPipelineOrder } from './actions';
+import { NUMBER_RECORDS } from './constants';
 
 let v1 = "";
 let v2= "";

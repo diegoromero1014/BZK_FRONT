@@ -1,7 +1,3 @@
-import moment from 'moment';
-import get from 'lodash/get';
-import flow from 'lodash/flow';
-import {REVIEWED_DATE_FORMAT} from '../../../constantsGlobal';
 import {shorterStringValue, mapDateValueFromTask} from '../../../actionsGlobal';
 import {DELETE_TYPE_PREVISIT} from '../../previsita/constants';
 import {DELETE_TYPE_VISIT} from '../../visit/constants';
@@ -47,7 +43,7 @@ export function validateTypeDeleteJson(typeDocument){
 
 export function validateUrlRedirect(typeDocument){
   if( typeDocument === PREVISITA ){
-    return '/dashboard/previsitaEditar';
+    return '/dashboard/previsita';
   } else if( typeDocument === VISITA ){
     return '/dashboard/visitaEditar';
   } else if( typeDocument === PIPELINE ){

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-flexbox-grid';
 import _ from 'lodash';
 import { formatLongDateToDateWithNameMonthAndHour } from '../../../../actionsGlobal';
 

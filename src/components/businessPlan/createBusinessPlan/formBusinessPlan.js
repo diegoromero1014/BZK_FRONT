@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import moment from 'moment';
 import _ from 'lodash';
-
 import ComboBox from '../../../ui/comboBox/comboBoxComponent';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import NeedBusiness from '../need/needBusiness';
@@ -13,7 +12,6 @@ import SweetAlertFocus from '../../sweetalertFocus';
 import Tooltip from "../../toolTip/toolTipComponent";
 import RichText from "../../richText/richTextComponent";
 import PermissionUserReports from "../../commercialReport/permissionsUserReports";
-
 import { redirectUrl } from '../../globalComponents/actions';
 import { setConfidential } from '../../commercialReport/actions';
 import { buildJsoncommercialReport } from '../../commercialReport/functionsGenerics';
@@ -22,10 +20,9 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { createBusiness, validateRangeDates } from '../actions';
 import {
-    consultParameterServer, formValidateKeyEnter, htmlToText, validateResponse,
+    consultParameterServer, formValidateKeyEnter, htmlToText,
     onSessionExpire
 } from '../../../actionsGlobal';
-
 import { LAST_BUSINESS_REVIEW } from '../../../constantsParameters';
 import { OBJECTIVE_BUSINESS } from '../constants';
 import {
