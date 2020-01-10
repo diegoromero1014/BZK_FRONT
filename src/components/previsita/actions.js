@@ -146,6 +146,12 @@ export function detailPrevisit(idPrevisit) {
   }
 }
 
+export function clearPrevisitDetail(){
+  return {
+    type: constants.CLEAR_PREVISIT_DETAIL
+  };
+}
+
 export function getCsvPreVisitsByClient(clientId, hasParticipatingContacts, hasParticipatingEmployees, hasRelatedEmployees) {
   const json = {
     "messageHeader": {

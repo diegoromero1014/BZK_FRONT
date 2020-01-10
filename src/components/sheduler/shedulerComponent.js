@@ -9,19 +9,16 @@ import {showLoading} from '../loading/actions';
 import {updateTitleNavBar, showBrandConfidential} from '../navBar/actions';
 import {Row, Col} from 'react-flexbox-grid';
 import {redirectUrl} from "../globalComponents/actions";
-import {getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter} from './actions';
+import {getSchedulerPrevisits, changeTeam, clearFilter} from './actions';
 import {consultInfoClient} from "../clientInformation/actions";
 import {
-    consultList,
     consultDataSelect,
     consultListWithParameterUbication,
-    clearConsultListWithParameterUbication,
     consultListWithParameter,
-    clrearConsultListWithParameter,
     clearLists,
     getRegionsByEmployee
 } from "../selectsComponent/actions";
-import {validatePermissionsByModule, validateValue, clearPrevisitPermissions} from "../../actionsGlobal";
+import {validatePermissionsByModule, validateValue} from "../../actionsGlobal";
 import {MODULE_PREVISITS} from "../../constantsGlobal";
 import {SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR} from "./constants";
 import {
@@ -33,9 +30,9 @@ import {
 import {bindActionCreators} from "redux";
 import _ from 'lodash';
 import $ from 'jquery';
-import EditPrevisit from '../previsita/editPrevisit/editPrevisit';
-import {filterUsersBanco} from '../participantsVisitPre/actions';
+import { filterUsersBanco } from '../participantsVisitPre/actions';
 import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
+import PrevisitPage from '../previsita/previsitPage';
 
 
 BigCalendar.momentLocalizer(moment);
@@ -405,8 +402,7 @@ export class Sheduler extends Component {
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
-                            <EditPrevisit params={{id: this.state.idPrevisit}} viewBottons={true}
-                                          closeModal={this.closeModal}/>
+                           <PrevisitPage params={{ id: this.state.idPrevisit }} fromModal={true} closeModal={this.closeModal}></PrevisitPage>
                         </div>
                     </div>
                 </Modal>
@@ -422,20 +418,14 @@ function mapDispatchToProps(dispatch) {
         consultInfoClientDispatch: consultInfoClient,
         validatePermissionsByModuleDispatch: validatePermissionsByModule,
         updateTitleNavBarDispatch: updateTitleNavBar,
-        consultList,
         consultDataSelectDispatch: consultDataSelect,
         consultListWithParameterUbicationDispatch: consultListWithParameterUbication,
-        clearConsultListWithParameterUbication,
         consultListWithParameterDispatch: consultListWithParameter,
         changeTeam,
-        changeRegion,
         showLoadingDispatch: showLoading,
         clearFilterDispatch: clearFilter,
-        changeZone,
         getRegionsByEmployeeDispatch: getRegionsByEmployee,
-        clrearConsultListWithParameter,
         filterUsersBancoDispatch: filterUsersBanco,
-        clearPrevisitPermissions,
         clearListsDispatch: clearLists,
         showBrandConfidentialDispatch: showBrandConfidential
     }, dispatch);

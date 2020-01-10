@@ -107,7 +107,7 @@ class ListPrevisitComponent extends Component {
 				id: value.id,
 				typeClickDetail: MODULE_PREVISIT,
 				ownerDraft: value.idStatusDocument,
-				urlRedirect: '/dashboard/previsitaEditar',
+				urlRedirect: `/dashboard/previsita`,
 				component: 'VIEW_PREVISIT'
 			});
 			let datePrevisitFormat = moment(value.datePrevisit).locale('es');
