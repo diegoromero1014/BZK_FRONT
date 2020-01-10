@@ -2,7 +2,7 @@ import Immutable from 'immutable';
 import {
     GET_PREVISIT_LIST, CHANGE_PAGE, LIMITE_INF, ORDER_COLUMN_PREVISIT,
     CLEAR_PREVISIT, CLEAR_PREVISIT_PAGINATOR, CLEAR_PREVISIT_ORDER, GET_DETAIL_PREVISIT, OWNER_DRAFT,
-    ASK_EDIT_PREVISITA, DELETE_BLOCKED_PREVISITA
+    ASK_EDIT_PREVISITA, DELETE_BLOCKED_PREVISITA, CLEAR_PREVISIT_DETAIL
 } from './constants';
 import {orderBy} from 'lodash';
 
@@ -40,6 +40,8 @@ export default (state = initialState, action) => {
             });
         case GET_DETAIL_PREVISIT:
             return state.set('detailPrevisit', action.payload.data);
+        case CLEAR_PREVISIT_DETAIL:
+            return state.set('detailPrevisit', null);
         case CLEAR_PREVISIT:
             return state.withMutations(map => {
                 map.set('page', 1)

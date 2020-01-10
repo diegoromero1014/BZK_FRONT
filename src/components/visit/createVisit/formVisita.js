@@ -423,6 +423,12 @@ class FormVisita extends Component {
     }
   }
 
+  componentWillUnmount() {
+    const { clearParticipants } = this.props;
+    clearParticipants();
+  }
+  
+
   _consultInfoPrevisit() {
     const { detailPrevisit, selectsReducer, participants } = this.props;
     detailPrevisit(idPrevisitSeleted).then((result) => {

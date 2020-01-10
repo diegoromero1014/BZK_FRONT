@@ -740,12 +740,16 @@ export const checkPlaceOfPrevisit = value => {
     return message;
 }
 
-export const checkRichTextRequired = value => {
+export const checkRichTextRequired = value => {    
     if (!_.isUndefined(value)) {
         return checkRequired(htmlToText(value));
     } else {
         return MESSAGE_REQUIRED_VALUE;
     }
+}
+
+export const checkRichTextRequiredBoolean = value => {    
+    return !checkRichTextRequired(value);
 }
 
 export const checkNumberInRange = (min, max) => value => {
