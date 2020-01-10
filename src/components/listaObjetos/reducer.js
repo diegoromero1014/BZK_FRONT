@@ -1,11 +1,13 @@
-import { UPDATE_LIST } from "./constants";
+import { UPDATE_LIST, UPDATE_ACTIVE_FIELD_OBJECT } from "./constants";
 
 const initialState = {
   Oportunidades: {
-    elements: []
+    elements: [],
+    open: false
   },
   Debilidades: {
-    elements: []
+    elements: [],
+    open: false
   }
 };
 
@@ -16,6 +18,12 @@ export default function reducer(state = initialState, action) {
       const newList = Object.assign({}, list, { elements: action.elements });
       const newState = Object.assign({}, state, { [action.name]: newList });
       return newState;
+    case UPDATE_ACTIVE_FIELD_OBJECT:
+      let element = Object.assign({}, state[action.name], {
+        open: action.status
+      });
+
+      return Object.assign({}, state, { [action.name]: element });
     default:
       return state;
   }

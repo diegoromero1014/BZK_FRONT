@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux";
 import { Row, Col } from "react-flexbox-grid";
 import ToolTip from "../toolTip/toolTipComponent";
 import SweetAlert from "../sweetalertFocus";
-import { updateElementFromList } from "./actions";
+import { updateElementFromList, updateActiveFieldObject } from "./actions";
 import "./styleListaObjetos.scss";
 
 export class ListaObjetos extends Component {
@@ -19,7 +19,8 @@ export class ListaObjetos extends Component {
     idObjetoEliminar: "",
     modalEliminar: false,
     switchGuardarEditar: false,
-    stylePlus: false
+    stylePlus: false,
+    maxObjects: false
   };
 
   componentDidMount() {
@@ -34,13 +35,24 @@ export class ListaObjetos extends Component {
   };
 
   abrirCampoObjeto = () => {
-    this.setState({
-      campoObjeto: true,
-      stylePlus: true
-    });
+    const { objetos } = this.state;
+    const { dispatchUpdateActiveFieldObject, titulo } = this.props;
+    dispatchUpdateActiveFieldObject(true, titulo);
+    if (objetos.length < 5) {
+      this.setState({
+        campoObjeto: true,
+        stylePlus: true
+      });
+    } else {
+      this.setState({
+        maxObjects: true
+      });
+    }
   };
 
   cerrarCampoObjeto = () => {
+    const { dispatchUpdateActiveFieldObject, titulo } = this.props;
+    dispatchUpdateActiveFieldObject(false, titulo);
     this.setState({
       objeto: {
         id: "",
@@ -62,6 +74,10 @@ export class ListaObjetos extends Component {
 
   editarObjeto = elemento => {
     const { id, texto } = elemento;
+    const { dispatchUpdateActiveFieldObject, titulo } = this.props;
+
+    dispatchUpdateActiveFieldObject(true, titulo);
+
     this.setState({
       objeto: {
         id,
@@ -77,7 +93,13 @@ export class ListaObjetos extends Component {
     const { objeto } = this.state;
     const listaObjetos = this.state.objetos;
     const campoVacio = this.state.objeto.texto;
-    const { dispatchUpdateElementFromList, titulo } = this.props;
+    const {
+      dispatchUpdateElementFromList,
+      titulo,
+      dispatchUpdateActiveFieldObject
+    } = this.props;
+
+    dispatchUpdateActiveFieldObject(false, titulo);
 
     if (campoVacio !== "") {
       listaObjetos.map((elemento, index) => {
@@ -107,11 +129,18 @@ export class ListaObjetos extends Component {
   agregarObjetoLista = () => {
     const id = (Math.random() * 10000).toFixed();
     const { objeto } = this.state;
-    const { dispatchUpdateElementFromList, titulo } = this.props;
+    const {
+      dispatchUpdateElementFromList,
+      titulo,
+      dispatchUpdateActiveFieldObject
+    } = this.props;
     objeto.id = id;
-    const campoVacio = this.state.objeto.texto;
+    // const terminoNoValido =
 
+    const campoVacio = this.state.objeto.texto;
+    dispatchUpdateActiveFieldObject(false, titulo);
     if (campoVacio !== "") {
+      // if(campoVacio )
       const objetos = [...this.state.objetos, objeto];
       this.cerrarCampoObjeto();
 
@@ -165,9 +194,10 @@ export class ListaObjetos extends Component {
       idObjetoEliminar,
       modalEliminar,
       switchGuardarEditar,
-      stylePlus
+      stylePlus,
+      maxObjects
     } = this.state;
-
+    console.log(maxObjects);
     const textButon = switchGuardarEditar ? "Modificar" : "Agregar";
 
     const functionButton = switchGuardarEditar
@@ -187,6 +217,14 @@ export class ListaObjetos extends Component {
 
     return (
       <div className="container-listaObjetos">
+        <SweetAlert
+          type="warning"
+          show={maxObjects}
+          title="Atención"
+          text={`Señor usuario, el maximo de ${titulo} son 5`}
+          confirmButtonText="OK"
+          onConfirm={() => this.setState({ maxObjects: false })}
+        />
         <Row style={{ padding: "20px 23px 20px 20px" }}>
           <Col xs={12} md={12} lg={12}>
             <div className="header-component">
@@ -348,7 +386,8 @@ export class ListaObjetos extends Component {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      dispatchUpdateElementFromList: updateElementFromList
+      dispatchUpdateElementFromList: updateElementFromList,
+      dispatchUpdateActiveFieldObject: updateActiveFieldObject
     },
     dispatch
   );
