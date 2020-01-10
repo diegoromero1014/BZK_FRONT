@@ -108,11 +108,22 @@ describe('Test shedulerComponent', () => {
     });
 
     it('should _onChangeRegionStatus', ()=>{
+        let val = "";
         const wrapper = shallow(
             <Sheduler {...defaultProps} />
         );
 
-        wrapper.instance()._onChangeRegionStatus();
+        wrapper.instance()._onChangeRegionStatus(val);
+        expect(clearListsDispatch.called).to.equal(true);
+    });
+
+    it('should _onChangeRegionStatus val is not empty', ()=>{
+        let val = 1;
+        const wrapper = shallow(
+            <Sheduler {...defaultProps} />
+        );
+
+        wrapper.instance()._onChangeRegionStatus(val);
         expect(clearListsDispatch.called).to.equal(true);
         expect(consultListWithParameterUbicationDispatch.called).to.equal(true);
     });
@@ -139,6 +150,35 @@ describe('Test shedulerComponent', () => {
         wrapper.instance()._onChangeZoneStatus(val);
         expect(clearListsDispatch.called).to.equal(true);
         expect(consultListWithParameterDispatch.called).to.equal(true);
+    });
+
+    it('should _onChangeZoneStatus when val is empty', ()=>{
+        let val = "";
+        const wrapper = shallow(
+            <Sheduler {...defaultProps} />
+        );
+
+        wrapper.instance()._onChangeZoneStatus(val);
+        expect(clearListsDispatch.called).to.equal(true);
+
+    });
+
+    it('Test when regions is not null', ()=>{
+        const success = { payload:{ data:{data:"msj"}}};
+        getRegionsByEmployeeDispatch.resolves(success);
+
+        const wrapper = shallow(
+            <Sheduler {...defaultProps} getRegionsByEmployeeDispatch={getRegionsByEmployeeDispatch}/>
+        );
+    });
+
+    it('Test when regions is not null', ()=>{
+        const success = { payload:{ data:{data:""}}};
+        getRegionsByEmployeeDispatch.resolves(success);
+
+        const wrapper = shallow(
+            <Sheduler {...defaultProps} getRegionsByEmployeeDispatch={getRegionsByEmployeeDispatch}/>
+        );
     });
 
 });
