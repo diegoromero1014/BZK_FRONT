@@ -42,9 +42,9 @@ BigCalendar.momentLocalizer(moment);
 const fields = ["team", "region", "zone", "nameUsuario", "idUsuario"];
 var usersBanco = [];
 
-class Sheduler extends Component {
+export class Sheduler extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             modalIsOpen: false,
             idUser: 0,
