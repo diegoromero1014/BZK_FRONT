@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Row, Grid, Col} from 'react-flexbox-grid';
+import {Row, Col} from 'react-flexbox-grid';
 
 class DeclarationOfOrigin extends Component{
 

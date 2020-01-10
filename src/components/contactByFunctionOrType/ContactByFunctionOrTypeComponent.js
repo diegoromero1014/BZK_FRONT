@@ -1,6 +1,3 @@
-/**
- * Created by ahurtado on 12/06/2016.
- */
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';

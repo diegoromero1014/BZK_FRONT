@@ -1,6 +1,5 @@
 import Immutable from 'immutable';
 import _ from 'lodash';
-
 import * as actions from './constants';
 
 const initialState = Immutable.Map(

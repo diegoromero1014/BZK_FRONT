@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { APP_URL } from '../../constantsGlobal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { TASK_STATUS } from '../selectsComponent/constants';

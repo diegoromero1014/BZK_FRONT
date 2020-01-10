@@ -1,6 +1,3 @@
-/**
- * Created by Andres Hurtado on 16/03/2017.
- */
 import Immutable from 'immutable';
 import {UPDATE_ENTITY, CREATE_ENTITY, DELETE_ENTITY, SET_ENTITIES, CLEAR_ENTITIES} from './constants';
 import _ from 'lodash';

@@ -1,19 +1,19 @@
 import _ from 'lodash';
 import {
     processRules, checkRequired, checkMaxLength, checkFirstCharacter, checkGroupName,
-    checkJustificationsRiskGroup, checkGroupExternalClientNumberDocument
+    checkJustificationsRiskGroup, checkGroupExternalClientNumberDocument, checkRegexHtmlInjection
 } from './../../validationsFields/rulesField';
 
 const fieldsWithRules = {
     id: { rules: [] },
-    clientName: { rules: [checkRequired, checkMaxLength(50), checkFirstCharacter, checkGroupName] },
-    justification: { rules: [checkRequired, checkMaxLength(1000), checkFirstCharacter, checkJustificationsRiskGroup] },
+    clientName: { rules: [checkRequired, checkMaxLength(50), checkFirstCharacter, checkGroupName, checkRegexHtmlInjection] },
+    justification: { rules: [checkRequired, checkMaxLength(1000), checkFirstCharacter, checkJustificationsRiskGroup, checkRegexHtmlInjection] },
     conformationReasonId: { rules: [checkRequired] },
 };
 
 const fieldsWithRulesSearch = {
     idType: { rules: [checkRequired] },
-    idNumber: { rules: [checkRequired, checkMaxLength(30), checkFirstCharacter, checkGroupExternalClientNumberDocument] },
+    idNumber: { rules: [checkRequired, checkMaxLength(30), checkFirstCharacter, checkGroupExternalClientNumberDocument, checkRegexHtmlInjection] },
     clientType: { rules: [checkRequired] }
 };
 

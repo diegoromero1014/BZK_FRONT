@@ -1,7 +1,4 @@
-/**
- * Created by Andres Hurtado on 01/03/2017.
- */
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {

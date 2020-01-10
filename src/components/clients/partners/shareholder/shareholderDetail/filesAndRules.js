@@ -1,5 +1,4 @@
 import _ from "lodash";
-
 import {
     checkRequired, processRules, checkRequiredWhenVarIsTrue, checkRequiredWhenVarIsFalse, 
     checkClientName, checkNumberInRange, checkOnlyAlphabetical, checkMinLength, 

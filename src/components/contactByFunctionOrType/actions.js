@@ -1,6 +1,3 @@
-/**
- * Created by ahurtado on 12/06/2016.
- */
 import {APP_URL} from '../../constantsGlobal';
 import {
     FIND_CONTACTS_BY_FUNCTION_OR_TYPE,

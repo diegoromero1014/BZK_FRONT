@@ -9,7 +9,7 @@ import { seletedButton, validateContactShareholder } from '../clientDetailsInfo/
 import { updateTitleNavBar } from '../navBar/actions';
 import { consultInfoClient } from '../clientInformation/actions';
 import { showLoading } from '../loading/actions';
-import { isUndefined, has } from 'lodash';
+import { isUndefined } from 'lodash';
 import { updateStatusModal } from '../myPendings/draftDocuments/actions';
 import { toggleMenu } from '../navBar/actions';
 import { MENU_OPENED } from '../navBar/constants';

@@ -2,14 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
-
 import GridComponent from '../../../grid/component';
-
 import { joinName, validateResponse } from '../../../../actionsGlobal';
 import { deleteBoardMemberByClient, getBoardMembers, clearFilters, changeKeyword } from './actions';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../../dashboard/actions';
-
 import { VIEW_BOARD_MEMBERS } from '../../../modal/constants';
 import { NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from './constants';
 import {

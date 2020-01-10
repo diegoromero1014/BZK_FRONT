@@ -1,9 +1,9 @@
-import {createStore, applyMiddleware, compose} from 'redux';
-import {createEpicMiddleware, combineEpics } from 'redux-observable';
+import { createStore, applyMiddleware, compose } from 'redux';
+import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import rootReducer from '../reducers';
 import ReduxPromise from 'redux-promise';
 import DevTools from '../components/devTools/component';
-import {inputEventsEpic} from '../components/timeout/timeoutDucks';
+import { inputEventsEpic } from '../components/timeout/timeoutDucks';
 
 import { invalidTokenMiddleware } from './middleware';
 

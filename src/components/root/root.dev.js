@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Provider} from 'react-redux';
-import {Router} from 'react-router';
+import React, { Component } from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router';
 import DevTools from '../../components/devTools/component';
 
 class RootComponent extends Component {

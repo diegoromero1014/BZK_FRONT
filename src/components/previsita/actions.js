@@ -4,7 +4,6 @@ import * as constants from './constants';
 import { generatePDF } from '../reports/pdf/actions';
 import { validateIsNullOrUndefined } from '../../actionsGlobal';
 
-
 export function pdfDescarga(changeStateSaveData, idPrevisit) {
     const requestBody = {
       "name": "reportPreVisit.pdf",

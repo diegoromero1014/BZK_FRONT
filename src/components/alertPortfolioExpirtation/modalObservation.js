@@ -1,6 +1,3 @@
-/**
- * Created by Andres Hurtado on 25/04/2017.
- */
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {reduxForm} from 'redux-form';
@@ -13,7 +10,6 @@ import {showLoading} from '../loading/actions';
 import {swtShowMessage} from '../sweetAlertMessages/actions';
 import {fields, validations as validate} from "./fieldsAndRulesForReduxForm";
 import { getMasterDataFields } from "../../components/selectsComponent/actions";
-
 import { ALERT_PORTFOLIO_EXPECTATIONS } from '../selectsComponent/constants';
 import ModalClientName from '../globalComponents/modalClientName/component';
 

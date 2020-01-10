@@ -3,14 +3,12 @@ import { bindActionCreators } from "redux";
 import { reduxForm } from "redux-form";
 import { Col, Row } from "react-flexbox-grid";
 import { swtShowMessage } from "../../../sweetAlertMessages/actions";
-import { showLoading } from "../../../loading/actions";
 import ComboBox from "../../../../ui/comboBox/comboBoxComponent";
 import {
     MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_ERROR,
     MESSAGE_SUCCESS
 } from "../../../../constantsGlobal";
 import { stringValidate, validateResponse } from "../../../../actionsGlobal";
-import $ from "jquery";
 import { getMasterDataFields } from "../../../selectsComponent/actions";
 import { FILTER_TYPE_CONTACT_ID, FILTER_FUNCTION_ID } from "../../../selectsComponent/constants";
 import ListResultFuntionOrType from './listResultFunctionOrType';
@@ -22,7 +20,6 @@ import {
 } from '../actions';
 import { FIRST_PAGE, NUMBER_RECORDS, MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP } from '../constants';
 import { changeStateSaveData } from '../../../dashboard/actions';
-import PaginationContactsByFunctionOrType from './paginationContactsByFunctionOrType';
 
 const fields = ["typeOfContact", "functionOfContact", "keyword"];
 

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import numeral from 'numeral';
 
 class Product extends Component {

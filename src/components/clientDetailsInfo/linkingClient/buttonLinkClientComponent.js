@@ -4,11 +4,9 @@ import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
 import { isEmpty, isEqual, get, isNil } from 'lodash';
-
 import LinkEntities from './LinkEntitiesComponent/linkEntities';
 import Textarea from '../../../ui/textarea/textareaComponent';
 import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
-
 import { setEntities, clearEntities, saveLinkClient } from './LinkEntitiesComponent/actions';
 import { updateErrorsLinkEntities } from '../../clientDetailsInfo/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
@@ -17,23 +15,18 @@ import { updateFieldInfoClient } from '../../clientInformation/actions';
 import { consultStateBlackListClient, updateValuesBlackList } from './actions';
 import { showLoading } from '../../loading/actions';
 import { consultInfoClient } from '../../clientInformation/actions';
-
 import { ENTITY_BANCOLOMBIA, ENTITY_VALORES_BANCOLOMBIA, HELP_LINK_MESSAGE } from './LinkEntitiesComponent/constants';
 import { FILTER_TYPE_LBO_ID } from '../../selectsComponent/constants';
 import { consultParameterServer } from "../../../actionsGlobal";
 import { MAX_LENGTH_LINK_CLIENT_TRACER_CODE, NATURAL_PERSON } from "../../../constantsGlobal";
-
 import {
     patternOfOnlyNumbersLinkClient, patternOfObservationLinkClient, patternOfForbiddenCharacter, regexHtmlInjection
 } from './../../../validationsFields/patternsToValidateField';
-
 import {
     MESSAGE_WARNING_ONLY_NUMBERS_LINK_CLIENT, MESSAGE_WARNING_MAX_LENGTH,
     MESSAGE_REQUIRED_VALUE, MESSAGE_ERROR_INJECTION_HTML
 } from './../../../validationsFields/validationsMessages';
-
 import { MAX_LENGTH_OBSERVATIONS } from '../constants';
-
 import {
     checkRequired, checkMaxLength, checkObservationsLinkClient, checkFirstCharacter
 } from './../../../validationsFields/rulesField';

@@ -16,10 +16,8 @@ import { LINE_OF_BUSINESS, MESSAGE_LINE_OF_BUSINESS } from '../constants';
 import _ from 'lodash';
 import { ORIGIN_CREDIT_STUDY } from '../../clients/creditStudy/constants';
 import {
-    checkNumberLength, checkClientDescription, checkMaxLength,
-    checkValueClientInformacion, checkNumberInRange, checkFirstCharacter
+    checkNumberLength, checkClientDescription, checkMaxLength, checkNumberInRange, checkFirstCharacter
 } from '../../../validationsFields/rulesField';
-
 
 export class ComponentListLineBusiness extends Component {
     constructor(props) {

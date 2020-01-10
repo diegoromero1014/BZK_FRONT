@@ -1,6 +1,3 @@
-/**
- * Created by Andres Hurtado on 16/03/2017.
- */
 import React, {Component} from 'react';
 import {Row, Col} from 'react-flexbox-grid';
 import ComboBox from '../../../../ui/comboBox/comboBoxComponent';

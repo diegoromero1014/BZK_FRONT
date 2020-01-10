@@ -1,10 +1,6 @@
-/**
- * Created by dloaiza 20170426.
- */
 import {shorterStringValue, joinName} from '../../actionsGlobal';
 import {VIEW_CONTACT} from '../grid/constants';
 import {DELETE_MESSAGE,DELETE_CONTACT_FROM_FUNCTION_OR_TYPE} from './constants';
-
 
 export const mapDataGrid = (data = []) => {
     return data.map((clientContact, idx) => ({

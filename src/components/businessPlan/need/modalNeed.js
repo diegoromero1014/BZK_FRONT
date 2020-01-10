@@ -16,11 +16,9 @@ import _ from "lodash";
 import $ from "jquery";
 import RichText from "../../richText/richTextComponent";
 import { htmlToText, shorterStringValue } from "../../../actionsGlobal";
-import { MESSAGE_ERROR, VALUE_XSS_INVALID, REGEX_SIMPLE_XSS_TITLE, REGEX_SIMPLE_XSS_MESAGE } from '../../../constantsGlobal';
+import { MESSAGE_ERROR } from '../../../constantsGlobal';
 import { TASK_STATUS } from '../../selectsComponent/constants';
-
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-
 
 const fields = ["idEmployee", "needType", "descriptionNeed", "productFamily", "needProduct", "needImplementation", "needTask", "needBenefits", "needResponsable", "needDate", "statusNeed"];
 const errors = {};

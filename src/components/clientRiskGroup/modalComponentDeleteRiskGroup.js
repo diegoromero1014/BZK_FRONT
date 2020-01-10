@@ -8,11 +8,8 @@ import {formValidateKeyEnter, nonValidateEnter, validateResponse} from "../../ac
 import {bindActionCreators} from "redux";
 import {deleteRiskGroup, getClientsRiskGroup, updateIsPendingRiskGroup} from "./actions";
 import {showLoading} from "../loading/actions";
-
 import _ from "lodash";
 import { fields, validations as validate } from './fieldsAndRulesForDeleteRiskGroup';
-
-
 
 let thisForm;
 export class ModalComponentDeleteRiskGroup extends Component {

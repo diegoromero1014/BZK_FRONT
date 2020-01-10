@@ -1,5 +1,4 @@
 import React, {Component, PropTypes} from 'react';
-import * as constants from '../login/constants';
 import ImageLogoApp from '../../../img/svg/logo_bancolombia.svg';
 
 class LogoApplication extends Component{

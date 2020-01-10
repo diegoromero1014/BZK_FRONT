@@ -4,16 +4,13 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { Menu, Segment } from 'semantic-ui-react';
 import _ from 'lodash';
-
 import Shareholder from './shareholder/component';
 import BoardMembers from './boardMembers/component';
-
 import { validateResponse } from '../../../actionsGlobal';
 import { consultModulesAccess } from '../../navBar/actions';
 import { updateTabSeletedPartners } from './actions';
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-
 import { TAB_BOARD_MEMBERS, TAB_SHAREHOLDER } from './constants';
 import {
     MODULE_SHAREHOLDERS, MODULE_BOARD_MEMBERS, MESSAGE_LOAD_DATA, TITLE_ERROR_SWEET_ALERT,
