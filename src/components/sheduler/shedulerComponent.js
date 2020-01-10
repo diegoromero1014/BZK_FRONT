@@ -269,7 +269,7 @@ export class Sheduler extends Component {
     render() {
         const {fields: {team, region, zone, nameUsuario}, schedulerPrevisitReduser, selectsReducer, navBar} = this.props;
         const data = schedulerPrevisitReduser.get('schedulerPrevisitList');
-        const userName = localStorage.getItem('userNameFront');
+        const userName = window.localStorage.getItem('userNameFront');
         const confidential = navBar.get('confidential');
 
         return (

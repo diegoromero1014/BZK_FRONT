@@ -1,41 +1,144 @@
 import React from 'react'
-import Sheduler from "../../../../src/components/sheduler/shedulerComponent";
+import Immutable from 'immutable';
+import {Sheduler} from "../../../../src/components/sheduler/shedulerComponent";
 import {createFieldsFromArray} from "../../../helpers/ReduxFormField";
 
-
+const schedulerPrevisitReduser = Immutable.Map({});
+const navBar = Immutable.Map({});
+const selectsReducer = Immutable.Map({});
+const contactsByClient = Immutable.Map({});
 describe('Test shedulerComponent', () => {
 
-    let fields = createFieldsFromArray(["team", "region", "zone", "nameUsuario"]);
+    let fields = createFieldsFromArray(["team", "region", "zone", "nameUsuario","idUsuario"]);
     let defaultProps;
     let getRegionsByEmployeeDispatch;
     let clearListsDispatch;
+    let stubLocalStorage;
     let updateTitleNavBarDispatch;
+    let showLoadingDispatch;
     let validatePermissionsByModuleDispatch;
+    let consultInfoClientDispatch;
+    let showBrandConfidentialDispatch;
+    let getSchedulerPrevisitsDispatch;
+    let consultListWithParameterUbicationDispatch;
+    let resetForm;
+    let clearFilterDispatch;
+    let consultListWithParameterDispatch;
 
     beforeEach(() => {
 
-
         clearListsDispatch = sinon.fake();
         updateTitleNavBarDispatch = sinon.fake();
-        getRegionsByEmployeeDispatch = sinon.stub();
-        getRegionsByEmployeeDispatch.resolves("");
-
+        showLoadingDispatch = sinon.fake();
+        consultListWithParameterUbicationDispatch = sinon.fake();
+        showBrandConfidentialDispatch = sinon.fake();
+        getSchedulerPrevisitsDispatch = sinon.fake();
+        resetForm = sinon.fake();
+        clearFilterDispatch = sinon.fake();
+        consultListWithParameterDispatch = sinon.fake();
         validatePermissionsByModuleDispatch = sinon.stub();
         validatePermissionsByModuleDispatch.resolves("");
+        getRegionsByEmployeeDispatch = sinon.stub();
+        getRegionsByEmployeeDispatch.resolves("");
+        consultInfoClientDispatch = sinon.stub();
+        consultInfoClientDispatch.resolves("");
 
         defaultProps = {
             fields: fields,
+            schedulerPrevisitReduser,
             clearListsDispatch,
             getRegionsByEmployeeDispatch,
             updateTitleNavBarDispatch,
-            validatePermissionsByModuleDispatch
+            navBar,
+            selectsReducer,
+            showLoadingDispatch,
+            consultListWithParameterUbicationDispatch,
+            validatePermissionsByModuleDispatch,
+            consultInfoClientDispatch,
+            showBrandConfidentialDispatch,
+            getSchedulerPrevisitsDispatch,
+            resetForm,
+            clearFilterDispatch,
+            consultListWithParameterDispatch,
+            contactsByClient
         };
     });
 
+    afterEach(()=> {
+        // runs after each test in this block
+        stubLocalStorage.restore();
+    });
 
     it('should render shedulerComponent', () => {
+        stubLocalStorage = sinon.stub(window.localStorage, 'getItem').returns("dj");
         itRenders(<Sheduler {...defaultProps}/>)
     });
 
+    it('should open modal', ()=>{
+        const wrapper = shallow(
+            <Sheduler {...defaultProps} />
+        );
+
+        wrapper.instance().openModal();
+        expect(showLoadingDispatch.called).to.equal(true);
+        expect(validatePermissionsByModuleDispatch.called).to.equal(true);
+        expect(consultInfoClientDispatch.called).to.equal(true);
+    });
+
+    it('should _handlePrevisitsFind', ()=>{
+        let newFields = createFieldsFromArray(["team", "region", "zone", "idUsuario","nameUsuario"]);
+
+
+        const wrapper = shallow(
+            <Sheduler {...defaultProps} fields={newFields}/>
+        );
+
+        wrapper.instance()._handlePrevisitsFind();
+        expect(showLoadingDispatch.called).to.equal(true);
+        expect(getSchedulerPrevisitsDispatch.called).to.equal(true);
+    });
+
+    it('should close modal', ()=>{
+        const wrapper = shallow(
+            <Sheduler {...defaultProps} />
+        );
+
+        wrapper.instance().closeModal();
+        expect(showBrandConfidentialDispatch.called).to.equal(true);
+    });
+
+    it('should _onChangeRegionStatus', ()=>{
+        const wrapper = shallow(
+            <Sheduler {...defaultProps} />
+        );
+
+        wrapper.instance()._onChangeRegionStatus();
+        expect(clearListsDispatch.called).to.equal(true);
+        expect(consultListWithParameterUbicationDispatch.called).to.equal(true);
+    });
+
+    it('should _cleanSearch', ()=>{
+        const wrapper = shallow(
+            <Sheduler {...defaultProps} />
+        );
+
+        wrapper.instance()._cleanSearch();
+        expect(showLoadingDispatch.called).to.equal(true);
+        expect(resetForm.called). to.equal(true);
+        expect(clearFilterDispatch.called).to.equal(true);
+        expect(clearListsDispatch.called).to.equal(true);
+
+    });
+
+    it('should _onChangeZoneStatus', ()=>{
+        let val = 1;
+        const wrapper = shallow(
+            <Sheduler {...defaultProps} />
+        );
+
+        wrapper.instance()._onChangeZoneStatus(val);
+        expect(clearListsDispatch.called).to.equal(true);
+        expect(consultListWithParameterDispatch.called).to.equal(true);
+    });
 
 });
