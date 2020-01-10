@@ -9,8 +9,7 @@ var path = require('path'),
         entry: {
             'main': [
                 'babel-polyfill',
-                './src/index.js',
-                './src/resources/recaptcha/api.js',
+                './src/index.js',                
                 'webpack-dev-server/client?http://0.0.0.0:3000', // WebpackDevServer host and port
                 'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
             ]

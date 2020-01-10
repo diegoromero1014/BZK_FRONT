@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
-import { redirectUrl } from '../../../globalComponents/actions';
 import { modifyClientRelationship } from '../../actions';
-import { MESSAGE_SAVE_DATA } from '../../../../constantsGlobal';
 import { shorterStringValue } from '../../../../actionsGlobal';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';

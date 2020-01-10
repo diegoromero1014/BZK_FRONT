@@ -1,5 +1,5 @@
 import { APP_URL } from '../../constantsGlobal';
-import { VALIDATE_PROSPECT_EXISTS, CLEAR_STATE_PROSPECT, CLEAR_ALL_PROSPECT, CREATE_PROSPECT, VALIDATE_NEED } from './constants';
+import { VALIDATE_PROSPECT_EXISTS, CLEAR_STATE_PROSPECT, CLEAR_ALL_PROSPECT, CREATE_PROSPECT } from './constants';
 import axios from 'axios';
 
 export function validateProspectExists(typeDocument, numberDocument) {

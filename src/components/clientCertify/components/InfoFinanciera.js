@@ -1,11 +1,8 @@
 import React from 'react'
-
 import Input from "../../../ui/input/inputComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import {Col, Row} from "react-flexbox-grid";
-
 import {ONLY_POSITIVE_INTEGER, ALLOWS_NEGATIVE_INTEGER} from "../../../constantsGlobal";
-
 import numeral from "numeral";
 import moment from "moment";
 

@@ -1,8 +1,6 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import Modal from 'react-modal';
 import _ from 'lodash';
 import {
   shorterStringValue, stringValidate, mapDateValueFromTask,
@@ -13,7 +11,6 @@ import {
   MESSAGE_ERROR_SWEET_ALERT, MESSAGE_LOAD_DATA
 } from '../../../constantsGlobal';
 import GridComponent from '../../grid/component';
-import { VIEW_AEC_PENDING } from '../../modal/constants';
 import { getAssigned, changeSortOrder, clearListOfAssigned } from './actions';
 import { NUMBER_RECORDS } from './constants';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';

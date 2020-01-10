@@ -1,6 +1,4 @@
-import React, {Component, PropTypes} from 'react';
-import * as constants from '../login/constants';
-import ImageLogoApp from '../../../img/svg/logo_bancolombia.svg';
+import React, {Component} from 'react';
 import {redirectUrl} from './actions';
 import SweetAlert from '../sweetalertFocus';
 

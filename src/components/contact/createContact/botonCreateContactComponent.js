@@ -6,7 +6,6 @@ import { Icon } from 'semantic-ui-react';
 import Modal from 'react-modal';
 import ToolTip from '../../toolTip/toolTipComponent';
 import ModalComponentContact from './modalComponentContact';
-
 import { toggleModalContact } from './actions';
 
 class BotonCreateContactComponent extends Component {

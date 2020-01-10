@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
 import DetailsInfoClient from '../clientDetailsInfo/detailsInfoClient';
 import ContactInfo from '../contact/component';
 import Partners from '../clients/partners/tabComponent';
@@ -12,10 +11,8 @@ import BusinessPlanInfo from '../businessPlan/component';
 import PendingInfo from '../pendingTask/component';
 import RisksManagements from '../risksManagement/componentRisksManagement';
 import ComponentCustomerStory from '../customerStory/componentCustomerStory';
-
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import _ from 'lodash';
-
 import {
     MODULE_CONTACTS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS, MODULE_PIPELINE, MODULE_BUSSINESS_PLAN,
     MODULE_RISKS_MANAGEMENT, MODULE_CUSTOMER_STORY, MODULE_PARTNERS
@@ -24,7 +21,6 @@ import {
     TAB_INFO, TAB_CONTACTS, TAB_SHAREHOLDER, TAB_PREVISITS, TAB_VISITS, TAB_PENDING_TASK, TAB_PIPELINE,
     TAB_BUSINESS_PLAN, TAB_RISKS_MANAGEMENT, TAB_CUSTOMER_STORY
 } from '../../constantsGlobal';
-
 import { BIZTRACK_MY_CLIENTS, _PIPELINE, nombreflujoAnalytics, _BUSINESS_PLAN, _RISKS_MANAGEMENT } from '../../constantsAnalytics';
 
 export class TabClientInfo extends Component {

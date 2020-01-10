@@ -1,5 +1,4 @@
 import _ from "lodash";
-
 import {
     checkRequired, checkNumberDocument, checkOnlyAlphabetical, checkMinLength, checkMaxLength, checkObservations,
     processRules, checkFirstCharacter

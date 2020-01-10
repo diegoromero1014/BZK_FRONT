@@ -6,14 +6,12 @@ import { updateTitleNavBar } from '../../navBar/actions';
 import _ from 'lodash';
 import { NUMBER_RECORDS, PAGE_INITIAL } from './constants';
 import { changeStateSaveData } from '../../dashboard/actions';
-import Tooltip from "../../toolTip/toolTipComponent";
 import ListLinkingRequests from './listLinkingRequests';
 import { getLinkRequests, limitInf, changePage, clearLinkRequestPaginator, clearLinkRequests } from './actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import PaginationLinkingRequests from './paginationLinkingRequests';
 import { validatePermissionsByModule } from '../../../actionsGlobal';
 import { MODULE_CLIENTS, MESSAGE_SAVE_DATA, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_ERROR } from '../../../constantsGlobal';
-import $ from 'jquery';
 
 class ComponentAssigned extends Component {
 

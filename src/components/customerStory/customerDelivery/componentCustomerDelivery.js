@@ -12,7 +12,6 @@ import { _CUSTOMER_DELIVERY_STORY, BIZTRACK_MY_CLIENTS, nombreflujoAnalytics } f
 import _ from 'lodash';
 import moment from 'moment';
 
-
 import { consultList, getMasterDataFields } from '../../selectsComponent/actions';
 import { clientsByEconomicGroup, getAllteams, updateCheckEconomicGroup, updateTeamClients } from '../actions';
 import { consultParameterServer, validateResponse } from '../../../actionsGlobal';

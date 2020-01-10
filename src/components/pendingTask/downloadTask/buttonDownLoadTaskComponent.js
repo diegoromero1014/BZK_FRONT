@@ -1,10 +1,9 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {getCsvBusinessPlan, getCsvBusinessPlanByClient} from '../actions';
-import {TAB_TASKS} from '../../viewManagement/constants';
-import {APP_URL, MESSAGE_DOWNLOAD_DATA} from '../../../constantsGlobal';
-import {changeStateSaveData} from '../../dashboard/actions';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { getCsvBusinessPlan } from '../actions';
+import { MESSAGE_DOWNLOAD_DATA } from '../../../constantsGlobal';
+import { changeStateSaveData } from '../../dashboard/actions';
 
 class ButtonDownloadTaskComponent extends Component {
 

@@ -5,6 +5,7 @@ import {
 } from './constants';
 import axios from 'axios';
 import _ from 'lodash';
+import { generatePDF as _generatePDF} from "../../reports/pdf/actions";
 
 export function getContextClient(idClient, type) {
     const json = {
@@ -123,27 +124,15 @@ export function existsPDFforTheSameDay(){
     }
 }
 
-export function generatePDF() {
-    const json = {
-        messageHeader: {
-            "timestamp": new Date().getTime(),
-            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-            "service": "",
-            "status": "0",
-            "language": "es",
-            "displayErrorMessage": "",
-            "technicalErrorMessage": "",
-            "applicationVersion": "",
-            "debug": true,
-            "isSuccessful": true
-        },
-        messageBody: window.sessionStorage.getItem('idClientSelected')
-    }
+export function generatePDF(changeStateSaveData,namePDf) {
+    const requestBody = {
+      name: namePDf,
+      route: "BiztrackReports/reportContextClient.jrxml",
+      params: {
+        P_CLIENT_ID: Number(window.sessionStorage.getItem("idClientSelected"))
+      },
+      source: []
+    };
 
-    var request = axios.post(APP_URL + "/generatePDFContextClient", json);
-
-    return {
-        type: GENERATE_PDF,
-        payload: request
-    }
+    _generatePDF(changeStateSaveData, requestBody);
 }

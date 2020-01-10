@@ -155,9 +155,7 @@ class FormLogin extends Component {
                         required value={this.state.password}
                         onChange={this._handleChangePassword.bind(this)}></input>
                 </div>
-                <div className={'form-item ' + (this.state.loginAttempts >= 2 ? 'show' : 'hidden')} style={{ marginLeft: "0px", paddingLeft: '28px', paddingRight: '28px' }}>                    
-                    <ReCaptcha></ReCaptcha>
-                </div>
+
                 <div style={{ marginLeft: "28px", marginTop: "20px", marginBottom: "0px", marginRight: "10px" }}>
                     <span style={{ color: "#e76e70", size: "17px" }}>{this.state.message}</span>
                 </div>

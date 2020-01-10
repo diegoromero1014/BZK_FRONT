@@ -12,3 +12,4 @@ export const FINANCIAL_INSTITUTIONS = "Instituciones financieras";
 export const CONSTRUCT_PYME = "Constructor Pyme";
 export const UPDATE_METHOD = 'Actualizar';
 export const EDIT_METHOD = 'Editar';
+export const CERTIFY_METHOD = 'Certificar';

@@ -1,19 +1,10 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import Modal from 'react-modal';
 import _ from 'lodash';
-import moment from 'moment';
-import { shorterStringValue, validateResponse, stringValidate } from '../../../../actionsGlobal';
+import { stringValidate } from '../../../../actionsGlobal';
 import { MESSAGE_ERROR } from '../../../../constantsGlobal';
 import GridComponent from '../../../grid/component';
-import { VIEW_BOARD_MEMBERS } from '../../../modal/constants';
-import { CONTACT_ID_TYPE } from '../../../selectsComponent/constants';
-import {
-    TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, ELIMINAR,
-    MESSAGE_LOAD_DATA
-} from '../../../../constantsGlobal';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../../dashboard/actions';
 import { ACTION_CHECK } from '../../../grid/constants';

@@ -9,7 +9,6 @@ import { reduxForm } from "redux-form";
 import SweetAlert from "../sweetalertFocus";
 import { isNil } from 'lodash';
 import Tooltip from "../toolTip/toolTipComponent";
-
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { showLoading } from '../loading/actions';
 import { redirectUrl } from "../globalComponents/actions";
@@ -24,7 +23,6 @@ import {
     backButtonFilter, changeKeyword, changePage, clearClients, clearSaveSelectedValue,
     clientsFindServer, deleteAllRecentClients, getRecentClients, saveSelectValue
 } from "./actions";
-
 import { AEC_NO_APLICA, ID_OPTION_ALL_LEVEL_AEC, NUMBER_RECORDS } from "./constants";
 import * as constants from "../selectsComponent/constants";
 import { TAB_AEC } from "../risksManagement/constants";

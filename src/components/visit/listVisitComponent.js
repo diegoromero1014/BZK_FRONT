@@ -1,18 +1,16 @@
 import React, {
   Component
 } from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {visitByClientFindServer,orderColumnVisit,clearVisitOrder,clearVisitPaginator} from './actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { visitByClientFindServer, orderColumnVisit, clearVisitOrder, clearVisitPaginator } from './actions';
 import GridComponent from '../grid/component';
-import {NUMBER_RECORDS,DELETE_TYPE_VISIT, getRequestBodyDownloadPrevisitPDF} from './constants';
+import { NUMBER_RECORDS, DELETE_TYPE_VISIT, getRequestBodyDownloadPrevisitPDF } from './constants';
 import moment from 'moment';
-import {ELIMINAR} from '../../constantsGlobal';
+import { ELIMINAR } from '../../constantsGlobal';
 import { MODULE_VISIT } from '../grid/constants';
 
-
 let v1 = "";
-
 
 class ListVisitComponent extends Component {
 

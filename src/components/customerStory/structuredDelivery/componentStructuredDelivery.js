@@ -16,7 +16,6 @@ import Textarea from '../../../ui/textarea/textareaComponent';
 import ComponentEvents from './events/componentEvents';
 import { addEvent } from './events/actions';
 
-
 import {
     patternOfHistoryEvent, patternOfForbiddenCharacter
 } from './../../../validationsFields/patternsToValidateField';
