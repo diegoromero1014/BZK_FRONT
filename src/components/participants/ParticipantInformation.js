@@ -3,6 +3,8 @@ import { Form, Field, ErrorMessage, withFormik } from 'formik';
 import { Row, Col } from 'react-flexbox-grid';
 import { Input } from 'semantic-ui-react';
 import { renderLabel, renderMessageError }  from '../../functions';
+import ElementsComponent from '../elements';
+import { schema } from './schema';
 
 class ParticipantInformation extends Component {
 
@@ -162,6 +164,11 @@ class ParticipantInformation extends Component {
                     </Col>
                 </Row>
 
+                <Row style={{ marginTop: '-65px' }}> 
+                    <Col xs={12} md={12} lg={12}>
+                        <ElementsComponent schema={schema} placeholder='Objectivos' messageButton='Agregar' name={'objectives'} />
+                    </Col>
+                </Row>
             </Form>
         );
     }

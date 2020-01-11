@@ -3,7 +3,7 @@ import { Icon } from 'semantic-ui-react';
 import './../../../styles/message/main.scss';
 
 const Message = ({ message, icon, style, show }) => {
-    const defaultStyle = { padding: 20, marginBottom: 20, background: 'transparent', textAlign: 'justify', fontWeight: 600, fontSize: '11pt', borderBottom: '6px solid #2172d8', color: '#818181', width: '95%' };
+    const defaultStyle = { padding: 20, marginBottom: 20, background: 'transparent', textAlign: 'justify', fontWeight: 600, fontSize: '11pt', borderBottom: '6px solid #2172d8', color: '#818181', width: '95%', display: 'flex', alignItems: 'centrer' };
 
     return (
         <div>

@@ -96,12 +96,8 @@ export class ParticipantsByClient extends Component {
                             name="txtContactoCliente"
                             labelInput="Seleccione..."
                             onChange={value => {
-                                this.setState({ selectedContact: value });
-
-                                //Habilita el modal
-
-                                //this.setState({ selectedContact: value, open: true });
-                                //this.handleSetInformation(value);
+                                this.setState({ selectedContact: value, open: true });
+                                this.handleSetInformation(value);
                                 this.addContact();
                             }}
                             value={selectedContact}
@@ -125,9 +121,8 @@ export class ParticipantsByClient extends Component {
                         {data.length > 0 ?
                             <Col xs={12} md={12} lg={12}>
                                 <ListParticipantsByClient data={data} disabled={disabled} handleOpenModal={selectedRecord => {
-                                    //Habilita el modal
-                                    //this.setState({ open: true, selectedContact: null });
-                                    //this.handleSetInformation(selectedRecord);
+                                    this.setState({ open: true, selectedContact: null });
+                                    this.handleSetInformation(selectedRecord);
                                 }} />
                             </Col>
                             :
