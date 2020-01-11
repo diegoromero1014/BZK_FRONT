@@ -22,13 +22,6 @@ class ElementsComponent extends Component {
         const { placeholder, messageButton, handleSubmit} = this.props;
         const { show } = this.state;
         
-        let test = {name: 'name' }
-        let test2 = { lastname: 'lastname'}
-
-        const test3 = {...test, ...test2 };
-
-        console.log(test3);
-
         return (
             <form>
                 <div className={'elements-container'}>
