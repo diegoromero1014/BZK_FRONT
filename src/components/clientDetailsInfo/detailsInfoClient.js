@@ -236,10 +236,9 @@ class DetailsInfoClient extends Component {
                             </tr>
                         </tbody>
                     </table>
-
-                    <ComponentAccordion functionChange={() => this._changeValueAccordion('opportunitiesWeaknesses')}
+                    {!_.isEmpty(infoClient) && <ComponentAccordion functionChange={() => this._changeValueAccordion('opportunitiesWeaknesses')}
                         codSection={accordion.opportunitiesWeaknesses} title="Oportunidades y debilidades" icon="lightbulb"
-                        componentView={<SectionOpportunitiesWeaknesses visual={false}/>} />
+                        componentView={<SectionOpportunitiesWeaknesses infoClient={infoClient} visual={false}/>} />}
 
                     <ComponentAccordion functionChange={() => this._changeValueAccordion('economicActivity')}
                         codSection={accordion.economicActivity} title="Actividad económica" icon="payment"

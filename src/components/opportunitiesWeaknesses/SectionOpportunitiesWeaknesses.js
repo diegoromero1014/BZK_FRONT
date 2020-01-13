@@ -3,11 +3,38 @@ import { connect } from "react-redux";
 import { Row, Col } from "react-flexbox-grid";
 import ListaObjetos from "../listaObjetos/ListaObjetos";
 
-import styleListaobjetos from "../listaObjetos/styleListaObjetos.scss";
-
 class SectionOpportunitiesWeaknesses extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      opportunities: null,
+      weaknesses: null
+    }
+  }
+
+
+  componentDidMount() {
+    const { infoClient } = this.props;
+    let opportunities = [], weaknesses = [];
+
+    if (infoClient != null && infoClient.clientDetailsRequest != null) {
+      if (infoClient.clientDetailsRequest.opportunities != undefined) {
+        opportunities = infoClient.clientDetailsRequest.opportunities
+      }
+      if (infoClient.clientDetailsRequest.weaknesses != undefined) {
+        weaknesses = infoClient.clientDetailsRequest.weaknesses}
+    }
+
+    this.setState({
+      weaknesses,
+      opportunities
+    })
+  }
+
   render() {
     const { visual } = this.props;
+
     const ayudaOportunidades = `Factores externos que representan posibles ingresos para el cliente. Pueden ser: cambios en el sector económico. Normativas, movimiento de la competencia, tendencia de sus consumidores, mercados geográficos. economía, tendencias del mercado, benchmarks. `;
     const ayudaDebilidades = `Aspectos internos negativos del cliente que no le permiten  el crecimiento empresarial o que frenan el cumplimiento de sus objetivos y que debe controlarlos para superarlos. Pueden ser: Localizaciones, marca y reputación, idealización de los clientes, capital humano, tecnologías, canales, liderazgo, calidad del producto, situación financiera.`;
 
@@ -28,22 +55,24 @@ class SectionOpportunitiesWeaknesses extends Component {
         )}
         <div style={{ width: "100%", display: "flex" }}>
           <div style={{ width: "50%" }}>
-            <ListaObjetos
+            {this.state.opportunities && <ListaObjetos
+              key="opportunities"
               titulo="Oportunidades"
               ayuda={ayudaOportunidades}
               visual={visual}
               icon="thumbs up outline icon"
-              initialObjects={[]}
-            />
+              initialObjects={this.state.opportunities}
+            />}
           </div>
           <div style={{ width: "50%" }}>
-            <ListaObjetos
+            {this.state.opportunities && <ListaObjetos
+              key="weaknesses"
               titulo="Debilidades"
               ayuda={ayudaDebilidades}
               visual={visual}
               icon="thumbs down outline icon"
-              initialObjects={[]}
-            />
+              initialObjects={this.state.weaknesses}
+            />}
           </div>
         </div>
       </div>
@@ -51,10 +80,4 @@ class SectionOpportunitiesWeaknesses extends Component {
   }
 }
 
-function mapStateToProps({ clientInformation }) {
-  return {
-    clientInformation
-  };
-}
-
-export default connect(mapStateToProps, null)(SectionOpportunitiesWeaknesses);
+export default SectionOpportunitiesWeaknesses;
