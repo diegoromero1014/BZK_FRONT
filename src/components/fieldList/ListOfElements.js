@@ -18,7 +18,7 @@ class ListOfElements extends React.Component {
         const isValid = elements && (elements.length < maxLength);
 
         if (!isValid) {
-            swtShowMessage("error", "Erorr!", "Señor usuario, el número máximo de " + title + " permitidos son "+maxLength);
+            swtShowMessage("error", "Error!", "Señor usuario, el número máximo de " + title + " permitidas son "+maxLength);
         }
 
         return isValid;
