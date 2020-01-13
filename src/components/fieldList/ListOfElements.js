@@ -30,6 +30,14 @@ class ListOfElements extends React.Component {
         }
     }
 
+    handleCancel = () => {
+        const { setListState } = this.props;
+        setListState({
+            isEditing: false
+        });
+        this.toogleAddSection();
+    }
+
     toogleAddSection = () => {
         const { listenAddSection, setListState, showAddSection } = this.props;
         if (typeof listenAddSection === 'function') {
@@ -125,7 +133,7 @@ class ListOfElements extends React.Component {
         return (
             <div>
                 <button style={{ marginRight: "15px" }} className="btn btn-secondary" type="button" onClick={this.addElement}>{botonAddText}</button>
-                <button className="btn section-btn-cancel" type="button" onClick={this.toogleAddSection}>Cancelar</button>
+                <button className="btn section-btn-cancel" type="button" onClick={this.handleCancel}>Cancelar</button>
             </div>
         )
     }
@@ -167,7 +175,7 @@ class ListOfElements extends React.Component {
                             fields,
                             onChange: this.handleChange,
                             onAddElement: this.addElement,
-                            onCancel: this.toogleAddSection,
+                            onCancel: this.handleCancel,
                             isEditing: this.props.isEditing,
                             errors: this.props.errors || {}
                         })
