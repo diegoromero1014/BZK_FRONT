@@ -109,7 +109,7 @@ function addElementToList(state, listName) {
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case CREATE_LIST:
+        case CREATE_LIST: {
             //Lista ya se encuentra creada
             if (state.hasOwnProperty(action.name)) {
                 return state;
@@ -117,6 +117,7 @@ export default (state = initialState, action) => {
             let newState = Object.assign({}, state);
             newState[action.name] = Object.assign({}, defaultListState, action.defaultValues);
             return newState;
+        }
         case ADD_FIELD_TO_LIST: {
             let list = state[action.list];
             let fields = Object.assign({}, list.fields, { [action.field]: action.value });

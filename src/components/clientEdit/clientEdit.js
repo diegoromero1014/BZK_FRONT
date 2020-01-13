@@ -99,6 +99,10 @@ import {
 } from "../contextClient/constants";
 import { fields, validations as validate } from './fieldsAndRulesClientEditUpdate';
 
+import { 
+    createClientDetailRequestFromReducer
+} from '../fieldList/mapListsToEntities';
+
 
 let idButton;
 let errorContact;
@@ -773,7 +777,7 @@ class clientEdit extends Component {
             originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
             detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
             originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology },
-            error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer
+            selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer, fieldListReducer
         } = this.props;
         const productsArray = [];
         clientProductReducer.map(map => {
@@ -781,6 +785,7 @@ class clientEdit extends Component {
         });
         const infoClient = clientInformacion.get('responseClientInfo');
 
+        const clientDetailRequest = createClientDetailRequestFromReducer(fieldListReducer, infoClient.id);
 
         const jsonCreateProspect = {
             "id": infoClient.id,
@@ -857,7 +862,8 @@ class clientEdit extends Component {
             "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
             "idCustomerTypology": customerTypology.value,
             "clientType": infoClient.clientType,
-            "saveMethod": BUTTON_EDIT  === typeSave ? EDIT_METHOD : UPDATE_METHOD
+            "saveMethod": BUTTON_EDIT  === typeSave ? EDIT_METHOD : UPDATE_METHOD,
+            "clientDetailsRequest": clientDetailRequest
         };
                 
         const { createProspect, updateClient, saveCreditStudy, swtShowMessage } = this.props;
@@ -2184,7 +2190,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes, reducerGlobal }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes, reducerGlobal, fieldListReducer }) {
     const infoClient = clientInformacion.get('responseClientInfo');
     const { contextClient } = infoClient;
 
@@ -2204,6 +2210,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
         reducerGlobal,
         isPersonaNatural,
         idButton,
+        fieldListReducer,
         initialValues: {
             razonSocial: infoClient.clientName,
             idTypeClient: infoClient.clientIdType,
