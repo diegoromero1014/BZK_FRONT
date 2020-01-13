@@ -1323,11 +1323,9 @@ class clientEdit extends Component {
                     idButton={idButton} isMethodEditClient={isMethodEditClient} isPersonaNatural={isPersonaNatural}
                 />
                 
-                <SectionOpportunitiesWeaknesses visual={true}/>
-
                 <Objetivos />
+                <SectionOpportunitiesWeaknesses visual={true}/>
                 <ActividadEconomica idSubCIIU={idSubCIIU} idCIIU={idCIIU} taxNature={taxNature} isMethodEditClient={isMethodEditClient} />
-
                 <Row>
 
                     {allowRiskGroupEdit &&
