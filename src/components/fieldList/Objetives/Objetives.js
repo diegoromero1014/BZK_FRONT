@@ -140,7 +140,7 @@ export function renderElements(elements, removeElement, editElement) {
                             float: "left"
                         }}>
                             <i
-                                className="pencil icon"
+                                className="edit icon"
                                 title="Editar Objetivo"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => editElement(objetivo)}

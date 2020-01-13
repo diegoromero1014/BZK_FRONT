@@ -69,7 +69,7 @@ import menuReducer from '../components/menu/reducer';
 import transactionalReducer from '../components/transactional/reducer';
 import linkRequestsReducer from '../components/myPendings/linkingRequests/reducer';
 import schedulerPrevisitReduser from '../components/sheduler/reducer';
-import formLists from '../components/fieldList/reducer';
+import fieldListReducer from '../components/fieldList/reducer';
 import questionsReducer from '../components/challenger/reducer';
 import objectListReducer from "../components/listaObjetos/reducer";
 
@@ -144,7 +144,12 @@ export default combineReducers({
     linkRequestsReducer,
     schedulerPrevisitReduser,
     confidentialReducer,
+<<<<<<< HEAD
     formLists,
     questionsReducer,
     objectListReducer
+=======
+    fieldListReducer,
+    questionsReducer
+>>>>>>> 4ac7bf0188eb77cf6c89a69451f1e1245f2959e0
 });
