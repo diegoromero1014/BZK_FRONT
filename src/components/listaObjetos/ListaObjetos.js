@@ -20,7 +20,9 @@ export class ListaObjetos extends Component {
     modalEliminar: false,
     switchGuardarEditar: false,
     stylePlus: false,
-    maxObjects: false
+    maxObjects: false,
+    textInicioNoValido: false,
+    soloAlfanumericos: false
   };
 
   componentDidMount() {
@@ -61,7 +63,9 @@ export class ListaObjetos extends Component {
       campoObjeto: false,
       campoVacio: false,
       switchGuardarEditar: false,
-      stylePlus: false
+      stylePlus: false,
+      textInicioNoValido: false ,
+      soloAlfanumericos: false
     });
   };
 
@@ -90,35 +94,48 @@ export class ListaObjetos extends Component {
   };
 
   modificarObjeto = () => {
-    const { objeto } = this.state;
-    const listaObjetos = this.state.objetos;
-    const campoVacio = this.state.objeto.texto;
+    this.setState({
+      campoVacio: false,
+      textInicioNoValido: false ,
+      soloAlfanumericos: false
+    })
     const {
       dispatchUpdateElementFromList,
       titulo,
       dispatchUpdateActiveFieldObject
     } = this.props;
-
-    dispatchUpdateActiveFieldObject(false, titulo);
-
+    const campoVacio = this.state.objeto.texto;
     if (campoVacio !== "") {
-      listaObjetos.map((elemento, index) => {
-        if (elemento.id === objeto.id) {
-          listaObjetos[index].texto = objeto.texto;
-        }
-      });
-      dispatchUpdateElementFromList(titulo, listaObjetos);
-      this.setState({
-        objeto: {
-          id: "",
-          texto: ""
-        },
-        objetos: listaObjetos,
-        campoVacio: false,
-        campoObjeto: false,
-        switchGuardarEditar: false,
-        stylePlus: false
-      });
+      if(campoVacio[0] === ":" || campoVacio[0] === "=" || campoVacio[0] === "+" || campoVacio[0] === "-" || campoVacio[0] === "@"){
+        this.setState({
+          textInicioNoValido : true
+        })
+      }else if(campoVacio.includes('@')){
+        this.setState({
+          soloAlfanumericos : true 
+        })
+      }else{
+        const { objeto } = this.state;
+        const listaObjetos = this.state.objetos;
+        listaObjetos.map((elemento, index) => {
+          if (elemento.id === objeto.id) {
+            listaObjetos[index].texto = objeto.texto;
+          }
+        });
+        dispatchUpdateElementFromList(titulo, listaObjetos);
+        dispatchUpdateActiveFieldObject(false, titulo);
+        this.setState({
+          objeto: {
+            id: "",
+            texto: ""
+          },
+          objetos: listaObjetos,
+          campoVacio: false,
+          campoObjeto: false,
+          switchGuardarEditar: false,
+          stylePlus: false
+        });
+      }
     } else {
       this.setState({
         campoVacio: true
@@ -127,33 +144,46 @@ export class ListaObjetos extends Component {
   };
 
   agregarObjetoLista = () => {
-    const id = (Math.random() * 10000).toFixed();
-    const { objeto } = this.state;
+    this.setState({
+      campoVacio: false,
+      textInicioNoValido: false,
+      soloAlfanumericos: false
+    })
     const {
       dispatchUpdateElementFromList,
       titulo,
       dispatchUpdateActiveFieldObject
     } = this.props;
-    objeto.id = id;
-    // const terminoNoValido =
-
     const campoVacio = this.state.objeto.texto;
-    dispatchUpdateActiveFieldObject(false, titulo);
-    if (campoVacio !== "") {
-      // if(campoVacio )
-      const objetos = [...this.state.objetos, objeto];
-      this.cerrarCampoObjeto();
 
-      dispatchUpdateElementFromList(titulo, objetos);
-
-      this.setState({
-        objeto: {
-          id: "",
-          texto: ""
-        },
-        objetos,
-        stylePlus: false
-      });
+    if(campoVacio !== "") {
+      if(campoVacio[0] === ":" || campoVacio[0] === "=" || campoVacio[0] === "+" || campoVacio[0] === "-" || campoVacio[0] === "@"){
+        this.setState({
+          textInicioNoValido : true 
+        })
+      }else if(campoVacio.includes('@')){
+        this.setState({
+          soloAlfanumericos : true 
+        })
+      }else{
+        const id = (Math.random() * 10000).toFixed();
+        const { objeto } = this.state;
+        objeto.id = id;
+        const objetos = [...this.state.objetos, objeto];
+        this.cerrarCampoObjeto();
+        dispatchUpdateElementFromList(titulo, objetos);
+        dispatchUpdateActiveFieldObject(false, titulo);
+        this.setState({
+          objeto: {
+            id: "",
+            texto: ""
+          },
+          objetos,
+          stylePlus: false,
+          textInicioNoValido: false,
+          soloAlfanumericos: false
+        });
+      }
     } else {
       this.setState({
         campoVacio: true
@@ -195,9 +225,11 @@ export class ListaObjetos extends Component {
       modalEliminar,
       switchGuardarEditar,
       stylePlus,
-      maxObjects
+      maxObjects,
+      textInicioNoValido,
+      soloAlfanumericos
     } = this.state;
-    console.log(maxObjects);
+
     const textButon = switchGuardarEditar ? "Modificar" : "Agregar";
 
     const functionButton = switchGuardarEditar
@@ -289,6 +321,18 @@ export class ListaObjetos extends Component {
                   </button>
                 </div>
               </div>
+              {
+                textInicioNoValido && 
+                (<div className="ui pointing red basic label">
+                    {`No se permiten textos que empiecen con : = + - @`}
+                </div>)
+              }
+              {
+                soloAlfanumericos &&                   
+                (<div className="ui pointing red basic label">
+                    {`Solo se permiten los siguientes valores alfanumericos ;,.-""!()$%&/¿?°#=¡':´+[]_<>`}
+                </div>)
+              }
               {campoVacio ? (
                 switchGuardarEditar ? (
                   <div
