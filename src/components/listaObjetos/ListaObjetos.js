@@ -106,7 +106,7 @@ export class ListaObjetos extends Component {
     } = this.props;
     const campoVacio = this.state.objeto.texto;
     if (campoVacio !== "") {
-      if(campoVacio[0] === ":" || campoVacio[0] === "=" || campoVacio[0] === "+" || campoVacio[0] === "-" || campoVacio[0] === "@"){
+      if( campoVacio[0] === "=" || campoVacio[0] === "+" || campoVacio[0] === "-" || campoVacio[0] === "@"){
         this.setState({
           textInicioNoValido : true
         })
@@ -157,7 +157,7 @@ export class ListaObjetos extends Component {
     const campoVacio = this.state.objeto.texto;
 
     if(campoVacio !== "") {
-      if(campoVacio[0] === ":" || campoVacio[0] === "=" || campoVacio[0] === "+" || campoVacio[0] === "-" || campoVacio[0] === "@"){
+      if( campoVacio[0] === "=" || campoVacio[0] === "+" || campoVacio[0] === "-" || campoVacio[0] === "@"){
         this.setState({
           textInicioNoValido : true 
         })
