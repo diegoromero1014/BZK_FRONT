@@ -20,7 +20,7 @@ class SectionOpportunitiesWeaknesses extends Component {
                 <div className="line-topComponent" />
                 <i className="lightbulb icon" style={{ fontSize: "25px" }} />
                 <span className="title-middle">
-                  Oportunidades y debilidades
+                  Oportunidades y Debilidades
                 </span>
               </div>
             </Col>
