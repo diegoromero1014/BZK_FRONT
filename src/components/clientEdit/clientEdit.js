@@ -222,7 +222,8 @@ class clientEdit extends Component {
             showFormAddMainCompetitor: false,
             showFormAddIntOperatrions: false,
             showJustifyNoGeren: true,
-            shouldUpdate: false
+            shouldUpdate: false,
+            showAlertListObjetcActive: false
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
@@ -1025,6 +1026,15 @@ class clientEdit extends Component {
         }
     }
 
+    handleShowMessage = () => {
+        const { objectListReducer: { Oportunidades, Debilidades }} = this.props;
+        if (Oportunidades.open || Debilidades.open) {
+            this.setState({ showAlertListObjetcActive: true });
+            return true;
+        }
+        return false;
+    };
+
     //Edita el cliente después de haber validado los campos, solo acá se validan las notas
     _submitEditClient() {
         const { fields: { justifyNoGeren, marcGeren, necesitaLME, justifyNoLME }, notes, setNotes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage } = this.props;
@@ -1049,6 +1059,9 @@ class clientEdit extends Component {
             };
             notesArray.push(noteItem);
         });
+        if (this.handleShowMessage()) {
+            return;
+        }
         const dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
         const idJustify = _.get(_.filter(dataJustifyNoGeren, ['key', KEY_DESMONTE]), '[0].id');
         const dataJustifyNoNeedLME = selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED);
@@ -1267,7 +1280,6 @@ class clientEdit extends Component {
             messageContact = 'El cliente tiene información de Representante Legal,';
 
         }
-
         return (
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{ backgroundColor: "#FFFFFF" }}>
                 <SecurityMessageComponent />
@@ -2155,6 +2167,13 @@ class clientEdit extends Component {
                     text='Señor usuario, el tipo y número de documento que desea guardar ya se encuentra registrado.'
                     onConfirm={() => this._closeError()}
                 />
+                <SweetAlert
+                    type="error"
+                    show={this.state.showAlertListObjetcActive}
+                    title="Error editando cliente"
+                    text="Señor usuario, esta creando o editando un registro en la sección de Oportunidades y Debilidades, debe terminarlo o cancelarlo para poder guardar."
+                    onConfirm={() => this.setState({ showAlertListObjetcActive: false })}
+                />
             </form>
         );
     }
@@ -2188,7 +2207,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes, reducerGlobal }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes, reducerGlobal, objectListReducer }, ownerProps) {
     const infoClient = clientInformacion.get('responseClientInfo');
     const { contextClient } = infoClient;
 
@@ -2201,6 +2220,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
 
     return {
         clientInformacion,
+        objectListReducer,
         selectsReducer,
         clientProductReducer,
         tabReducer,
