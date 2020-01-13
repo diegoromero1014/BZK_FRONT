@@ -1,0 +1,136 @@
+:root{
+    --colorBlue: #2671D7;
+    --colorGray: #C1C1C1;
+    --colorWhite: #fff;
+    --colorTitlesLines: #CEA70B;
+    --colorHover: #66778D;
+}
+
+.container-listaObjetos{
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.header-component{
+    font-size: 25px;
+    color: var(--colorTitlesLines);
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+.line-topComponent{
+    border-top: 1px dotted var(--colorTitlesLines);
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.container-titleHelpPlus{
+    display: flex;
+    justify-content: space-between;
+}
+
+.book{
+    font-size: 18px;
+}
+
+.title-component{
+    font-size: 20px;
+}
+
+.icon-obligatoriedad{
+    color: red;
+}
+
+.help.circle.icon.blue{
+    font-size: 15px;
+    cursor: pointer;
+    margin-left: 2px;
+}
+
+.button-openField{
+    margin-right: 10px;
+    border: none;
+    background-color: var(--colorBlue);
+    color: var(--colorWhite);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 10px;
+}
+
+//estilo cuando este activo se abra el campoObjetivo - modificar 
+.button-openFieldChecked{
+    margin-right: 10px;
+    border: none;
+    background-color: var(--colorHover);
+    color: var(--colorWhite);
+    border-radius: 3px;
+    cursor: no-drop;
+    font-size: 15px;
+    padding: 10px;
+}
+
+.plus{
+    padding: 3px 0 0 5px;
+}
+
+.container-fieldButtons{
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.field-textArea{
+    width: 75%;
+    height: 150px;
+}
+
+.container-buttons{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-add{
+    width: 7rem;
+    padding: 10px 20px;
+    border: none;
+    background-color: var(--colorBlue);
+    color: var(--colorWhite);
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.button-add:hover{
+    background-color: var(--colorHover);
+}
+
+.button-cancel{
+    margin-top: 5px;
+    width: 7rem;
+    padding: 10px 20px;
+    border: none;
+    background-color:  var(--colorGray);
+    color: var(--colorWhite);
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.edit{ 
+    cursor: pointer;
+}
+
+.trash{
+    cursor: pointer;
+}
+
+.tr-void{
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

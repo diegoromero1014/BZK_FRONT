@@ -21,7 +21,8 @@ import {
     patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
     patternOfInventoryPolice, patternOfControlLinkedPayments, patternOfNameEntity, patternOfNoOperatingInCome,
     patternOfOnlyAlphabeticalAndSlash, patternOfRiskGroupName, patternOfObservationRiskGroup, patternOfJustificationsRiskGroup,
-    patternOfExternalClientNumberDocument, patternOfTaskObservation, patternOfOriginCityResources, regexHtmlInjection
+    patternOfExternalClientNumberDocument, patternOfTaskObservation, patternOfOriginCityResources, regexHtmlInjection,
+    patternClientObjective
 } from './patternsToValidateField';
 
 import {
@@ -60,8 +61,8 @@ import {
     MESSAGE_REQUIRED_EMPLOYEE,
     MESSAGE_WARNING_TASK_OBSERVATIONS,
     MESSAGE_WARNING_ORIGIN_CITY_RESOURCES,
-    MESSAGE_ERROR_INJECTION_HTML
-
+    MESSAGE_ERROR_INJECTION_HTML,
+    MESSAGE_ERROR_PATTERN_CLIENT_OBJECTIVE
 } from './validationsMessages';
 
 import {
@@ -79,7 +80,7 @@ export const setGlobalCondition = value => {
 export const processRules = (formFields, fieldsWithRules, props) => {
     const errors = {};
     _.mapKeys(formFields, function (value, field) {
-        if (!_.isEmpty(fieldsWithRules[field].rules)) {
+        if (fieldsWithRules[field] && !_.isEmpty(fieldsWithRules[field].rules)) {
             _.forEach(fieldsWithRules[field].rules, function (rule) {
                 const message = rule(value, formFields, props);
                 if (!_.isEmpty(message)) {
@@ -861,6 +862,14 @@ export const checkRequiredWhenVarIsFalse = field => (value, fields, _) => {
         return checkRequired(value);
     }
     return null;
-
 }
 
+export const checkPatternClientObjective = value => {
+    let message = null;
+
+    if (!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternClientObjective.test(value)) {
+        message = MESSAGE_ERROR_PATTERN_CLIENT_OBJECTIVE;
+    }
+
+    return message;
+}
