@@ -124,9 +124,9 @@ export function existsPDFforTheSameDay(){
     }
 }
 
-export function generatePDF(changeStateSaveData) {
+export function generatePDF(changeStateSaveData,namePDf) {
     const requestBody = {
-      name: "reportCreditStudy.pdf",
+      name: namePDf,
       route: "BiztrackReports/reportContextClient.jrxml",
       params: {
         P_CLIENT_ID: Number(window.sessionStorage.getItem("idClientSelected"))

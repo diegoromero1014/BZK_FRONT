@@ -14,7 +14,7 @@ import Participants from './participants';
 import Challenger from '../challenger/challenger';
 import { renderLabel, renderMessageError }  from '../../functions';
 
-import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER, HELP_VISIT_TYPE } from './constants';
+import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER, HELP_VISIT_TYPE, TITLE_MESSAGE_PENDIENT } from './constants';
 import { checkRichTextRequiredBoolean } from '../../validationsFields/rulesField';
 
 export class PrevisitFormComponent extends Component {
@@ -51,9 +51,13 @@ export class PrevisitFormComponent extends Component {
                name: 'Construcción de la Propuesta de Negocio',
                nullable: true,
                message: TITLE_CHALLENGER
+            },
+            observations: {
+               name: 'Pendientes, quejas y reclamos',
+               nullable: true,
+               message: TITLE_MESSAGE_PENDIENT
             }
-         },
-         type: null
+         }
       };
    }
 
@@ -81,8 +85,9 @@ export class PrevisitFormComponent extends Component {
    }
 
    render() {
-      const { fields: { type, date, duration, place, objective, challenger } } = this.state;
+      const { fields: { type, date, duration, place, objective, challenger, observations } } = this.state;
       const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue } = this.props;
+      
       return (
          <div>
             <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
@@ -113,6 +118,7 @@ export class PrevisitFormComponent extends Component {
                                     setFieldValue(name, id, false);
                                     this.changeTypePrevisit(id);
                                  }}
+                                 onBlur={onBlur}
                                  data={previsitTypes || []}
                                  className='field-input'
                                  disabled={isEditable ? 'disabled' : ''}
@@ -265,8 +271,43 @@ export class PrevisitFormComponent extends Component {
                   </div>
                }
                {commercialReportButtons(setFieldValue)}
-            </Form>
 
+               <Row style={{ padding: "20px 23px 20px 20px" }}>
+                  <Col xs={12} md={12} lg={12}>
+                     <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                        <div className="tab-content-row"
+                           style={{ borderTop: "1px dotted #cea70b", width: "100%", marginBottom: "10px" }} />
+                        <i className="book icon" style={{ fontSize: "18px" }} />
+                        <span style={{ fontSize: "20px" }}>{this.renderTitle(observations)}</span>
+                     </div>
+                  </Col>
+               </Row>
+
+               <Row style={{ padding: "0px 23px 20px 20px" }}>
+                  <Col xs={12} md={12} lg={12}>
+                     <Field type="text" name="observations">
+                        {({ field: { value, name } }) =>
+                           <div>
+                              <RichText
+                                 name="observations"
+                                 id="observations"
+                                 value={value}
+                                 onChange={val => setFieldValue(name, val, false)}
+                                 title="Pendientes, quejas y reclamos"
+                                 style={{ width: '100%', height: '178px' }}
+                                 readOnly={isEditable}
+                                 disabled={!isEditable ? '' : 'disabled'}
+                              />
+                              <br></br>
+                              <ErrorMessage name="observations" component={'div'} >
+                                 {message => renderMessageError(message)}
+                              </ErrorMessage>
+                           </div>
+                        }
+                     </Field>
+                  </Col>
+               </Row>
+            </Form>
          </div>
       )
    }
@@ -284,13 +325,13 @@ export default withFormik({
       questions.forEach(element => fields[element.field] = '');
 
       if (previsitData) {
-         const { documentType, visitTime, endTime, visitLocation, principalObjective, documentStatus } = previsitData;
+         const { documentType, visitTime, endTime, visitLocation, principalObjective, documentStatus, observations } = previsitData;
 
          previsitData.answers.forEach(element => fields[element.field] = element.answer);
 
-         return Object.assign({}, fields, { documentType, visitTime: new Date(visitTime), endTime, visitLocation, principalObjective, documentStatus })
+         return Object.assign({}, fields, { documentType, visitTime: new Date(visitTime), endTime, visitLocation, principalObjective, documentStatus, observations })
       } else {
-         return Object.assign({}, fields, { documentType: '', visitTime: new Date(), endTime: '', visitLocation: '', principalObjective: '', documentStatus: undefined });
+         return Object.assign({}, fields, { documentType: '', visitTime: new Date(), endTime: '', visitLocation: '', principalObjective: '', documentStatus: undefined, observations: '' });
       }
    },
    validationSchema: ({ questions, showChallengerSection }) => {

@@ -599,8 +599,10 @@ export class ComponentStudyCredit extends Component {
     }
 
     callGeneratePDF() {
-        const { dispatchChangeStateSaveData, generatePDF } = this.props;
-        generatePDF(dispatchChangeStateSaveData);
+        const { dispatchChangeStateSaveData, generatePDF, clientInformacion } = this.props;
+        const infoClient = clientInformacion.get('responseClientInfo');
+        const namePDf = infoClient.clientNameType +"_"+ infoClient.clientIdNumber +"_"+ moment(new Date()).format("YYYYMMDD")+"_EC"+".pdf";
+        generatePDF(dispatchChangeStateSaveData,namePDf);
         this.setState({ isPDFGenerated: true });
     }
 
