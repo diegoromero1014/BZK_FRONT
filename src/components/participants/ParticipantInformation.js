@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Form, Field, ErrorMessage, withFormik } from 'formik';
 import { Row, Col } from 'react-flexbox-grid';
 import { Input } from 'semantic-ui-react';
-import { renderLabel, renderMessageError }  from '../../functions';
+import { renderLabel, renderMessageError } from '../../functions';
 import ElementsComponent from '../elements';
 import { schema } from './schema';
+import { cleanList, addToList, createList } from '../elements/actions';
+import { OBJECTIVES, OBJECTIVES_ERROR_MSG } from './constants';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 class ParticipantInformation extends Component {
 
@@ -39,6 +44,18 @@ class ParticipantInformation extends Component {
             }
         }
     }
+
+    componentWillMount() {
+        const { selectedRecord: { interlocutorObjs }, dispatchCleanList, dispatchAddToList, dispatchCreateList } = this.props;
+
+        dispatchCleanList(OBJECTIVES);
+        dispatchCreateList(OBJECTIVES);
+
+        if (interlocutorObjs && interlocutorObjs.length) {
+            interlocutorObjs.forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1) }), name: OBJECTIVES, old: null }));
+        }
+    }
+
 
     render() {
         const { fields: { name, position, socialStyle, attitude } } = this.state;
@@ -164,37 +181,70 @@ class ParticipantInformation extends Component {
                     </Col>
                 </Row>
 
-                <Row style={{ marginTop: '-65px' }}> 
+                <Row style={{ marginTop: '-65px' }}>
                     <Col xs={12} md={12} lg={12}>
-                        <ElementsComponent schema={schema} placeholder='Objectivos' messageButton='Agregar' name={'objectives'} />
+                        <ElementsComponent schema={schema} placeholder='Objectivos' messageButton='Agregar' name={OBJECTIVES} max={3} />
                     </Col>
                 </Row>
+
+                <div className="modalBt4-footer modal-footer">
+                    <button type="submit" className="btn btn-primary modal-button-edit">
+                        <span>Guardar</span>
+                    </button>
+                </div>
             </Form>
         );
     }
 }
 
-export default withFormik({
-    handleSubmit: (values) => {
-       console.log(values);
-    },
-    mapPropsToValues: ({ selectedRecord }) => {
-        
-        if(selectedRecord) {
-            const { nameComplet, contactPosition, contactSocialStyle, contactActitudeCompany } = selectedRecord;
-            return {
-                name: nameComplet,
-                position:  !contactPosition ? '' : contactPosition,
-                socialStyle: !contactSocialStyle ? '' : contactSocialStyle,
-                attitude: !contactActitudeCompany ? '' : contactActitudeCompany
+const mapStateToProps = ({ elementsReducer }) => ({
+    elementsReducer
+});
+
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators({
+        dispatchCleanList: cleanList,
+        dispatchAddToList: addToList,
+        dispatchCreateList: createList,
+        dispatchSwtShowMessage: swtShowMessage
+    }, dispatch)
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withFormik({
+        handleSubmit: (values, { props }) => {
+            debugger;
+
+            const { elementsReducer, dispatchSwtShowMessage } = props;
+
+            let data = elementsReducer[OBJECTIVES];
+
+            if (data) { data = data.elements; }
+
+            if (!data.length) {
+                dispatchSwtShowMessage('error', 'Error', OBJECTIVES_ERROR_MSG);
             }
-        } else {
-            return {
-                name: '',
-                position: '',
-                socialStyle: '',
-                attitude: ''
+        },
+        mapPropsToValues: ({ selectedRecord }) => {
+
+            if (selectedRecord) {
+                const { nameComplet, contactPosition, contactSocialStyle, contactActitudeCompany } = selectedRecord;
+                return {
+                    name: nameComplet,
+                    position: !contactPosition ? '' : contactPosition,
+                    socialStyle: !contactSocialStyle ? '' : contactSocialStyle,
+                    attitude: !contactActitudeCompany ? '' : contactActitudeCompany
+                }
+            } else {
+                return {
+                    name: '',
+                    position: '',
+                    socialStyle: '',
+                    attitude: ''
+                }
             }
         }
-    }
- })(ParticipantInformation);
+    })(
+        ParticipantInformation
+    )
+)

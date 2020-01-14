@@ -71,6 +71,7 @@ import linkRequestsReducer from '../components/myPendings/linkingRequests/reduce
 import schedulerPrevisitReduser from '../components/sheduler/reducer';
 import questionsReducer from '../components/challenger/reducer';
 import objectListReducer from "../components/listaObjetos/reducer";
+import elementsReducer from "../components/elements/reducer";
 
 export default combineReducers({
     routing: routerReducer,
@@ -144,5 +145,6 @@ export default combineReducers({
     schedulerPrevisitReduser,
     confidentialReducer,
     questionsReducer,
-    objectListReducer
+    objectListReducer,
+    elementsReducer
 });

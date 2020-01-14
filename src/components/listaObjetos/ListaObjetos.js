@@ -197,7 +197,7 @@ export class ListaObjetos extends Component {
       stylePlus,
       maxObjects
     } = this.state;
-    console.log(maxObjects);
+    
     const textButon = switchGuardarEditar ? "Modificar" : "Agregar";
 
     const functionButton = switchGuardarEditar

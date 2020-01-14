@@ -38,7 +38,14 @@ export class ParticipantsByClient extends Component {
     handleSetInformation = selectedContact => {
         const { contacts } = this.props;
 
-        const existingContact = contacts.filter(element => element.id === Number(selectedContact))[0];            
+        let existingContact;
+
+        if(!isNaN(selectedContact)) {
+            existingContact = contacts.filter(element => element.id === Number(selectedContact))[0];            
+        } else {
+            existingContact = selectedContact;
+        }
+        
 
         if(existingContact) {
             this.setState({ selectedContactInformation: existingContact });
@@ -67,7 +74,11 @@ export class ParticipantsByClient extends Component {
                     estiloSocial: !contact.contactSocialStyle ? '' : contact.contactSocialStyle,
                     actitudBanco: !contact.contactActitudeCompany ? '' : contact.contactActitudeCompany,
                     fecha: Date.now(),
-                    uuid: _.uniqueId('participanClient_')
+                    uuid: _.uniqueId('participanClient_'),
+                    nameComplet: contact.nameComplet, 
+                    contactPosition: contact.contactPosition,
+                    contactSocialStyle: contact.contactSocialStyle,
+                    contactActitudeCompany: contact.contactActitudeCompany,
                 }
 
                 dispatchAddParticipant(participant);
@@ -77,7 +88,6 @@ export class ParticipantsByClient extends Component {
                 this.setState({ selectedContact: '' });
             }
         }
-
     }
 
     handleCloseModal = () => this.setState({ open: false, selectedContactInformation: null, selectedContact: null });
@@ -98,7 +108,6 @@ export class ParticipantsByClient extends Component {
                             onChange={value => {
                                 this.setState({ selectedContact: value, open: true });
                                 this.handleSetInformation(value);
-                                this.addContact();
                             }}
                             value={selectedContact}
                             valueProp={'id'}

@@ -18,7 +18,11 @@ export default (state = initialState, action) => {
                 actitudBanco: participant.actitudBanco,
                 fecha: participant.fecha,
                 uuid: participant.uuid,
-                order: getNextValue(state, participant.tipoParticipante)
+                order: getNextValue(state, participant.tipoParticipante),
+                nameComplet: participant.nameComplet, 
+                contactPosition: participant.contactPosition, 
+                contactSocialStyle: participant.contactSocialStyle, 
+                contactActitudeCompany: participant.contactActitudeCompany
             });
             return state.push(newParticipant);
         case contants.DELETE_PARTICIPANT:
