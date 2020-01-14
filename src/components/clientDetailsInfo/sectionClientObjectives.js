@@ -37,7 +37,7 @@ export class SectionClientObjectives extends Component {
                                                                     <div style={{ margin: "10px 0 10px 0" }}><Col md={12} className='add-line-break'>{strategy.clientDetailRelation.text}</Col></div>
                                                                 </Row>
                                                             )) : (
-                                                                <Row style={{ padding: "5px 23px 5px 20px" }}>
+                                                                <Row className='row-no-element-child' style={{ padding: "5px 23px 5px 20px" }}>
                                                                   <Col xs={12}md={12} lg={12} style={{ paddingRight: "15px", marginTop: "15px" }}>
                                                                     <table className="ui striped table">
                                                                       <thead>
@@ -61,7 +61,7 @@ export class SectionClientObjectives extends Component {
                     </Col>
                 </Row>
             )) : (
-                <Row style={{ padding: "5px 23px 5px 20px" }}>
+                <Row className='row-no-element-parent' style={{ padding: "5px 23px 5px 20px" }}>
                   <Col xs={12}md={12} lg={12} style={{ paddingRight: "15px", marginTop: "15px" }}>
                     <table className="ui striped table">
                       <thead>
