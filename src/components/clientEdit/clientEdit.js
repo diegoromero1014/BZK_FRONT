@@ -1330,7 +1330,7 @@ class clientEdit extends Component {
                 />
                 
                 <Objetivos />
-                <SectionOpportunitiesWeaknesses visual={true}/>
+                {!_.isEmpty(infoClient) && <SectionOpportunitiesWeaknesses infoClient={infoClient} visual={true}/>}
                 <ActividadEconomica idSubCIIU={idSubCIIU} idCIIU={idCIIU} taxNature={taxNature} isMethodEditClient={isMethodEditClient} />
                 <Row>
 
