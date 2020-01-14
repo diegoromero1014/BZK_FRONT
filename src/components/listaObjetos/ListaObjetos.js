@@ -415,7 +415,7 @@ export class ListaObjetos extends Component {
               <table className="ui striped table">
                 <thead>
                   <tr className="tr-void">
-                    <span>{`Aún no se han adicionado ${tituloCompleto}.`}</span>
+                    <span>{`No se han adicionado ${tituloCompleto}.`}</span>
                   </tr>
                 </thead>
               </table>

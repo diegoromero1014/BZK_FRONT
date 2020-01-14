@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col } from 'react-flexbox-grid';
-import { isEmpty, mapKeys } from 'lodash';
+import { mapKeys } from 'lodash';
 
 import ToolTipComponent from '../toolTip/toolTipComponent';
 import { processRules } from '../../validationsFields/rulesField';
@@ -18,7 +18,7 @@ class ListOfElements extends React.Component {
         const isValid = elements && (elements.length < maxLength);
 
         if (!isValid) {
-            swtShowMessage("error", "Erorr!", "Señor usuario, el número máximo de " + title + " permitidos son "+maxLength);
+            swtShowMessage("error", "Error!", "Señor usuario, el número máximo de " + title + " permitidas son "+maxLength);
         }
 
         return isValid;
@@ -132,7 +132,7 @@ class ListOfElements extends React.Component {
 
         return (
             <div>
-                <button style={{ marginRight: "15px" }} className="btn btn-secondary" type="button" onClick={this.addElement}>{botonAddText}</button>
+                <button style={{ marginRight: "15px" }} className="btn btn-secondary section-btn-save" type="button" onClick={this.addElement}>{botonAddText}</button>
                 <button className="btn section-btn-cancel" type="button" onClick={this.handleCancel}>Cancelar</button>
             </div>
         )
@@ -140,13 +140,12 @@ class ListOfElements extends React.Component {
 
     renderElements = () => {
         const { elements, renderElement, title } = this.props;
-
         if (elements && elements.length) {
             return renderElement(elements, this.removeElement, this.editElement);
         }
 
         return (
-            <Col xs={12} md={12} lg={12}>
+            <Col xs={12} md={12} lg={12} className="elements-not-found">
                 <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
                     <span className="form-item">No se han adicionado {title} </span>
                 </div>
@@ -161,7 +160,7 @@ class ListOfElements extends React.Component {
             <div>
                 <div style={{ position: "relative", marginBottom: "25px" }}>
                     {this.props.renderTitle}
-                    {!showAddSection && <div style={{ position: "absolute", top: "10px", right: "10px" }} >
+                    {!showAddSection && <div className="add-section" style={{ position: "absolute", top: "10px", right: "10px" }} >
                         <button className="btn" onClick={this.openAddElement} type="button">
                             <ToolTipComponent text={"Agregar " + title}>
                                 <i className="plus white icon" style={{ padding: "3px 0 0 5px" }}></i>
