@@ -1,5 +1,4 @@
 export function getObjectivesRequestFromReducer(objectives, clientId) {
-    debugger;
     let objectivesRequest = objectives.map((objective) => {
         return {
             id: objective.id,
