@@ -10,7 +10,7 @@ import "./styleListaObjetos.scss";
 export class ListaObjetos extends Component {
   state = {
     objeto: {
-      id: "",
+      idObject: "",
       texto: ""
     },
     objetos: [],
@@ -30,7 +30,8 @@ export class ListaObjetos extends Component {
   }
 
   setStateInitialObjects = () => {
-    const { initialObjects } = this.props;
+    const { initialObjects, dispatchUpdateElementFromList, titulo } = this.props;
+    dispatchUpdateElementFromList(titulo, initialObjects);
     this.setState({
       objetos: initialObjects
     });
@@ -57,7 +58,7 @@ export class ListaObjetos extends Component {
     dispatchUpdateActiveFieldObject(false, titulo);
     this.setState({
       objeto: {
-        id: "",
+        idObject: "",
         texto: ""
       },
       campoObjeto: false,
@@ -69,22 +70,22 @@ export class ListaObjetos extends Component {
     });
   };
 
-  mostrarModalEliminar = id => {
+  mostrarModalEliminar = idObject => {
     this.setState({
-      idObjetoEliminar: id,
+      idObjetoEliminar: idObject,
       modalEliminar: true
     });
   };
 
   editarObjeto = elemento => {
-    const { id, texto } = elemento;
+    const { idObject, texto } = elemento;
     const { dispatchUpdateActiveFieldObject, titulo } = this.props;
 
     dispatchUpdateActiveFieldObject(true, titulo);
 
     this.setState({
       objeto: {
-        id,
+        idObject,
         texto
       },
       campoObjeto: true,
@@ -104,7 +105,7 @@ export class ListaObjetos extends Component {
       titulo,
       dispatchUpdateActiveFieldObject
     } = this.props;
-    const campoVacio = this.state.objeto.texto;
+    const campoVacio = this.state.objeto.text;
     if (campoVacio !== "") {
       if( campoVacio[0] === "=" || campoVacio[0] === "+" || campoVacio[0] === "-" || campoVacio[0] === "@"){
         this.setState({
@@ -118,7 +119,7 @@ export class ListaObjetos extends Component {
         const { objeto } = this.state;
         const listaObjetos = this.state.objetos;
         listaObjetos.map((elemento, index) => {
-          if (elemento.id === objeto.id) {
+          if (elemento.idObject === objeto.idObject) {
             listaObjetos[index].texto = objeto.texto;
           }
         });
@@ -126,7 +127,7 @@ export class ListaObjetos extends Component {
         dispatchUpdateActiveFieldObject(false, titulo);
         this.setState({
           objeto: {
-            id: "",
+            idObject: "",
             texto: ""
           },
           objetos: listaObjetos,
@@ -154,7 +155,7 @@ export class ListaObjetos extends Component {
       titulo,
       dispatchUpdateActiveFieldObject
     } = this.props;
-    const campoVacio = this.state.objeto.texto;
+    const campoVacio = this.state.objeto.text;
 
     if(campoVacio !== "") {
       if( campoVacio[0] === "=" || campoVacio[0] === "+" || campoVacio[0] === "-" || campoVacio[0] === "@"){
@@ -166,16 +167,16 @@ export class ListaObjetos extends Component {
           soloAlfanumericos : true 
         })
       }else{
-        const id = (Math.random() * 10000).toFixed();
+        const idObject = (Math.random() * 10000).toFixed();
         const { objeto } = this.state;
-        objeto.id = id;
+        objeto.idObject = idObject;
         const objetos = [...this.state.objetos, objeto];
         this.cerrarCampoObjeto();
         dispatchUpdateElementFromList(titulo, objetos);
         dispatchUpdateActiveFieldObject(false, titulo);
         this.setState({
           objeto: {
-            id: "",
+            idObject: "",
             texto: ""
           },
           objetos,
@@ -191,9 +192,9 @@ export class ListaObjetos extends Component {
     }
   };
 
-  eliminarObjeto = id => {
+  eliminarObjeto = idObject => {
     const { dispatchUpdateElementFromList, titulo } = this.props;
-    const objetos = this.state.objetos.filter(elemento => elemento.id !== id);
+    const objetos = this.state.objetos.filter(elemento => elemento.idObject !== idObject);
     this.setState({
       modalEliminar: false
     });
@@ -205,10 +206,10 @@ export class ListaObjetos extends Component {
 
   newObjeto = event => {
     const { name, value } = event.target;
-    const { id } = this.state.objeto;
+    const { idObject } = this.state.objeto;
     this.setState({
       objeto: {
-        id,
+        idObject,
         [name]: value
       }
     });
@@ -297,10 +298,10 @@ export class ListaObjetos extends Component {
                 <textarea
                   className="field-textArea"
                   type="text"
-                  name="texto"
+                  name="text"
                   onChange={this.newObjeto}
                   placeholder={ayuda}
-                  value={this.state.objeto.texto}
+                  value={this.state.objeto.text}
                   maxLength={700}
                 />
                 <div className="container-buttons">
@@ -364,7 +365,7 @@ export class ListaObjetos extends Component {
               <table className="ui striped table">
                 <thead>
                   {objetos.map(elemento => (
-                    <tr>
+                    <tr key={elemento.id}>
                       {visual && (
                         <td name="td-edit" className="collapsing">
                           <i
@@ -374,14 +375,14 @@ export class ListaObjetos extends Component {
                           />
                         </td>
                       )}
-                      <td>{elemento.texto}</td>
+                      <td>{elemento.text}</td>
                       {visual && (
                         <td className="collapsing">
                           <i
                             className="trash icon"
                             title={`Eliminar ${titulo}`}
                             onClick={() =>
-                              this.mostrarModalEliminar(elemento.id)
+                              this.mostrarModalEliminar(elemento.idObject)
                             }
                           />
                         </td>
