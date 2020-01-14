@@ -10,7 +10,7 @@ import "./styleListaObjetos.scss";
 export class ListaObjetos extends Component {
   state = {
     objeto: {
-      id: "",
+      idObject: "",
       texto: ""
     },
     objetos: [],
@@ -57,7 +57,7 @@ export class ListaObjetos extends Component {
     dispatchUpdateActiveFieldObject(false, titulo);
     this.setState({
       objeto: {
-        id: "",
+        idObject: "",
         texto: ""
       },
       campoObjeto: false,
@@ -69,22 +69,22 @@ export class ListaObjetos extends Component {
     });
   };
 
-  mostrarModalEliminar = id => {
+  mostrarModalEliminar = idObject => {
     this.setState({
-      idObjetoEliminar: id,
+      idObjetoEliminar: idObject,
       modalEliminar: true
     });
   };
 
   editarObjeto = elemento => {
-    const { id, texto } = elemento;
+    const { idObject, texto } = elemento;
     const { dispatchUpdateActiveFieldObject, titulo } = this.props;
 
     dispatchUpdateActiveFieldObject(true, titulo);
 
     this.setState({
       objeto: {
-        id,
+        idObject,
         texto
       },
       campoObjeto: true,
@@ -118,7 +118,7 @@ export class ListaObjetos extends Component {
         const { objeto } = this.state;
         const listaObjetos = this.state.objetos;
         listaObjetos.map((elemento, index) => {
-          if (elemento.id === objeto.id) {
+          if (elemento.idObject === objeto.idObject) {
             listaObjetos[index].texto = objeto.texto;
           }
         });
@@ -126,7 +126,7 @@ export class ListaObjetos extends Component {
         dispatchUpdateActiveFieldObject(false, titulo);
         this.setState({
           objeto: {
-            id: "",
+            idObject: "",
             texto: ""
           },
           objetos: listaObjetos,
@@ -166,16 +166,16 @@ export class ListaObjetos extends Component {
           soloAlfanumericos : true 
         })
       }else{
-        const id = (Math.random() * 10000).toFixed();
+        const idObject = (Math.random() * 10000).toFixed();
         const { objeto } = this.state;
-        objeto.id = id;
+        objeto.idObject = idObject;
         const objetos = [...this.state.objetos, objeto];
         this.cerrarCampoObjeto();
         dispatchUpdateElementFromList(titulo, objetos);
         dispatchUpdateActiveFieldObject(false, titulo);
         this.setState({
           objeto: {
-            id: "",
+            idObject: "",
             texto: ""
           },
           objetos,
@@ -191,9 +191,9 @@ export class ListaObjetos extends Component {
     }
   };
 
-  eliminarObjeto = id => {
+  eliminarObjeto = idObject => {
     const { dispatchUpdateElementFromList, titulo } = this.props;
-    const objetos = this.state.objetos.filter(elemento => elemento.id !== id);
+    const objetos = this.state.objetos.filter(elemento => elemento.idObject !== idObject);
     this.setState({
       modalEliminar: false
     });
@@ -205,10 +205,10 @@ export class ListaObjetos extends Component {
 
   newObjeto = event => {
     const { name, value } = event.target;
-    const { id } = this.state.objeto;
+    const { idObject } = this.state.objeto;
     this.setState({
       objeto: {
-        id,
+        idObject,
         [name]: value
       }
     });
@@ -381,7 +381,7 @@ export class ListaObjetos extends Component {
                             className="trash icon"
                             title={`Eliminar ${titulo}`}
                             onClick={() =>
-                              this.mostrarModalEliminar(elemento.id)
+                              this.mostrarModalEliminar(elemento.idObject)
                             }
                           />
                         </td>
@@ -415,7 +415,7 @@ export class ListaObjetos extends Component {
               <table className="ui striped table">
                 <thead>
                   <tr className="tr-void">
-                    <span>{`Aún no se han adicionado ${tituloCompleto}.`}</span>
+                    <span>{`No se han adicionado ${tituloCompleto}.`}</span>
                   </tr>
                 </thead>
               </table>

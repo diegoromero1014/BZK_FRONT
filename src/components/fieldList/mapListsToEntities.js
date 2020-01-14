@@ -17,7 +17,6 @@ function getStrategiesFromObjective(objective, clientId) {
 }
 
 export function getObjectivesRequestFromReducer(objectives, clientId) {
-
     let objectivesRequest = objectives.map((objective) => {
         let objectiveRequest = getRequestFromElement(objective, clientId);
         objectiveRequest.relations = getStrategiesFromObjective(objective, clientId);
