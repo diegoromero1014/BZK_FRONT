@@ -184,7 +184,7 @@ export function renderElements(elements, removeElement, editElement) {
                                                         <div style={{}}>
                                                             <Row>
 
-                                                                <Col md={12}>
+                                                                <Col md={12} className="add-line-break">
                                                                     {objetivo.value}
                                                                 </Col>
 
@@ -196,7 +196,7 @@ export function renderElements(elements, removeElement, editElement) {
                                                             {objetivo["strategies"] && objetivo["strategies"].map((strategy) => (
                                                                 <Row className="section-list-divider">
                                                                     <div style={{ margin: "10px 0 10px 0" }}>
-                                                                        <Col md={12}>
+                                                                        <Col md={12} className="add-line-break">
                                                                             {strategy.value}
                                                                         </Col>
                                                                     </div>
