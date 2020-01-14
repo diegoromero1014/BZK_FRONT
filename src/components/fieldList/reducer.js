@@ -1,4 +1,4 @@
-import { uniqueId, isEmpty } from 'lodash'
+import { uniqueId, isEmpty, find, indexOf } from 'lodash'
 
 import {
     CREATE_LIST,
@@ -9,6 +9,7 @@ import {
     UPDATE_ELEMENT_FROM_LIST,
     EDIT_ELEMENT_FROM_LIST
 } from './constants';
+import { array } from 'yup';
 
 const ID = "fieldlist-id";
 
@@ -39,9 +40,19 @@ function addIdToElement(element) {
     return modifiedFiels;
 }
 
+function replaceElementInArray(arr, searchFunction, newElement) {
+    var match = find(arr, searchFunction);
+    if(match){
+        var index = indexOf(arr, find(arr, searchFunction));
+        arr.splice(index, 1, newElement);
+    } else {
+        arr.push(newElement);
+    }
+    return arr;
+}
+
 function mergeElements(elements, newElement) {
-    const filterElements = elements.filter((element) => element[ID] !== newElement[ID]);
-    return [...filterElements, newElement];
+    return replaceElementInArray(elements, (element) => element[ID] == newElement[ID], newElement );
 }
 
 /**
