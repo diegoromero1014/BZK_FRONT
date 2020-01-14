@@ -132,13 +132,8 @@ class ListOfElements extends React.Component {
 
         return (
             <div>
-<<<<<<< HEAD
-                <button style={{ marginRight: "15px" }} className="btn btn-secondary" type="button" onClick={this.addElement}>{botonAddText}</button>
-                <button className="btn section-btn-cancel" type="button" onClick={this.handleCancel}>Cancelar</button>
-=======
                 <button style={{ marginRight: "15px" }} className="btn btn-secondary section-btn-save" type="button" onClick={this.addElement}>{botonAddText}</button>
-                <button className="btn section-btn-cancel" type="button" onClick={this.toogleAddSection}>Cancelar</button>
->>>>>>> 4ac7bf0188eb77cf6c89a69451f1e1245f2959e0
+                <button className="btn section-btn-cancel" type="button" onClick={this.handleCancel}>Cancelar</button>
             </div>
         )
     }

@@ -31,11 +31,7 @@ export function renderFields({fields, onChange, onAddElement, onCancel, isEditin
                 </Col>
                 <Col md={4} sm={12} style={styles.buttonsDiv}>
                     <div style={styles.buttonsDiv}>
-<<<<<<< HEAD
                         <button style={{ marginRight: "5px" }} className="btn btn-secondary" type="button" onClick={onAddElement}>{isEditing ? "Modificar Estrategia" : "Agregar Estrategia"}</button>
-=======
-                        <button style={{ marginRight: "15px" }} className="btn btn-secondary" type="button" onClick={onAddElement}>{isEditing ? "Modificar Estrategia" : "Agregar Estrategia"}</button>
->>>>>>> 4ac7bf0188eb77cf6c89a69451f1e1245f2959e0
                         <button className="btn cancel-btn" type="button" onClick={onCancel}>Cancelar</button>
                     </div>
 

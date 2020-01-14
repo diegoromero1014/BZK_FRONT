@@ -144,12 +144,7 @@ export default combineReducers({
     linkRequestsReducer,
     schedulerPrevisitReduser,
     confidentialReducer,
-<<<<<<< HEAD
-    formLists,
+    fieldListReducer,
     questionsReducer,
     objectListReducer
-=======
-    fieldListReducer,
-    questionsReducer
->>>>>>> 4ac7bf0188eb77cf6c89a69451f1e1245f2959e0
 });
