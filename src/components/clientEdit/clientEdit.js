@@ -780,7 +780,7 @@ class clientEdit extends Component {
             originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
             detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
             originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology },
-            selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer, fieldListReducer
+            selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer, fieldListReducer, objectListReducer
         } = this.props;
         const productsArray = [];
         clientProductReducer.map(map => {
@@ -788,7 +788,7 @@ class clientEdit extends Component {
         });
         const infoClient = clientInformacion.get('responseClientInfo');
 
-        const clientDetailRequest = createClientDetailRequestFromReducer(fieldListReducer, infoClient.id);
+        const clientDetailRequest = createClientDetailRequestFromReducer(fieldListReducer, objectListReducer, infoClient.id);
 
         const jsonCreateProspect = {
             "id": infoClient.id,
