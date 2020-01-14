@@ -53,7 +53,7 @@ class MenuListFatherComponent extends Component {
         );
         return (
             <Dropdown key={_.uniqueId("MenuListFatherComponent_")} style={style} trigger={iconAndText} className={`link item ${activeItem}`}>
-                <Dropdown.Menu>
+                <Dropdown.Menu style={{zIndex: '10000'}}>
                     {!_.isUndefined(linkUrlFather) &&
                         <Dropdown.Item key={_.uniqueId("MenuListFatherComponent_")} onClick={this._handleClickMenuItemChildren.bind(this, linkUrlFather)} >
                             {labelTextFather}

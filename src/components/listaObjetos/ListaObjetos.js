@@ -30,7 +30,8 @@ export class ListaObjetos extends Component {
   }
 
   setStateInitialObjects = () => {
-    const { initialObjects } = this.props;
+    const { initialObjects, dispatchUpdateElementFromList, titulo } = this.props;
+    dispatchUpdateElementFromList(titulo, initialObjects);
     this.setState({
       objetos: initialObjects
     });
@@ -104,7 +105,7 @@ export class ListaObjetos extends Component {
       titulo,
       dispatchUpdateActiveFieldObject
     } = this.props;
-    const campoVacio = this.state.objeto.texto;
+    const campoVacio = this.state.objeto.text;
     if (campoVacio !== "") {
       if( campoVacio[0] === "=" || campoVacio[0] === "+" || campoVacio[0] === "-" || campoVacio[0] === "@"){
         this.setState({
@@ -154,7 +155,7 @@ export class ListaObjetos extends Component {
       titulo,
       dispatchUpdateActiveFieldObject
     } = this.props;
-    const campoVacio = this.state.objeto.texto;
+    const campoVacio = this.state.objeto.text;
 
     if(campoVacio !== "") {
       if( campoVacio[0] === "=" || campoVacio[0] === "+" || campoVacio[0] === "-" || campoVacio[0] === "@"){
@@ -297,10 +298,10 @@ export class ListaObjetos extends Component {
                 <textarea
                   className="field-textArea"
                   type="text"
-                  name="texto"
+                  name="text"
                   onChange={this.newObjeto}
                   placeholder={ayuda}
-                  value={this.state.objeto.texto}
+                  value={this.state.objeto.text}
                   maxLength={700}
                 />
                 <div className="container-buttons">
@@ -364,7 +365,7 @@ export class ListaObjetos extends Component {
               <table className="ui striped table">
                 <thead>
                   {objetos.map(elemento => (
-                    <tr>
+                    <tr key={elemento.id}>
                       {visual && (
                         <td name="td-edit" className="collapsing">
                           <i
@@ -374,7 +375,7 @@ export class ListaObjetos extends Component {
                           />
                         </td>
                       )}
-                      <td>{elemento.texto}</td>
+                      <td>{elemento.text}</td>
                       {visual && (
                         <td className="collapsing">
                           <i
