@@ -336,6 +336,11 @@ export function htmlToText(html) {
     return tag.innerText.trim();
 }
 
+export function htmlToTextRegex(html) {
+    const regex = RegExp(/(<([^>]+)>)/ig);
+    return html.replace(regex, "");
+}
+
 export function clearPrevisitPermissions() {
 
     return {

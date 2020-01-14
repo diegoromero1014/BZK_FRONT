@@ -58,8 +58,7 @@ class RichText extends Component {
 
 
     render() {
-        const { touched, error, disabled } = this.props;
-        
+        const { touched, error, disabled } = this.props;        
         // No quitar el onChange={(value) => null }, se realiza para evitar que se llame el onChange de reduxForm
         return (
             <div onBlur={() => this.handleOnBlur()} onFocus={() => this.handeOnFocus()}>

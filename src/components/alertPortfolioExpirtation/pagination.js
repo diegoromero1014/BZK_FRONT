@@ -17,8 +17,10 @@ class Pagination extends Component{
         const idZone = alertPortfolioExpiration.get('idZone');
         const order = alertPortfolioExpiration.get('order');
         const columnOrder = alertPortfolioExpiration.get('columnOrder');
+        const line = alertPortfolioExpiration.get('line');
+        const expirationType = alertPortfolioExpiration.get('expirationType');
         showLoading(true, 'Cargando..');
-        clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idRegion, idZone, page, NUMBER_RECORDS, order, columnOrder).then((data) => {
+        clientsPortfolioExpirationFindServer(keyWordNameNit, idTeam, idRegion, idZone, page, NUMBER_RECORDS, order, columnOrder, line, expirationType).then((data) => {
             if (has(data, 'payload.data.data.pagination')) {
                 showLoading(false, null);
             }

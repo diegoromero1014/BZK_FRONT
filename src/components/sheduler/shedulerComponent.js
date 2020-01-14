@@ -1,35 +1,47 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
 import Modal from 'react-modal';
-import { reduxForm } from 'redux-form';
+import {reduxForm} from 'redux-form';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
-import { showLoading } from '../loading/actions';
-import { updateTitleNavBar, showBrandConfidential } from '../navBar/actions';
-import { Row, Col } from 'react-flexbox-grid';
-import { redirectUrl } from "../globalComponents/actions";
-import { getSchedulerPrevisits, changeTeam, changeRegion, changeZone, clearFilter } from './actions';
-import { consultInfoClient } from "../clientInformation/actions";
-import { consultList, consultDataSelect, consultListWithParameterUbication, clearConsultListWithParameterUbication, consultListWithParameter, clrearConsultListWithParameter, clearLists, getRegionsByEmployee } from "../selectsComponent/actions";
-import { validatePermissionsByModule, validateValue, clearPrevisitPermissions } from "../../actionsGlobal";
-import { MODULE_PREVISITS } from "../../constantsGlobal";
-import { SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR } from "./constants";
-import { TEAM_FOR_EMPLOYEE, LIST_REGIONS, LIST_ZONES, TEAM_FOR_EMPLOYEE_REGION_ZONE, TEAM_VALUE_OBJECTS } from "../selectsComponent/constants";
-import { bindActionCreators } from "redux";
+import {showLoading} from '../loading/actions';
+import {updateTitleNavBar, showBrandConfidential} from '../navBar/actions';
+import {Row, Col} from 'react-flexbox-grid';
+import {redirectUrl} from "../globalComponents/actions";
+import {getSchedulerPrevisits, changeTeam, clearFilter} from './actions';
+import {consultInfoClient} from "../clientInformation/actions";
+import {
+    consultDataSelect,
+    consultListWithParameterUbication,
+    consultListWithParameter,
+    clearLists,
+    getRegionsByEmployee
+} from "../selectsComponent/actions";
+import {validatePermissionsByModule, validateValue} from "../../actionsGlobal";
+import {MODULE_PREVISITS} from "../../constantsGlobal";
+import {SHEDULER_FILTER, GREEN_COLOR, ORANGE_COLOR} from "./constants";
+import {
+    LIST_REGIONS,
+    LIST_ZONES,
+    TEAM_FOR_EMPLOYEE_REGION_ZONE,
+    TEAM_VALUE_OBJECTS
+} from "../selectsComponent/constants";
+import {bindActionCreators} from "redux";
 import _ from 'lodash';
 import $ from 'jquery';
-import EditPrevisit from '../previsita/editPrevisit/editPrevisit';
 import { filterUsersBanco } from '../participantsVisitPre/actions';
 import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
+import PrevisitPage from '../previsita/previsitPage';
 
 
 BigCalendar.momentLocalizer(moment);
 const fields = ["team", "region", "zone", "nameUsuario", "idUsuario"];
 var usersBanco = [];
-class Sheduler extends Component {
+
+export class Sheduler extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             modalIsOpen: false,
             idUser: 0,
@@ -50,32 +62,31 @@ class Sheduler extends Component {
 
 
     componentWillMount() {
-        const { getSchedulerPrevisits, clearLists, updateTitleNavBar, clrearConsultListWithParameter, clearConsultListWithParameterUbication, consultList, consultDataSelect, getRegionsByEmployee } = this.props;
-        clearLists([LIST_ZONES, TEAM_VALUE_OBJECTS]);
-        getRegionsByEmployee().then((regions) => {
+        const {clearListsDispatch, updateTitleNavBarDispatch, consultDataSelectDispatch, getRegionsByEmployeeDispatch} = this.props;
+        clearListsDispatch([LIST_ZONES, TEAM_VALUE_OBJECTS]);
+        getRegionsByEmployeeDispatch().then((regions) => {
 
             let listaRegiones = regions.payload.data.data
             if (_.isEmpty(listaRegiones)) {
-                consultDataSelect(LIST_REGIONS);
+                consultDataSelectDispatch(LIST_REGIONS);
             }
         });
 
-        updateTitleNavBar('Agenda');
+        updateTitleNavBarDispatch('Agenda');
     }
 
     openModal(idClient, idPrevisit) {
-        const { clearPrevisitPermissions, validatePermissionsByModule, showLoading } = this.props;
-        showLoading(true, 'Cargando..');
-        validatePermissionsByModule(MODULE_PREVISITS).then((data) => {
+        const {validatePermissionsByModuleDispatch, showLoadingDispatch, consultInfoClientDispatch} = this.props;
+        showLoadingDispatch(true, 'Cargando..');
+        validatePermissionsByModuleDispatch(MODULE_PREVISITS).then((data) => {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                 redirectUrl("/login");
             }
         });
 
-        const { consultInfoClient } = this.props;
         window.sessionStorage.setItem("idClientSelected", idClient);
-        consultInfoClient().then((success) => {
-            showLoading(false, null);
+        consultInfoClientDispatch().then((success) => {
+            showLoadingDispatch(false, null);
             this.setState({
                 modalIsOpen: true,
                 idPrevisit: idPrevisit
@@ -90,25 +101,25 @@ class Sheduler extends Component {
     }
 
     closeModal() {
-        const { showBrandConfidential } = this.props;
-        
+        const {showBrandConfidentialDispatch} = this.props;
+
         this._handlePrevisitsFind();
-        this.setState({ modalIsOpen: false });
-        
-        showBrandConfidential(false);
+        this.setState({modalIsOpen: false});
+
+        showBrandConfidentialDispatch(false);
     }
 
     _onChangeRegionStatus(val) {
 
-        const { fields: { team, region, zone }, consultListWithParameterUbication, consultListWithParameter, changeRegion, clearLists } = this.props;
+        const {fields: {team, region, zone}, consultListWithParameterUbicationDispatch, clearListsDispatch} = this.props;
         region.onChange(val);
         zone.onChange("");
         team.onChange("");
 
-        clearLists([LIST_ZONES, TEAM_VALUE_OBJECTS]);
+        clearListsDispatch([LIST_ZONES, TEAM_VALUE_OBJECTS]);
 
         if (!_.isEqual(val, "")) {
-            consultListWithParameterUbication(LIST_ZONES, val);
+            consultListWithParameterUbicationDispatch(LIST_ZONES, val);
             this._handlePrevisitsFind();
         }
 
@@ -116,33 +127,33 @@ class Sheduler extends Component {
     }
 
     _cleanSearch() {
-        const { resetForm, showLoading, clearFilter, consultList, consultDataSelect, clrearConsultListWithParameter, clearConsultListWithParameterUbication, clearLists } = this.props;
+        const {resetForm, showLoadingDispatch, clearFilterDispatch, clearListsDispatch} = this.props;
 
-        showLoading(true, "cargando..");
+        showLoadingDispatch(true, "cargando..");
 
         resetForm();
 
-        clearLists([LIST_ZONES, TEAM_VALUE_OBJECTS]);
+        clearListsDispatch([LIST_ZONES, TEAM_VALUE_OBJECTS]);
 
-        clearFilter();
+        clearFilterDispatch();
 
         this.setState({
             display: 'none'
         });
 
-        showLoading(false, false);
+        showLoadingDispatch(false, false);
 
     }
 
     _onChangeZoneStatus(val) {
-        const { fields: { team, region, zone }, consultListWithParameterUbication, clrearConsultListWithParameter, consultListWithParameter, changeRegion, clearLists } = this.props;
+        const {fields: {team, region, zone}, consultListWithParameterDispatch, clearListsDispatch} = this.props;
         zone.onChange(val);
         team.onChange("");
 
-        clearLists([TEAM_VALUE_OBJECTS]);
+        clearListsDispatch([TEAM_VALUE_OBJECTS]);
 
         if (val) {
-            consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
+            consultListWithParameterDispatch(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
                 region: region.value,
                 zone: zone.value
             });
@@ -152,7 +163,7 @@ class Sheduler extends Component {
     }
 
     _onChangeTeam(val) {
-        const { fields: { team, region, zone }, consultListWithParameterUbication, consultListWithParameter, changeRegion } = this.props;
+        const {fields: {team}} = this.props;
         team.onChange(val);
         changeTeam(val);
         if (val) {
@@ -162,15 +173,15 @@ class Sheduler extends Component {
     }
 
     _handlePrevisitsFind() {
-        const { fields: { team, region, zone, idUsuario }, getSchedulerPrevisits, showLoading } = this.props;
-        showLoading(true, 'Cargando..');
-        getSchedulerPrevisits(team.value, region.value, zone.value, idUsuario.value)
+        const {fields: {team, region, zone, idUsuario}, getSchedulerPrevisitsDispatch, showLoadingDispatch} = this.props;
+        showLoadingDispatch(true, 'Cargando..');
+        getSchedulerPrevisitsDispatch(team.value, region.value, zone.value, idUsuario.value)
 
         this.setState({
             display: 'block'
         });
 
-        showLoading(false, null);
+        showLoadingDispatch(false, null);
 
     }
 
@@ -182,7 +193,7 @@ class Sheduler extends Component {
     }
 
     _updateValue(value) {
-        const { fields: { idUsuario, nameUsuario, cargoUsuario }, contactsByClient } = this.props;
+        const {fields: {nameUsuario}, contactsByClient} = this.props;
         var contactClient = contactsByClient.get('contacts');
         var userSelected;
         _.map(contactClient, contact => {
@@ -200,7 +211,7 @@ class Sheduler extends Component {
     componentDidMount() {
         let self = this;
         $("#iconSearchParticipants").click(function () {
-            var e = { keyCode: 13, consultclick: true };
+            var e = {keyCode: 13, consultclick: true};
             self.updateKeyValueUsersBanco(e);
         });
     }
@@ -208,19 +219,19 @@ class Sheduler extends Component {
     componentWillUpdate() {
         let self = this;
         $("#iconSearchParticipants").click(function () {
-            var e = { keyCode: 13, consultclick: true };
+            var e = {keyCode: 13, consultclick: true};
             self.updateKeyValueUsersBanco(e);
         });
     }
 
     updateKeyValueUsersBanco(e) {
-        const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco } = this.props;
+        const {fields: {nameUsuario, idUsuario}, filterUsersBancoDispatch} = this.props;
         const selfThis = this;
         if (e.keyCode === 13 || e.which === 13) {
-            e.consultclick ? "" : e.preventDefault();
+            e.preventDefault();
             if (nameUsuario.value !== "" && nameUsuario.value !== null && nameUsuario.value !== undefined) {
                 $('.ui.search.participantBanc').toggleClass('loading');
-                filterUsersBanco(nameUsuario.value).then((data) => {
+                filterUsersBancoDispatch(nameUsuario.value).then((data) => {
                     usersBanco = _.get(data, 'payload.data.data');
                     $('.ui.search.participantBanc')
                         .search({
@@ -253,16 +264,16 @@ class Sheduler extends Component {
     }
 
     render() {
-        const { fields: { team, region, zone, nameUsuario }, schedulerPrevisitReduser, selectsReducer, navBar } = this.props;
+        const {fields: {team, region, zone, nameUsuario}, schedulerPrevisitReduser, selectsReducer, navBar} = this.props;
         const data = schedulerPrevisitReduser.get('schedulerPrevisitList');
-        const userName = localStorage.getItem('userNameFront');
+        const userName = window.localStorage.getItem('userNameFront');
         const confidential = navBar.get('confidential');
 
         return (
             <div>
                 <form>
-                    <Row style={{ borderBottom: "2px solid #D9DEDF", marginTop: "15px", padding: "10px" }}>
-                        <Col xs={12} sm={12} md={3} lg={2} style={{ width: '60%' }}>
+                    <Row style={{borderBottom: "2px solid #D9DEDF", marginTop: "15px", padding: "10px"}}>
+                        <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
                             <ComboBox
                                 name="region"
                                 labelInput="Región"
@@ -276,7 +287,7 @@ class Sheduler extends Component {
                                 data={selectsReducer.get(LIST_REGIONS) || []}
                             />
                         </Col>
-                        <Col xs={12} sm={12} md={3} lg={2} style={{ width: '60%' }}>
+                        <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
                             <ComboBox
                                 name="zona"
                                 labelInput="Zona"
@@ -290,7 +301,7 @@ class Sheduler extends Component {
                                 data={selectsReducer.get(LIST_ZONES) || []}
                             />
                         </Col>
-                        <Col xs={12} sm={12} md={3} lg={2} style={{ width: '60%' }}>
+                        <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
                             <ComboBox
                                 name="celula"
                                 labelInput="Célula"
@@ -305,52 +316,53 @@ class Sheduler extends Component {
                             />
                         </Col>
                         <Col xs={12} sm={12} md={3} lg={2}>
-                                <div className="ui dropdown search participantBanc fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
-                                    <ComboBoxFilter
-                                        name="inputParticipantBanc"
-                                        placeholder="Creador"
-                                        {...nameUsuario}
-                                        parentId="dashboardComponentScroll"
-                                        value={nameUsuario.value}
-                                        onChange={nameUsuario.onChange}
-                                        onKeyPress={this.updateKeyValueUsersBanco}
-                                        onSelect={val => this._updateValue(val)}
-                                        max="255"
-                                    />
-                                </div>
+                            <div className="ui dropdown search participantBanc fluid"
+                                 style={{border: "0px", zIndex: "1", padding: "0px"}}>
+                                <ComboBoxFilter
+                                    name="inputParticipantBanc"
+                                    placeholder="Creador"
+                                    {...nameUsuario}
+                                    parentId="dashboardComponentScroll"
+                                    value={nameUsuario.value}
+                                    onChange={nameUsuario.onChange}
+                                    onKeyPress={this.updateKeyValueUsersBanco}
+                                    onSelect={val => this._updateValue(val)}
+                                    max="255"
+                                />
+                            </div>
                         </Col>
-                        <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
+                        <Col xs={12} sm={12} md={2} lg={2} style={{width: '100%'}}>
                             <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
-                                title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
+                                    title="Limpiar búsqueda" style={{marginLeft: "17px"}}>
                                 <i className="erase icon"
-                                    style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                                   style={{color: "white", margin: '0em', fontSize: '1.2em'}}></i>
                             </button>
                         </Col>
                         <Col xs={12} sm={12} md={2} lg={2}>
-                            <div style={{ height: '80px', marginLeft: '0px' }}>
+                            <div style={{height: '80px', marginLeft: '0px'}}>
                                 <Row>
                                     <div style={{
                                         borderRadius: '50%',
                                         width: '20px',
                                         height: '20px',
                                         backgroundColor: GREEN_COLOR
-                                    }} />
-                                    <span style={{ marginLeft: '10px' }}> Está invitado</span>
+                                    }}/>
+                                    <span style={{marginLeft: '10px'}}> Está invitado</span>
                                 </Row>
-                                <Row style={{ marginTop: "5px" }}>
+                                <Row style={{marginTop: "5px"}}>
                                     <div style={{
                                         borderRadius: '50%',
                                         width: '20px',
                                         height: '20px',
                                         backgroundColor: ORANGE_COLOR
-                                    }} />
-                                    <span style={{ marginLeft: '10px' }}> No está invitado</span>
+                                    }}/>
+                                    <span style={{marginLeft: '10px'}}> No está invitado</span>
                                 </Row>
                             </div>
                         </Col>
                     </Row>
                 </form>
-                <div style={{ padding: '10px', background: 'white', display: this.state.display }}>
+                <div style={{padding: '10px', background: 'white', display: this.state.display}}>
                     <BigCalendar
                         {...this.props}
                         selectable
@@ -371,22 +383,26 @@ class Sheduler extends Component {
                         eventPropGetter={data => ({ className: this.bindClassParticipants(data.listParticipantsBank, userName) })}
                     />
                 </div>
-                <Modal isOpen={this.state.modalIsOpen} contentLabel="Previsitas" onRequestClose={this.closeModal} className="modalBt4-fade modal fade contact-detail-modal in">
+                <Modal isOpen={this.state.modalIsOpen} contentLabel="Previsitas" onRequestClose={this.closeModal}
+                       className="modalBt4-fade modal fade contact-detail-modal in">
                     <div className="modalBt4-dialog modalBt4-lg">
                         <div className="modalBt4-content modal-content">
                             <div className="modalBt4-header modal-header">
-                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">
-                                    Previsita 
+                                <h4 className="modal-title" style={{float: 'left', marginBottom: '0px'}}
+                                    id="myModalLabel">
+                                    Previsita
                                     {confidential &&
-                                        <ConfidentialBrandComponent />
+                                    <ConfidentialBrandComponent/>
                                     }
                                 </h4>
-                                <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal" role="close">
-                                    <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
+                                <button type="button" onClick={this.closeModal} className="close" data-dismiss="modal"
+                                        role="close">
+                                    <span className="modal-title" aria-hidden="true" role="close"><i
+                                        className="remove icon modal-icon-close" role="close"></i></span>
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
-                            <EditPrevisit params={{ id: this.state.idPrevisit }} viewBottons={true} closeModal={this.closeModal} />
+                           <PrevisitPage params={{ id: this.state.idPrevisit }} fromModal={true} closeModal={this.closeModal}></PrevisitPage>
                         </div>
                     </div>
                 </Modal>
@@ -398,29 +414,24 @@ class Sheduler extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getSchedulerPrevisits,
-        consultInfoClient,
-        validatePermissionsByModule,
-        updateTitleNavBar,
-        consultList,
-        consultDataSelect,
-        consultListWithParameterUbication,
-        clearConsultListWithParameterUbication,
-        consultListWithParameter,
+        getSchedulerPrevisitsDispatch: getSchedulerPrevisits,
+        consultInfoClientDispatch: consultInfoClient,
+        validatePermissionsByModuleDispatch: validatePermissionsByModule,
+        updateTitleNavBarDispatch: updateTitleNavBar,
+        consultDataSelectDispatch: consultDataSelect,
+        consultListWithParameterUbicationDispatch: consultListWithParameterUbication,
+        consultListWithParameterDispatch: consultListWithParameter,
         changeTeam,
-        changeRegion,
-        showLoading,
-        clearFilter,
-        changeZone,
-        getRegionsByEmployee,
-        clrearConsultListWithParameter,
-        filterUsersBanco,
-        clearPrevisitPermissions,
-        clearLists,
-        showBrandConfidential
+        showLoadingDispatch: showLoading,
+        clearFilterDispatch: clearFilter,
+        getRegionsByEmployeeDispatch: getRegionsByEmployee,
+        filterUsersBancoDispatch: filterUsersBanco,
+        clearListsDispatch: clearLists,
+        showBrandConfidentialDispatch: showBrandConfidential
     }, dispatch);
 }
-function mapStateToProps({ schedulerPrevisitReduser, selectsReducer, contactsByClient, navBar }, ownerProps) {
+
+function mapStateToProps({schedulerPrevisitReduser, selectsReducer, contactsByClient, navBar}, ownerProps) {
     return {
         schedulerPrevisitReduser,
         selectsReducer,
@@ -431,4 +442,4 @@ function mapStateToProps({ schedulerPrevisitReduser, selectsReducer, contactsByC
 }
 
 
-export default reduxForm({ form: SHEDULER_FILTER, fields }, mapStateToProps, mapDispatchToProps)(Sheduler);
+export default reduxForm({form: SHEDULER_FILTER, fields}, mapStateToProps, mapDispatchToProps)(Sheduler);

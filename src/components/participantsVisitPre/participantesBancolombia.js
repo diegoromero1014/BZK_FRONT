@@ -101,8 +101,7 @@ class ParticipantesBancolombia extends Component {
   }
 
   componentWillMount() {
-    const { clearParticipants, contactsByClient, contactsByClientFindServer } = this.props;
-    clearParticipants();
+    const { contactsByClient, contactsByClientFindServer } = this.props;
     this.props.resetForm();
     const valuesContactsClient = contactsByClient.get('contacts');
     if (_.isEmpty(valuesContactsClient) || valuesContactsClient === null || valuesContactsClient === undefined) {
