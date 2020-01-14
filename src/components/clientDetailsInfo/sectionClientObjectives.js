@@ -15,7 +15,7 @@ export class SectionClientObjectives extends Component {
 
     return (
         <div>
-            {objectives.length ? objectives.map((objetive) => (
+            {objectives && objectives.length ? objectives.map((objetive) => (
                 <Row className="row-element row-element-parent" style={{margin: "5px"}}>
                     <Col xs={12}>
                         <div style={{display: "block"}}>
@@ -32,7 +32,7 @@ export class SectionClientObjectives extends Component {
                                                     </Col>
                                                     <Col md={6} sm={12}>
                                                         <div style={{ padding: "10px" }} className="section-list-parent">
-                                                            {objetive["relations"].length ? objetive["relations"].map((strategy) => (
+                                                            {objetive["relations"] && objetive["relations"].length ? objetive["relations"].map((strategy) => (
                                                                 <Row className="section-list-divider row-element-child">
                                                                     <div style={{ margin: "10px 0 10px 0" }}><Col md={12} className='add-line-break'>{strategy.clientDetailRelation.text}</Col></div>
                                                                 </Row>
