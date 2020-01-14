@@ -1,5 +1,5 @@
 import React from "react";
-import { ListaObjetos } from "../../../../src/components/listaObjetos/ListaObjetos";
+import { ListaObjetos } from "../../../../src/components/listaObjetos/ListaObjetos"; 
 import { Row, Col } from "react-flexbox-grid";
 import { mount, render, shallow, configure } from "enzyme";
 import ToolTip from "../../../../src/components/toolTip/toolTipComponent";
@@ -7,16 +7,18 @@ import SweetAlert from "../../../../src/components/sweetalertFocus";
 
 let defaultProps = {
   dispatchUpdateElementFromList: sinon.fake(),
-  initialObjects: [{ id: "", texto: "" }],
+  dispatchUpdateActiveFieldObject : spy(sinon.fake()),
+  initialObjects: [{ idObject: "", texto: "" }],
   titulo: "",
   ayuda: "",
   visual: ""
 };
 
 describe("Unit tests of the listaObjetos.js component", () => {
+  
   let defaultState = {
     objeto: {
-      id: "",
+      idObject: "",
       texto: ""
     },
     campoObjeto: false,
@@ -24,7 +26,10 @@ describe("Unit tests of the listaObjetos.js component", () => {
     idObjetoEliminar: "",
     modalEliminar: false,
     switchGuardarEditar: false,
-    stylePlus: false
+    stylePlus: false,
+    maxObjects: false,
+    textInicioNoValido: false,
+    soloAlfanumericos: false
   };
 
   it("should render component", () => {
@@ -75,12 +80,12 @@ describe("Unit tests of the listaObjetos.js component", () => {
 
   it("onClick in modificarObjeto expect me to edit the object", () => {
     const objeto = {
-      id: 1,
+      iidObjectd: 1,
       texto: "Lorem ipsum dolor sit amet, consectetur adipiscing "
     };
     const listaObjetos = [
       {
-        id: 1,
+        idObject: 1,
         texto: "Lorem ipsum dolor sit amet, consectetur "
       }
     ];
@@ -96,22 +101,62 @@ describe("Unit tests of the listaObjetos.js component", () => {
     expect(wrapper.state().stylePlus).to.equal(false);
   });
 
+  it("onClick in modificarObjeto expect me to edit the object", () => {
+    const objeto = {
+      idObject: 1,
+      texto: "@Lorem ipsum dolor sit amet, consectetur adipiscing "
+    };
+    const listaObjetos = [
+      {
+        idObject: 1,
+        texto: "Lorem ipsum dolor sit amet, consectetur "
+      }
+    ];
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto,
+      objetos: listaObjetos
+    });
+    wrapper.instance().modificarObjeto();
+    expect(wrapper.state().textInicioNoValido).to.equal(true);
+  });
+
+  it("when I press click on modify and the object contains an @ after the first position except message alone alphanumeric are enabled", () => {
+    const objeto = {
+      idObject: 1,
+      texto: "Lorem ipsum dolor sit amet, @consectetur adipiscing "
+    };
+    const listaObjetos = [
+      {
+        idObject: 1,
+        texto: "Lorem ipsum dolor sit amet, consectetur "
+      }
+    ];
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto,
+      objetos: listaObjetos
+    });
+    wrapper.instance().modificarObjeto();
+    expect(wrapper.state().soloAlfanumericos).to.equal(true);
+  });
+
   it("onClick in modificarObjeto expect me not to edit the object", () => {
     const wrapper = shallow(<ListaObjetos {...defaultProps} />);
     wrapper.setState({
-      objeto: { id: 1, texto: "" }
+      objeto: { idObject: 1, texto: "" }
     });
     wrapper.instance().modificarObjeto();
     expect(wrapper.state().campoVacio).to.equal(true);
   });
 
   it("onClick in agregarObjetoLista agregue un objeto", () => {
-    const id = (Math.random() * 10000).toFixed();
+    const idObject = (Math.random() * 10000).toFixed();
     const objeto = {
-      id: "",
+      idObject: "",
       texto: "test agregar objeto"
     };
-    objeto.id = id;
+    objeto.idObject = idObject;
     const campoVacio = objeto.texto;
     const wrapper = shallow(<ListaObjetos {...defaultProps} />);
     wrapper.setState({
@@ -123,13 +168,47 @@ describe("Unit tests of the listaObjetos.js component", () => {
     expect(wrapper.state().campoObjeto).to.equal(false);
   });
 
-  it("onClick in agregarObjetoLista con un objeto vacio", () => {
-    const id = (Math.random() * 10000).toFixed();
+  it("onClick in agregarObjetoLista agregue un objeto", () => {
+    const idObject = (Math.random() * 10000).toFixed();
     const objeto = {
-      id: "",
+      idObject: "",
+      texto: "@test agregar objeto"
+    };
+    objeto.idObject = idObject;
+    const campoVacio = objeto.texto;
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto,
+      campoVacio
+    });
+    wrapper.instance().agregarObjetoLista();
+    expect(wrapper.state().textInicioNoValido).to.equal(true);
+  });
+
+  it("onClick in agregarObjetoLista agregue un objeto", () => {
+    const idObject = (Math.random() * 10000).toFixed();
+    const objeto = {
+      idObject: "",
+      texto: "test@ agregar objeto"
+    };
+    objeto.idObject = idObject;
+    const campoVacio = objeto.texto;
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto,
+      campoVacio
+    });
+    wrapper.instance().agregarObjetoLista();
+    expect(wrapper.state().soloAlfanumericos).to.equal(true);
+  });
+
+  it("onClick in agregarObjetoLista con un objeto vacio", () => {
+    const idObject = (Math.random() * 10000).toFixed();
+    const objeto = {
+      idObject: "",
       texto: ""
     };
-    objeto.id = id;
+    objeto.idObject = idObject;
     const campoVacio = objeto.texto;
     const wrapper = shallow(<ListaObjetos {...defaultProps} />);
     wrapper.instance().agregarObjetoLista();
@@ -138,11 +217,11 @@ describe("Unit tests of the listaObjetos.js component", () => {
 
   it("onClick in eliminarObjeto se espera que elimine el objeto", () => {
     const objeto = {
-      id: 1,
+      idObject: 1,
       texto: "Lorem ipsum dolor sit amet, consectetur adipiscing "
     };
     const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-    wrapper.instance().eliminarObjeto(objeto.id);
+    wrapper.instance().eliminarObjeto(objeto.idObject);
     expect(wrapper.state().modalEliminar).to.equal(false);
   });
 
@@ -160,7 +239,6 @@ describe("Unit tests of the listaObjetos.js component", () => {
     );
   });
 
-  // caso de prueba if para redefinir el titulo
   it("test if where the component title is Oportunidades", () => {
     defaultProps.titulo = "Oportunidades";
 
@@ -191,30 +269,15 @@ describe("Unit tests of the listaObjetos.js component", () => {
     expect(wrapper.find("button[name='btn-agregar']")).to.have.length(1);
   });
 
-  // it('when visual is false, the "mas" td is not displayed', () => {
-  //   defaultProps.visual = false;
-  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-  //   expect(wrapper.find("td[name='td-edit']")).to.have.length(0);
-  // });
+  it('when visual is false, the "mas" td is not displayed', () => {
+    defaultProps.visual = false;
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    expect(wrapper.find("td[name='td-edit']")).to.have.length(0);
+  });
 
-  // it('when visual is false, the "mas" td is displayed', () => {
-  //   defaultProps.visual = true;
-  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-  //   expect(wrapper.find("td[name='td-edit']")).to.have.length(1);
-  // });
-
-  // it("when campoVacio is true and switchGuardarEditar is true, render error message modificar", () => {
-  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-  //   wrapper.setState({
-  //     objeto : {
-  //       id : 1215,
-  //       texto : ""
-  //     }
-  //     switchGuardarEditar: true
-  //   });
-  //   wrapper.instance().
-  //   expect(wrapper.find("div[name='msjErrorModificar']")).to.have.length(1);
-  // });
-
-  // it("", () => {});
+  it('when visual is false, the "mas" td is displayed', () => {
+    defaultProps.visual = true;
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    expect(wrapper.find("td[name='td-edit']")).to.have.length(1);
+  });
 });
