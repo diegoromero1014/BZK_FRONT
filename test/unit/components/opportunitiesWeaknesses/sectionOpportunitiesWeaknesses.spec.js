@@ -51,4 +51,11 @@ describe('SectionOpportunitiesWeaknesses Test', () => {
         const wrapper = shallow(<SectionOpportunitiesWeaknesses {...defaultProps}/>);
         expect(wrapper.find('.list-objects-weaknesses')).to.have.length(1);
     })
+
+    it('Shouldn´t render any ListaObjetos', () => {
+        const wrapper = shallow(<SectionOpportunitiesWeaknesses {...defaultProps}/>);
+        wrapper.setState({ weaknesses: undefined, opportunities: undefined })
+        expect(wrapper.find('.list-objects-weaknesses')).to.have.length(0);
+        expect(wrapper.find('.list-objects-opportunities')).to.have.length(0);
+    })
 })
