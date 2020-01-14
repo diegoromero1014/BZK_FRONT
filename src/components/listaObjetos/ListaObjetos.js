@@ -10,7 +10,7 @@ import "./styleListaObjetos.scss";
 export class ListaObjetos extends Component {
   state = {
     objeto: {
-      id: "",
+      idObject: "",
       texto: ""
     },
     objetos: [],
@@ -20,7 +20,9 @@ export class ListaObjetos extends Component {
     modalEliminar: false,
     switchGuardarEditar: false,
     stylePlus: false,
-    maxObjects: false
+    maxObjects: false,
+    textInicioNoValido: false,
+    soloAlfanumericos: false
   };
 
   componentDidMount() {
@@ -28,7 +30,8 @@ export class ListaObjetos extends Component {
   }
 
   setStateInitialObjects = () => {
-    const { initialObjects } = this.props;
+    const { initialObjects, dispatchUpdateElementFromList, titulo } = this.props;
+    dispatchUpdateElementFromList(titulo, initialObjects);
     this.setState({
       objetos: initialObjects
     });
@@ -55,32 +58,34 @@ export class ListaObjetos extends Component {
     dispatchUpdateActiveFieldObject(false, titulo);
     this.setState({
       objeto: {
-        id: "",
+        idObject: "",
         texto: ""
       },
       campoObjeto: false,
       campoVacio: false,
       switchGuardarEditar: false,
-      stylePlus: false
+      stylePlus: false,
+      textInicioNoValido: false ,
+      soloAlfanumericos: false
     });
   };
 
-  mostrarModalEliminar = id => {
+  mostrarModalEliminar = idObject => {
     this.setState({
-      idObjetoEliminar: id,
+      idObjetoEliminar: idObject,
       modalEliminar: true
     });
   };
 
   editarObjeto = elemento => {
-    const { id, texto } = elemento;
+    const { idObject, texto } = elemento;
     const { dispatchUpdateActiveFieldObject, titulo } = this.props;
 
     dispatchUpdateActiveFieldObject(true, titulo);
 
     this.setState({
       objeto: {
-        id,
+        idObject,
         texto
       },
       campoObjeto: true,
@@ -90,35 +95,48 @@ export class ListaObjetos extends Component {
   };
 
   modificarObjeto = () => {
-    const { objeto } = this.state;
-    const listaObjetos = this.state.objetos;
-    const campoVacio = this.state.objeto.texto;
+    this.setState({
+      campoVacio: false,
+      textInicioNoValido: false ,
+      soloAlfanumericos: false
+    })
     const {
       dispatchUpdateElementFromList,
       titulo,
       dispatchUpdateActiveFieldObject
     } = this.props;
-
-    dispatchUpdateActiveFieldObject(false, titulo);
-
+    const campoVacio = this.state.objeto.text;
     if (campoVacio !== "") {
-      listaObjetos.map((elemento, index) => {
-        if (elemento.id === objeto.id) {
-          listaObjetos[index].texto = objeto.texto;
-        }
-      });
-      dispatchUpdateElementFromList(titulo, listaObjetos);
-      this.setState({
-        objeto: {
-          id: "",
-          texto: ""
-        },
-        objetos: listaObjetos,
-        campoVacio: false,
-        campoObjeto: false,
-        switchGuardarEditar: false,
-        stylePlus: false
-      });
+      if( campoVacio[0] === "=" || campoVacio[0] === "+" || campoVacio[0] === "-" || campoVacio[0] === "@"){
+        this.setState({
+          textInicioNoValido : true
+        })
+      }else if(campoVacio.includes('@')){
+        this.setState({
+          soloAlfanumericos : true 
+        })
+      }else{
+        const { objeto } = this.state;
+        const listaObjetos = this.state.objetos;
+        listaObjetos.map((elemento, index) => {
+          if (elemento.idObject === objeto.idObject) {
+            listaObjetos[index].texto = objeto.texto;
+          }
+        });
+        dispatchUpdateElementFromList(titulo, listaObjetos);
+        dispatchUpdateActiveFieldObject(false, titulo);
+        this.setState({
+          objeto: {
+            idObject: "",
+            texto: ""
+          },
+          objetos: listaObjetos,
+          campoVacio: false,
+          campoObjeto: false,
+          switchGuardarEditar: false,
+          stylePlus: false
+        });
+      }
     } else {
       this.setState({
         campoVacio: true
@@ -127,33 +145,46 @@ export class ListaObjetos extends Component {
   };
 
   agregarObjetoLista = () => {
-    const id = (Math.random() * 10000).toFixed();
-    const { objeto } = this.state;
+    this.setState({
+      campoVacio: false,
+      textInicioNoValido: false,
+      soloAlfanumericos: false
+    })
     const {
       dispatchUpdateElementFromList,
       titulo,
       dispatchUpdateActiveFieldObject
     } = this.props;
-    objeto.id = id;
-    // const terminoNoValido =
+    const campoVacio = this.state.objeto.text;
 
-    const campoVacio = this.state.objeto.texto;
-    dispatchUpdateActiveFieldObject(false, titulo);
-    if (campoVacio !== "") {
-      // if(campoVacio )
-      const objetos = [...this.state.objetos, objeto];
-      this.cerrarCampoObjeto();
-
-      dispatchUpdateElementFromList(titulo, objetos);
-
-      this.setState({
-        objeto: {
-          id: "",
-          texto: ""
-        },
-        objetos,
-        stylePlus: false
-      });
+    if(campoVacio !== "") {
+      if( campoVacio[0] === "=" || campoVacio[0] === "+" || campoVacio[0] === "-" || campoVacio[0] === "@"){
+        this.setState({
+          textInicioNoValido : true 
+        })
+      }else if(campoVacio.includes('@')){
+        this.setState({
+          soloAlfanumericos : true 
+        })
+      }else{
+        const idObject = (Math.random() * 10000).toFixed();
+        const { objeto } = this.state;
+        objeto.idObject = idObject;
+        const objetos = [...this.state.objetos, objeto];
+        this.cerrarCampoObjeto();
+        dispatchUpdateElementFromList(titulo, objetos);
+        dispatchUpdateActiveFieldObject(false, titulo);
+        this.setState({
+          objeto: {
+            idObject: "",
+            texto: ""
+          },
+          objetos,
+          stylePlus: false,
+          textInicioNoValido: false,
+          soloAlfanumericos: false
+        });
+      }
     } else {
       this.setState({
         campoVacio: true
@@ -161,9 +192,9 @@ export class ListaObjetos extends Component {
     }
   };
 
-  eliminarObjeto = id => {
+  eliminarObjeto = idObject => {
     const { dispatchUpdateElementFromList, titulo } = this.props;
-    const objetos = this.state.objetos.filter(elemento => elemento.id !== id);
+    const objetos = this.state.objetos.filter(elemento => elemento.idObject !== idObject);
     this.setState({
       modalEliminar: false
     });
@@ -175,10 +206,10 @@ export class ListaObjetos extends Component {
 
   newObjeto = event => {
     const { name, value } = event.target;
-    const { id } = this.state.objeto;
+    const { idObject } = this.state.objeto;
     this.setState({
       objeto: {
-        id,
+        idObject,
         [name]: value
       }
     });
@@ -195,9 +226,12 @@ export class ListaObjetos extends Component {
       modalEliminar,
       switchGuardarEditar,
       stylePlus,
-      maxObjects
+      maxObjects,
+      textInicioNoValido,
+      soloAlfanumericos
     } = this.state;
     
+
     const textButon = switchGuardarEditar ? "Modificar" : "Agregar";
 
     const functionButton = switchGuardarEditar
@@ -265,10 +299,10 @@ export class ListaObjetos extends Component {
                 <textarea
                   className="field-textArea"
                   type="text"
-                  name="texto"
+                  name="text"
                   onChange={this.newObjeto}
                   placeholder={ayuda}
-                  value={this.state.objeto.texto}
+                  value={this.state.objeto.text}
                   maxLength={700}
                 />
                 <div className="container-buttons">
@@ -289,6 +323,18 @@ export class ListaObjetos extends Component {
                   </button>
                 </div>
               </div>
+              {
+                textInicioNoValido && 
+                (<div className="ui pointing red basic label">
+                    {`No se permiten textos que empiecen con : = + - @`}
+                </div>)
+              }
+              {
+                soloAlfanumericos &&                   
+                (<div className="ui pointing red basic label">
+                    {`Solo se permiten los siguientes valores alfanumericos ;,.-""!()$%&/¿?°#=¡':´+[]_<>`}
+                </div>)
+              }
               {campoVacio ? (
                 switchGuardarEditar ? (
                   <div
@@ -320,7 +366,7 @@ export class ListaObjetos extends Component {
               <table className="ui striped table">
                 <thead>
                   {objetos.map(elemento => (
-                    <tr>
+                    <tr key={elemento.id}>
                       {visual && (
                         <td name="td-edit" className="collapsing">
                           <i
@@ -330,14 +376,14 @@ export class ListaObjetos extends Component {
                           />
                         </td>
                       )}
-                      <td>{elemento.texto}</td>
+                      <td>{elemento.text}</td>
                       {visual && (
                         <td className="collapsing">
                           <i
                             className="trash icon"
                             title={`Eliminar ${titulo}`}
                             onClick={() =>
-                              this.mostrarModalEliminar(elemento.id)
+                              this.mostrarModalEliminar(elemento.idObject)
                             }
                           />
                         </td>
@@ -371,7 +417,7 @@ export class ListaObjetos extends Component {
               <table className="ui striped table">
                 <thead>
                   <tr className="tr-void">
-                    <span>{`Aún no se han adicionado ${tituloCompleto}.`}</span>
+                    <span>{`No se han adicionado ${tituloCompleto}.`}</span>
                   </tr>
                 </thead>
               </table>
