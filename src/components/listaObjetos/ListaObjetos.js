@@ -134,34 +134,28 @@ export class ListaObjetos extends Component {
   };
 
   checkValidations = (value) => {
-    
-        const fields = { valor: value};
-
-        const validations = {
-          valor: {
-            rules: [ checkRequired, checkFirstCharacter, checkPatternClientObjective, checkRegexHtmlInjection ]
-          }
-        }
-
-        const fieldErrors = processRules(fields, validations);
-        let errors = []
-        mapKeys(fieldErrors, (value, _) => {
-            if (value) {
-                errors.push(value);
-            }
-        })
-
-        const isValid = errors.length === 0;
-
-        if (!isValid) {
-            this.setState({
-              error: errors[0]
-            })
-        }
-
-        return isValid;
- 
+    const fields = { valor: value};
+    const validations = {
+      valor: {
+        rules: [ checkRequired, checkFirstCharacter, checkPatternClientObjective, checkRegexHtmlInjection ]
+      }
     }
+    const fieldErrors = processRules(fields, validations);
+    let errors = []
+    mapKeys(fieldErrors, (value, _) => {
+        if (value) {
+            errors.push(value);
+        }
+    })
+    const isValid = errors.length === 0;
+    if (!isValid) {
+        this.setState({
+          error: errors[0]
+        })
+    }
+    return isValid;
+
+  }
 
   agregarObjetoLista = () => {
   
