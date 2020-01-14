@@ -31,7 +31,7 @@ import ComponentListIntOperations from "../contextClient/listInternationalOperat
 import ComponentInfoClient from './components/InfoClient';
 import ActividadEconomica from './components/ActividadEconomica';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
-import Objetivos from '../fieldList/Objetives/Objetives';
+import Objetivos, { listName } from '../fieldList/Objetives/Objetives';
 import SectionOpportunitiesWeaknesses from '../opportunitiesWeaknesses/SectionOpportunitiesWeaknesses';
 
 import { clearProducts, setProducts } from "./products/actions";
@@ -102,9 +102,13 @@ import {
 import { fields, validations as validate } from './fieldsAndRulesClientEditUpdate';
 
 import { 
-    createClientDetailRequestFromReducer
+    createClientDetailRequestFromReducer,
+    clientInformationToReducer
 } from '../fieldList/mapListsToEntities';
 
+import {
+    changeListState
+} from '../fieldList/actions';
 
 let idButton;
 let errorContact;
@@ -175,6 +179,8 @@ const drawRequiredField = (condition) => {
         return requiredField;
     }
 }
+
+const changeObjectiveState = changeListState(listName);
 
 //Componente genérico para cargar los selects de justificación
 function SelectsJustificacion(props) {
@@ -358,7 +364,7 @@ class clientEdit extends Component {
                 $('.ui.search.participantBanc').toggleClass('loading');
                 economicGroupsByKeyword(economicGroupName.value).then((data) => {
                     let economicGroup1 = _.get(data, 'payload.data.data');
-                    let economicGroup2 = _.forEach(economicGroup1, function (data1) {
+                    _.forEach(economicGroup1, function (data1) {
                         data1.title = data1.group;
                         data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
                     });
@@ -388,7 +394,6 @@ class clientEdit extends Component {
     }
 
     _updateValue(value) {
-        const { fields: { nitPrincipal, groupEconomic, economicGroupName }, economicGroupsByKeyword } = this.props;
         let userSelected;
         _.map(contactClient, contact => {
             if (contact.id.toString() === value) {
@@ -470,7 +475,7 @@ class clientEdit extends Component {
 
     _onChangeValueNeedLME(val) {
         const {
-            fields: { necesitaLME, justifyNoLME }, clientInformacion,
+            fields: { necesitaLME, justifyNoLME },
             selectsReducer, deleteNote, notes, updateErrorsNotes
         } = this.props;
         if (val === 'true' || val && initValueJustifyNonLME) {
@@ -670,7 +675,7 @@ class clientEdit extends Component {
     }
 
     _onChangeOriginGoods(val) {
-        const { fields: { otherOriginGoods, originGoods }, selectsReducer, clientInformacion } = this.props;
+        const { fields: { otherOriginGoods }, selectsReducer, clientInformacion } = this.props;
         var dataOriginGoods = selectsReducer.get(constants.CLIENT_ORIGIN_GOODS);
         var idOptionOther = _.get(_.filter(dataOriginGoods, ['key', KEY_OPTION_OTHER_ORIGIN_GOODS]), '[0].id');
         var infoClient = clientInformacion.get('responseClientInfo');
@@ -775,12 +780,12 @@ class clientEdit extends Component {
         const {
             fields: {
                 idTypeClient, idNumber, razonSocial, description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, addressClient,
-            country, city, province, neighborhood, district, telephone, reportVirtual, extractsVirtual, annualSales,
+            country, city, province, neighborhood, telephone, reportVirtual, extractsVirtual, annualSales,
             dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods,
             originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
             detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
             originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology },
-            selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer, fieldListReducer
+            selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer, fieldListReducer, objectListReducer
         } = this.props;
         const productsArray = [];
         clientProductReducer.map(map => {
@@ -788,7 +793,7 @@ class clientEdit extends Component {
         });
         const infoClient = clientInformacion.get('responseClientInfo');
 
-        const clientDetailRequest = createClientDetailRequestFromReducer(fieldListReducer, infoClient.id);
+        const clientDetailRequest = createClientDetailRequestFromReducer(fieldListReducer, objectListReducer, infoClient.id);
 
         const jsonCreateProspect = {
             "id": infoClient.id,
@@ -925,7 +930,7 @@ class clientEdit extends Component {
                 changeStateSaveData(false, "");
                 this.setState({ showEr: true });
             }
-        }, (reason) => {
+        }, () => {
             changeStateSaveData(false, "");
             this.setState({ showEr: true });
         });
@@ -1141,11 +1146,19 @@ class clientEdit extends Component {
     };
 
     componentDidMount() {
+
+        const { clientInformacion, dispatchChangeObjectiveState } = this.props;
+
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
+
+        dispatchChangeObjectiveState({
+            elements: clientInformationToReducer(clientInformacion.get("responseClientInfo"))
+        });
+
     }
 
     componentWillReceiveProps(nextProps) {
-        const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion, reducerGlobal } = nextProps;
+        const { fields: { operationsForeignCurrency, operationsForeigns, controlLinkedPayments }, clientInformacion, reducerGlobal } = nextProps;
 
         let { errors } = nextProps;
 
@@ -1181,7 +1194,7 @@ class clientEdit extends Component {
         const {
             fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns }, updateTitleNavBar,
             clientInformacion, clearValuesAdressess, sendErrorsUpdate, setNotes, clearNotes,
-            clearProducts, setProducts, tabReducer, updateErrorsNotes, showLoading
+            clearProducts, setProducts, updateErrorsNotes, showLoading
         } = this.props;
 
         updateErrorsNotes(false);
@@ -1210,12 +1223,13 @@ class clientEdit extends Component {
                 redirectUrl("/dashboard/clientInformation");
             } else {
                 showLoading(true, MESSAGE_LOAD_DATA);
-                const { economicGroupsByKeyword, selectsReducer, consultList, clientInformacion, consultListWithParameterUbication, getMasterDataFields } = this.props;
+                const { economicGroupsByKeyword, consultList, consultListWithParameterUbication, getMasterDataFields } = this.props;                
+
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
                 constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS, constants.CUSTOMER_TYPOLOGY,
                 constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE,
                 constants.MANAGEMENT_BRAND, constants.CONTACT_ID_TYPE, constants.SUBSEGMENTS])
-                    .then((data) => {
+                    .then(() => {
                         if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
                             consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
@@ -1230,7 +1244,7 @@ class clientEdit extends Component {
                         operationsForeigns.onChange(dataOperationsForeign);
                         showLoading(false, '');
 
-                    }, (reason) => {
+                    }, () => {
                         showLoading(false, '');
                         this.setState({ showEx: true });
                     });
@@ -1256,9 +1270,9 @@ class clientEdit extends Component {
         const {
             fields: {
                 razonSocial, idTypeClient, idNumber, description, idCIIU, idSubCIIU, addressClient, country, city, province, neighborhood,
-            district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
+            telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
             liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
-            centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
+            centroDecision, necesitaLME, nitPrincipal, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
             detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
             otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, inventoryPolicy,
             nameMainSupplier, participationMS, termMainSupplier,
@@ -1270,7 +1284,6 @@ class clientEdit extends Component {
         errorContact = tabReducer.get('errorConstact');
         errorShareholder = tabReducer.get('errorShareholder');
         var infoClient = clientInformacion.get('responseClientInfo');
-        const isProspect = infoClient.isProspect;
         const allowChangeEconomicGroup = !infoClient.allowChangeEconomicGroup ? 'disabled' : '';
 
         const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
@@ -2207,7 +2220,8 @@ function mapDispatchToProps(dispatch) {
         showLoading,
         swtShowMessage,
         validateContactShareholder,
-        saveCreditStudy
+        saveCreditStudy,
+        dispatchChangeObjectiveState: changeObjectiveState
     }, dispatch);
 }
 

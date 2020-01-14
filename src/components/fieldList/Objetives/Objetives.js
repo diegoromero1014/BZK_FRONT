@@ -13,7 +13,9 @@ import {
     renderElements as renderStrategyElements
 } from '../Strategies/Strategies';
 
-const ListaObjetivos = makeFieldList("objectives", [{ name: "strategies", alias: "strategies", initialValues: {value: ""} }]);
+export const listName = "objectives";
+
+const ListaObjetivos = makeFieldList(listName, [{ name: "strategies", alias: "strategies", initialValues: {value: ""} }]);
 const ListaEstrategias = makeFieldList("strategies");
 
 const styles = {
