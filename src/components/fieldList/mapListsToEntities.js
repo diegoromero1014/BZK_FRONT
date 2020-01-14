@@ -28,7 +28,7 @@ function getObjectListRequestFromReducer(opportunities, clientId) {
         return {
             id: opportunity.id,
             client: clientId,
-            text: opportunity.texto
+            text: opportunity.text
         }
     })
     return opportunitiesRequest;
