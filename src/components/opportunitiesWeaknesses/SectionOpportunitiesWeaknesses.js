@@ -5,8 +5,8 @@ import ListaObjetos from "../listaObjetos/ListaObjetos";
 class SectionOpportunitiesWeaknesses extends Component {
 
   state = {
-    opportunities: null,
-    weaknesses: null
+    opportunities: undefined,
+    weaknesses: undefined
   }
 
   componentDidMount() {
@@ -15,9 +15,21 @@ class SectionOpportunitiesWeaknesses extends Component {
 
   setInfo = () => {
     const { infoClient } = this.props;
+
+    let weaknesses = infoClient ? infoClient.clientDetailsRequest.weaknesses : [];
+    let opportunities = infoClient ? infoClient.clientDetailsRequest.opportunities : [];
+
+    if (!weaknesses) {
+      weaknesses = []
+    }
+
+    if (!opportunities) {
+      opportunities = []
+    }
+
     this.setState({
-      weaknesses: infoClient ? infoClient.clientDetailsRequest.weaknesses : [],
-      opportunities: infoClient ? infoClient.clientDetailsRequest.opportunities : []
+      weaknesses,
+      opportunities 
     })
   }
 
@@ -35,7 +47,7 @@ class SectionOpportunitiesWeaknesses extends Component {
                 <div className="line-topComponent" />
                 <i className="lightbulb icon" style={{ fontSize: "25px" }} />
                 <span className="title-middle">
-                  Oportunidades y debilidades
+                  Oportunidades y Debilidades
                 </span>
               </div>
             </Col>
@@ -43,7 +55,7 @@ class SectionOpportunitiesWeaknesses extends Component {
         )}
         <div style={{ width: "100%", display: "flex" }}>
           <div style={{ width: "50%" }}>
-            {this.state.opportunities && <ListaObjetos
+            {typeof this.state.opportunities !== 'undefined' && <ListaObjetos
               className='list-objects-opportunities'
               key="opportunities"
               titulo="Oportunidades"
@@ -54,7 +66,7 @@ class SectionOpportunitiesWeaknesses extends Component {
             />}
           </div>
           <div style={{ width: "50%" }}>
-            {this.state.weaknesses && <ListaObjetos
+            {typeof this.state.weaknesses !== 'undefined' && <ListaObjetos
               className='list-objects-weaknesses'
               key="weaknesses"
               titulo="Debilidades"
