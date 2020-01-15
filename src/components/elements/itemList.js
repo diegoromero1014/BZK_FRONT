@@ -16,7 +16,7 @@ const ItemList = ({ data, handleDelete, handleEdit, title }) => {
                                         <i style={{ cursor: 'pointer' }} className="pencil icon" onClick={() => handleEdit(element)} />
                                     </ToolTip>
                                 </Table.Cell>
-                                <Table.Cell textAlign='left' style={{ cursor: 'pointer', textAlign: 'justify' }} onClick={() => handleEdit(element)} >{element.text}</Table.Cell>
+                                <Table.Cell textAlign='left' style={{ cursor: 'pointer', textAlign: 'justify', whiteSpace: 'pre-line' }} onClick={() => handleEdit(element)} >{element.text}</Table.Cell>
                                 <Table.Cell textAlign='right' verticalAlign='middle'>
                                     <ToolTip text={'Eliminar'}>
                                         <i className="trash icon" onClick={() => handleDelete(element)} />

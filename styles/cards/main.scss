@@ -28,6 +28,11 @@
     margin-bottom: 10px !important;
     -webkit-box-shadow: 0px 1px 3px 0px #D4D4D5, 0px 0px 0px 1px #D4D4D5 !important;
     box-shadow: 0px 0px 3px 0px #D4D4D5, 0px 0px 0px 1px #D4D4D5 !important;
+    &.disabled {
+        -webkit-box-shadow: 0 -3px 3px -3px #D4D4D5, 3px 0px 3px -3px #D4D4D5, -3px 0px 3px -3px #D4D4D5 !important;
+        box-shadow: 0 -3px 3px -3px #D4D4D5, 3px 0px 3px -3px #D4D4D5, -3px 0px 3px -3px #D4D4D5 !important;
+        background-color: transparent !important;
+    }
 }
 
 .card-container::before {
