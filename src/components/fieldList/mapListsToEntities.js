@@ -26,7 +26,6 @@ function getRequestFromElement(element, clientId) {
 function getObjectListRequestFromReducer(opportunities, clientId) {
     let opportunitiesRequest = opportunities.map((opportunity) => {
         return {
-            id: opportunity.id,
             client: clientId,
             text: opportunity.text
         }
