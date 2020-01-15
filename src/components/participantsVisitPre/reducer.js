@@ -22,7 +22,8 @@ export default (state = initialState, action) => {
                 nameComplet: participant.nameComplet, 
                 contactPosition: participant.contactPosition, 
                 contactSocialStyle: participant.contactSocialStyle, 
-                contactActitudeCompany: participant.contactActitudeCompany
+                contactActitudeCompany: participant.contactActitudeCompany,
+                interlocutorObjs: participant.interlocutorObjs
             });
             return state.push(newParticipant);
         case contants.DELETE_PARTICIPANT:

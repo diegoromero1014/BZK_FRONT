@@ -1,8 +1,9 @@
-import { CREATE_LIST, ADD_LIST, DELETE_LIST, CLEAN_LIST } from "./constants";
+import { CREATE_LIST, ADD_LIST, DELETE_LIST, CLEAN_LIST, SET_TO_SHOW } from "./constants";
 
 const initialState = {}
 const defaultProps = {
-    elements: []
+    elements: [],
+    open: false
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -16,11 +17,11 @@ export default (state = initialState, { type, payload }) => {
 
             const element = state[name];
 
-            if(old) {
+            if (old) {
                 element.elements = element.elements.filter(element => element !== old);
                 data = Object.assign({}, payload.old, payload.data);
             }
-            
+
             element.elements.push(data);
 
             return Object.assign({}, state, { [name]: Object.assign({}, element) });
@@ -31,13 +32,16 @@ export default (state = initialState, { type, payload }) => {
             return Object.assign({}, state, { [payload.name]: Object.assign({}, list) });
         case CLEAN_LIST:
             let newState = Object.assign({}, state);
-            
-            if(newState[payload]) {
+
+            if (newState[payload]) {
                 newState[payload].elements = [];
                 defaultProps.elements = [];
+                defaultProps.open = false;
             }
-            
+
             return newState;
+        case SET_TO_SHOW:
+            return Object.assign({}, state, Object.assign({}, { [payload.name]: { elements: state[payload.name].elements, open: payload.show } }));
         default:
             return state
     }

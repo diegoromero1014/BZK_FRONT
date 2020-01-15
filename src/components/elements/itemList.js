@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'semantic-ui-react';
 import ToolTip from '../toolTip/toolTipComponent';
 
-const ItemList = ({ data, handleDelete, handleEdit }) => {
+const ItemList = ({ data, handleDelete, handleEdit, title }) => {
     
     if(data.length) { 
         return (
@@ -11,10 +11,13 @@ const ItemList = ({ data, handleDelete, handleEdit }) => {
                     {
                         data.sort((a, b) => a.order - b.order).map((element, index) =>
                             <Table.Row key={index}>
-                                <Table.Cell style={{ cursor: 'pointer' }} onClick={() => {
-                                    handleEdit(element);
-                                }} >{element.text}</Table.Cell>
-                                <Table.Cell textAlign='right'>
+                                <Table.Cell textAlign='left' style={{ width: 10 }} verticalAlign='middle'>
+                                    <ToolTip text={'Editar'}>
+                                        <i style={{ cursor: 'pointer' }} className="pencil icon" onClick={() => handleEdit(element)} />
+                                    </ToolTip>
+                                </Table.Cell>
+                                <Table.Cell textAlign='left' style={{ cursor: 'pointer', textAlign: 'justify' }} onClick={() => handleEdit(element)} >{element.text}</Table.Cell>
+                                <Table.Cell textAlign='right' verticalAlign='middle'>
                                     <ToolTip text={'Eliminar'}>
                                         <i className="trash icon" onClick={() => handleDelete(element)} />
                                     </ToolTip>
@@ -29,7 +32,7 @@ const ItemList = ({ data, handleDelete, handleEdit }) => {
     } else {
         return ( 
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', border: '1px solid #e1e1e1', color: '#3f3f3f', borderRadius: 3,}}>
-                <p>Aún no se han adicionado items a la lista</p> 
+                <p>{`No se han adicionado ${title}`}</p> 
             </div>
         )
     }

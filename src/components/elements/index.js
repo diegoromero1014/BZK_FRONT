@@ -8,7 +8,7 @@ import { Field, ErrorMessage, withFormik } from 'formik';
 import { renderMessageError } from '../../functions';
 import ToolTip from '../toolTip/toolTipComponent';
 import '../../../styles/elements/main.scss';
-import { createList, addToList, removeFromList } from './actions';
+import { createList, addToList, removeFromList, setToShow } from './actions';
 import ItemList from './itemList';
 
 
@@ -33,14 +33,15 @@ class ElementsComponent extends Component {
 
     handleOnEdit = data => {
         const { id, text } = data;
-        const { setValues } = this.props;
+        const { setValues, dispatchSetToShow, name } = this.props;
 
         setValues({ id, text, objectEdited: data });
         this.setState({ show: true });
+        dispatchSetToShow({ name, show: true });
     }
     
     render() {
-        const { placeholder, messageButton, handleSubmit, name, elementsReducer, max } = this.props;
+        const { placeholder, messageButton, handleSubmit, name, elementsReducer, max, resetForm, title, dispatchSetToShow } = this.props;
         const { show } = this.state;
 
         let data = elementsReducer[name];
@@ -54,7 +55,7 @@ class ElementsComponent extends Component {
         return (
             <form>
                 <div className={'elements-container'}>
-                    <Row style={{ padding: "10px 10px 20px 20px", marginBottom: 70 }} end="xs">
+                    <Row style={{ padding: "10px 10px 20px 20px", marginBottom: 30 }} end="xs">
                         <Col xs={12} md={12} lg={12}>
                             <ToolTip text={messageButton}>
                                 <Icon
@@ -62,7 +63,10 @@ class ElementsComponent extends Component {
                                     size='huge'
                                     name={'add square'}
                                     style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
-                                    onClick={() => this.setState({ show: true })}
+                                    onClick={() => {
+                                        this.setState({ show: true });
+                                        dispatchSetToShow({ name, show: true });
+                                    }}
                                     disabled={(length || 0) === max}
                                 />
                             </ToolTip>
@@ -107,6 +111,7 @@ class ElementsComponent extends Component {
 
                                             if (this.props.isValid) {
                                                 this.setState({ show: false });
+                                                dispatchSetToShow({ name, show: false });
                                             }
                                         }}
                                     >
@@ -115,9 +120,13 @@ class ElementsComponent extends Component {
                                 </Col>
                                 <Col xs={12} md={12} lg={12}>
                                     <button
-                                        type="button"
+                                        type="reset"
                                         className='button-secondary'
-                                        onClick={() => this.setState({ show: false })}
+                                        onClick={() => {
+                                            this.setState({ show: false });
+                                            dispatchSetToShow({ name, show: false });
+                                            resetForm({id: null, text: ''});
+                                        }}
                                     >
                                         Cancelar
                                     </button>
@@ -126,8 +135,8 @@ class ElementsComponent extends Component {
                         </Row>
                     }
 
-                    <Row style={{ padding: "10px 10px 20px 20px", marginBottom: 70 }} end="xs">
-                        <ItemList data={data || []} handleDelete={this.handleOnDelete} handleEdit={this.handleOnEdit}  />
+                    <Row style={{ padding: "10px 10px 20px 30px", marginBottom: 70, width: '99%' }} end="xs">
+                        <ItemList data={data || []} handleDelete={this.handleOnDelete} handleEdit={this.handleOnEdit} title={title}  />
                     </Row>
                 </div>
             </form>
@@ -143,7 +152,8 @@ const mapDispatchToProps = dispatch => {
     return bindActionCreators({
         dispatchCreateList: createList,
         dispatchAddToList: addToList,
-        dispatchRemoveFromList: removeFromList
+        dispatchRemoveFromList: removeFromList,
+        dispatchSetToShow: setToShow
     }, dispatch)
 };
 
@@ -168,7 +178,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(
 
             props.dispatchAddToList({ name: props.name, data, old });
 
-            resetForm({id: null, text: ''})
+            resetForm({id: null, text: ''});
         },
         mapPropsToValues: () => ({ id: null, text: '' }),
         validationSchema: ({ schema }) => schema

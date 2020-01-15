@@ -8,8 +8,9 @@ import { renderLabel, renderMessageError } from '../../functions';
 import ElementsComponent from '../elements';
 import { schema } from './schema';
 import { cleanList, addToList, createList } from '../elements/actions';
-import { OBJECTIVES, OBJECTIVES_ERROR_MSG } from './constants';
+import { OBJECTIVES, OBJECTIVES_ERROR_MSG, MANDATORY_OBJECTIVES_MSG, OBJECTIVES_OPEN_ERROR_MSG } from './constants';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
+import Tooltip from "../toolTip/toolTipComponent";
 
 class ParticipantInformation extends Component {
 
@@ -56,12 +57,12 @@ class ParticipantInformation extends Component {
         }
     }
 
-
     render() {
         const { fields: { name, position, socialStyle, attitude } } = this.state;
+        const { handleCloseModal } = this.props;
 
         return (
-            <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
+            <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%" }}>
                 <Row style={{ padding: "10px 10px 20px 20px" }}>
                     <Col xs={12} md={12} lg={12}>
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
@@ -176,20 +177,31 @@ class ParticipantInformation extends Component {
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
                             <i className="browser icon" style={{ fontSize: "20px" }} />
-                            <span style={{ fontSize: "20px" }}> Objetivos del interlocutor</span>
+                            <span>{`Objetivos del interlocutor (`}</span>
+                            <span style={{ color: 'red' }}>*</span>
+                            )
+  
+                            <Tooltip text={MANDATORY_OBJECTIVES_MSG}>
+                                <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
+                            </Tooltip>
+                            
                         </div>
                     </Col>
                 </Row>
 
                 <Row style={{ marginTop: '-65px' }}>
                     <Col xs={12} md={12} lg={12}>
-                        <ElementsComponent schema={schema} placeholder='Objectivos' messageButton='Agregar' name={OBJECTIVES} max={3} />
+                        <ElementsComponent schema={schema} placeholder='Objetivos' messageButton='Agregar' name={OBJECTIVES} max={3} title={'Objetivos del interlocutor'}/>
                     </Col>
                 </Row>
 
                 <div className="modalBt4-footer modal-footer">
-                    <button type="submit" className="btn btn-primary modal-button-edit">
+                    <button type="submit" className="btn btn-primary modal-button-edit" style={{ marginRight: 15 }}>
                         <span>Guardar</span>
+                    </button>
+
+                    <button type="button" className="btn btn-default modal-button-edit" onClick={handleCloseModal}>
+                        <span>Cancelar</span>
                     </button>
                 </div>
             </Form>
@@ -213,17 +225,23 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(
     withFormik({
         handleSubmit: (values, { props }) => {
-            debugger;
-
             const { elementsReducer, dispatchSwtShowMessage } = props;
 
             let data = elementsReducer[OBJECTIVES];
-
-            if (data) { data = data.elements; }
-
-            if (!data.length) {
-                dispatchSwtShowMessage('error', 'Error', OBJECTIVES_ERROR_MSG);
+           
+            if(data && data.open) {
+                dispatchSwtShowMessage('error', 'Error', OBJECTIVES_OPEN_ERROR_MSG);
+                return;
             }
+
+            if (data && !data.elements.length) {
+                dispatchSwtShowMessage('error', 'Error', OBJECTIVES_ERROR_MSG);
+                return;
+            }
+
+            let newElement = Object.assign({}, props.selectedRecord, { interlocutorObjs: data.elements }) 
+
+            props.addContact(newElement);
         },
         mapPropsToValues: ({ selectedRecord }) => {
 

@@ -1,4 +1,4 @@
-import { CREATE_LIST, ADD_LIST, DELETE_LIST, CLEAN_LIST } from "./constants";
+import { CREATE_LIST, ADD_LIST, DELETE_LIST, CLEAN_LIST, SET_TO_SHOW } from "./constants";
 
 export const createList = payload => ({
     type: CREATE_LIST,
@@ -19,3 +19,8 @@ export const cleanList = payload => ({
     type: CLEAN_LIST,
     payload
 });
+
+export const setToShow = payload => ({
+    type: SET_TO_SHOW,
+    payload
+})

@@ -7,6 +7,7 @@ import user from '../../../img/icon/user.png';
 import SweetAlert from '../sweetalertFocus';
 import { deleteParticipant } from './actions';
 import { KEY_PARTICIPANT_CLIENT } from './constants';
+import Tooltip from "../toolTip/toolTipComponent";
 
 
 class ListParticipantsByClient extends Component {
@@ -21,8 +22,9 @@ class ListParticipantsByClient extends Component {
     handleRenderParticipants = disabled => {
         const { data, handleOpenModal } = this.props;
 
-        return data.map(participant => (
+        return data.map((participant, index) => (
             <CardComponent 
+                key={index}
                 header={
                     <Image src={user} wrapped ui={false} className='img-header-participants-list' />
                 }
@@ -31,8 +33,13 @@ class ListParticipantsByClient extends Component {
                         <Card.Header className='title-content-participants-list'>{ participant.nombreParticipante }</Card.Header>
                         <Card.Description>
                             <span>{participant.cargo}</span><br />
-                            <span>{participant.estiloSocial}</span> <br />
-                            <span>{participant.actitudBanco}</span>
+                            <span>{participant.estiloSocial}</span><br />
+                            <span>{participant.actitudBanco}</span><br /> <br />
+                            <Tooltip text={'Click para ver más'}>
+                                <span>
+                                    <a>- Objetivos del interlocutor</a>
+                                </span>        
+                            </Tooltip>
                         </Card.Description>
                     </div>
                 }

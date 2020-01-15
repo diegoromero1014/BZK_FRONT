@@ -36,56 +36,57 @@ export class ParticipantsByClient extends Component {
     }
 
     handleSetInformation = selectedContact => {
-        const { contacts } = this.props;
+        const { contacts, participants, dispatchShowAlert } = this.props;
 
         let existingContact;
 
         if(!isNaN(selectedContact)) {
-            existingContact = contacts.filter(element => element.id === Number(selectedContact))[0];            
+            existingContact = contacts.find(element => element.id === Number(selectedContact));            
+
+            existingContact = {
+                tipoParticipante: KEY_PARTICIPANT_CLIENT,
+                idParticipante: existingContact.id,
+                nombreParticipante: existingContact.nameComplet,
+                cargo: !existingContact.contactPosition ? '' : existingContact.contactPosition,
+                empresa: '',
+                estiloSocial: !existingContact.contactSocialStyle ? '' : existingContact.contactSocialStyle,
+                actitudBanco: !existingContact.contactActitudeCompany ? '' : existingContact.contactActitudeCompany,
+                fecha: Date.now(),
+                uuid: _.uniqueId('participanClient_'),
+                nameComplet: existingContact.nameComplet, 
+                contactPosition: existingContact.contactPosition,
+                contactSocialStyle: existingContact.contactSocialStyle,
+                contactActitudeCompany: existingContact.contactActitudeCompany
+            }
         } else {
             existingContact = selectedContact;
         }
-        
 
         if(existingContact) {
             this.setState({ selectedContactInformation: existingContact });
         }
     }
 
-    addContact = () => {        
-        const { dispatchAddParticipant, participants, contacts, dispatchShowAlert, limitParticipantsByClient } = this.props;
-        const { selectedContact } = this.state;        
+    addContact = selectedContact => {        
+        const { dispatchAddParticipant, participants, dispatchShowAlert, limitParticipantsByClient } = this.props;
+        
         if (selectedContact) {       
                  
             if (limitParticipantsByClient && participants.toArray().filter(participant => participant.tipoParticipante === KEY_PARTICIPANT_CLIENT).length >= limitParticipantsByClient) {
                 dispatchShowAlert('error', "Límite de participantes", "Señor usuario, sólo se pueden agregar máximo 10 participantes por parte del cliente");
                 return;
             }
-            let existingContact = participants.find(element => element.idParticipante === Number(selectedContact));            
+            
+            let existingContact = participants.find(element => element.idParticipante === Number(selectedContact.idParticipante));            
 
             if (!existingContact) {
-                let contact = contacts.filter(element => element.id === Number(selectedContact))[0];                
-                let participant = {
-                    tipoParticipante: KEY_PARTICIPANT_CLIENT,
-                    idParticipante: contact.id,
-                    nombreParticipante: contact.nameComplet,
-                    cargo: !contact.contactPosition ? '' : contact.contactPosition,
-                    empresa: '',
-                    estiloSocial: !contact.contactSocialStyle ? '' : contact.contactSocialStyle,
-                    actitudBanco: !contact.contactActitudeCompany ? '' : contact.contactActitudeCompany,
-                    fecha: Date.now(),
-                    uuid: _.uniqueId('participanClient_'),
-                    nameComplet: contact.nameComplet, 
-                    contactPosition: contact.contactPosition,
-                    contactSocialStyle: contact.contactSocialStyle,
-                    contactActitudeCompany: contact.contactActitudeCompany,
-                }
-
-                dispatchAddParticipant(participant);
-                this.setState({ selectedContact: '' });
+                dispatchAddParticipant(selectedContact);
+                this.setState({ selectedContact: ''});
+                this.handleCloseModal();
             } else {                
                 dispatchShowAlert('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
-                this.setState({ selectedContact: '' });
+                this.setState({ selectedContact: ''});
+                this.handleCloseModal();
             }
         }
     }
@@ -101,13 +102,16 @@ export class ParticipantsByClient extends Component {
         return (
             <div className='participants-client'>
                 <Row style={{ marginTop: 20, marginLeft: 7 }}>
-                    <Col xs={11} md={11} lg={11} style={{ maxWidth: '96%', flexBasis: '96.666667%' }}>
+                    <Col xs={11} md={11} lg={11} style={{ maxWidth: '96%', flexBasis: '96.7%' }}>
                         <ComboBox
                             name="txtContactoCliente"
                             labelInput="Seleccione..."
                             onChange={value => {
                                 this.setState({ selectedContact: value, open: true });
-                                this.handleSetInformation(value);
+
+                                if(value && value !== "") {
+                                    this.handleSetInformation(value);
+                                }
                             }}
                             value={selectedContact}
                             valueProp={'id'}
@@ -157,7 +161,7 @@ export class ParticipantsByClient extends Component {
                             </div>
 
                             {selectedContactInformation && 
-                                <ParticipantInformation selectedRecord={selectedContactInformation} />
+                                <ParticipantInformation selectedRecord={selectedContactInformation} handleCloseModal={this.handleCloseModal} addContact={this.addContact}/>
                             }
                         </div>
                     </div>
