@@ -28,7 +28,7 @@ export class SectionClientObjectives extends Component {
                                             <div className="section-list-divider">
                                                 <Row>
                                                     <Col md={6} sm={12} style={{ display: "flex", padding: "10px", marginTop: "10px" }} >
-                                                        <div><Row><Col md={12} className='add-line-break'>{objetive.text}</Col></Row></div>
+                                                        <div><Col md={12} className='add-line-break'>{objetive.text}</Col></div>
                                                     </Col>
                                                     <Col md={6} sm={12}>
                                                         <div style={{ padding: "10px" }} className="section-list-parent">
