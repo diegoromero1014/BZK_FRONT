@@ -7,6 +7,7 @@ import user from '../../../img/icon/user.png';
 import SweetAlert from '../sweetalertFocus';
 import { deleteParticipant } from './actions';
 import { KEY_PARTICIPANT_CLIENT } from './constants';
+import Tooltip from "../toolTip/toolTipComponent";
 
 
 class ListParticipantsByClient extends Component {
@@ -21,30 +22,40 @@ class ListParticipantsByClient extends Component {
     handleRenderParticipants = disabled => {
         const { data, handleOpenModal } = this.props;
 
-        return data.map(({nombreParticipante, cargo, estiloSocial, actitudBanco, idParticipante }) => (
+        return data.map((participant, index) => (
             <CardComponent 
+                key={index}
                 header={
                     <Image src={user} wrapped ui={false} className='img-header-participants-list' />
                 }
                 content= {
                     <div>
-                        <Card.Header className='title-content-participants-list'>{ nombreParticipante }</Card.Header>
+                        <Card.Header className='title-content-participants-list'>{ participant.nombreParticipante }</Card.Header>
                         <Card.Description>
-                            <span>{cargo}</span><br />
-                            <span>{estiloSocial}</span> <br />
-                            <span>{actitudBanco}</span>
+                            <span>{participant.cargo}</span><br />
+                            <span>{participant.estiloSocial}</span><br />
+                            <span>{participant.actitudBanco}</span><br /> <br />
+                            <Tooltip text={'Click para ver más'}>
+                                <span>
+                                    <a>- Objetivos del interlocutor</a>
+                                </span>        
+                            </Tooltip>
                         </Card.Description>
                     </div>
                 }
                 footer={
                     !disabled &&
-                        <a onClick={() => this.handleOnClickDelete(idParticipante)}>
+                        <a className={'delete-card'} onClick={event => {
+                            event.preventDefault();
+                            this.handleOnClickDelete(participant.idParticipante);
+                        }}>
                             <Icon name='delete' />
                             Eliminar
                         </a>
                 }
-                handleOnClick={() => handleOpenModal(idParticipante)}
+                handleOnClick={() => !disabled && handleOpenModal(participant)}
                 style={{ width: 230, color: 'black' }}
+                className={disabled ? 'disabled' : ''}
             />
         ))
     }

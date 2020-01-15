@@ -227,6 +227,7 @@ export class ListaObjetos extends Component {
       maxObjects,
       error
     } = this.state;
+    
 
     const textButon = switchGuardarEditar ? "Modificar" : "Agregar";
 

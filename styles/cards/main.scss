@@ -1,21 +1,51 @@
+.container-element-card {
+    border-radius: 0.28571429rem;
+    margin: 14px;
+    -webkit-box-shadow: 0px 1px 3px 0px #D4D4D5, 0px 0px 0px 1px #D4D4D5;
+    box-shadow: 0px 1px 3px 0px #D4D4D5, 0px 0px 0px 1px #D4D4D5;
+    -webkit-transition: -webkit-box-shadow 0.1s ease, -webkit-transform 0.1s ease;
+    transition: -webkit-box-shadow 0.1s ease, -webkit-transform 0.1s ease;
+    transition: box-shadow 0.1s ease, transform 0.1s ease;
+    transition: box-shadow 0.1s ease, transform 0.1s ease, -webkit-box-shadow 0.1s ease, -webkit-transform 0.1s ease;
+}
+
+.delete-card {
+    color: #969696;
+    font-weight: lighter;
+    cursor: pointer;
+
+    &::hover {
+        color: #4183C4;
+    }
+}
+
 .card-container {
     cursor: pointer;
     overflow: hidden;
-    margin: 13px !important;
+    margin: 0px !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    margin-bottom: 10px !important;
+    -webkit-box-shadow: 0px 1px 3px 0px #D4D4D5, 0px 0px 0px 1px #D4D4D5 !important;
+    box-shadow: 0px 0px 3px 0px #D4D4D5, 0px 0px 0px 1px #D4D4D5 !important;
+    &.disabled {
+        -webkit-box-shadow: 0 -3px 3px -3px #D4D4D5, 3px 0px 3px -3px #D4D4D5, -3px 0px 3px -3px #D4D4D5 !important;
+        box-shadow: 0 -3px 3px -3px #D4D4D5, 3px 0px 3px -3px #D4D4D5, -3px 0px 3px -3px #D4D4D5 !important;
+        background-color: transparent !important;
+    }
 }
 
 .card-container::before {
     content: "";
     position: absolute;
     background: linear-gradient(90deg, #007cffc4 0%, #007cffc4 100%);
-    padding: 80%;
+    padding: 63%;
     border-radius: 50%;
     left: 50%;
-    top: 50%;
+    top: 44%;
     transform: translate(-50%, -50%) scale(1);
     opacity: 0;
     transition: transform .7s, opacity .7s;
-    z-index: 1;
 }
 
 .card-container:active::before {
