@@ -177,11 +177,8 @@ export function renderElements(elements, removeElement, editElement) {
                                         <Col md={12}>
                                             <div className="section-list-divider" style={{}} >
                                                 <Row>
-                                                    <Col md={6} sm={12} style={{ display: "flex", padding: "10px", marginTop: "10px" }} >
-                                                        <div style={{}}>
-
-                                                        </div>
-                                                        <div style={{}}>
+                                                    <Col md={6} sm={12} style={{ padding: "10px", marginTop: "10px" }} >
+                                                        <div>
                                                             <Row>
 
                                                                 <Col md={12} className="add-line-break">
