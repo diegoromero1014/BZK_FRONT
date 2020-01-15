@@ -113,7 +113,7 @@ class ListOfElements extends React.Component {
                 onCancelCallback: () => { }
             },
             {
-                confirmButtonText: 'Confirmar'
+                confirmButtonText: 'Sí, estoy seguro!'
             }
         );
     }
