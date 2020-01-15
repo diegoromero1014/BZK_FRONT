@@ -90,7 +90,7 @@ class ElementsComponent extends Component {
                                                 onChange={onChange}
                                                 onBlur={onBlur}
                                                 placeholder={placeholder}
-                                                className={`field ${errors[name] ? 'error' : ''}`}
+                                                className={`field ${errors[name] ? 'error-field-element' : ''}`}
                                             />
                                             <br></br>
 
