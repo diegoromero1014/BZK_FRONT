@@ -8,7 +8,7 @@ import { renderLabel, renderMessageError } from '../../functions';
 import ElementsComponent from '../elements';
 import { schema } from './schema';
 import { cleanList, addToList, createList } from '../elements/actions';
-import { OBJECTIVES, OBJECTIVES_ERROR_MSG, MANDATORY_OBJECTIVES_MSG, OBJECTIVES_OPEN_ERROR_MSG } from './constants';
+import { OBJECTIVES, OBJECTIVES_ERROR_MSG, MANDATORY_OBJECTIVES_MSG, OBJECTIVES_OPEN_ERROR_MSG, OBJECTIVES_PLACEHOLDER } from './constants';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import Tooltip from "../toolTip/toolTipComponent";
 
@@ -191,7 +191,7 @@ class ParticipantInformation extends Component {
 
                 <Row style={{ marginTop: '-65px' }}>
                     <Col xs={12} md={12} lg={12}>
-                        <ElementsComponent schema={schema} placeholder='Objetivos' messageButton='Agregar' name={OBJECTIVES} max={3} title={'Objetivos del interlocutor'}/>
+                        <ElementsComponent schema={schema} placeholder={OBJECTIVES_PLACEHOLDER} messageButton='Agregar' name={OBJECTIVES} max={3} title={'Objetivos del interlocutor'}/>
                     </Col>
                 </Row>
 

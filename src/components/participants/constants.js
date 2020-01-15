@@ -8,4 +8,5 @@ export const OBJECTIVES = "objectives";
 export const OBJECTIVES_ERROR_MSG = "Señor usuario, debe agregar al menos un objetivo del interlocutor."
 export const OBJECTIVES_OPEN_ERROR_MSG = "Señor usuario, esta creando o editando un registro en la sección Objetivos del interlocutor, debe terminarlo o cancelarlo para poder guardar."
 export const MANDATORY_OBJECTIVES_MSG = "Objetivos que tiene la persona con la cual se va a reunir de acuerdo a su rol. Indagar: ¿Cómo miden a su interlocutor? ¿Qué busca en su cargo? ¿Cuáles son las estrategias para lograr sus objetivos?.";
+export const OBJECTIVES_PLACEHOLDER = "Objetivos que tiene la persona con la cual se va a reunir de acuerdo a su rol. Indagar: ¿Cómo miden a su interlocutor? ¿Qué busca en su cargo? ¿Cuáles son las estrategias para lograr sus objetivos?. ";
 
