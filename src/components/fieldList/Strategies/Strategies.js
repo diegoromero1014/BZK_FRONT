@@ -67,7 +67,7 @@ export function renderElements(elements, removeElement, editElement) {
                                 onClick={() => editElement(element)}
                             />
                         </Col>
-                        <Col md={10}>
+                        <Col md={10} className="add-line-break">
                             {element.value}
                         </Col>
                         <Col md={1}>
