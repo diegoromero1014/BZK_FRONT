@@ -19,7 +19,6 @@ export default class ReCaptcha extends Component {
             <ReCAPTCHA
                 sitekey={GRECAPTCHA_PUBLIC_KEY}
                 onChange={this.handleCaptchaResponseChange}
-                grecaptcha={window.grecaptcha}
             />
         )
     }
