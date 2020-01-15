@@ -45,7 +45,7 @@ class ListParticipantsByClient extends Component {
                 }
                 footer={
                     !disabled &&
-                        <a onClick={event => {
+                        <a className={'delete-card'} onClick={event => {
                             event.preventDefault();
                             this.handleOnClickDelete(participant.idParticipante);
                         }}>
