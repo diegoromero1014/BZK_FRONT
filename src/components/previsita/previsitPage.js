@@ -249,12 +249,38 @@ export class PrevisitPage extends Component {
       return previsitParticipants;
    }
 
+   objectivesInterlocutor = () => {
+      const { participants, dispatchSwtShowMessage } = this.props;
+      const participantsList = participants ? participants.toArray() : [];
+
+      let names = "";
+
+      participantsList.filter(participantIsClient)
+         .forEach(element => {
+            if(!element.interlocutorObjs || !element.interlocutorObjs.length) {
+                names = names + ' - ' + element.nombreParticipante + ' \n';
+            }
+         });
+
+      if(names !== "") {
+         dispatchSwtShowMessage('error', "Error", "Los siguientes participantes no tienen objetivos del interlocutor: " + names);            
+         return false;
+      }
+
+      return true;
+   }
+
    submitForm = async (previsit) => {
       const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions,
          fromModal, closeModal } = this.props;         
       const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);
       if (validateDatePrevisitResponse) {
          const previsitParticipants = this.getPrevisitParticipants();
+         
+         if(!this.objectivesInterlocutor()) {
+            return;
+         }
+
          if (!previsitParticipants.bankParticipants.length && previsit.documentStatus) {
             dispatchSwtShowMessage('error', TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS);            
             return;

@@ -2,7 +2,9 @@ import React from 'react';
 import { Table } from 'semantic-ui-react';
 import ToolTip from '../toolTip/toolTipComponent';
 
-const ItemList = ({ data, handleDelete, handleEdit, title }) => {
+let selectedRecord;
+
+const ItemList = ({ data, handleDelete, handleEdit, title, show }) => {
     
     if(data.length) { 
         return (
@@ -10,13 +12,19 @@ const ItemList = ({ data, handleDelete, handleEdit, title }) => {
                 <Table.Body>
                     {
                         data.sort((a, b) => a.order - b.order).map((element, index) =>
-                            <Table.Row key={index}>
+                            <Table.Row key={index} disabled={index === selectedRecord && show}>
                                 <Table.Cell textAlign='left' style={{ width: 10 }} verticalAlign='middle'>
                                     <ToolTip text={'Editar'}>
-                                        <i style={{ cursor: 'pointer' }} className="pencil icon" onClick={() => handleEdit(element)} />
+                                        <i style={{ cursor: 'pointer' }} className="pencil icon" onClick={() => {
+                                            handleEdit(element);
+                                            selectedRecord = index;
+                                        }} />
                                     </ToolTip>
                                 </Table.Cell>
-                                <Table.Cell textAlign='left' style={{ cursor: 'pointer', textAlign: 'justify', whiteSpace: 'pre-line' }} onClick={() => handleEdit(element)} >{element.text}</Table.Cell>
+                                <Table.Cell textAlign='left' style={{ cursor: 'pointer', textAlign: 'justify', whiteSpace: 'pre-line' }} onClick={() => {
+                                    handleEdit(element);
+                                    selectedRecord = index;
+                                }} >{element.text}</Table.Cell>
                                 <Table.Cell textAlign='right' verticalAlign='middle'>
                                     <ToolTip text={'Eliminar'}>
                                         <i className="trash icon" onClick={() => handleDelete(element)} />

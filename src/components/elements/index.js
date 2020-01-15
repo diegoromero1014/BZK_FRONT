@@ -138,7 +138,7 @@ class ElementsComponent extends Component {
                     }
 
                     <Row style={{ padding: "10px 10px 20px 30px", marginBottom: 70, width: '99%' }} end="xs">
-                        <ItemList data={data || []} handleDelete={this.handleOnDelete} handleEdit={this.handleOnEdit} title={title}  />
+                        <ItemList data={data || []} handleDelete={this.handleOnDelete} handleEdit={this.handleOnEdit} title={title} show={show} />
                     </Row>
                 </div>
             </form>
