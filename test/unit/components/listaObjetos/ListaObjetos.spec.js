@@ -19,7 +19,7 @@ describe("Unit tests of the listaObjetos.js component", () => {
   let defaultState = {
     objeto: {
       idObject: "",
-      texto: ""
+      text: ""
     },
     campoObjeto: false,
     campoVacio: false,
@@ -28,8 +28,7 @@ describe("Unit tests of the listaObjetos.js component", () => {
     switchGuardarEditar: false,
     stylePlus: false,
     maxObjects: false,
-    textInicioNoValido: false,
-    soloAlfanumericos: false
+    error: ""
   };
 
   it("should render component", () => {
@@ -54,173 +53,208 @@ describe("Unit tests of the listaObjetos.js component", () => {
     expect(wrapper.state().campoObjeto).to.equal(true);
   });
 
+  it('onClick in abrirCampoOjeto y la lista de objetos tiene 5', () => {
+    const listaObjetos = [
+      {
+        idObject: 1,
+        text: "Lorem ipsum dolor sit amet, consectetur "
+      },
+      {
+        idObject: 2,
+        text: "Lorem ipsum dolor sit amet, consectetur "
+      },
+      {
+        idObject: 3,
+        text: "Lorem ipsum dolor sit amet, consectetur "
+      },
+      {
+        idObject: 4,
+        text: "Lorem ipsum dolor sit amet, consectetur "
+      },
+      {
+        idObject: 5,
+        text: "Lorem ipsum dolor sit amet, consectetur "
+      },
+    ];
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objetos: listaObjetos
+    });
+    wrapper.instance().abrirCampoObjeto();
+    expect(wrapper.state().maxObjects).to.equal(true);
+
+  });
+
   it("onClick in cerrarCampoObjetivo should change campoObjeto state to false", () => {
     const wrapper = shallow(<ListaObjetos {...defaultProps} />);
     wrapper.instance().cerrarCampoObjeto();
     expect(wrapper.state().campoObjeto).to.equal(false);
   });
 
-  // it("onClick in mostrarModalEliminar should change modalEliminar state to true", () => {
-  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-  //   wrapper.instance().mostrarModalEliminar();
-  //   expect(wrapper.state().modalEliminar).to.equal(true);
-  // });
+  it("onClick in mostrarModalEliminar should change modalEliminar state to true", () => {
+    const objeto = {
+      idObject: 1, 
+      texto: "Lorem ipsum dolor sit amet, consectetur adipiscing "
+    };
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.instance().mostrarModalEliminar(objeto.idObject);
+    expect(wrapper.state().modalEliminar).to.equal(true);
+  });
 
-  // it("onClick in editarObjeto should change campoObjeto, switchGuardarEditar, stylePlus in the state to true", () => {
-  //   const elemento = {
-  //     id: 1343,
-  //     texto: "texto de la oportunidad o debilidad"
-  //   };
-  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-  //   wrapper.instance().editarObjeto(elemento);
-  //   expect(wrapper.state().campoObjeto).to.equal(true);
-  //   expect(wrapper.state().switchGuardarEditar).to.equal(true);
-  //   expect(wrapper.state().stylePlus).to.equal(true);
-  // });
+  it("onClick in editarObjeto should change campoObjeto, switchGuardarEditar, stylePlus in the state to true", () => {
+    const elemento = {
+      idObject: 1343,
+      texto: "texto de la oportunidad o debilidad"
+    };
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.instance().editarObjeto(elemento);
+    expect(wrapper.state().campoObjeto).to.equal(true);
+    expect(wrapper.state().switchGuardarEditar).to.equal(true);
+    expect(wrapper.state().stylePlus).to.equal(true);
+  });
 
-  // it("onClick in modificarObjeto expect me to edit the object", () => {
-  //   const objeto = {
-  //     iidObjectd: 1,
-  //     texto: "Lorem ipsum dolor sit amet, consectetur adipiscing "
-  //   };
-  //   const listaObjetos = [
-  //     {
-  //       idObject: 1,
-  //       texto: "Lorem ipsum dolor sit amet, consectetur "
-  //     }
-  //   ];
-  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-  //   wrapper.setState({
-  //     objeto,
-  //     objetos: listaObjetos
-  //   });
-  //   wrapper.instance().modificarObjeto();
-  //   expect(wrapper.state().campoVacio).to.equal(false);
-  //   expect(wrapper.state().campoObjeto).to.equal(false);
-  //   expect(wrapper.state().switchGuardarEditar).to.equal(false);
-  //   expect(wrapper.state().stylePlus).to.equal(false);
-  // });
+  it("onClick in modificarObjeto expect me to edit the object", () => {
+    const objeto = {
+      idObject: 1,
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing "
+    };
+    const listaObjetos = [
+      {
+        idObject: 1,
+        text: "Lorem ipsum dolor sit amet, consectetur "
+      }
+    ];
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto,
+      objetos: listaObjetos
+    });
+    wrapper.instance().modificarObjeto();
+    expect(wrapper.state().error).to.have.string("");
+  });
 
-  // it("onClick in modificarObjeto expect me to edit the object", () => {
-  //   const objeto = {
-  //     idObject: 1,
-  //     texto: "@Lorem ipsum dolor sit amet, consectetur adipiscing "
-  //   };
-  //   const listaObjetos = [
-  //     {
-  //       idObject: 1,
-  //       texto: "Lorem ipsum dolor sit amet, consectetur "
-  //     }
-  //   ];
-  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-  //   wrapper.setState({
-  //     objeto,
-  //     objetos: listaObjetos
-  //   });
-  //   wrapper.instance().modificarObjeto();
-  //   expect(wrapper.state().textInicioNoValido).to.equal(true);
-  // });
+  it("onClick in modificarObjeto expect me to edit the object", () => {
+    const objeto = {
+      idObject: 1,
+      text: "-Lorem ipsum dolor sit amet, consectetur adipiscing"
+    };
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto
+    });
+    wrapper.instance().modificarObjeto();
+    expect(wrapper.state().error).to.contain("No se permiten textos que inicien con los siguientes caracteres: = + - @");
+  });
 
-  // it("when I press click on modify and the object contains an @ after the first position except message alone alphanumeric are enabled", () => {
-  //   const objeto = {
-  //     idObject: 1,
-  //     texto: "Lorem ipsum dolor sit amet, @consectetur adipiscing "
-  //   };
-  //   const listaObjetos = [
-  //     {
-  //       idObject: 1,
-  //       texto: "Lorem ipsum dolor sit amet, consectetur "
-  //     }
-  //   ];
-  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-  //   wrapper.setState({
-  //     objeto,
-  //     objetos: listaObjetos
-  //   });
-  //   wrapper.instance().modificarObjeto();
-  //   expect(wrapper.state().soloAlfanumericos).to.equal(true);
-  // });
+  it("when I press click on modify and the object contains an @ after the first position except message alone alphanumeric are enabled", () => {
+    const objeto = {
+      idObject: 1,
+      text: "Lorem ipsum dolor sit amet, @consectetur adipiscing "
+    };
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto,
+    });
+    wrapper.instance().modificarObjeto();
+    expect(wrapper.state().error).to.contain(`Solo se permiten valores alfanuméricos y ;,.-"!()$%&/¿?°#=¡':´+[]_<>`);
+  });
 
-  // it("onClick in modificarObjeto expect me not to edit the object", () => {
-  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-  //   wrapper.setState({
-  //     objeto: { idObject: 1, texto: "" }
-  //   });
-  //   wrapper.instance().modificarObjeto();
-  //   expect(wrapper.state().campoVacio).to.equal(true);
-  // });
+  it("onClick in modificarObjeto expect me not to edit the object", () => {
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto: { idObject: 1, text: "" }
+    });
+    wrapper.instance().modificarObjeto();
+    expect(wrapper.state().error).to.contain("Requiere que especifique un valor");
+  });
 
-  // it("onClick in agregarObjetoLista agregue un objeto", () => {
-  //   const idObject = (Math.random() * 10000).toFixed();
-  //   const objeto = {
-  //     idObject: "",
-  //     texto: "test agregar objeto"
-  //   };
-  //   objeto.idObject = idObject;
-  //   const campoVacio = objeto.texto;
-  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-  //   wrapper.setState({
-  //     objeto,
-  //     campoVacio
-  //   });
-  //   wrapper.instance().agregarObjetoLista();
-  //   wrapper.instance().cerrarCampoObjeto();
-  //   expect(wrapper.state().campoObjeto).to.equal(false);
-  // });
+  it("onClick in agregarObjetoLista agregue un objeto", () => {
+    const idObject = (Math.random() * 10000).toFixed();
+    const objeto = {
+      idObject: "",
+      text: "test agregar objeto"
+    };
+    objeto.idObject = idObject;
+    const campoVacio = objeto.texto;
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto,
+      campoVacio
+    });
+    wrapper.instance().agregarObjetoLista();
+    wrapper.instance().cerrarCampoObjeto();
+    expect(wrapper.state().campoObjeto).to.equal(false); 
+    expect(wrapper.state().error).to.have.string("");
+  });
 
-  // it("onClick in agregarObjetoLista agregue un objeto", () => {
-  //   const idObject = (Math.random() * 10000).toFixed();
-  //   const objeto = {
-  //     idObject: "",
-  //     texto: "@test agregar objeto"
-  //   };
-  //   objeto.idObject = idObject;
-  //   const campoVacio = objeto.texto;
-  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-  //   wrapper.setState({
-  //     objeto,
-  //     campoVacio
-  //   });
-  //   wrapper.instance().agregarObjetoLista();
-  //   expect(wrapper.state().textInicioNoValido).to.equal(true);
-  // });
+  it("onClick in agregarObjetoLista agregue un objeto", () => {
+    const idObject = (Math.random() * 10000).toFixed();
+    const objeto = {
+      idObject: "",
+      text: "@test agregar objeto"
+    };
+    objeto.idObject = idObject;
+    const campoVacio = objeto.texto;
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto,
+      campoVacio
+    });
+    wrapper.instance().agregarObjetoLista();
+    expect(wrapper.state().error).to.contain("No se permiten textos que inicien con los siguientes caracteres: = + - @");
+  });
 
-  // it("onClick in agregarObjetoLista agregue un objeto", () => {
-  //   const idObject = (Math.random() * 10000).toFixed();
-  //   const objeto = {
-  //     idObject: "",
-  //     texto: "test@ agregar objeto"
-  //   };
-  //   objeto.idObject = idObject;
-  //   const campoVacio = objeto.texto;
-  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-  //   wrapper.setState({
-  //     objeto,
-  //     campoVacio
-  //   });
-  //   wrapper.instance().agregarObjetoLista();
-  //   expect(wrapper.state().soloAlfanumericos).to.equal(true);
-  // });
+  it("onClick in agregarObjetoLista agregue un objeto", () => {
+    const idObject = (Math.random() * 10000).toFixed();
+    const objeto = {
+      idObject: "",
+      text: "test@ agregar objeto"
+    };
+    objeto.idObject = idObject;
+    const campoVacio = objeto.texto;
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto,
+      campoVacio
+    });
+    wrapper.instance().agregarObjetoLista();
+    expect(wrapper.state().error).to.have.string(`Solo se permiten valores alfanuméricos y ;,.-"!()$%&/¿?°#=¡':´+[]_<>`);
+  });
 
-  // it("onClick in agregarObjetoLista con un objeto vacio", () => {
-  //   const idObject = (Math.random() * 10000).toFixed();
-  //   const objeto = {
-  //     idObject: "",
-  //     texto: ""
-  //   };
-  //   objeto.idObject = idObject;
-  //   const campoVacio = objeto.texto;
-  //   const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-  //   wrapper.instance().agregarObjetoLista();
-  //   expect(wrapper.state().campoVacio).to.equal(true);
-  // });
+  it("onClick in agregarObjetoLista con un objeto vacio", () => {
+    const idObject = (Math.random() * 10000).toFixed();
+    const objeto = {
+      idObject: "",
+      texto: ""
+    };
+    objeto.idObject = idObject;
+    const campoVacio = objeto.texto;
+    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objeto : {
+        idObjeto : 123,
+        text: ""
+      }
+    });
+    wrapper.instance().agregarObjetoLista();
+    expect(wrapper.state().error).to.have.string("Requiere que especifique un valor");
+  });
 
   it("onClick in eliminarObjeto se espera que elimine el objeto", () => {
     const objeto = {
       idObject: 1,
       texto: "Lorem ipsum dolor sit amet, consectetur adipiscing "
     };
+    const listaObjetos = [
+      {
+        idObject: 1,
+        texto: "Lorem ipsum dolor sit amet, consectetur "
+      }
+    ]
     const wrapper = shallow(<ListaObjetos {...defaultProps} />);
+    wrapper.setState({
+      objetos: listaObjetos
+    });
     wrapper.instance().eliminarObjeto(objeto.idObject);
     expect(wrapper.state().modalEliminar).to.equal(false);
   });
