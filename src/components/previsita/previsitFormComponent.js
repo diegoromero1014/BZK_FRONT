@@ -52,14 +52,12 @@ export class PrevisitFormComponent extends Component {
                nullable: true,
                message: TITLE_CHALLENGER
             },
-            
             observations: {
                name: 'Pendientes, quejas y reclamos',
                nullable: true,
                message: TITLE_MESSAGE_PENDIENT
             }
-         },
-         type: null
+         }
       };
    }
 
@@ -89,6 +87,7 @@ export class PrevisitFormComponent extends Component {
    render() {
       const { fields: { type, date, duration, place, objective, challenger, observations } } = this.state;
       const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue } = this.props;
+      
       return (
          <div>
             <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
@@ -119,6 +118,7 @@ export class PrevisitFormComponent extends Component {
                                     setFieldValue(name, id, false);
                                     this.changeTypePrevisit(id);
                                  }}
+                                 onBlur={onBlur}
                                  data={previsitTypes || []}
                                  className='field-input'
                                  disabled={isEditable ? 'disabled' : ''}
@@ -308,7 +308,6 @@ export class PrevisitFormComponent extends Component {
                   </Col>
                </Row>
             </Form>
-
          </div>
       )
    }
