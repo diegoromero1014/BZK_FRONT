@@ -53,6 +53,7 @@ export class ListaObjetos extends Component {
         stylePlus: true
       });
     } else {
+      dispatchUpdateActiveFieldObject(false, titulo);
       this.setState({
         maxObjects: true
       });
