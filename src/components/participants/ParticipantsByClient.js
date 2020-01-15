@@ -24,9 +24,10 @@ export class ParticipantsByClient extends Component {
         this.state = {
             selectedContact: null,
             selectedContactInformation: null,
-            open: false,
-            editing: false
+            open: false
         }
+        
+        this.editing = false;
     }
 
     componentWillMount() {
@@ -38,8 +39,7 @@ export class ParticipantsByClient extends Component {
 
     handleSetInformation = selectedContact => {
         const { contacts, participants, dispatchShowAlert } = this.props;
-        const { editing } = this.state;
-
+        
         let existingContact;
 
         if (!isNaN(selectedContact)) {
@@ -64,6 +64,11 @@ export class ParticipantsByClient extends Component {
             existingContact = selectedContact;
         }
 
+        if(participants.find(element => element.idParticipante === Number(existingContact.idParticipante)) && !this.editing) {
+            dispatchShowAlert('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
+            this.setState({open: false, selectedContact: '' });
+        }
+
         if (existingContact) {
             this.setState({ selectedContactInformation: existingContact });
         }
@@ -71,8 +76,7 @@ export class ParticipantsByClient extends Component {
 
     addContact = selectedContact => {
         const { dispatchAddParticipant, participants, dispatchShowAlert, limitParticipantsByClient, dispatchDeleteParticipant } = this.props;
-        const { editing } = this.state;
-
+        
         if (selectedContact) {
 
             if (limitParticipantsByClient && participants.toArray().filter(participant => participant.tipoParticipante === KEY_PARTICIPANT_CLIENT).length >= limitParticipantsByClient) {
@@ -82,9 +86,9 @@ export class ParticipantsByClient extends Component {
 
             let existingContact = participants.find(element => element.idParticipante === Number(selectedContact.idParticipante));
 
-            if (!existingContact || editing) {
+            if (!existingContact || this.editing) {
 
-                if(editing) {
+                if(this.editing) {
                     dispatchDeleteParticipant(participants.findIndex(item => item.idParticipante === existingContact.idParticipante), KEY_PARTICIPANT_CLIENT);
                 }
 
@@ -99,7 +103,10 @@ export class ParticipantsByClient extends Component {
         }
     }
 
-    handleCloseModal = () => this.setState({ open: false, selectedContactInformation: null, selectedContact: '', editing: false });
+    handleCloseModal = () => {
+        this.setState({ open: false, selectedContactInformation: null, selectedContact: '' });
+        this.editing = false;
+    }
 
     render() {
         const { contacts, participants, disabled, reducerGlobal } = this.props;
@@ -117,6 +124,7 @@ export class ParticipantsByClient extends Component {
                             onChange={value => {
                                 if (value && value !== "") {
                                     this.setState({ selectedContact: value, open: true });
+                                    this.editing = false;
                                     this.handleSetInformation(value);
                                 }
                             }}
@@ -141,7 +149,8 @@ export class ParticipantsByClient extends Component {
                         {data.length > 0 ?
                             <Col xs={12} md={12} lg={12}>
                                 <ListParticipantsByClient data={data} disabled={disabled} handleOpenModal={selectedRecord => {
-                                    this.setState({ open: true, selectedContact: null, editing: true });
+                                    this.setState({ open: true, selectedContact: null });
+                                    this.editing = true;
                                     this.handleSetInformation(selectedRecord);
                                 }} />
                             </Col>

@@ -53,8 +53,9 @@ class ListParticipantsByClient extends Component {
                             Eliminar
                         </a>
                 }
-                handleOnClick={() => handleOpenModal(participant)}
+                handleOnClick={() => !disabled && handleOpenModal(participant)}
                 style={{ width: 230, color: 'black' }}
+                className={disabled ? 'disabled' : ''}
             />
         ))
     }
