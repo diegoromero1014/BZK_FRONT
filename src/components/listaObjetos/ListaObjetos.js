@@ -27,7 +27,6 @@ export class ListaObjetos extends Component {
     switchGuardarEditar: false,
     stylePlus: false,
     maxObjects: false,
-    soloAlfanumericos: false,
     error: ""
   };
 
