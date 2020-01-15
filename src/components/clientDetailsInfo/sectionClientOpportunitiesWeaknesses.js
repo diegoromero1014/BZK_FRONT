@@ -58,7 +58,7 @@ export class SectionClientOpportunitiesWeaknesses extends Component {
                     <Col xs={12} md={12} lg={12} style={{ paddingRight: "15px", marginTop: "15px" }}>
                         <table className="ui striped table">
                             <thead>
-                                { opportunities.map(item => (
+                                { weaknesses.map(item => (
                                     <tr key={item.id}><td className="add-line-break">{item.text}</td></tr>
                                 ))}
                             </thead>
