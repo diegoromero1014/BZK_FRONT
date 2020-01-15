@@ -362,7 +362,7 @@ export class ListaObjetos extends Component {
                           />
                         </td>
                       )}
-                    </tr>
+                    </tr> 
                   ))}
                 </thead>
               </table>
