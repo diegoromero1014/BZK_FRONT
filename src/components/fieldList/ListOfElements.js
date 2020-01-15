@@ -113,7 +113,8 @@ class ListOfElements extends React.Component {
                 onCancelCallback: () => { }
             },
             {
-                confirmButtonText: 'Sí, estoy seguro!'
+                confirmButtonText: 'Sí, estoy seguro!',
+                confirmButtonColor='#DD6B55'
             }
         );
     }
