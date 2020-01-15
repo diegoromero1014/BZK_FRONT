@@ -99,7 +99,7 @@ export class ParticipantsByClient extends Component {
         }
     }
 
-    handleCloseModal = () => this.setState({ open: false, selectedContactInformation: null, selectedContact: null, editing: false });
+    handleCloseModal = () => this.setState({ open: false, selectedContactInformation: null, selectedContact: '', editing: false });
 
     render() {
         const { contacts, participants, disabled, reducerGlobal } = this.props;
@@ -115,9 +115,8 @@ export class ParticipantsByClient extends Component {
                             name="txtContactoCliente"
                             labelInput="Seleccione..."
                             onChange={value => {
-                                this.setState({ selectedContact: value, open: true });
-
                                 if (value && value !== "") {
+                                    this.setState({ selectedContact: value, open: true });
                                     this.handleSetInformation(value);
                                 }
                             }}
