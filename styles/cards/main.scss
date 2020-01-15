@@ -1,7 +1,12 @@
 .card-container {
     cursor: pointer;
     overflow: hidden;
-    margin: 13px !important;
+    margin: 0px !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    margin-bottom: 10px !important;
+    -webkit-box-shadow: 0px 1px 3px 0px #D4D4D5, 0px 0px 0px 1px #D4D4D5 !important;
+    box-shadow: 0px 0px 3px 0px #D4D4D5, 0px 0px 0px 1px #D4D4D5 !important;
 }
 
 .card-container::before {

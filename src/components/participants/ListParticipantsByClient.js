@@ -45,7 +45,10 @@ class ListParticipantsByClient extends Component {
                 }
                 footer={
                     !disabled &&
-                        <a onClick={() => this.handleOnClickDelete(participant.idParticipante)}>
+                        <a onClick={event => {
+                            event.preventDefault();
+                            this.handleOnClickDelete(participant.idParticipante);
+                        }}>
                             <Icon name='delete' />
                             Eliminar
                         </a>
