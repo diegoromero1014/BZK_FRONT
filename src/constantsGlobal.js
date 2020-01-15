@@ -62,9 +62,9 @@ export const TITLE_BANC_PARTICIPANTS = "En esta sección se podrán adicionar co
   "Si desea adicionar un participante y no está creado en Biztrack, haga uso de la sección " +
   "“Otros participantes en la reunión”.";
 export const TITLE_CLIENT_PARTICIPANTS = "En esta sección se podrán adicionar como “Participantes en la reunión por parte del cliente” a los contactos del cliente en Biztrack. Si desea adicionar un participante y que este no quede como contacto haga uso de la sección “Otros participantes en la reunión” \n\n" + 
-"Agregar un participante: \n" 
-"1. Ingrese el nombre del contacto.\n" 
-"2. Seleccione el contacto que desea como participante. Los campos “Cargo”, “Estilo social”, “Actitud frente al grupo”, se alimentan automáticamente de la información del contacto registrada en Bistrack, si salen en blanco deberá: a. Guardar el informe como borrador b. Ir a la pestaña de “contactos” y completar los campos. c. Retomar la edición del informe y agregar el contacto. Crear contacto: Si desea crear un contacto en Biztrack para adicionarlo como participante haga clic en el botón “más” y diligencie todos los campos. Repita los pasos para agregar participante.";
+"\n\nAgregar un participante: \n" +
+"\n\n1. Ingrese el nombre del contacto.\n"  +
+"\n\n2. Seleccione el contacto que desea como participante. Los campos “Cargo”, “Estilo social”, “Actitud frente al grupo”, se alimentan automáticamente de la información del contacto registrada en Bistrack, si salen en blanco deberá: a. Guardar el informe como borrador b. Ir a la pestaña de “contactos” y completar los campos. c. Retomar la edición del informe y agregar el contacto. Crear contacto: Si desea crear un contacto en Biztrack para adicionarlo como participante haga clic en el botón “más” y diligencie todos los campos. Repita los pasos para agregar participante.";
 export const TITLE_OPPORTUNITY_BUSINESS = "Piense en: Medio Ambiente de la Industria, Medio ambiente económico, Mercado, Competencia, Medio Ambiente Político, Legislación, Tendencias Sociales.";
 export const OPTION_REQUIRED = "Debe seleccionar una opción";
 export const VALUE_REQUIERED = "Debe ingresar un valor";
