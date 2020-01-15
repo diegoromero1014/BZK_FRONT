@@ -8,10 +8,6 @@ import { processRules } from '../../validationsFields/rulesField';
 
 class ListOfElements extends React.Component {
 
-    componentDidMount() {
-        //const { setFields, initialValues } = this.props;
-        //setFields(initialValues);
-    }
 
     canAddElement = () => {
         const { elements, maxLength, swtShowMessage, title } = this.props;
@@ -113,7 +109,8 @@ class ListOfElements extends React.Component {
                 onCancelCallback: () => { }
             },
             {
-                confirmButtonText: 'Confirmar'
+                confirmButtonText: 'Sí, estoy seguro!',
+                confirmButtonColor:'#DD6B55'
             }
         );
     }
