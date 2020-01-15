@@ -81,7 +81,7 @@ export class Challenger extends Component {
                         <a name={field} className="clickableBox" onClick={() => this.selectedTabActive(field)}></a>
                     </div>
 
-                    <div className={`content ${field} challenger-dropdown-${field}`}>
+                    <div className={`content challenger-dropdown-${field}`}>
                         <Field type="text" name={field}>
                             {({ field: { name }, form: { setFieldValue, errors } }) =>
                                 <div>

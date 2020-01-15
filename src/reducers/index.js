@@ -72,6 +72,7 @@ import schedulerPrevisitReduser from '../components/sheduler/reducer';
 import fieldListReducer from '../components/fieldList/reducer';
 import questionsReducer from '../components/challenger/reducer';
 import objectListReducer from "../components/listaObjetos/reducer";
+import elementsReducer from "../components/elements/reducer";
 
 export default combineReducers({
     routing: routerReducer,
@@ -146,5 +147,6 @@ export default combineReducers({
     confidentialReducer,
     fieldListReducer,
     questionsReducer,
-    objectListReducer
+    objectListReducer,
+    elementsReducer
 });

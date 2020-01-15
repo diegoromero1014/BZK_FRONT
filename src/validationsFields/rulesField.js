@@ -873,3 +873,7 @@ export const checkPatternClientObjective = value => {
 
     return message;
 }
+
+export const validateHtmlInjection = value => {
+    return !regexHtmlInjection.test(value);
+}

@@ -23,6 +23,7 @@ export const patternOfControlLinkedPayments = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,.\
 export const patternOfClientAddress = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s#();,.\-"/_´']+$/;
 export const patternOfClientNeighborhood = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s#();,.\-"/]+$/;
 export const regexNumbers = /^[0-9]+$/;
+export const patternOfForbiddenCharacter2 = /^[^\s@+\-=].*.*((.|\n)*)$/;
 export const patternOfForbiddenCharacter = /^[@+\-=][\s\S]*$/;
 export const patternOfOpportunityName = /^[a-zA-Z0-9\s()\[\];,."!¡$%&/¿?°#=':´+_\-ÁÉÍÓÚáéíóúÑñÜü]+$/;
 export const patternDecimalNumbers = /^[0-9.]+$/;
