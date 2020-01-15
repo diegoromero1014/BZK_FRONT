@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import { findContactsByClient } from '../contact/actions';
-import { addParticipant, clearParticipants } from './actions';
+import { addParticipant, clearParticipants, deleteParticipant } from './actions';
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import { NUMBER_CONTACTS, KEY_PARTICIPANT_CLIENT } from './constants';
 import { CREAR, MODULE_CONTACTS } from '../../constantsGlobal';
@@ -24,7 +24,8 @@ export class ParticipantsByClient extends Component {
         this.state = {
             selectedContact: null,
             selectedContactInformation: null,
-            open: false
+            open: false,
+            editing: false
         }
     }
 
@@ -37,11 +38,12 @@ export class ParticipantsByClient extends Component {
 
     handleSetInformation = selectedContact => {
         const { contacts, participants, dispatchShowAlert } = this.props;
+        const { editing } = this.state;
 
         let existingContact;
 
-        if(!isNaN(selectedContact)) {
-            existingContact = contacts.find(element => element.id === Number(selectedContact));            
+        if (!isNaN(selectedContact)) {
+            existingContact = contacts.find(element => element.id === Number(selectedContact));
 
             existingContact = {
                 tipoParticipante: KEY_PARTICIPANT_CLIENT,
@@ -53,7 +55,7 @@ export class ParticipantsByClient extends Component {
                 actitudBanco: !existingContact.contactActitudeCompany ? '' : existingContact.contactActitudeCompany,
                 fecha: Date.now(),
                 uuid: _.uniqueId('participanClient_'),
-                nameComplet: existingContact.nameComplet, 
+                nameComplet: existingContact.nameComplet,
                 contactPosition: existingContact.contactPosition,
                 contactSocialStyle: existingContact.contactSocialStyle,
                 contactActitudeCompany: existingContact.contactActitudeCompany
@@ -62,36 +64,42 @@ export class ParticipantsByClient extends Component {
             existingContact = selectedContact;
         }
 
-        if(existingContact) {
+        if (existingContact) {
             this.setState({ selectedContactInformation: existingContact });
         }
     }
 
-    addContact = selectedContact => {        
-        const { dispatchAddParticipant, participants, dispatchShowAlert, limitParticipantsByClient } = this.props;
-        
-        if (selectedContact) {       
-                 
+    addContact = selectedContact => {
+        const { dispatchAddParticipant, participants, dispatchShowAlert, limitParticipantsByClient, dispatchDeleteParticipant } = this.props;
+        const { editing } = this.state;
+
+        if (selectedContact) {
+
             if (limitParticipantsByClient && participants.toArray().filter(participant => participant.tipoParticipante === KEY_PARTICIPANT_CLIENT).length >= limitParticipantsByClient) {
                 dispatchShowAlert('error', "Límite de participantes", "Señor usuario, sólo se pueden agregar máximo 10 participantes por parte del cliente");
                 return;
             }
-            
-            let existingContact = participants.find(element => element.idParticipante === Number(selectedContact.idParticipante));            
 
-            if (!existingContact) {
+            let existingContact = participants.find(element => element.idParticipante === Number(selectedContact.idParticipante));
+
+            if (!existingContact || editing) {
+
+                if(editing) {
+                    dispatchDeleteParticipant(participants.findIndex(item => item.idParticipante === existingContact.idParticipante), KEY_PARTICIPANT_CLIENT);
+                }
+
                 dispatchAddParticipant(selectedContact);
-                this.setState({ selectedContact: ''});
+                this.setState({ selectedContact: '' });
                 this.handleCloseModal();
-            } else {                
+            } else {
                 dispatchShowAlert('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
-                this.setState({ selectedContact: ''});
+                this.setState({ selectedContact: '' });
                 this.handleCloseModal();
             }
         }
     }
 
-    handleCloseModal = () => this.setState({ open: false, selectedContactInformation: null, selectedContact: null });
+    handleCloseModal = () => this.setState({ open: false, selectedContactInformation: null, selectedContact: null, editing: false });
 
     render() {
         const { contacts, participants, disabled, reducerGlobal } = this.props;
@@ -109,7 +117,7 @@ export class ParticipantsByClient extends Component {
                             onChange={value => {
                                 this.setState({ selectedContact: value, open: true });
 
-                                if(value && value !== "") {
+                                if (value && value !== "") {
                                     this.handleSetInformation(value);
                                 }
                             }}
@@ -129,12 +137,12 @@ export class ParticipantsByClient extends Component {
                 </Row>
 
 
-                <div className='participants-client-list'>                
+                <div className='participants-client-list'>
                     <Row>
                         {data.length > 0 ?
                             <Col xs={12} md={12} lg={12}>
                                 <ListParticipantsByClient data={data} disabled={disabled} handleOpenModal={selectedRecord => {
-                                    this.setState({ open: true, selectedContact: null });
+                                    this.setState({ open: true, selectedContact: null, editing: true });
                                     this.handleSetInformation(selectedRecord);
                                 }} />
                             </Col>
@@ -153,15 +161,15 @@ export class ParticipantsByClient extends Component {
                         <div className="modalBt4-content modal-content" style={{ zIndex: 100 }}>
                             <div className="modalBt4-header modal-header">
                                 <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Participante</h4>
-                                
+
                                 <button type="button" onClick={this.handleCloseModal} className="close" data-dismiss="modal" role="close">
                                     <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
 
-                            {selectedContactInformation && 
-                                <ParticipantInformation selectedRecord={selectedContactInformation} handleCloseModal={this.handleCloseModal} addContact={this.addContact}/>
+                            {selectedContactInformation &&
+                                <ParticipantInformation selectedRecord={selectedContactInformation} handleCloseModal={this.handleCloseModal} addContact={this.addContact} />
                             }
                         </div>
                     </div>
@@ -183,7 +191,8 @@ const mapDispatchToProps = dispatch => {
         dispatchAddParticipant: addParticipant,
         dispatchClearParticipants: clearParticipants,
         dispatchShowAlert: swtShowMessage,
-        dispatchValidatePermissionsByModule: validatePermissionsByModule
+        dispatchValidatePermissionsByModule: validatePermissionsByModule,
+        dispatchDeleteParticipant: deleteParticipant
     }, dispatch)
 };
 
