@@ -113,7 +113,7 @@ describe('Test previsitPage', () => {
             dispatchClearParticipants,
             dispatchGetAllQuestions,
             dispatchDisabledBlockedReport,
-            participants: [],
+            participants: Immutable.List(),
             fromModal: false,
             closeModal
         };      
@@ -952,6 +952,34 @@ describe('Test previsitPage', () => {
             wrapper.instance().closeShowErrorBlockedPrevisit();                        
             expect(redirectUrl.notCalled).to.equal(true);
         });
+
+        it('objectivesInterlocutor should filter participantsList', () => {
+            defaultProps.participants = Immutable.List([
+                {
+                    id: 1,
+                    nombreParticipante: 'Daniel',
+                    tipoParticipante: KEY_PARTICIPANT_CLIENT,
+                    interlocutorObjs: [{
+                        id: 1,
+                        text: 'Objetivo 1'
+                    }]
+                },
+                {
+                    id: 2,
+                    nombreParticipante: 'Camilo',
+                    tipoParticipante: KEY_PARTICIPANT_CLIENT,
+                    interlocutorObjs: []
+                },
+                {
+                    id: 3,
+                    nombreParticipante: 'Edwin',
+                    tipoParticipante: KEY_PARTICIPANT_CLIENT
+                }
+            ]);
+            const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
+            wrapper.instance().objectivesInterlocutor();
+            expect(dispatchSwtShowMessage).to.have.been.called.once;
+        })
     });
     
 });
