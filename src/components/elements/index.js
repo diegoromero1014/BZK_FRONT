@@ -55,8 +55,8 @@ class ElementsComponent extends Component {
         return (
             <form>
                 <div className={'elements-container'}>
-                    <Row style={{ padding: "10px 10px 20px 20px", marginBottom: 30 }} end="xs">
-                        <Col xs={12} md={12} lg={12}>
+                    <Row style={{ padding: "10px 10px 20px 20px", marginBottom: 30, display: 'flex', flexDirection: 'row' }} end="xs">
+                        <Col xs={1} md={1} lg={1} style={{ justifySelf: 'end' }}>
                             <ToolTip text={messageButton}>
                                 <Icon
                                     className='icon-message-elements'
