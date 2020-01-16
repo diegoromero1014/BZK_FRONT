@@ -1,10 +1,9 @@
-:root{
-    --colorBlue: #2671D7;
-    --colorGray: #C1C1C1;
-    --colorWhite: #fff;
-    --colorTitlesLines: #CEA70B;
-    --colorHover: #66778D;
-}
+
+$colorBlue: #2671D7;
+$colorGray: #C1C1C1;
+$colorWhite: #fff;
+$colorTitlesLines: #CEA70B;
+$colorHover: #66778D;
 
 .container-listaObjetos{
     width: 100%;
@@ -13,13 +12,13 @@
 
 .header-component{
     font-size: 25px;
-    color: var(--colorTitlesLines);
+    color:$colorTitlesLines ;
     margin-top: 5px;
     margin-bottom: 0px;
 }
 
 .line-topComponent{
-    border-top: 1px dotted var(--colorTitlesLines);
+    border-top: 1px dotted $colorTitlesLines;
     width: 100%;
     margin-bottom: 10px;
 }
@@ -50,8 +49,8 @@
 .button-openField{
     margin-right: 10px;
     border: none;
-    background-color: var(--colorBlue);
-    color: var(--colorWhite);
+    background-color: $colorBlue;
+    color: $colorWhite;
     border-radius: 3px;
     cursor: pointer;
     font-size: 15px;
@@ -61,8 +60,8 @@
 .button-openFieldChecked{
     margin-right: 10px;
     border: none;
-    background-color: var(--colorHover);
-    color: var(--colorWhite);
+    background-color: $colorHover;
+    color: $colorWhite;
     border-radius: 3px;
     cursor: no-drop;
     font-size: 15px;
@@ -96,15 +95,15 @@
     width: 7rem;
     padding: 10px 20px;
     border: none;
-    background-color: var(--colorBlue);
-    color: var(--colorWhite);
+    background-color: $colorBlue;
+    color: $colorWhite;
     border-radius: 3px;
     font-size: 16px;
     cursor: pointer;
 }
 
 .button-add:hover{
-    background-color: var(--colorHover);
+    background-color: $colorHover;
 }
 
 .button-cancel{
@@ -112,8 +111,8 @@
     width: 7rem;
     padding: 10px 20px;
     border: none;
-    background-color:  var(--colorGray);
-    color: var(--colorWhite);
+    background-color:  $colorGray;
+    color: $colorWhite;
     border-radius: 3px;
     font-size: 16px;
     cursor: pointer;

@@ -126,9 +126,9 @@ export class FormCreateProspect extends Component {
         if (typeConfirm === "create") {
             const {
                 fields: {
-                    razonSocial, descriptionCompany, reportVirtual, extractsVirtual, marcGeren, necesitaLME, idCIIU, idSubCIIU,
-                    address, telephone, district, country, city, province, annualSales, assets, centroDecision, liabilities, operatingIncome,
-                    nonOperatingIncome, expenses, dateSalesAnnuals, idCelula, segment, subSegment, firstName, middleName, lastName, middleLastName, occupation
+                    razonSocial, descriptionCompany, reportVirtual, extractsVirtual, idCIIU, idSubCIIU,
+                    address, telephone, district, country, city, province, annualSales, assets, liabilities, operatingIncome,
+                    nonOperatingIncome, expenses, dateSalesAnnuals, idCelula, segment, subSegment,
                 }, idTupeDocument, numberDocument, changeStateSaveData, clientType
             } = this.props;
 
@@ -208,7 +208,7 @@ export class FormCreateProspect extends Component {
                             this.setState({ showEr: true });
                         }
                     }
-                }, (reason) => {
+                }, () => {
                     changeStateSaveData(false, "");
                     this.setState({ showEr: true });
                 });
@@ -253,14 +253,14 @@ export class FormCreateProspect extends Component {
     }
 
     _onChangeProvince(val) {
-        const { fields: { country, province, city } } = this.props;
+        const { fields: { province, city } } = this.props;
         province.onChange(val);
         const { consultListWithParameterUbication } = this.props;
         consultListWithParameterUbication(constants.FILTER_CITY, province.value);
         city.onChange('');
     }
 
-    _submitFormCreateProspect(formData) {
+    _submitFormCreateProspect() {
         messageConfirm = "Recuerde que una vez creado el prospecto sólo podrá ser modificado por el gerente de cuenta Bancolombia o su asistente ¿está seguro de guardar la información?";
         titleConfirm = "Confirmación creación";
         typeConfirm = "create";
@@ -762,7 +762,7 @@ export default reduxForm({
     form: 'submitValidation',
     fields,
     validate,
-    onSubmitFail: errors => {
+    onSubmitFail: () => {
         thisForm.setState({ showEr: true });
     }
 }, mapStateToProps, mapDispatchToProps)(FormCreateProspect);

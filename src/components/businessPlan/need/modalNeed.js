@@ -167,7 +167,7 @@ export class ModalNeed extends Component {
     }
 
     _changeProductFamily(currencyValue) {
-        const { selectsReducer, fields: { needProduct }, consultListWithParameterUbication } = this.props;
+        const { fields: { needProduct }, consultListWithParameterUbication } = this.props;
         if (!currencyValue || currencyValue == null) {
             needProduct.onChange('');
         }
@@ -176,7 +176,7 @@ export class ModalNeed extends Component {
     }
 
     _handleCreateNeed() {
-        const { fields: { needType, idEmployee, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, handleSubmit, error, addNeed, editNeed, needEdit, swtShowMessage } = this.props;
+        const { fields: { needType, idEmployee, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed }, selectsReducer, addNeed, editNeed, needEdit, swtShowMessage } = this.props;
         let status = _.get(_.filter(selectsReducer.get(TASK_STATUS), ['id', parseInt(statusNeed.value)]), '[0].value');
         let implementation = _.get(_.filter(selectsReducer.get(IMPLEMENTATION_TIMELINE), ['id', parseInt(needImplementation.value)]), '[0].value');
         let needC = _.get(_.filter(selectsReducer.get('pipelineClientNeeds'), ['id', parseInt(needType.value)]), '[0].need');
@@ -193,12 +193,7 @@ export class ModalNeed extends Component {
             nameUsuario = needResponsable.value;
             idUsuario = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
         }
-        let jsonValidate = {
-            descriptionNeed: descriptionNeed.value,
-            needTask: needTask.value,
-            needBenefits: needBenefits.value,
-        };
-
+       
         if (needEdit !== undefined) {
             let idNeed = (needEdit.userTask !== null && needEdit.userTask !== undefined  && needEdit.userTask.id !== undefined) ? needEdit.userTask.id : null;
             needEdit.needIdType = needType.value;
@@ -307,14 +302,14 @@ export class ModalNeed extends Component {
     }
 
     componentWillMount() {
-        const { getClientNeeds, getMasterDataFields, selectsReducer, consultDataSelect } = this.props;
+        const { getClientNeeds, getMasterDataFields, consultDataSelect } = this.props;
         getClientNeeds();
         consultDataSelect(PRODUCTS, PRODUCTS_MASK);
         getMasterDataFields([IMPLEMENTATION_TIMELINE, TASK_STATUS, PRODUCT_FAMILY]);
     }
 
     render() {
-        const { initialValues, selectsReducer, disabled, handleSubmit, error,
+        const { selectsReducer, disabled, handleSubmit,
             fields: { needType, descriptionNeed, productFamily, needProduct, needImplementation, needTask, needBenefits, needResponsable, needDate, statusNeed, idEmployee } } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateNeed)}>

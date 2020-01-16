@@ -74,12 +74,17 @@ export class ParticipantsByClient extends Component {
         }
     }
 
+    lengthParticipants = () => {
+        const { participants } = this.props;
+        return participants.toArray().filter(participant => participant.tipoParticipante === KEY_PARTICIPANT_CLIENT).length;
+    }
+
     addContact = selectedContact => {
         const { dispatchAddParticipant, participants, dispatchShowAlert, limitParticipantsByClient, dispatchDeleteParticipant } = this.props;
         
         if (selectedContact) {
 
-            if (limitParticipantsByClient && participants.toArray().filter(participant => participant.tipoParticipante === KEY_PARTICIPANT_CLIENT).length >= limitParticipantsByClient) {
+            if (limitParticipantsByClient && this.lengthParticipants() >= limitParticipantsByClient && !this.editing) {
                 dispatchShowAlert('error', "Límite de participantes", "Señor usuario, sólo se pueden agregar máximo 10 participantes por parte del cliente");
                 return;
             }
@@ -108,6 +113,22 @@ export class ParticipantsByClient extends Component {
         this.editing = false;
     }
 
+    handleOnChange = value => {
+        const { limitParticipantsByClient, dispatchShowAlert } = this.props;
+
+        if (value && value !== "") {
+
+            if (limitParticipantsByClient && this.lengthParticipants() >= limitParticipantsByClient && !this.editing) {
+                dispatchShowAlert('error', "Límite de participantes", "Señor usuario, sólo se pueden agregar máximo 10 participantes por parte del cliente");
+                return;
+            }
+            
+            this.setState({ selectedContact: value, open: true });
+            this.editing = false;
+            this.handleSetInformation(value);
+        }
+    }
+
     render() {
         const { contacts, participants, disabled, reducerGlobal } = this.props;
         const { open, selectedContact, selectedContactInformation } = this.state;
@@ -121,13 +142,7 @@ export class ParticipantsByClient extends Component {
                         <ComboBox
                             name="txtContactoCliente"
                             labelInput="Seleccione..."
-                            onChange={value => {
-                                if (value && value !== "") {
-                                    this.setState({ selectedContact: value, open: true });
-                                    this.editing = false;
-                                    this.handleSetInformation(value);
-                                }
-                            }}
+                            onChange={this.handleOnChange}
                             value={selectedContact}
                             valueProp={'id'}
                             textProp={'additional'}

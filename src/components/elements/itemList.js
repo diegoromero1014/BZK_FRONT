@@ -6,6 +6,8 @@ let selectedRecord;
 
 const ItemList = ({ data, handleDelete, handleEdit, title, show }) => {
     
+    if(!show) { selectedRecord = null; }
+    
     if(data.length) { 
         return (
             <Table basic>

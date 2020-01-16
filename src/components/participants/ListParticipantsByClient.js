@@ -35,11 +35,19 @@ class ListParticipantsByClient extends Component {
                             <span>{participant.cargo}</span><br />
                             <span>{participant.estiloSocial}</span><br />
                             <span>{participant.actitudBanco}</span><br /> <br />
-                            <Tooltip text={'Click para ver más'}>
+                            {!disabled ?
+                                <Tooltip text={'Click para ver más'}>
+                                    <span>
+                                        <a>- Objetivos del interlocutor</a>
+                                    </span>        
+                                </Tooltip>
+                                
+                                :
+
                                 <span>
                                     <a>- Objetivos del interlocutor</a>
                                 </span>        
-                            </Tooltip>
+                            }
                         </Card.Description>
                     </div>
                 }

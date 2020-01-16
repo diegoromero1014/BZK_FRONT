@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { clientsFindServer, changePage, changeKeyword } from './actions';
-import { NUMBER_RECORDS } from './constants';
 import { redirectUrl } from '../globalComponents/actions';
 import SweetAlert from '../sweetalertFocus';
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import _ from 'lodash';
 import { saveSelectValue, backButtonFilter, clearSaveSelectedValue } from '../clients/actions';
 
-let varBackButtonFilter = false;
 
 class SearchBarClient extends Component {
 
@@ -29,7 +27,7 @@ class SearchBarClient extends Component {
   }
 
   componentWillMount() {
-    const { login, updateTabSeleted, clientR, changeKeyword, backButtonFilter, clearSaveSelectedValue } = this.props;
+    const { updateTabSeleted } = this.props;
 
 
     updateTabSeleted(null);
@@ -39,11 +37,7 @@ class SearchBarClient extends Component {
   }
 
   _handleChangeKeyword(e) {
-    const { changeKeyword, saveSelectValue, handleClientsFind } = this.props;
-    const jsonFilter = {
-      name: "searchBarClient",
-      value: e.target.value
-    };
+    const { changeKeyword } = this.props;
 
     changeKeyword(e.target.value);
     if (e.keyCode === 13 || e.which === 13) {
@@ -97,7 +91,7 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({ clientR, tabReducer }, ownerProps) {
+function mapStateToProps({ clientR, tabReducer }) {
   return {
     clientR,
     tabReducer

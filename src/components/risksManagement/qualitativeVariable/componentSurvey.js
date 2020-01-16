@@ -50,7 +50,7 @@ class ComponentSurvey extends Component {
     }
 
     _reloadSurvey() {
-        const { clearSurvey, validatePermissionsByModule, getSurveyQualitativeVarible, swtShowMessage, changeStateSaveData } = this.props;
+        const { clearSurvey, getSurveyQualitativeVarible, swtShowMessage, changeStateSaveData } = this.props;
 
         clearSurvey();
         changeStateSaveData(true, MESSAGE_LOAD_DATA);
@@ -262,7 +262,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ reducerGlobal, clientInformacion, qualitativeVariableReducer }, ownerProps) {
+function mapStateToProps({ reducerGlobal, clientInformacion, qualitativeVariableReducer }) {
     return {
         reducerGlobal,
         clientInformacion,

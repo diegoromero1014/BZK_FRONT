@@ -565,13 +565,13 @@ export class ComponentStudyCredit extends Component {
                             showSuccessMessage: true
                         });
                     }
-                }, (reason) => {
+                }, () => {
                     changeStateSaveData(false, "");
                     swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                 });
             }
 
-        }).catch((error) => {
+        }).catch(() => {
             showLoading(false, "Cargando...");
         })
 
@@ -592,7 +592,7 @@ export class ComponentStudyCredit extends Component {
             if (!validateResponse(data)) {
                 swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
             }
-        }, (reason) => {
+        }, () => {
             changeStateSaveData(false, "");
             swtShowMessage('error', TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
@@ -717,7 +717,7 @@ export class ComponentStudyCredit extends Component {
 
         // Informar al backend que el informe se puede liberar
         if (this.state.isEditable) {
-            stopBlockToReport(idClient, BLOCK_CREDIT_STUDY).then((success) => {
+            stopBlockToReport(idClient, BLOCK_CREDIT_STUDY).then(() => {
             }).catch(() => {
             })
         }
@@ -742,11 +742,11 @@ export class ComponentStudyCredit extends Component {
                 const value = _.get(_.find(data.payload.data.data.masterDataDetailEntries, ['id', parseInt(infoClient.segment)]), 'value');
                 if (!_.isUndefined(value)) {
                     if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {
-                        consultListWithParameterUbication(constantsSelects.CUSTOMER_TYPOLOGY, infoClient.segment).then((data) => {
+                        consultListWithParameterUbication(constantsSelects.CUSTOMER_TYPOLOGY, infoClient.segment).then(() => {
                             customerTypology.onChange(infoClient.idCustomerTypology);
                         });;
                     } else {
-                        getMasterDataFields([constantsSelects.CUSTOMER_TYPOLOGY], true).then((data) => {
+                        getMasterDataFields([constantsSelects.CUSTOMER_TYPOLOGY], true).then(() => {
                             customerTypology.onChange(infoClient.idCustomerTypology);
                         });;
                     }
@@ -1091,7 +1091,7 @@ function mapDispatchToProps(dispatch) {
     );
 }
 
-function mapStateToProps({ selectsReducer, clientInformacion, studyCreditReducer, reducerGlobal }, ownerProps) {
+function mapStateToProps({ selectsReducer, clientInformacion, studyCreditReducer, reducerGlobal }) {
     return {
         selectsReducer,
         clientInformacion,
