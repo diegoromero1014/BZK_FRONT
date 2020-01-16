@@ -11,6 +11,8 @@ import { cleanList, addToList, createList } from '../elements/actions';
 import { OBJECTIVES, OBJECTIVES_ERROR_MSG, MANDATORY_OBJECTIVES_MSG, OBJECTIVES_OPEN_ERROR_MSG, OBJECTIVES_PLACEHOLDER } from './constants';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import Tooltip from "../toolTip/toolTipComponent";
+import { downloadFilePDF } from '../contact/actions';
+import { FILE_OPTION_SOCIAL_STYLE_CONTACT } from '../../constantsGlobal';
 
 export class ParticipantInformation extends Component {
 
@@ -56,6 +58,25 @@ export class ParticipantInformation extends Component {
             interlocutorObjs.forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1) }), name: OBJECTIVES, old: null }));
         }
     }
+
+    handleDownloadFileSocialStyle = () => {
+        const { dispatchDownloadFilePDF } = this.props;
+        dispatchDownloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
+    }
+
+    renderLabelSocialStyle = ({ name, message, nullable }) => (
+        <div style={{ display: 'flex', 'flex-direction': 'row', 'justify-content': 'space-between' }}>
+           <strong style={{ marginBottom: 10 }}>
+              <span>{`${name}  ${!nullable ? '(' : ''}`} </span>
+              {!nullable && <span style={{ color: 'red' }}>*</span>}
+              {!nullable && ')'}
+           </strong>
+    
+           <Tooltip text='Descargar archivo de estilo social'>
+                <i onClick={this.handleDownloadFileSocialStyle} style={{ marginLeft: "0px", cursor: "pointer", fontSize: "13px" }} className="red file pdf outline icon" />
+            </Tooltip>
+        </div>
+    );
 
     render() {
         const { fields: { name, position, socialStyle, attitude } } = this.state;
@@ -129,7 +150,7 @@ export class ParticipantInformation extends Component {
                         <Field type="text" name="socialStyle">
                             {({ field: { value, onChange, onBlur } }) =>
                                 <div>
-                                    {renderLabel(socialStyle)}
+                                    {this.renderLabelSocialStyle(socialStyle)}
                                     <Input
                                         name="socialStyle"
                                         value={value}
@@ -180,18 +201,18 @@ export class ParticipantInformation extends Component {
                             <span style={{ fontSize: "20px" }}>{`Objetivos del interlocutor (`}</span>
                             <span style={{ color: 'red', fontSize: 16 }}>*</span>
                             <span style={{ fontSize: "20px" }}>{`)`}</span>
-  
+
                             <Tooltip text={MANDATORY_OBJECTIVES_MSG}>
                                 <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
                             </Tooltip>
-                            
+
                         </div>
                     </Col>
                 </Row>
 
                 <Row style={{ marginTop: '-65px' }}>
                     <Col xs={12} md={12} lg={12}>
-                        <ElementsComponent schema={schema} placeholder={OBJECTIVES_PLACEHOLDER} messageButton='Agregar' name={OBJECTIVES} max={3} title={'Objetivos del interlocutor'}/>
+                        <ElementsComponent schema={schema} placeholder={OBJECTIVES_PLACEHOLDER} messageButton='Agregar' name={OBJECTIVES} max={3} title={'Objetivos del interlocutor'} />
                     </Col>
                 </Row>
 
@@ -218,7 +239,8 @@ const mapDispatchToProps = dispatch => {
         dispatchCleanList: cleanList,
         dispatchAddToList: addToList,
         dispatchCreateList: createList,
-        dispatchSwtShowMessage: swtShowMessage
+        dispatchSwtShowMessage: swtShowMessage,
+        dispatchDownloadFilePDF: downloadFilePDF
     }, dispatch)
 };
 
@@ -228,8 +250,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(
             const { elementsReducer, dispatchSwtShowMessage } = props;
 
             let data = elementsReducer[OBJECTIVES];
-           
-            if(data && data.open) {
+
+            if (data && data.open) {
                 dispatchSwtShowMessage('error', 'Error', OBJECTIVES_OPEN_ERROR_MSG);
                 return;
             }
@@ -239,7 +261,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(
                 return;
             }
 
-            let newElement = Object.assign({}, props.selectedRecord, { interlocutorObjs: data.elements }) 
+            let newElement = Object.assign({}, props.selectedRecord, { interlocutorObjs: data.elements })
 
             props.addContact(newElement);
         },
