@@ -1,4 +1,4 @@
-import ReCaptcha from "../../../../src/components/recaptcha/component";
+import ReCaptcha from "../../../../src/components/recaptcha/ReCaptcha";
 
 describe('Test reCaptcha component', () => {
 

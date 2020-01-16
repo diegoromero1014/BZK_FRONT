@@ -18,7 +18,7 @@ import { changeActiveItemMenu } from '../menu/actions';
 import { isInternetExplorer } from '../../utils/browserValidation';
 
 import SweetAlert from "../sweetalertFocus";
-import ReCaptcha from '../recaptcha/component';
+import ReCaptcha from '../recaptcha/ReCaptcha';
 import {clearCache} from '../../utils/catchRequest';
 import { changeTokenStatus } from '../dashboard/actions';
 
