@@ -405,7 +405,7 @@ class FormEdit extends Component {
             }
 
             //Adicionar participantes por parte del cliente
-            _.forIn(part.participatingContacts, function (value, key) {
+            _.forIn(part.participatingContacts, function (value) {
                 const uuid = _.uniqueId('participanClient_');
                 let clientParticipant = {
                     tipoParticipante: 'client',
@@ -426,7 +426,7 @@ class FormEdit extends Component {
             });
 
             //Adicionar participantes por parte de bancolombia
-            _.forIn(part.participatingEmployees, function (value, key) {
+            _.forIn(part.participatingEmployees, function (value) {
                 const uuid = _.uniqueId('participanBanco_');
                 let clientParticipant = {
                     tipoParticipante: 'banco',
