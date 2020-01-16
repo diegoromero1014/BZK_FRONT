@@ -178,8 +178,8 @@ export class ParticipantInformation extends Component {
                             <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
                             <i className="browser icon" style={{ fontSize: "20px" }} />
                             <span style={{ fontSize: "20px" }}>{`Objetivos del interlocutor (`}</span>
-                            <span style={{ color: 'red' }}>*</span>
-                            )
+                            <span style={{ color: 'red', fontSize: 16 }}>*</span>
+                            <span style={{ fontSize: "20px" }}>{`)`}</span>
   
                             <Tooltip text={MANDATORY_OBJECTIVES_MSG}>
                                 <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />

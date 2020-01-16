@@ -41,7 +41,7 @@ class ElementsComponent extends Component {
     }
     
     render() {
-        const { placeholder, messageButton, handleSubmit, name, elementsReducer, max, resetForm, title, dispatchSetToShow } = this.props;
+        const { placeholder, messageButton, handleSubmit, name, elementsReducer, max, resetForm, title, dispatchSetToShow, values: { objectEdited } } = this.props;
         const { show } = this.state;
 
         let data = elementsReducer[name];
@@ -117,7 +117,8 @@ class ElementsComponent extends Component {
                                             }
                                         }}
                                     >
-                                        Agregar
+                                    { !objectEdited ? 'Agregar' : 'Modificar' }
+                                        
                                     </button>
                                 </Col>
                                 <Col xs={12} md={12} lg={12}>
