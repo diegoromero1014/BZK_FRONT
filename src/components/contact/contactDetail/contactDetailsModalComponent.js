@@ -116,7 +116,7 @@ export class ContactDetailsModalComponent extends Component {
             FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP
         ];
 
-        getMasterDataFields(masterData).then(function (data) {
+        getMasterDataFields(masterData).then(function () {
             getContactDetails(contactId, idClient)
             .then(function (data) {
                 showLoading(false, "");                           
@@ -155,7 +155,7 @@ export class ContactDetailsModalComponent extends Component {
     }
 
     _genero(val) {
-        const { fields: { contactGender }, selectsReducer, contactDetail } = this.props;
+        const { fields: { contactGender }, selectsReducer } = this.props;
         var femenino = ['Señora', 'Señorita', 'Doctora'];
         var masculino = ['Señor', 'Doctor', 'Padre'];
         var genero;
@@ -360,7 +360,7 @@ export class ContactDetailsModalComponent extends Component {
                     swtShowMessage('error', 'Error editando contacto', 'Señor usuario, ocurrió un error editando el contacto.');
                 }
             }
-        }, (reason) => {
+        }, () => {
             changeStateSaveData(false, "");
             swtShowMessage('error', 'Error editando contacto', 'Señor usuario, ocurrió un error editando el contacto.');
         });
@@ -434,7 +434,7 @@ export class ContactDetailsModalComponent extends Component {
                     swtShowMessage('error', 'Error actualizando información', 'Señor usuario, ocurrió un error guardando la información.');
                 }
             }
-        }, (reason) => {
+        }, () => {
             changeStateSaveData(false, "");
             swtShowMessage('error', 'Error actualizando información', 'Señor usuario, ocurrió un error guardando la información.');
         });
@@ -988,7 +988,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal, clientInformacion }, { fields }, ownerProps) {
+function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal, clientInformacion }) {
     const contact = contactDetail.get('contactDetailList');
     const clientInfo = Object.assign({}, clientInformacion.get('responseClientInfo'));
     if (contact) {

@@ -276,7 +276,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ navBar, customerStory, clientInformacion, selectsReducer, reducerGlobal }, ownerProps) {
+function mapStateToProps({ navBar, customerStory, clientInformacion, selectsReducer, reducerGlobal }) {
     return {
         navBar,
         customerStory,

@@ -337,7 +337,7 @@ class ModalCreateRelationship extends Component {
 
 
     render() {
-        const { fields: { contactTypeOfContact, contactFunctions, contactLineOfBusiness, idClient, nameClient, economicGroupName },
+        const { fields: { contactTypeOfContact, contactFunctions, contactLineOfBusiness, nameClient, economicGroupName },
             handleSubmit, filterContactsReducer, selectsReducer, functionClose, reducerGlobal } = this.props;
         return (
             <div className="modalBt4-dialog modalBt4-lg0" style={{ width: '70%' }}>
@@ -489,7 +489,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ filterContactsReducer, reducerGlobal, contactDetail, selectsReducer }, { ownerProps }) {
+function mapStateToProps({ filterContactsReducer, reducerGlobal, contactDetail, selectsReducer }) {
     return {
         filterContactsReducer,
         reducerGlobal,
@@ -503,7 +503,7 @@ export default reduxForm({
     form: 'validationCreateRelationship',
     fields,
     validate,
-    onSubmitFail: errors => {
+    onSubmitFail: () => {
         thisForm.setState({
             showErrorForm: true,
             typeView: "error",
