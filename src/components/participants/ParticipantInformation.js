@@ -12,7 +12,7 @@ import { OBJECTIVES, OBJECTIVES_ERROR_MSG, MANDATORY_OBJECTIVES_MSG, OBJECTIVES_
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import Tooltip from "../toolTip/toolTipComponent";
 
-class ParticipantInformation extends Component {
+export class ParticipantInformation extends Component {
 
     constructor(props) {
         super(props);
@@ -177,7 +177,7 @@ class ParticipantInformation extends Component {
                         <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
                             <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
                             <i className="browser icon" style={{ fontSize: "20px" }} />
-                            <span>{`Objetivos del interlocutor (`}</span>
+                            <span style={{ fontSize: "20px" }}>{`Objetivos del interlocutor (`}</span>
                             <span style={{ color: 'red' }}>*</span>
                             )
   
