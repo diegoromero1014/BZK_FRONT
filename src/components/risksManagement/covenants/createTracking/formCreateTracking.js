@@ -77,7 +77,7 @@ export class FormCreateTracking extends Component {
     }
 
     _onChangeValidCovenant(val) {
-        const { selectsReducer, fields: { validCovenant, fullfillmentCovenant } } = this.props;
+        const { fields: { validCovenant, fullfillmentCovenant } } = this.props;
         this.validateCovenantObservation(val, fullfillmentCovenant.value);
         validCovenant.onChange(val);
     }
@@ -166,13 +166,9 @@ export class FormCreateTracking extends Component {
     render() {
         const {
             fields: { validCovenant, fullfillmentCovenant, observedValue, dateFinancialStatements, observations },
-            handleSubmit, selectsReducer, infoCovenant
+            handleSubmit, selectsReducer
         } = this.props;
-        /* if (!_.isEmpty(validCovenant.value)) {
-             isMandatoryObservations = _.isEmpty(observations.value) && !_.isEqual(_.get(_.find(_.toArray(selectsReducer.get(VALID_COVENANT)), (item) => item.id == validCovenant.value), 'value'), STR_YES);
-         } else {
-             isMandatoryObservations = false;
-         }*/
+        
         return (
             <form onSubmit={handleSubmit(this._handleCreateTracking)}>
                 <div className="tab-content break-word" style={{
@@ -291,7 +287,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ selectsReducer, reducerGlobal, covenant, alertCovenant }, ownerProps) {
+function mapStateToProps({ selectsReducer, reducerGlobal, covenant, alertCovenant }) {
     return {
         selectsReducer,
         reducerGlobal,

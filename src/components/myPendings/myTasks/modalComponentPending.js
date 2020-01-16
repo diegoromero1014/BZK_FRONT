@@ -140,7 +140,7 @@ class ModalComponentPending extends Component {
                 onSessionExpire();
             }
 
-        }, (reason) => {
+        }, () => {
             showLoading(false, '');
             swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
@@ -158,7 +158,7 @@ class ModalComponentPending extends Component {
                 redirectUrl("/login");
             }
             showLoading(false, '');
-        }, (reason) => {
+        }, () => {
             showLoading(false, '');
             swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
@@ -183,7 +183,7 @@ class ModalComponentPending extends Component {
                 redirectUrl("/login");
             }
             showLoading(false, '');
-        }, (reason) => {
+        }, () => {
             showLoading(false, '');
             swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
@@ -256,7 +256,7 @@ class ModalComponentPending extends Component {
 
         consultListWithParameter(TEAM_FOR_EMPLOYEE_REGION_ZONE, { region: "", zone: "" });
 
-        tasksByUser(0, NUMBER_RECORDS, "", null, "").then((data) => {
+        tasksByUser(0, NUMBER_RECORDS, "", null, "").then(() => {
             showLoading(false, '');
         });
 
@@ -265,7 +265,7 @@ class ModalComponentPending extends Component {
         })
     }
 
-    _onChangeRegion(val) {
+    _onChangeRegion() {
         const { fields: { region, zone, team }, consultListWithParameterUbication, consultListWithParameter } = this.props;
 
         consultListWithParameterUbication(LIST_ZONES, region.value);

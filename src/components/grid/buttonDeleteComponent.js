@@ -66,7 +66,7 @@ class ButtonDeleteComponent extends Component {
                 } else {
                     this.setState({ showEr: true });
                 }
-            }, (reason) => {
+            }, () => {
                 this.setState({ showEr: true });
             });
         } else {
@@ -181,7 +181,7 @@ class ButtonDeleteComponent extends Component {
     }
 
     render() {
-        const { actionsDelete, deleteGridReducer } = this.props;
+        const { actionsDelete } = this.props;
         return (
             <td style={{ padding: '10px', textAlign: 'center' }}>
                 <button onClick={this._confirmDeleteEntity} className="btn btn-sm  btn-danger">
@@ -256,7 +256,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ deleteGridReducer, participants, tasks, needs, areas, contactsByFunctionOrType }, ownerProps) {
+function mapStateToProps({ deleteGridReducer, participants, tasks, needs, areas, contactsByFunctionOrType }) {
     return {
         deleteGridReducer,
         participants,

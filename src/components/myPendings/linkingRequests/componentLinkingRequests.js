@@ -48,9 +48,9 @@ class ComponentAssigned extends Component {
         const { getLinkRequests, changePage, changeStateSaveData } = this.props;
         changeStateSaveData(true, "Cargando..");
         changePage(1);
-        getLinkRequests(PAGE_INITIAL, NUMBER_RECORDS, this.state.keywordLinkingRequests).then((data) => {
+        getLinkRequests(PAGE_INITIAL, NUMBER_RECORDS, this.state.keywordLinkingRequests).then(() => {
             changeStateSaveData(false, "");
-        }, (reason) => {
+        }, () => {
             changeStateSaveData(false, "");
             swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
@@ -60,12 +60,12 @@ class ComponentAssigned extends Component {
         const { getLinkRequests, changePage } = this.props;
         changeStateSaveData(true, "Cargando..");
         changePage(1);
-        getLinkRequests(PAGE_INITIAL, NUMBER_RECORDS, null).then((data) => {
+        getLinkRequests(PAGE_INITIAL, NUMBER_RECORDS, null).then(() => {
             this.setState({
                 keywordLinkingRequests: '',
             });
             changeStateSaveData(false, "");
-        }, (reason) => {
+        }, () => {
             changeStateSaveData(false, "");
             swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
@@ -76,9 +76,9 @@ class ComponentAssigned extends Component {
         updateTitleNavBar("Solicitudes de vinculación");
         validatePermissionsByModule(MODULE_CLIENTS);
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
-        getLinkRequests(PAGE_INITIAL, NUMBER_RECORDS).then((data) => {
+        getLinkRequests(PAGE_INITIAL, NUMBER_RECORDS).then(() => {
             changeStateSaveData(false, "");
-        }, (reason) => {
+        }, () => {
             changeStateSaveData(false, "");
             swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
         });
@@ -93,7 +93,7 @@ class ComponentAssigned extends Component {
     render() {
         const { linkRequestsReducer, getLinkRequests, swtShowMessage, changePage, limitInf,
             changeStateSaveData, reducerGlobal } = this.props;
-        const listLinkRequests = linkRequestsReducer.get('listLinkRequests');
+        
         let visibleTable = 'none';
         let visibleMessage = 'block';
         if (linkRequestsReducer.get('rowCount') !== 0) {
@@ -175,7 +175,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ linkRequestsReducer, reducerGlobal }, ownerProps) {
+function mapStateToProps({ linkRequestsReducer, reducerGlobal }) {
     return {
         linkRequestsReducer,
         reducerGlobal

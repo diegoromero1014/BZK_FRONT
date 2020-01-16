@@ -435,7 +435,7 @@ export class ClientCertify extends React.Component {
                 $('.ui.search.participantBanc').toggleClass('loading');
                 economicGroupsByKeyword(economicGroupName.value).then((data) => {
                     let economicGroup1 = _.get(data, 'payload.data.data');
-                    let economicGroup2 = _.forEach(economicGroup1, function (data1) {
+                    _.forEach(economicGroup1, function (data1) {
                         data1.title = data1.group;
                         data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
                     });
@@ -585,7 +585,7 @@ export class ClientCertify extends React.Component {
 
     _onChangeValueNeedLME(val) {
         const {
-            fields: { necesitaLME, justifyNoLME }, clientInformacion,
+            fields: { necesitaLME, justifyNoLME },
             selectsReducer, deleteNote, notes, updateErrorsNotes
         } = this.props;
         if (val === 'true' || val && initValueJustifyNonLME) {
@@ -670,7 +670,7 @@ export class ClientCertify extends React.Component {
         const { fields: { nitPrincipal, economicGroupName, marcGeren,
             justifyNoGeren, centroDecision, necesitaLME, justifyNoLME, justifyExClient, idCIIU, idSubCIIU,
             annualSales, assets, liabilities, operatingIncome, expenses, nonOperatingIncome, dateSalesAnnuals,
-            addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber,}, 
+            addressClient, country, province, city, telephone, razonSocial, idTypeClient, idNumber}, 
             handleSubmit, clientInformacion, selectsReducer, tabReducer } = this.props;
 
         var infoClient = clientInformacion.get('responseClientInfo');
