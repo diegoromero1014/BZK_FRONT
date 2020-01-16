@@ -9,7 +9,6 @@ import {
     UPDATE_ELEMENT_FROM_LIST,
     EDIT_ELEMENT_FROM_LIST
 } from './constants';
-import { array } from 'yup';
 
 const ID = "fieldlist-id";
 
