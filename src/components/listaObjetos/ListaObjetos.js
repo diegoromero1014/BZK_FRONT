@@ -133,8 +133,8 @@ export class ListaObjetos extends Component {
     });
   };
 
-  checkValidations = (value) => {
-    const fields = { valor: value};
+  checkValidations = campoVacio => {
+    const fields = { valor: campoVacio};
     const validations = {
       valor: {
         rules: [ checkRequired, checkFirstCharacter, checkPatternClientObjective, checkRegexHtmlInjection ]
@@ -151,7 +151,7 @@ export class ListaObjetos extends Component {
     if (!isValid) {
         this.setState({
           error: errors[0]
-        })
+        }) 
     }
     return isValid;
 
