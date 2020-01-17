@@ -6,7 +6,16 @@ export class SectionClientObjectives extends Component {
 
   setInfo = () => {
     const { infoClient } = this.props;
-    return infoClient ? infoClient.clientDetailsRequest.objectives : []
+
+    if (!infoClient) {
+      return []
+    }
+
+    if (!infoClient.clientDetailsRequest) {
+      return []
+    }
+
+    return infoClient.clientDetailsRequest.objectives;
   }
 
   render() {

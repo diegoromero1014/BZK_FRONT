@@ -16,17 +16,17 @@ class SectionOpportunitiesWeaknesses extends Component {
   setInfo = () => {
     const { infoClient } = this.props;
 
-    let weaknesses = infoClient ? infoClient.clientDetailsRequest.weaknesses.map(element => Object.assign({}, element, { idObject: element.id })) : [];
-    let opportunities = infoClient ? infoClient.clientDetailsRequest.opportunities.map(element => Object.assign({}, element, { idObject: element.id })) : [];
+    let weaknesses = [];
+    let opportunities = [];
 
-    if (!weaknesses) {
-      weaknesses = []
+    if (infoClient && infoClient.clientDetailsRequest.weaknesses) {
+      weaknesses = infoClient.clientDetailsRequest.weaknesses.map(element => Object.assign({}, element, { idObject: element.id }));
     }
 
-    if (!opportunities) {
-      opportunities = []
+    if (infoClient && infoClient.clientDetailsRequest.opportunities) {
+      opportunities = infoClient.clientDetailsRequest.opportunities.map(element => Object.assign({}, element, { idObject: element.id }));
     }
-
+ 
     this.setState({
       weaknesses,
       opportunities 
