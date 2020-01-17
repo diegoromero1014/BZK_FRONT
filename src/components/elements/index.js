@@ -12,7 +12,7 @@ import { createList, addToList, removeFromList, setToShow } from './actions';
 import ItemList from './itemList';
 
 
-class ElementsComponent extends Component {
+export class ElementsComponent extends Component {
     constructor(props) {
         super(props);
 
