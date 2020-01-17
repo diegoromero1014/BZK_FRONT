@@ -120,7 +120,7 @@ export class ModalArea extends Component {
   }
 
   _handleCreateArea() {
-    const { fields: { idEmployee, areaDes, actionArea, areaResponsable, areaDate, statusArea }, handleSubmit, error, addArea, editArea, areaEdit, selectsReducer, swtShowMessage, validateWhiteListOnArea } = this.props;
+    const { fields: { idEmployee, areaDes, actionArea, areaResponsable, areaDate, statusArea }, addArea, editArea, areaEdit, selectsReducer, swtShowMessage, validateWhiteListOnArea } = this.props;
     let status = _.get(_.filter(selectsReducer.get(STATUS_AREAS), ['id', parseInt(statusArea.value)]), '[0].value');
     if (areaResponsable.value !== nameUsuario) {
       nameUsuario = areaResponsable.value;
@@ -198,8 +198,7 @@ export class ModalArea extends Component {
 
   updateKeyValueUsersBanco(e) {
     const { fields: { areaResponsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
-    let self = this;
-
+  
     const selector = $('.ui.search.areaResponsable');
     if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
       e.consultclick ? "" : e.preventDefault();
@@ -247,7 +246,7 @@ export class ModalArea extends Component {
   }
 
   render() {
-    const { selectsReducer, disabled, initialValues, fields: { areaDes, actionArea, areaResponsable, areaDate, statusArea, idEmployee }, handleSubmit, error } = this.props;
+    const { selectsReducer, disabled, fields: { areaDes, actionArea, areaResponsable, areaDate, statusArea, idEmployee }, handleSubmit } = this.props;
     return (
       <form onSubmit={handleSubmit(this._handleCreateArea)}>
         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScrollArea">

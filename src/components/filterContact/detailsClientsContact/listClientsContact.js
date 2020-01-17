@@ -71,7 +71,7 @@ class ListClientsContact extends Component {
     }
 
     _selectCheckbox(idClientContact) {
-        const { contactDetail, setArrayDeleteClientContact } = this.props;
+        const { setArrayDeleteClientContact } = this.props;
         var { listRelationshipClients } = this.state;
         const indexDelete = _.indexOf(listRelationshipClients, idClientContact);
         if (indexDelete < 0) {
@@ -89,7 +89,7 @@ class ListClientsContact extends Component {
         const { changeStateSaveData, getContactDetails, contactId } = this.props;
         this.setState({ successDeleteRelationship: false });
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
-        getContactDetails(contactId).then((data) => {
+        getContactDetails(contactId).then(() => {
             changeStateSaveData(false, "");
         });
     }
@@ -98,7 +98,7 @@ class ListClientsContact extends Component {
         this.setState({ showConfirmDelete: false });
         const { contactDetail, deleteRelationshipServer, changeStateSaveData } = this.props;
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
-        deleteRelationshipServer(contactDetail.get('listDeleteClientContact')).then((data) => {
+        deleteRelationshipServer(contactDetail.get('listDeleteClientContact')).then(() => {
             changeStateSaveData(false, "");
             this.setState({ successDeleteRelationship: true });
         });
@@ -243,7 +243,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ filterContactsReducer, contactDetail, clientInformacion }, ownerProps) {
+function mapStateToProps({ filterContactsReducer, contactDetail, clientInformacion }) {
     return {
         filterContactsReducer,
         contactDetail,

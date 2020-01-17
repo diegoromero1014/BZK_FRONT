@@ -115,7 +115,10 @@ describe('Test participants/participantsByClient', () => {
         wrapper.setState({
             selectedContact: 1
         });
-        wrapper.instance().addContact();
+        wrapper.instance().addContact({            
+            idParticipante: 1,
+            name: 'Daniel'            
+        });
         expect(dispatchShowAlert).to.have.been.called.once;
     });
 
@@ -145,7 +148,10 @@ describe('Test participants/participantsByClient', () => {
         wrapper.setState({
             selectedContact: 12
         });
-        wrapper.instance().addContact();
+        wrapper.instance().addContact({
+            idParticipante: 12,
+            name: 'Patri'
+        });
         expect(dispatchAddParticipant).to.have.been.called;
         expect(wrapper.state().selectedContact).to.equal('');
     });

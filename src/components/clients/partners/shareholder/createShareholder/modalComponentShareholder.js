@@ -123,7 +123,7 @@ export class ModalComponentShareholder extends Component {
             this.setState({ noExiste: 'visible' });
             this.setState({ botonBus: 'none' });
           }
-        }, (reason) => {
+        }, () => {
           typeMessage = "error";
           titleMessage = "Error";
           message = "Señor usuario, se presento un error.";
@@ -172,7 +172,7 @@ export class ModalComponentShareholder extends Component {
   }
 
   _onChangeProvince(val) {
-    const { fields: { pais, departamento, ciudad } } = this.props;
+    const { fields: { departamento, ciudad } } = this.props;
     departamento.onChange(val);
     const { consultListWithParameterUbication } = this.props;
     consultListWithParameterUbication(FILTER_CITY, departamento.value);
@@ -268,7 +268,7 @@ export class ModalComponentShareholder extends Component {
         }
       }
       this.setState({ showMessage: true });
-    }, (reason) => {
+    }, () => {
       changeStateSaveData(false, "");
       typeMessage = "error";
       titleMessage = "Error creando accionista";
@@ -545,7 +545,7 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({ selectsReducer, createShareholder, reducerGlobal }, ownerProps) {
+function mapStateToProps({ selectsReducer, createShareholder, reducerGlobal }) {
   return {
     selectsReducer,
     createShareholder,

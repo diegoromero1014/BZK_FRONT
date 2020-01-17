@@ -71,7 +71,7 @@ class ViewAlerts extends Component {
     }
 
     _cleanFilterBlackList() {
-        const {showLoading, clearFilterBlackList} = this.props;
+        const { clearFilterBlackList} = this.props;
         clearFilterBlackList();
     }
 
@@ -151,7 +151,6 @@ class ViewAlerts extends Component {
     render() {
         const {alerts, navBar} = this.props;
         const listAlerts = alerts.get('listAlertByUser');
-        const modalIsOpen = alerts.get('openModal');
 
         if (_.get(navBar.get('mapModulesAccess'), MODULE_ALERTS)) {
             return (
@@ -186,7 +185,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({viewManagementReducer, navBar, reducerGlobal, alerts}, ownerProps) {
+function mapStateToProps({viewManagementReducer, navBar, reducerGlobal, alerts}) {
     return {
         viewManagementReducer,
         navBar,

@@ -37,7 +37,7 @@ class TextareaComponent extends Component {
     }
 
     _onBlur(e, event) {
-        const { nonValidateEnter, onChange } = this.props;
+        const { nonValidateEnter, onChange, onChangeEvent } = this.props;
 
         this.setState({
             touched: true,
@@ -46,7 +46,14 @@ class TextareaComponent extends Component {
 
         let trimmed = this.state.value ? this.state.value.trim() : '';
 
-        onChange(trimmed);
+        if (typeof onChangeEvent === 'function') {
+            onChangeEvent(e);
+        }
+
+        if (typeof onChange === 'function') {
+            onChange(trimmed);
+        }
+        
         nonValidateEnter(true);
     }
 

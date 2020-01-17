@@ -105,14 +105,14 @@ class ContactsByFunctionOrType extends Component {
                     showLoading(false, null);
                     changePage(1);
                 }
-            }, (reason) => {
+            }, () => {
             });
     }
 
     render() {
         var visibleTable = 'none';
         var visibleMessage = 'block';
-        const { fields: { contactFunction, contactType, contactPositionFilter, contactDependencyFilter }, handleSubmit, reducerGlobal, contactsByFunctionOrType, selectsReducer } = this.props;
+        const { fields: { contactFunction, contactType, contactPositionFilter, contactDependencyFilter }, contactsByFunctionOrType, selectsReducer } = this.props;
         if (_.size(contactsByFunctionOrType.get('responseContacts')) !== 0) {
             visibleTable = 'block';
             visibleMessage = 'none';
@@ -234,7 +234,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ contactsByFunctionOrType, selectsReducer, navBar, reducerGlobal }, { fields }) {
+function mapStateToProps({ contactsByFunctionOrType, selectsReducer, navBar, reducerGlobal }) {
     return {
         contactsByFunctionOrType,
         selectsReducer,

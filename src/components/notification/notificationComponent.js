@@ -4,15 +4,12 @@ import { Icon } from "semantic-ui-react";
 
 export default class NotificationComponent extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            options: [
-                { type: "success", color: "#A5DC86" },
-                { type: "error", color: "#E95B4C" },
-                { type: "info", color: "#00448c" }
-            ]
-        }
+    state = {
+        options: [
+            { type: "success", color: "#A5DC86" },
+            { type: "error", color: "#E95B4C" },
+            { type: "info", color: "#00448c" }
+        ]
     }
     
     render() {
