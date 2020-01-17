@@ -97,6 +97,9 @@ class FormLogin extends Component {
                         //TODO: reCaptcha deshabilitado           
                         loginAttempts: res.loginAttempts
                     });
+                    if(res.shouldReload){
+                        window.location.reload(true);
+                    }
                 }
                 showLoading(false, '');
             })
