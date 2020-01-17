@@ -1,0 +1,72 @@
+i.huge.add.square.icon-message-elements.icon {
+    font-size: 22pt !important;
+}
+
+.field {
+    width: 100%;
+    border-radius: 5px;
+    max-height: 100px;
+}
+
+.field.error-field-element {
+    border: 1px solid red;
+    color: #000 !important;
+}
+
+.button-primary {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    outline: none;
+    border: 1px solid #16498b;
+    font-size: 10pt;
+    color: #16498b;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: ease all .3s;
+    border-radius: 3px; 
+    cursor: pointer;
+    margin-bottom: 15px;
+
+    &:hover {
+        background: rgba(22, 73, 139, 0.74);
+        color: #ffffff
+    }
+}
+
+.button-secondary {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    outline: none;
+    border: none;
+    font-size: 10pt;
+    color: #6d6d6d;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: ease all .3s;
+    border-radius: 3px; 
+    cursor: pointer;
+    margin-bottom: 15px;
+
+    &:hover {
+        background: rgba(22, 73, 139, 0.18);
+        color: #16498b
+    }
+}
+
+.error {
+    display: initial !important;
+    font-size: 16px !important;
+    color: #e86853 !important;
+    color: #ffffff !important;
+    position: relative !important;
+    top: 0 !important;
+    margin-left: 0 !important;
+    background-color: transparent !important;
+    z-index: 1 !important;
+    min-width: 210px !important;
+    padding: 3px 10px 3px !important;
+    border-radius: 3px !important;
+}
+

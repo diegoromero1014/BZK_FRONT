@@ -31,6 +31,9 @@ import ComponentListIntOperations from "../contextClient/listInternationalOperat
 import ComponentInfoClient from './components/InfoClient';
 import ActividadEconomica from './components/ActividadEconomica';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
+import Objetivos, { listName } from '../fieldList/Objetives/Objetives';
+import SectionOpportunitiesWeaknesses from '../opportunitiesWeaknesses/SectionOpportunitiesWeaknesses';
+
 import { clearProducts, setProducts } from "./products/actions";
 import { clearNotes, deleteNote, setNotes } from "./notes/actions";
 import { createProspect } from "../propspect/actions";
@@ -98,6 +101,14 @@ import {
 } from "../contextClient/constants";
 import { fields, validations as validate } from './fieldsAndRulesClientEditUpdate';
 
+import { 
+    createClientDetailRequestFromReducer,
+    clientInformationToReducer
+} from '../fieldList/mapListsToEntities';
+
+import {
+    changeListState
+} from '../fieldList/actions';
 
 let idButton;
 let errorContact;
@@ -169,6 +180,8 @@ const drawRequiredField = (condition) => {
     }
 }
 
+const changeObjectiveState = changeListState(listName);
+
 //Componente genérico para cargar los selects de justificación
 function SelectsJustificacion(props) {
     if (props.visible !== undefined && props.visible !== null && props.visible.toString() === "false") {
@@ -219,7 +232,8 @@ class clientEdit extends Component {
             showFormAddMainCompetitor: false,
             showFormAddIntOperatrions: false,
             showJustifyNoGeren: true,
-            shouldUpdate: false
+            shouldUpdate: false,
+            showAlertListObjetcActive: false
         };
         this._saveClient = this._saveClient.bind(this);
         this._submitEditClient = this._submitEditClient.bind(this);
@@ -350,7 +364,7 @@ class clientEdit extends Component {
                 $('.ui.search.participantBanc').toggleClass('loading');
                 economicGroupsByKeyword(economicGroupName.value).then((data) => {
                     let economicGroup1 = _.get(data, 'payload.data.data');
-                    let economicGroup2 = _.forEach(economicGroup1, function (data1) {
+                    _.forEach(economicGroup1, function (data1) {
                         data1.title = data1.group;
                         data1.description = data1.nitPrincipal != null ? data1.nitPrincipal : '';
                     });
@@ -380,7 +394,6 @@ class clientEdit extends Component {
     }
 
     _updateValue(value) {
-        const { fields: { nitPrincipal, groupEconomic, economicGroupName }, economicGroupsByKeyword } = this.props;
         let userSelected;
         _.map(contactClient, contact => {
             if (contact.id.toString() === value) {
@@ -462,7 +475,7 @@ class clientEdit extends Component {
 
     _onChangeValueNeedLME(val) {
         const {
-            fields: { necesitaLME, justifyNoLME }, clientInformacion,
+            fields: { necesitaLME, justifyNoLME },
             selectsReducer, deleteNote, notes, updateErrorsNotes
         } = this.props;
         if (val === 'true' || val && initValueJustifyNonLME) {
@@ -662,7 +675,7 @@ class clientEdit extends Component {
     }
 
     _onChangeOriginGoods(val) {
-        const { fields: { otherOriginGoods, originGoods }, selectsReducer, clientInformacion } = this.props;
+        const { fields: { otherOriginGoods }, selectsReducer, clientInformacion } = this.props;
         var dataOriginGoods = selectsReducer.get(constants.CLIENT_ORIGIN_GOODS);
         var idOptionOther = _.get(_.filter(dataOriginGoods, ['key', KEY_OPTION_OTHER_ORIGIN_GOODS]), '[0].id');
         var infoClient = clientInformacion.get('responseClientInfo');
@@ -767,12 +780,12 @@ class clientEdit extends Component {
         const {
             fields: {
                 idTypeClient, idNumber, razonSocial, description, idCIIU, idSubCIIU, marcGeren, justifyNoGeren, addressClient,
-            country, city, province, neighborhood, district, telephone, reportVirtual, extractsVirtual, annualSales,
+            country, city, province, neighborhood, telephone, reportVirtual, extractsVirtual, annualSales,
             dateSalesAnnuals, liabilities, assets, operatingIncome, nonOperatingIncome, expenses, originGoods,
             originResource, centroDecision, necesitaLME, groupEconomic, justifyNoLME, justifyExClient, taxNature,
             detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, operationsForeigns,
             originCityResource, operationsForeignCurrency, otherOperationsForeign, segment, subSegment, customerTypology },
-            error, handleSubmit, selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer
+            selectsReducer, clientInformacion, changeStateSaveData, clientProductReducer, fieldListReducer, objectListReducer
         } = this.props;
         const productsArray = [];
         clientProductReducer.map(map => {
@@ -780,6 +793,7 @@ class clientEdit extends Component {
         });
         const infoClient = clientInformacion.get('responseClientInfo');
 
+        const clientDetailRequest = createClientDetailRequestFromReducer(fieldListReducer, objectListReducer, infoClient.id);
 
         const jsonCreateProspect = {
             "id": infoClient.id,
@@ -856,7 +870,8 @@ class clientEdit extends Component {
             "operationsForeigns": JSON.parse('[' + ((operationsForeigns.value) ? operationsForeigns.value : "") + ']'),
             "idCustomerTypology": customerTypology.value,
             "clientType": infoClient.clientType,
-            "saveMethod": BUTTON_EDIT  === typeSave ? EDIT_METHOD : UPDATE_METHOD
+            "saveMethod": BUTTON_EDIT  === typeSave ? EDIT_METHOD : UPDATE_METHOD,
+            "clientDetailsRequest": clientDetailRequest
         };
                 
         const { createProspect, updateClient, saveCreditStudy, swtShowMessage } = this.props;
@@ -915,7 +930,7 @@ class clientEdit extends Component {
                 changeStateSaveData(false, "");
                 this.setState({ showEr: true });
             }
-        }, (reason) => {
+        }, () => {
             changeStateSaveData(false, "");
             this.setState({ showEr: true });
         });
@@ -1022,6 +1037,15 @@ class clientEdit extends Component {
         }
     }
 
+    handleShowMessage = () => {
+        const { objectListReducer: { Oportunidades, Debilidades }} = this.props;
+        if (Oportunidades.open || Debilidades.open) {
+            this.setState({ showAlertListObjetcActive: true });
+            return true;
+        }
+        return false;
+    };
+
     //Edita el cliente después de haber validado los campos, solo acá se validan las notas
     _submitEditClient() {
         const { fields: { justifyNoGeren, marcGeren, necesitaLME, justifyNoLME }, notes, setNotes, tabReducer, selectsReducer, updateErrorsNotes, swtShowMessage } = this.props;
@@ -1046,6 +1070,9 @@ class clientEdit extends Component {
             };
             notesArray.push(noteItem);
         });
+        if (this.handleShowMessage()) {
+            return;
+        }
         const dataJustifyNoGeren = selectsReducer.get(constants.JUSTIFICATION_NO_RM);
         const idJustify = _.get(_.filter(dataJustifyNoGeren, ['key', KEY_DESMONTE]), '[0].id');
         const dataJustifyNoNeedLME = selectsReducer.get(constants.JUSTIFICATION_CREDIT_NEED);
@@ -1119,11 +1146,19 @@ class clientEdit extends Component {
     };
 
     componentDidMount() {
+
+        const { clientInformacion, dispatchChangeObjectiveState } = this.props;
+
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
+
+        dispatchChangeObjectiveState({
+            elements: clientInformationToReducer(clientInformacion.get("responseClientInfo"))
+        });
+
     }
 
     componentWillReceiveProps(nextProps) {
-        const { fields: { operationsForeignCurrency, operationsForeigns, otherOriginGoods, originGoods, controlLinkedPayments }, clientInformacion, reducerGlobal } = nextProps;
+        const { fields: { operationsForeignCurrency, operationsForeigns, controlLinkedPayments }, clientInformacion, reducerGlobal } = nextProps;
 
         let { errors } = nextProps;
 
@@ -1159,7 +1194,7 @@ class clientEdit extends Component {
         const {
             fields: { nitPrincipal, economicGroupName, originGoods, originResource, operationsForeigns }, updateTitleNavBar,
             clientInformacion, clearValuesAdressess, sendErrorsUpdate, setNotes, clearNotes,
-            clearProducts, setProducts, tabReducer, updateErrorsNotes, showLoading
+            clearProducts, setProducts, updateErrorsNotes, showLoading
         } = this.props;
 
         updateErrorsNotes(false);
@@ -1188,12 +1223,13 @@ class clientEdit extends Component {
                 redirectUrl("/dashboard/clientInformation");
             } else {
                 showLoading(true, MESSAGE_LOAD_DATA);
-                const { economicGroupsByKeyword, selectsReducer, consultList, clientInformacion, consultListWithParameterUbication, getMasterDataFields } = this.props;
+                const { economicGroupsByKeyword, consultList, consultListWithParameterUbication, getMasterDataFields } = this.props;                
+
                 getMasterDataFields([constants.FILTER_COUNTRY, constants.JUSTIFICATION_CREDIT_NEED, constants.JUSTIFICATION_LOST_CLIENT,
                 constants.JUSTIFICATION_NO_RM, constants.TYPE_NOTES, constants.CLIENT_TAX_NATURA, constants.CLIENT_ORIGIN_GOODS, constants.CUSTOMER_TYPOLOGY,
                 constants.CLIENT_ORIGIN_RESOURCE, constants.CLIENT_OPERATIONS_FOREIGN_CURRENCY, constants.SEGMENTS, constants.CLIENT_ID_TYPE,
                 constants.MANAGEMENT_BRAND, constants.CONTACT_ID_TYPE, constants.SUBSEGMENTS])
-                    .then((data) => {
+                    .then(() => {
                         if (infoClient.addresses !== null && infoClient.addresses !== '' && infoClient.addresses !== null) {
                             consultListWithParameterUbication(constants.FILTER_PROVINCE, infoClient.addresses[0].country);
                             consultListWithParameterUbication(constants.FILTER_CITY, infoClient.addresses[0].province);
@@ -1208,7 +1244,7 @@ class clientEdit extends Component {
                         operationsForeigns.onChange(dataOperationsForeign);
                         showLoading(false, '');
 
-                    }, (reason) => {
+                    }, () => {
                         showLoading(false, '');
                         this.setState({ showEx: true });
                     });
@@ -1234,9 +1270,9 @@ class clientEdit extends Component {
         const {
             fields: {
                 razonSocial, idTypeClient, idNumber, description, idCIIU, idSubCIIU, addressClient, country, city, province, neighborhood,
-            district, telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
+            telephone, reportVirtual, extractsVirtual, annualSales, dateSalesAnnuals, operationsForeigns,
             liabilities, assets, operatingIncome, nonOperatingIncome, expenses, marcGeren, originGoods, originResource,
-            centroDecision, necesitaLME, nitPrincipal, groupEconomic, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
+            centroDecision, necesitaLME, nitPrincipal, economicGroupName, justifyNoGeren, justifyNoLME, justifyExClient, taxNature,
             detailNonOperatingIncome, otherOriginGoods, otherOriginResource, countryOrigin, originCityResource, operationsForeignCurrency,
             otherOperationsForeign, segment, subSegment, customerTypology, contextClientField, inventoryPolicy,
             nameMainSupplier, participationMS, termMainSupplier,
@@ -1248,7 +1284,6 @@ class clientEdit extends Component {
         errorContact = tabReducer.get('errorConstact');
         errorShareholder = tabReducer.get('errorShareholder');
         var infoClient = clientInformacion.get('responseClientInfo');
-        const isProspect = infoClient.isProspect;
         const allowChangeEconomicGroup = !infoClient.allowChangeEconomicGroup ? 'disabled' : '';
 
         const allowRiskGroupEdit = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), INFO_ESTUDIO_CREDITO), false);
@@ -1264,7 +1299,6 @@ class clientEdit extends Component {
             messageContact = 'El cliente tiene información de Representante Legal,';
 
         }
-
         return (
             <form onSubmit={handleSubmit(this._submitEditClient)} style={{ backgroundColor: "#FFFFFF" }}>
                 <SecurityMessageComponent />
@@ -1307,9 +1341,10 @@ class clientEdit extends Component {
                     segment={segment} subSegment={subSegment} description={description} customerTypology={customerTypology}
                     idButton={idButton} isMethodEditClient={isMethodEditClient} isPersonaNatural={isPersonaNatural}
                 />
-
+                
+                <Objetivos />
+                {!_.isEmpty(infoClient) && <SectionOpportunitiesWeaknesses infoClient={infoClient} visual={true}/>}
                 <ActividadEconomica idSubCIIU={idSubCIIU} idCIIU={idCIIU} taxNature={taxNature} isMethodEditClient={isMethodEditClient} />
-
                 <Row>
 
                     {allowRiskGroupEdit &&
@@ -2149,6 +2184,13 @@ class clientEdit extends Component {
                     text='Señor usuario, el tipo y número de documento que desea guardar ya se encuentra registrado.'
                     onConfirm={() => this._closeError()}
                 />
+                <SweetAlert
+                    type="error"
+                    show={this.state.showAlertListObjetcActive}
+                    title="Error editando cliente"
+                    text="Señor usuario, esta creando o editando un registro en la sección de Oportunidades y Debilidades, debe terminarlo o cancelarlo para poder guardar."
+                    onConfirm={() => this.setState({ showAlertListObjetcActive: false })}
+                />
             </form>
         );
     }
@@ -2178,11 +2220,12 @@ function mapDispatchToProps(dispatch) {
         showLoading,
         swtShowMessage,
         validateContactShareholder,
-        saveCreditStudy
+        saveCreditStudy,
+        dispatchChangeObjectiveState: changeObjectiveState
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes, reducerGlobal }, ownerProps) {
+function mapStateToProps({ clientInformacion, selectsReducer, clientProductReducer, tabReducer, notes, reducerGlobal, fieldListReducer, objectListReducer }) {
     const infoClient = clientInformacion.get('responseClientInfo');
     const { contextClient } = infoClient;
 
@@ -2195,6 +2238,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
 
     return {
         clientInformacion,
+        objectListReducer,
         selectsReducer,
         clientProductReducer,
         tabReducer,
@@ -2202,6 +2246,7 @@ function mapStateToProps({ clientInformacion, selectsReducer, clientProductReduc
         reducerGlobal,
         isPersonaNatural,
         idButton,
+        fieldListReducer,
         initialValues: {
             razonSocial: infoClient.clientName,
             idTypeClient: infoClient.clientIdType,

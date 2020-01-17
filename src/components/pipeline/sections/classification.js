@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
-import SectionTitle from './sectionTitle';
+import SectionTitle from '../../formSections/sectionTitle';
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import {
     PIPELINE_TYPE,

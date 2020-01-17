@@ -152,7 +152,7 @@ class ComponentAssigned extends Component {
     }
 
     componentWillMount() {
-        const {fields: {trafficLight}, updateTitleNavBar, getMasterDataFields, validatePermissionsByModule} = this.props;
+        const {updateTitleNavBar, getMasterDataFields, validatePermissionsByModule} = this.props;
         getMasterDataFields([TASK_STATUS]);
         updateTitleNavBar("Asignadas");
         this._consultAssigned(null, null, null);
@@ -309,7 +309,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({assignedReducer, selectsReducer, reducerGlobal}, ownerProps) {
+function mapStateToProps({assignedReducer, selectsReducer, reducerGlobal}) {
     return {
         assignedReducer,
         selectsReducer,

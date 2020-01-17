@@ -367,3 +367,19 @@ code {
 	font-size: 28px;
 	vertical-align: -5px;
 }
+
+.section-btn-cancel {
+	background-color: #C1C1C1
+}
+
+.section-list-container {
+	border: 1px solid #ECECEC
+}
+
+.section-list-divider {
+	border-bottom: 1px solid #ECECEC;
+}
+
+.section-list-parent .section-list-divider:last-child {
+	border-bottom: none;
+}

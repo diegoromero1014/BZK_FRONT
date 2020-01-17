@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import { findContactsByClient } from '../contact/actions';
-import { addParticipant, clearParticipants } from './actions';
+import { addParticipant, clearParticipants, deleteParticipant } from './actions';
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import { NUMBER_CONTACTS, KEY_PARTICIPANT_CLIENT } from './constants';
 import { CREAR, MODULE_CONTACTS } from '../../constantsGlobal';
@@ -26,6 +26,8 @@ export class ParticipantsByClient extends Component {
             selectedContactInformation: null,
             open: false
         }
+        
+        this.editing = false;
     }
 
     componentWillMount() {
@@ -36,51 +38,96 @@ export class ParticipantsByClient extends Component {
     }
 
     handleSetInformation = selectedContact => {
-        const { contacts } = this.props;
+        const { contacts, participants, dispatchShowAlert } = this.props;
+        
+        let existingContact;
 
-        const existingContact = contacts.filter(element => element.id === Number(selectedContact))[0];            
+        if (!isNaN(selectedContact)) {
+            existingContact = contacts.find(element => element.id === Number(selectedContact));
 
-        if(existingContact) {
+            existingContact = {
+                tipoParticipante: KEY_PARTICIPANT_CLIENT,
+                idParticipante: existingContact.id,
+                nombreParticipante: existingContact.nameComplet,
+                cargo: !existingContact.contactPosition ? '' : existingContact.contactPosition,
+                empresa: '',
+                estiloSocial: !existingContact.contactSocialStyle ? '' : existingContact.contactSocialStyle,
+                actitudBanco: !existingContact.contactActitudeCompany ? '' : existingContact.contactActitudeCompany,
+                fecha: Date.now(),
+                uuid: _.uniqueId('participanClient_'),
+                nameComplet: existingContact.nameComplet,
+                contactPosition: existingContact.contactPosition,
+                contactSocialStyle: existingContact.contactSocialStyle,
+                contactActitudeCompany: existingContact.contactActitudeCompany
+            }
+        } else {
+            existingContact = selectedContact;
+        }
+
+        if(participants.find(element => element.idParticipante === Number(existingContact.idParticipante)) && !this.editing) {
+            dispatchShowAlert('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
+            this.setState({open: false, selectedContact: '' });
+        }
+
+        if (existingContact) {
             this.setState({ selectedContactInformation: existingContact });
         }
     }
 
-    addContact = () => {        
-        const { dispatchAddParticipant, participants, contacts, dispatchShowAlert, limitParticipantsByClient } = this.props;
-        const { selectedContact } = this.state;        
-        if (selectedContact) {       
-                 
-            if (limitParticipantsByClient && participants.toArray().filter(participant => participant.tipoParticipante === KEY_PARTICIPANT_CLIENT).length >= limitParticipantsByClient) {
+    lengthParticipants = () => {
+        const { participants } = this.props;
+        return participants.toArray().filter(participant => participant.tipoParticipante === KEY_PARTICIPANT_CLIENT).length;
+    }
+
+    addContact = selectedContact => {
+        const { dispatchAddParticipant, participants, dispatchShowAlert, limitParticipantsByClient, dispatchDeleteParticipant } = this.props;
+        
+        if (selectedContact) {
+
+            if (limitParticipantsByClient && this.lengthParticipants() >= limitParticipantsByClient && !this.editing) {
                 dispatchShowAlert('error', "Límite de participantes", "Señor usuario, sólo se pueden agregar máximo 10 participantes por parte del cliente");
                 return;
             }
-            let existingContact = participants.find(element => element.idParticipante === Number(selectedContact));            
 
-            if (!existingContact) {
-                let contact = contacts.filter(element => element.id === Number(selectedContact))[0];                
-                let participant = {
-                    tipoParticipante: KEY_PARTICIPANT_CLIENT,
-                    idParticipante: contact.id,
-                    nombreParticipante: contact.nameComplet,
-                    cargo: !contact.contactPosition ? '' : contact.contactPosition,
-                    empresa: '',
-                    estiloSocial: !contact.contactSocialStyle ? '' : contact.contactSocialStyle,
-                    actitudBanco: !contact.contactActitudeCompany ? '' : contact.contactActitudeCompany,
-                    fecha: Date.now(),
-                    uuid: _.uniqueId('participanClient_')
+            let existingContact = participants.find(element => element.idParticipante === Number(selectedContact.idParticipante));
+
+            if (!existingContact || this.editing) {
+
+                if(this.editing) {
+                    dispatchDeleteParticipant(participants.findIndex(item => item.idParticipante === existingContact.idParticipante), KEY_PARTICIPANT_CLIENT);
                 }
 
-                dispatchAddParticipant(participant);
+                dispatchAddParticipant(selectedContact);
                 this.setState({ selectedContact: '' });
-            } else {                
+                this.handleCloseModal();
+            } else {
                 dispatchShowAlert('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
                 this.setState({ selectedContact: '' });
+                this.handleCloseModal();
             }
         }
-
     }
 
-    handleCloseModal = () => this.setState({ open: false, selectedContactInformation: null, selectedContact: null });
+    handleCloseModal = () => {
+        this.setState({ open: false, selectedContactInformation: null, selectedContact: '' });
+        this.editing = false;
+    }
+
+    handleOnChange = value => {
+        const { limitParticipantsByClient, dispatchShowAlert } = this.props;
+
+        if (value && value !== "") {
+
+            if (limitParticipantsByClient && this.lengthParticipants() >= limitParticipantsByClient && !this.editing) {
+                dispatchShowAlert('error', "Límite de participantes", "Señor usuario, sólo se pueden agregar máximo 10 participantes por parte del cliente");
+                return;
+            }
+            
+            this.setState({ selectedContact: value, open: true });
+            this.editing = false;
+            this.handleSetInformation(value);
+        }
+    }
 
     render() {
         const { contacts, participants, disabled, reducerGlobal } = this.props;
@@ -91,19 +138,11 @@ export class ParticipantsByClient extends Component {
         return (
             <div className='participants-client'>
                 <Row style={{ marginTop: 20, marginLeft: 7 }}>
-                    <Col xs={11} md={11} lg={11} style={{ maxWidth: '96%', flexBasis: '96.666667%' }}>
+                    <Col xs={11} md={11} lg={11} style={{ maxWidth: '96%', flexBasis: '96.7%' }}>
                         <ComboBox
                             name="txtContactoCliente"
                             labelInput="Seleccione..."
-                            onChange={value => {
-                                this.setState({ selectedContact: value });
-
-                                //Habilita el modal
-
-                                //this.setState({ selectedContact: value, open: true });
-                                //this.handleSetInformation(value);
-                                this.addContact();
-                            }}
+                            onChange={this.handleOnChange}
                             value={selectedContact}
                             valueProp={'id'}
                             textProp={'additional'}
@@ -120,14 +159,14 @@ export class ParticipantsByClient extends Component {
                 </Row>
 
 
-                <div className='participants-client-list'>                
+                <div className='participants-client-list'>
                     <Row>
                         {data.length > 0 ?
                             <Col xs={12} md={12} lg={12}>
                                 <ListParticipantsByClient data={data} disabled={disabled} handleOpenModal={selectedRecord => {
-                                    //Habilita el modal
-                                    //this.setState({ open: true, selectedContact: null });
-                                    //this.handleSetInformation(selectedRecord);
+                                    this.setState({ open: true, selectedContact: null });
+                                    this.editing = true;
+                                    this.handleSetInformation(selectedRecord);
                                 }} />
                             </Col>
                             :
@@ -145,15 +184,15 @@ export class ParticipantsByClient extends Component {
                         <div className="modalBt4-content modal-content" style={{ zIndex: 100 }}>
                             <div className="modalBt4-header modal-header">
                                 <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Participante</h4>
-                                
+
                                 <button type="button" onClick={this.handleCloseModal} className="close" data-dismiss="modal" role="close">
                                     <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                                     <span className="sr-only">Close</span>
                                 </button>
                             </div>
 
-                            {selectedContactInformation && 
-                                <ParticipantInformation selectedRecord={selectedContactInformation} />
+                            {selectedContactInformation &&
+                                <ParticipantInformation selectedRecord={selectedContactInformation} handleCloseModal={this.handleCloseModal} addContact={this.addContact} />
                             }
                         </div>
                     </div>
@@ -175,7 +214,8 @@ const mapDispatchToProps = dispatch => {
         dispatchAddParticipant: addParticipant,
         dispatchClearParticipants: clearParticipants,
         dispatchShowAlert: swtShowMessage,
-        dispatchValidatePermissionsByModule: validatePermissionsByModule
+        dispatchValidatePermissionsByModule: validatePermissionsByModule,
+        dispatchDeleteParticipant: deleteParticipant
     }, dispatch)
 };
 
