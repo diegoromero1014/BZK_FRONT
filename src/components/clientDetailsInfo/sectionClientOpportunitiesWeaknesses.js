@@ -37,7 +37,7 @@ export class SectionClientOpportunitiesWeaknesses extends Component {
                 ) : (
                 <Row style={{ padding: "5px 23px 5px 20px" }}>
                     <Col xs={12} md={12} lg={12} style={{ paddingRight: "15px", marginTop: "15px" }} >
-                        <table className="ui striped table"><thead><tr className="tr-void"><span>No se han adicionado Oportunidades.</span></tr></thead></table>
+                        <table className="ui striped table"><thead><tr className="tr-void"><span>No se han adicionado Oportunidades externas.</span></tr></thead></table>
                     </Col>
                 </Row>
             )}
@@ -68,7 +68,7 @@ export class SectionClientOpportunitiesWeaknesses extends Component {
                 ) : (
                 <Row style={{ padding: "5px 23px 5px 20px" }}>
                     <Col xs={12} md={12} lg={12} style={{ paddingRight: "15px", marginTop: "15px" }} >
-                    <table className="ui striped table"><thead><tr className="tr-void"><span>No se han adicionado Debilidades.</span></tr></thead></table>
+                    <table className="ui striped table"><thead><tr className="tr-void"><span>No se han adicionado Debilidades internas del cliente.</span></tr></thead></table>
                     </Col>
                 </Row>
             )}
