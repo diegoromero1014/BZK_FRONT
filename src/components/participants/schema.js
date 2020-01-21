@@ -6,6 +6,7 @@ import { validateHtmlInjection } from '../../validationsFields/rulesField';
 export const schema = Yup.object().shape({
     text: Yup
         .string()
+        .trim()
         .max(700, "Solo se permiten 700 caracteres.")
         .test('validateHtmlInjection', MESSAGE_ERROR_INJECTION_HTML, validateHtmlInjection)
         .matches(patternOfForbiddenCharacter2, {  message: MESSAGE_WARNING_FORBIDDEN_CHARACTER, excludeEmptyString: true })

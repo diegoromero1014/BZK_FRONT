@@ -23,7 +23,7 @@ export class ParticipantInformation extends Component {
             fields: {
                 name: {
                     name: 'Nombre',
-                    nullable: false,
+                    nullable: true,
                     message: null
                 },
 
