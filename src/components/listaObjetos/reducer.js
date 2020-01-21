@@ -11,7 +11,12 @@ const initialState = {
   }
 };
 
-export default function reducer(state = initialState, action) {
+export default function reducer(state, action) {
+
+  if (!state) {
+    state = initialState;
+  }
+
   switch (action.type) {
     case UPDATE_LIST:
       const list = state[action.name];

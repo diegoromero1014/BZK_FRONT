@@ -117,7 +117,12 @@ function addElementToList(state, listName) {
     return addNewListToState(listName, state, newList);
 }
 
-export default (state = initialState, action) => {
+export default (state, action) => {
+
+    if (!state) {
+        state = initialState
+    }
+
     switch (action.type) {
         case CREATE_LIST: {
             //Lista ya se encuentra creada
