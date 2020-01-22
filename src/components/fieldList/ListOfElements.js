@@ -52,7 +52,7 @@ class ListOfElements extends React.Component {
 
     handleChange = (e) => {
         const { addField } = this.props;
-        addField(e.target.name, e.target.value);
+        addField(e.target.name, e.target.value.trim());
     }
 
     checkValidations = () => {
@@ -97,11 +97,11 @@ class ListOfElements extends React.Component {
     }
 
     removeElement = (elementToDelete) => {
-        const { removeElement, swtShowMessage } = this.props;
+        const { removeElement, swtShowMessage, title } = this.props;
         swtShowMessage(
             "warning",
             "Confirmar eliminación",
-            "Señor usuario, ¿Esta seguro que desea eliminar este elemento?",
+            `Señor usuario, ¿Esta seguro que desea eliminar ${title}?`,
             {
                 onConfirmCallback: () => {
                     removeElement(elementToDelete)
