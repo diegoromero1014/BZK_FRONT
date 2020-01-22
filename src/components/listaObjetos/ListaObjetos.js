@@ -131,10 +131,10 @@ export class ListaObjetos extends Component {
       switchGuardarEditar: false,
       stylePlus: false
     });
-  };
+  }; 
 
   checkValidations = campoVacio => {
-    const fields = { valor: campoVacio};
+    const fields = { valor: campoVacio.trim()};
     const validations = {
       valor: {
         rules: [ checkRequired, checkFirstCharacter, checkPatternClientObjective, checkRegexHtmlInjection ]
@@ -158,7 +158,7 @@ export class ListaObjetos extends Component {
   }
 
   agregarObjetoLista = () => {
-  
+
     const {
       dispatchUpdateElementFromList,
       titulo,
@@ -171,7 +171,7 @@ export class ListaObjetos extends Component {
     if (!isValid) {
       return;
     }
-
+ 
     const idObject = (Math.random() * 10000).toFixed();
     const { objeto } = this.state;
     objeto.idObject = idObject;
@@ -370,7 +370,7 @@ export class ListaObjetos extends Component {
                 type="warning"
                 show={modalEliminar}
                 title="Confirmar Eliminacion"
-                text={`Señor usuario, ¿Está seguro que desea eliminar ${titulo}?`}
+                text={`Señor usuario, ¿Está seguro que desea eliminar ${tituloCompleto}?`}
                 confirmButtonColor="#DD6B55"
                 confirmButtonText="Sí, estoy seguro!"
                 cancelButtonText="Cancelar"
