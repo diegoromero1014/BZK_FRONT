@@ -26,7 +26,7 @@ import { FORM_FILTER_ALERT_BLACK_LIST } from '../alertBlackList/constants';
 import _ from 'lodash';
 import {Icon} from 'semantic-ui-react';
 
-class ViewAlerts extends Component {
+export class ViewAlerts extends Component {
     constructor(props) {
         super(props);
         this.handlePaintAlerts = this.handlePaintAlerts.bind(this);
@@ -57,6 +57,8 @@ class ViewAlerts extends Component {
                 }
             }
         });
+
+        
     }
 
     _cleanFilterClientPendingUpdate() {
@@ -71,7 +73,7 @@ class ViewAlerts extends Component {
     }
 
     _cleanFilterBlackList() {
-        const {showLoading, clearFilterBlackList} = this.props;
+        const { clearFilterBlackList} = this.props;
         clearFilterBlackList();
     }
 
@@ -113,25 +115,21 @@ class ViewAlerts extends Component {
                         const iconClientsPending = <i className='users icon' style={{ fontSize: "50px", marginTop: '50px', marginLeft: "18px" }} />;
                         return this.paintItemAlert(item, idx, iconClientsPending, "15px", BLUE_COLOR,
                             "/dashboard/alertClientPendingUpdate", this._cleanFilterClientPendingUpdate, FORM_FILTER_ALERT_PUC);
-                        break;
                     case CODE_ALERT_PORTFOLIO_EXPIRATION:
                         countAlerts = countAlerts + 1;
                         const iconPortfolioExp = <PortfolioExpirationIcon />;
                         return this.paintItemAlert(item, idx, iconPortfolioExp, "15px", BLUE_COLOR,
                             "/dashboard/alertClientsPortfolioExpiration", this._cleanFilterPortfolioExpiration, FORM_FILTER_ALERT_PE);
-                        break;
                     case CODE_COVENANT_ALERT:
                         countAlerts = countAlerts + 1;
                         const iconCovenant = <Icon style={{fontSize: "50px", marginTop: '55px', marginLeft: "18px"}} name="ordered list"/>;
                         return this.paintItemAlert(item, idx, iconCovenant, "15px", BLUE_COLOR,
                             "/dashboard/alertCovenants", this._cleanFilterAlertCovenant, FORM_FILTER_ALERT_COVENANT);
-                        break;
                     case CODE_BLACK_LIST_ALERT:
                         countAlerts = countAlerts + 1;
                         const iconBlackList = <BlackListIcon/>;
                         return this.paintItemAlert(item, idx, iconBlackList, "15px", BLUE_COLOR,
                             "/dashboard/alertBlackList", this._cleanFilterBlackList, FORM_FILTER_ALERT_BLACK_LIST);
-                        break;
                     default:
                         return null;
                 }
@@ -151,7 +149,6 @@ class ViewAlerts extends Component {
     render() {
         const {alerts, navBar} = this.props;
         const listAlerts = alerts.get('listAlertByUser');
-        const modalIsOpen = alerts.get('openModal');
 
         if (_.get(navBar.get('mapModulesAccess'), MODULE_ALERTS)) {
             return (
@@ -186,7 +183,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({viewManagementReducer, navBar, reducerGlobal, alerts}, ownerProps) {
+function mapStateToProps({viewManagementReducer, navBar, reducerGlobal, alerts}) {
     return {
         viewManagementReducer,
         navBar,

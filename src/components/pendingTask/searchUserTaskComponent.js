@@ -8,7 +8,6 @@ import _ from 'lodash';
 let v1 = "";
 let v2 = "";
 let v3 = "";
-let limInf1 = 0;
 
 class SearchUserTaskComponent extends Component {
   constructor(props) {
@@ -21,11 +20,6 @@ class SearchUserTaskComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-        value1,
-        value2,
-        value3
-    } = nextProps;
     if ((v1 !== nextProps.value1)  ||  (v2 !== nextProps.value2)  ||
         (v3 !== nextProps.value3)) {
     v1 = nextProps.value1;
@@ -50,7 +44,7 @@ class SearchUserTaskComponent extends Component {
   }
 
   _handleUserTasksByClientsFind() {
-    const {tasksByClientFindServer, tasksByClient, clearUserTaskPaginator, clearUserTaskOrder} = this.props;
+    const {tasksByClientFindServer, clearUserTaskPaginator, clearUserTaskOrder} = this.props;
     clearUserTaskPaginator();
     clearUserTaskOrder();
     if(this.state.keywordUserTask === '' || this.state.keywordUserTask === undefined) {
@@ -78,7 +72,7 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({tasksByClient}, ownerProps) {
+function mapStateToProps({tasksByClient}) {
   return {
     tasksByClient
   };

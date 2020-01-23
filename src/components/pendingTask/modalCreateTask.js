@@ -59,7 +59,7 @@ export class ModalCreateTask extends Component {
   }
 
   _updateValue(value) {
-    const { fields: { responsable }, contactsByClient } = this.props;
+    const { fields: { responsable } } = this.props;
     responsable.onChange(value);
   }
 
@@ -156,7 +156,7 @@ export class ModalCreateTask extends Component {
 
   _handleEditTask() {
     const { createPendingTaskNew, changeStateSaveData, idClient, swtShowMessage } = this.props;
-    const { fields: { id, responsable, idEmployee, fecha, idEstado, tarea, advance }, handleSubmit, error } = this.props;
+    const { fields: { id, responsable, idEmployee, fecha, idEstado, tarea, advance }} = this.props;
     if (this.cancelSubmit) {
       return;
     }
@@ -247,9 +247,9 @@ export class ModalCreateTask extends Component {
 }
   render() {
     
-    const { fields: { responsable, fecha, idEstado, tarea, advance, dateVisit, idEmployee },
+    const { fields: { responsable, fecha, idEstado, tarea, advance, idEmployee },
       selectsReducer, reducerGlobal, handleSubmit, myPendingsReducer, actionEdit } = this.props;
-    const styleRow = {};
+
     var visibleEdit, editAction;
     var userName = myPendingsReducer.get('userName');
     if (actionEdit) {
@@ -416,7 +416,7 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({ tasksByClient, selectsReducer, participants, reducerGlobal, visitReducer, businessPlanReducer, myPendingsReducer }, { taskEdit }) {
+function mapStateToProps({ tasksByClient, selectsReducer, participants, reducerGlobal, visitReducer, businessPlanReducer, myPendingsReducer }) {
   return {
     tasksByClient,
     selectsReducer,

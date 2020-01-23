@@ -40,7 +40,7 @@ class PaginationContactComponent extends Component{
   }
 
   _handlePaginar(page){
-    const {changePage,limitiInf,contactsByClient} = this.props;
+    const {changePage,limitiInf} = this.props;
     var limInf = (page - 1);
     limitiInf(limInf);
     changePage(page);
@@ -56,7 +56,7 @@ class PaginationContactComponent extends Component{
   }
 
   render(){
-    const {contactsByClient, config} = this.props;
+    const {contactsByClient} = this.props;
     var page = contactsByClient.get('page');
     var firstPage = 1;
     if(page > 7){
@@ -111,7 +111,7 @@ function mapDispatchToProps(dispatch){
   }, dispatch);
 }
 
-function mapStateToProps({contactsByClient}, ownerProps){
+function mapStateToProps({contactsByClient}){
   return {
     contactsByClient
   };

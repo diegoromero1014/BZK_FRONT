@@ -44,7 +44,7 @@ class ModalComponentPendingTask extends Component {
     }
 
     _updateValue(value) {
-        const { fields: { responsable }, contactsByClient } = this.props;
+        const { fields: { responsable } } = this.props;
         responsable.onChange(value);
     }
 
@@ -103,7 +103,7 @@ class ModalComponentPendingTask extends Component {
 
     _handleCreatePendingTask() {
         const { createPendingTaskNew, tasksByClientFindServer, swtShowMessage } = this.props;
-        const { fields: { responsable, fecha, idEmployee, idEstado, tarea, advance }, handleSubmit, error, changeStateSaveData } = this.props;
+        const { fields: { responsable, fecha, idEmployee, idEstado, tarea, advance }, changeStateSaveData } = this.props;
         if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
             const messageBody = {
                 "clientId": window.sessionStorage.getItem('idClientSelected'),
@@ -158,7 +158,7 @@ class ModalComponentPendingTask extends Component {
         }
     }
     render() {
-        const { fields: { responsable, fecha, idEstado, tarea, advance, idEmployee }, taskEdit, selectsReducer, handleSubmit } = this.props;
+        const { fields: { responsable, fecha, idEstado, tarea, advance, idEmployee }, selectsReducer, handleSubmit } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreatePendingTask)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix">
@@ -272,7 +272,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ tasksByClient, selectsReducer }, { taskEdit }) {
+function mapStateToProps({ tasksByClient, selectsReducer }) {
     return {
         tasksByClient,
         selectsReducer

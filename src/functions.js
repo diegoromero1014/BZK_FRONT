@@ -4,9 +4,9 @@ import Tooltip from './components/toolTip/toolTipComponent';
 export const renderLabel = ({ name, message, nullable }) => (
     <div style={{ display: 'flex', 'flex-direction': 'row', 'justify-content': 'space-between' }}>
        <strong style={{ marginBottom: 10 }}>
-          <span>{`${name}  ${!nullable ? '(' : ''} `} </span>
+          <span>{`${name}  ${!nullable ? '(' : ''}`} </span>
           {!nullable && <span style={{ color: 'red' }}>*</span>}
-          {!nullable && ' )'}
+          {!nullable && ')'}
        </strong>
 
        {message !== null &&

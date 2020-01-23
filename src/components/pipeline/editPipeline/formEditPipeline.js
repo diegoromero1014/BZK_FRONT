@@ -691,7 +691,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         this.setState({ showMessageEditPipeline: true });
                                     }
                                 }
-                            }, (reason) => {
+                            }, () => {
                                 changeStateSaveData(false, "");
                                 typeMessage = "error";
                                 titleMessage = "Edición pipeline";
@@ -857,7 +857,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                         PROBABILITY, LINE_OF_BUSINESS, MELLOWING_PERIOD,
                         FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY,
-                        PIPELINE_JUSTIFICATION, CLIENT_NEED])]).then((data) => {                                                         
+                        PIPELINE_JUSTIFICATION, CLIENT_NEED])]).then(() => {                                                         
                             if (origin !== ORIGIN_PIPELIN_BUSINESS) {                            
                                 const { params: { id } } = this.props;
                                 getPipelineById(id).then((result) => {                                                                                       
@@ -865,7 +865,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                                     } else {
                                         let data = result.payload.data.data;
-                                        _.forIn(data.listPipelines, function (pipeline, key) {
+                                        _.forIn(data.listPipelines, function (pipeline) {
                                             const uuid = _.uniqueId('pipelineBusiness_');
                                             pipeline.uuid = uuid;
                                             addBusiness(pipeline);
@@ -901,7 +901,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         renderNominalValue() {
-            const { fields: {value }, pipelineReducer } = this.props;
+            const { pipelineReducer } = this.props;
             const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
         }
 
