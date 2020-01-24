@@ -26,7 +26,6 @@ export class ParticipantsByClient extends Component {
             selectedContactInformation: null,
             open: false
         }
-        
         this.editing = false;
     }
 
@@ -43,8 +42,7 @@ export class ParticipantsByClient extends Component {
         let existingContact;
 
         if (!isNaN(selectedContact)) {
-            existingContact = contacts.find(element => element.id === Number(selectedContact));
-
+            existingContact = contacts.find(element => element.id === Number(selectedContact));            
             existingContact = {
                 tipoParticipante: KEY_PARTICIPANT_CLIENT,
                 idParticipante: existingContact.id,
@@ -62,16 +60,12 @@ export class ParticipantsByClient extends Component {
             }
         } else {
             existingContact = selectedContact;
-        }
-
-        if(participants.find(element => element.idParticipante === Number(existingContact.idParticipante)) && !this.editing) {
+        }        
+        if(participants.find(element => element.idParticipante === Number(existingContact.idParticipante)) && !this.editing) {                        
             dispatchShowAlert('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
             this.setState({open: false, selectedContact: '' });
         }
-
-        if (existingContact) {
-            this.setState({ selectedContactInformation: existingContact });
-        }
+        this.setState({ selectedContactInformation: existingContact });        
     }
 
     lengthParticipants = () => {
@@ -84,7 +78,7 @@ export class ParticipantsByClient extends Component {
         
         if (selectedContact) {
 
-            if (limitParticipantsByClient && this.lengthParticipants() >= limitParticipantsByClient && !this.editing) {
+            if (limitParticipantsByClient && this.lengthParticipants() >= limitParticipantsByClient && !this.editing) {                
                 dispatchShowAlert('error', "Límite de participantes", "Señor usuario, sólo se pueden agregar máximo 10 participantes por parte del cliente");
                 return;
             }
@@ -117,15 +111,14 @@ export class ParticipantsByClient extends Component {
         const { limitParticipantsByClient, dispatchShowAlert } = this.props;
 
         if (value && value !== "") {
-
-            if (limitParticipantsByClient && this.lengthParticipants() >= limitParticipantsByClient && !this.editing) {
+            
+            if (limitParticipantsByClient && this.lengthParticipants() >= limitParticipantsByClient && !this.editing) {                
                 dispatchShowAlert('error', "Límite de participantes", "Señor usuario, sólo se pueden agregar máximo 10 participantes por parte del cliente");
                 return;
-            }
-            
+            }                        
             this.setState({ selectedContact: value, open: true });
             this.editing = false;
-            this.handleSetInformation(value);
+            this.handleSetInformation(value);            
         }
     }
 
