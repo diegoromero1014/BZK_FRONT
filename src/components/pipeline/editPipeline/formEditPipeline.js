@@ -491,10 +491,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             let needSelectedKey = null;
             let needSelected = null;
             let newValueIsFinancing = null;
-
             if(need.value != ''){
                 needSelected = this._getNeedById(need.value);
-                needSelectedKey = needSelected.key ? needSelected.key : '';
+                needSelectedKey = needSelected ? needSelected.key : '';
             }
 
             newValueIsFinancing = needSelectedKey === NEED_FINANCING;
@@ -519,7 +518,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeCatalogProductFamily(currencyValue){
-            const { fields: { need, productFamily }, consultListByCatalogType, pipelineReducer } = this.props;            
+            const { fields: { need, productFamily }, consultListByCatalogType, pipelineReducer } = this.props;
             consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "productFamily").then((data) => {
                 this.setState({
                     productsFamily: _.get(data, 'payload.data.data', [])
@@ -1030,6 +1029,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             <span>Necesidad del cliente (</span><span style={{ color: "red" }}>*</span>)
                                         </dt>
                                         <ComboBox
+                                            id="nameNeed"
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
                                             textProp={'value'}
