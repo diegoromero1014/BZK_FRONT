@@ -104,7 +104,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   let pipelineTypeName = _.uniqueId('pipelineType');
   let commercialOportunityName = _.uniqueId("commercialOportunity");
   let nameJustificationPipeline = _.uniqueId('justificationPipeline_');
-  let nameTypePolicy = _.uniqueId('typePolicy_');
 
   class FormPipeline extends Component {
     
@@ -1372,7 +1371,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                           valueProp={'id'}
                           textProp={'value'}
                           {...typePolicy}
-                          name={nameTypePolicy}
+                          name="typePolicy"
                           parentId="dashboardComponentScroll"
                           data={selectsReducer.get(FILTER_TYPE_POLICY) || []}
                       />

@@ -115,7 +115,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
     let pipelineTypeName = _.uniqueId('pipelineType');
     let commercialOportunityName = _.uniqueId("commercialOportunity");
     let nameJustificationPipeline = _.uniqueId('justificationPipeline_');
-    let nameTypePolicy = _.uniqueId('typePolicy_');
     let typeMessage = "success";
     let titleMessage = "";
     let message = "";
@@ -430,7 +429,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         showTypePolicy(val) {
             const { fields: { typePolicy }, selectsReducer } = this.props;
             let productFamilySelected = selectsReducer.get(ALL_PRODUCT_FAMILIES).find((family) => family.id == val);
-            //let productFamilySelected = this.state.productsFamily.find(family => family.id == productFamily.value);
             const keyProductFamily = productFamilySelected ? productFamilySelected.key.toLowerCase() : '';
             if(keyProductFamily === PRODUCT_FAMILY_LEASING.toLowerCase()){
                 this.setState({
@@ -1522,7 +1520,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             valueProp={'id'}
                                             textProp={'value'}
                                             {...typePolicy}
-                                            name={nameTypePolicy}
+                                            name="typePolicy"
                                             parentId="dashboardComponentScroll"
                                             data={selectsReducer.get(FILTER_TYPE_POLICY) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
