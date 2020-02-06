@@ -38,10 +38,29 @@ import {
 } from "../../../actionsGlobal";
 
 import {
-    BUSINESS_CATEGORY, FILTER_COUNTRY, LINE_OF_BUSINESS, PIPELINE_BUSINESS, PRODUCT_FAMILY,
-    MELLOWING_PERIOD, PIPELINE_INDEXING, PIPELINE_PRIORITY, PIPELINE_STATUS, PROBABILITY,
-    FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES,
-    PRODUCTS_MASK, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY, PIPELINE_JUSTIFICATION, CLIENT_NEED, FILTER_MULTISELECT_FIELDS, ALL_BUSINESS_CATEGORIES, ALL_PRODUCT_FAMILIES
+    BUSINESS_CATEGORY,
+    FILTER_COUNTRY,
+    LINE_OF_BUSINESS,
+    PIPELINE_BUSINESS,
+    PRODUCT_FAMILY,
+    MELLOWING_PERIOD,
+    PIPELINE_INDEXING,
+    PIPELINE_PRIORITY,
+    PIPELINE_STATUS,
+    PROBABILITY,
+    FILTER_MONEY_DISTRIBITION_MARKET,
+    FILTER_ACTIVE,
+    TERM_IN_MONTHS_VALUES,
+    PRODUCTS_MASK,
+    CURRENCY,
+    PIPELINE_TYPE,
+    COMMERCIAL_OPORTUNITY,
+    PIPELINE_JUSTIFICATION,
+    CLIENT_NEED,
+    FILTER_MULTISELECT_FIELDS,
+    ALL_BUSINESS_CATEGORIES,
+    ALL_PRODUCT_FAMILIES,
+    FILTER_TYPE_POLICY
 } from "../../selectsComponent/constants";
 import {
     EDITAR, MESSAGE_SAVE_DATA, ONLY_POSITIVE_INTEGER, REVIEWED_DATE_FORMAT, SAVE_DRAFT,
@@ -64,8 +83,8 @@ import {
     TRIANGULAR_LINE,
     IMPORTATION_LEASING,
     NUEVO_NEGOCIO,
-    NEED_FINANCING,PIPELINE_INDEXING_FIELD, PIPELINE_PENDING_DISBURSEMENT_AMOUNT, PIPELINE_TERM_IN_MONTHS_AND_VALUES,
-    PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS
+    NEED_FINANCING, PIPELINE_INDEXING_FIELD, PIPELINE_PENDING_DISBURSEMENT_AMOUNT, PIPELINE_TERM_IN_MONTHS_AND_VALUES,
+    PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS, PRODUCT_FAMILY_LEASING
 } from "../constants";
 import { addUsers, setConfidential } from "../../commercialReport/actions";
 import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
@@ -96,6 +115,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
     let pipelineTypeName = _.uniqueId('pipelineType');
     let commercialOportunityName = _.uniqueId("commercialOportunity");
     let nameJustificationPipeline = _.uniqueId('justificationPipeline_');
+    let nameTypePolicy = _.uniqueId('typePolicy_');
     let typeMessage = "success";
     let titleMessage = "";
     let message = "";
@@ -140,7 +160,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showpendingDisbursementAmountField: false,
                 showComponentDisbursementPlan: false,
                 isFinancingNeed: false,
-                businessCategories: null
+                businessCategories: null,
+                showPolicyType: false
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -325,6 +346,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             if (!_.isEqual(pipelineReducer.get('detailPipeline').productFamily, productFamily.value)) {
                 businessCategory.onChange('');
             }
+            this.showTypePolicy(currencyValue);
         }
 
         _changeAreaAssetsEnabledValue(value){
@@ -403,6 +425,24 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         _onChangeBusinessCategory(val) {                                                        
             this.showInteresSpreadField(val);                                
           }
+
+
+        showTypePolicy(val) {
+            const { fields: { typePolicy }, selectsReducer } = this.props;
+            let productFamilySelected = selectsReducer.get(ALL_PRODUCT_FAMILIES).find((family) => family.id == val);
+            //let productFamilySelected = this.state.productsFamily.find(family => family.id == productFamily.value);
+            const keyProductFamily = productFamilySelected ? productFamilySelected.key.toLowerCase() : '';
+            if(keyProductFamily === PRODUCT_FAMILY_LEASING.toLowerCase()){
+                this.setState({
+                    showPolicyType: true
+                });
+            }else{
+                this.setState({
+                    showPolicyType: false
+                });
+                typePolicy.onChange("");
+            }
+        }
 
         showInteresSpreadField(businessCategoryValue){
             const { fields: { commission }, selectsReducer } = this.props; 
@@ -586,7 +626,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const { fields: {
                 idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                 moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit
+                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit, typePolicy
             }, createEditPipeline, changeStateSaveData, swtShowMessage, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
             } = this.props;
 
@@ -637,7 +677,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "pipelineType": pipelineType.value,
                             "commercialOportunity": commercialOportunity.value,
                             "justification": justification.value,
-                            "pivotNit": pivotNit.value ? pivotNit.value : ""
+                            "pivotNit": pivotNit.value ? pivotNit.value : "",
+                            "policyType": typePolicy.value ? typePolicy.value : "",
                         };
                         if (origin === ORIGIN_PIPELIN_BUSINESS) {
                             typeMessage = "success";
@@ -775,7 +816,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 fields: { businessStatus, commission, currency, idUsuario, nameUsuario, indexing, need, observations, product, roe, moneyDistribitionMarket,
                     termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, positionCreatedBy,
                     positionUpdatedBy, reviewedDate, probability, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                    termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit
+                    termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit, typePolicy
                 }, updateDisbursementPlans
             } = this.props;                        
             updateDisbursementPlans(data.disbursementPlans, origin);
@@ -817,6 +858,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             reviewedDate.onChange(moment(data.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)); 
             businessCategory.onChange(data.businessCategory);      
             product.onChange(data.product);
+            typePolicy.onChange(data.policyType);
         }
 
         loadCategories(productFamily){
@@ -856,7 +898,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                         PROBABILITY, LINE_OF_BUSINESS, MELLOWING_PERIOD,
                         FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY,
-                        PIPELINE_JUSTIFICATION, CLIENT_NEED])]).then(() => {                                                         
+                        PIPELINE_JUSTIFICATION, CLIENT_NEED, FILTER_TYPE_POLICY])]).then(() => {
                             if (origin !== ORIGIN_PIPELIN_BUSINESS) {                            
                                 const { params: { id } } = this.props;
                                 getPipelineById(id).then((result) => {                                                                                       
@@ -913,7 +955,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                     moneyDistribitionMarket, pendingDisbursementAmount, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
                     positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                    termInMonthsValues, pipelineType, commercialOportunity, justification, pivotNit
+                    termInMonthsValues, pipelineType, commercialOportunity, justification, pivotNit, typePolicy
                 }, selectsReducer, handleSubmit, pipelineReducer, reducerGlobal
             } = this.props;            
             const ownerDraft = pipelineReducer.get('ownerDraft');
@@ -1469,6 +1511,25 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         }
                                     </div>
                                 </Col>
+                                {this.state.showPolicyType &&
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{paddingRight: "15px"}}>
+                                        <dt>
+                                            <span>Tipo póliza</span>
+                                        </dt>
+                                        <ComboBox
+                                            labelInput="Seleccione..."
+                                            valueProp={'id'}
+                                            textProp={'value'}
+                                            {...typePolicy}
+                                            name={nameTypePolicy}
+                                            parentId="dashboardComponentScroll"
+                                            data={selectsReducer.get(FILTER_TYPE_POLICY) || []}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
+                                }
                             </Row>
                             {this.state.showComponentDisbursementPlan ?
                             <ComponentDisbursementPlan
