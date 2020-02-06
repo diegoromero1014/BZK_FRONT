@@ -1513,7 +1513,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{paddingRight: "15px"}}>
                                         <dt>
-                                            <span>Tipo póliza</span>
+                                            <span>Tipo de póliza</span>
                                         </dt>
                                         <ComboBox
                                             labelInput="Seleccione..."
