@@ -579,26 +579,4 @@ describe("Test CreatePipelineChildren", () => {
       expect(wrapper.state().businessCategories.value).to.equal("Captación");
     }, 1 );
   });
-
-  it('Should render field Tipo poliza', () => {
-    const wrapper = shallow(<PipelineComponent store={store} {...defaultProps}/>)
-        .dive()
-        .dive()
-        .dive()
-        .dive();
-    wrapper.instance().showTypePolicy(1);
-    expect(wrapper.state().showPolicyType).to.equal(true);
-    expect(wrapper.find(ComboBox).find({name: "typePolicy"})).to.have.length(1);
-  });
-
-  it('Should not render field Tipo poliza', () => {
-    const wrapper = shallow(<PipelineComponent store={store} {...defaultProps}/>)
-        .dive()
-        .dive()
-        .dive()
-        .dive();
-    wrapper.instance().showTypePolicy(2);
-    expect(wrapper.state().showPolicyType).to.equal(false);
-    expect(wrapper.find(ComboBox).find({name: "typePolicy"})).to.have.length(0);
-  });
 });
