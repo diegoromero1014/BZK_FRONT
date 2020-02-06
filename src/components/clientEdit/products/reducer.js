@@ -20,7 +20,7 @@ export default (state = initialState, action) => {
       });
       return state.set(indexProductToUpdate, productToUpdate);
     case CREATE:
-      var product = action.product;
+      const product = action.product;
       const newProduct = _.assign({}, {
         name: product.name,
         type: product.type,

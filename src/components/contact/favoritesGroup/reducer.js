@@ -194,7 +194,7 @@ export default (state = initialState, action = {}) => {
             });
             return state.set('contactByFunctionOrTypeSelected', newList);
         case actions.ASSOCIATE_CONTACTS_BY_FUNCTION_OR_TYPE:
-            var listContact = state.get('group').get('listContact');
+            const listContact = state.get('group').get('listContact');
             listContact.push(...action.listContactsByFunctionOrType);
             var newGroup = Immutable.Map({
                 id: state.get('group').get('id'),

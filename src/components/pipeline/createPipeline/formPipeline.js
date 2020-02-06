@@ -220,7 +220,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     _cleanForm() {
       const {
         fields: {
-          nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, reviewedDate,
+          nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, reviewedDate,
           client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues, justification, pivotNit
         }
       } = this.props;
@@ -253,6 +253,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       areaAssetsValue.onChange('');
       justification.onChange('');
       pivotNit.onChange('');
+      sva.onChange('');
     }
 
     _changeCurrency(currencyValue) {
@@ -703,12 +704,12 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               });
 
               changeStateSaveData(true, MESSAGE_SAVE_DATA);
-              createEditPipeline(pipelineJson).then((data) => {
+              createEditPipeline(pipelineJson).then((data) => {                                
                 changeStateSaveData(false, "");
                 if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                   redirectUrl("/login");
-                } else {
-                  if ((_.get(data, 'payload.data.status') === 200)) {
+                } else {                  
+                  if ((_.get(data, 'payload.data.status') === 200)) {                    
                     typeMessage = "success";
                     titleMessage = "Creación pipeline";
                     message = "Señor usuario, el pipeline se creó exitosamente.";

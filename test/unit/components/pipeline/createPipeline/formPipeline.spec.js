@@ -9,6 +9,8 @@ import configureStore from "redux-mock-store";
 import Immutable from "immutable";
 import { reducer as formReducer } from "redux-form";
 import * as actionsGlobal from "../../../../../src/actionsGlobal";
+import * as pipelineActions from '../../../../../src/components/pipeline/actions';
+import * as globalActions from '../../../../../src/components/globalComponents/actions';
 import Input from "../../../../../src/ui/input/inputComponent";
 import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
 import SweetAlert from "../../../../../src/components/sweetalertFocus";
@@ -34,20 +36,44 @@ const productsResolve = {payload: {data: {data: { id: 100, value: 'Captación', 
 
 let stubGetParameter;
 let stubGetCatalogType;
+let createEditPipeline;
+let redirectUrl;
 
 describe("Test CreatePipeline", () => {
-  let store; 
+  let store;
+
   beforeEach(() => {
     const selectsReducer = Immutable.Map({ PRODUCT_FAMILY: productFamily, pipelineType: pipelineTypes});
     const pipelineReducer = Immutable.Map({
       nameDisbursementPlansInReducer: "disbursementPlans"
     });
     const clientInformacion = Immutable.Map({ responseClientInfo: clientInfo });
+    const usersPermission = Immutable.List();
+    const confidentialReducer = Immutable.Map({
+      confidential: false
+    });
+    const pipelineBusinessReducer = Immutable.Map();      
+    redirectUrl = sinon.stub(globalActions, "redirectUrl");
+    createEditPipeline = sinon.stub(pipelineActions, 'createEditPipeline');
+    createEditPipeline.onCall(0)
+            .returns(() => { return new Promise((resolve, reject) => resolve(
+                {
+                  payload: {
+                    data: {
+                      validateLogin: true,
+                      status: 200
+                    }                    
+                  }
+                })); });
     store = mockStore({
       selectsReducer,
       clientInformacion,
       pipelineReducer,
-      form: formReducer
+      form: formReducer,
+      usersPermission,
+      confidentialReducer,
+      pipelineBusinessReducer,
+      createEditPipeline
     });
     
     const getParameterSuccess = {payload: {data:{parameter:{"id":5233384,"createdTimestamp":null,"createdBy":null,"updatedTimestamp":null,"updatedBy":null,"status":null,"name":"ULTIMA_REVISION_DE_PIPELINE","typeofData":"Fecha","value":"01/03/2015","description":null}, status: '200', validateLogin: true}}}
@@ -68,7 +94,8 @@ describe("Test CreatePipeline", () => {
     // runs after each test in this block
     stubGetParameter.restore();
     stubGetCatalogType.restore();
-
+    createEditPipeline.restore();
+    redirectUrl.restore();
   });
 
   let origin = "pipeline";
@@ -355,6 +382,34 @@ describe("Test CreatePipeline", () => {
       expect(wrapper.state().products.value).to.equal("Factoring Plus");
       expect(wrapper.state().businessCategories.value).to.equal("Captación");
     }, 1 );
+  });
+
+  it('should clean form when cleanForm is called', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+    const svaOnChangeSpy = spy(sinon.fake());
+    wrapper.instance().props.fields.sva.onChange = svaOnChangeSpy;
+    wrapper.update();    
+    
+    wrapper.instance()._cleanForm();
+
+    expect(svaOnChangeSpy).to.have.been.called(1);
+  });
+
+  it('submitCreatePipeline should call createEditPipeline action', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+    wrapper.instance().props.fields.productFamily.value = 456465;    
+    wrapper.instance()._submitCreatePipeline();
+    expect(createEditPipeline.calledOnce).to.equal(true);
+    
   });
 });
 
