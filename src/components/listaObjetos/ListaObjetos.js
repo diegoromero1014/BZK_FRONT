@@ -6,6 +6,7 @@ import {mapKeys} from 'lodash';
 
 import ToolTip from "../toolTip/toolTipComponent";
 import SweetAlert from "../sweetalertFocus";
+import Modal from "react-modal";
 import { updateElementFromList, updateActiveFieldObject } from "./actions";
 
 import {
@@ -241,9 +242,9 @@ export class ListaObjetos extends Component {
 
     let tituloCompleto;
     if (titulo === "Oportunidades") {
-      tituloCompleto = "Oportunidades externas";
+      tituloCompleto = "Oportunidades (externas)";
     } else if (titulo === "Debilidades") {
-      tituloCompleto = "Debilidades internas del cliente";
+      tituloCompleto = "Debilidades (internas del cliente)";
     }
 
     return (

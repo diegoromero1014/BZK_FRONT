@@ -16,6 +16,7 @@ import { renderLabel, renderMessageError }  from '../../functions';
 
 import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER, HELP_VISIT_TYPE, TITLE_MESSAGE_PENDIENT } from './constants';
 import { checkRichTextRequiredBoolean } from '../../validationsFields/rulesField';
+import SectionOpportunitiesWeaknesses from '../opportunitiesWeaknesses/SectionOpportunitiesWeaknesses';
 
 export class PrevisitFormComponent extends Component {
    constructor(props) {
@@ -216,12 +217,14 @@ export class PrevisitFormComponent extends Component {
                   </Col>
                </Row>
 
+               <SectionOpportunitiesWeaknesses visual={true}/>
+               
                <Row style={{ padding: "20px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
                      {this.renderTitle(objective)}
                   </Col>
                </Row>
-
+           
                <Row style={{ padding: "0px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
                      <Field type="text" name="principalObjective">
