@@ -1,4 +1,4 @@
-import { uniqueId, isEmpty } from 'lodash'
+import { uniqueId, isEmpty, find, indexOf } from 'lodash'
 
 import {
     CREATE_LIST,
@@ -39,9 +39,19 @@ function addIdToElement(element) {
     return modifiedFiels;
 }
 
+function replaceElementInArray(arr, searchFunction, newElement) {
+    var match = find(arr, searchFunction);
+    if(match){
+        var index = indexOf(arr, find(arr, searchFunction));
+        arr.splice(index, 1, newElement);
+    } else {
+        arr.push(newElement);
+    }
+    return arr;
+}
+
 function mergeElements(elements, newElement) {
-    const filterElements = elements.filter((element) => element[ID] !== newElement[ID]);
-    return [...filterElements, newElement];
+    return replaceElementInArray(elements, (element) => element[ID] == newElement[ID], newElement );
 }
 
 /**
@@ -107,9 +117,14 @@ function addElementToList(state, listName) {
     return addNewListToState(listName, state, newList);
 }
 
-export default (state = initialState, action) => {
+export default (state, action) => {
+
+    if (!state) {
+        state = initialState
+    }
+
     switch (action.type) {
-        case CREATE_LIST:
+        case CREATE_LIST: {
             //Lista ya se encuentra creada
             if (state.hasOwnProperty(action.name)) {
                 return state;
@@ -117,6 +132,7 @@ export default (state = initialState, action) => {
             let newState = Object.assign({}, state);
             newState[action.name] = Object.assign({}, defaultListState, action.defaultValues);
             return newState;
+        }
         case ADD_FIELD_TO_LIST: {
             let list = state[action.list];
             let fields = Object.assign({}, list.fields, { [action.field]: action.value });

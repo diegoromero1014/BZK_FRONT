@@ -73,8 +73,8 @@ export default function makeFieldList(listName, childrenList=[]) {
 
     }
 
-    function mapStateToProps({ formLists }) {
-        let values = formLists[listName];
+    function mapStateToProps({ fieldListReducer }) {
+        let values = fieldListReducer[listName];
         let fields = {};
         let elements = [];
         let showAddSection = false;
@@ -90,7 +90,7 @@ export default function makeFieldList(listName, childrenList=[]) {
         }
 
         return {
-            formLists,
+            fieldListReducer,
             fields,
             elements,
             showAddSection,

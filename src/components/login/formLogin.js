@@ -18,8 +18,7 @@ import { changeActiveItemMenu } from '../menu/actions';
 import { isInternetExplorer } from '../../utils/browserValidation';
 
 import SweetAlert from "../sweetalertFocus";
-import ReCaptcha from '../recaptcha/component';
-import {getGrecaptcha} from '../recaptcha/actions';
+import ReCaptcha from '../recaptcha/ReCaptcha';
 import {clearCache} from '../../utils/catchRequest';
 import { changeTokenStatus } from '../dashboard/actions';
 
@@ -37,9 +36,11 @@ class FormLogin extends Component {
             showMessageNotification: false,
             messageTitle: '¡Aviso!',
             messageNotification: '',
-            loginAttempts: 0
+            loginAttempts: 0,
+            valueRecaptcha:""
         };        
         this._redirectLogin = this._redirectLogin.bind(this);
+        this._getValueRecaptcha = this._getValueRecaptcha.bind(this);
     }
 
     _handleChangeId(e) {
@@ -59,11 +60,15 @@ class FormLogin extends Component {
         redirectUrl("/dashboard/clients");
     }
 
+    _getValueRecaptcha(value){
+        this.setState({valueRecaptcha:value});
+    }
+
     _handleValidateLogin(e) {
         e.preventDefault();
         
         const { usuario, password } = this.state;
-        const recaptcha = this.state.loginAttempts >= 2 ? getGrecaptcha().getResponse() : null;        
+        const recaptcha = this.state.loginAttempts >= 2 ? this.state.valueRecaptcha : null;
         const { validateLogin, showLoading, changeActiveItemMenu, changeTokenStatus } = this.props;
         changeTokenStatus(true);
         showLoading(true, LOADING_LOGIN);        
@@ -90,8 +95,11 @@ class FormLogin extends Component {
                     this.setState({
                         message: res.message,             
                         //TODO: reCaptcha deshabilitado           
-                        //loginAttempts: res.loginAttempts                        
+                        loginAttempts: res.loginAttempts
                     });
+                    if(res.shouldReload){
+                        window.location.reload(true);
+                    }
                 }
                 showLoading(false, '');
             })
@@ -155,7 +163,9 @@ class FormLogin extends Component {
                         required value={this.state.password}
                         onChange={this._handleChangePassword.bind(this)}></input>
                 </div>
-
+                <div className={'form-item ' + (this.state.loginAttempts >= 2 ? 'show' : 'hidden')} style={{ marginLeft: "0px", paddingLeft: '28px', paddingRight: '28px' }}>
+                    <ReCaptcha _getValueRecaptcha={this._getValueRecaptcha}/>
+                </div>
                 <div style={{ marginLeft: "28px", marginTop: "20px", marginBottom: "0px", marginRight: "10px" }}>
                     <span style={{ color: "#e76e70", size: "17px" }}>{this.state.message}</span>
                 </div>

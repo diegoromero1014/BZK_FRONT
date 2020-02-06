@@ -17,7 +17,8 @@ export function changeParticipantClientDataStructure(participant){
     return {
         "id": null,
         "contact": participant.idParticipante,
-        "order": participant.order
+        "order": participant.order,
+        "interlocutorObjs": participant.interlocutorObjs
     };
 }
 
@@ -52,6 +53,7 @@ export function fillParticipants(participants){
             actitudBanco: participant.attitudeOverGroupName === null || participant.attitudeOverGroupName === undefined || participant.attitudeOverGroupName === '' ? ''
                 : ' - ' + participant.attitudeOverGroupName
         };
+
         switch (participant.tipoParticipante) {            
             case KEY_PARTICIPANT_CLIENT:                
                 participantData.idParticipante = participant.contact;
@@ -59,6 +61,12 @@ export function fillParticipants(participants){
                 participantData.cargo = participant.contactPositionName === null || participant.contactPositionName === undefined || participant.contactPositionName === '' ? ''
                     : ' - ' + participant.contactPositionName;
                 participantData.empresa = '';
+                participantData.interlocutorObjs = participant.interlocutorObjs;
+                participantData.nameComplet = participant.contactName; 
+                participantData.contactPosition = participant.contactPositionName;
+                participantData.contactSocialStyle = participant.socialStyleName;
+                participantData.contactActitudeCompany = participant.attitudeOverGroupName;
+
                 return participantData;
             case KEY_PARTICIPANT_BANCO:                
                 participantData.idParticipante = participant.employee;

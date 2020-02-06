@@ -13,7 +13,9 @@ import {
     renderElements as renderStrategyElements
 } from '../Strategies/Strategies';
 
-const ListaObjetivos = makeFieldList("objectives", [{ name: "strategies", alias: "strategies", initialValues: {value: ""} }]);
+export const listName = "objectives";
+
+const ListaObjetivos = makeFieldList(listName, [{ name: "strategies", alias: "strategies", initialValues: { value: "" } }]);
 const ListaEstrategias = makeFieldList("strategies");
 
 const styles = {
@@ -26,7 +28,7 @@ const styles = {
     }
 }
 
-const helpText = "¿A donde quiere llegar el cliente? ¿Como se visualiza en algunos años?";
+const helpText = "¿A dónde quiere llegar el cliente? ¿Cómo se visualiza en algunos años?";
 
 const objectivesInitialValues = {
     value: ""
@@ -50,9 +52,9 @@ export default class Objetivos extends React.Component {
                     }
                     initialValues={objectivesInitialValues}
                     schema={ObjetiveSchema}
-                    title={"Objetivos"}
+                    title={"Objetivos del cliente"}
                     maxLength={3}
-                    renderAddSection={({fields, onChange, onAddElement, onCancel, isEditing, errors}) => (
+                    renderAddSection={({ fields, onChange, onAddElement, onCancel, isEditing, errors }) => (
                         <Row>
                             <Modal isOpen={true} className="modalBt3-fade modal fade contact-detail-modal in">
                                 <div className="modalBt4-dialog modalBt4-lg">
@@ -67,7 +69,7 @@ export default class Objetivos extends React.Component {
                                         <div style={{ padding: "15px" }}>
                                             <Col md={12} sm={9} >
                                                 <div>
-                                                    <dt><span>{helpText} (<span style={{color: 'red'}}>*</span>)</span></dt>
+                                                    <dt><span>{helpText} (<span style={{ color: 'red' }}>*</span>)</span></dt>
                                                     <TextArea
                                                         placeholder=""
                                                         onChangeEvent={onChange}
@@ -103,7 +105,7 @@ export default class Objetivos extends React.Component {
                                             </Col>
                                             <Col md={12} style={styles.buttonsDiv}>
                                                 <div style={styles.buttonsDiv}>
-                                                    <button style={{ marginRight: "15px" }} className="btn btn-secondary save-btn" type="button" onClick={onAddElement}>{isEditing ? "Guardar" : "Agregar"}</button>
+                                                    <button style={{ marginRight: "15px" }} className="btn btn-secondary save-btn" type="button" onClick={onAddElement}>{isEditing ? "Modificar" : "Agregar"}</button>
                                                     <button className="btn btn-primary cancel-btn" type="button" onClick={onCancel}>Cancelar</button>
                                                 </div>
                                             </Col>
@@ -126,7 +128,7 @@ export function renderElements(elements, removeElement, editElement) {
     return (
         <div >
             {elements.map((objetivo) => (
-                <Row className="row-element" style={{margin: "5px"}}>
+                <Row className="row-element" style={{ margin: "5px" }}>
                     <Col xs={12} style={{}}>
                         <div className="element-buttons" style={{
                             height: "100%",
@@ -140,7 +142,7 @@ export function renderElements(elements, removeElement, editElement) {
                             float: "left"
                         }}>
                             <i
-                                className="zoom icon"
+                                className="edit icon"
                                 title="Editar Objetivo"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => editElement(objetivo)}
@@ -154,7 +156,7 @@ export function renderElements(elements, removeElement, editElement) {
 
                             />
 
-                        </div><div style={{display: "block"}}>
+                        </div><div style={{ display: "block" }}>
                             <Row>
                                 <Col md={12} sm={12}>
                                     <Row>
@@ -175,14 +177,11 @@ export function renderElements(elements, removeElement, editElement) {
                                         <Col md={12}>
                                             <div className="section-list-divider" style={{}} >
                                                 <Row>
-                                                    <Col md={6} sm={12} style={{ display: "flex", padding: "10px", marginTop: "10px" }} >
-                                                        <div style={{}}>
-
-                                                        </div>
-                                                        <div style={{}}>
+                                                    <Col md={6} sm={12} style={{ padding: "10px", marginTop: "10px" }} >
+                                                        <div>
                                                             <Row>
 
-                                                                <Col md={12}>
+                                                                <Col md={12} className="add-line-break">
                                                                     {objetivo.value}
                                                                 </Col>
 
@@ -191,10 +190,17 @@ export function renderElements(elements, removeElement, editElement) {
                                                     </Col>
                                                     <Col md={6} sm={12}>
                                                         <div style={{ padding: "10px" }} className="section-list-parent">
+
+                                                            {!objetivo["strategies"].length && <div className="elements-not-found">
+                                                                <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px", padding: "5px", border: "1px solid #ECECEC" }}>
+                                                                    <span className="form-item">No se han adicionado Estrategias.</span>
+                                                                </div>
+                                                            </div>}
+
                                                             {objetivo["strategies"] && objetivo["strategies"].map((strategy) => (
                                                                 <Row className="section-list-divider">
                                                                     <div style={{ margin: "10px 0 10px 0" }}>
-                                                                        <Col md={12}>
+                                                                        <Col md={12} className="add-line-break">
                                                                             {strategy.value}
                                                                         </Col>
                                                                     </div>
