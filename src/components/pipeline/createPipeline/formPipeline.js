@@ -44,7 +44,7 @@ import {
   PIPELINE_JUSTIFICATION,
   CLIENT_NEED,
   FILTER_MULTISELECT_FIELDS,
-  FILTER_TYPE_POLICY, ALL_PRODUCT_FAMILIES
+  FILTER_TYPE_POLICY
 } from "../../selectsComponent/constants";
 import { BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY,
   ORIGIN_PIPELIN_BUSINESS, CURRENCY_MESSAGE, OPORTUNITIES_MANAGEMENT,
@@ -256,6 +256,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       areaAssetsValue.onChange('');
       justification.onChange('');
       pivotNit.onChange('');
+      typePolicy.onChange('');
     }
 
     _changeCurrency(currencyValue) {
