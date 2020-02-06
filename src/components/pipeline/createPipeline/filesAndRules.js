@@ -15,6 +15,7 @@ export const fieldsWithRules = {
     value: { rules: [checkRequired, checkNumberLength(15)] }, 
     commission: { rules: [checkNumberLength(10)] }, 
     roe: { rules: [checkNumberLength(10)] }, 
+    sva: { rules: [checkNumberLength(15)] },
     termInMonths: { rules: [checkRequiredTermInMonths, checkNumberLength(3)] },
     businessStatus: { rules: [checkRequired] }, 
     businessCategory: { rules: [checkRequiredWithGlobalCondition] }, 

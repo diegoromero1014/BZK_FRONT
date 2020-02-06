@@ -7,7 +7,8 @@ import {NUEVO_NEGOCIO, OPORTUNITIES_MANAGEMENT} from "../../../../../src/compone
 import Immutable from "immutable";
 import * as selectsComponent from "../../../../../src/components/selectsComponent/actions";
 import * as pipelineActions from '../../../../../src/components/pipeline/actions';
-import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
+import Input from "../../../../../src/ui/input/inputComponent";
+import * as globalActions from '../../../../../src/components/globalComponents/actions';
 
 const clientInfo = [{}, {}];
 const productFamily = [{}, {}];
@@ -27,6 +28,7 @@ let stubGetCatalogType;
 let getPipelineById;
 let store;
 let defaultProps;
+let redirectUrl;
 
 describe('Pruebas unitarias editar pipeline', () =>{
 
@@ -50,6 +52,7 @@ describe('Pruebas unitarias editar pipeline', () =>{
             .returns(() => { return new Promise((resolve, reject) => resolve(
                 {payload: {data: {data: { id: 1, value: 'Factoring', key: 'Factoring', field: 'productFamily', description: ''}}}}
             )); });
+        redirectUrl = sinon.stub(globalActions, "redirectUrl");
 
         defaultProps = {
             form: formReducer,
@@ -68,6 +71,7 @@ describe('Pruebas unitarias editar pipeline', () =>{
     afterEach(() => {
         stubGetCatalogType.restore();
         getPipelineById.restore();
+        redirectUrl.restore();
     })
 
     let origin = "pipeline";
@@ -100,4 +104,14 @@ describe('Pruebas unitarias editar pipeline', () =>{
         sinon.assert.notCalled(getNeedById);
 
     });
+
+    it('should render SVA field', () => {
+      const wrapper = shallow(<PipelineComponent store={store}  {...defaultProps}/>)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+  
+      expect(wrapper.find(Input).find({ name: "sva" })).to.have.length(1);
+    })
 })

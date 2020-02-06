@@ -101,8 +101,18 @@ describe("Test CreatePipeline", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(4);
+    expect(wrapper.find(Input)).to.have.length(5);
   });
+
+  it('should render SVA field', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+    expect(wrapper.find(Input).find({ name: "sva" })).to.have.length(1);
+  })
 
   it('show Active field when areaAssetsEnabled value is true', () => {
     const wrapper = shallow(<PipelineComponent store={store} />)
@@ -525,7 +535,7 @@ describe("Test CreatePipelineChildren", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(4);
+    expect(wrapper.find(Input)).to.have.length(5);
     expect(
       wrapper.find(Input).find({ name: "txtOpportunityName" })
     ).to.have.length(0);
