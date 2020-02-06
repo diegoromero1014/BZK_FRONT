@@ -40,7 +40,8 @@ export const fieldsWithRules = {
     pipelineType: { rules: [checkRequired] },
     commercialOportunity: { rules: [checkRequiredComercialOportunity] },
     justification: { rules: [checkRequiredPipelineJustification]},
-    pivotNit: {rules: [checkRequiredPivotNit]}
+    pivotNit: {rules: [checkRequiredPivotNit]},
+    typePolicy: { rules: [] }
 }
 
 export const fields = _.keys(fieldsWithRules);
