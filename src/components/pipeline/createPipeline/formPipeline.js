@@ -1136,6 +1136,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       type="text"
                       {...roe}
                       parentId="dashboardComponentScroll"
+                      placeholder="Ingresa el valor sin el %. Ejm ROE 30"
                       onBlur={val => handleBlurValueNumber(1, roe, val, true, 2)}
                       onFocus={val => handleFocusValueNumber(roe, roe.value)}
                     />
