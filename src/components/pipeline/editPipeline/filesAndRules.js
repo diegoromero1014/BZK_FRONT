@@ -22,7 +22,7 @@ export const fieldsWithRules = {
     idUsuario: { rules: [checkRequired] }, 
     value: { rules: [checkRequired, checkNumberLength(15)] }, 
     commission: { rules: [checkNumberLength(10)] }, 
-    roe: { rules: [checkNumberLength(10)] }, 
+    roe: { rules: [checkNumberLength(5)] },
     termInMonths: { rules: [checkRequiredTermInMonths, checkNumberLength(4)] },
     businessStatus: { rules: [] }, 
     businessCategory: { rules: [checkRequiredWithGlobalCondition] }, 
