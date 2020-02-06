@@ -284,7 +284,15 @@ describe("Test CreatePipeline", () => {
   });
 
   
+it('should render filed roe', ()=>{
+    const wrapper = shallow(<PipelineComponent store={store}/>)
+    .dive()
+    .dive()
+    .dive()
+    .dive();
 
+    expect(wrapper.find(Input).find({name:'roe'})).to.have.length(1);
+});
   
   it('should render  messages tooltip value nominal', () => {
     const wrapper = shallow(<PipelineComponent store={store} />)

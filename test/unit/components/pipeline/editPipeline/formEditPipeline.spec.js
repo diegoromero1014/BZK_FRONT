@@ -8,6 +8,7 @@ import Immutable from "immutable";
 import * as selectsComponent from "../../../../../src/components/selectsComponent/actions";
 import * as pipelineActions from '../../../../../src/components/pipeline/actions';
 import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
+import Input from "../../../../../src/ui/input/inputComponent";
 
 const clientInfo = [{}, {}];
 const productFamily = [{}, {}];
@@ -99,5 +100,15 @@ describe('Pruebas unitarias editar pipeline', () =>{
         wrapper.instance()._changeNeedsClient();
         sinon.assert.notCalled(getNeedById);
 
+    });
+
+    it('should render filed roe', ()=>{
+        const wrapper = shallow(<PipelineComponent store={store}/>)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        expect(wrapper.find(Input).find({name:'roe'})).to.have.length(1);
     });
 })
