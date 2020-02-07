@@ -20,16 +20,16 @@ export default (state = initialState, action) => {
       });
       return state.set(indexProductToUpdate, productToUpdate);
     case CREATE:
-      let product = action.product;
+      let productAction = action.product;
       const newProduct = _.assign({}, {
-        name: product.name,
-        type: product.type,
-        number: product.number,
-        averageMontlyAmount: product.averageMontlyAmount,
-        coin: product.coin,
-        country: product.country,
-        city: product.city,
-        uid: product.uid
+        name: productAction.name,
+        type: productAction.type,
+        number: productAction.number,
+        averageMontlyAmount: productAction.averageMontlyAmount,
+        coin: productAction.coin,
+        country: productAction.country,
+        city: productAction.city,
+        uid: productAction.uid
       });
       return state.push(newProduct);
     case DELETE:
