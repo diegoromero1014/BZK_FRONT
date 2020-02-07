@@ -13,9 +13,9 @@ export const fieldsWithRules = {
     nameUsuario: { rules: [checkRequired, checkOnlyAlphabetical] }, 
     idUsuario: { rules: [checkRequired] }, 
     value: { rules: [checkRequired, checkNumberLength(15)] }, 
-    commission: { rules: [checkNumberLength(10)] }, 
-    roe: { rules: [checkNumberLength(10)] }, 
+    commission: { rules: [checkNumberLength(10)] },     
     sva: { rules: [checkNumberLength(15)] },
+    roe: { rules: [checkNumberLength(5)] },
     termInMonths: { rules: [checkRequiredTermInMonths, checkNumberLength(3)] },
     businessStatus: { rules: [checkRequired] }, 
     businessCategory: { rules: [checkRequiredWithGlobalCondition] }, 
@@ -41,7 +41,8 @@ export const fieldsWithRules = {
     pipelineType: { rules: [checkRequired] },
     commercialOportunity: { rules: [checkRequiredComercialOportunity] },
     justification: { rules: [checkRequiredPipelineJustification]},
-    pivotNit: {rules: [checkRequiredPivotNit]}
+    pivotNit: {rules: [checkRequiredPivotNit]},
+    typePolicy: { rules: [] }
 }
 
 export const fields = _.keys(fieldsWithRules);

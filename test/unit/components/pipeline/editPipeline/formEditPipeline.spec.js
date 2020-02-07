@@ -3,13 +3,18 @@ import FormEditPipeline from "../../../../../src/components/pipeline/editPipelin
 import thunk from "redux-thunk";
 import configureStore from "redux-mock-store";
 import { reducer as formReducer } from "redux-form";
-import {NUEVO_NEGOCIO, OPORTUNITIES_MANAGEMENT} from "../../../../../src/components/pipeline/constants";
+import {
+    NUEVO_NEGOCIO,
+    OPORTUNITIES_MANAGEMENT,
+    PRODUCT_FAMILY_LEASING
+} from "../../../../../src/components/pipeline/constants";
 import Immutable from "immutable";
 import * as selectsComponent from "../../../../../src/components/selectsComponent/actions";
 import * as pipelineActions from '../../../../../src/components/pipeline/actions';
 import Input from "../../../../../src/ui/input/inputComponent";
 import * as globalActions from '../../../../../src/components/globalComponents/actions';
 import * as actionsGlobal from "../../../../../src/actionsGlobal";
+import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
 
 const clientInfo = [{}, {}];
 const productFamily = [{}, {}];
@@ -36,7 +41,10 @@ let stubHandleFocusValueNumber;
 describe('Pruebas unitarias editar pipeline', () =>{
 
     beforeEach(() => {
-        const selectsReducer = Immutable.Map({ PRODUCT_FAMILY: productFamily, clientNeed: [{id: 12012, value: 'Alguna necesidad'}] });
+        const selectsReducer = Immutable.Map({
+            PRODUCT_FAMILY: [{id: 505950, value: 'Leasing'}],
+            clientNeed: [{id: 12012, value: 'Alguna necesidad'}],
+            allProductFamilies: [{id: 1, key: PRODUCT_FAMILY_LEASING}, {id: 2, key: 'Factoring'}] });
         const clientInformacion = Immutable.Map({ responseClientInfo: clientInfo });
         const reducerGlobal = Immutable.Map({});
         const pipelineReducer = Immutable.Map({
@@ -169,4 +177,36 @@ describe('Pruebas unitarias editar pipeline', () =>{
       svaField.simulate('focus', {value: 15555});
       expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
     });
-})
+
+    it('should render filed roe', ()=>{
+      const wrapper = shallow(<PipelineComponent store={store}/>)
+          .dive()
+          .dive()
+          .dive()
+          .dive();
+
+      expect(wrapper.find(Input).find({name:'roe'})).to.have.length(1);
+  });
+
+  it('Should render field Tipo poliza in EditPipelineForm', () => {
+      const wrapper = shallow(<PipelineComponent store={store} {...defaultProps}/>)
+          .dive()
+          .dive()
+          .dive()
+          .dive();
+      wrapper.instance().showTypePolicy(1);
+      expect(wrapper.state().showPolicyType).to.equal(true);
+      expect(wrapper.find(ComboBox).find({name: "typePolicy"})).to.have.length(1);
+  });
+
+  it('Should not render field Tipo poliza in EditPipelineForm', () => {
+      const wrapper = shallow(<PipelineComponent store={store} {...defaultProps}/>)
+          .dive()
+          .dive()
+          .dive()
+          .dive();
+      wrapper.instance().showTypePolicy(2);
+      expect(wrapper.state().showPolicyType).to.equal(false);
+      expect(wrapper.find(ComboBox).find({name: "typePolicy"})).to.have.length(0);
+  });
+});
