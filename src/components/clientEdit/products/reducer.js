@@ -38,17 +38,17 @@ export default (state = initialState, action) => {
     case SET:
       const products = action.products;
       return state.withMutations(list => {
-        products.map(product => {
+        products.map(p => {
           const uid = _.uniqueId('product_');
           list.push({
             uid,
-            name: product.name,
-            type: product.type,
-            number: product.number,
-            averageMontlyAmount: product.averageMontlyAmount,
-            coin: product.coin,
-            country: product.country,
-            city: product.city
+            name: p.name,
+            type: p.type,
+            number: p.number,
+            averageMontlyAmount: p.averageMontlyAmount,
+            coin: p.coin,
+            country: p.country,
+            city: p.city
           })
         });
       });
