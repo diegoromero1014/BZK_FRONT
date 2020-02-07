@@ -69,7 +69,7 @@ export default (state = initialState, action) => {
                     .set('noAppliedIntOperations', noAppliedIntOperations);
             });
         case UPDATE_CONTEXT_CLIENT:
-            let { data } = action.payload.data;
+            const data = action.payload.data.data;
             const otherListMainCustomer = _.isUndefined(data) || _.isNull(data) || _.isNull(data.listMainCustomer) ? [] : data.listMainCustomer;
             const otherListMainSupplier = _.isUndefined(data) || _.isNull(data) || _.isNull(data.listMainSupplier) ? [] : data.listMainSupplier;
             const otherNoAppliedMainClients = _.isUndefined(data) || _.isNull(data) || _.isNull(data.noAppliedMainClients) ? false : data.noAppliedMainClients;
