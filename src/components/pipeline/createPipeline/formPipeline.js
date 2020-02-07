@@ -622,7 +622,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         fields: {
           idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, probability, nameUsuario,
           opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues, pendingDisbursementAmount,
-          pipelineType, commercialOportunity, justification, pivotNit
+          pipelineType, commercialOportunity, justification, pivotNit, margen
         }, createEditPipeline, swtShowMessage, changeStateSaveData, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
       } = this.props;
       
@@ -672,7 +672,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "pipelineType": pipelineType.value,
               "commercialOportunity": commercialOportunity.value,
               "justification": justification.value,
-              "pivotNit": pivotNit.value ? pivotNit.value : ""          
+              "pivotNit": pivotNit.value ? pivotNit.value : "",
+              "margin": margen.value === undefined || margen.value === null || margen.value === '' ? '' : numeral(margen.value).format('0.0000'),
+          
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -862,7 +864,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const { fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, pendingDisbursementAmount,
         probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod,
-        moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity, areaAssetsValue, termInMonthsValues, justification, pivotNit },
+        moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity, areaAssetsValue, termInMonthsValues, justification, pivotNit, margen },
         selectsReducer, handleSubmit, reducerGlobal, pipelineReducer } = this.props;
 
       const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
@@ -1141,8 +1143,24 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
+
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
+                    <dt>
+                      <span>Margen</span>
+                    </dt>
+                    <Input
+                      name="margen"
+                      type="text"
+                      {...margen}
+                      parentId="dashboardComponentScroll"
+                      onBlur={val => handleBlurValueNumber(1, margen, val, true)}
+                      onFocus={val => handleFocusValueNumber(margen, margen.value)}
+                    />
+                  </div>
+                </Col>
+                <Col xs={6} md={3} lg={3}>
+                  <div style={{ paddingRight: "15px", marginTop: "0.5em" }}>
                     <dt>
                       <span>Moneda (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
