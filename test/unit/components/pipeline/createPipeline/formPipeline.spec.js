@@ -9,6 +9,8 @@ import configureStore from "redux-mock-store";
 import Immutable from "immutable";
 import { reducer as formReducer } from "redux-form";
 import * as actionsGlobal from "../../../../../src/actionsGlobal";
+import * as pipelineActions from '../../../../../src/components/pipeline/actions';
+import * as globalActions from '../../../../../src/components/globalComponents/actions';
 import Input from "../../../../../src/ui/input/inputComponent";
 import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
 import SweetAlert from "../../../../../src/components/sweetalertFocus";
@@ -34,20 +36,48 @@ const productsResolve = {payload: {data: {data: { id: 100, value: 'Captación', 
 
 let stubGetParameter;
 let stubGetCatalogType;
+let createEditPipeline;
+let stubHandleBlurValueNumber;
+let stubHandleFocusValueNumber;
+let redirectUrl;
 
 describe("Test CreatePipeline", () => {
-  let store; 
+  let store;
+
   beforeEach(() => {
     const selectsReducer = Immutable.Map({ PRODUCT_FAMILY: productFamily, pipelineType: pipelineTypes});
     const pipelineReducer = Immutable.Map({
       nameDisbursementPlansInReducer: "disbursementPlans"
     });
     const clientInformacion = Immutable.Map({ responseClientInfo: clientInfo });
+    const usersPermission = Immutable.List();
+    const confidentialReducer = Immutable.Map({
+      confidential: false
+    });
+    const pipelineBusinessReducer = Immutable.Map();      
+    redirectUrl = sinon.stub(globalActions, "redirectUrl");
+    stubHandleBlurValueNumber = sinon.stub(actionsGlobal, 'handleBlurValueNumber');
+    stubHandleFocusValueNumber = sinon.stub(actionsGlobal, 'handleFocusValueNumber');
+    createEditPipeline = sinon.stub(pipelineActions, 'createEditPipeline');
+    createEditPipeline.onCall(0)
+            .returns(() => { return new Promise((resolve, reject) => resolve(
+                {
+                  payload: {
+                    data: {
+                      validateLogin: true,
+                      status: 200
+                    }                    
+                  }
+                })); });
     store = mockStore({
       selectsReducer,
       clientInformacion,
       pipelineReducer,
-      form: formReducer
+      form: formReducer,
+      usersPermission,
+      confidentialReducer,
+      pipelineBusinessReducer,
+      createEditPipeline
     });
     
     const getParameterSuccess = {payload: {data:{parameter:{"id":5233384,"createdTimestamp":null,"createdBy":null,"updatedTimestamp":null,"updatedBy":null,"status":null,"name":"ULTIMA_REVISION_DE_PIPELINE","typeofData":"Fecha","value":"01/03/2015","description":null}, status: '200', validateLogin: true}}}
@@ -68,7 +98,10 @@ describe("Test CreatePipeline", () => {
     // runs after each test in this block
     stubGetParameter.restore();
     stubGetCatalogType.restore();
-
+    stubHandleBlurValueNumber.restore();
+    stubHandleFocusValueNumber.restore();
+    createEditPipeline.restore();
+    redirectUrl.restore();
   });
 
   let origin = "pipeline";
@@ -101,7 +134,39 @@ describe("Test CreatePipeline", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(4);
+    expect(wrapper.find(Input)).to.have.length(6);
+  });
+
+  it('should render SVA field', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+    expect(wrapper.find(Input).find({ name: "sva" })).to.have.length(1);
+  });
+
+  it('should call SVA onBlur function', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+    const svaField = wrapper.find(Input).find({ name: "sva" });    
+    svaField.simulate('blur', {value: 15555});
+    expect(stubHandleBlurValueNumber.calledOnce).to.equal(true);
+  });
+
+  it('should call SVA onFocus function', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+    const svaField = wrapper.find(Input).find({ name: "sva" });    
+    svaField.simulate('focus', {value: 15555});
+    expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
   });
 
   it('show Active field when areaAssetsEnabled value is true', () => {
@@ -284,8 +349,59 @@ describe("Test CreatePipeline", () => {
   });
 
   
+  it('should render field roe', ()=>{
+      const wrapper = shallow(<PipelineComponent store={store}/>)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
 
-  
+      expect(wrapper.find(Input).find({name:'roe'})).to.have.length(1);
+  });
+
+  it('should render field roe whit placeholder', ()=>{
+    const wrapper = shallow(<PipelineComponent store={store}/>)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    const input = wrapper.find(Input).find({name:'roe'})
+    expect(input.props().placeholder).to.equal('Ingresa el valor sin el %. Ejm ROE 30');
+  });
+
+   it("should render Margen field", () => {
+     const wrapper = shallow(<PipelineComponent store={store} />)
+       .dive()
+       .dive()
+       .dive()
+       .dive();
+
+     expect(wrapper.find(Input).find({ name: "margen" })).to.have.length(1);
+   });
+
+   it("should call Margen onBlur function", () => {
+     const wrapper = shallow(<PipelineComponent store={store} />)
+       .dive()
+       .dive()
+       .dive()
+       .dive();
+     const margin = wrapper.find(Input).find({ name: "margen" });
+     margin.simulate("blur", { value: 35 });
+     expect(stubHandleBlurValueNumber.calledOnce).to.equal(true);
+   });
+
+   it("should call Margen onFocus function", () => {
+     const wrapper = shallow(<PipelineComponent store={store} />)
+       .dive()
+       .dive()
+       .dive()
+       .dive();
+     const margin = wrapper.find(Input).find({ name: "margen" });
+     margin.simulate("focus", { value: 35 });
+     expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
+   });
+
   it('should render  messages tooltip value nominal', () => {
     const wrapper = shallow(<PipelineComponent store={store} />)
     .dive()
@@ -345,6 +461,34 @@ describe("Test CreatePipeline", () => {
       expect(wrapper.state().products.value).to.equal("Factoring Plus");
       expect(wrapper.state().businessCategories.value).to.equal("Captación");
     }, 1 );
+  });
+
+  it('should clean form when cleanForm is called', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+    const svaOnChangeSpy = spy(sinon.fake());
+    wrapper.instance().props.fields.sva.onChange = svaOnChangeSpy;
+    wrapper.update();    
+    
+    wrapper.instance()._cleanForm();
+
+    expect(svaOnChangeSpy).to.have.been.called(1);
+  });
+
+  it('submitCreatePipeline should call createEditPipeline action', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+    wrapper.instance().props.fields.productFamily.value = 456465;    
+    wrapper.instance()._submitCreatePipeline();
+    expect(createEditPipeline.calledOnce).to.equal(true);
+    
   });
 });
 
@@ -525,7 +669,7 @@ describe("Test CreatePipelineChildren", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(4);
+    expect(wrapper.find(Input)).to.have.length(6);
     expect(
       wrapper.find(Input).find({ name: "txtOpportunityName" })
     ).to.have.length(0);
