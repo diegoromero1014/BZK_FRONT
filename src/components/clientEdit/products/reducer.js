@@ -7,7 +7,7 @@ const initialState = Immutable.List();
 export default (state = initialState, action) => {
   switch (action.type) {
     case UPDATE:
-      const product = action.product;
+      let product = action.product;
       const indexProductToUpdate = state.findIndex(item => item.uid === product.uid);
       var productToUpdate = _.assign({}, state.get(indexProductToUpdate), {
         name: product.name,
@@ -20,7 +20,7 @@ export default (state = initialState, action) => {
       });
       return state.set(indexProductToUpdate, productToUpdate);
     case CREATE:
-      const product = action.product;
+      let product = action.product;
       const newProduct = _.assign({}, {
         name: product.name,
         type: product.type,

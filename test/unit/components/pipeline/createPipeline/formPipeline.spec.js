@@ -37,6 +37,8 @@ const productsResolve = {payload: {data: {data: { id: 100, value: 'Captación', 
 let stubGetParameter;
 let stubGetCatalogType;
 let createEditPipeline;
+let stubHandleBlurValueNumber;
+let stubHandleFocusValueNumber;
 let redirectUrl;
 
 describe("Test CreatePipeline", () => {
@@ -54,6 +56,8 @@ describe("Test CreatePipeline", () => {
     });
     const pipelineBusinessReducer = Immutable.Map();      
     redirectUrl = sinon.stub(globalActions, "redirectUrl");
+    stubHandleBlurValueNumber = sinon.stub(actionsGlobal, 'handleBlurValueNumber');
+    stubHandleFocusValueNumber = sinon.stub(actionsGlobal, 'handleFocusValueNumber');
     createEditPipeline = sinon.stub(pipelineActions, 'createEditPipeline');
     createEditPipeline.onCall(0)
             .returns(() => { return new Promise((resolve, reject) => resolve(
@@ -94,6 +98,8 @@ describe("Test CreatePipeline", () => {
     // runs after each test in this block
     stubGetParameter.restore();
     stubGetCatalogType.restore();
+    stubHandleBlurValueNumber.restore();
+    stubHandleFocusValueNumber.restore();
     createEditPipeline.restore();
     redirectUrl.restore();
   });
@@ -139,7 +145,29 @@ describe("Test CreatePipeline", () => {
       .dive();
 
     expect(wrapper.find(Input).find({ name: "sva" })).to.have.length(1);
-  })
+  });
+
+  it('should call SVA onBlur function', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+    const svaField = wrapper.find(Input).find({ name: "sva" });    
+    svaField.simulate('blur', {value: 15555});
+    expect(stubHandleBlurValueNumber.calledOnce).to.equal(true);
+  });
+
+  it('should call SVA onFocus function', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+    const svaField = wrapper.find(Input).find({ name: "sva" });    
+    svaField.simulate('focus', {value: 15555});
+    expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
+  });
 
   it('show Active field when areaAssetsEnabled value is true', () => {
     const wrapper = shallow(<PipelineComponent store={store} />)

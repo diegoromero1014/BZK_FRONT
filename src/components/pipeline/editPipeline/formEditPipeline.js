@@ -493,7 +493,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             let newValueIsFinancing = null;
             if(need.value != ''){
                 needSelected = this._getNeedById(need.value);
-                needSelectedKey = needSelected ? needSelected.key : '';
+                needSelectedKey = needSelected ? needSelected.key : '';                
             }
 
             newValueIsFinancing = needSelectedKey === NEED_FINANCING;

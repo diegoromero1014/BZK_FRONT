@@ -9,6 +9,7 @@ import * as selectsComponent from "../../../../../src/components/selectsComponen
 import * as pipelineActions from '../../../../../src/components/pipeline/actions';
 import Input from "../../../../../src/ui/input/inputComponent";
 import * as globalActions from '../../../../../src/components/globalComponents/actions';
+import * as actionsGlobal from "../../../../../src/actionsGlobal";
 
 const clientInfo = [{}, {}];
 const productFamily = [{}, {}];
@@ -29,6 +30,8 @@ let getPipelineById;
 let store;
 let defaultProps;
 let redirectUrl;
+let stubHandleBlurValueNumber;
+let stubHandleFocusValueNumber;
 
 describe('Pruebas unitarias editar pipeline', () =>{
 
@@ -53,6 +56,8 @@ describe('Pruebas unitarias editar pipeline', () =>{
                 {payload: {data: {data: { id: 1, value: 'Factoring', key: 'Factoring', field: 'productFamily', description: ''}}}}
             )); });
         redirectUrl = sinon.stub(globalActions, "redirectUrl");
+        stubHandleBlurValueNumber = sinon.stub(actionsGlobal, 'handleBlurValueNumber');
+        stubHandleFocusValueNumber = sinon.stub(actionsGlobal, 'handleFocusValueNumber');
 
         defaultProps = {
             form: formReducer,
@@ -72,6 +77,8 @@ describe('Pruebas unitarias editar pipeline', () =>{
         stubGetCatalogType.restore();
         getPipelineById.restore();
         redirectUrl.restore();
+        stubHandleBlurValueNumber.restore();
+        stubHandleFocusValueNumber.restore();
     })
 
     let origin = "pipeline";
@@ -88,6 +95,20 @@ describe('Pruebas unitarias editar pipeline', () =>{
         wrapper.update();
         wrapper.instance()._changeNeedsClient();
         expect(getNeedById).to.have.been.called(1);
+    });
+
+    it('should call getNeedById when needs client on change is called', () => {
+      const wrapper = shallow(<PipelineComponent store={store} {...defaultProps}/>)
+          .dive()
+          .dive()
+          .dive()
+          .dive();
+      const getNeedById = spy(() => ({key: 46486}));
+      wrapper.instance().props.fields.need.value = 456465;
+      wrapper.instance()._getNeedById = getNeedById;
+      wrapper.update();
+      wrapper.instance()._changeNeedsClient();
+      expect(getNeedById).to.have.been.called(1);
     });
 
     it('should not call getNeedById when need value is empty', () => {
@@ -111,7 +132,41 @@ describe('Pruebas unitarias editar pipeline', () =>{
         .dive()
         .dive()
         .dive();
-  
+      wrapper.setState({isEditable: true});
       expect(wrapper.find(Input).find({ name: "sva" })).to.have.length(1);
-    })
+      expect(wrapper.find(Input).find({ name: "sva" }).props().disabled).to.equal('');
+    });
+
+    it('should render SVA field disabled', () => {
+      const wrapper = shallow(<PipelineComponent store={store}  {...defaultProps}/>)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+      wrapper.setState({isEditable: false});
+      expect(wrapper.find(Input).find({ name: "sva" })).to.have.length(1);
+      expect(wrapper.find(Input).find({ name: "sva" }).props().disabled).to.equal('disabled');
+    });
+
+    it('should call SVA onBlur function', () => {
+      const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+      const svaField = wrapper.find(Input).find({ name: "sva" });    
+      svaField.simulate('blur', {value: 15555});
+      expect(stubHandleBlurValueNumber.calledOnce).to.equal(true);
+    });
+  
+    it('should call SVA onFocus function', () => {
+      const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+      const svaField = wrapper.find(Input).find({ name: "sva" });    
+      svaField.simulate('focus', {value: 15555});
+      expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
+    });
 })
