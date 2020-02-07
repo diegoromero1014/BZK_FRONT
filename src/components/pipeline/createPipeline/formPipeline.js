@@ -222,7 +222,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     _cleanForm() {
       const {
         fields: {
-          nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, reviewedDate,
+          nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, reviewedDate,
           client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues, justification, pivotNit, typePolicy
         }
       } = this.props;
@@ -255,6 +255,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       areaAssetsValue.onChange('');
       justification.onChange('');
       pivotNit.onChange('');
+      sva.onChange('');
       typePolicy.onChange('');
     }
 
@@ -639,7 +640,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     _submitCreatePipeline() {
       const {
         fields: {
-          idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, probability, nameUsuario,
+          idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, probability, nameUsuario,
           opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues, pendingDisbursementAmount,
           pipelineType, commercialOportunity, justification, pivotNit, typePolicy
         }, createEditPipeline, swtShowMessage, changeStateSaveData, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
@@ -673,6 +674,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
               "need": need.value,
               "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
+              "sva": sva.value === undefined ? null : numeral(sva.value).format('0'),
               "observations": observations.value,
               "termInMonths": termInMonths.value,
               "termInMonthsValues": termInMonthsValues.value ? termInMonthsValues.value : "",
@@ -722,12 +724,12 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               });
 
               changeStateSaveData(true, MESSAGE_SAVE_DATA);
-              createEditPipeline(pipelineJson).then((data) => {
+              createEditPipeline(pipelineJson).then((data) => {                                
                 changeStateSaveData(false, "");
                 if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                   redirectUrl("/login");
-                } else {
-                  if ((_.get(data, 'payload.data.status') === 200)) {
+                } else {                  
+                  if ((_.get(data, 'payload.data.status') === 200)) {                    
                     typeMessage = "success";
                     titleMessage = "Creación pipeline";
                     message = "Señor usuario, el pipeline se creó exitosamente.";
@@ -879,7 +881,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     render() {
-      const { fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus,
+      const { fields: { nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, pendingDisbursementAmount,
         probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod,
         moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity, areaAssetsValue, termInMonthsValues, justification, pivotNit, typePolicy },
@@ -1159,6 +1161,22 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       placeholder="Ingresa el valor sin el %. Ejm ROE 30"
                       onBlur={val => handleBlurValueNumber(1, roe, val, true, 2)}
                       onFocus={val => handleFocusValueNumber(roe, roe.value)}
+                    />
+                  </div>
+                </Col>
+                <Col xs={6} md={3} lg={3}>
+                  <div style={{ paddingRight: "15px" }}>
+                    <dt>
+                      <span>SVA</span>
+                    </dt>
+                    <Input
+                      {...sva}
+                      name="sva"
+                      type="text"
+                      placeholder="Miles ' , ' y decimales ' . '"
+                      parentId="dashboardComponentScroll"
+                      onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, sva, val, true, 2)}
+                      onFocus={val => handleFocusValueNumber(sva, sva.value)}                      
                     />
                   </div>
                 </Col>
