@@ -69,11 +69,11 @@ export default (state = initialState, action) => {
                     .set('noAppliedIntOperations', noAppliedIntOperations);
             });
         case UPDATE_CONTEXT_CLIENT:
-            const data = action.payload.data.data;
-            const otherListMainCustomer = _.isUndefined(data) || _.isNull(data) || _.isNull(data.listMainCustomer) ? [] : data.listMainCustomer;
-            const otherListMainSupplier = _.isUndefined(data) || _.isNull(data) || _.isNull(data.listMainSupplier) ? [] : data.listMainSupplier;
-            const otherNoAppliedMainClients = _.isUndefined(data) || _.isNull(data) || _.isNull(data.noAppliedMainClients) ? false : data.noAppliedMainClients;
-            const otherNoAppliedMainSuppliers = _.isUndefined(data) || _.isNull(data) || _.isNull(data.noAppliedMainSuppliers) ? false : data.noAppliedMainSuppliers;
+            const dataPayload = action.payload.data.data;
+            const otherListMainCustomer = _.isUndefined(dataPayload) || _.isNull(dataPayload) || _.isNull(dataPayload.listMainCustomer) ? [] : dataPayload.listMainCustomer;
+            const otherListMainSupplier = _.isUndefined(dataPayload) || _.isNull(dataPayload) || _.isNull(dataPayload.listMainSupplier) ? [] : dataPayload.listMainSupplier;
+            const otherNoAppliedMainClients = _.isUndefined(dataPayload) || _.isNull(dataPayload) || _.isNull(dataPayload.noAppliedMainClients) ? false : dataPayload.noAppliedMainClients;
+            const otherNoAppliedMainSuppliers = _.isUndefined(dataPayload) || _.isNull(dataPayload) || _.isNull(dataPayload.noAppliedMainSuppliers) ? false : dataPayload.noAppliedMainSuppliers;
             return state.withMutations(map => {
                 map
                     .set('otherListMainCustomer', otherListMainCustomer)
