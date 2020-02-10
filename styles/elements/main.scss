@@ -70,3 +70,10 @@ i.huge.add.square.icon-message-elements.icon {
     border-radius: 3px !important;
 }
 
+
+textarea::placeholder, textarea:-ms-input-placeholder {
+    color: #b9b9b9;
+    font-weight: lighter;
+    font-family: sans-serif;
+    font-size: 9.7pt;
+}
