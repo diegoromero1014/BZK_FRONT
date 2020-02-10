@@ -249,7 +249,7 @@ export class PrevisitPage extends Component {
       return previsitParticipants;
    }
 
-   objectivesInterlocutor = () => {
+   validateParticipantsByClient = () => {
       const { participants, dispatchSwtShowMessage } = this.props;
       const participantsList = participants ? participants.toArray() : [];
 
@@ -257,13 +257,13 @@ export class PrevisitPage extends Component {
 
       participantsList.filter(participantIsClient)
          .forEach(element => {
-            if(!element.interlocutorObjs || !element.interlocutorObjs.length) {
+            if(!element.interlocutorObjs || !element.interlocutorObjs.length || !element.socialStyleId) {
                 names = names + ' - ' + element.nombreParticipante + ' \n';
             }
          });
 
       if(names !== "") {
-         dispatchSwtShowMessage('error', "Error", "Los siguientes participantes no tienen objetivos del interlocutor: " + names);            
+         dispatchSwtShowMessage('error', "Error", "Señor usuario, los siguientes participantes tienen campos obligatorios sin diligenciar: " + names);            
          return false;
       }
 
@@ -277,7 +277,7 @@ export class PrevisitPage extends Component {
       if (validateDatePrevisitResponse) {
          const previsitParticipants = this.getPrevisitParticipants();
          
-         if(!this.objectivesInterlocutor()) {
+         if(!this.validateParticipantsByClient()) {
             return;
          }
 

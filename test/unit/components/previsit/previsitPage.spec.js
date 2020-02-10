@@ -953,7 +953,7 @@ describe('Test previsitPage', () => {
             expect(redirectUrl.notCalled).to.equal(true);
         });
 
-        it('objectivesInterlocutor should filter participantsList', () => {
+        it('validateParticipantsByClient should filter participantsList', () => {
             defaultProps.participants = Immutable.List([
                 {
                     id: 1,
@@ -962,22 +962,24 @@ describe('Test previsitPage', () => {
                     interlocutorObjs: [{
                         id: 1,
                         text: 'Objetivo 1'
-                    }]
+                    }],
+                    socialStyleId: 1
                 },
                 {
                     id: 2,
                     nombreParticipante: 'Camilo',
                     tipoParticipante: KEY_PARTICIPANT_CLIENT,
-                    interlocutorObjs: []
+                    interlocutorObjs: [],
+                    socialStyleId: 2
                 },
                 {
                     id: 3,
                     nombreParticipante: 'Edwin',
-                    tipoParticipante: KEY_PARTICIPANT_CLIENT
+                    tipoParticipante: KEY_PARTICIPANT_CLIENT,
                 }
             ]);
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
-            wrapper.instance().objectivesInterlocutor();
+            wrapper.instance().validateParticipantsByClient();
             expect(dispatchSwtShowMessage).to.have.been.called.once;
         })
     });
