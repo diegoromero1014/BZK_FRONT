@@ -1314,7 +1314,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                           {...sva}
                                           name="sva"
                                           type="text"
-                                          placeholder="Miles ' , ' y decimales ' . '"
+                                          placeholder="Ingresar el valor nominal del SVA"
                                           parentId="dashboardComponentScroll"
                                           onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, sva, val, true, 2)}
                                           onFocus={val => handleFocusValueNumber(sva, sva.value)}
