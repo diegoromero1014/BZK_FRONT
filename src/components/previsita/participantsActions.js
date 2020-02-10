@@ -18,6 +18,7 @@ export function changeParticipantClientDataStructure(participant){
         "id": null,
         "contact": participant.idParticipante,
         "order": participant.order,
+        "socialStyle": participant.socialStyleId,
         "interlocutorObjs": participant.interlocutorObjs
     };
 }

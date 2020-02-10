@@ -23,7 +23,7 @@ import { addListParticipant, clearParticipants } from '../participantsVisitPre/a
 import { changeStateSaveData } from '../dashboard/actions';
 import { getAnswerQuestionRelationship, clearAnswer, addAnswer, getAllQuestions } from '../challenger/actions';
 
-import { PREVISIT_TYPE } from '../selectsComponent/constants';
+import { PREVISIT_TYPE, FILTER_SOCIAL_STYLE } from '../selectsComponent/constants';
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from '../participantsVisitPre/constants';
 import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_CREATE_SUCCESS, MESSAGE_PREVISIT_CREATE_ERROR, TITLE_PREVISIT_EDIT, MESSAGE_PREVISIT_EDIT_SUCCESS, MESSAGE_PREVISIT_EDIT_ERROR, MESSAGE_PREVISIT_INVALID_INPUT, TITLE_EXIT_CONFIRMATION, MESSAGE_EXIT_CONFIRMATION, TITLE_ERROR_VALIDITY_DATES, TITLE_VISIT_TYPE, MESSAGE_VISIT_TYPE_CHANGED, PROPUEST_OF_BUSINESS, TITLE_ERROR_EDIT_PREVISIT, MESSAGE_ERROR_EDIT_PREVISIT } from './constants';
 import { ComponentClientInformationURL, LoginComponentURL } from '../../constantsAnalytics';
@@ -77,7 +77,7 @@ export class PrevisitPage extends Component {
       const { params: { id }, dispatchShowLoading } = this.props;
       dispatchShowLoading(true, "Cargando...");
 
-      Promise.all([this.getPrevisitTypes(), this.getPrevisitData(id), this.getChallengerQuestions()]).then(() => {
+      Promise.all([this.masterDataFields(), this.getPrevisitData(id), this.getChallengerQuestions()]).then(() => {
          this.setState({
             renderForm: true,
             isMounted: true
@@ -154,9 +154,9 @@ export class PrevisitPage extends Component {
       }
    }
 
-   getPrevisitTypes = async () => {
+   masterDataFields = async () => {
       const { dispatchGetMasterDataFields } = this.props;
-      await dispatchGetMasterDataFields([PREVISIT_TYPE]);
+      await dispatchGetMasterDataFields([PREVISIT_TYPE, FILTER_SOCIAL_STYLE]);
    }
 
    getChallengerQuestions = async () => {
@@ -479,7 +479,8 @@ export class PrevisitPage extends Component {
             isEditable={this.state.isEditable}
             onSubmit={this.submitForm}            
             questions={questions}
-            answers={answers}                                    
+            answers={answers}    
+            previsitType={this.state.oldPrevisitTypeSelected}                                
             commercialReportButtons={(setFieldValue) => (               
                <CommercialReportButtonsComponent
                   onClickSave={draft => setFieldValue('documentStatus', draft, true)}

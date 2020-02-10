@@ -9,9 +9,13 @@ export const schema = Yup.object().shape({
         .trim()
         .max(700, "Solo se permiten 700 caracteres.")
         .test('validateHtmlInjection', MESSAGE_ERROR_INJECTION_HTML, validateHtmlInjection)
-        .matches(patternOfForbiddenCharacter2, {  message: MESSAGE_WARNING_FORBIDDEN_CHARACTER, excludeEmptyString: true })
+        .matches(patternOfForbiddenCharacter2, { message: MESSAGE_WARNING_FORBIDDEN_CHARACTER, excludeEmptyString: true })
         .matches(patternClientObjective, { message: MESSAGE_ERROR_PATTERN_CLIENT_OBJECTIVE, excludeEmptyString: true })
         .required('El campo objetivos del interlocutor es requerido'),
+});
+
+export const participantInformationSchema = Yup.object().shape({
+    socialStyle: Yup.string().required('El campo Estilo social es requerido'),
 });
 
 
