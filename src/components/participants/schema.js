@@ -38,7 +38,7 @@ export const schemaOthers = Yup.object().shape({
 });
 
 export const participantInformationSchema = Yup.object().shape({
-    socialStyle: Yup.string().required('El campo Estilo social es requerido'),
+    socialStyle: Yup.string().nullable().required('El campo Estilo social es requerido'),
 });
 
 
