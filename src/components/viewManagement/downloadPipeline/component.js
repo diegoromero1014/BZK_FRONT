@@ -205,6 +205,7 @@ class DownloadPipeline extends Component {
                                         <li>{'Fecha de actualización'}</li>
                                         <li>{'Valor de desembolso'}</li>
                                         <li>{'Fecha de desembolso'}</li>
+                                        <li>{'Detalle Justificación'}</li>
                                     </ul>
                                 </Col>
                             </Row>
