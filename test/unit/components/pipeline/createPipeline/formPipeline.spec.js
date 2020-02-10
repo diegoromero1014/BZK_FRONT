@@ -304,6 +304,19 @@ describe("Test CreatePipeline", () => {
     const input = wrapper.find(Input).find({name:'roe'})
     expect(input.props().placeholder).to.equal('Ingresa el valor sin el %. Ejm ROE 30');
   });
+
+  it('sould execute function _handleBlurValueNumber', ()=>{
+    const wrapper = shallow(<PipelineComponent store={store}/>)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    const valueReduxForm = -33.33;
+    const value = -33.33
+    wrapper.instance()._handleBlurValueNumber(valueReduxForm, value);
+
+  });
   
   it('should render  messages tooltip value nominal', () => {
     const wrapper = shallow(<PipelineComponent store={store} />)
