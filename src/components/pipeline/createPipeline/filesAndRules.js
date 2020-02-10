@@ -6,7 +6,7 @@ import {
     checkFirstCharacter, checkNumberLength,
     checkRequiredPipelineJustification,
     checkRequiredComercialOportunity, checkRequiredPivotNit, checkRequiredTermInMonths,
-    checkRequiredTermInMonthsValue, checkDecimalNumbers, checkNumberInRange, validateDecimal
+    checkRequiredTermInMonthsValue, validateDecimal
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
