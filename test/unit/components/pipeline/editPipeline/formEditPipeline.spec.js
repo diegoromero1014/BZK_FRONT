@@ -188,6 +188,21 @@ describe('Pruebas unitarias editar pipeline', () =>{
       expect(wrapper.find(Input).find({name:'roe'})).to.have.length(1);
   });
 
+    it('should execute function _handleBlurValueNumber', ()=>{
+        const wrapper = shallow(<PipelineComponent store={store}/>)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        const valueReduxForm = {
+            onChange: spy(sinon.fake())
+        }
+        const value = -33.33
+        wrapper.instance()._handleBlurValueNumber(valueReduxForm, value);
+
+    });
+
   it('Should render field Tipo poliza in EditPipelineForm', () => {
       const wrapper = shallow(<PipelineComponent store={store} {...defaultProps}/>)
           .dive()
