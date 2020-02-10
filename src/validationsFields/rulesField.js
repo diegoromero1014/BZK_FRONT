@@ -442,6 +442,10 @@ export const checkPipeLineOpportunityName = value => {
     return required ? required : (!patternOfOpportunityName.test(value) ? MESSAGE_WARNING_OPPORTUNITY_NAME : null);
 }
 
+export const checkJustificationDetails = value =>{
+    return (!patternOfOpportunityName.test(value) ? MESSAGE_WARNING_OPPORTUNITY_NAME : null);
+}
+
 /**
  * 
  * @param {*} fieldValue -> Valor al que se le aplican las reglas de validación

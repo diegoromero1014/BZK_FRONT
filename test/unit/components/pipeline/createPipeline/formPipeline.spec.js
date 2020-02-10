@@ -1,7 +1,12 @@
 import React from "react";
 import createFormPipeline from "../../../../../src/components/pipeline/createPipeline/formPipeline";
 import HeaderPipeline from "../../../../../src/components/pipeline/headerPipeline";
-import { ORIGIN_PIPELIN_BUSINESS, OPORTUNITIES_MANAGEMENT, NUEVO_NEGOCIO } from "../../../../../src/components/pipeline/constants";
+import {
+  ORIGIN_PIPELIN_BUSINESS,
+  OPORTUNITIES_MANAGEMENT,
+  NUEVO_NEGOCIO,
+  BUSINESS_STATUS_NO_CONTACTADO
+} from "../../../../../src/components/pipeline/constants";
 import PermissionsUserReports from "../../../../../src/components/commercialReport/permissionsUserReports";
 import ComponentDisbursementPlan from '../../../../../src/components/pipeline/disbursementPlan/componentDisbursementPlan';
 import thunk from "redux-thunk";
@@ -31,6 +36,7 @@ const pipelineTypes = [
   }];
 const productsFamilyResolve = {payload: {data: {data: { id: 10, value: 'Factoring Plus', key: 'Factoring Plus', field: 'products', description: ''}}}};
 const productsResolve = {payload: {data: {data: { id: 100, value: 'Captación', key: 'Captación', field: 'businessCategory', description: ''}}}};
+const statusBusiness = {payload: {data:{data:{ id:15, value:'No contactado', key:'No contactado', field:'businessStatus', description:''}}}};
 
 let stubGetParameter;
 let stubGetCatalogType;
@@ -346,6 +352,22 @@ describe("Test CreatePipeline", () => {
       expect(wrapper.state().businessCategories.value).to.equal("Captación");
     }, 1 );
   });
+
+  it('should render field justification when business status is no contactado', ()=>{
+
+    const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_NO_CONTACTADO);
+    setTimeout(()=>{
+      expect(wrapper.state().showJustificationField).to.equal(true);
+      expect(wrapper.find(Input).find({name:'txtJustificationDetail'}));
+    }, 1);
+
+  })
 });
 
 describe("Test CreatePipelineChildren", () => {

@@ -1,9 +1,36 @@
-import { checkFirstCharacter, checkObservations, checkRequired, checkOnlyAlphabetical,
-    checkIsUpdateClient, checkMinLength, checkMaxLength, checkNumberDocument, checkAddress,
-    checkNeighborhood, checkPostalCode, checkPhone, checkOnlyNumbers, checkEmail, checkContactRelevantFeatures,
-    checkPipeLineOpportunityName, checkObservationsLinkClient, checkHistoryFields, checkOtherReason, checkClientName,
-    checkClientContext, checkInventoryPolicy, checkControlLinkedPayments, checkClientDescription, checkClientAddress,
-    checkNameEntityProduct, checkdetailNonOperatingIncomePrincipal, checkOttherOperationsForeign, checkClientNeighborhood, checkRegexHtmlInjection} from '../../../src/validationsFields/rulesField';
+import {
+    checkFirstCharacter,
+    checkObservations,
+    checkRequired,
+    checkOnlyAlphabetical,
+    checkIsUpdateClient,
+    checkMinLength,
+    checkMaxLength,
+    checkNumberDocument,
+    checkAddress,
+    checkNeighborhood,
+    checkPostalCode,
+    checkPhone,
+    checkOnlyNumbers,
+    checkEmail,
+    checkContactRelevantFeatures,
+    checkPipeLineOpportunityName,
+    checkObservationsLinkClient,
+    checkHistoryFields,
+    checkOtherReason,
+    checkClientName,
+    checkClientContext,
+    checkInventoryPolicy,
+    checkControlLinkedPayments,
+    checkClientDescription,
+    checkClientAddress,
+    checkNameEntityProduct,
+    checkdetailNonOperatingIncomePrincipal,
+    checkOttherOperationsForeign,
+    checkClientNeighborhood,
+    checkRegexHtmlInjection,
+    checkJustificationDetails
+} from '../../../src/validationsFields/rulesField';
 import { MESSAGE_WARNING_FORBIDDEN_CHARACTER, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_REQUIRED_VALUE,
     MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH, MESSAGE_WARNING_MAX_LENGTH,
     MESSAGE_WARNING_NUMBER_DOCUMENT, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE,
@@ -819,3 +846,11 @@ describe('Test checkRegexHtmlInjection white list validation', () => {
         expect(checkRegexHtmlInjection(value)).equal(expectedMessage);
     });
 });
+
+describe('Test checkJustificationDetails validations', ()=>{
+    it('you must send a message when you have values ​​not allowed', ()=>{
+        const value = 'mess^~';
+        const expectedMessage = MESSAGE_WARNING_OPPORTUNITY_NAME;
+        expect(checkJustificationDetails(value)).equal(expectedMessage);
+    })
+})

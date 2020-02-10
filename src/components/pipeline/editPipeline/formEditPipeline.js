@@ -465,7 +465,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
           }
 
         _validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey) {
-            const { fields: {justification} } = this.props;
+            const { fields: {justification, justificationDetail} } = this.props;
             if(pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){
                 this.setState({
                     showMellowingPeriodField: false,
@@ -479,7 +479,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     showJustificationField: false
                 });
                 justification.onChange("");
-            }            
+                justificationDetail.onChange("");
+            }
         }
 
         _showAlertFinancingAndPlan(isEditableValue) {
@@ -586,7 +587,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const { fields: {
                 idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                 moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit
+                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit, justificationDetail
             }, createEditPipeline, changeStateSaveData, swtShowMessage, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
             } = this.props;
 
@@ -637,7 +638,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "pipelineType": pipelineType.value,
                             "commercialOportunity": commercialOportunity.value,
                             "justification": justification.value,
-                            "pivotNit": pivotNit.value ? pivotNit.value : ""
+                            "pivotNit": pivotNit.value ? pivotNit.value : "",
+                            "justificationDetail": justificationDetail.value ? justificationDetail.value : ""
                         };
                         if (origin === ORIGIN_PIPELIN_BUSINESS) {
                             typeMessage = "success";
@@ -775,7 +777,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 fields: { businessStatus, commission, currency, idUsuario, nameUsuario, indexing, need, observations, product, roe, moneyDistribitionMarket,
                     termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, positionCreatedBy,
                     positionUpdatedBy, reviewedDate, probability, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                    termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit
+                    termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification,justificationDetail, pivotNit,
                 }, updateDisbursementPlans
             } = this.props;                        
             updateDisbursementPlans(data.disbursementPlans, origin);
@@ -817,6 +819,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             reviewedDate.onChange(moment(data.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)); 
             businessCategory.onChange(data.businessCategory);      
             product.onChange(data.product);
+            justificationDetail.onChange(data.justificationDetail);
+
         }
 
         loadCategories(productFamily){
@@ -913,7 +917,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                     moneyDistribitionMarket, pendingDisbursementAmount, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
                     positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                    termInMonthsValues, pipelineType, commercialOportunity, justification, pivotNit
+                    termInMonthsValues, pipelineType, commercialOportunity, justification, pivotNit, justificationDetail
                 }, selectsReducer, handleSubmit, pipelineReducer, reducerGlobal
             } = this.props;            
             const ownerDraft = pipelineReducer.get('ownerDraft');
@@ -1141,7 +1145,25 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             />
                                         </div>
                                     </Col>
-                                    : null}                                    
+                                    : null}
+                            </Row>
+                            <Row style={{ padding: "0px 10px 20px 20px" }}>
+                                {this.state.showJustificationField ?
+                                    <Col xs={12} md={6} lg={6}>
+                                        <div style={{paddingRight: "15px"}}>
+                                            <dt>
+                                                <span>Detalle justificación </span>
+                                            </dt>
+                                            <Input
+                                                name="txtJustificationDetail"
+                                                type="text"
+                                                {...justificationDetail}
+                                                max="500"
+                                                parentId="dashboardComponentScroll"
+                                            />
+                                        </div>
+                                    </Col>
+                                    : null}
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>                                
                                 {this.state.showMellowingPeriodField ?
