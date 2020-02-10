@@ -187,6 +187,7 @@ class DownloadPipeline extends Component {
                                         <li>{'Activo'}</li>
                                         <li>{'Valor Activo proyecto'}</li>
                                         <li>{'Roe'}</li>
+                                        <li>{'SVA'}</li>
                                         <li>{'Nit Pivote'}</li>
                                         <li>{'Justificación'}</li>
                                         <li>{'Libros'}</li>
