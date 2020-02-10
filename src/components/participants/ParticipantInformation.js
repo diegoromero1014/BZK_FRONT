@@ -6,13 +6,15 @@ import { Row, Col } from 'react-flexbox-grid';
 import { Input } from 'semantic-ui-react';
 import { renderLabel, renderMessageError } from '../../functions';
 import ElementsComponent from '../elements';
-import { schema } from './schema';
+import { schema, participantInformationSchema } from './schema';
 import { cleanList, addToList, createList } from '../elements/actions';
 import { OBJECTIVES, OBJECTIVES_ERROR_MSG, MANDATORY_OBJECTIVES_MSG, OBJECTIVES_OPEN_ERROR_MSG, OBJECTIVES_PLACEHOLDER } from './constants';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import Tooltip from "../toolTip/toolTipComponent";
 import { downloadFilePDF } from '../contact/actions';
 import { FILE_OPTION_SOCIAL_STYLE_CONTACT } from '../../constantsGlobal';
+import ComboBox from '../../ui/comboBox/comboBoxComponent';
+import { FILTER_SOCIAL_STYLE } from '../selectsComponent/constants';
 
 export class ParticipantInformation extends Component {
 
@@ -35,7 +37,7 @@ export class ParticipantInformation extends Component {
 
                 socialStyle: {
                     name: 'Estilo social',
-                    nullable: true,
+                    nullable: false,
                     message: null
                 },
 
@@ -66,13 +68,13 @@ export class ParticipantInformation extends Component {
 
     renderLabelSocialStyle = ({ name, message, nullable }) => (
         <div style={{ display: 'flex', 'flex-direction': 'row', 'justify-content': 'space-between' }}>
-           <strong style={{ marginBottom: 10 }}>
-              <span>{`${name}  ${!nullable ? '(' : ''}`} </span>
-              {!nullable && <span style={{ color: 'red' }}>*</span>}
-              {!nullable && ')'}
-           </strong>
-    
-           <Tooltip text='Descargar archivo de estilo social'>
+            <strong style={{ marginBottom: 10 }}>
+                <span>{`${name}  ${!nullable ? '(' : ''}`} </span>
+                {!nullable && <span style={{ color: 'red' }}>*</span>}
+                {!nullable && ')'}
+            </strong>
+
+            <Tooltip text='Descargar archivo de estilo social'>
                 <i onClick={this.handleDownloadFileSocialStyle} style={{ marginLeft: "0px", cursor: "pointer", fontSize: "13px" }} className="red file pdf outline icon" />
             </Tooltip>
         </div>
@@ -80,7 +82,7 @@ export class ParticipantInformation extends Component {
 
     render() {
         const { fields: { name, position, socialStyle, attitude } } = this.state;
-        const { handleCloseModal } = this.props;
+        const { handleCloseModal, listSocialStyle } = this.props;
 
         return (
             <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%" }}>
@@ -148,18 +150,23 @@ export class ParticipantInformation extends Component {
                 <Row style={{ width: '99%', paddingLeft: 20, marginTop: 20 }}>
                     <Col xs={6}>
                         <Field type="text" name="socialStyle">
-                            {({ field: { value, onChange, onBlur } }) =>
+                            {({ field: { value, name, onBlur }, form: { setFieldValue } }) =>
                                 <div>
                                     {this.renderLabelSocialStyle(socialStyle)}
-                                    <Input
+
+                                    <ComboBox
                                         name="socialStyle"
+                                        labelInput="Seleccione..."
+                                        valueProp={'id'}
+                                        textProp={'value'}
                                         value={value}
-                                        placeholder="Estilo social"
-                                        type="text"
-                                        onChange={onChange}
+                                        onChange={(id, val) => setFieldValue(name, id, false)}
                                         onBlur={onBlur}
+                                        data={listSocialStyle}
                                         className='field-input'
-                                        disabled={true}
+                                        disabled={''}
+                                        parentId="dashboardComponentScroll"
+                                        filterData={true}
                                     />
                                     <ErrorMessage name="socialStyle" component={'div'} >
                                         {message => renderMessageError(message)}
@@ -230,8 +237,9 @@ export class ParticipantInformation extends Component {
     }
 }
 
-const mapStateToProps = ({ elementsReducer }) => ({
-    elementsReducer
+const mapStateToProps = ({ elementsReducer, selectsReducer }) => ({
+    elementsReducer,
+    listSocialStyle: (selectsReducer.get(FILTER_SOCIAL_STYLE) || [])
 });
 
 const mapDispatchToProps = dispatch => {
@@ -261,29 +269,30 @@ export default connect(mapStateToProps, mapDispatchToProps)(
                 return;
             }
 
-            let newElement = Object.assign({}, props.selectedRecord, { interlocutorObjs: data.elements })
+            let newElement = Object.assign({}, props.selectedRecord, { interlocutorObjs: data.elements, socialStyleId: values.socialStyle });
 
             props.addContact(newElement);
         },
         mapPropsToValues: ({ selectedRecord }) => {
 
             if (selectedRecord) {
-                const { nameComplet, contactPosition, contactSocialStyle, contactActitudeCompany } = selectedRecord;
-                return {
+                const { nameComplet, contactPosition, socialStyleId, contactActitudeCompany } = selectedRecord;
+                return Object.assign({}, {}, {
                     name: nameComplet,
                     position: !contactPosition ? '' : contactPosition,
-                    socialStyle: !contactSocialStyle ? '' : contactSocialStyle,
+                    socialStyle: socialStyleId,
                     attitude: !contactActitudeCompany ? '' : contactActitudeCompany
-                }
+                });
             } else {
                 return {
                     name: '',
                     position: '',
-                    socialStyle: '',
+                    socialStyle: null,
                     attitude: ''
                 }
             }
-        }
+        },
+        validationSchema: participantInformationSchema
     })(
         ParticipantInformation
     )
