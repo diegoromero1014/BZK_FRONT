@@ -50,6 +50,7 @@ export class ParticipantsByClient extends Component {
                 cargo: !existingContact.contactPosition ? '' : existingContact.contactPosition,
                 empresa: '',
                 estiloSocial: !existingContact.contactSocialStyle ? '' : existingContact.contactSocialStyle,
+                socialStyleId: existingContact.contactSocialStyleId ? existingContact.contactSocialStyleId : null,
                 actitudBanco: !existingContact.contactActitudeCompany ? '' : existingContact.contactActitudeCompany,
                 fecha: Date.now(),
                 uuid: _.uniqueId('participanClient_'),
@@ -61,10 +62,12 @@ export class ParticipantsByClient extends Component {
         } else {
             existingContact = selectedContact;
         }        
+        
         if(participants.find(element => element.idParticipante === Number(existingContact.idParticipante)) && !this.editing) {                        
             dispatchShowAlert('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
             this.setState({open: false, selectedContact: '' });
         }
+
         this.setState({ selectedContactInformation: existingContact });        
     }
 

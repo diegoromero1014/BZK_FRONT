@@ -14,7 +14,7 @@ import Participants from './participants';
 import Challenger from '../challenger/challenger';
 import { renderLabel, renderMessageError } from '../../functions';
 
-import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER, HELP_VISIT_TYPE, TITLE_MESSAGE_PENDIENT } from './constants';
+import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER, HELP_VISIT_TYPE, TITLE_MESSAGE_PENDIENT, TITLE_MESSAGE_ALTERNATIVE_OBJECTIVE, PROPUEST_OF_BUSINESS } from './constants';
 import { checkRichTextRequiredBoolean } from '../../validationsFields/rulesField';
 
 export class PrevisitFormComponent extends Component {
@@ -33,7 +33,7 @@ export class PrevisitFormComponent extends Component {
                message: null
             },
             duration: {
-               name: 'Duración previsita - horas',
+               name: 'Duración visita - horas',
                nullable: false,
                message: null
             },
@@ -46,6 +46,11 @@ export class PrevisitFormComponent extends Component {
                name: 'Objetivo de la reunión',
                nullable: false,
                message: TITLE_MESSAGE_TARGET
+            },
+            alternativeObjective: {
+               name: '¿Cuál es la propuesta que se le llevará al cliente? ',
+               nullable: false,
+               message: TITLE_MESSAGE_ALTERNATIVE_OBJECTIVE
             },
             challenger: {
                name: 'Construcción de la Propuesta de Negocio',
@@ -76,7 +81,7 @@ export class PrevisitFormComponent extends Component {
       </div>
    );
 
-   changeTypePrevisit = (previsitTypeId) => {
+   changeTypePrevisit = previsitTypeId => {
       const { onChangeShowChallengerSection, setFieldValue } = this.props;
       onChangeShowChallengerSection(previsitTypeId, setFieldValue);
    }
@@ -86,8 +91,8 @@ export class PrevisitFormComponent extends Component {
    }
 
    render() {
-      const { fields: { type, date, duration, place, objective, challenger, observations } } = this.state;
-      const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue } = this.props;
+      const { fields: { type, date, duration, place, objective, challenger, observations, alternativeObjective } } = this.state;
+      const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue, previsitType } = this.props;
 
       return (
          <div>
@@ -218,7 +223,7 @@ export class PrevisitFormComponent extends Component {
 
                <Row style={{ padding: "20px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
-                     {this.renderTitle(objective)}
+                     {this.renderTitle(previsitType === PROPUEST_OF_BUSINESS.toUpperCase() ? alternativeObjective : objective)}
                   </Col>
                </Row>
 

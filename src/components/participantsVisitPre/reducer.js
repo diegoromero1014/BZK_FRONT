@@ -15,6 +15,7 @@ export default (state = initialState, action) => {
                 cargo: participant.cargo,
                 empresa: participant.empresa,
                 estiloSocial: participant.estiloSocial,
+                socialStyleId: participant.socialStyleId,
                 actitudBanco: participant.actitudBanco,
                 fecha: participant.fecha,
                 uuid: participant.uuid,

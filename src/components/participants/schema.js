@@ -37,4 +37,8 @@ export const schemaOthers = Yup.object().shape({
         .matches(patternOfCompanyOtherParticipant, { message: MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT, excludeEmptyString: true })
 });
 
+export const participantInformationSchema = Yup.object().shape({
+    socialStyle: Yup.string().required('El campo Estilo social es requerido'),
+});
+
 
