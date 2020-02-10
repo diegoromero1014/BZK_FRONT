@@ -197,17 +197,6 @@ describe('Pruebas unitarias editar pipeline', () =>{
     expect(wrapper.find(Input).find({ name: "margen" })).to.have.length(1);
   });
 
-  it("should call Margen onBlur function", () => {
-    const wrapper = shallow(<PipelineComponent store={store} />)
-      .dive()
-      .dive()
-      .dive()
-      .dive();
-    const margin = wrapper.find(Input).find({ name: "margen" });
-    margin.simulate("blur", { value: 35 });
-    expect(stubHandleBlurValueNumber.calledOnce).to.equal(true);
-  });
-
   it("should call Margen onFocus function", () => {
     const wrapper = shallow(<PipelineComponent store={store} />)
       .dive()
@@ -218,6 +207,21 @@ describe('Pruebas unitarias editar pipeline', () =>{
     margin.simulate("focus", { value: 35 });
     expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
   });
+    it('should execute function _handleBlurValueNumber', ()=>{
+        const wrapper = shallow(<PipelineComponent store={store}/>)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        const valueReduxForm = {
+            onChange: spy(sinon.fake())
+        }
+        const value = -33.33
+        wrapper.instance()._handleBlurValueNumber(valueReduxForm, value);
+
+    });
+
   it('Should render field Tipo poliza in EditPipelineForm', () => {
       const wrapper = shallow(<PipelineComponent store={store} {...defaultProps}/>)
           .dive()

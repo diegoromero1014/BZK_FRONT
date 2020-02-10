@@ -84,7 +84,7 @@ import {
     IMPORTATION_LEASING,
     NUEVO_NEGOCIO,
     NEED_FINANCING, PIPELINE_INDEXING_FIELD, PIPELINE_PENDING_DISBURSEMENT_AMOUNT, PIPELINE_TERM_IN_MONTHS_AND_VALUES,
-    PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS, PRODUCT_FAMILY_LEASING
+    PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS, PRODUCT_FAMILY_LEASING, HELP_SVA
 } from "../constants";
 import { addUsers, setConfidential } from "../../commercialReport/actions";
 import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
@@ -205,6 +205,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._getNeedById = this._getNeedById.bind(this);
             this._validateShowFinancingNeedFields = this._validateShowFinancingNeedFields.bind(this);
             this._nameDisbursementPlansInReducer = this._nameDisbursementPlansInReducer.bind(this);
+            this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
         }
 
         showFormDisbursementPlan(isOpen) {
@@ -284,6 +285,20 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
 
             valuReduxForm.onChange(output);
+        }
+
+
+        _handleBlurValueNumber(valuReduxForm, val) {
+            //Elimino los caracteres no validos
+            if (val !== null && val !== '' && val !== undefined) {
+                for (var i = 0, output = '', validos = "0123456789."; i < val.length; i++) {
+                    if (validos.indexOf(val.charAt(i)) !== -1) {
+                        output += val.charAt(i)
+                    }
+                }
+                val = output;
+                valuReduxForm.onChange(val);
+            }
         }
 
         _onCloseButton() {
@@ -1300,8 +1315,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             type="text"
                                             {...roe}
                                             parentId="dashboardComponentScroll"
+                                            max="6"
                                             placeholder="Ingresa el valor sin el %. Ejm ROE 30"
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, roe, val, true, 2)}
+                                            onBlur={val => this._handleBlurValueNumber(roe, val)}
                                             onFocus={val => handleFocusValueNumber(roe, roe.value)}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
@@ -1317,9 +1333,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             type="text"
                                             {...margen}
                                             parentId="dashboardComponentScroll"
+                                            max="6"
                                             placeholder="Ingresa el valor sin el %."
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, margen, val, true)}
-                                            onFocus={val => handleFocusValueNumber(margen, margen.value)}
+                                            onBlur={val =>  this._handleBlurValueNumber(roe, val)}
+                                            onFocus={val => handleFocusValueNumber(roe, roe.value)}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
                                     </div>
@@ -1328,6 +1345,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
                                             <span>SVA</span>
+                                            <ToolTip text={HELP_SVA}>
+                                                <i className="help circle icon blue"
+                                                   style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
+                                            </ToolTip>
                                         </dt>
                                         <Input
                                           {...sva}

@@ -40,3 +40,4 @@ export const MESSAGE_WARNING_EXTERNAL_NUMBER_DOCUMENT = "Solo se permiten valore
 export const MESSAGE_REQUIRED_EMPLOYEE="Debe seleccionar un empleado";
 export const MESSAGE_ERROR_INJECTION_HTML = "No se permiten caracteres con la siguiente estructura < > < />";
 export const MESSAGE_ERROR_PATTERN_CLIENT_OBJECTIVE = "Solo se permiten valores alfanuméricos y ;,.-\"!()$%&/¿?°#=¡':´+[]_<>";
+export const MESSAGE_ERROR_PERCENTAGE = "Solo se permiten 3 enteros y 2 decimales";

@@ -46,13 +46,15 @@ import {
   FILTER_MULTISELECT_FIELDS,
   FILTER_TYPE_POLICY
 } from "../../selectsComponent/constants";
-import { BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY,
+import {
+  BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY,
   ORIGIN_PIPELIN_BUSINESS, CURRENCY_MESSAGE, OPORTUNITIES_MANAGEMENT,
   BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO, LEASING, FINANCIAL_LEASING,
   OPERATING_LEASE, IMPORTATION_LEASING, FACTORING, FACTORING_BANCOLOMBIA_CONFIRMING,
   FACTORING_PLUS, TRIANGULAR_LINE, NUEVO_NEGOCIO, NEED_FINANCING,
   PIPELINE_INDEXING_FIELD, PIPELINE_PENDING_DISBURSEMENT_AMOUNT, PIPELINE_TERM_IN_MONTHS_AND_VALUES,
-  PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS, PRODUCT_FAMILY_LEASING} from "../constants";
+  PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS, PRODUCT_FAMILY_LEASING, HELP_SVA
+} from "../constants";
 import {
   ALLOWS_NEGATIVE_INTEGER,
   MESSAGE_ERROR,
@@ -189,6 +191,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.getPipelineSelectedKey = this.getPipelineSelectedKey.bind(this);
       this.getBusinessStatusKey = this.getBusinessStatusKey.bind(this);
       this._nameDisbursementPlansInReducer = this._nameDisbursementPlansInReducer.bind(this);
+      this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
     }
 
     showFormDisbursementPlan(isOpen) {
@@ -429,6 +432,19 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       }
 
       valuReduxForm.onChange(output);
+    }
+
+    _handleBlurValueNumber(valuReduxForm, val) {
+      //Elimino los caracteres no validos
+      if (val !== null && val !== '' && val !== undefined) {
+        for (var i = 0, output = '', validos = "0123456789."; i < val.length; i++) {
+          if (validos.indexOf(val.charAt(i)) !== -1) {
+            output += val.charAt(i)
+          }
+        }
+        val = output;
+        valuReduxForm.onChange(val);
+      }
     }
 
     _onCloseButton() {
@@ -1158,9 +1174,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name="roe"
                       type="text"
                       {...roe}
+                      max="6"
                       parentId="dashboardComponentScroll"
                       placeholder="Ingresa el valor sin el %. Ejm ROE 30"
-                      onBlur={val => handleBlurValueNumber(1, roe, val, true, 2)}
+                      onBlur={val => this._handleBlurValueNumber(roe, val)}
                       onFocus={val => handleFocusValueNumber(roe, roe.value)}
                     />
                   </div>
@@ -1175,16 +1192,22 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name="margen"
                       type="text"
                       {...margen}
+                      max="6"
                       parentId="dashboardComponentScroll"
                       placeholder="Ingresa el valor sin el %."
-                      onBlur={val => handleBlurValueNumber(1, margen, val, true)}
-                      onFocus={val => handleFocusValueNumber(margen, margen.value)}/>
+                      onBlur={val => this._handleBlurValueNumber(roe, val)}
+                      onFocus={val => handleFocusValueNumber(roe, roe.value)}
+                    />
                   </div>
                 </Col>
                   <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
                       <span>SVA</span>
+                      <ToolTip text={HELP_SVA}>
+                        <i className="help circle icon blue"
+                           style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
+                      </ToolTip>
                     </dt>
                     <Input
                       {...sva}

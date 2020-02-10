@@ -359,7 +359,7 @@ describe("Test CreatePipeline", () => {
       expect(wrapper.find(Input).find({name:'roe'})).to.have.length(1);
   });
 
-  it('should render field roe whit placeholder', ()=>{
+  it('should render field roe with placeholder', ()=>{
     const wrapper = shallow(<PipelineComponent store={store}/>)
         .dive()
         .dive()
@@ -380,17 +380,6 @@ describe("Test CreatePipeline", () => {
      expect(wrapper.find(Input).find({ name: "margen" })).to.have.length(1);
    });
 
-   it("should call Margen onBlur function", () => {
-     const wrapper = shallow(<PipelineComponent store={store} />)
-       .dive()
-       .dive()
-       .dive()
-       .dive();
-     const margin = wrapper.find(Input).find({ name: "margen" });
-     margin.simulate("blur", { value: 35 });
-     expect(stubHandleBlurValueNumber.calledOnce).to.equal(true);
-   });
-
    it("should call Margen onFocus function", () => {
      const wrapper = shallow(<PipelineComponent store={store} />)
        .dive()
@@ -402,6 +391,36 @@ describe("Test CreatePipeline", () => {
      expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
    });
 
+  it('should execute function _handleBlurValueNumber', ()=>{
+    const wrapper = shallow(<PipelineComponent store={store}/>)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    const valueReduxForm = {
+      onChange: spy(sinon.fake())
+    }
+    const value = -33.33
+    wrapper.instance()._handleBlurValueNumber(valueReduxForm, value);
+
+  });
+
+  it('should execute function _handleBlurValueNumber how much has allowed values', ()=>{
+    const wrapper = shallow(<PipelineComponent store={store}/>)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    const valueReduxForm = {
+      onChange: spy(sinon.fake())
+    }
+    const value = 33.33
+    wrapper.instance()._handleBlurValueNumber(valueReduxForm, value);
+
+  });
+  
   it('should render  messages tooltip value nominal', () => {
     const wrapper = shallow(<PipelineComponent store={store} />)
     .dive()
