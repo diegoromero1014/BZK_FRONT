@@ -67,6 +67,7 @@ export function fillParticipants(participants){
                 participantData.contactPosition = participant.contactPositionName;
                 participantData.contactSocialStyle = participant.socialStyleName;
                 participantData.contactActitudeCompany = participant.attitudeOverGroupName;
+                participantData.socialStyleId = participant.socialStyle;
 
                 return participantData;
             case KEY_PARTICIPANT_BANCO:                

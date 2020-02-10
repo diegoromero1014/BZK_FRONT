@@ -336,9 +336,9 @@ describe('Test previsitPage', () => {
             expect(result).not.to.equal(null);
         });
 
-        it('getPrevisitTypes should call getMasterDataFields service', () => {
+        it('masterDataFields should call getMasterDataFields service', () => {
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
-            wrapper.instance().getPrevisitTypes();
+            wrapper.instance().masterDataFields();
             expect(dispatchGetMasterDataFields.called).to.equal(true);
         });
 
