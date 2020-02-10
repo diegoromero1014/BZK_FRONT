@@ -380,6 +380,19 @@ describe("Test CreatePipeline", () => {
      expect(wrapper.find(Input).find({ name: "margen" })).to.have.length(1);
    });
 
+   it("should render field Margen with placeholder", () => {
+     const wrapper = shallow(<PipelineComponent store={store} />)
+       .dive()
+       .dive()
+       .dive()
+       .dive();
+
+     const input = wrapper.find(Input).find({ name: "margen" });
+     expect(input.props().placeholder).to.equal(
+       "Ingresa el valor sin el %."
+     );
+   });
+
    it("should call Margen onFocus function", () => {
      const wrapper = shallow(<PipelineComponent store={store} />)
        .dive()
