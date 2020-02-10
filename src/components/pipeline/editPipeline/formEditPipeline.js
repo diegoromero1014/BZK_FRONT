@@ -84,7 +84,7 @@ import {
     IMPORTATION_LEASING,
     NUEVO_NEGOCIO,
     NEED_FINANCING, PIPELINE_INDEXING_FIELD, PIPELINE_PENDING_DISBURSEMENT_AMOUNT, PIPELINE_TERM_IN_MONTHS_AND_VALUES,
-    PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS, PRODUCT_FAMILY_LEASING
+    PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS, PRODUCT_FAMILY_LEASING, HELP_SVA
 } from "../constants";
 import { addUsers, setConfidential } from "../../commercialReport/actions";
 import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
@@ -1309,6 +1309,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
                                             <span>SVA</span>
+                                            <ToolTip text={HELP_SVA}>
+                                                <i className="help circle icon blue"
+                                                   style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
+                                            </ToolTip>
                                         </dt>
                                         <Input
                                           {...sva}
