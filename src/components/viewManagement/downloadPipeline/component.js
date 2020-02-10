@@ -175,6 +175,7 @@ class DownloadPipeline extends Component {
                                         <li>{'Producto'}</li>
                                         <li>{'Estado'}</li>
                                         <li>{'Empleado responsable'}</li>
+                                        <li>{'Tipo de poliza'}</li>
                                         <li>{'Indexación'}</li>
                                         <li>{'Interés/Spread'}</li>
                                         <li>{'Categoría del negocio'}</li>
@@ -187,6 +188,7 @@ class DownloadPipeline extends Component {
                                         <li>{'Activo'}</li>
                                         <li>{'Valor Activo proyecto'}</li>
                                         <li>{'Roe'}</li>
+                                        <li>{'Margen'}</li>
                                         <li>{'SVA'}</li>
                                         <li>{'Nit Pivote'}</li>
                                         <li>{'Justificación'}</li>
