@@ -191,6 +191,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.getPipelineSelectedKey = this.getPipelineSelectedKey.bind(this);
       this.getBusinessStatusKey = this.getBusinessStatusKey.bind(this);
       this._nameDisbursementPlansInReducer = this._nameDisbursementPlansInReducer.bind(this);
+      this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
     }
 
     showFormDisbursementPlan(isOpen) {
@@ -431,6 +432,19 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       }
 
       valuReduxForm.onChange(output);
+    }
+
+    _handleBlurValueNumber(valuReduxForm, val) {
+      //Elimino los caracteres no validos
+      if (val !== null && val !== '' && val !== undefined) {
+        for (var i = 0, output = '', validos = "0123456789."; i < val.length; i++) {
+          if (validos.indexOf(val.charAt(i)) !== -1) {
+            output += val.charAt(i)
+          }
+        }
+        val = output;
+        valuReduxForm.onChange(val);
+      }
     }
 
     _onCloseButton() {
@@ -1159,9 +1173,10 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       name="roe"
                       type="text"
                       {...roe}
+                      max="6"
                       parentId="dashboardComponentScroll"
                       placeholder="Ingresa el valor sin el %. Ejm ROE 30"
-                      onBlur={val => handleBlurValueNumber(1, roe, val, true, 2)}
+                      onBlur={val => this._handleBlurValueNumber(roe, val)}
                       onFocus={val => handleFocusValueNumber(roe, roe.value)}
                     />
                   </div>
