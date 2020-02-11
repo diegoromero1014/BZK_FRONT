@@ -2,10 +2,10 @@ import React from "react";
 import createFormPipeline from "../../../../../src/components/pipeline/createPipeline/formPipeline";
 import HeaderPipeline from "../../../../../src/components/pipeline/headerPipeline";
 import {
-  ORIGIN_PIPELIN_BUSINESS,
-  OPORTUNITIES_MANAGEMENT,
-  NUEVO_NEGOCIO,
-  BUSINESS_STATUS_NO_CONTACTADO
+    ORIGIN_PIPELIN_BUSINESS,
+    OPORTUNITIES_MANAGEMENT,
+    NUEVO_NEGOCIO,
+    BUSINESS_STATUS_NO_CONTACTADO, BUSINESS_STATUS_PERDIDO
 } from "../../../../../src/components/pipeline/constants";
 import PermissionsUserReports from "../../../../../src/components/commercialReport/permissionsUserReports";
 import ComponentDisbursementPlan from '../../../../../src/components/pipeline/disbursementPlan/componentDisbursementPlan';
@@ -367,7 +367,23 @@ describe("Test CreatePipeline", () => {
       expect(wrapper.find(Input).find({name:'txtJustificationDetail'}));
     }, 1);
 
-  })
+  });
+
+    it('should render field justification when business status is perdido', ()=>{
+
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_PERDIDO);
+        setTimeout(()=>{
+            expect(wrapper.state().showJustificationField).to.equal(true);
+            expect(wrapper.find(Input).find({name:'txtJustificationDetail'}));
+        }, 1);
+
+    });
 });
 
 describe("Test CreatePipelineChildren", () => {
