@@ -474,7 +474,11 @@ export const checkPipeLineOpportunityName = value => {
 }
 
 export const checkJustificationDetails = value =>{
-    return (!patternOfOpportunityName.test(value) ? MESSAGE_WARNING_OPPORTUNITY_NAME : null);
+    let message = null;
+    if(!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfOpportunityName.test(value)){
+     message = MESSAGE_WARNING_OPPORTUNITY_NAME;
+    }
+    return message;
 }
 
 /**
