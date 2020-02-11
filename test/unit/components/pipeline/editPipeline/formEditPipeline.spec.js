@@ -3,11 +3,16 @@ import FormEditPipeline from "../../../../../src/components/pipeline/editPipelin
 import thunk from "redux-thunk";
 import configureStore from "redux-mock-store";
 import { reducer as formReducer } from "redux-form";
-import {NUEVO_NEGOCIO, OPORTUNITIES_MANAGEMENT} from "../../../../../src/components/pipeline/constants";
+import {
+    BUSINESS_STATUS_NO_CONTACTADO, BUSINESS_STATUS_PERDIDO,
+    NUEVO_NEGOCIO,
+    OPORTUNITIES_MANAGEMENT
+} from "../../../../../src/components/pipeline/constants";
 import Immutable from "immutable";
 import * as selectsComponent from "../../../../../src/components/selectsComponent/actions";
 import * as pipelineActions from '../../../../../src/components/pipeline/actions';
 import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
+import Input from "../../../../../src/ui/input/inputComponent";
 
 const clientInfo = [{}, {}];
 const productFamily = [{}, {}];
@@ -98,6 +103,54 @@ describe('Pruebas unitarias editar pipeline', () =>{
         wrapper.update();
         wrapper.instance()._changeNeedsClient();
         sinon.assert.notCalled(getNeedById);
+
+    });
+
+    it('should render field justification when business status is no contactado', ()=>{
+
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_NO_CONTACTADO);
+        setTimeout(()=>{
+            expect(wrapper.state().showJustificationField).to.equal(true);
+            expect(wrapper.find(Input).find({name:'txtJustificationDetail'}));
+        }, 1);
+
+    });
+
+    it('should render field justification when business status is perdido', ()=>{
+
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_PERDIDO);
+        setTimeout(()=>{
+            expect(wrapper.state().showJustificationField).to.equal(true);
+            expect(wrapper.find(Input).find({name:'txtJustificationDetail'}));
+        }, 1);
+
+    });
+
+    it('should render field justification when business status is not perdido or no contactado', ()=>{
+
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields("gestion","buisiness");
+        setTimeout(()=>{
+            expect(wrapper.state().showJustificationField).to.equal(false);
+            expect(wrapper.find(Input).find({name:'txtJustificationDetail'})).to.have.length(0);
+        }, 1);
 
     });
 })
