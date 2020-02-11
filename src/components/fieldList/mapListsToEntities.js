@@ -18,8 +18,10 @@ function getStrategiesFromObjective(objective, clientId) {
 
 function getRequestFromElement(element, clientId) {
     return {
+        id: element.id,
         client: clientId,
-        text: element.value
+        text: element.value,
+        didChange: element.didChange
     }
 }
 

@@ -91,6 +91,8 @@ class ListOfElements extends React.Component {
             setListState({
                 isEditing: false
             });
+            //Marcar que el elemento cambio
+            fields.didChange = true;
             updateElement(fields);
             this.toogleAddSection();
         }
