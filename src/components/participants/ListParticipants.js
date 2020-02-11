@@ -14,6 +14,7 @@ class ListParticipants extends Component {
 
         this.state = {
             open: false,
+            record: null
         }
     }
 
@@ -48,19 +49,18 @@ class ListParticipants extends Component {
         ))
     }
 
-    handleOnClick = selectedRecord => this.setState({ open: true, selectedRecord });
+    handleOnClick = record => this.setState({ open: true, record });
 
     handleDelete = () => {
         const { data, dispatchDeleteParticipant, type } = this.props;
-        const { selectedRecord } = this.state;
+        const { record } = this.state;
 
         if (type === KEY_PARTICIPANT_BANCO) {
-            dispatchDeleteParticipant(data.findIndex(item => item.idParticipante === selectedRecord.idParticipante), KEY_PARTICIPANT_BANCO);
+            dispatchDeleteParticipant(data.findIndex(item => item.idParticipante === record.idParticipante), KEY_PARTICIPANT_BANCO);
         } else if (type === KEY_PARTICIPANT_OTHER) {
-            dispatchDeleteParticipant(data.findIndex(item => item === selectedRecord), KEY_PARTICIPANT_OTHER);
+            dispatchDeleteParticipant(data.findIndex(item => item === record), KEY_PARTICIPANT_OTHER);
         }
-
-        this.setState({ open: false, selectedRecord: null });
+        this.setState({ record: null });
     }
 
 
@@ -82,7 +82,10 @@ class ListParticipants extends Component {
                     cancelButtonText="Cancelar"
                     showCancelButton={true}
                     onCancel={() => this.setState({ open: false })}
-                    onConfirm={this.handleDelete}
+                    onConfirm={() => {
+                        this.setState({ open: false });
+                        this.handleDelete();
+                    }}
                 />
             </div>
         );
