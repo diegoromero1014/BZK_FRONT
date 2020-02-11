@@ -134,7 +134,7 @@ describe("Test CreatePipeline", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(5);
+    expect(wrapper.find(Input)).to.have.length(6);
   });
 
   it('should render SVA field', () => {
@@ -359,7 +359,7 @@ describe("Test CreatePipeline", () => {
       expect(wrapper.find(Input).find({name:'roe'})).to.have.length(1);
   });
 
-  it('should render field roe whit placeholder', ()=>{
+  it('should render field roe with placeholder', ()=>{
     const wrapper = shallow(<PipelineComponent store={store}/>)
         .dive()
         .dive()
@@ -369,6 +369,40 @@ describe("Test CreatePipeline", () => {
     const input = wrapper.find(Input).find({name:'roe'})
     expect(input.props().placeholder).to.equal('Ingresa el valor sin el %. Ejm ROE 30');
   });
+
+   it("should render Margen field", () => {
+     const wrapper = shallow(<PipelineComponent store={store} />)
+       .dive()
+       .dive()
+       .dive()
+       .dive();
+
+     expect(wrapper.find(Input).find({ name: "margen" })).to.have.length(1);
+   });
+
+   it("should render field Margen with placeholder", () => {
+     const wrapper = shallow(<PipelineComponent store={store} />)
+       .dive()
+       .dive()
+       .dive()
+       .dive();
+
+     const input = wrapper.find(Input).find({ name: "margen" });
+     expect(input.props().placeholder).to.equal(
+       "Ingresa el valor sin el %."
+     );
+   });
+
+   it("should call Margen onFocus function", () => {
+     const wrapper = shallow(<PipelineComponent store={store} />)
+       .dive()
+       .dive()
+       .dive()
+       .dive();
+     const margin = wrapper.find(Input).find({ name: "margen" });
+     margin.simulate("focus", { value: 35 });
+     expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
+   });
 
   it('should execute function _handleBlurValueNumber', ()=>{
     const wrapper = shallow(<PipelineComponent store={store}/>)
@@ -667,7 +701,7 @@ describe("Test CreatePipelineChildren", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(5);
+    expect(wrapper.find(Input)).to.have.length(6);
     expect(
       wrapper.find(Input).find({ name: "txtOpportunityName" })
     ).to.have.length(0);

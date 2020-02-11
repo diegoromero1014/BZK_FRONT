@@ -187,7 +187,35 @@ describe('Pruebas unitarias editar pipeline', () =>{
 
       expect(wrapper.find(Input).find({name:'roe'})).to.have.length(1);
   });
+  it("should render Margen field", () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
 
+    expect(wrapper.find(Input).find({ name: "margen" })).to.have.length(1);
+  });
+  it("should render field Margen with placeholder", () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+    const input = wrapper.find(Input).find({ name: "margen" });
+    expect(input.props().placeholder).to.equal("Ingresa el valor sin el %.");
+  });
+  it("should call Margen onFocus function", () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+    const margin = wrapper.find(Input).find({ name: "margen" });
+    margin.simulate("focus", { value: 35 });
+    expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
+  });
     it('should execute function _handleBlurValueNumber', ()=>{
         const wrapper = shallow(<PipelineComponent store={store}/>)
             .dive()

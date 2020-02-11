@@ -658,7 +658,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         fields: {
           idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, probability, nameUsuario,
           opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues, pendingDisbursementAmount,
-          pipelineType, commercialOportunity, justification, pivotNit, typePolicy
+          pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen
         }, createEditPipeline, swtShowMessage, changeStateSaveData, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
       } = this.props;
       
@@ -710,6 +710,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "commercialOportunity": commercialOportunity.value,
               "justification": justification.value,
               "pivotNit": pivotNit.value ? pivotNit.value : "",
+              "margin": margen.value === undefined || margen.value === null || margen.value === '' ? '' : numeral(margen.value).format('0.0000'),
               "policyType": typePolicy.value ? typePolicy.value : "",
             };
 
@@ -900,7 +901,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const { fields: { nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, pendingDisbursementAmount,
         probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod,
-        moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity, areaAssetsValue, termInMonthsValues, justification, pivotNit, typePolicy },
+        moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity, areaAssetsValue, termInMonthsValues, justification, pivotNit, typePolicy, margen },
         selectsReducer, handleSubmit, reducerGlobal, pipelineReducer } = this.props;
 
       const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
@@ -1181,7 +1182,25 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
+
                 <Col xs={6} md={3} lg={3}>
+                  <div style={{ paddingRight: "15px" }}>
+                    <dt>
+                      <span>Margen</span>
+                    </dt>
+                    <Input
+                      name="margen"
+                      type="text"
+                      {...margen}
+                      max="6"
+                      parentId="dashboardComponentScroll"
+                      placeholder="Ingresa el valor sin el %."
+                      onBlur={val => this._handleBlurValueNumber(roe, val)}
+                      onFocus={val => handleFocusValueNumber(roe, roe.value)}
+                    />
+                  </div>
+                </Col>
+                  <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
                       <span>SVA</span>

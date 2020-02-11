@@ -50,6 +50,7 @@ export const fieldsWithRules = {
     commercialOportunity: { rules: [checkRequiredComercialOportunity] },
     justification : {rules: [checkRequiredPipelineJustification] },
     pivotNit: {rules: [checkRequiredPivotNit]},
+    margen: {rules:[validateDecimal]},
     typePolicy: { rules: [] }
 }
 
