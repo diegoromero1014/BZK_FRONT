@@ -4,9 +4,9 @@ import thunk from "redux-thunk";
 import configureStore from "redux-mock-store";
 import { reducer as formReducer } from "redux-form";
 import {
+    BUSINESS_STATUS_NO_CONTACTADO, BUSINESS_STATUS_PERDIDO,
     NUEVO_NEGOCIO,
-    OPORTUNITIES_MANAGEMENT,
-    PRODUCT_FAMILY_LEASING
+    OPORTUNITIES_MANAGEMENT,PRODUCT_FAMILY_LEASING
 } from "../../../../../src/components/pipeline/constants";
 import Immutable from "immutable";
 import * as selectsComponent from "../../../../../src/components/selectsComponent/actions";
@@ -134,6 +134,54 @@ describe('Pruebas unitarias editar pipeline', () =>{
 
     });
 
+    it('should render field justification when business status is no contactado', ()=>{
+
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_NO_CONTACTADO);
+        setTimeout(()=>{
+            expect(wrapper.state().showJustificationField).to.equal(true);
+            expect(wrapper.find(Input).find({name:'txtJustificationDetail'}));
+        }, 1);
+
+    });
+
+    it('should render field justification when business status is perdido', ()=>{
+
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_PERDIDO);
+        setTimeout(()=>{
+            expect(wrapper.state().showJustificationField).to.equal(true);
+            expect(wrapper.find(Input).find({name:'txtJustificationDetail'}));
+        }, 1);
+
+    });
+
+    it('should render field justification when business status is not perdido or no contactado', ()=>{
+
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields("gestion","buisiness");
+        setTimeout(()=>{
+            expect(wrapper.state().showJustificationField).to.equal(false);
+            expect(wrapper.find(Input).find({name:'txtJustificationDetail'})).to.have.length(0);
+        }, 1);
+
+    });
+
     it('should render SVA field', () => {
       const wrapper = shallow(<PipelineComponent store={store}  {...defaultProps}/>)
         .dive()
@@ -162,18 +210,18 @@ describe('Pruebas unitarias editar pipeline', () =>{
         .dive()
         .dive()
         .dive();
-      const svaField = wrapper.find(Input).find({ name: "sva" });    
+      const svaField = wrapper.find(Input).find({ name: "sva" });
       svaField.simulate('blur', {value: 15555});
       expect(stubHandleBlurValueNumber.calledOnce).to.equal(true);
     });
-  
+
     it('should call SVA onFocus function', () => {
       const wrapper = shallow(<PipelineComponent store={store} />)
         .dive()
         .dive()
         .dive()
         .dive();
-      const svaField = wrapper.find(Input).find({ name: "sva" });    
+      const svaField = wrapper.find(Input).find({ name: "sva" });
       svaField.simulate('focus', {value: 15555});
       expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
     });

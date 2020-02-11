@@ -6,7 +6,7 @@ import {
     checkFirstCharacter, checkNumberLength,
     checkRequiredPipelineJustification,
     checkRequiredComercialOportunity, checkRequiredPivotNit, checkRequiredTermInMonths,
-    checkRequiredTermInMonthsValue, validateDecimal
+    checkRequiredTermInMonthsValue, validateDecimal, checkJustificationDetails
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -30,8 +30,9 @@ export const fieldsWithRules = {
     probability: { rules: [] }, 
     amountDisbursed: { rules: [] }, 
     estimatedDisburDate: { rules: [] }, 
-    opportunityName: { rules: [checkPipeLineOpportunityName, checkFirstCharacter] }, 
-    productFamily: { rules: [checkRequired] }, 
+    opportunityName: { rules: [checkPipeLineOpportunityName, checkFirstCharacter] },
+    justificationDetail: { rules: [checkJustificationDetails, checkFirstCharacter] },
+    productFamily: { rules: [checkRequired] },
     mellowingPeriod: { rules: [] }, 
     moneyDistribitionMarket: { rules: [] }, 
     areaAssets: { rules: [] }, 

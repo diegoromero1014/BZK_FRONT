@@ -1,7 +1,12 @@
 import React from "react";
 import createFormPipeline from "../../../../../src/components/pipeline/createPipeline/formPipeline";
 import HeaderPipeline from "../../../../../src/components/pipeline/headerPipeline";
-import { ORIGIN_PIPELIN_BUSINESS, OPORTUNITIES_MANAGEMENT, NUEVO_NEGOCIO } from "../../../../../src/components/pipeline/constants";
+import {
+    ORIGIN_PIPELIN_BUSINESS,
+    OPORTUNITIES_MANAGEMENT,
+    NUEVO_NEGOCIO,
+    BUSINESS_STATUS_NO_CONTACTADO, BUSINESS_STATUS_PERDIDO
+} from "../../../../../src/components/pipeline/constants";
 import PermissionsUserReports from "../../../../../src/components/commercialReport/permissionsUserReports";
 import ComponentDisbursementPlan from '../../../../../src/components/pipeline/disbursementPlan/componentDisbursementPlan';
 import thunk from "redux-thunk";
@@ -33,6 +38,7 @@ const pipelineTypes = [
   }];
 const productsFamilyResolve = {payload: {data: {data: { id: 10, value: 'Factoring Plus', key: 'Factoring Plus', field: 'products', description: ''}}}};
 const productsResolve = {payload: {data: {data: { id: 100, value: 'Captación', key: 'Captación', field: 'businessCategory', description: ''}}}};
+const statusBusiness = {payload: {data:{data:{ id:15, value:'No contactado', key:'No contactado', field:'businessStatus', description:''}}}};
 
 let stubGetParameter;
 let stubGetCatalogType;
@@ -54,7 +60,7 @@ describe("Test CreatePipeline", () => {
     const confidentialReducer = Immutable.Map({
       confidential: false
     });
-    const pipelineBusinessReducer = Immutable.Map();      
+    const pipelineBusinessReducer = Immutable.Map();
     redirectUrl = sinon.stub(globalActions, "redirectUrl");
     stubHandleBlurValueNumber = sinon.stub(actionsGlobal, 'handleBlurValueNumber');
     stubHandleFocusValueNumber = sinon.stub(actionsGlobal, 'handleFocusValueNumber');
@@ -66,7 +72,7 @@ describe("Test CreatePipeline", () => {
                     data: {
                       validateLogin: true,
                       status: 200
-                    }                    
+                    }
                   }
                 })); });
     store = mockStore({
@@ -153,7 +159,7 @@ describe("Test CreatePipeline", () => {
       .dive()
       .dive()
       .dive();
-    const svaField = wrapper.find(Input).find({ name: "sva" });    
+    const svaField = wrapper.find(Input).find({ name: "sva" });
     svaField.simulate('blur', {value: 15555});
     expect(stubHandleBlurValueNumber.calledOnce).to.equal(true);
   });
@@ -164,7 +170,7 @@ describe("Test CreatePipeline", () => {
       .dive()
       .dive()
       .dive();
-    const svaField = wrapper.find(Input).find({ name: "sva" });    
+    const svaField = wrapper.find(Input).find({ name: "sva" });
     svaField.simulate('focus', {value: 15555});
     expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
   });
@@ -433,7 +439,7 @@ describe("Test CreatePipeline", () => {
     wrapper.instance()._handleBlurValueNumber(valueReduxForm, value);
 
   });
-  
+
   it('should render  messages tooltip value nominal', () => {
     const wrapper = shallow(<PipelineComponent store={store} />)
     .dive()
@@ -495,6 +501,38 @@ describe("Test CreatePipeline", () => {
     }, 1 );
   });
 
+  it('should render field justification when business status is no contactado', ()=>{
+
+    const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_NO_CONTACTADO);
+    setTimeout(()=>{
+      expect(wrapper.state().showJustificationField).to.equal(true);
+      expect(wrapper.find(Input).find({name:'txtJustificationDetail'}));
+    }, 1);
+
+  });
+
+    it('should render field justification when business status is perdido', ()=>{
+
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_PERDIDO);
+        setTimeout(()=>{
+            expect(wrapper.state().showJustificationField).to.equal(true);
+            expect(wrapper.find(Input).find({name:'txtJustificationDetail'}));
+        }, 1);
+
+    });
+
   it('should clean form when cleanForm is called', () => {
     const wrapper = shallow(<PipelineComponent store={store} />)
       .dive()
@@ -503,8 +541,8 @@ describe("Test CreatePipeline", () => {
       .dive();
     const svaOnChangeSpy = spy(sinon.fake());
     wrapper.instance().props.fields.sva.onChange = svaOnChangeSpy;
-    wrapper.update();    
-    
+    wrapper.update();
+
     wrapper.instance()._cleanForm();
 
     expect(svaOnChangeSpy).to.have.been.called(1);
@@ -517,10 +555,10 @@ describe("Test CreatePipeline", () => {
       .dive()
       .dive();
 
-    wrapper.instance().props.fields.productFamily.value = 456465;    
+    wrapper.instance().props.fields.productFamily.value = 456465;
     wrapper.instance()._submitCreatePipeline();
     expect(createEditPipeline.calledOnce).to.equal(true);
-    
+
   });
 });
 
