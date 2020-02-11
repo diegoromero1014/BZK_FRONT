@@ -92,7 +92,6 @@ export default (state = initialState, action = {}) => {
             let nameSearch = '';
             if (!_.isNull(response6) && !_.isNull(response6.id)) {
                 state.set('validExistGroup', true);
-                nameSearch = '';
             } else {
                 state.set('validExistGroup', false);
             }
@@ -194,12 +193,12 @@ export default (state = initialState, action = {}) => {
             });
             return state.set('contactByFunctionOrTypeSelected', newList);
         case actions.ASSOCIATE_CONTACTS_BY_FUNCTION_OR_TYPE:
-            var listContact = state.get('group').get('listContact');
-            listContact.push(...action.listContactsByFunctionOrType);
+            let listContactPayload = state.get('group').get('listContact');
+            listContactPayload.push(...action.listContactsByFunctionOrType);
             var newGroup = Immutable.Map({
                 id: state.get('group').get('id'),
                 name: state.get('group').get('name'),
-                listContact: listContact
+                listContact: listContactPayload
             });
             return state.set('group', newGroup);
         case actions.CHANGE_PAGE_CONTACTS_BY_FUNCTION_OR_TYPE:
