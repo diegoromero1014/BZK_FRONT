@@ -358,7 +358,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     showTypePolicy() {
-      const { fields: { typePolicy, productFamily } } = this.props;
+      const { fields: { typePolicy, productFamily, margen } } = this.props;
       let productFamilySelected = this.state.productsFamily.find(family => family.id == productFamily.value);
       const keyProductFamily = productFamilySelected ? productFamilySelected.key.toLowerCase() : '';
       if(keyProductFamily === PRODUCT_FAMILY_LEASING.toLowerCase()){
@@ -370,6 +370,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           showPolicyType: false
         });
         typePolicy.onChange("");
+        margen.onChange("");
       }
     }
 

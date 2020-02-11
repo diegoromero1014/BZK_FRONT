@@ -442,7 +442,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
 
         showTypePolicy(val) {
-            const { fields: { typePolicy }, selectsReducer } = this.props;
+            const { fields: { typePolicy, margen }, selectsReducer } = this.props;
             let productFamilySelected = selectsReducer.get(ALL_PRODUCT_FAMILIES).find((family) => family.id == val);
             const keyProductFamily = productFamilySelected ? productFamilySelected.key.toLowerCase() : '';
             if(keyProductFamily === PRODUCT_FAMILY_LEASING.toLowerCase()){
@@ -454,6 +454,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     showPolicyType: false
                 });
                 typePolicy.onChange("");
+                margen.onChange("");
+
             }
         }
 
