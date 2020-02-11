@@ -360,7 +360,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     showTypePolicy() {
       const { fields: { typePolicy, productFamily, margen } } = this.props;
       let productFamilySelected = this.state.productsFamily.find(family => family.id == productFamily.value);
-      const keyProductFamily = productFamilySelected ? productFamilySelected.key.toLowerCase() : '';
+      const keyProductFamily = productFamilySelected ? productFamilySelected.key.toLowerCase() : '';      
       if(keyProductFamily === PRODUCT_FAMILY_LEASING.toLowerCase()){
         this.setState({
           showPolicyType: true

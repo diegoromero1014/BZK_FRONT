@@ -193,7 +193,7 @@ describe('Pruebas unitarias editar pipeline', () =>{
       .dive()
       .dive()
       .dive();
-
+    wrapper.instance().showTypePolicy(1);
     expect(wrapper.find(Input).find({ name: "margen" })).to.have.length(1);
   });
 
@@ -203,17 +203,18 @@ describe('Pruebas unitarias editar pipeline', () =>{
       .dive()
       .dive()
       .dive();
-
+    wrapper.instance().showTypePolicy(1);
     const input = wrapper.find(Input).find({ name: "margen" });
     expect(input.props().placeholder).to.equal("Ingresa el valor sin el %.");
   });
-  
+
   it("should call Margen onFocus function", () => {
     const wrapper = shallow(<PipelineComponent store={store} />)
       .dive()
       .dive()
       .dive()
       .dive();
+    wrapper.instance().showTypePolicy(1);
     const margin = wrapper.find(Input).find({ name: "margen" });
     margin.simulate("focus", { value: 35 });
     expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);

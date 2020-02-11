@@ -134,7 +134,7 @@ describe("Test CreatePipeline", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(6);
+    expect(wrapper.find(Input)).to.have.length(5);
   });
 
   it('should render SVA field', () => {
@@ -371,37 +371,56 @@ describe("Test CreatePipeline", () => {
   });
 
    it("should render Margen field", () => {
-     const wrapper = shallow(<PipelineComponent store={store} />)
-       .dive()
-       .dive()
-       .dive()
-       .dive();
-
+     const wrapper = shallow(
+       <PipelineComponent store={store}/>
+       ).dive()
+        .dive()
+        .dive()
+        .dive();
+      const instance = wrapper.instance();
+      wrapper.setState({ productsFamily:[
+        {id: 1, field: "productFamily", value: "Leasing", parentId: 5849408, key: "Leasing"}
+      ]});
+      instance.props.fields.productFamily.value = 1; 
+      instance.showTypePolicy();
      expect(wrapper.find(Input).find({ name: "margen" })).to.have.length(1);
    });
 
    it("should render field Margen with placeholder", () => {
-     const wrapper = shallow(<PipelineComponent store={store} />)
-       .dive()
-       .dive()
-       .dive()
-       .dive();
-
-     const input = wrapper.find(Input).find({ name: "margen" });
-     expect(input.props().placeholder).to.equal(
-       "Ingresa el valor sin el %."
-     );
+      const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+      const instance = wrapper.instance();
+      wrapper.setState({
+        productsFamily: [{
+            id: 1, field: "productFamily",value: "Leasing", parentId: 5849408, key: "Leasing"
+          }]
+       });
+      instance.props.fields.productFamily.value = 1;
+      instance.showTypePolicy();
+      const input = wrapper.find(Input).find({ name: "margen" });
+      expect(input.props().placeholder).to.equal(
+        "Ingresa el valor sin el %."
+      );
    });
 
    it("should call Margen onFocus function", () => {
-     const wrapper = shallow(<PipelineComponent store={store} />)
-       .dive()
-       .dive()
-       .dive()
-       .dive();
-     const margin = wrapper.find(Input).find({ name: "margen" });
-     margin.simulate("focus", { value: 35 });
-     expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
+      const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+      const instance = wrapper.instance();
+      wrapper.setState({ productsFamily:[
+        {id: 1, field: "productFamily", value: "Leasing", key: "Leasing"}
+      ]});
+      instance.props.fields.productFamily.value = 1; 
+      instance.showTypePolicy();
+      const margin = wrapper.find(Input).find({ name: "margen" });
+      margin.simulate("focus", { value: 35 });
+      expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
    });
 
   it('should execute function _handleBlurValueNumber', ()=>{
@@ -701,7 +720,7 @@ describe("Test CreatePipelineChildren", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(6);
+    expect(wrapper.find(Input)).to.have.length(5);
     expect(
       wrapper.find(Input).find({ name: "txtOpportunityName" })
     ).to.have.length(0);
