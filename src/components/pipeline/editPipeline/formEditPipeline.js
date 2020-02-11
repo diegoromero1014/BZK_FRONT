@@ -1323,6 +1323,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
+                                {this.state.showPolicyType &&
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -1341,6 +1342,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
+                                }
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>

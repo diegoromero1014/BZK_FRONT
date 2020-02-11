@@ -1182,7 +1182,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
-
+            {this.state.showPolicyType &&
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
@@ -1200,6 +1200,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
+              }
                   <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
