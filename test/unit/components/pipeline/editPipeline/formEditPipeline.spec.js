@@ -15,7 +15,6 @@ import Input from "../../../../../src/ui/input/inputComponent";
 import * as globalActions from '../../../../../src/components/globalComponents/actions';
 import * as actionsGlobal from "../../../../../src/actionsGlobal";
 import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
-import Input from "../../../../../src/ui/input/inputComponent";
 
 const clientInfo = [{}, {}];
 const productFamily = [{}, {}];
