@@ -29,14 +29,35 @@ import {
     checkOttherOperationsForeign,
     checkClientNeighborhood,
     checkRegexHtmlInjection,
+    validateDecimal,
     checkJustificationDetails
 } from '../../../src/validationsFields/rulesField';
-import { MESSAGE_WARNING_FORBIDDEN_CHARACTER, MESSAGE_WARNING_OBSERVATIONS, MESSAGE_REQUIRED_VALUE,
-    MESSAGE_WARNING_ONLY_ALPHABETICAL, MESSAGE_WARNING_MIN_LENGTH, MESSAGE_WARNING_MAX_LENGTH,
-    MESSAGE_WARNING_NUMBER_DOCUMENT, MESSAGE_WARNING_ADDRESS, MESSAGE_WARNING_NEIGHBORHOOD, MESSAGE_WARNING_POSTAL_CODE,
-    MESSAGE_WARNING_PHONE, MESSAGE_WARNING_ONLY_NUMBERS, MESSAGE_WARNING_INVALID_EMAIL, MESSAGE_WARNING_RELEVANT_FEATURES,
-    MESSAGE_WARNING_OPPORTUNITY_NAME, MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT, MESSAGE_WARNING_HISTORY, MESSAGE_WARNING_OTHER_REASON,
-    MESSAGE_WARNING_CLIENT_NAME, MESSAGE_WARNING_NAME_ENTITY, MESSAGE_WARNING_NO_OPERATING_IN_COME, MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH, MESSAGE_ERROR_INJECTION_HTML} from '../../../src/validationsFields/validationsMessages';
+import {
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER,
+    MESSAGE_WARNING_OBSERVATIONS,
+    MESSAGE_REQUIRED_VALUE,
+    MESSAGE_WARNING_ONLY_ALPHABETICAL,
+    MESSAGE_WARNING_MIN_LENGTH,
+    MESSAGE_WARNING_MAX_LENGTH,
+    MESSAGE_WARNING_NUMBER_DOCUMENT,
+    MESSAGE_WARNING_ADDRESS,
+    MESSAGE_WARNING_NEIGHBORHOOD,
+    MESSAGE_WARNING_POSTAL_CODE,
+    MESSAGE_WARNING_PHONE,
+    MESSAGE_WARNING_ONLY_NUMBERS,
+    MESSAGE_WARNING_INVALID_EMAIL,
+    MESSAGE_WARNING_RELEVANT_FEATURES,
+    MESSAGE_WARNING_OPPORTUNITY_NAME,
+    MESSAGE_WARNING_OBSERVATIONS_LINK_CLIENT,
+    MESSAGE_WARNING_HISTORY,
+    MESSAGE_WARNING_OTHER_REASON,
+    MESSAGE_WARNING_CLIENT_NAME,
+    MESSAGE_WARNING_NAME_ENTITY,
+    MESSAGE_WARNING_NO_OPERATING_IN_COME,
+    MESSAGE_WARNING_ONLY_ALPHABETICAL_AND_SLASH,
+    MESSAGE_ERROR_INJECTION_HTML,
+    MESSAGE_ERROR_PERCENTAGE
+} from '../../../src/validationsFields/validationsMessages';
 
 describe('Test checkRequired white list validation', () => {
     it('should throw error if the text is empty', () => {
@@ -846,6 +867,20 @@ describe('Test checkRegexHtmlInjection white list validation', () => {
         expect(checkRegexHtmlInjection(value)).equal(expectedMessage);
     });
 });
+
+describe('Test validateDecimal', ()=>{
+    it('should throw message error when it does not meet the criteria', ()=> {
+        const value = 3333.55;
+        const expectedMessage = MESSAGE_ERROR_PERCENTAGE;
+        expect(validateDecimal(value)).equal(expectedMessage);
+    });
+
+    it('no should throw message error when  meet the criteria', ()=> {
+        const value = 333.55;
+        const expectedMessage = null;
+        expect(validateDecimal(value)).equal(expectedMessage);
+    });
+})
 
 describe('Test checkJustificationDetails validations', ()=>{
     it('you must send a message when you have values ​​not allowed', ()=>{
