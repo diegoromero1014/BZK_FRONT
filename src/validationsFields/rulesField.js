@@ -911,7 +911,7 @@ export const validateHtmlInjection = value => {
 
 export const validateDecimal = (valor) => {
     let message = null;
-    if (!patternValidateDecimals.test(valor)) {
+    if (!_.isUndefined(valor) && !_.isNull(valor) &&  valor !=="" && !patternValidateDecimals.test(valor)) {
          message = MESSAGE_ERROR_PERCENTAGE;
     }
     return message;
