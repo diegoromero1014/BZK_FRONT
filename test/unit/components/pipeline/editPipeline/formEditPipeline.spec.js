@@ -196,6 +196,7 @@ describe('Pruebas unitarias editar pipeline', () =>{
 
     expect(wrapper.find(Input).find({ name: "margen" })).to.have.length(1);
   });
+
   it("should render field Margen with placeholder", () => {
     const wrapper = shallow(<PipelineComponent store={store} />)
       .dive()
@@ -206,6 +207,7 @@ describe('Pruebas unitarias editar pipeline', () =>{
     const input = wrapper.find(Input).find({ name: "margen" });
     expect(input.props().placeholder).to.equal("Ingresa el valor sin el %.");
   });
+  
   it("should call Margen onFocus function", () => {
     const wrapper = shallow(<PipelineComponent store={store} />)
       .dive()

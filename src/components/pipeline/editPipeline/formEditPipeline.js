@@ -1335,8 +1335,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             parentId="dashboardComponentScroll"
                                             max="6"
                                             placeholder="Ingresa el valor sin el %."
-                                            onBlur={val =>  this._handleBlurValueNumber(roe, val)}
-                                            onFocus={val => handleFocusValueNumber(roe, roe.value)}
+                                            onBlur={val =>  this._handleBlurValueNumber(margen, val)}
+                                            onFocus={val => handleFocusValueNumber(margen, margen.value)}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
                                     </div>
