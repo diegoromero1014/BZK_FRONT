@@ -116,6 +116,7 @@ export class ListaObjetos extends Component {
     listaObjetos.map((elemento, index) => {
       if (elemento.idObject === objeto.idObject) {
         listaObjetos[index].text = objeto.text;
+        listaObjetos[index].didChange = true;
       }
     });
     dispatchUpdateElementFromList(titulo, listaObjetos);

@@ -18,8 +18,10 @@ function getStrategiesFromObjective(objective, clientId) {
 
 function getRequestFromElement(element, clientId) {
     return {
+        id: element.id,
         client: clientId,
-        text: element.value
+        text: element.value,
+        didChange: element.didChange
     }
 }
 
@@ -27,7 +29,9 @@ function getObjectListRequestFromReducer(opportunities, clientId) {
     let opportunitiesRequest = opportunities.map((opportunity) => {
         return {
             client: clientId,
-            text: opportunity.text
+            id: opportunity.id,
+            text: opportunity.text,
+            didChange: opportunity.didChange
         }
     })
     return opportunitiesRequest;
