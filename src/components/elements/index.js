@@ -64,12 +64,12 @@ export class ElementsComponent extends Component {
                                     name={'add square'}
                                     style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
                                     onClick={() => {
-                                        if(!((length || 0) === max)) {
+                                        if(!((length || 0) >= max)) {
                                             this.setState({ show: true });
                                             dispatchSetToShow({ name, show: true });
                                         }
                                     }}
-                                    disabled={(length || 0) === max}
+                                    disabled={(length || 0) >= max}
                                 />
                             </ToolTip>
                         </Col>
