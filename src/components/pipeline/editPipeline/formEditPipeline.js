@@ -673,7 +673,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
                             "need": need.value,
                             "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.00'),
-                            "sva": sva.value === undefined ? null : numeral(sva.value).format('0'),
+                            "sva": sva.value === undefined || sva.value === null || sva.value === '' ? '' : numeral(sva.value).format('0'),
                             "moneyDistribitionMarket": moneyDistribitionMarket.value,
                             "observations": observations.value,
                             "termInMonths": termInMonths.value,
@@ -1681,7 +1681,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             marginBottom: "0px",
                             backgroundColor: "#F8F8F8",
                             height: "50px",
-                            background: "rgba(255,255,255,0.75)"
+                            background: "rgba(255,255,255,0.75)",
+                            zIndex: 999
                         } : { display: "none" }}>
                             <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
                                 <button className="btn" type="submit" onClick={() => { setGlobalCondition(null); typeButtonClick = SAVE_DRAFT; }}
