@@ -63,7 +63,7 @@ export function fillParticipants(participants) {
                 participantData.cargo = participant.contactPositionName === null || participant.contactPositionName === undefined || participant.contactPositionName === '' ? ''
                     : ' - ' + participant.contactPositionName;
                 participantData.empresa = '';
-                participantData.interlocutorObjs = participant.interlocutorObjs;
+                participantData.interlocutorObjs = participant.contactObject.interlocutorObjs;
                 participantData.nameComplet = participant.contactName;
                 participantData.contactPosition = participant.contactPositionName;
                 participantData.contactSocialStyle = participant.socialStyleName;
