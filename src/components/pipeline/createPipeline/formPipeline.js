@@ -690,7 +690,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
               "need": need.value,
               "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.00'),
-              "sva": sva.value === undefined ? null : numeral(sva.value).format('0'),
+              "sva": sva.value === undefined || sva.value === null || sva.value === '' ? '' : numeral(sva.value).format('0'),
               "observations": observations.value,
               "termInMonths": termInMonths.value,
               "termInMonthsValues": termInMonthsValues.value ? termInMonthsValues.value : "",
@@ -1463,7 +1463,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 </Col>
               </Row>
             </div>
-            <div style={origin !== ORIGIN_PIPELIN_BUSINESS ? { display: "block", position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height: "50px", background: "rgba(255,255,255,0.75)" } : { display: "none" }}>
+            <div style={origin !== ORIGIN_PIPELIN_BUSINESS ? { display: "block", position: "fixed", zIndex: 999, border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height: "50px", background: "rgba(255,255,255,0.75)" } : { display: "none" }}>
               <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
                 <button className="btn" type="submit" onClick={() => { setGlobalCondition(null); typeButtonClick = SAVE_DRAFT; }} style={{ float: "right", margin: "8px 0px 0px 8px", position: "fixed", backgroundColor: "#00B5AD" }}>
                   <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
