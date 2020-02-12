@@ -20,7 +20,7 @@ import { formValidateKeyEnter } from '../../../actionsGlobal';
 
 import { FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID } from '../../selectsComponent/constants';
 import { OPEN_EDIT_MODAL } from '../constants';
-import { OBJECTIVES_PLACEHOLDER, OBJECTIVES, MANDATORY_OBJECTIVES_MSG } from '../../participants/constants';
+import { OBJECTIVES_PLACEHOLDER, OBJECTIVES, MANDATORY_OBJECTIVES_MSG, OBJECTIVES_OPEN_ERROR_MSG } from '../../participants/constants';
 import { OPTION_REQUIRED, MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 
 import { schema as schemaObjectivesInterlocutor } from '../../participants/schema';
@@ -29,16 +29,8 @@ const fields = ["contactTypeOfContact", "contactFunctions", "contactLineOfBusine
 var thisForm;
 const validate = (values) => {
     const errors = {};
-    if (!values.contactTypeOfContact) {
-        errors.contactTypeOfContact = OPTION_REQUIRED;
-    } else {
-        errors.contactTypeOfContact = null;
-    }
-    if (!values.contactFunctions) {
-        errors.contactFunctions = OPTION_REQUIRED;
-    } else {
-        errors.contactFunctions = null;
-    }
+    errors.contactTypeOfContact = !values.contactTypeOfContact ? OPTION_REQUIRED : null;
+    errors.contactFunctions = !values.contactFunctions ? OPTION_REQUIRED : null;
     return errors;
 }
 
@@ -62,20 +54,52 @@ export class ModalEditRelationship extends Component {
         const { filterContactsReducer, dispatchAddToList, dispatchCreateList, dispatchCleanList } = this.props;
         const interlocutorObjs = filterContactsReducer.get('entityClientContact').interlocutorObjsDTOS;
 
-        dispatchCleanList('objectives');
-        dispatchCreateList('objectives');
+        dispatchCleanList(OBJECTIVES);
+        dispatchCreateList(OBJECTIVES);
 
         if (interlocutorObjs && interlocutorObjs.length) {
             interlocutorObjs.forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1) }), name: OBJECTIVES, old: null }));
         }
     }
 
+    saveData = async (json) => {
+        const { dispatchChangeStateSaveData, dispatchUpdateRelationshipClientContact, dispatchGetContactDetails } = this.props;
+
+        dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
+
+        const response = await dispatchUpdateRelationshipClientContact(json);
+        dispatchChangeStateSaveData(false, "");
+        if (!_.get(response, 'payload.data.validateLogin')) {
+            redirectUrl("/login");
+        } else {
+            if (_.get(response, 'payload.data.status') === 200) {
+                this.setState({
+                    showErrorForm: true,
+                    typeView: "success",
+                    title: "Actualizar información",
+                    message: "Señor usuario, la relación cliente-contacto ha sido actualizada correctamente."
+                });                    
+                dispatchGetContactDetails(window.sessionStorage.getItem('idContactSelected'));
+            } else {
+                this.setState({
+                    showErrorForm: true,
+                    typeView: "error",
+                    title: "Error actualizando información",
+                    message: "Señor usuario, ocurrió un error tratando de actualizar la información."
+                });
+            }
+        }
+    }
+
     handleSubmitRelationship = () => {
-        const { 
-            fields: { contactTypeOfContact, contactFunctions, contactLineOfBusiness }, 
-            filterContactsReducer, dispatchUpdateRelationshipClientContact, dispatchChangeStateSaveData, dispatchGetContactDetails, elementsReducer, dispatchSwtShowMessage
-        } = this.props;
-        const data = elementsReducer['objectives'];
+        const { fields: { contactTypeOfContact, contactFunctions, contactLineOfBusiness }, filterContactsReducer, elementsReducer, dispatchSwtShowMessage } = this.props;        
+        const data = elementsReducer[OBJECTIVES];
+
+        if (data && data.open) {
+            dispatchSwtShowMessage('error', 'Error', OBJECTIVES_OPEN_ERROR_MSG);
+            return;
+        }
+
         const entityClientContact = filterContactsReducer.get('entityClientContact');
         const json = {
             "idClientContact": entityClientContact.idClientContact,
@@ -84,32 +108,8 @@ export class ModalEditRelationship extends Component {
             "lineOfBusiness": JSON.parse('[' + ((contactLineOfBusiness.value) ? contactLineOfBusiness.value : "") + ']'),
             "interlocutorObjs": data.elements
         };
-        dispatchSwtShowMessage('warning', 'Confirmación cambios', 'Señor usuario, el cambio realizado se aplicará en todas las previsitas donde participe la relación Cliente-Contacto.', { onConfirmCallback: () => {
-            dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
-            dispatchUpdateRelationshipClientContact(json).then((data) => {
-                dispatchChangeStateSaveData(false, "");
-                if (!_.get(data, 'payload.data.validateLogin')) {
-                    redirectUrl("/login");
-                } else {
-                    if (_.get(data, 'payload.data.status') === 200) {
-                        dispatchGetContactDetails(window.sessionStorage.getItem('idContactSelected'));
-                        this.setState({
-                            showErrorForm: true,
-                            typeView: "success",
-                            title: "Actualizar información",
-                            message: "Señor usuario, la relación cliente-contacto ha sido actualizada correctamente."
-                        });
-                    } else {
-                        this.setState({
-                            showErrorForm: true,
-                            typeView: "error",
-                            title: "Error actualizando información",
-                            message: "Señor usuario, ocurrió un error tratando de actualizar la información."
-                        });
-                    }
-                }
-            });
-        }, onCancelCallback: () => console.log('Dios 2')});
+
+        this.saveData(json);
     }
 
     closeAlertInformation = () => {
@@ -118,7 +118,6 @@ export class ModalEditRelationship extends Component {
             const {functionClose} = this.props;
             functionClose(OPEN_EDIT_MODAL);
         }
-
     }
 
     render() {
@@ -128,7 +127,7 @@ export class ModalEditRelationship extends Component {
                 <div className="modalBt4-content modal-content">
                     <div className="modalBt4-header modal-header">
                         <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Editar relación cliente-contacto</h4>
-                        <button type="button" onClick={() => { functionClose(OPEN_EDIT_MODAL) }} className="close" data-dismiss="modal" role="close">
+                        <button name="btnClose" type="button" onClick={() => { functionClose(OPEN_EDIT_MODAL) }} className="close" data-dismiss="modal" role="close">
                             <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                             <span className="sr-only">Close</span>
                         </button>

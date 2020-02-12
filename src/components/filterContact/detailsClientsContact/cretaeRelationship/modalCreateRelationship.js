@@ -12,6 +12,7 @@ import ComboBoxFilter from '../../../../ui/comboBoxFilter/comboBoxFilter';
 import ListCreateRelationship from './listCreateRelationship';
 import Tooltip from '../../../toolTip/toolTipComponent';
 import ElementsComponent from '../../../elements';
+import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 
 import { getContactDetails } from '../../../contact/contactDetail/actions';
 import { changeStateSaveData } from '../../../dashboard/actions';
@@ -22,7 +23,7 @@ import { clientsFindServer } from '../../../clients/actions';
 import { formValidateKeyEnter } from '../../../../actionsGlobal';
 import { cleanList, addToList, createList } from '../../../elements/actions';
 
-import { OBJECTIVES_PLACEHOLDER, OBJECTIVES, MANDATORY_OBJECTIVES_MSG } from '../../../participants/constants';
+import { OBJECTIVES_PLACEHOLDER, OBJECTIVES, OBJECTIVES_OPEN_ERROR_MSG, MANDATORY_OBJECTIVES_MSG } from '../../../participants/constants';
 import { OPEN_CREATE_MODAL } from '../../constants';
 import { FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID } from '../../../selectsComponent/constants';
 import { MESSAGE_SAVE_DATA, OPTION_REQUIRED } from '../../../../constantsGlobal';
@@ -39,20 +40,12 @@ var access;
 var thisForm;
 const validate = (values) => {
     const errors = {};
-    if (!values.contactTypeOfContact) {
-        errors.contactTypeOfContact = OPTION_REQUIRED;
-    } else {
-        errors.contactTypeOfContact = null;
-    }
-    if (!values.contactFunctions) {
-        errors.contactFunctions = OPTION_REQUIRED;
-    } else {
-        errors.contactFunctions = null;
-    }
+    errors.contactTypeOfContact = !values.contactTypeOfContact ? OPTION_REQUIRED : null;
+    errors.contactFunctions = !values.contactFunctions ? OPTION_REQUIRED : null;
     return errors;
 }
 
-class ModalCreateRelationship extends Component {
+export class ModalCreateRelationship extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -63,7 +56,7 @@ class ModalCreateRelationship extends Component {
             message: "",
             uploadTable: false
         };
-        this.handlerSubmitRelationship = this.handlerSubmitRelationship.bind(this);
+        this.handleSubmitRelationship = this.handleSubmitRelationship.bind(this);
         this.closeAlertInformation = this.closeAlertInformation.bind(this);
         this.addClientToRelationship = this.addClientToRelationship.bind(this);
         this.updateKeyValueClient = this.updateKeyValueClient.bind(this);
@@ -73,25 +66,57 @@ class ModalCreateRelationship extends Component {
     }
 
     componentWillMount() {
-        const { filterContactsReducer, dispatchAddToList, dispatchCreateList, dispatchCleanList } = this.props;
-        const interlocutorObjs = filterContactsReducer.get('entityClientContact').interlocutorObjsDTOS;
+        const { dispatchCreateList, dispatchCleanList } = this.props;
 
-        dispatchCleanList('objectives');
-        dispatchCreateList('objectives');
+        dispatchCleanList(OBJECTIVES);
+        dispatchCreateList(OBJECTIVES);
+    }
 
-        if (interlocutorObjs && interlocutorObjs.length) {
-            interlocutorObjs.forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1) }), name: OBJECTIVES, old: null }));
+    saveData = async (json) => {
+        const { dispatchChangeStateSaveData, dispatchUpdateRelationshipClientContact, dispatchGetContactDetails } = this.props;
+
+        dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
+
+        const response = await dispatchUpdateRelationshipClientContact(json);
+        dispatchChangeStateSaveData(false, "");
+
+        if (!_.get(response, 'payload.data.validateLogin')) {
+            redirectUrl("/login");
+        } else {
+            if (_.get(response, 'payload.data.status') === 200) {
+                this.setState({
+                    showErrorForm: true,
+                    typeView: "success",
+                    title: "Crear relación(es)",
+                    message: "Señor usuario, las relaciones cliente-contacto se crearon correctamente."
+                });
+                dispatchGetContactDetails(window.sessionStorage.getItem('idContactSelected'));
+            } else {
+                this.setState({
+                    showErrorForm: true,
+                    typeView: "error",
+                    title: "Error",
+                    message: "Señor usuario, ocurrió un error tratando de actualizar la información."
+                });
+            }
         }
     }
 
-    handlerSubmitRelationship = () => {
+    handleSubmitRelationship = () => {
         const { 
             fields: { contactTypeOfContact, contactFunctions, contactLineOfBusiness },
-            filterContactsReducer, dispatchUpdateRelationshipClientcontact, dispatchChangeStateSaveData, dispatchGetContactDetails, elementsReducer,
-        } = this.props;
+            filterContactsReducer, elementsReducer, dispatchSwtShowMessage
+        } = this.props; 
+
         if (filterContactsReducer.get('clientsCreaterRelationship').length > 0) {
-            const data = elementsReducer['objectives'];
-            dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
+
+            const data = elementsReducer[OBJECTIVES];
+
+            if (data && data.open) {
+                dispatchSwtShowMessage('error', 'Error', OBJECTIVES_OPEN_ERROR_MSG);
+                return;
+            }
+
             const idValuesClients = _.map(filterContactsReducer.get('clientsCreaterRelationship'), 'id');
             const json = {
                 "idClientContact": null,
@@ -102,30 +127,7 @@ class ModalCreateRelationship extends Component {
                 "lineOfBusiness": JSON.parse('[' + ((contactLineOfBusiness.value) ? contactLineOfBusiness.value : "") + ']'),
                 "interlocutorObjs": data.elements
             };
-            dispatchUpdateRelationshipClientcontact(json).then((data) => {
-                dispatchChangeStateSaveData(false, "");
-                if (!_.get(data, 'payload.data.validateLogin')) {
-                    // redirectUrl("/login");
-                    alert('paila socito')
-                } else {
-                    if (_.get(data, 'payload.data.status') === 200) {
-                        dispatchGetContactDetails(window.sessionStorage.getItem('idContactSelected'));
-                        this.setState({
-                            showErrorForm: true,
-                            typeView: "success",
-                            title: "Crear relación(es)",
-                            message: "Señor usuario, las relaciones cliente-contacto se crearon correctamente."
-                        });
-                    } else {
-                        this.setState({
-                            showErrorForm: true,
-                            typeView: "error",
-                            title: "Error",
-                            message: "Señor usuario, ocurrió un error tratando de actualizar la información."
-                        });
-                    }
-                }
-            });
+            this.saveData(json);
         } else {
             this.setState({
                 showErrorForm: true,
@@ -143,7 +145,6 @@ class ModalCreateRelationship extends Component {
             const { functionClose } = this.props;
             functionClose(OPEN_CREATE_MODAL);
         }
-
     }
 
     updateKeyValueClient(e) {
@@ -365,12 +366,12 @@ class ModalCreateRelationship extends Component {
                 <div className="modalBt4-content modal-content">
                     <div className="modalBt4-header modal-header">
                         <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Crear relación cliente-contacto</h4>
-                        <button type="button" onClick={() => { functionClose(OPEN_CREATE_MODAL) }} className="close" data-dismiss="modal" role="close">
+                        <button name='btnClose' type="button" onClick={() => { functionClose(OPEN_CREATE_MODAL) }} className="close" data-dismiss="modal" role="close">
                             <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                             <span className="sr-only">Close</span>
                         </button>
                     </div>
-                    <form onSubmit={handleSubmit(this.handlerSubmitRelationship)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
+                    <form onSubmit={handleSubmit(this.handleSubmitRelationship)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
                         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{ overflowX: 'hidden' }}>
                             <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Clasificación del contacto</span></dt>
                             <Row style={{ paddingLeft: '20px', paddingRight: '20px' }}>
@@ -520,12 +521,13 @@ function mapDispatchToProps(dispatch) {
         dispatchAddToList: addToList,
         dispatchCreateList: createList,
         dispatchCleanList: cleanList,
-        dispatchUpdateRelationshipClientcontact: updateRelationshipClientcontact,
+        dispatchUpdateRelationshipClientContact: updateRelationshipClientcontact,
         dispatchChangeStateSaveData: changeStateSaveData,
         dispatchGetContactDetails: getContactDetails,
         dispatchClientsFindServer: clientsFindServer,
         dispatchEconomicGroupsByKeyword: economicGroupsByKeyword,
-        dispatchClientsByEconomicGroup: clientsByEconomicGroup
+        dispatchClientsByEconomicGroup: clientsByEconomicGroup,
+        dispatchSwtShowMessage: swtShowMessage
     }, dispatch);
 }
 

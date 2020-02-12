@@ -14,7 +14,7 @@ import ModalCreateRelationship from './cretaeRelationship/modalCreateRelationshi
 import Modal from 'react-modal';
 import _ from 'lodash';
 
-class ListClientsContact extends Component {
+export class ListClientsContact extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -23,31 +23,30 @@ class ListClientsContact extends Component {
             successDeleteRelationship: false,
             showConfirmDelete: false
         };
-        this._mapValuesClientsContact = this._mapValuesClientsContact.bind(this);
-        this._deleteRelastionship = this._deleteRelastionship.bind(this);
-        this._seletedAllItems = this._seletedAllItems.bind(this);
-        this._closeDeleteRelationship = this._closeDeleteRelationship.bind(this);
-        this._openModalCreateRelationship = this._openModalCreateRelationship.bind(this);
-        this._viewRelationchipClientContact = this._viewRelationchipClientContact.bind(this);
-        this._validateDelete = this._validateDelete.bind(this);
-        this._selectCheckbox = this._selectCheckbox.bind(this);
+        this.mapValuesClientsContact = this.mapValuesClientsContact.bind(this);
+        this.deleteRelastionship = this.deleteRelastionship.bind(this);
+        this.selectedAllItems = this.selectedAllItems.bind(this);
+        this.closeDeleteRelationship = this.closeDeleteRelationship.bind(this);
+        this.openModalCreateRelationship = this.openModalCreateRelationship.bind(this);
+        this.viewRelationshipClientContact = this.viewRelationshipClientContact.bind(this);
+        this.validateDelete = this.validateDelete.bind(this);
+        this.selectCheckbox = this.selectCheckbox.bind(this);
         this.closeModal = this.closeModal.bind(this);
     }
 
-    _openModalCreateRelationship(type) {
+    openModalCreateRelationship = () => {
         const { changeValueOpenModal } = this.props;
         changeValueOpenModal(true, OPEN_CREATE_MODAL);
     }
 
-    _viewRelationchipClientContact(entityClientContat) {
+    viewRelationshipClientContact = (entityClientContat) => {
         const { changeValueOpenModal, setEditRelationship } = this.props;
         changeValueOpenModal(true, OPEN_EDIT_MODAL);
         setEditRelationship(entityClientContat);
     }
 
 
-    _mapValuesClientsContact(clientContact, idx) {
-        const { contactDetail } = this.props;
+    mapValuesClientsContact = (clientContact, idx) => {
         const lineOfBusiness = _.join(_.map(clientContact.listLineOfBusiness, 'value'), ', ')
         const functions = _.join(_.map(clientContact.listFunction, 'value'), ', ')
         const { listRelationshipClients } = this.state;
@@ -55,7 +54,7 @@ class ListClientsContact extends Component {
         return <tr key={idx}>
             <td className="collapsing">
                 <input type="checkbox" title="Seleccionar" style={{ cursor: "pointer" }}
-                    onClick={() => this._selectCheckbox(clientContact.idClientContact)}
+                    onClick={() => this.selectCheckbox(clientContact.idClientContact)}
                     checked={valueCheck} />
             </td>
             <td>{clientContact.numberDocument}</td>
@@ -65,12 +64,12 @@ class ListClientsContact extends Component {
             <td>{shorterStringValue(functions, 60)}</td>
             <td className="collapsing">
                 <i className="zoom icon" title="Ver detalle" style={{ cursor: "pointer" }}
-                    onClick={() => this._viewRelationchipClientContact(clientContact)} />
+                    onClick={() => this.viewRelationshipClientContact(clientContact)} />
             </td>
         </tr>
     }
 
-    _selectCheckbox(idClientContact) {
+    selectCheckbox = (idClientContact) => {
         const { setArrayDeleteClientContact } = this.props;
         var { listRelationshipClients } = this.state;
         const indexDelete = _.indexOf(listRelationshipClients, idClientContact);
@@ -85,7 +84,7 @@ class ListClientsContact extends Component {
         });
     }
 
-    _closeDeleteRelationship() {
+    closeDeleteRelationship = () => {
         const { changeStateSaveData, getContactDetails, contactId } = this.props;
         this.setState({ successDeleteRelationship: false });
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -94,17 +93,22 @@ class ListClientsContact extends Component {
         });
     }
 
-    _deleteRelastionship() {
+    deleteRelastionship = async () => {
         this.setState({ showConfirmDelete: false });
-        const { contactDetail, deleteRelationshipServer, changeStateSaveData } = this.props;
+
+        const { contactDetail, deleteRelationshipServer, changeStateSaveData, getContactDetails, contactId } = this.props;
+
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
-        deleteRelationshipServer(contactDetail.get('listDeleteClientContact')).then(() => {
-            changeStateSaveData(false, "");
-            this.setState({ successDeleteRelationship: true });
-        });
+        const response = await deleteRelationshipServer(contactDetail.get('listDeleteClientContact'));
+        changeStateSaveData(false, "");
+        
+        if (_.get(response, 'payload.status') === 200) {
+            getContactDetails(contactId);
+            this.setState({ successDeleteRelationship: true, listRelationshipClients: [] });
+        }
     }
 
-    _validateDelete() {
+    validateDelete = () => {
         const { contactDetail } = this.props;
         const listRelationshipClients = contactDetail.get('listDeleteClientContact');
         if (listRelationshipClients.length <= 0) {
@@ -114,13 +118,13 @@ class ListClientsContact extends Component {
         }
     }
 
-    closeModal(type) {
+    closeModal = (type) => {
         const { changeValueOpenModal, modifyClientRelationship } = this.props;
         modifyClientRelationship([]);
         changeValueOpenModal(false, type);
     }
 
-    _seletedAllItems() {
+    selectedAllItems = () => {
         const { contactDetail, setArrayDeleteClientContact } = this.props;
         const { listRelationshipClients } = this.state;
         if (listRelationshipClients.length !== contactDetail.get('listClientcontacts').length) {
@@ -147,7 +151,7 @@ class ListClientsContact extends Component {
                                 <thead>
                                     <tr>
                                         <th><input type="checkbox"
-                                            onClick={this._seletedAllItems} title="Seleccionar todos"
+                                            onClick={this.selectedAllItems} title="Seleccionar todos"
                                             checked={valueCheckAll} />
                                         </th>
                                         <th>Documento</th>
@@ -159,15 +163,15 @@ class ListClientsContact extends Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {contactDetail.get('listClientcontacts').map(this._mapValuesClientsContact)}
+                                    {contactDetail.get('listClientcontacts').map(this.mapValuesClientsContact)}
                                 </tbody>
                             </table>
                         </Col>
                         <Col xsOffset={1} mdOffset={3} lgOffset={3} xs={12} md={9} lg={9} >
-                            <button className="btn btn-danger" onClick={this._validateDelete} style={{ float: 'right', cursor: 'pointer', marginTop: '15px', marginLeft: '15px' }}>
+                            <button className="btn btn-danger" onClick={this.validateDelete} style={{ float: 'right', cursor: 'pointer', marginTop: '15px', marginLeft: '15px' }}>
                                 <i className="trash icon"></i> Eliminar relación(es)
                             </button>
-                            <button className="btn btn-primary" onClick={this._openModalCreateRelationship} style={{ float: 'right', cursor: 'pointer', marginTop: '15px' }}>
+                            <button className="btn btn-primary" onClick={this.openModalCreateRelationship} style={{ float: 'right', cursor: 'pointer', marginTop: '15px' }}>
                                 <i className="plus icon"></i> Adicionar relación(es)
                             </button>
                         </Col>
@@ -180,7 +184,7 @@ class ListClientsContact extends Component {
                             </div>
                         </Col>
                         <Col xsOffset={1} mdOffset={3} lgOffset={3} xs={12} md={9} lg={9} >
-                            <button className="btn btn-primary" onClick={this._openModalCreateRelationship} style={{ float: 'right', cursor: 'pointer', marginTop: '15px', marginRight: '32px' }}>
+                            <button className="btn btn-primary" onClick={this.openModalCreateRelationship} style={{ float: 'right', cursor: 'pointer', marginTop: '15px', marginRight: '32px' }}>
                                 <i className="plus icon"></i> Adicionar relación(es)
                                 </button>
                         </Col>
@@ -212,7 +216,7 @@ class ListClientsContact extends Component {
                     show={this.state.successDeleteRelationship}
                     title="Eliminar relaciones"
                     text="Señor usuario, la eliminación se realizó de forma exitosa."
-                    onConfirm={this._closeDeleteRelationship}
+                    onConfirm={this.closeDeleteRelationship}
                 />
                 <SweetAlert
                     type="warning"
@@ -224,7 +228,7 @@ class ListClientsContact extends Component {
                     cancelButtonText="Cancelar"
                     showCancelButton={true}
                     onCancel={() => this.setState({ showConfirmDelete: false })}
-                    onConfirm={this._deleteRelastionship} />
+                    onConfirm={this.deleteRelastionship} />
             </div>
         )
     };
