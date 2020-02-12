@@ -88,7 +88,7 @@ export class PrevisitFormComponent extends Component {
 
    render() {
       const { fields: { type, date, duration, place, objective, challenger, observations } } = this.state;
-      const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue } = this.props;
+      const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue , infoClient} = this.props;
       
       return (
          <div>
@@ -217,7 +217,7 @@ export class PrevisitFormComponent extends Component {
                   </Col>
                </Row>
 
-               <SectionOpportunitiesWeaknesses visual={true}/>
+               <SectionOpportunitiesWeaknesses visual={true} infoClient={infoClient} previsit={true}/> 
                
                <Row style={{ padding: "20px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
