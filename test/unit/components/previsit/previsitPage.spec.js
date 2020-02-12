@@ -396,7 +396,10 @@ describe('Test previsitPage', () => {
                                 {
                                     id: 1,
                                     contactName: 'Daniel',
-                                    tipoParticipante: KEY_PARTICIPANT_CLIENT
+                                    tipoParticipante: KEY_PARTICIPANT_CLIENT,
+                                    contactObject: {
+                                        interlocutorObjs: []
+                                    }
                                 }
                             ],
                             participatingEmployees: [

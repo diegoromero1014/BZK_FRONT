@@ -43,6 +43,7 @@ export class ParticipantsByClient extends Component {
 
         if (!isNaN(selectedContact)) {
             existingContact = contacts.find(element => element.id === Number(selectedContact));            
+            
             existingContact = {
                 tipoParticipante: KEY_PARTICIPANT_CLIENT,
                 idParticipante: existingContact.id,
@@ -57,7 +58,8 @@ export class ParticipantsByClient extends Component {
                 nameComplet: existingContact.nameComplet,
                 contactPosition: existingContact.contactPosition,
                 contactSocialStyle: existingContact.contactSocialStyle,
-                contactActitudeCompany: existingContact.contactActitudeCompany
+                contactActitudeCompany: existingContact.contactActitudeCompany,
+                interlocutorObjs: existingContact.interlocutorObjs
             }
         } else {
             existingContact = selectedContact;
