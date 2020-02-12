@@ -18,6 +18,7 @@ export function changeParticipantClientDataStructure(participant){
         "id": null,
         "contact": participant.idParticipante,
         "order": participant.order,
+        "socialStyle": participant.socialStyleId,
         "interlocutorObjs": participant.interlocutorObjs
     };
 }
@@ -66,6 +67,7 @@ export function fillParticipants(participants){
                 participantData.contactPosition = participant.contactPositionName;
                 participantData.contactSocialStyle = participant.socialStyleName;
                 participantData.contactActitudeCompany = participant.attitudeOverGroupName;
+                participantData.socialStyleId = participant.socialStyle;
 
                 return participantData;
             case KEY_PARTICIPANT_BANCO:                

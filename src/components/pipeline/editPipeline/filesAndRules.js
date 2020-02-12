@@ -2,10 +2,10 @@ import _ from "lodash";
 
 import {
     checkRequired, processRules, checkRequiredWithGlobalCondition,
-    checkOnlyAlphabetical, checkPipeLineOpportunityName, 
-    checkFirstCharacter, checkNumberLength,checkRequiredPipelineJustification,
+    checkOnlyAlphabetical, checkPipeLineOpportunityName,
+    checkFirstCharacter, checkNumberLength, checkRequiredPipelineJustification,
     checkRequiredComercialOportunity, checkRequiredPivotNit, checkRequiredTermInMonths,
-    checkRequiredTermInMonthsValue
+    checkRequiredTermInMonthsValue, validateDecimal
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -21,8 +21,9 @@ export const fieldsWithRules = {
     nameUsuario: { rules: [checkRequired, checkOnlyAlphabetical] }, 
     idUsuario: { rules: [checkRequired] }, 
     value: { rules: [checkRequired, checkNumberLength(15)] }, 
-    commission: { rules: [checkNumberLength(10)] }, 
-    roe: { rules: [checkNumberLength(5)] },
+    commission: { rules: [checkNumberLength(10)] },
+    sva: { rules: [checkNumberLength(15)] },
+    roe: { rules: [validateDecimal] },
     termInMonths: { rules: [checkRequiredTermInMonths, checkNumberLength(4)] },
     businessStatus: { rules: [] }, 
     businessCategory: { rules: [checkRequiredWithGlobalCondition] }, 

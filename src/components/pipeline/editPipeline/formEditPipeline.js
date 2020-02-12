@@ -84,7 +84,7 @@ import {
     IMPORTATION_LEASING,
     NUEVO_NEGOCIO,
     NEED_FINANCING, PIPELINE_INDEXING_FIELD, PIPELINE_PENDING_DISBURSEMENT_AMOUNT, PIPELINE_TERM_IN_MONTHS_AND_VALUES,
-    PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS, PRODUCT_FAMILY_LEASING
+    PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS, PRODUCT_FAMILY_LEASING, HELP_SVA
 } from "../constants";
 import { addUsers, setConfidential } from "../../commercialReport/actions";
 import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercialReport/functionsGenerics";
@@ -206,6 +206,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._getNeedById = this._getNeedById.bind(this);
             this._validateShowFinancingNeedFields = this._validateShowFinancingNeedFields.bind(this);
             this._nameDisbursementPlansInReducer = this._nameDisbursementPlansInReducer.bind(this);
+            this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
         }
 
         showFormDisbursementPlan(isOpen) {
@@ -285,6 +286,20 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
 
             valuReduxForm.onChange(output);
+        }
+
+
+        _handleBlurValueNumber(valuReduxForm, val) {
+            //Elimino los caracteres no validos
+            if (val !== null && val !== '' && val !== undefined) {
+                for (var i = 0, output = '', validos = "0123456789."; i < val.length; i++) {
+                    if (validos.indexOf(val.charAt(i)) !== -1) {
+                        output += val.charAt(i)
+                    }
+                }
+                val = output;
+                valuReduxForm.onChange(val);
+            }
         }
 
         _onCloseButton() {
@@ -532,7 +547,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             let newValueIsFinancing = null;
             if(need.value != ''){
                 needSelected = this._getNeedById(need.value);
-                needSelectedKey = needSelected ? needSelected.key : '';
+                needSelectedKey = needSelected ? needSelected.key : '';                
             }
 
             newValueIsFinancing = needSelectedKey === NEED_FINANCING;
@@ -623,7 +638,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         _submitEditPipeline() {
             const { fields: {
-                idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
+                idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                 moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
                 termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit, typePolicy
             }, createEditPipeline, changeStateSaveData, swtShowMessage, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
@@ -658,6 +673,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
                             "need": need.value,
                             "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
+                            "sva": sva.value === undefined ? null : numeral(sva.value).format('0'),
                             "moneyDistribitionMarket": moneyDistribitionMarket.value,
                             "observations": observations.value,
                             "termInMonths": termInMonths.value,
@@ -812,7 +828,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         _consultInfoPipeline(data) {
             const {
-                fields: { businessStatus, commission, currency, idUsuario, nameUsuario, indexing, need, observations, product, roe, moneyDistribitionMarket,
+                fields: { businessStatus, commission, currency, idUsuario, nameUsuario, indexing, need, observations, product, roe, sva, moneyDistribitionMarket,
                     termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, positionCreatedBy,
                     positionUpdatedBy, reviewedDate, probability, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
                     termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit, typePolicy
@@ -857,6 +873,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             reviewedDate.onChange(moment(data.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)); 
             businessCategory.onChange(data.businessCategory);      
             product.onChange(data.product);
+            sva.onChange(data.sva);
             typePolicy.onChange(data.policyType);
         }
 
@@ -951,7 +968,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         render() {
             const {
-                fields: { nameUsuario, idUsuario, value, commission, roe, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
+                fields: { nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                     moneyDistribitionMarket, pendingDisbursementAmount, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
                     positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
                     termInMonthsValues, pipelineType, commercialOportunity, justification, pivotNit, typePolicy
@@ -1297,10 +1314,32 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             type="text"
                                             {...roe}
                                             parentId="dashboardComponentScroll"
+                                            max="6"
                                             placeholder="Ingresa el valor sin el %. Ejm ROE 30"
-                                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, roe, val, true, 2)}
+                                            onBlur={val => this._handleBlurValueNumber(roe, val)}
                                             onFocus={val => handleFocusValueNumber(roe, roe.value)}
                                             disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>SVA</span>
+                                            <ToolTip text={HELP_SVA}>
+                                                <i className="help circle icon blue"
+                                                   style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
+                                            </ToolTip>
+                                        </dt>
+                                        <Input
+                                          {...sva}
+                                          name="sva"
+                                          type="text"
+                                          placeholder="Miles ' , ' y decimales ' . '"
+                                          parentId="dashboardComponentScroll"
+                                          onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, sva, val, true, 2)}
+                                          onFocus={val => handleFocusValueNumber(sva, sva.value)}
+                                          disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
                                     </div>
                                 </Col>
