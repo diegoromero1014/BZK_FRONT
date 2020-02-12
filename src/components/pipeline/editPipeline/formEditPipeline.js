@@ -115,6 +115,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
     let pipelineTypeName = _.uniqueId('pipelineType');
     let commercialOportunityName = _.uniqueId("commercialOportunity");
     let nameJustificationPipeline = _.uniqueId('justificationPipeline_');
+    let nameTypePolicy = _.uniqueId('nameTypePolicy');
     let typeMessage = "success";
     let titleMessage = "";
     let message = "";
@@ -1556,11 +1557,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             <span>Tipo de póliza</span>
                                         </dt>
                                         <ComboBox
+                                            id={"typePolicy"}
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
                                             textProp={'value'}
                                             {...typePolicy}
-                                            name="typePolicy"
+                                            name={nameTypePolicy}
                                             parentId="dashboardComponentScroll"
                                             data={selectsReducer.get(FILTER_TYPE_POLICY) || []}
                                             disabled={this.state.isEditable ? '' : 'disabled'}

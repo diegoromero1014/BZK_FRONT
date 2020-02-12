@@ -102,7 +102,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   let nameCurrency = _.uniqueId('currency_');
   let participantBanc = _.uniqueId('participantBanc_');
   let inputParticipantBanc = _.uniqueId('inputParticipantBanc_');
-  
+  let nameTypePolicy = _.uniqueId('nameTypePolicy');
   let pipelineTypeName = _.uniqueId('pipelineType');
   let commercialOportunityName = _.uniqueId("commercialOportunity");
   let nameJustificationPipeline = _.uniqueId('justificationPipeline_');
@@ -1411,7 +1411,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                           valueProp={'id'}
                           textProp={'value'}
                           {...typePolicy}
-                          name="typePolicy"
+                          name={nameTypePolicy}
                           parentId="dashboardComponentScroll"
                           data={selectsReducer.get(FILTER_TYPE_POLICY) || []}
                       />
