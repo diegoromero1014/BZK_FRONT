@@ -1,38 +1,40 @@
 import _ from 'lodash';
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from '../participantsVisitPre/constants';
 
-export function participantIsClient(participant){
+export function participantIsClient(participant) {
     return participant.tipoParticipante === KEY_PARTICIPANT_CLIENT;
 }
 
-export function participantIsBank(participant){
+export function participantIsBank(participant) {
     return participant.tipoParticipante === KEY_PARTICIPANT_BANCO;
 }
 
-export function participantIsOther(participant){
+export function participantIsOther(participant) {
     return participant.tipoParticipante === KEY_PARTICIPANT_OTHER;
 }
 
-export function changeParticipantClientDataStructure(participant){
-    return {
-        "id": null,
-        "contact": participant.idParticipante,
-        "order": participant.order,
-        "interlocutorObjs": participant.interlocutorObjs
-    };
-}
+export const changeParticipantClientDataStructure = participant => ({
+    "id": null,
+    "contact": participant.idParticipante, 
+    "contactObject": {
+        "id": participant.idParticipante,
+        "interlocutorObjs": participant.interlocutorObjs,
+        "socialStyle": participant.socialStyleId,
+        "client": window.sessionStorage.getItem('idClientSelected')
+    },
+    "order": participant.order,
+});
 
-export function changeParticipantOtherDataStructure(participant){
-    return {
-        "id": null,
-        "name": participant.nombreParticipante.replace('-', '').trim(),
-        "position": participant.cargo.replace('-', '').trim(),
-        "company": participant.empresa.replace('-', '').trim(),
-        "order": participant.order
-    };
-}
+export const changeParticipantOtherDataStructure = participant => ({
+    "id": null,
+    "name": participant.nombreParticipante.replace('-', '').trim(),
+    "position": participant.cargo.replace('-', '').trim(),
+    "company": participant.empresa.replace('-', '').trim(),
+    "order": participant.order,
+    "participantOrder": participant.order
+});
 
-export function changeParticipantBankDataStructure(participant){
+export function changeParticipantBankDataStructure(participant) {
     return {
         "id": null,
         "employee": participant.idParticipante,
@@ -40,7 +42,7 @@ export function changeParticipantBankDataStructure(participant){
     };
 }
 
-export function fillParticipants(participants){
+export function fillParticipants(participants) {
     return participants.map(participant => {
         const uuid = _.uniqueId('participant');
         let participantData = {
@@ -54,21 +56,22 @@ export function fillParticipants(participants){
                 : ' - ' + participant.attitudeOverGroupName
         };
 
-        switch (participant.tipoParticipante) {            
-            case KEY_PARTICIPANT_CLIENT:                
+        switch (participant.tipoParticipante) {
+            case KEY_PARTICIPANT_CLIENT:
                 participantData.idParticipante = participant.contact;
                 participantData.nombreParticipante = participant.contactName;
                 participantData.cargo = participant.contactPositionName === null || participant.contactPositionName === undefined || participant.contactPositionName === '' ? ''
                     : ' - ' + participant.contactPositionName;
                 participantData.empresa = '';
-                participantData.interlocutorObjs = participant.interlocutorObjs;
-                participantData.nameComplet = participant.contactName; 
+                participantData.interlocutorObjs = participant.contactObject.interlocutorObjs;
+                participantData.nameComplet = participant.contactName;
                 participantData.contactPosition = participant.contactPositionName;
                 participantData.contactSocialStyle = participant.socialStyleName;
                 participantData.contactActitudeCompany = participant.attitudeOverGroupName;
+                participantData.socialStyleId = participant.socialStyle;
 
                 return participantData;
-            case KEY_PARTICIPANT_BANCO:                
+            case KEY_PARTICIPANT_BANCO:
                 participantData.idParticipante = participant.employee;
                 participantData.nombreParticipante = participant.employeeName;
                 participantData.cargo = participant.positionName === null || participant.positionName === undefined || participant.positionName === '' ? ''
@@ -82,7 +85,7 @@ export function fillParticipants(participants){
                 participantData.cargo = participant.position === null || participant.position === undefined || participant.position === '' ? ''
                     : ' - ' + participant.position;
                 participantData.empresa = participant.company === null || participant.company === undefined || participant.company === '' ? ''
-                    : ' - ' + participant.company;  
+                    : ' - ' + participant.company;
                 return participantData;
             default:
                 break;
