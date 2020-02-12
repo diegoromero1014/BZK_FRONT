@@ -1218,6 +1218,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                 {...justificationDetail}
                                                 max="500"
                                                 parentId="dashboardComponentScroll"
+                                                disabled={this.state.isEditable ? '' : 'disabled'}
                                             />
                                         </div>
                                     </Col>
