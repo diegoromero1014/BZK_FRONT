@@ -689,7 +689,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "indexing": indexing.value,
               "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
               "need": need.value,
-              "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
+              "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.00'),
               "sva": sva.value === undefined ? null : numeral(sva.value).format('0'),
               "observations": observations.value,
               "termInMonths": termInMonths.value,
