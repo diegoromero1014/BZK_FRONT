@@ -313,11 +313,11 @@ export class PrevisitPage extends Component {
    errorClientDetails = (previsit) => {
       const { objectListReducer } = this.props;
       if (previsit.documentStatus == SAVE_PUBLISHED) {
-         if (getLinkedClientDetails(objectListReducer.Oportunidades.elements).length === 0) {
+         if (getLinkedClientDetails(objectListReducer.Oportunidades.linked).length === 0) {
             return "Señor usuario, debe seleccionar al menos una oportunidad externa para guardar."
          };
 
-         if (getLinkedClientDetails(objectListReducer.Debilidades.elements).length === 0) {
+         if (getLinkedClientDetails(objectListReducer.Debilidades.linked).length === 0) {
             return "Señor usuario, debe seleccionar al menos una debilidad para guardar."
          }
       }
