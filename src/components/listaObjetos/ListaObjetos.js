@@ -276,7 +276,7 @@ export class ListaObjetos extends Component {
     const { checked } = event.target;
     const { dispatchUpdateElementoAsociado, titulo } = this.props;
     dispatchUpdateElementoAsociado(elemento.id, titulo, checked);
-
+    
   }
 
   getObjectsFromReducer = () => {
@@ -551,7 +551,7 @@ export class ListaObjetos extends Component {
         }
 
         {previsit ?
-          (objetosAsociados.length === 0 ?
+          (this.filterObjectsByCheckedValue("checked", objetosAsociados, true).length === 0 ?
             (<Row style={{ padding: "5px 23px 5px 20px" }}>
               <Col
                 xs={12}
