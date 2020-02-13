@@ -313,10 +313,14 @@ export class PrevisitPage extends Component {
             dispatchSwtShowMessage('error', TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS);
             return;
          }
+
+         let clientDetailsRequest = buildLinkedClientDetailsRequestForSubmit(objectListReducer, window.sessionStorage.getItem('idClientSelected'));
+         clientDetailsRequest.objectives = [];
+
          const previsitRequest = {
             "id": id,
             "client": window.sessionStorage.getItem('idClientSelected'),
-            "clientDetails": buildLinkedClientDetailsRequestForSubmit(objectListReducer, window.sessionStorage.getItem('idClientSelected')),
+            "clientDetails": clientDetailsRequest,
             "visitTime": parseInt(moment(previsit.visitTime).format('x')),
             "participatingContacts": previsitParticipants.clientParticipants.length ? previsitParticipants.clientParticipants : null,
             "participatingEmployees": previsitParticipants.bankParticipants.length ? previsitParticipants.bankParticipants : null,
