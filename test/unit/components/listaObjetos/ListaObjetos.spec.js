@@ -278,7 +278,7 @@ describe("Unit tests of the listaObjetos.js component", () => {
 
     const wrapper = shallow(<ListaObjetos {...defaultProps} />);
     expect(wrapper.find(".title-component").text()).to.equal(
-      "Oportunidades externas"
+      "Oportunidades (externas)"
     );
   });
 
@@ -287,7 +287,7 @@ describe("Unit tests of the listaObjetos.js component", () => {
 
     const wrapper = shallow(<ListaObjetos {...defaultProps} />);
     expect(wrapper.find(".title-component").text()).to.equal(
-      "Debilidades internas del cliente"
+      "Debilidades (internas del cliente)"
     );
   });
 

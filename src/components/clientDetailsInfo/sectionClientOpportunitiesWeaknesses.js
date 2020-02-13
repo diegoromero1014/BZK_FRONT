@@ -17,7 +17,7 @@ export class SectionClientOpportunitiesWeaknesses extends Component {
                     <div className="header-component">
                         <div className="line-topComponent" />
                             <div className="container-titleHelpPlus">
-                            <div><i className='thumbs up outline icon' /><span className="title-component">Oportunidades externas</span></div>
+                            <div><i className='thumbs up outline icon' /><span className="title-component">{`Oportunidades (externas)`}</span></div>
                         </div>
                     </div>
                 </Col>
@@ -48,7 +48,7 @@ export class SectionClientOpportunitiesWeaknesses extends Component {
                     <div className="header-component">
                         <div className="line-topComponent" />
                         <div className="container-titleHelpPlus">
-                            <div><i className='thumbs down outline icon' /><span className="title-component">Debilidades internas del cliente</span></div>
+                        <div><i className='thumbs down outline icon' /><span className="title-component">{`Debilidades (internas del cliente)`}</span></div>
                         </div>
                     </div>
                 </Col>
