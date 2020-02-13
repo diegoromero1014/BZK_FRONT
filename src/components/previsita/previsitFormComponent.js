@@ -222,7 +222,7 @@ export class PrevisitFormComponent extends Component {
                   </Col>
                </Row>
 
-               <SectionOpportunitiesWeaknesses visual={true} infoClient={infoClient} previsit={true}/> 
+               <SectionOpportunitiesWeaknesses canEdit={!isEditable} visual={true} infoClient={infoClient} previsit={true}/> 
                
                <Row style={{ padding: "20px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>

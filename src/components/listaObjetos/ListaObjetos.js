@@ -303,7 +303,7 @@ export class ListaObjetos extends Component {
   }
 
   render() {
-    const { titulo, ayuda, visual, icon, previsit } = this.props;
+    const { titulo, ayuda, visual, icon, previsit, canEdit } = this.props;
 
     const {
       objetos,
@@ -421,7 +421,7 @@ export class ListaObjetos extends Component {
                     </ToolTip>
                   )}
                 </div>
-                {visual && (
+                {visual && canEdit && (
                   <button
                     name="btn-agregar"
                     type="button"
@@ -579,7 +579,7 @@ export class ListaObjetos extends Component {
                     { this.filterObjectsByCheckedValue("checked", objetosAsociados, true).map(elemento => (
                       <tr key={elemento.idObject}>
                         <td name="td-edit" className="collapsing">
-                          <input type="checkbox" checked={elemento.checked} onChange={(event) => this.desasociar(event, elemento.id)} style={{ marginTop: "4px" }} />
+                          <input type="checkbox" disabled={!canEdit} checked={elemento.checked} onChange={(event) => this.desasociar(event, elemento.id)} style={{ marginTop: "4px" }} />
                         </td>
                         <td className="add-line-break">{elemento.text}</td>
                       </tr>
@@ -627,5 +627,9 @@ const mapStateToProps = (
   objectListReducer,
   clientInformation
 });
+
+ListaObjetos.defaultProps = {
+  canEdit: true
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListaObjetos);
