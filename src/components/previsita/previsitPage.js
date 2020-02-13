@@ -13,7 +13,7 @@ import { buildJsoncommercialReport, fillUsersPermissions } from '../commercialRe
 import CommercialReportButtonsComponent from '../globalComponents/commercialReportButtonsComponent';
 
 import { detailPrevisit, canEditPrevisita, disableBlockedReport, clearPrevisitDetail, validateDatePreVisit, createPrevisit, pdfDescarga } from "./actions";
-import { TIME_REQUEST_BLOCK_REPORT, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, EDITAR, REQUEST_ERROR, MESSAGE_SAVE_DATA, REQUEST_INVALID_INPUT, REQUEST_SUCCESS, AFIRMATIVE_ANSWER, CANCEL } from '../../constantsGlobal';
+import { TIME_REQUEST_BLOCK_REPORT, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, EDITAR, REQUEST_ERROR, MESSAGE_SAVE_DATA, REQUEST_INVALID_INPUT, REQUEST_SUCCESS, AFIRMATIVE_ANSWER, CANCEL, SAVE_PUBLISHED } from '../../constantsGlobal';
 import { showLoading } from '../loading/actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { getMasterDataFields } from '../selectsComponent/actions';
@@ -29,6 +29,8 @@ import { TITLE_ERROR_PARTICIPANTS, MESSAGE_ERROR_PARTICIPANTS, TITLE_PREVISIT_CR
 import { ComponentClientInformationURL, LoginComponentURL } from '../../constantsAnalytics';
 import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure, fillParticipants } from './participantsActions';
 import CommercialReportInfoFooter from '../globalComponents/commercialReportInfoFooter';
+
+import { getLinkedClientDetails, buildLinkedClientDetailsRequestForSubmit } from '../listaObjetos/ListaObjetos';
 
 export class PrevisitPage extends Component {
 
@@ -275,14 +277,35 @@ export class PrevisitPage extends Component {
       return true;
    }
 
+   errorClientDetails = (previsit) => {
+      const { objectListReducer } = this.props;
+      if (previsit.documentStatus == SAVE_PUBLISHED) {
+         if (getLinkedClientDetails(objectListReducer.Oportunidades.elements).length === 0) {
+            return "Señor usuario, debe seleccionar al menos una oportunidad externa para guardar."
+         };
+
+         if (getLinkedClientDetails(objectListReducer.Debilidades.elements).length === 0) {
+            return "Señor usuario, debe seleccionar al menos una debilidad para guardar."
+         }
+      }
+      return false;
+   }
+
    submitForm = async (previsit) => {
       const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions,
-         fromModal, closeModal } = this.props;
+         fromModal, closeModal, objectListReducer } = this.props;
       const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);
       if (validateDatePrevisitResponse) {
          const previsitParticipants = this.getPrevisitParticipants();
 
          if (!this.validateParticipantsByClient()) {
+            return;
+         }
+
+         const clientDetailsMessage = this.errorClientDetails(previsit);
+
+         if (clientDetailsMessage) {
+            dispatchSwtShowMessage("error", "Error", clientDetailsMessage);
             return;
          }
 
@@ -293,6 +316,7 @@ export class PrevisitPage extends Component {
          const previsitRequest = {
             "id": id,
             "client": window.sessionStorage.getItem('idClientSelected'),
+            "clientDetails": buildLinkedClientDetailsRequestForSubmit(objectListReducer, window.sessionStorage.getItem('idClientSelected')),
             "visitTime": parseInt(moment(previsit.visitTime).format('x')),
             "participatingContacts": previsitParticipants.clientParticipants.length ? previsitParticipants.clientParticipants : null,
             "participatingEmployees": previsitParticipants.bankParticipants.length ? previsitParticipants.bankParticipants : null,
@@ -473,10 +497,12 @@ export class PrevisitPage extends Component {
    }
 
    renderForm = () => {
-      const { params: { id }, previsitReducer, selectsReducer, fromModal, questions, answers } = this.props;
+      const { params: { id }, previsitReducer, selectsReducer, fromModal, questions, answers ,clientInformacion} = this.props;
+      const infoClient = clientInformacion.get('responseClientInfo');
       const previsitDetail = previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null;
       return (
          <PrevisitFormComponent
+            infoClient={infoClient}
             previsitData={previsitDetail}
             previsitTypes={selectsReducer.get(PREVISIT_TYPE)}
             onChangeShowChallengerSection={this.showChallengerSection}
@@ -587,7 +613,7 @@ function mapDispatchToProps(dispatch) {
    }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, selectsReducer, usersPermission, confidentialReducer, participants, questionsReducer: { answers, questions } }) {
+function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, selectsReducer, usersPermission, confidentialReducer, participants, questionsReducer: { answers, questions }, objectListReducer }) {
    return {
       clientInformacion,
       previsitReducer,
@@ -597,7 +623,8 @@ function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, se
       confidentialReducer,
       participants,
       answers,
-      questions
+      questions,
+      objectListReducer
    };
 }
 
