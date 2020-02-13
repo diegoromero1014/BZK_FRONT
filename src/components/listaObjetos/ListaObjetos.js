@@ -261,11 +261,12 @@ export class ListaObjetos extends Component {
   }
 
   eliminarObjetoAsociado = idObject => {
-    const { dispatchUpdateElementoAsociado, titulo } = this.props;
+    const { dispatchUpdateElementoAsociado, titulo, dispatchSaveTemporalChanges } = this.props;
     this.setState({
       modalEliminar: false
     })
     dispatchUpdateElementoAsociado(idObject, titulo, false);
+    dispatchSaveTemporalChanges(titulo);
   }
 
   isCheck = (event, elemento) => {
