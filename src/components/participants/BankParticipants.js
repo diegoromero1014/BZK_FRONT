@@ -2,17 +2,20 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
+import _ from 'lodash';
+import $ from 'jquery';
+
 import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 import { renderLabel } from '../../functions';
+import ListParticipants from './ListParticipants';
+
 import { addParticipant } from './actions';
 import { filterUsersBanco } from '../participantsVisitPre/actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
-import _ from 'lodash';
-import $ from 'jquery';
-import { KEY_PARTICIPANT_BANCO } from './constants';
-import ListParticipants from './ListParticipants';
 
-class BankParticipants extends Component {
+import { KEY_PARTICIPANT_BANCO } from './constants';
+
+export class BankParticipants extends Component {
 
     constructor(props) {
         super(props);
@@ -96,9 +99,7 @@ class BankParticipants extends Component {
                     setTimeout(() => $('#inputParticipantBanc').focus(), 150);
                 });
             } else {
-                if (selectedRecord.length <= 3) {
-                    dispatchSwtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
-                }
+                dispatchSwtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
             }
         }
     }
