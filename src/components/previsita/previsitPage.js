@@ -30,7 +30,7 @@ import { ComponentClientInformationURL, LoginComponentURL } from '../../constant
 import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure, fillParticipants } from './participantsActions';
 import CommercialReportInfoFooter from '../globalComponents/commercialReportInfoFooter';
 
-import { getLinkedClientDetails } from '../listaObjetos/ListaObjetos';
+import { getLinkedClientDetails, buildLinkedClientDetailsRequestForSubmit } from '../listaObjetos/ListaObjetos';
 
 export class PrevisitPage extends Component {
 
@@ -293,7 +293,7 @@ export class PrevisitPage extends Component {
 
    submitForm = async (previsit) => {
       const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions,
-         fromModal, closeModal } = this.props;
+         fromModal, closeModal, objectListReducer } = this.props;
       const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);
       if (validateDatePrevisitResponse) {
          const previsitParticipants = this.getPrevisitParticipants();
@@ -316,6 +316,7 @@ export class PrevisitPage extends Component {
          const previsitRequest = {
             "id": id,
             "client": window.sessionStorage.getItem('idClientSelected'),
+            "clientDetails": buildLinkedClientDetailsRequestForSubmit(objectListReducer, window.sessionStorage.getItem('idClientSelected')),
             "visitTime": parseInt(moment(previsit.visitTime).format('x')),
             "participatingContacts": previsitParticipants.clientParticipants.length ? previsitParticipants.clientParticipants : null,
             "participatingEmployees": previsitParticipants.bankParticipants.length ? previsitParticipants.bankParticipants : null,
