@@ -1,4 +1,5 @@
-import { UPDATE_LIST,UPDATE_ACTIVE_FIELD_OBJECT, UPDATE_ELEMENT_ASOCIADO, DISCARD_TEMPORAL_CHANGES, SAVE_TEMPORAL_CHANGES} from "./constants";
+import { UPDATE_LIST,UPDATE_ACTIVE_FIELD_OBJECT, UPDATE_ELEMENT_ASOCIADO,
+  DISCARD_TEMPORAL_CHANGES, SAVE_TEMPORAL_CHANGES, OPEN_LINK_MODAL} from "./constants";
 
 export const updateElementFromList = (name, elements) => ({
   type: UPDATE_LIST,
@@ -30,6 +31,13 @@ export const saveTemporalChanges = (name) => ({
 
 export const discardTemporalChanges = (name) => ({
   type: DISCARD_TEMPORAL_CHANGES,
+  payload: {
+    name
+  }
+});
+
+export const openLinkModal = (name) => ({
+  type: OPEN_LINK_MODAL,
   payload: {
     name
   }
