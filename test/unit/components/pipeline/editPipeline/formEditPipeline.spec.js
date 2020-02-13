@@ -290,7 +290,7 @@ describe('Pruebas unitarias editar pipeline', () =>{
           .dive();
       wrapper.instance().showTypePolicy(1);
       expect(wrapper.state().showPolicyType).to.equal(true);
-      expect(wrapper.find(ComboBox).find({name: "typePolicy"})).to.have.length(1);
+      expect(wrapper.find(ComboBox).find({id: "typePolicy"})).to.have.length(1);
   });
 
   it('Should not render field Tipo poliza in EditPipelineForm', () => {
@@ -301,6 +301,6 @@ describe('Pruebas unitarias editar pipeline', () =>{
           .dive();
       wrapper.instance().showTypePolicy(2);
       expect(wrapper.state().showPolicyType).to.equal(false);
-      expect(wrapper.find(ComboBox).find({name: "typePolicy"})).to.have.length(0);
+      expect(wrapper.find(ComboBox).find({id: "typePolicy"})).to.have.length(0);
   });
 });

@@ -102,13 +102,13 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   let nameCurrency = _.uniqueId('currency_');
   let participantBanc = _.uniqueId('participantBanc_');
   let inputParticipantBanc = _.uniqueId('inputParticipantBanc_');
-
+  let nameTypePolicy = _.uniqueId('nameTypePolicy');
   let pipelineTypeName = _.uniqueId('pipelineType');
   let commercialOportunityName = _.uniqueId("commercialOportunity");
   let nameJustificationPipeline = _.uniqueId('justificationPipeline_');
 
   class FormPipeline extends Component {
-
+    
     constructor(props) {
       super(props);
       thisForm = this;
@@ -124,7 +124,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         updateValues: {},
         probabilityEnabled: false,
         areaAssetsEnabled: false,
-        //Se utilizan para controlar el componente de planes de desembolso
+        //Se utilizan para controlar el componente de planes de desembolso 
         showFormAddDisbursementPlan: false,
         disbursementPlanRequired: false,
         products: [],
@@ -226,7 +226,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const {
         fields: {
           nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, reviewedDate,
-          client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues, justification, pivotNit, typePolicy,justificationDetail
+          client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues, justification, pivotNit, typePolicy, justificationDetail
         }
       } = this.props;
 
@@ -361,7 +361,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     showTypePolicy() {
       const { fields: { typePolicy, productFamily, margen } } = this.props;
       let productFamilySelected = this.state.productsFamily.find(family => family.id == productFamily.value);
-      const keyProductFamily = productFamilySelected ? productFamilySelected.key.toLowerCase() : '';      
+      const keyProductFamily = productFamilySelected ? productFamilySelected.key.toLowerCase() : '';
       if(keyProductFamily === PRODUCT_FAMILY_LEASING.toLowerCase()){
         this.setState({
           showPolicyType: true
@@ -692,8 +692,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "indexing": indexing.value,
               "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
               "need": need.value,
-              "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.0000'),
-              "sva": sva.value === undefined ? null : numeral(sva.value).format('0'),
+              "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.00'),
+              "sva": sva.value === undefined || sva.value === null || sva.value === '' ? '' : numeral(sva.value).format('0'),
               "observations": observations.value,
               "termInMonths": termInMonths.value,
               "termInMonthsValues": termInMonthsValues.value ? termInMonthsValues.value : "",
@@ -1453,7 +1453,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                           valueProp={'id'}
                           textProp={'value'}
                           {...typePolicy}
-                          name="typePolicy"
+                          name={nameTypePolicy}
                           parentId="dashboardComponentScroll"
                           data={selectsReducer.get(FILTER_TYPE_POLICY) || []}
                       />
@@ -1505,7 +1505,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 </Col>
               </Row>
             </div>
-            <div style={origin !== ORIGIN_PIPELIN_BUSINESS ? { display: "block", position: "fixed", border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height: "50px", background: "rgba(255,255,255,0.75)" } : { display: "none" }}>
+            <div style={origin !== ORIGIN_PIPELIN_BUSINESS ? { display: "block", position: "fixed", zIndex: 999, border: "1px solid #C2C2C2", bottom: "0px", width: "100%", marginBottom: "0px", backgroundColor: "#F8F8F8", height: "50px", background: "rgba(255,255,255,0.75)" } : { display: "none" }}>
               <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
                 <button className="btn" type="submit" onClick={() => { setGlobalCondition(null); typeButtonClick = SAVE_DRAFT; }} style={{ float: "right", margin: "8px 0px 0px 8px", position: "fixed", backgroundColor: "#00B5AD" }}>
                   <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
