@@ -7,7 +7,8 @@ import { mapKeys } from 'lodash';
 import ToolTip from "../toolTip/toolTipComponent";
 import SweetAlert from "../sweetalertFocus";
 import Modal from "react-modal";
-import { updateElementFromList, updateActiveFieldObject, updateElementoAsociado, saveTemporalChanges, discardTemporalChanges } from "./actions";
+import { updateElementFromList, updateActiveFieldObject, openLinkModal,
+  updateElementoAsociado, saveTemporalChanges, discardTemporalChanges } from "./actions";
 
 import {
   processRules, checkRequired, checkPatternClientObjective, checkRegexHtmlInjection, checkFirstCharacter
@@ -49,10 +50,10 @@ export class ListaObjetos extends Component {
 
   abrirCampoObjeto = () => {
     const { objetos } = this.state;
-    const { dispatchUpdateActiveFieldObject, titulo, previsit } = this.props;
+    const { dispatchUpdateActiveFieldObject, titulo, previsit, dispatchOpenLinkModal } = this.props;
 
     if (previsit) {
-
+      dispatchOpenLinkModal(titulo);
       this.setState({
         modalPrevisit: true
       })
@@ -608,7 +609,8 @@ const mapDispatchToProps = dispatch =>
       dispatchUpdateActiveFieldObject: updateActiveFieldObject,
       dispatchUpdateElementoAsociado: updateElementoAsociado,
       dispatchSaveTemporalChanges: saveTemporalChanges,
-      dispatchDiscardTemporalChanges: discardTemporalChanges
+      dispatchDiscardTemporalChanges: discardTemporalChanges,
+      dispatchOpenLinkModal: openLinkModal
     },
     dispatch
   );

@@ -1,4 +1,5 @@
-import { UPDATE_LIST, UPDATE_ACTIVE_FIELD_OBJECT, UPDATE_ELEMENT_ASOCIADO, SAVE_TEMPORAL_CHANGES, DISCARD_TEMPORAL_CHANGES } from "./constants";
+import { UPDATE_LIST, UPDATE_ACTIVE_FIELD_OBJECT, UPDATE_ELEMENT_ASOCIADO,
+  SAVE_TEMPORAL_CHANGES, DISCARD_TEMPORAL_CHANGES, OPEN_LINK_MODAL } from "./constants";
 
 const initialState = {
   Oportunidades: {
@@ -82,7 +83,17 @@ export default function reducer(state, action) {
         })
         return getNewStateFromElements(state, action.payload.name, newElements);
       }
-
+    case OPEN_LINK_MODAL: 
+      {
+        let newElements = state[action.payload.name].elements.map(
+          element => {
+            let newElement = Object.assign({}, element);
+            newElement['temporalChecked'] = newElement['checked'];
+            return newElement;
+          }
+        )
+        return getNewStateFromElements(state, action.payload.name, newElements);
+      }
     default:
       return state;
   }
