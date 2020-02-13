@@ -714,7 +714,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "justification": justification.value,
               "pivotNit": pivotNit.value ? pivotNit.value : "",
               "justificationDetail": justificationDetail.value ? justificationDetail.value : "",
-              "margin": margen.value === undefined || margen.value === null || margen.value === '' ? '' : numeral(margen.value).format('0.0000'),
+              "margin": margen.value === undefined || margen.value === null || margen.value === '' ? '' : numeral(margen.value).format('0.00'),
               "policyType": typePolicy.value ? typePolicy.value : "",
             };
 
