@@ -12,12 +12,23 @@ import { updateElementFromList, updateActiveFieldObject, openLinkModal,
 
 import {
   processRules, checkRequired, checkPatternClientObjective, checkRegexHtmlInjection, checkFirstCharacter
-} from '../../validationsFields/rulesField.js'
+} from '../../validationsFields/rulesField.js';
+
+import {
+  getObjectListRequestFromReducer
+} from '../fieldList/mapListsToEntities'
 
 import "./styleListaObjetos.scss";
 
 export function getLinkedClientDetails(elements) {
   return elements.filter(element => element['checked'] )
+}
+
+export function buildLinkedClientDetailsRequestForSubmit(store, clientId) {
+  return {
+    opportunities: getObjectListRequestFromReducer(getLinkedClientDetails(store.Oportunidades.elements), clientId),
+    weaknesses: getObjectListRequestFromReducer(getLinkedClientDetails(store.Debilidades.elements), clientId)
+  }
 }
 
 export class ListaObjetos extends Component {
