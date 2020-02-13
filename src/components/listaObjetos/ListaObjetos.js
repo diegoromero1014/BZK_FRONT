@@ -16,6 +16,10 @@ import {
 
 import "./styleListaObjetos.scss";
 
+export function getLinkedClientDetails(elements) {
+  return elements.filter(element => element['checked'] )
+}
+
 export class ListaObjetos extends Component {
   state = {
     objeto: {
