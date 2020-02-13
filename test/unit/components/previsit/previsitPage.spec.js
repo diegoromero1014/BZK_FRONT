@@ -98,6 +98,7 @@ describe('Test previsitPage', () => {
             }),      
             selectsReducer,            
             confidentialReducer: Immutable.Map({ }),
+            objectListReducer: Immutable.Map({ Oportunidades: { elements: [] },  Debilidades: { elements: [] } }),
             dispatchShowLoading,
             dispatchGetMasterDataFields,
             dispatchSetConfidential,
@@ -481,7 +482,15 @@ describe('Test previsitPage', () => {
                     }
                 }
             });
-            defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;            
+            defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
+            defaultProps.objectListReducer = {
+                Oportunidades: {
+                    elements: []
+                },
+                Debilidades: {
+                    elements: []
+                }
+            }
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.instance().getPrevisitParticipants = () =>{
                 return {
@@ -545,6 +554,14 @@ describe('Test previsitPage', () => {
             });
             defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
             defaultProps.fromModal = true;
+            defaultProps.objectListReducer = {
+                Oportunidades: {
+                    elements: []
+                },
+                Debilidades: {
+                    elements: []
+                }
+            }
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.instance().getPrevisitParticipants = () =>{
                 return {
@@ -579,6 +596,14 @@ describe('Test previsitPage', () => {
             });
             defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
             defaultProps.fromModal = false;
+            defaultProps.objectListReducer = {
+                Oportunidades: {
+                    elements: []
+                },
+                Debilidades: {
+                    elements: []
+                }
+            }
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.instance().getPrevisitParticipants = () =>{
                 return {
@@ -622,6 +647,14 @@ describe('Test previsitPage', () => {
             defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
             defaultProps.dispatchCreatePrevisit = dispatchCreatePrevisit;
             defaultProps.fromModal = true;
+            defaultProps.objectListReducer = {
+                Oportunidades: {
+                    elements: []
+                },
+                Debilidades: {
+                    elements: []
+                }
+            }
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.instance().getPrevisitParticipants = () =>{
                 return {
@@ -665,6 +698,14 @@ describe('Test previsitPage', () => {
             defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
             defaultProps.dispatchCreatePrevisit = dispatchCreatePrevisit;
             defaultProps.fromModal = false;
+            defaultProps.objectListReducer = {
+                Oportunidades: {
+                    elements: []
+                },
+                Debilidades: {
+                    elements: []
+                }
+            }
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.instance().getPrevisitParticipants = () =>{
                 return {
@@ -707,6 +748,14 @@ describe('Test previsitPage', () => {
             });
             defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
             defaultProps.dispatchCreatePrevisit = dispatchCreatePrevisit;
+            defaultProps.objectListReducer = {
+                Oportunidades: {
+                    elements: []
+                },
+                Debilidades: {
+                    elements: []
+                }
+            }
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.instance().getPrevisitParticipants = () =>{
                 return {
@@ -748,6 +797,14 @@ describe('Test previsitPage', () => {
             });
             defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
             defaultProps.dispatchCreatePrevisit = dispatchCreatePrevisit;
+            defaultProps.objectListReducer = {
+                Oportunidades: {
+                    elements: []
+                },
+                Debilidades: {
+                    elements: []
+                }
+            }
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.instance().getPrevisitParticipants = () =>{
                 return {
