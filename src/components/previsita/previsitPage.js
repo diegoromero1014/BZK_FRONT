@@ -30,7 +30,10 @@ import { ComponentClientInformationURL, LoginComponentURL } from '../../constant
 import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure, fillParticipants } from './participantsActions';
 import CommercialReportInfoFooter from '../globalComponents/commercialReportInfoFooter';
 
-import { getLinkedClientDetails, buildLinkedClientDetailsRequestForSubmit } from '../listaObjetos/ListaObjetos';
+import { getLinkedClientDetails, buildLinkedClientDetailsRequestForSubmit, combineClientDetails } from '../listaObjetos/ListaObjetos';
+import {
+   addInitialLinkedElements
+} from '../listaObjetos/actions';
 
 export class PrevisitPage extends Component {
 
@@ -76,16 +79,32 @@ export class PrevisitPage extends Component {
       }
    }
 
-   componentDidMount() {
-      const { params: { id }, dispatchShowLoading } = this.props;
-      dispatchShowLoading(true, "Cargando...");
 
-      Promise.all([this.masterDataFields(), this.getPrevisitData(id), this.getChallengerQuestions()]).then(() => {
+   componentDidMount() {
+
+      const { params: { id }, dispatchShowLoading, clientInformacion, dispatchAddInitialLinkedElements } = this.props;
+      dispatchShowLoading(true, "Cargando...");
+      //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA;
+      Promise.all([this.masterDataFields(), this.getPrevisitData(id), this.getChallengerQuestions()]).then((data) => {
          this.setState({
             renderForm: true,
             isMounted: true
          });
+
+         //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA;
+         let linkedClientDetails = data[1].payload.data.data.clientDetails
+         let infoClient = clientInformacion.get('responseClientInfo');
+
          dispatchShowLoading(false, "");
+
+         dispatchAddInitialLinkedElements(
+            "Oportunidades",
+            combineClientDetails(linkedClientDetails.opportunities, infoClient.clientDetailsRequest.opportunities)
+         )
+         dispatchAddInitialLinkedElements(
+            "Debilidades",
+            combineClientDetails(linkedClientDetails.weaknesses, infoClient.clientDetailsRequest.weaknesses)
+         )
       });
    }
 
@@ -152,6 +171,7 @@ export class PrevisitPage extends Component {
             }),
             commercialReport: previsitDetail.commercialReport
          });
+         return response;
       } else {
          dispatchSetConfidential(false);
          this.setState({
@@ -163,12 +183,12 @@ export class PrevisitPage extends Component {
 
    masterDataFields = async () => {
       const { dispatchGetMasterDataFields } = this.props;
-      await dispatchGetMasterDataFields([PREVISIT_TYPE, FILTER_SOCIAL_STYLE]);
+      return await dispatchGetMasterDataFields([PREVISIT_TYPE, FILTER_SOCIAL_STYLE]);
    }
 
    getChallengerQuestions = async () => {
       const { dispatchGetAllQuestions } = this.props;
-      await dispatchGetAllQuestions();
+      return await dispatchGetAllQuestions();
    }
 
    validatePermissionsPrevisits = () => {
@@ -613,7 +633,8 @@ function mapDispatchToProps(dispatch) {
       dispatchClearParticipants: clearParticipants,
       dispatchClearAnswer: clearAnswer,
       dispatchAddAnswer: addAnswer,
-      dispatchGetAllQuestions: getAllQuestions
+      dispatchGetAllQuestions: getAllQuestions,
+      dispatchAddInitialLinkedElements: addInitialLinkedElements
    }, dispatch);
 }
 

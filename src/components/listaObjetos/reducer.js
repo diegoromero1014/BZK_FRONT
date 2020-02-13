@@ -1,19 +1,21 @@
 import { UPDATE_LIST, UPDATE_ACTIVE_FIELD_OBJECT, UPDATE_ELEMENT_ASOCIADO,
-  SAVE_TEMPORAL_CHANGES, DISCARD_TEMPORAL_CHANGES, OPEN_LINK_MODAL } from "./constants";
+  SAVE_TEMPORAL_CHANGES, DISCARD_TEMPORAL_CHANGES, OPEN_LINK_MODAL, ADD_INITIAL_LINKED_ELEMENTS } from "./constants";
 
 const initialState = {
   Oportunidades: {
     elements: [],
+    linked: [],
     open: false
   },
   Debilidades: {
     elements: [],
+    linked: [],
     open: false
   }
 };
 
 function changeCheckedFromElement(state, name, id, value) {
-  const elements = state[name].elements.map((element) => {
+  const elements = state[name].linked.map((element) => {
     let editedElement = Object.assign({}, element);
 
     if (element.id == id) {
@@ -29,7 +31,7 @@ function changeCheckedFromElement(state, name, id, value) {
 function getNewStateFromElements(state, name, elements) {
   let newState = Object.assign({}, state, {
     [name]: Object.assign({}, state[name], {
-      elements: elements
+      linked: elements
     })
   });
   return newState;
@@ -61,7 +63,7 @@ export default function reducer(state, action) {
 
     case SAVE_TEMPORAL_CHANGES:
       {
-        let newElements = state[action.payload.name].elements.map(element => {
+        let newElements = state[action.payload.name].linked.map(element => {
           let newElement = Object.assign({}, element);
           if (typeof newElement["temporalChecked"] != "undefined") {
             newElement["checked"] = newElement["temporalChecked"];
@@ -76,7 +78,7 @@ export default function reducer(state, action) {
 
     case DISCARD_TEMPORAL_CHANGES:
       {
-        let newElements = state[action.payload.name].elements.map(element => {
+        let newElements = state[action.payload.name].linked.map(element => {
           let newElement = Object.assign({}, element);
           delete newElement.temporalChecked;
           return newElement
@@ -85,7 +87,7 @@ export default function reducer(state, action) {
       }
     case OPEN_LINK_MODAL: 
       {
-        let newElements = state[action.payload.name].elements.map(
+        let newElements = state[action.payload.name].linked.map(
           element => {
             let newElement = Object.assign({}, element);
             newElement['temporalChecked'] = newElement['checked'];
@@ -94,6 +96,10 @@ export default function reducer(state, action) {
         )
         return getNewStateFromElements(state, action.payload.name, newElements);
       }
+    case ADD_INITIAL_LINKED_ELEMENTS: 
+    {
+      return getNewStateFromElements(state, action.payload.name, action.payload.elements);
+    }
     default:
       return state;
   }

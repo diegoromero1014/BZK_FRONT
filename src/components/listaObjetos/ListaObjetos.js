@@ -31,6 +31,33 @@ export function buildLinkedClientDetailsRequestForSubmit(store, clientId) {
   }
 }
 
+export function combineClientDetails(linkedDetails, clientDetails) {
+      
+  if (!clientDetails) {
+     return [];
+  }
+
+  let details = linkedDetails.map(element => {
+     return Object.assign({}, element, {
+       checked: true
+     });
+  });
+
+  let elementsToAdd = clientDetails.filter(element => {
+     let found = false;
+     linkedDetails.map(linkedDetail => {
+        if (element.id == linkedDetail.id) {
+           found = true;
+           return;
+        }
+     });
+     return !found;
+  });
+
+  return details.concat(elementsToAdd);
+
+}
+
 export class ListaObjetos extends Component {
   state = {
     objeto: {
@@ -298,10 +325,10 @@ export class ListaObjetos extends Component {
     let tituloCompleto;
 
     if (titulo === "Oportunidades") {
-      objectosAsociados = objectListReducer.Oportunidades.elements;
+      objectosAsociados = objectListReducer.Oportunidades.linked;
       tituloCompleto = "Oportunidades (externas)";
     } else if (titulo === "Debilidades") {
-      objectosAsociados = objectListReducer.Debilidades.elements;
+      objectosAsociados = objectListReducer.Debilidades.linked;
       tituloCompleto = "Debilidades (internas del cliente)";
     }
     
