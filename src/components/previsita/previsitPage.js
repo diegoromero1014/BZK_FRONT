@@ -90,20 +90,33 @@ export class PrevisitPage extends Component {
             renderForm: true,
             isMounted: true
          });
-
-         //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA;
-         let linkedClientDetails = data[1].payload.data.data.clientDetails
-         let infoClient = clientInformacion.get('responseClientInfo');
-
+         
          dispatchShowLoading(false, "");
 
+         let infoClient = clientInformacion.get('responseClientInfo');
+
+         //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA;
+         if (!data[1]) {
+            dispatchAddInitialLinkedElements(
+               "Oportunidades",
+               infoClient.clientDetailsRequest.opportunities || []
+            );
+            dispatchAddInitialLinkedElements(
+               "Debilidades",
+               infoClient.clientDetailsRequest.weaknesses || []
+            );
+            return;
+         }
+
+         let linkedClientDetails = data[1].payload.data.data.clientDetails
+         
          dispatchAddInitialLinkedElements(
             "Oportunidades",
-            combineClientDetails(linkedClientDetails.opportunities, infoClient.clientDetailsRequest.opportunities)
+            combineClientDetails(linkedClientDetails.opportunities, infoClient.clientDetailsRequest.opportunities || [])
          )
          dispatchAddInitialLinkedElements(
             "Debilidades",
-            combineClientDetails(linkedClientDetails.weaknesses, infoClient.clientDetailsRequest.weaknesses)
+            combineClientDetails(linkedClientDetails.weaknesses, infoClient.clientDetailsRequest.weaknesses || [])
          )
       });
    }
