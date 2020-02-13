@@ -42,4 +42,4 @@ export const patternOfJustificationsRiskGroup = /^[a-zA-Z0-9ñÑá-úÁ-Ú\s();,
 export const patternOfExternalClientNumberDocument = /^[a-zA-Z0-9\-Á-Úá-úÑñÜü]+$/;
 export const regexHtmlInjection = /(.*(\<|&lt;|&lt)\s*\/.*(\>|&gt|&gt;))|(.*(\<|&lt;|&lt).*\/\s*(\>|&gt|&gt;))/;
 export const patternClientObjective = /^[a-zA-Z0-9ñÑÜüá-úÁ-Ú\s();,.\-"!$%&/¿?°#=¡+':´+\<\>\[\]_]+$/;
-export const patternValidateDecimals = /^\d{0,3}(\.\d{1})?\d{0,1}$/;
+export const patternValidateDecimals = /(^[0-9]{1,3}$|^[0-9]{1,3}\.[0-9]{1,2}$)/;

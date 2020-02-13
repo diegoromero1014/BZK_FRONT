@@ -520,7 +520,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
           }
 
         _validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey) {
-            const { fields: {justification} } = this.props;
+            const { fields: {justification, justificationDetail} } = this.props;
             if(pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){
                 this.setState({
                     showMellowingPeriodField: false,
@@ -534,7 +534,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     showJustificationField: false
                 });
                 justification.onChange("");
-            }            
+                justificationDetail.onChange("");
+            }
         }
 
         _showAlertFinancingAndPlan(isEditableValue) {
@@ -548,7 +549,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             let newValueIsFinancing = null;
             if(need.value != ''){
                 needSelected = this._getNeedById(need.value);
-                needSelectedKey = needSelected ? needSelected.key : '';                
+                needSelectedKey = needSelected ? needSelected.key : '';
             }
 
             newValueIsFinancing = needSelectedKey === NEED_FINANCING;
@@ -641,7 +642,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const { fields: {
                 idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                 moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen
+                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen, justificationDetail
             }, createEditPipeline, changeStateSaveData, swtShowMessage, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
             } = this.props;
 
@@ -696,6 +697,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "pivotNit": pivotNit.value ? pivotNit.value : "",
                             "margin": margen.value === undefined || margen.value === null || margen.value === '' ? '' : numeral(margen.value).format('0.00'),
                             "policyType": typePolicy.value ? typePolicy.value : "",
+                            "justificationDetail": justificationDetail.value ? justificationDetail.value : ""
                         };
                         if (origin === ORIGIN_PIPELIN_BUSINESS) {
                             typeMessage = "success";
@@ -833,7 +835,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 fields: { businessStatus, commission, currency, idUsuario, nameUsuario, indexing, need, observations, product, roe, sva, moneyDistribitionMarket,
                     termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, positionCreatedBy,
                     positionUpdatedBy, reviewedDate, probability, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                    termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen
+                    termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen, justificationDetail
                 }, updateDisbursementPlans
             } = this.props;                        
             updateDisbursementPlans(data.disbursementPlans, origin);
@@ -878,6 +880,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             margen.onChange(fomatInitialStateNumber(data.margin));
             sva.onChange(data.sva);
             typePolicy.onChange(data.policyType);
+            justificationDetail.onChange(data.justificationDetail);
         }
 
         loadCategories(productFamily){
@@ -920,7 +923,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                         PIPELINE_JUSTIFICATION, CLIENT_NEED, FILTER_TYPE_POLICY])]).then(() => {
                             if (origin !== ORIGIN_PIPELIN_BUSINESS) {                            
                                 const { params: { id } } = this.props;
-                                getPipelineById(id).then((result) => {                                                                                        
+                                getPipelineById(id).then((result) => {
                                     if (!validateResponse(result)) {
                                         swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                                     } else {
@@ -974,7 +977,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 fields: { nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                     moneyDistribitionMarket, pendingDisbursementAmount, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
                     positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                    termInMonthsValues, pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen
+                    termInMonthsValues, pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen, justificationDetail
                 }, selectsReducer, handleSubmit, pipelineReducer, reducerGlobal
             } = this.props;            
             const ownerDraft = pipelineReducer.get('ownerDraft');
@@ -1202,7 +1205,25 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             />
                                         </div>
                                     </Col>
-                                    : null}                                    
+                                    : null}
+                            </Row>
+                            <Row style={{ padding: "0px 10px 20px 20px" }}>
+                                {this.state.showJustificationField ?
+                                    <Col xs={12} md={6} lg={6}>
+                                        <div style={{paddingRight: "15px"}}>
+                                            <dt>
+                                                <span>Detalle justificación </span>
+                                            </dt>
+                                            <Input
+                                                name="txtJustificationDetail"
+                                                type="text"
+                                                {...justificationDetail}
+                                                max="500"
+                                                parentId="dashboardComponentScroll"
+                                            />
+                                        </div>
+                                    </Col>
+                                    : null}
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>                                
                                 {this.state.showMellowingPeriodField ?
