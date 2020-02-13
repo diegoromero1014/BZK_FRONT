@@ -84,6 +84,18 @@ $colorHover: #66778D;
     height: 150px;
 }
 
+.field-textArea::-webkit-input-placeholder {
+    font-size: 13px;
+    font-style: italic;
+    color: $colorGray;
+}
+
+.field-textArea:-ms-input-placeholder{
+    font-size: 13px;
+    font-style: italic;
+    color: $colorGray;
+}
+
 .container-buttons{
     display: flex;
     flex-direction: column;
