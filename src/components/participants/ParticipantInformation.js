@@ -23,7 +23,7 @@ export class ParticipantInformation extends Component {
 
         this.state = {
             fields: {
-                name: {
+                nameContact: {
                     name: 'Nombre',
                     nullable: true,
                     message: null
@@ -38,7 +38,7 @@ export class ParticipantInformation extends Component {
                 socialStyle: {
                     name: 'Estilo social',
                     nullable: false,
-                    message: null
+                    message: 'Descargar archivo de estilo social'
                 },
 
                 attitude: {
@@ -74,14 +74,14 @@ export class ParticipantInformation extends Component {
                 {!nullable && ')'}
             </strong>
 
-            <Tooltip text='Descargar archivo de estilo social'>
+            <Tooltip text={message}>
                 <i onClick={this.handleDownloadFileSocialStyle} style={{ marginLeft: "0px", cursor: "pointer", fontSize: "13px" }} className="red file pdf outline icon" />
             </Tooltip>
         </div>
     );
 
     render() {
-        const { fields: { name, position, socialStyle, attitude } } = this.state;
+        const { fields: { nameContact, position, socialStyle, attitude } } = this.state;
         const { handleCloseModal, listSocialStyle } = this.props;
 
         return (
@@ -101,7 +101,7 @@ export class ParticipantInformation extends Component {
                         <Field type="text" name="name">
                             {({ field: { value, onChange, onBlur } }) =>
                                 <div>
-                                    {renderLabel(name)}
+                                    {renderLabel(nameContact)}
                                     <Input
                                         name="name"
                                         value={value}
