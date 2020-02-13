@@ -1,19 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { Form, Field, ErrorMessage, withFormik } from 'formik';
 import { Input } from 'semantic-ui-react';
-import { renderLabel, renderMessageError } from '../../functions';
 import { Icon } from 'semantic-ui-react';
+
+import { renderLabel, renderMessageError } from '../../functions';
 import ToolTip from '../toolTip/toolTipComponent';
+import ListParticipants from './ListParticipants';
+
 import { addParticipant } from './actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
+
 import { KEY_PARTICIPANT_OTHER } from './constants';
-import ListParticipants from './ListParticipants';
+
 import { schemaOthers as schema } from './schema';
 
-class OtherParticipants extends Component {
+export class OtherParticipants extends Component {
     constructor(props) {
         super(props);
 
@@ -124,6 +129,7 @@ class OtherParticipants extends Component {
                         <Col xs={1} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexBasis: '5%', maxWidth: '5%', height: 80 }}>
                             <ToolTip text={'Agregar'}>
                                 <Icon
+                                    className="btnAgregar"
                                     disabled={disabled || (length >= limit)}
                                     name={'plus circle'}
                                     style={{ cursor: 'pointer', color: 'rgb(33, 133, 208)', fontSize: '30pt !important' }}
@@ -175,7 +181,7 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(
     withFormik({
         handleSubmit: (values, { props, resetForm }) => {
-            const { participants, dispatchAddParticipant, dispatchSwtShowMessage } = props;
+            const { dispatchAddParticipant } = props;
 
             let otherParticipant = {
                 tipoParticipante: KEY_PARTICIPANT_OTHER,

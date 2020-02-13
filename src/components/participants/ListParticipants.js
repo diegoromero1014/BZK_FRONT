@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import CardComponent from '../cards';
 import { Card, Image, Icon } from 'semantic-ui-react';
-import user from '../../../img/icon/user.png';
+
+import CardComponent from '../cards';
 import SweetAlert from '../sweetalertFocus';
+
 import { deleteParticipant } from './actions';
+
 import { KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from './constants';
 
-class ListParticipants extends Component {
+import user from '../../../img/icon/user.png';
+
+export class ListParticipants extends Component {
     constructor(props) {
         super(props);
 
