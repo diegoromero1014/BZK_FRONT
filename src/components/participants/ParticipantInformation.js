@@ -23,7 +23,7 @@ export class ParticipantInformation extends Component {
 
         this.state = {
             fields: {
-                name: {
+                nameContact: {
                     name: 'Nombre',
                     nullable: true,
                     message: null
@@ -38,7 +38,7 @@ export class ParticipantInformation extends Component {
                 socialStyle: {
                     name: 'Estilo social',
                     nullable: false,
-                    message: null
+                    message: 'Descargar archivo de estilo social'
                 },
 
                 attitude: {
@@ -74,14 +74,14 @@ export class ParticipantInformation extends Component {
                 {!nullable && ')'}
             </strong>
 
-            <Tooltip text='Descargar archivo de estilo social'>
+            <Tooltip text={message}>
                 <i onClick={this.handleDownloadFileSocialStyle} style={{ marginLeft: "0px", cursor: "pointer", fontSize: "13px" }} className="red file pdf outline icon" />
             </Tooltip>
         </div>
     );
 
     render() {
-        const { fields: { name, position, socialStyle, attitude } } = this.state;
+        const { fields: { nameContact, position, socialStyle, attitude } } = this.state;
         const { handleCloseModal, listSocialStyle } = this.props;
 
         return (
@@ -101,7 +101,7 @@ export class ParticipantInformation extends Component {
                         <Field type="text" name="name">
                             {({ field: { value, onChange, onBlur } }) =>
                                 <div>
-                                    {renderLabel(name)}
+                                    {renderLabel(nameContact)}
                                     <Input
                                         name="name"
                                         value={value}
@@ -160,7 +160,10 @@ export class ParticipantInformation extends Component {
                                         valueProp={'id'}
                                         textProp={'value'}
                                         value={value}
-                                        onChange={(id, val) => setFieldValue(name, id, false)}
+                                        onChange={(id, val) => {
+                                            setFieldValue("socialStyleName", val, false);
+                                            setFieldValue(name, id, false);
+                                        }}
                                         onBlur={onBlur}
                                         data={listSocialStyle}
                                         className='field-input'
@@ -219,7 +222,7 @@ export class ParticipantInformation extends Component {
 
                 <Row style={{ marginTop: '-65px' }}>
                     <Col xs={12} md={12} lg={12}>
-                        <ElementsComponent schema={schema} placeholder={OBJECTIVES_PLACEHOLDER} messageButton='Agregar' name={OBJECTIVES} max={3} title={'Objetivos del interlocutor'} />
+                        <ElementsComponent schema={schema} placeholder={OBJECTIVES_PLACEHOLDER} messageButton='Agregar' name={OBJECTIVES} max={3} title={'Objetivos del interlocutor'} isEditable={true} />
                     </Col>
                 </Row>
 
@@ -269,7 +272,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(
                 return;
             }
 
-            let newElement = Object.assign({}, props.selectedRecord, { interlocutorObjs: data.elements, socialStyleId: values.socialStyle });
+            let newElement = Object.assign({}, props.selectedRecord, { interlocutorObjs: data.elements, socialStyleId: values.socialStyle, estiloSocial: `- ${values.socialStyleName}` });
 
             props.addContact(newElement);
         },
@@ -281,14 +284,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(
                     name: nameComplet,
                     position: !contactPosition ? '' : contactPosition,
                     socialStyle: socialStyleId,
-                    attitude: !contactActitudeCompany ? '' : contactActitudeCompany
+                    attitude: !contactActitudeCompany ? '' : contactActitudeCompany,
+                    socialStyleName: ''
                 });
             } else {
                 return {
                     name: '',
                     position: '',
                     socialStyle: null,
-                    attitude: ''
+                    attitude: '', 
+                    socialStyleName: ''
                 }
             }
         },

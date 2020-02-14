@@ -3,28 +3,32 @@ import { reduxForm } from 'redux-form';
 import SweetAlert from '../../../sweetalertFocus';
 import { bindActionCreators } from 'redux';
 import { Col, Row } from 'react-flexbox-grid';
-import { getContactDetails } from '../../../contact/contactDetail/actions';
-import { changeStateSaveData } from '../../../dashboard/actions';
-import { formValidateKeyEnter } from '../../../../actionsGlobal';
+import $ from 'jquery';
+import _ from 'lodash';
+
 import MultipleSelect from '../../../../ui/multipleSelect/multipleSelectComponent';
 import ComboBox from '../../../../ui/comboBox/comboBoxComponent';
 import ComboBoxFilter from '../../../../ui/comboBoxFilter/comboBoxFilter';
-import {
-    changeValueOpenModal,
-    clientsByEconomicGroup,
-    modifyClientRelationship,
-    updateRelationshipClientcontact
-} from '../../actions';
+import ListCreateRelationship from './listCreateRelationship';
+import Tooltip from '../../../toolTip/toolTipComponent';
+import ElementsComponent from '../../../elements';
+import { swtShowMessage } from '../../../sweetAlertMessages/actions';
+
+import { getContactDetails } from '../../../contact/contactDetail/actions';
+import { changeStateSaveData } from '../../../dashboard/actions';
+import { clientsByEconomicGroup, modifyClientRelationship, updateRelationshipClientcontact } from '../../actions';
+import { redirectUrl } from '../../../globalComponents/actions';
+import { economicGroupsByKeyword } from '../../../selectsComponent/actions';
+import { clientsFindServer } from '../../../clients/actions';
+import { formValidateKeyEnter } from '../../../../actionsGlobal';
+import { cleanList, addToList, createList } from '../../../elements/actions';
+
+import { OBJECTIVES_PLACEHOLDER, OBJECTIVES, OBJECTIVES_OPEN_ERROR_MSG, MANDATORY_OBJECTIVES_MSG } from '../../../participants/constants';
 import { OPEN_CREATE_MODAL } from '../../constants';
 import { FILTER_FUNCTION_ID, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID } from '../../../selectsComponent/constants';
-import { economicGroupsByKeyword } from '../../../selectsComponent/actions';
 import { MESSAGE_SAVE_DATA, OPTION_REQUIRED } from '../../../../constantsGlobal';
-import ListCreateRelationship from './listCreateRelationship';
-import { clientsFindServer } from '../../../clients/actions';
-import { redirectUrl } from '../../../globalComponents/actions';
-import _ from 'lodash';
-import $ from 'jquery';
 
+import { schema as schemaObjectivesInterlocutor } from '../../../participants/schema'; 
 
 const fields = ["contactTypeOfContact", "contactFunctions", "contactLineOfBusiness", "idClient", "nameClient",
     "groupEconomic", "economicGroupName"];
@@ -36,21 +40,12 @@ var access;
 var thisForm;
 const validate = (values) => {
     const errors = {};
-    if (!values.contactTypeOfContact) {
-        errors.contactTypeOfContact = OPTION_REQUIRED;
-    } else {
-        errors.contactTypeOfContact = null;
-    }
-    if (!values.contactFunctions) {
-        errors.contactFunctions = OPTION_REQUIRED;
-    } else {
-        errors.contactFunctions = null;
-    }
+    errors.contactTypeOfContact = !values.contactTypeOfContact ? OPTION_REQUIRED : null;
+    errors.contactFunctions = !values.contactFunctions ? OPTION_REQUIRED : null;
     return errors;
 }
 
-
-class ModalCreateRelationship extends Component {
+export class ModalCreateRelationship extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -61,8 +56,8 @@ class ModalCreateRelationship extends Component {
             message: "",
             uploadTable: false
         };
-        this._handlerSubmitRelationship = this._handlerSubmitRelationship.bind(this);
-        this._closeAlertInformation = this._closeAlertInformation.bind(this);
+        this.handleSubmitRelationship = this.handleSubmitRelationship.bind(this);
+        this.closeAlertInformation = this.closeAlertInformation.bind(this);
         this.addClientToRelationship = this.addClientToRelationship.bind(this);
         this.updateKeyValueClient = this.updateKeyValueClient.bind(this);
         this.updateKeyValueEconomicGroup = this.updateKeyValueEconomicGroup.bind(this);
@@ -70,11 +65,58 @@ class ModalCreateRelationship extends Component {
         thisForm = this;
     }
 
-    _handlerSubmitRelationship() {
-        const { fields: { contactTypeOfContact, contactFunctions, contactLineOfBusiness },
-            filterContactsReducer, updateRelationshipClientcontact, changeStateSaveData, getContactDetails } = this.props;
+    componentWillMount() {
+        const { dispatchCreateList, dispatchCleanList } = this.props;
+
+        dispatchCleanList(OBJECTIVES);
+        dispatchCreateList(OBJECTIVES);
+    }
+
+    saveData = async (json) => {
+        const { dispatchChangeStateSaveData, dispatchUpdateRelationshipClientContact, dispatchGetContactDetails } = this.props;
+
+        dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
+
+        const response = await dispatchUpdateRelationshipClientContact(json);
+        dispatchChangeStateSaveData(false, "");
+
+        if (!_.get(response, 'payload.data.validateLogin')) {
+            redirectUrl("/login");
+        } else {
+            if (_.get(response, 'payload.data.status') === 200) {
+                this.setState({
+                    showErrorForm: true,
+                    typeView: "success",
+                    title: "Crear relación(es)",
+                    message: "Señor usuario, las relaciones cliente-contacto se crearon correctamente."
+                });
+                dispatchGetContactDetails(window.sessionStorage.getItem('idContactSelected'));
+            } else {
+                this.setState({
+                    showErrorForm: true,
+                    typeView: "error",
+                    title: "Error",
+                    message: "Señor usuario, ocurrió un error tratando de actualizar la información."
+                });
+            }
+        }
+    }
+
+    handleSubmitRelationship = () => {
+        const { 
+            fields: { contactTypeOfContact, contactFunctions, contactLineOfBusiness },
+            filterContactsReducer, elementsReducer, dispatchSwtShowMessage
+        } = this.props; 
+
         if (filterContactsReducer.get('clientsCreaterRelationship').length > 0) {
-            changeStateSaveData(true, MESSAGE_SAVE_DATA);
+
+            const data = elementsReducer[OBJECTIVES];
+
+            if (data && data.open) {
+                dispatchSwtShowMessage('error', 'Error', OBJECTIVES_OPEN_ERROR_MSG);
+                return;
+            }
+
             const idValuesClients = _.map(filterContactsReducer.get('clientsCreaterRelationship'), 'id');
             const json = {
                 "idClientContact": null,
@@ -82,31 +124,10 @@ class ModalCreateRelationship extends Component {
                 "idContact": window.sessionStorage.getItem('idContactSelected'),
                 "typeOfContact": contactTypeOfContact.value !== undefined ? contactTypeOfContact.value : null,
                 "function": JSON.parse('[' + ((contactFunctions.value) ? contactFunctions.value : "") + ']'),
-                "lineOfBusiness": JSON.parse('[' + ((contactLineOfBusiness.value) ? contactLineOfBusiness.value : "") + ']')
+                "lineOfBusiness": JSON.parse('[' + ((contactLineOfBusiness.value) ? contactLineOfBusiness.value : "") + ']'),
+                "interlocutorObjs": data.elements
             };
-            updateRelationshipClientcontact(json).then((data) => {
-                changeStateSaveData(false, "");
-                if (!_.get(data, 'payload.data.validateLogin')) {
-                    redirectUrl("/login");
-                } else {
-                    if (_.get(data, 'payload.data.status') === 200) {
-                        getContactDetails(window.sessionStorage.getItem('idContactSelected'));
-                        this.setState({
-                            showErrorForm: true,
-                            typeView: "success",
-                            title: "Crear relación(es)",
-                            message: "Señor usuario, las relaciones cliente-contacto se crearon correctamente."
-                        });
-                    } else {
-                        this.setState({
-                            showErrorForm: true,
-                            typeView: "error",
-                            title: "Error",
-                            message: "Señor usuario, ocurrió un error tratando de actualizar la información."
-                        });
-                    }
-                }
-            });
+            this.saveData(json);
         } else {
             this.setState({
                 showErrorForm: true,
@@ -118,22 +139,21 @@ class ModalCreateRelationship extends Component {
 
     }
 
-    _closeAlertInformation() {
+    closeAlertInformation = () => {
         this.setState({ showErrorForm: false });
         if (_.isEqual(this.state.typeView, "success", false)) {
             const { functionClose } = this.props;
             functionClose(OPEN_CREATE_MODAL);
         }
-
     }
 
     updateKeyValueClient(e) {
-        const { fields: { idClient, nameClient }, clientsFindServer } = this.props;
+        const { fields: { idClient, nameClient }, dispatchClientsFindServer } = this.props;
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.consultclick ? "" : e.preventDefault();
             if (nameClient.value !== "" && nameClient.value !== null && nameClient.value !== undefined && nameClient.value.length >= 3) {
                 $('.ui.search.clientRelationship').toggleClass('loading');
-                clientsFindServer(nameClient.value, 0, 150, "", "", "").then((data) => {
+                dispatchClientsFindServer(nameClient.value, 0, 150, "", "", "").then((data) => {
                     clients = _.get(data, 'payload.data.data.rows', []);
                     $('.ui.search.clientRelationship')
                         .search({
@@ -172,13 +192,13 @@ class ModalCreateRelationship extends Component {
     }
 
     updateKeyValueEconomicGroup(e) {
-        const { fields: { groupEconomic, economicGroupName }, economicGroupsByKeyword } = this.props;
+        const { fields: { groupEconomic, economicGroupName }, dispatchEconomicGroupsByKeyword } = this.props;
         groupEconomic.onChange('');
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.consultclick ? "" : e.preventDefault();
             if (economicGroupName.value !== "" && economicGroupName.value !== null && economicGroupName.value !== undefined && economicGroupName.value.length >= 3) {
                 $('.ui.search.economicGroup').toggleClass('loading');
-                economicGroupsByKeyword(economicGroupName.value).then((data) => {
+                dispatchEconomicGroupsByKeyword(economicGroupName.value).then((data) => {
                     let economicGroup1 = _.get(data, 'payload.data.data');
                     let economicGroup2 = _.forEach(economicGroup1, function (data1) {
                         data1.title = data1.group;
@@ -277,7 +297,7 @@ class ModalCreateRelationship extends Component {
     }
 
     addClientsEconomicToRelationship() {
-        const { fields: { groupEconomic, economicGroupName }, clientsByEconomicGroup, filterContactsReducer,
+        const { fields: { groupEconomic, economicGroupName }, dispatchClientsByEconomicGroup, filterContactsReducer,
             contactDetail, modifyClientRelationship } = this.props;
         if (_.isUndefined(groupEconomic.value) || _.isNull(groupEconomic.value) || groupEconomic.value === "") {
             this.setState({
@@ -287,14 +307,16 @@ class ModalCreateRelationship extends Component {
                 message: "Señor usuario, debe buscar y seleccionar un grupo económico."
             });
         } else {
-            clientsByEconomicGroup(groupEconomic.value).then((data) => {
+            dispatchClientsByEconomicGroup(groupEconomic.value).then((data) => {
                 if (_.get(data, 'payload.data.status') === 200) {
                     var valuesServer = _.get(data, 'payload.data.data');
                     var valuesAdd = filterContactsReducer.get('clientsCreaterRelationship');
+
                     //Elimino los clientes que ya tiene una relación con el contacto
                     _.map(contactDetail.get('listClientcontacts'), map => {
                         _.remove(valuesServer, (val) => val.id === map.idClient)
                     });
+
                     //Elimino los clientes que están en la lista para crear una relación con el contacto
                     _.map(valuesAdd, map => {
                         _.remove(valuesServer, (val) => val.id === map.id)
@@ -344,12 +366,12 @@ class ModalCreateRelationship extends Component {
                 <div className="modalBt4-content modal-content">
                     <div className="modalBt4-header modal-header">
                         <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">Crear relación cliente-contacto</h4>
-                        <button type="button" onClick={() => { functionClose(OPEN_CREATE_MODAL) }} className="close" data-dismiss="modal" role="close">
+                        <button name='btnClose' type="button" onClick={() => { functionClose(OPEN_CREATE_MODAL) }} className="close" data-dismiss="modal" role="close">
                             <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                             <span className="sr-only">Close</span>
                         </button>
                     </div>
-                    <form onSubmit={handleSubmit(this._handlerSubmitRelationship)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
+                    <form onSubmit={handleSubmit(this.handleSubmitRelationship)} onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}>
                         <div className="modalBt4-body modal-body business-content editable-form-content clearfix" style={{ overflowX: 'hidden' }}>
                             <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Clasificación del contacto</span></dt>
                             <Row style={{ paddingLeft: '20px', paddingRight: '20px' }}>
@@ -392,8 +414,33 @@ class ModalCreateRelationship extends Component {
                                         />
                                     </dd>
                                 </Col>
+                                <Row style={{ padding: "20px 0px 20px 10px", marginTop: 20, width:'100%' }}>
+                                    <Col xs={12} md={12} lg={12}>
+                                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                                            <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                                            <i className="browser icon" style={{ fontSize: "20px" }} />
+                                            <span style={{ fontSize: "20px" }}>{`Objetivos del interlocutor`}</span>
+
+                                            <Tooltip text={MANDATORY_OBJECTIVES_MSG}>
+                                                <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
+                                            </Tooltip>
+
+                                        </div>
+                                    </Col>
+                                    <Col style={{ marginTop: '-50px' }} xs={12} md={12} lg={12}>
+                                        <ElementsComponent 
+                                            schema={schemaObjectivesInterlocutor} 
+                                            placeholder={OBJECTIVES_PLACEHOLDER} 
+                                            messageButton='Agregar' 
+                                            name={OBJECTIVES} 
+                                            max={3} 
+                                            title={'Objetivos del interlocutor'} 
+                                            isEditable={true} 
+                                        />
+                                    </Col>
+                                </Row>
                             </Row>
-                            <dt className="business-title" style={{ marginTop: '20px' }}>
+                            <dt className="business-title" style={{ marginTop: '-70px' }}>
                                 <span style={{ paddingLeft: '20px' }}>Búsqueda de clientes</span>
                             </dt>
                             <Row style={{ paddingLeft: '20px', paddingRight: '20px' }}>
@@ -469,7 +516,7 @@ class ModalCreateRelationship extends Component {
                     show={this.state.showErrorForm}
                     title={this.state.title}
                     text={this.state.message}
-                    onConfirm={this._closeAlertInformation}
+                    onConfirm={this.closeAlertInformation}
                 />
             </div>
         )
@@ -479,23 +526,27 @@ class ModalCreateRelationship extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        updateRelationshipClientcontact,
-        changeValueOpenModal,
-        changeStateSaveData,
-        getContactDetails,
-        clientsFindServer,
-        economicGroupsByKeyword,
-        clientsByEconomicGroup
+        dispatchAddToList: addToList,
+        dispatchCreateList: createList,
+        dispatchCleanList: cleanList,
+        dispatchUpdateRelationshipClientContact: updateRelationshipClientcontact,
+        dispatchChangeStateSaveData: changeStateSaveData,
+        dispatchGetContactDetails: getContactDetails,
+        dispatchClientsFindServer: clientsFindServer,
+        dispatchEconomicGroupsByKeyword: economicGroupsByKeyword,
+        dispatchClientsByEconomicGroup: clientsByEconomicGroup,
+        dispatchSwtShowMessage: swtShowMessage
     }, dispatch);
 }
 
-function mapStateToProps({ filterContactsReducer, reducerGlobal, contactDetail, selectsReducer }) {
+function mapStateToProps({ filterContactsReducer, reducerGlobal, contactDetail, selectsReducer, elementsReducer }) {
     return {
         filterContactsReducer,
         reducerGlobal,
         contactDetail,
         selectsReducer,
         modifyClientRelationship,
+        elementsReducer
     };
 }
 

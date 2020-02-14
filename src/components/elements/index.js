@@ -41,7 +41,7 @@ export class ElementsComponent extends Component {
     }
     
     render() {
-        const { placeholder, messageButton, handleSubmit, name, elementsReducer, max, resetForm, title, dispatchSetToShow, values: { objectEdited } } = this.props;
+        const { placeholder, messageButton, handleSubmit, name, elementsReducer, max, resetForm, title, dispatchSetToShow, values: { objectEdited }, isEditable } = this.props;
         const { show } = this.state;
 
         let data = elementsReducer[name];
@@ -64,12 +64,12 @@ export class ElementsComponent extends Component {
                                     name={'add square'}
                                     style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
                                     onClick={() => {
-                                        if(!((length || 0) === max)) {
+                                        if (isEditable && length < max) {
                                             this.setState({ show: true });
                                             dispatchSetToShow({ name, show: true });
                                         }
                                     }}
-                                    disabled={(length || 0) === max}
+                                    disabled={!isEditable || length >= max}
                                 />
                             </ToolTip>
                         </Col>
@@ -139,7 +139,7 @@ export class ElementsComponent extends Component {
                     }
 
                     <Row style={{ padding: "10px 10px 20px 30px", marginBottom: 70, width: '99%' }} end="xs">
-                        <ItemList data={data || []} handleDelete={this.handleOnDelete} handleEdit={this.handleOnEdit} title={title} show={show} />
+                        <ItemList data={data || []} handleDelete={this.handleOnDelete} handleEdit={this.handleOnEdit} title={title} show={show} isEditable={isEditable} />
                     </Row>
                 </div>
             </form>
