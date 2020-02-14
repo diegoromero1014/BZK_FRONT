@@ -20,7 +20,7 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../dashboard/actions';
 import { downloadFilePDF } from '../actions';
-import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer, markAsOutdated} from './actions';
+import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer, markAsOutdated } from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions';
 import {
     consultDataSelect,
@@ -58,6 +58,12 @@ import {
     MESSAGE_WARNING_FORBIDDEN_CHARACTER,
     MESSAGE_WARNING_FORBIDDEN_CHARACTER_PREFIX
 } from '../../../validationsFields/validationsMessages';
+import { schema } from '../../participants/schema';
+import ElementsComponent from '../../elements/';
+import { cleanList, addToList, createList } from '../../elements/actions';
+import { OBJECTIVES_PLACEHOLDER } from '../../elements/constants';
+import { MANDATORY_OBJECTIVES_MSG, OBJECTIVES_OPEN_ERROR_MSG, OBJECTIVES } from '../../participants/constants';
+import Tooltip from "../../toolTip/toolTipComponent";
 
 var thisForm;
 
@@ -76,7 +82,7 @@ export class ContactDetailsModalComponent extends Component {
         this._markAsOutdated = this._markAsOutdated.bind(this);
         this.unmarkContact = this.unmarkContact.bind(this);
         this.cancelAlert = this.cancelAlert.bind(this);
-        
+
         this.state = {
             isEditable: false,
             generoData: [],
@@ -84,12 +90,12 @@ export class ContactDetailsModalComponent extends Component {
             showErrorXss: false,
             showErrorFormInvalidValue: false,
             updateCheck: false,
-            updateCheckDesc : '',
+            updateCheckDesc: '',
             updateCheckPermission: false,
-            hasToUpdateInfo: false, 
-            showMessage:null,
-            isUpdatedInSubmit:false,
-            correspondenceAddressCopy:false,
+            hasToUpdateInfo: false,
+            showMessage: null,
+            isUpdatedInSubmit: false,
+            correspondenceAddressCopy: false,
         };
         momentLocalizer(moment);
         thisForm = this;
@@ -98,15 +104,15 @@ export class ContactDetailsModalComponent extends Component {
     /* Carga la información del contacto */
     componentWillMount() {
         const {
-            nonValidateEnter, getMasterDataFields, getContactDetails, contactId, callFromModuleContact, showLoading, reducerGlobal
+            nonValidateEnter, getMasterDataFields, getContactDetails, contactId, callFromModuleContact, showLoading, reducerGlobal, dispatchCleanList, dispatchAddToList, dispatchCreateList
         } = this.props;
         let updateCheckPermission = _.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), MARCAR_CONTACTO_DESACTUALIZADO), false);
         this.setState({ updateCheckPermission });
         setGlobalCondition(!callFromModuleContact);
-        
+
         nonValidateEnter(false);
         showLoading(true, MESSAGE_LOAD_DATA);
-        
+
         const that = this;
         const { fields: { contactFunctions, contactHobbies, contactSports, contactLineOfBusiness, contactCity } } = this.props;
         const idClient = callFromModuleContact ? null : window.sessionStorage.getItem('idClientSelected');
@@ -118,30 +124,39 @@ export class ContactDetailsModalComponent extends Component {
 
         getMasterDataFields(masterData).then(function () {
             getContactDetails(contactId, idClient)
-            .then(function (data) {
-                showLoading(false, "");                           
-                const contact = _.get(data, 'payload.data.data');
-                let hasToUpdateInfo = !that.state.updateCheckPermission && !contact.updatedInfo ;
-                that.setState({ updateCheck: !contact.updatedInfo, hasToUpdateInfo });
-                if (contact.country !== undefined && contact.country !== null) {
-                    that._uploadProvincesByCountryId(contact.country);
-                }
-                
-                if (contact.province !== undefined && contact.province !== null) {
-                    that._uploadCitiesByProvinceId(contact.province);
-                }
-                
-                if (!callFromModuleContact) {
-                    contactLineOfBusiness.onChange(JSON.parse('["' + _.join(contact.lineOfBusiness, '","') + '"]'));
-                    contactFunctions.onChange(JSON.parse('["' + _.join(contact.function, '","') + '"]'));
-                }
-                
-                contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
-                contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
-                
-                // Se vuelve a setear la ciudad para evitar que el cambio en el departamento deje vacio el campo ciudad
-                setTimeout(() => {
-                    contactCity.onChange(contact.city);
+                .then(function (data) {
+                    showLoading(false, "");
+                    const contact = _.get(data, 'payload.data.data');
+                    let hasToUpdateInfo = !that.state.updateCheckPermission && !contact.updatedInfo;
+                    that.setState({ updateCheck: !contact.updatedInfo, hasToUpdateInfo });
+                    if (contact.country !== undefined && contact.country !== null) {
+                        that._uploadProvincesByCountryId(contact.country);
+                    }
+
+                    if (contact.province !== undefined && contact.province !== null) {
+                        that._uploadCitiesByProvinceId(contact.province);
+                    }
+
+                    if (!callFromModuleContact) {
+                        contactLineOfBusiness.onChange(JSON.parse('["' + _.join(contact.lineOfBusiness, '","') + '"]'));
+                        contactFunctions.onChange(JSON.parse('["' + _.join(contact.function, '","') + '"]'));
+                    }
+
+                    if (contact.interlocutorObjsDTO) {
+                        dispatchCleanList(OBJECTIVES);
+                        dispatchCreateList(OBJECTIVES);
+
+                        if (contact.interlocutorObjsDTO && contact.interlocutorObjsDTO.length) {
+                            contact.interlocutorObjsDTO.forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1) }), name: OBJECTIVES, old: null }));
+                        }
+                    }
+
+                    contactHobbies.onChange(JSON.parse('["' + _.join(contact.hobbies, '","') + '"]'));
+                    contactSports.onChange(JSON.parse('["' + _.join(contact.sports, '","') + '"]'));
+
+                    // Se vuelve a setear la ciudad para evitar que el cambio en el departamento deje vacio el campo ciudad
+                    setTimeout(() => {
+                        contactCity.onChange(contact.city);
                     }, 1000);
 
                 });
@@ -169,7 +184,7 @@ export class ContactDetailsModalComponent extends Component {
             genero = selectsReducer.get(FILTER_GENDER);
         }
 
-        if(genero.length == 1){
+        if (genero.length == 1) {
             this.setState({ generoData: genero });
             contactGender.onChange(genero[0].id);
         } else {
@@ -288,16 +303,24 @@ export class ContactDetailsModalComponent extends Component {
         const {
             fields: {
                 contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName,
-            contactFirstLastName, contactSecondLastName, contactPosition, contactDependency, contactAddress,
-            contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
-            contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact,
-            contactLineOfBusiness, contactFunctions, contactHobbies, contactSports, contactSocialStyle,
-            contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures, updateCheckObservation
-            }, changeStateSaveData, callFromModuleContact, resetPage, swtShowMessage
+                contactFirstLastName, contactSecondLastName, contactPosition, contactDependency, contactAddress,
+                contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
+                contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact,
+                contactLineOfBusiness, contactFunctions, contactHobbies, contactSports, contactSocialStyle,
+                contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures, updateCheckObservation
+            }, changeStateSaveData, callFromModuleContact, resetPage, swtShowMessage, elementsReducer
         } = this.props;
         const { contactDetail, contactsByClientFindServer } = this.props;
         const contact = contactDetail.get('contactDetailList');
         const { saveContact } = this.props;
+
+        let interlocutor = elementsReducer[OBJECTIVES];
+
+        if (interlocutor && interlocutor.open) {
+            swtShowMessage('error', 'Error', OBJECTIVES_OPEN_ERROR_MSG);
+            return;
+        }
+
         const jsonUpdateContact = {
             "client": window.sessionStorage.getItem('idClientSelected'),
             "id": contact.id,
@@ -335,7 +358,8 @@ export class ContactDetailsModalComponent extends Component {
             "lineOfBusiness": JSON.parse('[' + ((contactLineOfBusiness.value) ? contactLineOfBusiness.value : "") + ']'),
             "socialStyle": contactSocialStyle.value !== undefined ? contactSocialStyle.value : null,
             "attitudeOverGroup": contactAttitudeOverGroup.value !== undefined ? contactAttitudeOverGroup.value : null,
-            "callFromModuleContact": _.isNull(callFromModuleContact) || _.isUndefined(callFromModuleContact) ? false : callFromModuleContact
+            "callFromModuleContact": _.isNull(callFromModuleContact) || _.isUndefined(callFromModuleContact) ? false : callFromModuleContact,
+            "interlocutorObjsDTO": interlocutor.elements
         };
 
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -345,10 +369,10 @@ export class ContactDetailsModalComponent extends Component {
                 redirectUrl("/login");
             } else {
                 if (_.get(data, 'payload.data.status') === 200) {
-                    this.setState({isUpdatedInSubmit:true});
+                    this.setState({ isUpdatedInSubmit: true });
                     if (this.state.updateCheck == true || !_.isEmpty(updateCheckObservation.value)) {
                         this.setState({ showMessage: true });
-                    }else{
+                    } else {
                         this._closeViewOrEditContact();
                         swtShowMessage('success', 'Edición de contacto', 'Señor usuario, el contacto se editó de forma exitosa.');
                     }
@@ -365,41 +389,41 @@ export class ContactDetailsModalComponent extends Component {
             swtShowMessage('error', 'Error editando contacto', 'Señor usuario, ocurrió un error editando el contacto.');
         });
     }
-    _handleChangeUpdateCheck(){
-        const { fields: { updateCheckObservation }}=this.props;
+    _handleChangeUpdateCheck() {
+        const { fields: { updateCheckObservation } } = this.props;
         const updateCheck = !(this.state.updateCheck);
-        this.setState({ updateCheck }); 
-        if (this.state.updateCheck && !_.isEmpty(updateCheckObservation.value)){
-            this.setState({ showMessage: true});
-        }else{
+        this.setState({ updateCheck });
+        if (this.state.updateCheck && !_.isEmpty(updateCheckObservation.value)) {
+            this.setState({ showMessage: true });
+        } else {
             this.setState({ showMessage: false });
         }
     }
-    cancelAlert(){
+    cancelAlert() {
         const { contactsByClientFindServer } = this.props;
         this.setState({
             updateCheck: true,
-            showMessage:false
+            showMessage: false
         })
-        if(this.state.isUpdatedInSubmit){
+        if (this.state.isUpdatedInSubmit) {
             showLoading(false, "");
-            this._closeViewOrEditContact(); 
+            this._closeViewOrEditContact();
             contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
         }
     }
-    unmarkContact(){
-        const { fields: { updateCheckObservation }, showLoading} = this.props;
+    unmarkContact() {
+        const { fields: { updateCheckObservation }, showLoading } = this.props;
         showLoading(true, MESSAGE_LOAD_DATA);
         this.setState({
             updateCheck: false,
             showMessage: false
         })
-        updateCheckObservation.value="";
+        updateCheckObservation.value = "";
         this._markAsOutdated();
     }
-    _markAsOutdated(){
-        const { fields: { updateCheckObservation }, redirectUrl, changeStateSaveData, resetPage, swtShowMessage, showLoading}= this.props;
-        const { markAsOutdated} = this.props;
+    _markAsOutdated() {
+        const { fields: { updateCheckObservation }, redirectUrl, changeStateSaveData, resetPage, swtShowMessage, showLoading } = this.props;
+        const { markAsOutdated } = this.props;
         const { contactDetail, contactsByClientFindServer } = this.props;
 
         const contact = contactDetail.get('contactDetailList');
@@ -410,7 +434,7 @@ export class ContactDetailsModalComponent extends Component {
             "contactIdentityNumber": contact.contactIdentityNumber,
         };
         showLoading(true, MESSAGE_LOAD_DATA);
-            markAsOutdated(jsonContact).then((data) => {
+        markAsOutdated(jsonContact).then((data) => {
             showLoading(false, "");
             changeStateSaveData(false, "");
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
@@ -427,10 +451,10 @@ export class ContactDetailsModalComponent extends Component {
                 } else if (_.get(data, 'payload.data.status') === 422) {
                     const result = _.get(data, 'payload.data.data');
                     updateCheckObservation.error = result[0].detail[0].message[0];
-                    updateCheckObservation.touched=true;
+                    updateCheckObservation.touched = true;
                     const val_ = updateCheckObservation.value;
                     updateCheckObservation.onChange(val_);
-                }else{
+                } else {
                     swtShowMessage('error', 'Error actualizando información', 'Señor usuario, ocurrió un error guardando la información.');
                 }
             }
@@ -445,10 +469,10 @@ export class ContactDetailsModalComponent extends Component {
         const {
             fields: {
                 contactTitle, contactGender, contactType, contactIdentityNumber, contactFirstName, contactMiddleName,
-            contactFirstLastName, contactSecondLastName, contactPosition, contactDependency, contactAddress,
-            contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
-            contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress,
-            contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies, contactSports,
+                contactFirstLastName, contactSecondLastName, contactPosition, contactDependency, contactAddress,
+                contactCountry, contactProvince, contactCity, contactNeighborhood, contactPostalCode,
+                contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress,
+                contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies, contactSports,
                 contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures, updateCheckObservation
             }, handleSubmit, selectsReducer, reducerGlobal, clientInfo, consultListWithParameterUbication, origin
         } = this.props;
@@ -460,58 +484,58 @@ export class ContactDetailsModalComponent extends Component {
                     id="modalEditCotact" style={callFromModuleContact ? { backgroundColor: '#FFF' } : {}}>
                     {this.state.updateCheckPermission &&
 
-                    <div>
-                    <dt className="business-title" style={{ fontSize: '17px' }}>
-                        <span style={{ paddingLeft: '20px' }}>Check de actualización de contacto.</span>
-                    </dt>
-                    <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                        <Row>
-                            <Col xs={12} sm={12} md={12} lg={12}>
-                                <div style={{ padding: '2.65em 0px 1em 0em' }} class="ui fitted toggle checkbox">
-                                    <Checkbox
-                                        toggle
-                                        label="La información del contacto está desactualizada"
-                                        checked={this.state.updateCheck}
-                                        onClick={this._handleChangeUpdateCheck}
-                                    />
-                                </div>
-                            </Col>
-                            <Col xs={12} sm={12} md={12} lg={12}>
-                                    {this.state.updateCheck &&
-                                    <div>
-                                    <dt><span>{'Observación ('}</span><span
-                                        style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
-                                        <dd>
-                                            <Textarea style ={{ height : '10em'}}
-                                            name="updateCheckObservation"
-                                                className="UpdateCheckObservation"
-                                                {...updateCheckObservation}
-                                                type="text"
-                                                disabled={this.state.updateCheck ? '' : 'disabled'}
+                        <div>
+                            <dt className="business-title" style={{ fontSize: '17px' }}>
+                                <span style={{ paddingLeft: '20px' }}>Check de actualización de contacto.</span>
+                            </dt>
+                            <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                                <Row>
+                                    <Col xs={12} sm={12} md={12} lg={12}>
+                                        <div style={{ padding: '2.65em 0px 1em 0em' }} class="ui fitted toggle checkbox">
+                                            <Checkbox
+                                                toggle
+                                                label="La información del contacto está desactualizada"
+                                                checked={this.state.updateCheck}
+                                                onClick={this._handleChangeUpdateCheck}
                                             />
-                                        </dd>
-                                    <div style={{ padding: '1.5em 0em 1.5em 0em' }}>
-                                        <button
-                                            type="button" 
-                                            onClick={this._markAsOutdated}
-                                            className="btn btn-primary modal-button-edit"
-                                            >{'Guardar'}</button>
                                         </div>
-                                    </div> 
-                                }
-                            </Col>
-                        </Row>
-                    </div>
-                    </div>
+                                    </Col>
+                                    <Col xs={12} sm={12} md={12} lg={12}>
+                                        {this.state.updateCheck &&
+                                            <div>
+                                                <dt><span>{'Observación ('}</span><span
+                                                    style={{ color: 'red' }}>{'*'}</span><span>{')'}</span></dt>
+                                                <dd>
+                                                    <Textarea style={{ height: '10em' }}
+                                                        name="updateCheckObservation"
+                                                        className="UpdateCheckObservation"
+                                                        {...updateCheckObservation}
+                                                        type="text"
+                                                        disabled={this.state.updateCheck ? '' : 'disabled'}
+                                                    />
+                                                </dd>
+                                                <div style={{ padding: '1.5em 0em 1.5em 0em' }}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={this._markAsOutdated}
+                                                        className="btn btn-primary modal-button-edit"
+                                                    >{'Guardar'}</button>
+                                                </div>
+                                            </div>
+                                        }
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
                     }
                     {this.state.hasToUpdateInfo &&
                         <div>
-                        <Message negative style={{margin:'1.5em'}}>
-                            <Message.Content style={{float: 'rigth'}}>
-                                <Message.Header style={{ minHeight: '28px' }}>La información del contacto está desactualizada</Message.Header>
-                                {updateCheckObservation.value}                           
+                            <Message negative style={{ margin: '1.5em' }}>
+                                <Message.Content style={{ float: 'rigth' }}>
+                                    <Message.Header style={{ minHeight: '28px' }}>La información del contacto está desactualizada</Message.Header>
+                                    {updateCheckObservation.value}
                                 </Message.Content>
-                        </Message>
+                            </Message>
                         </div>
                     }
 
@@ -714,26 +738,26 @@ export class ContactDetailsModalComponent extends Component {
                         </Row>
                     </div>
                     <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información de ubicación y correspondencia</span>
-                    </dt>               
-                    <Ubicacion fields={ { contactCountry, contactProvince, contactCity, contactAddress, contactNeighborhood }} selectsReducer={selectsReducer} 
+                    </dt>
+                    <Ubicacion fields={{ contactCountry, contactProvince, contactCity, contactAddress, contactNeighborhood }} selectsReducer={selectsReducer}
                         isEditable={this.state.isEditable} clientInfo={clientInfo} consultListWithParameterUbication={consultListWithParameterUbication} origin={origin}
                     />
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>
-                        <Col xs={12} sm={12} md={6} lg={4}>
-                            <dt>
-                                <span>{"Barrio"}</span>
-                            </dt>
-                            <dd>
-                                <Input
-                                name="contactNeighborhood"
-                                type="text"
-                                max="40"
-                                disabled={this.state.isEditable ? "" : "disabled"}
-                                {...contactNeighborhood}
-                                />
-                            </dd>
-                        </Col>
+                            <Col xs={12} sm={12} md={6} lg={4}>
+                                <dt>
+                                    <span>{"Barrio"}</span>
+                                </dt>
+                                <dd>
+                                    <Input
+                                        name="contactNeighborhood"
+                                        type="text"
+                                        max="40"
+                                        disabled={this.state.isEditable ? "" : "disabled"}
+                                        {...contactNeighborhood}
+                                    />
+                                </dd>
+                            </Col>
                             <Col xs={12} sm={12} md={6} lg={4}>
                                 <dt><span>{'Código postal'}</span></dt>
                                 <dd>
@@ -854,6 +878,35 @@ export class ContactDetailsModalComponent extends Component {
                                         </dd>
                                     </Col>
                                 </Row>
+
+                                <Row style={{ padding: "10px 0px 20px 0px", marginTop: 40 }}>
+                                    <Col xs={12} md={12} lg={12}>
+                                        <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                                            <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                                            <i className="browser icon" style={{ fontSize: "20px" }} />
+                                            <span style={{ fontSize: "20px" }}>{`Objetivos del interlocutor`}</span>
+
+                                            <Tooltip text={MANDATORY_OBJECTIVES_MSG}>
+                                                <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
+                                            </Tooltip>
+
+                                        </div>
+                                    </Col>
+                                </Row>
+
+                                <Row style={{ marginTop: '-65px' }}>
+                                    <Col xs>
+                                        <ElementsComponent
+                                            schema={schema}
+                                            placeholder={OBJECTIVES_PLACEHOLDER}
+                                            messageButton='Agregar'
+                                            name={OBJECTIVES}
+                                            max={3}
+                                            title={'Objetivos del interlocutor'}
+                                            disabled={this.state.isEditable ? false : true}
+                                        />
+                                    </Col>
+                                </Row>
                             </div>
                         </div>
                     }
@@ -953,7 +1006,7 @@ export class ContactDetailsModalComponent extends Component {
                     text="¿Señor usuario, certifica que con los cambios realizados, el contacto queda actualizado con las observaciones descritas?"
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='¡Sí, estoy seguro!'
-                    cancelButtonText={this.state.isUpdatedInSubmit?"Guardar sin certificar":"Cancelar"}
+                    cancelButtonText={this.state.isUpdatedInSubmit ? "Guardar sin certificar" : "Cancelar"}
                     showCancelButton={true}
                     onCancel={this.cancelAlert}
                     onConfirm={this.unmarkContact}
@@ -984,11 +1037,14 @@ function mapDispatchToProps(dispatch) {
         deleteRelationshipServer,
         showLoading,
         swtShowMessage,
-        markAsOutdated
+        markAsOutdated,
+        dispatchCleanList: cleanList,
+        dispatchAddToList: addToList,
+        dispatchCreateList: createList
     }, dispatch);
 }
 
-function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal, clientInformacion }) {
+function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal, clientInformacion, elementsReducer }) {
     const contact = contactDetail.get('contactDetailList');
     const clientInfo = Object.assign({}, clientInformacion.get('responseClientInfo'));
     if (contact) {
@@ -997,6 +1053,7 @@ function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal, clientI
             selectsReducer,
             reducerGlobal,
             clientInfo,
+            elementsReducer,
             initialValues: {
                 id: contact.id,
                 contactType: contact.contactType,
@@ -1036,7 +1093,8 @@ function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal, clientI
             contactDetail,
             selectsReducer,
             reducerGlobal,
-            clientInfo
+            clientInfo,
+            elementsReducer
         };
     }
 }

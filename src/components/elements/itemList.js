@@ -4,17 +4,17 @@ import ToolTip from '../toolTip/toolTipComponent';
 
 let selectedRecord;
 
-const ItemList = ({ data, handleDelete, handleEdit, title, show }) => {
-    
-    if(!show) { selectedRecord = null; }
-    
-    if(data.length) { 
+const ItemList = ({ data, handleDelete, handleEdit, title, show, disabled }) => {
+
+    if (!show) { selectedRecord = null; }
+
+    if (data.length) {
         return (
             <Table basic>
                 <Table.Body>
                     {
                         data.sort((a, b) => a.order - b.order).map((element, index) =>
-                            <Table.Row key={index} disabled={index === selectedRecord && show}>
+                            <Table.Row key={index} disabled={(index === selectedRecord && show) || disabled}>
                                 <Table.Cell textAlign='left' style={{ width: 10 }} verticalAlign='middle'>
                                     <ToolTip text={'Editar'}>
                                         <i style={{ cursor: 'pointer' }} className="pencil icon" onClick={() => {
@@ -38,16 +38,16 @@ const ItemList = ({ data, handleDelete, handleEdit, title, show }) => {
                 </Table.Body>
             </Table>
         )
-        
+
     } else {
-        return ( 
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', border: '1px solid #e1e1e1', color: '#3f3f3f', borderRadius: 3,}}>
-                <p>{`No se han adicionado ${title}`}</p> 
+        return (
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', border: '1px solid #e1e1e1', color: '#3f3f3f', borderRadius: 3, }}>
+                <p>{`No se han adicionado ${title}`}</p>
             </div>
         )
     }
 
-    
+
 };
 
 export default ItemList;
