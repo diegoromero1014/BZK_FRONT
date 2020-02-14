@@ -61,8 +61,7 @@ import {
 import { schema } from '../../participants/schema';
 import ElementsComponent from '../../elements/';
 import { cleanList, addToList, createList } from '../../elements/actions';
-import { OBJECTIVES_PLACEHOLDER } from '../../elements/constants';
-import { MANDATORY_OBJECTIVES_MSG, OBJECTIVES_OPEN_ERROR_MSG, OBJECTIVES } from '../../participants/constants';
+import { MANDATORY_OBJECTIVES_MSG, OBJECTIVES_OPEN_ERROR_MSG, OBJECTIVES, OBJECTIVES_PLACEHOLDER } from '../../participants/constants';
 import Tooltip from "../../toolTip/toolTipComponent";
 
 var thisForm;
