@@ -92,6 +92,7 @@ import PermissionUserReports from "../../commercialReport/permissionsUserReports
 
 import Classification from '../sections/classification';
 import '../pipeline.style.scss';
+import TextareaComponent from "../../../ui/textarea/textareaComponent";
 
 let thisForm;
 let typeButtonClick = null;
@@ -1212,12 +1213,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             <dt>
                                                 <span>Detalle justificación </span>
                                             </dt>
-                                            <Input
+                                            <TextareaComponent
                                                 name="txtJustificationDetail"
                                                 type="text"
                                                 {...justificationDetail}
-                                                max="500"
                                                 parentId="dashboardComponentScroll"
+                                                rows={4}
+                                                style={{ width: '100%', height: '100%' }}
                                                 disabled={this.state.isEditable ? '' : 'disabled'}
                                             />
                                         </div>

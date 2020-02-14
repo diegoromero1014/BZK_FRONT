@@ -12,6 +12,7 @@ import Immutable from "immutable";
 import * as selectsComponent from "../../../../../src/components/selectsComponent/actions";
 import * as pipelineActions from '../../../../../src/components/pipeline/actions';
 import Input from "../../../../../src/ui/input/inputComponent";
+import TextareaComponent from '../../../../../src/ui/textarea/textareaComponent';
 import * as globalActions from '../../../../../src/components/globalComponents/actions';
 import * as actionsGlobal from "../../../../../src/actionsGlobal";
 import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
@@ -145,7 +146,7 @@ describe('Pruebas unitarias editar pipeline', () =>{
         wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_NO_CONTACTADO);
         setTimeout(()=>{
             expect(wrapper.state().showJustificationField).to.equal(true);
-            expect(wrapper.find(Input).find({name:'txtJustificationDetail'}));
+            expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));
         }, 1);
 
     });
@@ -161,7 +162,7 @@ describe('Pruebas unitarias editar pipeline', () =>{
         wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_PERDIDO);
         setTimeout(()=>{
             expect(wrapper.state().showJustificationField).to.equal(true);
-            expect(wrapper.find(Input).find({name:'txtJustificationDetail'}));
+            expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));
         }, 1);
 
     });

@@ -75,6 +75,7 @@ import { fields, fieldsWithRules, validations as validate } from './filesAndRule
 import PermissionUserReports from "../../commercialReport/permissionsUserReports";
 import { buildJsoncommercialReport } from "../../commercialReport/functionsGenerics";
 import { setConfidential } from "../../commercialReport/actions";
+import TextareaComponent from "../../../ui/textarea/textareaComponent";
 
 let thisForm;
 let typeMessage = "success";
@@ -1086,13 +1087,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                                 <dt>
                                     <span>Detalle justificación </span>
                                 </dt>
-                                <Input
-                                    name="txtJustificationDetail"
-                                    type="text"
-                                    {...justificationDetail}
-                                    max="500"
-                                    parentId="dashboardComponentScroll"
-                                />
+                              <TextareaComponent
+                                  name="txtJustificationDetail"
+                                  type="text"
+                                  {...justificationDetail}
+                                  parentId="dashboardComponentScroll"
+                                  rows={4}
+                                  style={{ width: '100%', height: '100%' }}
+                              />
                             </div>
                         </Col>
                         : null}
