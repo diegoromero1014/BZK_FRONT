@@ -1372,21 +1372,20 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
                                             <span>SVA</span>
-                                            <ToolTip text={HELP_SVA}>
-                                                <i className="help circle icon blue"
-                                                   style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
-                                            </ToolTip>
                                         </dt>
-                                        <Input
-                                          {...sva}
-                                          name="sva"
-                                          type="text"
-                                          placeholder="Miles ' , ' y decimales ' . '"
-                                          parentId="dashboardComponentScroll"
-                                          onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, sva, val, true, 2)}
-                                          onFocus={val => handleFocusValueNumber(sva, sva.value)}
-                                          disabled={this.state.isEditable ? '' : 'disabled'}
-                                        />
+                                        <ToolTip text={HELP_SVA} rendertooltip={HELP_SVA}>
+                                            <div>
+                                                <Input
+                                                  {...sva}
+                                                  name="sva"
+                                                  type="text"
+                                                  placeholder="Miles ' , ' y decimales ' . '"
+                                                  parentId="dashboardComponentScroll"
+                                                  onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, sva, val, true, 2)}
+                                                  onFocus={val => handleFocusValueNumber(sva, sva.value)}
+                                                  disabled={this.state.isEditable ? '' : 'disabled'}/>
+                                            </div>
+                                        </ToolTip>
                                     </div>
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
