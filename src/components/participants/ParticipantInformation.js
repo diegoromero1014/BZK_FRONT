@@ -222,7 +222,7 @@ export class ParticipantInformation extends Component {
 
                 <Row style={{ marginTop: '-65px' }}>
                     <Col xs={12} md={12} lg={12}>
-                        <ElementsComponent schema={schema} placeholder={OBJECTIVES_PLACEHOLDER} messageButton='Agregar' name={OBJECTIVES} max={3} title={'Objetivos del interlocutor'} />
+                        <ElementsComponent schema={schema} placeholder={OBJECTIVES_PLACEHOLDER} messageButton='Agregar' name={OBJECTIVES} max={3} title={'Objetivos del interlocutor'} isEditable={true} />
                     </Col>
                 </Row>
 

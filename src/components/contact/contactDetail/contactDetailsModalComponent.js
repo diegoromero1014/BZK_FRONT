@@ -903,7 +903,7 @@ export class ContactDetailsModalComponent extends Component {
                                             name={OBJECTIVES}
                                             max={3}
                                             title={'Objetivos del interlocutor'}
-                                            disabled={this.state.isEditable ? false : true}
+                                            isEditable={this.state.isEditable}
                                         />
                                     </Col>
                                 </Row>

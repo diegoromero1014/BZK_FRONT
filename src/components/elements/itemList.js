@@ -4,7 +4,7 @@ import ToolTip from '../toolTip/toolTipComponent';
 
 let selectedRecord;
 
-const ItemList = ({ data, handleDelete, handleEdit, title, show, disabled }) => {
+const ItemList = ({ data, handleDelete, handleEdit, title, show, isEditable }) => {
 
     if (!show) { selectedRecord = null; }
 
@@ -14,7 +14,7 @@ const ItemList = ({ data, handleDelete, handleEdit, title, show, disabled }) => 
                 <Table.Body>
                     {
                         data.sort((a, b) => a.order - b.order).map((element, index) =>
-                            <Table.Row key={index} disabled={(index === selectedRecord && show) || disabled}>
+                            <Table.Row key={index} disabled={(index === selectedRecord && show) || !isEditable}>
                                 <Table.Cell textAlign='left' style={{ width: 10 }} verticalAlign='middle'>
                                     <ToolTip text={'Editar'}>
                                         <i style={{ cursor: 'pointer' }} className="pencil icon" onClick={() => {

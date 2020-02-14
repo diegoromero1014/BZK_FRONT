@@ -428,7 +428,15 @@ export class ModalCreateRelationship extends Component {
                                         </div>
                                     </Col>
                                     <Col style={{ marginTop: '-50px' }} xs={12} md={12} lg={12}>
-                                        <ElementsComponent schema={schemaObjectivesInterlocutor} placeholder={OBJECTIVES_PLACEHOLDER} messageButton='Agregar' name={OBJECTIVES} max={3} title={'Objetivos del interlocutor'} disabled={false} />
+                                        <ElementsComponent 
+                                            schema={schemaObjectivesInterlocutor} 
+                                            placeholder={OBJECTIVES_PLACEHOLDER} 
+                                            messageButton='Agregar' 
+                                            name={OBJECTIVES} 
+                                            max={3} 
+                                            title={'Objetivos del interlocutor'} 
+                                            isEditable={true} 
+                                        />
                                     </Col>
                                 </Row>
                             </Row>

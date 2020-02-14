@@ -652,7 +652,7 @@ class ModalComponentContact extends Component {
                                     name={OBJECTIVES}
                                     max={3}
                                     title={'Objetivos del interlocutor'}
-                                    disabled={false}
+                                    isEditable={true}
                                 />
                             </Col>
                         </Row>
