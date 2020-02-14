@@ -53,11 +53,12 @@ export default function reducer(state, action) {
       }
 
     case UPDATE_ACTIVE_FIELD_OBJECT:
-      let element = Object.assign({}, state[action.name], {
-        open: action.status
-      });
-      return Object.assign({}, state, { [action.name]: element });
-
+      {
+        let element = Object.assign({}, state[action.name], {
+          open: action.status
+        });
+        return Object.assign({}, state, { [action.name]: element });
+      }
     case UPDATE_ELEMENT_ASOCIADO:
       return changeCheckedFromElement(state, action.payload.name, action.payload.id, action.payload.value);
 
