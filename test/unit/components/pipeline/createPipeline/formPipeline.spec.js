@@ -2,10 +2,10 @@ import React from "react";
 import createFormPipeline from "../../../../../src/components/pipeline/createPipeline/formPipeline";
 import HeaderPipeline from "../../../../../src/components/pipeline/headerPipeline";
 import {
-    ORIGIN_PIPELIN_BUSINESS,
-    OPORTUNITIES_MANAGEMENT,
-    NUEVO_NEGOCIO,
-    BUSINESS_STATUS_NO_CONTACTADO, BUSINESS_STATUS_PERDIDO
+  ORIGIN_PIPELIN_BUSINESS,
+  OPORTUNITIES_MANAGEMENT,
+  NUEVO_NEGOCIO,
+  BUSINESS_STATUS_NO_CONTACTADO, BUSINESS_STATUS_PERDIDO, HELP_SVA
 } from "../../../../../src/components/pipeline/constants";
 import PermissionsUserReports from "../../../../../src/components/commercialReport/permissionsUserReports";
 import ComponentDisbursementPlan from '../../../../../src/components/pipeline/disbursementPlan/componentDisbursementPlan';
@@ -21,6 +21,7 @@ import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
 import SweetAlert from "../../../../../src/components/sweetalertFocus";
 import * as selectsComponent from "../../../../../src/components/selectsComponent/actions";
 import _ from "lodash";
+import Tooltip from "../../../../../src/components/toolTip/toolTipComponent";
 
 const middleWares = [thunk];
 const mockStore = configureStore(middleWares);
@@ -173,6 +174,18 @@ describe("Test CreatePipeline", () => {
     const svaField = wrapper.find(Input).find({ name: "sva" });
     svaField.simulate('focus', {value: 15555});
     expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
+  });
+
+  it('field SVA should have a Tooltip', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+    const svaFieldTooltip = wrapper.find(Tooltip).find({ text: HELP_SVA, rendertooltip: HELP_SVA });
+    const svaField = wrapper.find(Input).find({ name: "sva" });
+    expect(svaFieldTooltip).to.have.lengthOf(1);
+    expect(svaFieldTooltip).contains(svaField);
   });
 
   it('show Active field when areaAssetsEnabled value is true', () => {
