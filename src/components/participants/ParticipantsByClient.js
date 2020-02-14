@@ -71,10 +71,12 @@ export class ParticipantsByClient extends Component {
         
         if(participants.find(element => element.idParticipante === Number(existingContact.idParticipante)) && !this.editing) {                        
             dispatchShowAlert('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
-            this.setState({open: false, selectedContact: '' });
+            this.setState({open: false, selectedContact: '', selectedContactInformation: '' });
+        } else {
+            this.setState({ selectedContactInformation: existingContact });        
         }
 
-        this.setState({ selectedContactInformation: existingContact });        
+        
     }
 
     lengthParticipants = () => {
