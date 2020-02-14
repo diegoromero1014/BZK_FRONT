@@ -90,7 +90,7 @@ export class ElementsComponent extends Component {
                                                 onChange={onChange}
                                                 onBlur={onBlur}
                                                 placeholder={placeholder}
-                                                className={`field ${errors[name] ? 'error-field-element' : ''}`}
+                                                className={`field ${errors[name] ? 'error-field-element' : ''} textInterlocutorObjs`}
                                             />
                                             <br></br>
 
