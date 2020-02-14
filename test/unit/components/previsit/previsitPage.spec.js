@@ -49,6 +49,7 @@ let stubLocalStorage;
 let setFieldValue;
 let closeModal;
 let selectsReducer;
+let dispatchAddInitialLinkedElements;
 
 describe('Test previsitPage', () => {        
 
@@ -76,8 +77,7 @@ describe('Test previsitPage', () => {
                 }
             }
         });
-        selectsReducer = Immutable.Map({ previsitType: previsitTypes });
-        
+        selectsReducer = Immutable.Map({ previsitType: previsitTypes });        
         dispatchGetMasterDataFields = sinon.stub();        
         dispatchGetMasterDataFields.resolves({
             masterDataDetailEntries: previsitTypes
@@ -85,12 +85,13 @@ describe('Test previsitPage', () => {
         redirectUrl = sinon.stub(globalActions, "redirectUrl");      
         setFieldValue = sinon.stub();        
         closeModal = spy(sinon.fake());
+        dispatchAddInitialLinkedElements = sinon.fake();
         defaultProps = {
             params: {},
             answers: [],
             questions: [],
             usersPermission: Immutable.List([{name: 'daegalle'}]),
-            clientInformacion: Immutable.Map({responseClientInfo: {name: 'daniel'}}),
+            clientInformacion: Immutable.Map({responseClientInfo: {name: 'daniel', clientDetailsRequest: { opportunities: []}}}),
             previsitReducer: Immutable.Map({ detailPrevisit , ownerDraft}),
             reducerGlobal: Immutable.Map({ 
                 validateEnter, 
@@ -116,7 +117,8 @@ describe('Test previsitPage', () => {
             dispatchDisabledBlockedReport,
             participants: Immutable.List(),
             fromModal: false,
-            closeModal
+            closeModal,
+            dispatchAddInitialLinkedElements
         };      
     });
 
