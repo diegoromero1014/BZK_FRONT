@@ -431,7 +431,7 @@ export class ListaObjetos extends Component {
                     type="warning"
                     show={alertAsociar}
                     title="Atención"
-                    text={`Señor usuario, debe seleccionar al menos una ${ tituloCompleto = (tituloCompleto === "Oportunidades (externas)") ? "Oportunidad (externa)" : "Debilidad (interna del cliente)" } para guardar.`}
+                    text={`Señor usuario, debe seleccionar al menos una ${(tituloCompleto === "Oportunidades (externas)") ? "Oportunidad (externa)" : "Debilidad (interna del cliente)" } para guardar.`}
                     confirmButtonText="OK"
                     onConfirm={() => this.setState({ alertAsociar: false })}
                   />
