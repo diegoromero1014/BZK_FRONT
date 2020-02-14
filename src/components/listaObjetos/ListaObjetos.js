@@ -26,15 +26,19 @@ export function getLinkedClientDetails(elements) {
 
 export function buildLinkedClientDetailsRequestForSubmit(store, clientId) {
   return {
-    opportunities: getObjectListRequestFromReducer(getLinkedClientDetails(store.Oportunidades.elements), clientId),
-    weaknesses: getObjectListRequestFromReducer(getLinkedClientDetails(store.Debilidades.elements), clientId)
+    opportunities: getObjectListRequestFromReducer(getLinkedClientDetails(store.Oportunidades.linked), clientId),
+    weaknesses: getObjectListRequestFromReducer(getLinkedClientDetails(store.Debilidades.linked), clientId)
   }
 }
 
 export function combineClientDetails(linkedDetails, clientDetails) {
       
   if (!clientDetails) {
-     return [];
+     clientDetails = []
+  }
+
+  if (!linkedDetails) {
+    linkedDetails = []
   }
 
   let details = linkedDetails.map(element => {
