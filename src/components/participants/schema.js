@@ -18,6 +18,7 @@ export const schemaOthers = Yup.object().shape({
     name: Yup
         .string()
         .trim()
+        .max(255, "Solo se permiten 255 caracteres.")
         .test('validateHtmlInjection', MESSAGE_ERROR_INJECTION_HTML, validateHtmlInjection)
         .matches(patternOfForbiddenCharacter2, { message: MESSAGE_WARNING_FORBIDDEN_CHARACTER, excludeEmptyString: true })
         .matches(patternOfNameOtherParticipant, { message: MESSAGE_WARNING_NAME_OTHER_PARTICIPANT, excludeEmptyString: true })
@@ -25,13 +26,14 @@ export const schemaOthers = Yup.object().shape({
     position: Yup
         .string()
         .trim()
-        .max(1000, "Solo se permiten 1000 caracteres.")
+        .max(255, "Solo se permiten 255 caracteres.")
         .test('validateHtmlInjection', MESSAGE_ERROR_INJECTION_HTML, validateHtmlInjection)
         .matches(patternOfForbiddenCharacter2, { message: MESSAGE_WARNING_FORBIDDEN_CHARACTER, excludeEmptyString: true })
         .matches(patternOfPositionOtherParticipant, { message: MESSAGE_WARNING_POSITION_OTHER_PARTICIPANT, excludeEmptyString: true }),
     company: Yup
         .string()
         .trim()
+        .max(255, "Solo se permiten 255 caracteres.")
         .test('validateHtmlInjection', MESSAGE_ERROR_INJECTION_HTML, validateHtmlInjection)
         .matches(patternOfForbiddenCharacter2, { message: MESSAGE_WARNING_FORBIDDEN_CHARACTER, excludeEmptyString: true })
         .matches(patternOfCompanyOtherParticipant, { message: MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT, excludeEmptyString: true })
