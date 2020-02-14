@@ -127,7 +127,7 @@ export class OtherParticipants extends Component {
                         </Col>
 
                         <Col xs={1} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexBasis: '5%', maxWidth: '5%', height: 80 }}>
-                            <ToolTip text={'Agregar'}>
+                            <ToolTip text={'Agregar participante'}>
                                 <Icon
                                     className="btnAgregar"
                                     disabled={disabled || (length >= limit)}
