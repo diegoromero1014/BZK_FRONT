@@ -69,7 +69,7 @@ export class ListParticipants extends Component {
 
 
     render() {
-        const { disabled, key } = this.props;
+        const { disabled } = this.props;
         const { open } = this.state;
 
         return (

@@ -135,7 +135,7 @@ export class OtherParticipants extends Component {
                                     style={{ cursor: 'pointer', color: 'rgb(33, 133, 208)', fontSize: '30pt !important' }}
                                     size='huge'
                                     onClick={event => {
-                                        if(!(length >= limit)) {
+                                        if(length < limit) {
                                             if (!disabled) {
                                                 event.preventDefault();
                                                 handleSubmit();

@@ -160,7 +160,10 @@ export class ParticipantInformation extends Component {
                                         valueProp={'id'}
                                         textProp={'value'}
                                         value={value}
-                                        onChange={(id, val) => setFieldValue(name, id, false)}
+                                        onChange={(id, val) => {
+                                            setFieldValue("socialStyleName", val, false);
+                                            setFieldValue(name, id, false);
+                                        }}
                                         onBlur={onBlur}
                                         data={listSocialStyle}
                                         className='field-input'
@@ -269,7 +272,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(
                 return;
             }
 
-            let newElement = Object.assign({}, props.selectedRecord, { interlocutorObjs: data.elements, socialStyleId: values.socialStyle });
+            let newElement = Object.assign({}, props.selectedRecord, { interlocutorObjs: data.elements, socialStyleId: values.socialStyle, estiloSocial: `- ${values.socialStyleName}` });
 
             props.addContact(newElement);
         },
@@ -281,14 +284,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(
                     name: nameComplet,
                     position: !contactPosition ? '' : contactPosition,
                     socialStyle: socialStyleId,
-                    attitude: !contactActitudeCompany ? '' : contactActitudeCompany
+                    attitude: !contactActitudeCompany ? '' : contactActitudeCompany,
+                    socialStyleName: ''
                 });
             } else {
                 return {
                     name: '',
                     position: '',
                     socialStyle: null,
-                    attitude: ''
+                    attitude: '', 
+                    socialStyleName: ''
                 }
             }
         },
