@@ -90,20 +90,33 @@ export class PrevisitPage extends Component {
             renderForm: true,
             isMounted: true
          });
-
-         //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA;
-         let linkedClientDetails = data[1].payload.data.data.clientDetails
-         let infoClient = clientInformacion.get('responseClientInfo');
-
+         
          dispatchShowLoading(false, "");
 
+         let infoClient = clientInformacion.get('responseClientInfo');
+
+         //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA;
+         if (!data[1]) {
+            dispatchAddInitialLinkedElements(
+               "Oportunidades",
+               infoClient.clientDetailsRequest.opportunities || []
+            );
+            dispatchAddInitialLinkedElements(
+               "Debilidades",
+               infoClient.clientDetailsRequest.weaknesses || []
+            );
+            return;
+         }
+
+         let linkedClientDetails = data[1].payload.data.data.clientDetails
+         
          dispatchAddInitialLinkedElements(
             "Oportunidades",
-            combineClientDetails(linkedClientDetails.opportunities, infoClient.clientDetailsRequest.opportunities)
+            combineClientDetails(linkedClientDetails.opportunities, infoClient.clientDetailsRequest.opportunities || [])
          )
          dispatchAddInitialLinkedElements(
             "Debilidades",
-            combineClientDetails(linkedClientDetails.weaknesses, infoClient.clientDetailsRequest.weaknesses)
+            combineClientDetails(linkedClientDetails.weaknesses, infoClient.clientDetailsRequest.weaknesses || [])
          )
       });
    }
@@ -300,11 +313,11 @@ export class PrevisitPage extends Component {
    errorClientDetails = (previsit) => {
       const { objectListReducer } = this.props;
       if (previsit.documentStatus == SAVE_PUBLISHED) {
-         if (getLinkedClientDetails(objectListReducer.Oportunidades.elements).length === 0) {
+         if (getLinkedClientDetails(objectListReducer.Oportunidades.linked).length === 0) {
             return "Señor usuario, debe seleccionar al menos una oportunidad externa para guardar."
          };
 
-         if (getLinkedClientDetails(objectListReducer.Debilidades.elements).length === 0) {
+         if (getLinkedClientDetails(objectListReducer.Debilidades.linked).length === 0) {
             return "Señor usuario, debe seleccionar al menos una debilidad para guardar."
          }
       }
