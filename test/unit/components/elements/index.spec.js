@@ -32,7 +32,9 @@ describe('ElementsComponent Test', () => {
             handleSubmit,
             isValid: false,
             dispatchSetToShow,
-            resetForm
+            resetForm,
+            isEditable: true,
+            name: 'any'
         }
     });
 
@@ -70,13 +72,14 @@ describe('ElementsComponent Test', () => {
         wrapper.find('.icon-message-elements').simulate('click');
     })
 
-    it('When onclick on icon', () => {
+    it('When onclick on icon 2', () => {
         defaultProps.elementsReducer = {
             'any': {
                 elements: []
             }
         };
-        defaultProps.max = 1;
+        defaultProps.isEditable = true;
+        defaultProps.max = 10;
         const wrapper = shallow(<ElementsComponent {...defaultProps} />);
         wrapper.find('.icon-message-elements').simulate('click');
         expect(dispatchSetToShow).to.have.been.called.exactly(1);

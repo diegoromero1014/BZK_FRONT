@@ -49,6 +49,7 @@ let stubLocalStorage;
 let setFieldValue;
 let closeModal;
 let selectsReducer;
+let dispatchAddInitialLinkedElements;
 
 describe('Test previsitPage', () => {        
 
@@ -76,8 +77,7 @@ describe('Test previsitPage', () => {
                 }
             }
         });
-        selectsReducer = Immutable.Map({ previsitType: previsitTypes });
-        
+        selectsReducer = Immutable.Map({ previsitType: previsitTypes });        
         dispatchGetMasterDataFields = sinon.stub();        
         dispatchGetMasterDataFields.resolves({
             masterDataDetailEntries: previsitTypes
@@ -85,12 +85,13 @@ describe('Test previsitPage', () => {
         redirectUrl = sinon.stub(globalActions, "redirectUrl");      
         setFieldValue = sinon.stub();        
         closeModal = spy(sinon.fake());
+        dispatchAddInitialLinkedElements = sinon.fake();
         defaultProps = {
             params: {},
             answers: [],
             questions: [],
             usersPermission: Immutable.List([{name: 'daegalle'}]),
-            clientInformacion: Immutable.Map({responseClientInfo: {name: 'daniel'}}),
+            clientInformacion: Immutable.Map({responseClientInfo: {name: 'daniel', clientDetailsRequest: { opportunities: []}}}),
             previsitReducer: Immutable.Map({ detailPrevisit , ownerDraft}),
             reducerGlobal: Immutable.Map({ 
                 validateEnter, 
@@ -98,7 +99,7 @@ describe('Test previsitPage', () => {
             }),      
             selectsReducer,            
             confidentialReducer: Immutable.Map({ }),
-            objectListReducer: Immutable.Map({ Oportunidades: { elements: [] },  Debilidades: { elements: [] } }),
+            objectListReducer: Immutable.Map({ Oportunidades: { elements: [], linked: [] },  Debilidades: { elements: [], linked: [] } }),
             dispatchShowLoading,
             dispatchGetMasterDataFields,
             dispatchSetConfidential,
@@ -116,7 +117,8 @@ describe('Test previsitPage', () => {
             dispatchDisabledBlockedReport,
             participants: Immutable.List(),
             fromModal: false,
-            closeModal
+            closeModal,
+            dispatchAddInitialLinkedElements
         };      
     });
 
@@ -485,12 +487,26 @@ describe('Test previsitPage', () => {
             defaultProps.dispatchValidateDatePrevisit = dispatchValidateDatePrevisit;
             defaultProps.objectListReducer = {
                 Oportunidades: {
+                    linked: [{checked: true}],
                     elements: []
                 },
                 Debilidades: {
+                    linked: [{checked: true}],
                     elements: []
                 }
             }
+            defaultProps.participants = Immutable.List([
+                {
+                    id: 1,
+                    nombreParticipante: 'Daniel',
+                    tipoParticipante: KEY_PARTICIPANT_CLIENT,
+                    interlocutorObjs: [{
+                        id: 1,
+                        text: 'Objetivo 1'
+                    }],
+                    socialStyleId: 1
+                }
+            ])
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.instance().getPrevisitParticipants = () =>{
                 return {
@@ -556,11 +572,13 @@ describe('Test previsitPage', () => {
             defaultProps.fromModal = true;
             defaultProps.objectListReducer = {
                 Oportunidades: {
+                    linked: [{checked: true}],
                     elements: []
-                },
-                Debilidades: {
-                    elements: []
-                }
+                 },
+                 Debilidades: {
+                       linked: [{checked: true}],
+                       elements: []
+                 }
             }
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.instance().getPrevisitParticipants = () =>{
@@ -598,11 +616,13 @@ describe('Test previsitPage', () => {
             defaultProps.fromModal = false;
             defaultProps.objectListReducer = {
                 Oportunidades: {
+                    linked: [{checked: true}],
                     elements: []
-                },
-                Debilidades: {
-                    elements: []
-                }
+                 },
+                 Debilidades: {
+                       linked: [{checked: true}],
+                       elements: []
+                 }
             }
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
             wrapper.instance().getPrevisitParticipants = () =>{
@@ -649,9 +669,11 @@ describe('Test previsitPage', () => {
             defaultProps.fromModal = true;
             defaultProps.objectListReducer = {
                 Oportunidades: {
+                    linked: [{checked: true}],
                     elements: []
                 },
                 Debilidades: {
+                    linked: [{checked: true}],
                     elements: []
                 }
             }
@@ -700,9 +722,11 @@ describe('Test previsitPage', () => {
             defaultProps.fromModal = false;
             defaultProps.objectListReducer = {
                 Oportunidades: {
+                    linked: [{checked: true}],
                     elements: []
                 },
                 Debilidades: {
+                    linked: [{checked: true}],
                     elements: []
                 }
             }
@@ -750,9 +774,11 @@ describe('Test previsitPage', () => {
             defaultProps.dispatchCreatePrevisit = dispatchCreatePrevisit;
             defaultProps.objectListReducer = {
                 Oportunidades: {
+                    linked: [{checked: true}],
                     elements: []
                 },
                 Debilidades: {
+                    linked: [{checked: true}],
                     elements: []
                 }
             }
@@ -799,9 +825,11 @@ describe('Test previsitPage', () => {
             defaultProps.dispatchCreatePrevisit = dispatchCreatePrevisit;
             defaultProps.objectListReducer = {
                 Oportunidades: {
+                    linked: [{checked: true}],
                     elements: []
                 },
                 Debilidades: {
+                    linked: [{checked: true}],
                     elements: []
                 }
             }
