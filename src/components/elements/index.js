@@ -34,7 +34,14 @@ export class ElementsComponent extends Component {
             "Confirmar", "Señor usuario, ¿está seguro que desea eliminar el " + singularTitle + "?", 
             { 
                 onConfirmCallback: () => { dispatchRemoveFromList({ name, data }); }, 
-                onCancelCallback: () => {}}
+                onCancelCallback: () => {}
+            },
+            {
+                "confirmButtonColor": '#DD6B55',
+                "confirmButtonText": 'Sí, estoy seguro!',
+                "cancelButtonText": "Cancelar",
+                "showCancelButton": true,
+            }
         );
     }
 
