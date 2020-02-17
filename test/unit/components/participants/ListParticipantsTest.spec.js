@@ -2,6 +2,7 @@ import React from 'react';
 import { ListParticipants } from '../../../../src/components/participants/ListParticipants';
 import { shallow } from 'enzyme';
 import CardComponent from '../../../../src/components/cards';
+import Immutable from 'immutable';
 
 let defaultProps;
 let dispatchDeleteParticipant;
@@ -14,15 +15,12 @@ describe('ListParticipants Test', () => {
             data: [{ cargo: 'any', empresa: 'any'}],
             type: '',
             dispatchDeleteParticipant,
-            disabled: false
+            disabled: false,
+            participants: Immutable.List([])
         }
     })
 
     it('Should render', () => {
-        itRenders(<ListParticipants {...defaultProps}/>)
-    })
-
-    it('When data is not empty', () => {
         itRenders(<ListParticipants {...defaultProps}/>)
     })
 

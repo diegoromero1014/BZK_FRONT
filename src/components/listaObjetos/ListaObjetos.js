@@ -648,8 +648,8 @@ export class ListaObjetos extends Component {
                 <SweetAlert
                   type="warning"
                   show={modalEliminar}
-                  title="Confirmar desasoción"
-                  text={` Señor usuario, ¿Esta segura que desea desasociar esta ${tituloCompleto}?`}
+                  title="Confirmar desasociación"
+                  text={` Señor usuario, ¿Esta seguro que desea desasociar esta ${(tituloCompleto === "Oportunidades (externas)") ? "Oportunidad (externa)" : "Debilidad (interna del cliente)"}?`}
                   confirmButtonColor="#DD6B55"
                   confirmButtonText="Sí, estoy seguro!"
                   cancelButtonText="Cancelar"
