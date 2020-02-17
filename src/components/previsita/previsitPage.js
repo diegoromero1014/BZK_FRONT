@@ -312,16 +312,31 @@ export class PrevisitPage extends Component {
 
    errorClientDetails = (previsit) => {
       const { objectListReducer } = this.props;
+
+      let errors = [];
+
       if (previsit.documentStatus == SAVE_PUBLISHED) {
          if (getLinkedClientDetails(objectListReducer.Oportunidades.linked).length === 0) {
-            return "Señor usuario, debe seleccionar al menos una oportunidad externa para guardar."
+            errors.push("Oportunidades");
          };
 
          if (getLinkedClientDetails(objectListReducer.Debilidades.linked).length === 0) {
-            return "Señor usuario, debe seleccionar al menos una debilidad para guardar."
+            errors.push("Debilidades");
          }
       }
-      return false;
+      return errors;
+   }
+
+   renderErrorMessage = (errors) => {
+      let errorMessage = "";
+      for (let index = 0; index < errors.length; index++) {
+         const error = errors[index];
+         errorMessage += error;
+         if (index < errors.length - 1) {
+            errorMessage += ', ';
+         }
+      }
+      return errorMessage;
    }
 
    submitForm = async (previsit) => {
@@ -335,10 +350,10 @@ export class PrevisitPage extends Component {
             return;
          }
 
-         const clientDetailsMessage = this.errorClientDetails(previsit);
+         const clientDetailsErrors = this.errorClientDetails(previsit);
 
-         if (clientDetailsMessage) {
-            dispatchSwtShowMessage("error", "Error", clientDetailsMessage);
+         if (clientDetailsErrors.length != 0) {
+            dispatchSwtShowMessage("error", "Error", "Señor usuario, para guardar una previsita como definitivo debe asociar información en las siguientes secciones: "+this.renderErrorMessage(clientDetailsErrors));
             return;
          }
 
