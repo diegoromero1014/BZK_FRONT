@@ -4,9 +4,9 @@ import thunk from "redux-thunk";
 import configureStore from "redux-mock-store";
 import { reducer as formReducer } from "redux-form";
 import {
-    BUSINESS_STATUS_NO_CONTACTADO, BUSINESS_STATUS_PERDIDO,
+    BUSINESS_STATUS_NO_CONTACTADO, BUSINESS_STATUS_PERDIDO, HELP_SVA,
     NUEVO_NEGOCIO,
-    OPORTUNITIES_MANAGEMENT,PRODUCT_FAMILY_LEASING
+    OPORTUNITIES_MANAGEMENT, PRODUCT_FAMILY_LEASING
 } from "../../../../../src/components/pipeline/constants";
 import Immutable from "immutable";
 import * as selectsComponent from "../../../../../src/components/selectsComponent/actions";
@@ -16,6 +16,7 @@ import TextareaComponent from '../../../../../src/ui/textarea/textareaComponent'
 import * as globalActions from '../../../../../src/components/globalComponents/actions';
 import * as actionsGlobal from "../../../../../src/actionsGlobal";
 import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
+import Tooltip from "../../../../../src/components/toolTip/toolTipComponent";
 
 const clientInfo = [{}, {}];
 const productFamily = [{}, {}];
@@ -225,6 +226,18 @@ describe('Pruebas unitarias editar pipeline', () =>{
       const svaField = wrapper.find(Input).find({ name: "sva" });
       svaField.simulate('focus', {value: 15555});
       expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
+    });
+
+    it('field SVA should have a Tooltip', () => {
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+        const svaFieldTooltip = wrapper.find(Tooltip).find({ text: HELP_SVA, rendertooltip: HELP_SVA });
+        const svaField = wrapper.find(Input).find({ name: "sva" });
+        expect(svaFieldTooltip).to.have.lengthOf(1);
+        expect(svaFieldTooltip).contains(svaField);
     });
 
     it('should render filed roe', ()=>{
