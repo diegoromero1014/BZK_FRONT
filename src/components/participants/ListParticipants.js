@@ -56,13 +56,13 @@ export class ListParticipants extends Component {
     handleOnClick = record => this.setState({ open: true, record });
 
     handleDelete = () => {
-        const { data, dispatchDeleteParticipant, type } = this.props;
+        const { participants, dispatchDeleteParticipant, type } = this.props;
         const { record } = this.state;
 
         if (type === KEY_PARTICIPANT_BANCO) {
-            dispatchDeleteParticipant(data.findIndex(item => item.idParticipante === record.idParticipante), KEY_PARTICIPANT_BANCO);
+            dispatchDeleteParticipant(participants.findIndex(item => item.idParticipante === record.idParticipante), KEY_PARTICIPANT_BANCO);
         } else if (type === KEY_PARTICIPANT_OTHER) {
-            dispatchDeleteParticipant(data.findIndex(item => item === record), KEY_PARTICIPANT_OTHER);
+            dispatchDeleteParticipant(participants.findIndex(item => item === record), KEY_PARTICIPANT_OTHER);
         }
         this.setState({ record: null });
     }
@@ -96,10 +96,14 @@ export class ListParticipants extends Component {
     }
 }
 
+const mapStateToProps = ({ participants }) => ({
+    participants
+});
+
 const mapDispatchToProps = dispatch => {
     return bindActionCreators({
         dispatchDeleteParticipant: deleteParticipant
     }, dispatch)
 };
 
-export default connect(null, mapDispatchToProps)(ListParticipants)
+export default connect(mapStateToProps, mapDispatchToProps)(ListParticipants)
