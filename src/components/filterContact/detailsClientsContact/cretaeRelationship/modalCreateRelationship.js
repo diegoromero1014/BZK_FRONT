@@ -435,7 +435,8 @@ export class ModalCreateRelationship extends Component {
                                             name={OBJECTIVES} 
                                             max={3} 
                                             title={'Objetivos del interlocutor'} 
-                                            isEditable={true} 
+                                            isEditable={true}
+                                            singularTitle={'objetivo del interlocutor'}
                                         />
                                     </Col>
                                 </Row>
