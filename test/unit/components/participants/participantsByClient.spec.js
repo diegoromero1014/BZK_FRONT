@@ -159,8 +159,7 @@ describe('Test participants/ParticipantsByClient', () => {
             wrapper.instance().handleSetInformation(id);
             expect(dispatchShowAlert.calledOnce).to.equal(true);
             expect(wrapper.state().open).to.equal(false);
-            expect(wrapper.state().selectedContact).to.equal('');       
-            expect(wrapper.state().selectedContactInformation.idParticipante).to.equal(id);     
+            expect(wrapper.state().selectedContact).to.equal(''); 
         });
 
         it('lengthParticipants should return participants filtered size 1', () => {

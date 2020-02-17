@@ -9,6 +9,7 @@ let setValues;
 let dispatchSetToShow;
 let handleSubmit;
 let resetForm;
+let dispatchSwtShowMessage;
 
 describe('ElementsComponent Test', () => {
 
@@ -20,6 +21,7 @@ describe('ElementsComponent Test', () => {
         handleSubmit = spy(sinon.fake());
         dispatchSetToShow = spy(sinon.fake());
         resetForm = spy(sinon.fake());
+        dispatchSwtShowMessage = sinon.fake();
 
         defaultProps = {
             dispatchCreateList,
@@ -34,7 +36,8 @@ describe('ElementsComponent Test', () => {
             dispatchSetToShow,
             resetForm,
             isEditable: true,
-            name: 'any'
+            name: 'any',
+            dispatchSwtShowMessage
         }
     });
 
@@ -46,6 +49,7 @@ describe('ElementsComponent Test', () => {
         const wrapper = shallow(<ElementsComponent {...defaultProps} />);
         const data = { id: 0, text: 'Any text' };
         wrapper.instance().handleOnDelete(data);
+        sinon.assert.calledOnce(dispatchSwtShowMessage);
     })
 
     it('When call handleOnEdit ', () => {

@@ -10,6 +10,7 @@ import ToolTip from '../toolTip/toolTipComponent';
 import '../../../styles/elements/main.scss';
 import { createList, addToList, removeFromList, setToShow } from './actions';
 import ItemList from './itemList';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 
 export class ElementsComponent extends Component {
@@ -27,8 +28,14 @@ export class ElementsComponent extends Component {
     }
 
     handleOnDelete = data => {
-        const { dispatchRemoveFromList, name } = this.props;
-        dispatchRemoveFromList({ name, data });
+        const { dispatchSwtShowMessage, dispatchRemoveFromList, name, singularTitle } = this.props;
+        dispatchSwtShowMessage(
+            'warning', 
+            "Confirmar", "Señor usuario, ¿está seguro que desea eliminar el " + singularTitle + "?", 
+            { 
+                onConfirmCallback: () => { dispatchRemoveFromList({ name, data }); }, 
+                onCancelCallback: () => {}}
+        );
     }
 
     handleOnEdit = data => {
@@ -156,7 +163,8 @@ const mapDispatchToProps = dispatch => {
         dispatchCreateList: createList,
         dispatchAddToList: addToList,
         dispatchRemoveFromList: removeFromList,
-        dispatchSetToShow: setToShow
+        dispatchSetToShow: setToShow,
+        dispatchSwtShowMessage: swtShowMessage
     }, dispatch)
 };
 
