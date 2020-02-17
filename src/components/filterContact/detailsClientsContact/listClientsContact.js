@@ -35,14 +35,14 @@ export class ListClientsContact extends Component {
     }
 
     openModalCreateRelationship = () => {
-        const { changeValueOpenModal } = this.props;
-        changeValueOpenModal(true, OPEN_CREATE_MODAL);
+        const { dispatchChangeValueOpenModal } = this.props;
+        dispatchChangeValueOpenModal(true, OPEN_CREATE_MODAL);
     }
 
     viewRelationshipClientContact = (entityClientContat) => {
-        const { changeValueOpenModal, setEditRelationship } = this.props;
-        changeValueOpenModal(true, OPEN_EDIT_MODAL);
-        setEditRelationship(entityClientContat);
+        const { dispatchChangeValueOpenModal, dispatchSetEditRelationship } = this.props;
+        dispatchChangeValueOpenModal(true, OPEN_EDIT_MODAL);
+        dispatchSetEditRelationship(entityClientContat);
     }
 
 
@@ -70,7 +70,7 @@ export class ListClientsContact extends Component {
     }
 
     selectCheckbox = (idClientContact) => {
-        const { setArrayDeleteClientContact } = this.props;
+        const { dispatchSetArrayDeleteClientContact } = this.props;
         var { listRelationshipClients } = this.state;
         const indexDelete = _.indexOf(listRelationshipClients, idClientContact);
         if (indexDelete < 0) {
@@ -78,32 +78,32 @@ export class ListClientsContact extends Component {
         } else {
             _.remove(listRelationshipClients, (val) => val === idClientContact)
         }
-        setArrayDeleteClientContact(listRelationshipClients);
+        dispatchSetArrayDeleteClientContact(listRelationshipClients);
         this.setState({
             listRelationshipClients
         });
     }
 
     closeDeleteRelationship = () => {
-        const { changeStateSaveData, getContactDetails, contactId } = this.props;
+        const { dispatchChangeStateSaveData, dispatchGetContactDetails, contactId } = this.props;
         this.setState({ successDeleteRelationship: false });
-        changeStateSaveData(true, MESSAGE_SAVE_DATA);
-        getContactDetails(contactId).then(() => {
-            changeStateSaveData(false, "");
+        dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
+        dispatchGetContactDetails(contactId).then(() => {
+            dispatchChangeStateSaveData(false, "");
         });
     }
 
     deleteRelastionship = async () => {
         this.setState({ showConfirmDelete: false });
 
-        const { contactDetail, deleteRelationshipServer, changeStateSaveData, getContactDetails, contactId } = this.props;
+        const { contactDetail, dispatchDeleteRelationshipServer, dispatchChangeStateSaveData, dispatchGetContactDetails, contactId } = this.props;
 
-        changeStateSaveData(true, MESSAGE_SAVE_DATA);
-        const response = await deleteRelationshipServer(contactDetail.get('listDeleteClientContact'));
-        changeStateSaveData(false, "");
+        dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
+        const response = await dispatchDeleteRelationshipServer(contactDetail.get('listDeleteClientContact'));
+        dispatchChangeStateSaveData(false, "");
         
         if (_.get(response, 'payload.status') === 200) {
-            getContactDetails(contactId);
+            dispatchGetContactDetails(contactId);
             this.setState({ successDeleteRelationship: true, listRelationshipClients: [] });
         }
     }
@@ -119,22 +119,22 @@ export class ListClientsContact extends Component {
     }
 
     closeModal = (type) => {
-        const { changeValueOpenModal, modifyClientRelationship } = this.props;
-        modifyClientRelationship([]);
-        changeValueOpenModal(false, type);
+        const { dispatchChangeValueOpenModal, dispatchModifyClientRelationship } = this.props;
+        dispatchModifyClientRelationship([]);
+        dispatchChangeValueOpenModal(false, type);
     }
 
     selectedAllItems = () => {
-        const { contactDetail, setArrayDeleteClientContact } = this.props;
+        const { contactDetail, dispatchSetArrayDeleteClientContact } = this.props;
         const { listRelationshipClients } = this.state;
         if (listRelationshipClients.length !== contactDetail.get('listClientcontacts').length) {
             const valuesRelationship = _.map(contactDetail.get('listClientcontacts'), 'idClientContact', []);
-            setArrayDeleteClientContact(valuesRelationship);
+            dispatchSetArrayDeleteClientContact(valuesRelationship);
             this.setState({
                 listRelationshipClients: valuesRelationship
             });
         } else {
-            setArrayDeleteClientContact([]);
+            dispatchSetArrayDeleteClientContact([]);
             this.setState({ listRelationshipClients: [] });
         }
     }
@@ -237,13 +237,13 @@ export class ListClientsContact extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        setArrayDeleteClientContact,
-        deleteRelationshipServer,
-        changeStateSaveData,
-        getContactDetails,
-        changeValueOpenModal,
-        setEditRelationship,
-        modifyClientRelationship
+        dispatchSetArrayDeleteClientContact: setArrayDeleteClientContact,
+        dispatchDeleteRelationshipServer: deleteRelationshipServer,
+        dispatchChangeStateSaveData: changeStateSaveData,
+        dispatchGetContactDetails: getContactDetails,
+        dispatchChangeValueOpenModal: changeValueOpenModal,
+        dispatchSetEditRelationship: setEditRelationship,
+        dispatchModifyClientRelationship: modifyClientRelationship
     }, dispatch);
 }
 
