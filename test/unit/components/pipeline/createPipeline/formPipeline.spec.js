@@ -17,6 +17,7 @@ import * as actionsGlobal from "../../../../../src/actionsGlobal";
 import * as pipelineActions from '../../../../../src/components/pipeline/actions';
 import * as globalActions from '../../../../../src/components/globalComponents/actions';
 import Input from "../../../../../src/ui/input/inputComponent";
+import TextareaComponent from '../../../../../src/ui/textarea/textareaComponent';
 import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
 import SweetAlert from "../../../../../src/components/sweetalertFocus";
 import * as selectsComponent from "../../../../../src/components/selectsComponent/actions";
@@ -531,7 +532,7 @@ describe("Test CreatePipeline", () => {
     wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_NO_CONTACTADO);
     setTimeout(()=>{
       expect(wrapper.state().showJustificationField).to.equal(true);
-      expect(wrapper.find(Input).find({name:'txtJustificationDetail'}));
+      expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));
     }, 1);
 
   });
@@ -547,7 +548,7 @@ describe("Test CreatePipeline", () => {
         wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_PERDIDO);
         setTimeout(()=>{
             expect(wrapper.state().showJustificationField).to.equal(true);
-            expect(wrapper.find(Input).find({name:'txtJustificationDetail'}));
+            expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));
         }, 1);
 
     });
