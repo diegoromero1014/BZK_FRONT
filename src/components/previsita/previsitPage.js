@@ -317,11 +317,11 @@ export class PrevisitPage extends Component {
 
       if (previsit.documentStatus == SAVE_PUBLISHED) {
          if (getLinkedClientDetails(objectListReducer.Oportunidades.linked).length === 0) {
-            errors.push("Oportunidades");
+            errors.push("Oportunidades (externas)");
          };
 
          if (getLinkedClientDetails(objectListReducer.Debilidades.linked).length === 0) {
-            errors.push("Debilidades");
+            errors.push("Debilidades (internas del cliente)");
          }
       }
       return errors;
