@@ -272,46 +272,4 @@ describe("Unit tests of the listaObjetos.js component", () => {
       "texto que describe el objeto"
     );
   });
-
-  it("test if where the component title is Oportunidades", () => {
-    defaultProps.titulo = "Oportunidades";
-
-    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-    expect(wrapper.find(".title-component").text()).to.equal(
-      "Oportunidades externas"
-    );
-  });
-
-  it("test if where the component title is Debilidades", () => {
-    defaultProps.titulo = "Debilidades";
-
-    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-    expect(wrapper.find(".title-component").text()).to.equal(
-      "Debilidades internas del cliente"
-    );
-  });
-
-  it('when visual is false, the "mas" button is not displayed', () => {
-    defaultProps.visual = false;
-    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-    expect(wrapper.find("button[name='btn-agregar']")).to.have.length(0);
-  });
-
-  it('when visual is false, the "mas" button is displayed', () => {
-    defaultProps.visual = true;
-    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-    expect(wrapper.find("button[name='btn-agregar']")).to.have.length(1);
-  });
-
-  it('when visual is false, the "mas" td is not displayed', () => {
-    defaultProps.visual = false;
-    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-    expect(wrapper.find("td[name='td-edit']")).to.have.length(0);
-  });
-
-  it('when visual is false, the "mas" td is displayed', () => {
-    defaultProps.visual = true;
-    const wrapper = shallow(<ListaObjetos {...defaultProps} />);
-    expect(wrapper.find("td[name='td-edit']")).to.have.length(1);
-  });
 });

@@ -10,6 +10,7 @@ import ToolTip from '../toolTip/toolTipComponent';
 import '../../../styles/elements/main.scss';
 import { createList, addToList, removeFromList, setToShow } from './actions';
 import ItemList from './itemList';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 
 export class ElementsComponent extends Component {
@@ -27,8 +28,14 @@ export class ElementsComponent extends Component {
     }
 
     handleOnDelete = data => {
-        const { dispatchRemoveFromList, name } = this.props;
-        dispatchRemoveFromList({ name, data });
+        const { dispatchSwtShowMessage, dispatchRemoveFromList, name, singularTitle } = this.props;
+        dispatchSwtShowMessage(
+            'warning', 
+            "Confirmar", "Señor usuario, ¿está seguro que desea eliminar el " + singularTitle + "?", 
+            { 
+                onConfirmCallback: () => { dispatchRemoveFromList({ name, data }); }, 
+                onCancelCallback: () => {}}
+        );
     }
 
     handleOnEdit = data => {
@@ -41,7 +48,7 @@ export class ElementsComponent extends Component {
     }
     
     render() {
-        const { placeholder, messageButton, handleSubmit, name, elementsReducer, max, resetForm, title, dispatchSetToShow, values: { objectEdited } } = this.props;
+        const { placeholder, messageButton, handleSubmit, name, elementsReducer, max, resetForm, title, dispatchSetToShow, values: { objectEdited }, isEditable } = this.props;
         const { show } = this.state;
 
         let data = elementsReducer[name];
@@ -64,12 +71,12 @@ export class ElementsComponent extends Component {
                                     name={'add square'}
                                     style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
                                     onClick={() => {
-                                        if(!((length || 0) === max)) {
+                                        if (isEditable && length < max) {
                                             this.setState({ show: true });
                                             dispatchSetToShow({ name, show: true });
                                         }
                                     }}
-                                    disabled={(length || 0) === max}
+                                    disabled={!isEditable || length >= max}
                                 />
                             </ToolTip>
                         </Col>
@@ -90,7 +97,7 @@ export class ElementsComponent extends Component {
                                                 onChange={onChange}
                                                 onBlur={onBlur}
                                                 placeholder={placeholder}
-                                                className={`field ${errors[name] ? 'error-field-element' : ''}`}
+                                                className={`field ${errors[name] ? 'error-field-element' : ''} textInterlocutorObjs`}
                                             />
                                             <br></br>
 
@@ -139,7 +146,7 @@ export class ElementsComponent extends Component {
                     }
 
                     <Row style={{ padding: "10px 10px 20px 30px", marginBottom: 70, width: '99%' }} end="xs">
-                        <ItemList data={data || []} handleDelete={this.handleOnDelete} handleEdit={this.handleOnEdit} title={title} show={show} />
+                        <ItemList data={data || []} handleDelete={this.handleOnDelete} handleEdit={this.handleOnEdit} title={title} show={show} isEditable={isEditable} />
                     </Row>
                 </div>
             </form>
@@ -156,7 +163,8 @@ const mapDispatchToProps = dispatch => {
         dispatchCreateList: createList,
         dispatchAddToList: addToList,
         dispatchRemoveFromList: removeFromList,
-        dispatchSetToShow: setToShow
+        dispatchSetToShow: setToShow,
+        dispatchSwtShowMessage: swtShowMessage
     }, dispatch)
 };
 

@@ -4,16 +4,20 @@ import Modal from 'react-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
+
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import { findContactsByClient } from '../contact/actions';
-import { addParticipant, clearParticipants, deleteParticipant } from './actions';
-import { validatePermissionsByModule } from '../../actionsGlobal';
-import { NUMBER_CONTACTS, KEY_PARTICIPANT_CLIENT } from './constants';
-import { CREAR, MODULE_CONTACTS } from '../../constantsGlobal';
-import { swtShowMessage } from '../sweetAlertMessages/actions';
 import BotonCreateContactComponent from '../contact/createContact/botonCreateContactComponent';
 import ListParticipantsByClient from './ListParticipantsByClient';
 import ParticipantInformation from './ParticipantInformation';
+import { renderLabel } from '../../functions';
+
+import { findContactsByClient } from '../contact/actions';
+import { addParticipant, clearParticipants, deleteParticipant } from './actions';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
+import { validatePermissionsByModule } from '../../actionsGlobal';
+
+import { NUMBER_CONTACTS, KEY_PARTICIPANT_CLIENT } from './constants';
+import { CREAR, MODULE_CONTACTS } from '../../constantsGlobal';
 
 import '../../../styles/participants/participantsByClient.scss';
 
@@ -43,6 +47,7 @@ export class ParticipantsByClient extends Component {
 
         if (!isNaN(selectedContact)) {
             existingContact = contacts.find(element => element.id === Number(selectedContact));            
+            
             existingContact = {
                 tipoParticipante: KEY_PARTICIPANT_CLIENT,
                 idParticipante: existingContact.id,
@@ -57,7 +62,8 @@ export class ParticipantsByClient extends Component {
                 nameComplet: existingContact.nameComplet,
                 contactPosition: existingContact.contactPosition,
                 contactSocialStyle: existingContact.contactSocialStyle,
-                contactActitudeCompany: existingContact.contactActitudeCompany
+                contactActitudeCompany: existingContact.contactActitudeCompany,
+                interlocutorObjs: existingContact.interlocutorObjs
             }
         } else {
             existingContact = selectedContact;
@@ -65,10 +71,12 @@ export class ParticipantsByClient extends Component {
         
         if(participants.find(element => element.idParticipante === Number(existingContact.idParticipante)) && !this.editing) {                        
             dispatchShowAlert('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
-            this.setState({open: false, selectedContact: '' });
+            this.setState({open: false, selectedContact: '', selectedContactInformation: '' });
+        } else {
+            this.setState({ selectedContactInformation: existingContact });        
         }
 
-        this.setState({ selectedContactInformation: existingContact });        
+        
     }
 
     lengthParticipants = () => {
@@ -133,11 +141,14 @@ export class ParticipantsByClient extends Component {
 
         return (
             <div className='participants-client'>
-                <Row style={{ marginTop: 20, marginLeft: 7 }}>
+                <Row style={{ marginTop: 20, marginLeft: 15}}>
+                    {renderLabel({ name: 'Buscar participante', nullable: true, message: null})}
+                </Row>
+                <Row style={{ marginLeft: 7 }}>
                     <Col xs={11} md={11} lg={11} style={{ maxWidth: '96%', flexBasis: '96.7%' }}>
                         <ComboBox
                             name="txtContactoCliente"
-                            labelInput="Seleccione..."
+                            labelInput="Seleccionar contacto..."
                             onChange={this.handleOnChange}
                             value={selectedContact}
                             valueProp={'id'}
