@@ -79,7 +79,8 @@ export class ListaObjetos extends Component {
 
     modalPrevisit: false,
     objetosAsociados: [],
-    alertAsociar: false
+    alertAsociar: false,
+    alertMaxAsociados: false
   };
 
   componentDidMount() {
@@ -284,15 +285,22 @@ export class ListaObjetos extends Component {
   saveObjetosAsociados = () => {
     const { dispatchSaveTemporalChanges, titulo } = this.props; 
     let [objetosAsociados] = this.getObjectsFromReducer();
-    if ( this.filterObjectsByCheckedValue("temporalChecked", objetosAsociados, true).length === 0) {
+
+    if ( this.filterObjectsByCheckedValue("temporalChecked", objetosAsociados, true).length > 5 ) {
       this.setState({
-        alertAsociar: true
+        alertMaxAsociados : true
       })
-    } else {
-      dispatchSaveTemporalChanges(titulo);
-      this.setState({
-        modalPrevisit: false
-      })
+    }else{
+      if ( this.filterObjectsByCheckedValue("temporalChecked", objetosAsociados, true).length === 0) {
+        this.setState({
+          alertAsociar: true
+        })
+      } else {
+        dispatchSaveTemporalChanges(titulo);
+        this.setState({
+          modalPrevisit: false
+        })
+      }
     }
   }
 
@@ -357,7 +365,8 @@ export class ListaObjetos extends Component {
       maxObjects,
       error,
       modalPrevisit,
-      alertAsociar
+      alertAsociar,
+      alertMaxAsociados
     } = this.state;
 
 
@@ -374,7 +383,7 @@ export class ListaObjetos extends Component {
     let [objetosAsociados, tituloCompleto] = this.getObjectsFromReducer();
 
     return (
-      <div className="container-listaObjetos">
+      <div className="container-listaObjetos" id={titulo}>
         {previsit &&
           (<Modal isOpen={modalPrevisit} className="modalBt3-fade modal fade contact-detail-modal in">
             <div className="modalBt4-dialog modalBt4-lg">
@@ -434,6 +443,14 @@ export class ListaObjetos extends Component {
                     text={`Señor usuario, debe seleccionar al menos una ${(tituloCompleto === "Oportunidades (externas)") ? "Oportunidad (externa)" : "Debilidad (interna del cliente)" } para guardar.`}
                     confirmButtonText="OK"
                     onConfirm={() => this.setState({ alertAsociar: false })}
+                  />
+                  <SweetAlert
+                    type="warning"
+                    show={alertMaxAsociados}
+                    title="Atención"
+                    text={`Señor usuario, el maximo de ${titulo} que puede asociar son 5`}
+                    confirmButtonText="OK"
+                    onConfirm={() => this.setState({ alertMaxAsociados: false })}
                   />
                 </div>
               </div>
