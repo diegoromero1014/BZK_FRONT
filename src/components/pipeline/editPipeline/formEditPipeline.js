@@ -677,7 +677,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
                             "need": need.value,
                             "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.00'),
-                            "sva": sva.value === undefined || sva.value === null || sva.value === '' ? '' : numeral(sva.value).format('0'),
+                            "sva": sva.value === undefined || sva.value === null || sva.value === '' ? '' : numeral(sva.value).format('0.00'),
                             "moneyDistribitionMarket": moneyDistribitionMarket.value,
                             "observations": observations.value,
                             "termInMonths": termInMonths.value,
