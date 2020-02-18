@@ -7,8 +7,10 @@ function getStrategiesFromObjective(objective, clientId) {
     }
 
     let strategies = objective.strategies.map((strategy) => {
+        let strategyRequest = getRequestFromElement(strategy, clientId);
+        delete strategyRequest.id;
         let clientDetailRelation = {
-            "clientDetailRelation": getRequestFromElement(strategy, clientId)
+            "clientDetailRelation": strategyRequest
         }
         return clientDetailRelation;
     });
@@ -18,16 +20,20 @@ function getStrategiesFromObjective(objective, clientId) {
 
 function getRequestFromElement(element, clientId) {
     return {
+        id: element.id,
         client: clientId,
-        text: element.value
+        text: element.value,
+        didChange: element.didChange
     }
 }
 
-function getObjectListRequestFromReducer(opportunities, clientId) {
+export function getObjectListRequestFromReducer(opportunities, clientId) {
     let opportunitiesRequest = opportunities.map((opportunity) => {
         return {
             client: clientId,
-            text: opportunity.text
+            id: opportunity.id,
+            text: opportunity.text,
+            didChange: opportunity.didChange
         }
     })
     return opportunitiesRequest;
@@ -36,6 +42,7 @@ function getObjectListRequestFromReducer(opportunities, clientId) {
 function getObjectivesRequestFromReducer(objectives, clientId) {
     let objectivesRequest = objectives.map((objective) => {
         let objectiveRequest = getRequestFromElement(objective, clientId);
+        delete objectiveRequest.id
         objectiveRequest.relations = getStrategiesFromObjective(objective, clientId);
         return objectiveRequest;
     })

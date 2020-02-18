@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Tooltip from "../toolTip/toolTipComponent";
 import { TITLE_BANC_PARTICIPANTS, TITLE_CLIENT_PARTICIPANTS, TITLE_OTHERS_PARTICIPANTS } from "../../constantsGlobal";
-import ParticipantesBancolombia from "../participantsVisitPre/participantesBancolombia";
-import ParticipantesOtros from "../participantsVisitPre/participantesOtros";
 import ParticipantsByClient from '../participants/ParticipantsByClient';
+import BankParticipants from '../participants/BankParticipants';
+import OtherParticipants from '../participants/otherParticipants';
 
 class Participants extends Component {
 
@@ -69,11 +69,11 @@ class Participants extends Component {
                 </div>
 
                 <div className={`ui bottom attached tab segment segment-item`} data-tab="second">
-                    <ParticipantesBancolombia disabled={disabled ? 'disabled' : ''}/>
+                    <BankParticipants disabled={disabled} limit={10} />
                 </div>
 
                 <div className={`ui bottom attached tab segment segment-item`} data-tab="third">
-                    <ParticipantesOtros disabled={disabled ? 'disabled' : ''}/>
+                    <OtherParticipants disabled={disabled} limit={10} />
                 </div>
             </div>
         )
