@@ -2,10 +2,10 @@ import _ from "lodash";
 
 import {
     checkRequired, processRules, checkRequiredWithGlobalCondition,
-    checkOnlyAlphabetical, checkPipeLineOpportunityName, 
-    checkFirstCharacter, checkNumberLength,checkRequiredPipelineJustification,
+    checkOnlyAlphabetical, checkPipeLineOpportunityName,
+    checkFirstCharacter, checkNumberLength, checkRequiredPipelineJustification,
     checkRequiredComercialOportunity, checkRequiredPivotNit, checkRequiredTermInMonths,
-    checkRequiredTermInMonthsValue
+    checkRequiredTermInMonthsValue, validateDecimal, checkJustificationDetails, checkRegexHtmlInjection
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -21,8 +21,9 @@ export const fieldsWithRules = {
     nameUsuario: { rules: [checkRequired, checkOnlyAlphabetical] }, 
     idUsuario: { rules: [checkRequired] }, 
     value: { rules: [checkRequired, checkNumberLength(15)] }, 
-    commission: { rules: [checkNumberLength(10)] }, 
-    roe: { rules: [checkNumberLength(10)] }, 
+    commission: { rules: [checkNumberLength(10)] },
+    sva: { rules: [checkNumberLength(15)] },
+    roe: { rules: [validateDecimal] },
     termInMonths: { rules: [checkRequiredTermInMonths, checkNumberLength(4)] },
     businessStatus: { rules: [] }, 
     businessCategory: { rules: [checkRequiredWithGlobalCondition] }, 
@@ -37,7 +38,8 @@ export const fieldsWithRules = {
     probability: { rules: [] }, 
     amountDisbursed: { rules: [] }, 
     estimatedDisburDate: { rules: [] }, 
-    opportunityName: { rules: [checkPipeLineOpportunityName, checkFirstCharacter] }, 
+    opportunityName: { rules: [checkPipeLineOpportunityName, checkFirstCharacter] },
+    justificationDetail: { rules: [checkJustificationDetails, checkFirstCharacter, checkRegexHtmlInjection, checkNumberLength(500)] },
     productFamily: { rules: [checkRequired] }, 
     mellowingPeriod: { rules: [] }, 
     moneyDistribitionMarket: { rules: [] }, 
@@ -48,7 +50,9 @@ export const fieldsWithRules = {
     pipelineType: { rules: [checkRequired] },
     commercialOportunity: { rules: [checkRequiredComercialOportunity] },
     justification : {rules: [checkRequiredPipelineJustification] },
-    pivotNit: {rules: [checkRequiredPivotNit]}
+    pivotNit: {rules: [checkRequiredPivotNit]},
+    margen: {rules:[validateDecimal]},
+    typePolicy: { rules: [] }
 }
 
 export const fields = _.keys(fieldsWithRules);

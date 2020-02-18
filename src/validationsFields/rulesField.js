@@ -13,16 +13,47 @@ import {
     CLIENT_ORIGIN_GOODS
 } from './../constantsGlobal';
 import {
-    patternOfOnlyAlphabetical, patternOfNumberDocument, patternOfObservation, patternOfAddress, patternOfNeighborhood,
-    patternOfPostalCode, patternOfPhone, patternOfOnlyNumbers, patternOfContactRelevantFeatures,
-    patternOfStructureEmail, patternOfHistory, patternOfClientName, patternOfDescription, patternOfEmail,
-    patternOfClientAddress, patternOfClientNeighborhood, patternOfObservationLinkClient, regexNumbers,
-    patternOfForbiddenCharacter, patternOfOpportunityName, patternOfNameOtherParticipant, patternOfPositionOtherParticipant,
-    patternOfCompanyOtherParticipant, patternDecimalNumbers, patternOfPlaceOfPrevisit, patternOtherReason, patternOfContextClient,
-    patternOfInventoryPolice, patternOfControlLinkedPayments, patternOfNameEntity, patternOfNoOperatingInCome,
-    patternOfOnlyAlphabeticalAndSlash, patternOfRiskGroupName, patternOfObservationRiskGroup, patternOfJustificationsRiskGroup,
-    patternOfExternalClientNumberDocument, patternOfTaskObservation, patternOfOriginCityResources, regexHtmlInjection,
-    patternClientObjective
+    patternOfOnlyAlphabetical,
+    patternOfNumberDocument,
+    patternOfObservation,
+    patternOfAddress,
+    patternOfNeighborhood,
+    patternOfPostalCode,
+    patternOfPhone,
+    patternOfOnlyNumbers,
+    patternOfContactRelevantFeatures,
+    patternOfStructureEmail,
+    patternOfHistory,
+    patternOfClientName,
+    patternOfDescription,
+    patternOfEmail,
+    patternOfClientAddress,
+    patternOfClientNeighborhood,
+    patternOfObservationLinkClient,
+    regexNumbers,
+    patternOfForbiddenCharacter,
+    patternOfOpportunityName,
+    patternOfNameOtherParticipant,
+    patternOfPositionOtherParticipant,
+    patternOfCompanyOtherParticipant,
+    patternDecimalNumbers,
+    patternOfPlaceOfPrevisit,
+    patternOtherReason,
+    patternOfContextClient,
+    patternOfInventoryPolice,
+    patternOfControlLinkedPayments,
+    patternOfNameEntity,
+    patternOfNoOperatingInCome,
+    patternOfOnlyAlphabeticalAndSlash,
+    patternOfRiskGroupName,
+    patternOfObservationRiskGroup,
+    patternOfJustificationsRiskGroup,
+    patternOfExternalClientNumberDocument,
+    patternOfTaskObservation,
+    patternOfOriginCityResources,
+    regexHtmlInjection,
+    patternClientObjective,
+    patternValidateDecimals
 } from './patternsToValidateField';
 
 import {
@@ -62,7 +93,7 @@ import {
     MESSAGE_WARNING_TASK_OBSERVATIONS,
     MESSAGE_WARNING_ORIGIN_CITY_RESOURCES,
     MESSAGE_ERROR_INJECTION_HTML,
-    MESSAGE_ERROR_PATTERN_CLIENT_OBJECTIVE
+    MESSAGE_ERROR_PATTERN_CLIENT_OBJECTIVE, MESSAGE_ERROR_PERCENTAGE
 } from './validationsMessages';
 
 import {
@@ -440,6 +471,14 @@ export const checkRegexHtmlInjection = value => {
 export const checkPipeLineOpportunityName = value => {        
     const required = checkRequired(value);
     return required ? required : (!patternOfOpportunityName.test(value) ? MESSAGE_WARNING_OPPORTUNITY_NAME : null);
+}
+
+export const checkJustificationDetails = value =>{
+    let message = null;
+    if(!_.isUndefined(value) && !_.isNull(value) && !_.isEmpty(value) && !patternOfOpportunityName.test(value)){
+     message = MESSAGE_WARNING_OPPORTUNITY_NAME;
+    }
+    return message;
 }
 
 /**
@@ -877,3 +916,11 @@ export const checkPatternClientObjective = value => {
 export const validateHtmlInjection = value => {
     return !regexHtmlInjection.test(value);
 }
+
+export const validateDecimal = (valor) => {
+    let message = null;
+    if (!_.isUndefined(valor) && !_.isNull(valor) &&  valor !=="" && !patternValidateDecimals.test(valor)) {
+         message = MESSAGE_ERROR_PERCENTAGE;
+    }
+    return message;
+};

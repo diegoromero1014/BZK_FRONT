@@ -20,7 +20,7 @@ import Tooltip from '../../toolTip/toolTipComponent';
 import SecurityMessageComponent from '../../globalComponents/securityMessageComponent';
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 import { patternOfNumberDocument, patternOfForbiddenCharacter } from '../../../validationsFields/patternsToValidateField';
-
+import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { toggleModalContact, createContactNew, searchContact, clearSearchContact } from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate, downloadFilePDF } from '../actions'
 import { changeStateSaveData } from '../../dashboard/actions';
@@ -61,6 +61,10 @@ import {
     FILTER_SOCIAL_STYLE,
     FILTER_ATTITUDE_OVER_GROUP
 } from '../../selectsComponent/constants';
+import { schema } from '../../participants/schema';
+import ElementsComponent from '../../elements/';
+import { cleanList, addToList, createList } from '../../elements/actions';
+import { MANDATORY_OBJECTIVES_MSG, OBJECTIVES_OPEN_ERROR_MSG, OBJECTIVES, OBJECTIVES_PLACEHOLDER } from '../../participants/constants';
 
 var thisForm;
 
@@ -98,7 +102,7 @@ class ModalComponentContact extends Component {
     componentWillMount() {
         const {
             fields: { tipoDocumento }, getMasterDataFields, clearSearchContact,
-            nonValidateEnter, getListContactGroupById
+            nonValidateEnter, getListContactGroupById, dispatchCleanList, dispatchCreateList
         } = this.props;
         nonValidateEnter(true);
         getListContactGroupById();
@@ -106,6 +110,9 @@ class ModalComponentContact extends Component {
         this.props.resetForm();
         tipoDocumento.onChange('');
         getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
+        dispatchCleanList(OBJECTIVES);
+        dispatchCreateList(OBJECTIVES);
+
     }
 
     _downloadFileSocialStyle() {
@@ -212,8 +219,15 @@ class ModalComponentContact extends Component {
             tipoActitud, tipoContacto, numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido,
             fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo, tipoEntidad,
             tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures, listaFavoritos
-            },
+            }, elementsReducer, dispatchSwtShowMessage
         } = this.props;
+
+        let interlocutor = elementsReducer[OBJECTIVES];
+
+        if (interlocutor && interlocutor.open) {
+            dispatchSwtShowMessage('error', 'Error', OBJECTIVES_OPEN_ERROR_MSG);
+            return;
+        }
 
         var messageBody = {
             "id": id.value,
@@ -250,7 +264,8 @@ class ModalComponentContact extends Component {
             "callFromModuleContact": false,
             "favoritesGroups": JSON.parse('[' + ((_.isNull(listaFavoritos) || _.isUndefined(listaFavoritos)) ? "" : listaFavoritos.value) + ']'),
             "updatedInfo" : true,
-            "callFromCommercial": true
+            "callFromCommercial": true, 
+            "interlocutorObjsDTO": interlocutor.elements
         };
 
         changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -611,6 +626,36 @@ class ModalComponentContact extends Component {
                                 </dl>
                             </Col>
                         </Row>
+
+                        <Row style={{ padding: "10px 0px 20px 0px", marginTop: 40 }}>
+                            <Col xs={12} md={12} lg={12}>
+                                <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                                    <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                                    <i className="browser icon" style={{ fontSize: "20px" }} />
+                                    <span style={{ fontSize: "20px" }}>{`Objetivos del interlocutor`}</span>
+                                    
+                                    <Tooltip text={MANDATORY_OBJECTIVES_MSG}>
+                                        <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
+                                    </Tooltip>
+
+                                </div>
+                            </Col>
+                        </Row>
+
+                        <Row style={{ marginTop: '-65px' }}>
+                            <Col xs>
+                                <ElementsComponent
+                                    schema={schema}
+                                    placeholder={OBJECTIVES_PLACEHOLDER}
+                                    messageButton='Agregar'
+                                    name={OBJECTIVES}
+                                    max={3}
+                                    title={'Objetivos del interlocutor'}
+                                    isEditable={true}
+                                    singularTitle={'objetivo del interlocutor'}
+                                />
+                            </Col>
+                        </Row>
                     </div>
                     <dt style={{ visibility: this.state.noExiste }} className="col-md-12 business-title">
                         Hobbies y Deportes
@@ -736,7 +781,7 @@ class ModalComponentContact extends Component {
     }
 }
 
-function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal, groupsFavoriteContacts,clientInformacion }, { fields }) {
+function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal, groupsFavoriteContacts,clientInformacion, elementsReducer }, { fields }) {
     const contactDetail = !createContactReducer.get('isClientContact') ? createContactReducer.get('responseSearchContactData') : false;
     const clientInfo = Object.assign({}, clientInformacion.get('responseClientInfo'));
     
@@ -746,6 +791,7 @@ function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal, 
             selectsReducer,
             reducerGlobal,
             groupsFavoriteContacts,
+            elementsReducer,
             initialValues: {
                 id: contactDetail.id,
                 tipoDocumento: contactDetail.contactType,
@@ -787,6 +833,7 @@ function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal, 
             reducerGlobal,
             groupsFavoriteContacts,
             clientInfo,
+            elementsReducer,
             initialValues: {
                 tipoDocumento: '',
                 numeroDocumento: ''
@@ -811,7 +858,11 @@ function mapDispatchToProps(dispatch) {
         downloadFilePDF,
         changeStateSaveData,
         nonValidateEnter,
-        getListContactGroupById
+        getListContactGroupById,
+        dispatchCleanList: cleanList,
+        dispatchAddToList: addToList,
+        dispatchCreateList: createList,
+        dispatchSwtShowMessage: swtShowMessage
     }, dispatch);
 }
 
