@@ -30,7 +30,7 @@
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">${__P(SERVER,was-biztrackqa.apps.ambientesbc.com)}</stringProp>
+        <stringProp name="HTTPSampler.domain">${__P(SERVER,was-biztrackdev.apps.ambientesbc.com)}</stringProp>
         <stringProp name="HTTPSampler.port">443</stringProp>
         <stringProp name="HTTPSampler.protocol">https</stringProp>
         <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -76,9 +76,9 @@
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">${__P(LOGIN_HILOS, 1)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__P(SUBIDA, 1)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(SUBIDA, 10)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${__P(DURACION, 1)}</stringProp>
+        <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
@@ -24966,6 +24966,280 @@
             <stringProp name="HTTPSampler.connect_timeout"></stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
           </HTTPSamplerProxy>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Servicios Integrador" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(LOGIN_HILOS, 1)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(SUBIDA, 10)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="consultarInformacionGeneral" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;messageHeader&quot;: {&#xd;
+    &quot;usuarioConsume&quot;: &quot;DEFAULT&quot;,&#xd;
+    &quot;aplicacionConsume&quot;: &quot;AW0856&quot;,&#xd;
+    &quot;paisCliente&quot;: &quot;COL&quot;,&#xd;
+    &quot;systemId&quot;: &quot;AW0856&quot;,&#xd;
+    &quot;nombreEquipoConsumidor&quot;: &quot;Broker&quot;,&#xd;
+    &quot;ipConsumidor&quot;: &quot;0.0.0.0&quot;,&#xd;
+    &quot;messageId&quot;: &quot;DIGCHE&quot;,&#xd;
+    &quot;fechaEjecucion&quot;: 15251067,&#xd;
+    &quot;nombreServicio&quot;: &quot;consultarInformacionGeneral&quot;&#xd;
+  },&#xd;
+  &quot;messageBody&quot;: {&#xd;
+    &quot;identificacionCliente&quot;: &quot;${clientNumber}&quot;,&#xd;
+    &quot;tipoIdentificacionCliente&quot;: &quot;1&quot;&#xd;
+  }&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">Centricity/consultarInformacionGeneral</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">X-FORWARDED-FOR</stringProp>
+                <stringProp name="Header.value">${__P(SERVER_IP,10.8.87.145)}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="consultarRelacionGrupoEconomico" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;messageHeader&quot;: {&#xd;
+    &quot;usuarioConsume&quot;: &quot;DEFAULT&quot;,&#xd;
+    &quot;aplicacionConsume&quot;: &quot;AW0856&quot;,&#xd;
+    &quot;paisCliente&quot;: &quot;COL&quot;,&#xd;
+    &quot;systemId&quot;: &quot;AW0856&quot;,&#xd;
+    &quot;nombreEquipoConsumidor&quot;: &quot;Broker&quot;,&#xd;
+    &quot;ipConsumidor&quot;: &quot;0.0.0.0&quot;,&#xd;
+    &quot;messageId&quot;: &quot;DIGCHE&quot;,&#xd;
+    &quot;fechaEjecucion&quot;: 15251067,&#xd;
+    &quot;nombreServicio&quot;: &quot;consultarInformacionGeneral&quot;&#xd;
+  },&#xd;
+  &quot;messageBody&quot;: {&#xd;
+    &quot;identificacionCliente&quot;: &quot;${clientNumber}&quot;,&#xd;
+    &quot;tipoIdentificacionCliente&quot;: &quot;1&quot;&#xd;
+  }&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">Centricity/consultarRelacionGrupoEconomico</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">X-FORWARDED-FOR</stringProp>
+                <stringProp name="Header.value">${__P(SERVER_IP,10.8.87.145)}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="consultarInformacionFinanciera" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;messageHeader&quot;: {&#xd;
+    &quot;usuarioConsume&quot;: &quot;DEFAULT&quot;,&#xd;
+    &quot;aplicacionConsume&quot;: &quot;AW0856&quot;,&#xd;
+    &quot;paisCliente&quot;: &quot;COL&quot;,&#xd;
+    &quot;systemId&quot;: &quot;AW0856&quot;,&#xd;
+    &quot;nombreEquipoConsumidor&quot;: &quot;Broker&quot;,&#xd;
+    &quot;ipConsumidor&quot;: &quot;0.0.0.0&quot;,&#xd;
+    &quot;messageId&quot;: &quot;DIGCHE&quot;,&#xd;
+    &quot;fechaEjecucion&quot;: 15251067,&#xd;
+    &quot;nombreServicio&quot;: &quot;consultarInformacionGeneral&quot;&#xd;
+  },&#xd;
+  &quot;messageBody&quot;: {&#xd;
+    &quot;identificacionCliente&quot;: &quot;${clientNumber}&quot;,&#xd;
+    &quot;tipoIdentificacionCliente&quot;: &quot;1&quot;&#xd;
+  }&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">Centricity/consultarInformacionFinanciera</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">X-FORWARDED-FOR</stringProp>
+                <stringProp name="Header.value">${__P(SERVER_IP,10.8.87.145)}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="consultarInformacionMiembrosJunta" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;messageHeader&quot;: {&#xd;
+    &quot;usuarioConsume&quot;: &quot;DEFAULT&quot;,&#xd;
+    &quot;aplicacionConsume&quot;: &quot;AW0856&quot;,&#xd;
+    &quot;paisCliente&quot;: &quot;COL&quot;,&#xd;
+    &quot;systemId&quot;: &quot;AW0856&quot;,&#xd;
+    &quot;nombreEquipoConsumidor&quot;: &quot;Broker&quot;,&#xd;
+    &quot;ipConsumidor&quot;: &quot;0.0.0.0&quot;,&#xd;
+    &quot;messageId&quot;: &quot;DIGCHE&quot;,&#xd;
+    &quot;fechaEjecucion&quot;: 15251067,&#xd;
+    &quot;nombreServicio&quot;: &quot;consultarInformacionGeneral&quot;&#xd;
+  },&#xd;
+  &quot;messageBody&quot;: {&#xd;
+    &quot;identificacionCliente&quot;: &quot;${clientNumber}&quot;,&#xd;
+    &quot;tipoIdentificacionCliente&quot;: &quot;1&quot;&#xd;
+  }&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">Centricity/consultarInformacionMiembrosJunta</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">X-FORWARDED-FOR</stringProp>
+                <stringProp name="Header.value">${__P(SERVER_IP,10.8.87.145)}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="consultarInformacionContactos" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;messageHeader&quot;: {&#xd;
+    &quot;usuarioConsume&quot;: &quot;DEFAULT&quot;,&#xd;
+    &quot;aplicacionConsume&quot;: &quot;AW0856&quot;,&#xd;
+    &quot;paisCliente&quot;: &quot;COL&quot;,&#xd;
+    &quot;systemId&quot;: &quot;AW0856&quot;,&#xd;
+    &quot;nombreEquipoConsumidor&quot;: &quot;Broker&quot;,&#xd;
+    &quot;ipConsumidor&quot;: &quot;0.0.0.0&quot;,&#xd;
+    &quot;messageId&quot;: &quot;DIGCHE&quot;,&#xd;
+    &quot;fechaEjecucion&quot;: 15251067,&#xd;
+    &quot;nombreServicio&quot;: &quot;consultarInformacionGeneral&quot;&#xd;
+  },&#xd;
+  &quot;messageBody&quot;: {&#xd;
+    &quot;identificacionCliente&quot;: &quot;${clientNumber}&quot;,&#xd;
+    &quot;tipoIdentificacionCliente&quot;: &quot;1&quot;&#xd;
+  }&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">Centricity/consultarInformacionContactos</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">X-FORWARDED-FOR</stringProp>
+                <stringProp name="Header.value">${__P(SERVER_IP,10.8.87.145)}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
           <hashTree/>
         </hashTree>
       </hashTree>
