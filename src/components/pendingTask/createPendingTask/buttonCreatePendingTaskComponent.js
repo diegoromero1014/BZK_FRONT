@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import { Col } from 'react-flexbox-grid';
 import Modal from 'react-modal';
-import {Button, Icon} from 'semantic-ui-react';
 
 import ModalComponentPendingTask from './modalComponentPendingTask';
 import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
@@ -31,7 +28,7 @@ class ButtonCreatePendingTaskComponent extends Component {
     const { actionEdit } = this.props;
     return (
       <Col xs={2} sm={2} md={2} lg={2}>
-        <button className="btn btn-primary" type="button" title="Crear tarea" style={{ float: "right", marginTop: '21px' }} onClick={this.openModal}>
+        <button className="btn btn-primary" type="button" title="Crear tarea" style={{ float: "right", marginTop: '18px' }} onClick={this.openModal}>
           <i className="plus  icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i> Crear
         </button>
         <Modal

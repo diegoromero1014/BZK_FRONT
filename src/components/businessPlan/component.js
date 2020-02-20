@@ -13,8 +13,9 @@ import { updateTitleNavBar } from '../navBar/actions';
 import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
 import { NUMBER_RECORDS, FILTER_STATUS_BUSINESS_PLAN_ID } from './constants';
 import { MODULE_BUSSINESS_PLAN, CREAR, DESCARGAR } from '../../constantsGlobal';
+import _ from 'lodash';
 
-class BusinessPlanComponent extends Component {
+export class BusinessPlanComponent extends Component {
 
   constructor(props) {
     super(props);
@@ -77,7 +78,7 @@ class BusinessPlanComponent extends Component {
               </Col>
               <Col xs>
                 {_.get(reducerGlobal.get('permissionsBussinessPlan'), _.indexOf(reducerGlobal.get('permissionsBussinessPlan'), CREAR), false) &&
-                  <button className="btn btn-primary" onClick={this._createBusinessPlan} type="button" title="Crear plan de negocio" style={{ marginTop: '21px' }}>
+                  <button className="btn btn-primary" onClick={this._createBusinessPlan} type="button" title="Crear plan de negocio" style={{ marginTop: '18px' }}>
                     <i className="plus icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i> Crear
                   </button>
                 }

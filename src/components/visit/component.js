@@ -15,8 +15,9 @@ import { validatePermissionsByModule } from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import { clearIdPrevisit } from './actions';
 import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _VISIT } from '../../constantsAnalytics';
+import _ from 'lodash';
 
-class VisitComponent extends Component {
+export class VisitComponent extends Component {
 
   constructor(props) {
     super(props);
@@ -83,7 +84,7 @@ class VisitComponent extends Component {
               </Col>
               <Col xs>
                 {_.get(reducerGlobal.get('permissionsVisits'), _.indexOf(reducerGlobal.get('permissionsVisits'), CREAR), false) &&
-                  <button className="btn btn-primary" type="button" title="Crear reunión" style={{ marginTop: '21px' }} onClick={this._createVisit}>
+                  <button className="btn btn-primary" type="button" title="Crear reunión" style={{ marginTop: '18px' }} onClick={this._createVisit}>
                     <i className="plus icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i> Crear
                   </button>
                 }

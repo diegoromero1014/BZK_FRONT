@@ -18,8 +18,9 @@ import { updateTitleNavBar } from '../navBar/actions';
 import { NUMBER_RECORDS, FILTER_STATUS_PREVISIT_ID } from './constants';
 import { FILE_OPTION_PRE_VISIT_GUIDE, MODULE_PREVISITS, CREAR, DESCARGAR } from '../../constantsGlobal';
 import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _PREVISIT } from '../../constantsAnalytics';
+import _ from 'lodash';
 
-class PrevisitComponent extends Component {
+export class PrevisitComponent extends Component {
 
   constructor(props) {
     super(props);
@@ -90,7 +91,7 @@ class PrevisitComponent extends Component {
                 {
                   _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), CREAR), false) &&
                   <button className="btn btn-primary" type="button" title="Crear previsita"
-                    style={{ marginTop: "21px" }} onClick={this._createPrevisita}>
+                    style={{ marginTop: "18px" }} onClick={this._createPrevisita}>
                     <i className="plus icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i> Crear
                   </button>
                 }
