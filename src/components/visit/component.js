@@ -84,7 +84,7 @@ class VisitComponent extends Component {
               <Col xs>
                 {_.get(reducerGlobal.get('permissionsVisits'), _.indexOf(reducerGlobal.get('permissionsVisits'), CREAR), false) &&
                   <button className="btn btn-primary" type="button" title="Crear reunión" style={{ marginTop: '21px' }} onClick={this._createVisit}>
-                    <i className="file text outline icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                    <i className="plus icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i> Crear
                   </button>
                 }
               </Col>

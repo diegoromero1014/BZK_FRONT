@@ -91,7 +91,7 @@ class PrevisitComponent extends Component {
                   _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), CREAR), false) &&
                   <button className="btn btn-primary" type="button" title="Crear previsita"
                     style={{ marginTop: "21px" }} onClick={this._createPrevisita}>
-                    <i className="file text outline icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                    <i className="plus icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i> Crear
                   </button>
                 }
 

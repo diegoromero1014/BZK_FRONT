@@ -78,7 +78,7 @@ class BusinessPlanComponent extends Component {
               <Col xs>
                 {_.get(reducerGlobal.get('permissionsBussinessPlan'), _.indexOf(reducerGlobal.get('permissionsBussinessPlan'), CREAR), false) &&
                   <button className="btn btn-primary" onClick={this._createBusinessPlan} type="button" title="Crear plan de negocio" style={{ marginTop: '21px' }}>
-                    <i className="file text outline icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                    <i className="plus icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i> Crear
                   </button>
                 }
               </Col>
