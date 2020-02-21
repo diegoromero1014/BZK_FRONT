@@ -68,9 +68,6 @@ export default (state = initialState, action) => {
 
         case DELETE_BLOCKED_PREVISITA:
             return state.set('isBlocked', action.payload.data)
-
-        /* case IS_CONFIDENTIAL:
-            return state.set('confidential', action.payload); */
         default:
             return state;
     }

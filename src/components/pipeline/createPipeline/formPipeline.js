@@ -75,6 +75,7 @@ import { fields, fieldsWithRules, validations as validate } from './filesAndRule
 import PermissionUserReports from "../../commercialReport/permissionsUserReports";
 import { buildJsoncommercialReport } from "../../commercialReport/functionsGenerics";
 import { setConfidential } from "../../commercialReport/actions";
+import TextareaComponent from "../../../ui/textarea/textareaComponent";
 
 let thisForm;
 let typeMessage = "success";
@@ -693,7 +694,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "commission": commission.value === undefined || commission.value === null || commission.value === '' ? '' : numeral(commission.value).format('0.0000'),
               "need": need.value,
               "roe": roe.value === undefined || roe.value === null || roe.value === '' ? '' : numeral(roe.value).format('0.00'),
-              "sva": sva.value === undefined || sva.value === null || sva.value === '' ? '' : numeral(sva.value).format('0'),
+              "sva": sva.value === undefined || sva.value === null || sva.value === '' ? '' : numeral(sva.value).format('0.00'),
               "observations": observations.value,
               "termInMonths": termInMonths.value,
               "termInMonthsValues": termInMonthsValues.value ? termInMonthsValues.value : "",
@@ -1087,13 +1088,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                                 <dt>
                                     <span>Detalle justificación </span>
                                 </dt>
-                                <Input
-                                    name="txtJustificationDetail"
-                                    type="text"
-                                    {...justificationDetail}
-                                    max="500"
-                                    parentId="dashboardComponentScroll"
-                                />
+                              <TextareaComponent
+                                  name="txtJustificationDetail"
+                                  type="text"
+                                  {...justificationDetail}
+                                  parentId="dashboardComponentScroll"
+                                  rows={4}
+                                  style={{ width: '100%', height: '100%' }}
+                              />
                             </div>
                         </Col>
                         : null}
@@ -1227,20 +1229,20 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
                       <span>SVA</span>
-                      <ToolTip text={HELP_SVA}>
-                        <i className="help circle icon blue"
-                           style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
-                      </ToolTip>
                     </dt>
-                    <Input
-                      {...sva}
-                      name="sva"
-                      type="text"
-                      placeholder="Miles ' , ' y decimales ' . '"
-                      parentId="dashboardComponentScroll"
-                      onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, sva, val, true, 2)}
-                      onFocus={val => handleFocusValueNumber(sva, sva.value)}
-                    />
+                    <ToolTip text={HELP_SVA} rendertooltip={HELP_SVA}>
+                      <div>
+                        <Input
+                          {...sva}
+                          name="sva"
+                          type="text"
+                          placeholder="Miles ' , ' y decimales ' . '"
+                          parentId="dashboardComponentScroll"
+                          onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, sva, val, true, 2)}
+                          onFocus={val => handleFocusValueNumber(sva, sva.value)}
+                        />
+                      </div>
+                    </ToolTip>
                   </div>
                 </Col>
                 <Col xs={6} md={3} lg={3}>

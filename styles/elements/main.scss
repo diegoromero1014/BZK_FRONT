@@ -70,3 +70,17 @@ i.huge.add.square.icon-message-elements.icon {
     border-radius: 3px !important;
 }
 
+
+.field.textInterlocutorObjs::placeholder {
+    color: #b9b9b9 !important;
+    font-weight: lighter !important;
+    font-style: oblique !important;
+    font-size: 9.7pt !important;
+}
+
+.field.textInterlocutorObjs:-ms-input-placeholder {
+    color: #b9b9b9 !important;
+    font-weight: lighter !important;
+    font-style: oblique !important;
+    font-size: 9.7pt !important;
+}

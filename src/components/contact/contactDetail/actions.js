@@ -90,7 +90,8 @@ export function saveContact(contact) {
       "attitudeOverGroup": contact.attitudeOverGroup,
       "contactRelevantFeatures": contact.contactRelevantFeatures,
       "callFromModuleContact": contact.callFromModuleContact,
-      "callFromCommercial": true
+      "callFromCommercial": true,
+      "interlocutorObjsDTO": contact.interlocutorObjsDTO
     }
   }
 
