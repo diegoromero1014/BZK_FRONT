@@ -24,7 +24,6 @@ import $ from "jquery";
 import moment from "moment";
 
 var usersBanco = [];
-var idUsuario, nameUsuario;
 
 
 class ModalComponentPendingTask extends Component {
@@ -39,7 +38,8 @@ class ModalComponentPendingTask extends Component {
         this.state = {
             showEx: false,
             showEr: false,
-            tareaError: null
+            tareaError: null,
+            nameUsuario: ""
         }
     }
 
@@ -49,9 +49,15 @@ class ModalComponentPendingTask extends Component {
     }
 
     componentWillMount() {
-        const { getMasterDataFields } = this.props;
+        const { getMasterDataFields, filterUsersBanco } = this.props;
         this.props.resetForm();
         getMasterDataFields([TASK_STATUS]);
+        let userName = window.localStorage.getItem("userNameFront");
+        filterUsersBanco(userName).then((data)=>{
+            this.setState({
+                nameUsuario: _.get(data, 'payload.data.data[0].title')
+            });
+        });
     }
 
     _closeCreate() {
@@ -165,6 +171,11 @@ class ModalComponentPendingTask extends Component {
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <p style={{ paddingTop: "10px", marginBottom: "0px" }}>Los campos marcados con asterisco (<span
                             style={{ color: "red" }}>*</span>) son obligatorios.</p>
+                        <Row style={{ padding: "0px 10px 0px 0px" }}>
+                            <Col xs={12} md={6} lg={6}>
+                                <dt><span>Asignador: {this.state.nameUsuario}</span></dt>
+                            </Col>
+                        </Row>
                         <Row style={{ padding: "0px 10px 0px 0px" }}>
                             <Col xs={12} md={4} lg={4}>
                                 <dt><span>Fecha de cierre - DD/MM/YYYY (<span style={{ color: "red" }}>*</span>)</span>
