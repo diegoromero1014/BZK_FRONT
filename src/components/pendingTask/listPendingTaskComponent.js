@@ -6,6 +6,7 @@ import GridComponent from '../grid/component';
 import { NUMBER_RECORDS } from './constants';
 import moment from 'moment';
 import { shorterStringValue } from '../../actionsGlobal';
+import {MODULE_TASKS} from "../../constantsGlobal";
 
 let v1 = "";
 class ListPendingTaskComponent extends Component {
@@ -54,43 +55,17 @@ class ListPendingTaskComponent extends Component {
 
 
   _renderCellView(data) {
-    const mensaje = "Señor usuario ¿está seguro que desea eliminar la tarea ";
     return _.forOwn(data, function (value, key) {
-      var json1 = {
-        "messageHeader": {
-          "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-          "timestamp": new Date().getTime(),
-          "service": "",
-          "status": "0",
-          "language": "es",
-          "displayErrorMessage": "",
-          "technicalErrorMessage": "",
-          "applicationVersion": "",
-          "debug": true,
-          "isSuccessful": true
-        },
-        "messageBody": {
-          "clientId": window.sessionStorage.getItem('idClientSelected'),
-          "contactId": value.id,
-          "clientContactId": value.idClientContact
-        }
-      };
-      _.set(value, 'taskText', shorterStringValue(value.taskText, 50));
-      _.set(value, 'actions', {
+      _.set(value, 'actionsRedirect', {
         actionView: true,
-        id: value,
-        urlServer: "./component",
-        component: "VIEW_TASK_ADMIN"
+        id: value.id,
+        typeClickDetail: MODULE_TASKS,
+        urlRedirect: '/dashboard/task',
+        component: 'VIEW_TASK_ADMIN'
       });
       var dateTaskFormat = moment(value.finalDate).locale('es');
       _.set(value, 'dateTaskFormat', dateTaskFormat.format("DD") + " " + dateTaskFormat.format("MMM") + " " + dateTaskFormat.format("YYYY"));
-      _.set(value, 'delete', {
-        actionDelete: true,
-        urlServer: "/deleteContactForClient",
-        typeDelete: "",
-        mensaje: mensaje + value.task + "?",
-        json: json1
-      });
+
     });
   }
 
@@ -98,7 +73,7 @@ class ListPendingTaskComponent extends Component {
     return [
       {
         title: "",
-        key: "actions"
+        key: "actionsRedirect"
       },
       {
         title: "Responsable",

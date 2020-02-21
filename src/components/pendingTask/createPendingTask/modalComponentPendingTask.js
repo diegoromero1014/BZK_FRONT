@@ -24,7 +24,6 @@ import $ from "jquery";
 import moment from "moment";
 
 var usersBanco = [];
-var idUsuario, nameUsuario;
 
 
 class ModalComponentPendingTask extends Component {
@@ -47,7 +46,6 @@ class ModalComponentPendingTask extends Component {
         const { fields: { responsable } } = this.props;
         responsable.onChange(value);
     }
-
     componentWillMount() {
         const { getMasterDataFields } = this.props;
         this.props.resetForm();

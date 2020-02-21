@@ -484,6 +484,7 @@ export class PrevisitPage extends Component {
             commercialReportButtons={(setFieldValue) => (               
                <CommercialReportButtonsComponent
                   onClickSave={draft => setFieldValue('documentStatus', draft, true)}
+                  definitiveSaveTitle={'Guardar definitivo'}
                   onClickDownloadPDF={id ? this.onClickDownloadPDF : null}
                   cancel={this.onClickCancelCommercialReport}
                   fromModal={fromModal}

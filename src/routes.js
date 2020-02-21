@@ -87,6 +87,7 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     ADMINALERTCLIENTSPENDINGUPDATE,
     SHEDULER,
     DEFAULT} from "./constantsAnalytics";
+import TaskPage from "./components/pendingTask/taskPage";
 
 class App extends Component {
    
@@ -219,6 +220,9 @@ export default (
                     <Route path=":id" component={PrevisitPage}></Route>                    
                 </Route>                
                 <Route path="visita" component={Visit}></Route>
+                <Route path="task" component={TaskPage}>
+                    <Route path=":id" component={TaskPage}></Route>
+                </Route>
                 <Route path="visitaEditar/:id" component={VisitEdit}></Route>
                 <Route path="pipeline" component={createFormPipeline('pipelineCreate')}></Route>
                 <Route path="pipelineEdit/:id" component={editFormPipeline('pipelineEdit')}></Route>

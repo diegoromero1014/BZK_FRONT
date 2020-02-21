@@ -6,6 +6,8 @@ import Modal from 'react-modal';
 
 import ModalComponentPendingTask from './modalComponentPendingTask';
 import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
+import {redirectUrl} from "../../globalComponents/actions";
+import { updateTitleNavBar } from '../../navBar/actions';
 
 class ButtonCreatePendingTaskComponent extends Component {
 
@@ -13,6 +15,7 @@ class ButtonCreatePendingTaskComponent extends Component {
     super(props);
     this.closeModal = this.closeModal.bind(this);
     this.openModal = this.openModal.bind(this);
+    this.createTask = this.createTask.bind(this);
     this.state = {
       modalIsOpen: false
     };
@@ -20,6 +23,12 @@ class ButtonCreatePendingTaskComponent extends Component {
 
   openModal() {
     this.setState({ modalIsOpen: true });
+  }
+
+  createTask() {
+    const { updateTitleNavBar } = this.props;
+    updateTitleNavBar("Tareas");
+    redirectUrl("/dashboard/task");
   }
 
   closeModal() {
@@ -30,7 +39,7 @@ class ButtonCreatePendingTaskComponent extends Component {
     const { actionEdit } = this.props;
     return (
       <Col xs={2} sm={2} md={1} lg={1}>
-        <button className="btn btn-primary" type="button" title="Crear tarea" style={{ float: "right", marginTop: '21px' }} onClick={this.openModal}>
+        <button className="btn btn-primary" type="button" title="Crear tarea" style={{ float: "right", marginTop: '21px' }} onClick={this.createTask}>
           <i className="tasks  icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
         </button>
         <Modal
@@ -56,4 +65,18 @@ class ButtonCreatePendingTaskComponent extends Component {
   }
 }
 
-export default (ButtonCreatePendingTaskComponent);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    updateTitleNavBar
+  }, dispatch);
+}
+
+function mapStateToProps({ navBar }, ownerProps) {
+  return {
+    navBar
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ButtonCreatePendingTaskComponent);
+
+//export default (ButtonCreatePendingTaskComponent);
