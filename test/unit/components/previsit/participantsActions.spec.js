@@ -68,7 +68,10 @@ describe('Test previsita/participantsActions', () => {
                 contactName: "Any",
                 contactPositionName: "Any",
                 cargo: "Any",
-                order: "Any" 
+                order: "Any" ,
+                contactObject: {
+                    interlocutorObjs: []
+                }
             },
             { 
                 tipoParticipante: KEY_PARTICIPANT_BANCO,

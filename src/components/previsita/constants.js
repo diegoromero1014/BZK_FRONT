@@ -26,6 +26,11 @@ export const TITLE_MESSAGE_TARGET = "En este campo deberá registrar de manera c
 "c. ¿Cómo esta enseñanza conduce hacia una solución que tiene el Grupo Bancolombia?\n\n" +
 "2. ¿Cuáles son los resultados esperados y en cuánto tiempo se verán materializados?";
 
+export const TITLE_MESSAGE_ALTERNATIVE_OBJECTIVE = "¿Cuáles son los beneficios cuantitativos y cualitativos que se le presentará al cliente? \n\n" +
+"¿Qué arriesga al no tomar la solución? \n\n" +
+"¿Cuáles son los diferenciadores del banco que movilizan al cliente hacia nuestra solución?";
+   
+
 export const TITLE_CHALLENGER = `Diligencie de manera resumida los siguientes campos. Recuerde que lo importante es la necesidad del cliente, 
     por lo cual no debe hablar de Bancolombia hasta cuando se expone la situación del cliente.`;
 

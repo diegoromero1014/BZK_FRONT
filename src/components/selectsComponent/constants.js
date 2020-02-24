@@ -19,6 +19,7 @@ export const FILTER_CONTACT_POSITION = 'contactPosition';
 export const FILTER_SOCIAL_STYLE = 'socialStyle';
 export const FILTER_COUNTRY = 'country';
 export const FILTER_MONEY_DISTRIBITION_MARKET = 'moneyDistribitionMarket';
+export const FILTER_TYPE_POLICY = 'typePolicy';
 export const FILTER_ACTIVE = 'active';
 export const FILTER_PROVINCE = 'province';
 export const FILTER_CITY = 'city';
