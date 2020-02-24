@@ -30,11 +30,11 @@ export class ElementsComponent extends Component {
     handleOnDelete = data => {
         const { dispatchSwtShowMessage, dispatchRemoveFromList, name, singularTitle } = this.props;
         dispatchSwtShowMessage(
-            'warning', 
-            "Confirmar", "Señor usuario, ¿está seguro que desea eliminar el " + singularTitle + "?", 
-            { 
-                onConfirmCallback: () => { dispatchRemoveFromList({ name, data }); }, 
-                onCancelCallback: () => {}
+            'warning',
+            "Confirmar", "Señor usuario, ¿está seguro que desea eliminar el " + singularTitle + "?",
+            {
+                onConfirmCallback: () => { dispatchRemoveFromList({ name, data }); },
+                onCancelCallback: () => { }
             },
             {
                 "confirmButtonColor": '#DD6B55',
@@ -49,11 +49,17 @@ export class ElementsComponent extends Component {
         const { id, text } = data;
         const { setValues, dispatchSetToShow, name } = this.props;
 
-        setValues({ id, text, objectEdited: data });
+        setValues({ id, text, objectEdited: data, didChange: true });
         this.setState({ show: true });
         dispatchSetToShow({ name, show: true });
     }
-    
+
+    handleOnSelect = (element, { target: { checked } }) => {
+        const { name, dispatchAddToList } = this.props;
+
+        dispatchAddToList({ name: name, data: Object.assign({}, element, { associated: checked }),  old: element });
+    }
+
     render() {
         const { placeholder, messageButton, handleSubmit, name, elementsReducer, max, resetForm, title, dispatchSetToShow, values: { objectEdited }, isEditable } = this.props;
         const { show } = this.state;
@@ -61,7 +67,7 @@ export class ElementsComponent extends Component {
         let data = elementsReducer[name];
         let length;
 
-        if(data) {
+        if (data) {
             data = data.elements;
             length = data.length || 0;
         }
@@ -131,8 +137,8 @@ export class ElementsComponent extends Component {
                                             }
                                         }}
                                     >
-                                    { !objectEdited ? 'Agregar' : 'Modificar' }
-                                        
+                                        {!objectEdited ? 'Agregar' : 'Modificar'}
+
                                     </button>
                                 </Col>
                                 <Col xs={12} md={12} lg={12}>
@@ -142,7 +148,7 @@ export class ElementsComponent extends Component {
                                         onClick={() => {
                                             this.setState({ show: false });
                                             dispatchSetToShow({ name, show: false });
-                                            resetForm({id: null, text: ''});
+                                            resetForm({ id: null, text: '' });
                                         }}
                                     >
                                         Cancelar
@@ -153,7 +159,16 @@ export class ElementsComponent extends Component {
                     }
 
                     <Row style={{ padding: "10px 10px 20px 30px", marginBottom: 70, width: '99%' }} end="xs">
-                        <ItemList data={data || []} handleDelete={this.handleOnDelete} handleEdit={this.handleOnEdit} title={title} show={show} isEditable={isEditable} />
+                        <ItemList
+                            data={data || []}
+                            handleDelete={this.handleOnDelete}
+                            handleEdit={this.handleOnEdit}
+                            handleOnSelect={this.handleOnSelect}
+                            showCheck={this.props.showCheck}
+                            title={title}
+                            show={show}
+                            isEditable={isEditable}
+                        />
                     </Row>
                 </div>
             </form>
@@ -183,10 +198,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(
             let old;
 
             setSubmitting(false);
-            
+
             let order = (list.length + 1);
 
-            if(objectEdited) {
+            if (objectEdited) {
                 old = list.filter(element => element === objectEdited)[0];
                 order = old.order;
             }
@@ -196,11 +211,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(
 
             props.dispatchAddToList({ name: props.name, data, old });
 
-            resetForm({id: null, text: ''});
+            resetForm({ id: null, text: '' });
         },
         mapPropsToValues: () => ({ id: null, text: '' }),
         validationSchema: ({ schema }) => schema
     })(
-        ElementsComponent  
+        ElementsComponent
     )
 )

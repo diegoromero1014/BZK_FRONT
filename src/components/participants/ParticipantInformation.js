@@ -231,6 +231,7 @@ export class ParticipantInformation extends Component {
                             title={'Objetivos del interlocutor'} 
                             isEditable={true} 
                             singularTitle={'objetivo del interlocutor'}
+                            showCheck={false}
                         />
                     </Col>
                 </Row>

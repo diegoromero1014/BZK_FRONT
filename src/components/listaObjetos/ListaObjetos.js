@@ -7,8 +7,10 @@ import { mapKeys } from 'lodash';
 import ToolTip from "../toolTip/toolTipComponent";
 import SweetAlert from "../sweetalertFocus";
 import Modal from "react-modal";
-import { updateElementFromList, updateActiveFieldObject, openLinkModal,
-  updateElementoAsociado, saveTemporalChanges, discardTemporalChanges } from "./actions";
+import {
+  updateElementFromList, updateActiveFieldObject, openLinkModal,
+  updateElementoAsociado, saveTemporalChanges, discardTemporalChanges
+} from "./actions";
 
 import {
   processRules, checkRequired, checkPatternClientObjective, checkRegexHtmlInjection, checkFirstCharacter
@@ -21,7 +23,7 @@ import {
 import "./styleListaObjetos.scss";
 
 export function getLinkedClientDetails(elements) {
-  return elements.filter(element => element['checked'] )
+  return elements.filter(element => element['checked'])
 }
 
 export function buildLinkedClientDetailsRequestForSubmit(store, clientId) {
@@ -32,9 +34,9 @@ export function buildLinkedClientDetailsRequestForSubmit(store, clientId) {
 }
 
 export function combineClientDetails(linkedDetails, clientDetails) {
-      
+
   if (!clientDetails) {
-     clientDetails = []
+    clientDetails = []
   }
 
   if (!linkedDetails) {
@@ -42,20 +44,20 @@ export function combineClientDetails(linkedDetails, clientDetails) {
   }
 
   let details = linkedDetails.map(element => {
-     return Object.assign({}, element, {
-       checked: true
-     });
+    return Object.assign({}, element, {
+      checked: true
+    });
   });
 
   let elementsToAdd = clientDetails.filter(element => {
-     let found = false;
-     linkedDetails.map(linkedDetail => {
-        if (element.id == linkedDetail.id) {
-           found = true;
-           return;
-        }
-     });
-     return !found;
+    let found = false;
+    linkedDetails.map(linkedDetail => {
+      if (element.id == linkedDetail.id) {
+        found = true;
+        return;
+      }
+    });
+    return !found;
   });
 
   return details.concat(elementsToAdd);
@@ -260,15 +262,27 @@ export class ListaObjetos extends Component {
   };
 
   eliminarObjeto = idObject => {
-    const { dispatchUpdateElementFromList, titulo } = this.props;
-    const objetos = this.state.objetos.filter(elemento => elemento.idObject !== idObject);
+    const { previsit, dispatchUpdateElementFromList, dispatchUpdateElementoAsociado, dispatchSaveTemporalChanges, titulo } = this.props;
+    if (previsit) {
+      dispatchUpdateElementoAsociado(idObject, titulo, false);
+      const objetos = this.state.objetos.filter(elemento => elemento.id !== idObject);
+      dispatchUpdateElementFromList(titulo, objetos);
+      let [objetosAsociados] = this.getObjectsFromReducer();
+      const newObjetosAsociados = objetosAsociados.filter(elemento => elemento.id !== idObject);
+      this.setState({
+        objetos,
+        objetosAsociados: newObjetosAsociados
+      })
+    } else {
+      const objetos = this.state.objetos.filter(elemento => elemento.idObject !== idObject);
+      dispatchUpdateElementFromList(titulo, objetos);
+      this.setState({
+        objetos
+      });
+    }
     this.setState({
       modalEliminar: false
-    });
-    dispatchUpdateElementFromList(titulo, objetos);
-    this.setState({
-      objetos
-    });
+    })
   };
 
   newObjeto = event => {
@@ -283,15 +297,15 @@ export class ListaObjetos extends Component {
   };
 
   saveObjetosAsociados = () => {
-    const { dispatchSaveTemporalChanges, titulo } = this.props; 
+    const { dispatchSaveTemporalChanges, titulo } = this.props;
     let [objetosAsociados] = this.getObjectsFromReducer();
 
-    if ( this.filterObjectsByCheckedValue("temporalChecked", objetosAsociados, true).length > 5 ) {
+    if (this.filterObjectsByCheckedValue("temporalChecked", objetosAsociados, true).length > 5) {
       this.setState({
-        alertMaxAsociados : true
+        alertMaxAsociados: true
       })
-    }else{
-      if ( this.filterObjectsByCheckedValue("temporalChecked", objetosAsociados, true).length === 0) {
+    } else {
+      if (this.filterObjectsByCheckedValue("temporalChecked", objetosAsociados, true).length === 0) {
         this.setState({
           alertAsociar: true
         })
@@ -327,7 +341,7 @@ export class ListaObjetos extends Component {
     const { checked } = event.target;
     const { dispatchUpdateElementoAsociado, titulo } = this.props;
     dispatchUpdateElementoAsociado(elemento.id, titulo, checked);
-    
+
   }
 
   getObjectsFromReducer = () => {
@@ -343,13 +357,13 @@ export class ListaObjetos extends Component {
       objectosAsociados = objectListReducer.Debilidades.linked;
       tituloCompleto = "Debilidades (internas del cliente)";
     }
-    
-    return [ objectosAsociados, tituloCompleto]
+
+    return [objectosAsociados, tituloCompleto]
 
   }
 
   filterObjectsByCheckedValue(prop, objects, checkedValue) {
-    return objects.filter( object => !!object[prop] == checkedValue );
+    return objects.filter(object => !!object[prop] == checkedValue);
   }
 
   render() {
@@ -379,7 +393,7 @@ export class ListaObjetos extends Component {
     const styleCheckedPlus = stylePlus
       ? "button-openFieldChecked"
       : "button-openField";
-    
+
     let [objetosAsociados, tituloCompleto] = this.getObjectsFromReducer();
 
     return (
@@ -393,34 +407,6 @@ export class ListaObjetos extends Component {
                   <button type="button" onClick={this.cerrarCampoObjeto} className="close" data-dismiss="modal" role="close">
                     <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                   </button>
-                </div>
-                <div className="" style={{ background: "white", padding: "10px 10px" }}>
-                  <div className="header-component" style={{ margin: "15px 18px" }}>
-                    <i className={icon} />
-                    <span className="title-component">{`${tituloCompleto}`}</span>
-                  </div>
-                  {objetosAsociados.length !== 0 ? (
-                    <Row style={{ padding: "5px 23px 5px 20px" }}>
-                      <Col
-                        xs={12}
-                        md={12}
-                        lg={12}
-                        style={{ paddingRight: "15px", marginTop: "15px" }}>
-                        <table className="ui striped table">
-                          <thead>
-                            {objetosAsociados.map(elemento => 
-                                (<tr key={elemento.idObject}>
-                                  <td name="td-edit" className="collapsing">
-                                    <input type="checkbox" onChange={(event) => this.isCheck(event, elemento)} checked={(typeof elemento.temporalChecked == "undefined" && elemento.checked) || elemento.temporalChecked} style={{ marginTop: "4px" }} />
-                                  </td>
-                                  <td className="add-line-break">{elemento.text}</td>
-                                </tr> )
-                            )}
-                          </thead>
-                        </table>
-                      </Col>
-                    </Row>
-                  ) : null}
                 </div>
                 <div style={{ width: "100%", padding: "15px" }}>
                   <button
@@ -440,7 +426,7 @@ export class ListaObjetos extends Component {
                     type="warning"
                     show={alertAsociar}
                     title="Atención"
-                    text={`Señor usuario, debe seleccionar al menos una ${(tituloCompleto === "Oportunidades (externas)") ? "Oportunidad (externa)" : "Debilidad (interna del cliente)" } para guardar.`}
+                    text={`Señor usuario, debe seleccionar al menos una ${(tituloCompleto === "Oportunidades (externas)") ? "Oportunidad (externa)" : "Debilidad (interna del cliente)"} para guardar.`}
                     confirmButtonText="OK"
                     onConfirm={() => this.setState({ alertAsociar: false })}
                   />
@@ -451,6 +437,18 @@ export class ListaObjetos extends Component {
                     text={`Señor usuario, el maximo de ${titulo} que puede asociar son 5`}
                     confirmButtonText="OK"
                     onConfirm={() => this.setState({ alertMaxAsociados: false })}
+                  />
+                  <SweetAlert
+                    type="warning"
+                    show={modalEliminar}
+                    title="Confirmar Eliminacion"
+                    text={`Señor usuario el cambio realizado aplicara también en la pestaña Info de Mis clientes.`}
+                    confirmButtonColor="#DD6B55"
+                    confirmButtonText="Sí, estoy seguro!"
+                    cancelButtonText="Cancelar"
+                    showCancelButton={true}
+                    onCancel={() => this.setState({ modalEliminar: false })}
+                    onConfirm={() => this.eliminarObjeto(idObjetoEliminar)}
                   />
                 </div>
               </div>
@@ -635,7 +633,7 @@ export class ListaObjetos extends Component {
                 style={{ paddingRight: "15px", marginTop: "15px" }}>
                 <table className="ui striped table">
                   <thead>
-                    { this.filterObjectsByCheckedValue("checked", objetosAsociados, true).map(elemento => (
+                    {this.filterObjectsByCheckedValue("checked", objetosAsociados, true).map(elemento => (
                       <tr key={elemento.idObject}>
                         <td name="td-edit" className="collapsing">
                           <input type="checkbox" disabled={!canEdit} checked={elemento.checked} onChange={(event) => this.desasociar(event, elemento.id)} style={{ marginTop: "4px" }} />

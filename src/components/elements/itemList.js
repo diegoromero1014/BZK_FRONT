@@ -4,7 +4,7 @@ import ToolTip from '../toolTip/toolTipComponent';
 
 let selectedRecord;
 
-const ItemList = ({ data, handleDelete, handleEdit, title, show, isEditable }) => {
+const ItemList = ({ data, handleDelete, handleEdit, handleOnSelect, showCheck, title, show, isEditable }) => {
 
     if (!show) { selectedRecord = null; }
 
@@ -16,22 +16,40 @@ const ItemList = ({ data, handleDelete, handleEdit, title, show, isEditable }) =
                         data.sort((a, b) => a.order - b.order).map((element, index) =>
                             <Table.Row key={index} disabled={(index === selectedRecord && show) || !isEditable}>
                                 <Table.Cell textAlign='left' style={{ width: 10 }} verticalAlign='middle'>
-                                    <ToolTip text={'Editar'}>
-                                        <i style={{ cursor: 'pointer' }} className="pencil icon" onClick={() => {
+                                    {showCheck && handleOnSelect ?
+                                        <ToolTip text={'Asociar'}>
+                                            <input type="checkbox" name="select" id="select" defaultChecked={element.associated} onClick={event => handleOnSelect(element, event)} />
+                                        </ToolTip>
+                                        :
+
+                                        handleEdit &&
+                                        <ToolTip text={'Editar'}>
+                                            <i style={{ cursor: 'pointer' }} className="pencil icon" onClick={() => {
+                                                handleEdit(element);
+                                                selectedRecord = index;
+                                            }} />
+                                        </ToolTip>
+                                    }
+
+                                </Table.Cell>
+                                <Table.Cell
+                                    textAlign='left'
+                                    style={handleEdit ? { cursor: 'pointer', textAlign: 'justify', whiteSpace: 'pre-line' } : { textAlign: 'justify', whiteSpace: 'pre-line' }}
+                                    onClick={() => {
+                                        if (handleEdit) {
                                             handleEdit(element);
                                             selectedRecord = index;
-                                        }} />
-                                    </ToolTip>
+                                        }
+                                    }} >
+                                    {element.text}
                                 </Table.Cell>
-                                <Table.Cell textAlign='left' style={{ cursor: 'pointer', textAlign: 'justify', whiteSpace: 'pre-line' }} onClick={() => {
-                                    handleEdit(element);
-                                    selectedRecord = index;
-                                }} >{element.text}</Table.Cell>
-                                <Table.Cell textAlign='right' verticalAlign='middle'>
-                                    <ToolTip text={'Eliminar'}>
-                                        <i className="trash icon" onClick={() => handleDelete(element)} />
-                                    </ToolTip>
-                                </Table.Cell>
+                                {handleDelete &&
+                                    <Table.Cell textAlign='right' verticalAlign='middle' style={{ width: 10 }}>
+                                        <ToolTip text={'Eliminar'}>
+                                            <i className="trash icon" onClick={() => handleDelete(element)} />
+                                        </ToolTip>
+                                    </Table.Cell>
+                                }
                             </Table.Row>
                         )
                     }
