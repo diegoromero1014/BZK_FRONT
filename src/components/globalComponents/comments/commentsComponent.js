@@ -1,37 +1,42 @@
-import React, { Component } from 'react'
-import { Comment, Form, Header } from 'semantic-ui-react'
-import { Row } from 'react-flexbox-grid';
+import React, {Component} from 'react'
+import {connect} from 'react-redux';
+import {Comment, Form, Header} from 'semantic-ui-react'
+import {Row} from 'react-flexbox-grid';
 import Col from 'react-flexbox-grid/lib/components/Col';
 import CommentsAvatar from './commentsAvatar';
 import moment from 'moment';
-import { MentionsInput, Mention } from 'react-mentions';
+import {Mention, MentionsInput} from 'react-mentions';
+import {bindActionCreators} from "redux";
+import {filterUsersBanco} from "../../participantsVisitPre/actions";
+import {Subject} from "rxjs";
+import {addCommentToList, clearComments, createComment, getCommentsByTaskId} from "./actions";
+import _ from "lodash";
+import {REQUEST_SUCCESS} from "../../../constantsGlobal";
+import {swtShowMessage} from "../../sweetAlertMessages/actions";
+import {COMMENT_CREATED_ERROR, COMMENT_CREATED_SUCCESS, COMMENT_CREATED_TITLE} from "./constants";
 
 export class CommentsComponent extends Component {
 
     constructor(props) {
         super(props);
+        this.onSearch$ = new Subject();
+        this.users = [];
+
         this.state = {
             commentBeingReplied: null,
             commentReply: '',
-            comment: '',
-            users: [
-                {
-                    id: 312312,
-                    display: 'Daniel Gallego'
-                },
-                {
-                    id: 4234123,
-                    display: 'Monica Castillo'
-                },
-                {
-                    id: 5245234,
-                    display: 'Cristhian Rios'
-                },
-                {
-                    id: 63456345,
-                    display: 'Diego Romero'
-                }
-            ]
+            comment: ''
+        }
+    }
+
+    componentDidMount() {
+        this.subscription = this.onSearch$.debounceTime(300)
+            .subscribe( debounced => this.filterUsersAction(debounced));
+    }
+
+    componentWillUnmount() {
+        if(this.subscription){
+            this.subscription.unsubscribe();
         }
     }
 
@@ -45,23 +50,74 @@ export class CommentsComponent extends Component {
                 commentBeingReplied: id
             });
         }
-    }
+    };
 
-    handleChange = (event) => {
-        this.setState({ comment: event.target.value });
-    }
+    handleChange = async (event, source) => {
+        const comment = event.target.value;
+        if(source === 'new'){
+            await this.setState({ comment });
+        }else{
+            await this.setState({ commentReply: event.target.value });
+        }
+    };
 
-    handleChangeReply = (event) => {
-        this.setState({ commentReply: event.target.value });
-    }
+    fetchUsers = (query, callback) => {
+        let commentSplitted = query.split('@');
+        const username = commentSplitted[commentSplitted.length - 1];
+        if(username.length >= 3){
+            this.onSearch$.next({username, callback});
+        }
+    };
+
+    filterUsersAction = ({username, callback}) => {
+        const { dispatchFilterUsers } = this.props;
+        dispatchFilterUsers(username)
+            .then(response => response.payload.data.data.map(user => ({id: user.idUsuario, display: user.title})))
+            .then(callback);
+    };
+
+    /*****************Funciones para pasar al TaskPage*******************************/
+    addComment = async (parentCommentId, content) => {
+        const { dispatchAddCommentList, dispatchSwtShowMessage} = this.props;
+        let taskId = 123;
+        const comment = {
+            taskId,
+            content,
+            parentCommentId
+        };
+
+        if(taskId){
+            await this.createComment(comment);
+        }else{
+            dispatchAddCommentList(comment);
+            dispatchSwtShowMessage('success', COMMENT_CREATED_TITLE, COMMENT_CREATED_SUCCESS);
+        }
+    };
+
+    createComment = async (comment) => {
+        const { dispatchCreateComment, dispatchSwtShowMessage } = this.props;
+        const request = {
+            messageHeader: {
+                "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+            },
+            messageBody: comment
+        };
+        const response = await dispatchCreateComment(request);
+        if(_.get(response, 'payload.data.status') === REQUEST_SUCCESS){
+            dispatchSwtShowMessage('success', COMMENT_CREATED_TITLE, COMMENT_CREATED_SUCCESS);
+        }else{
+            dispatchSwtShowMessage('success', COMMENT_CREATED_TITLE, COMMENT_CREATED_ERROR);
+        }
+    };
+
+    /***************************************************************/
 
     renderComments = (comments) => {
-
-        return comments.map(({ id, initials, autor, createdTimestamp, content, replies }) =>
+        return comments.map(({ id, initials, author, createdTimestamp, content, replies }) =>
             <Comment key={id}>
                 <CommentsAvatar>{initials}</CommentsAvatar>
                 <Comment.Content>
-                    <Comment.Author as='a'>{autor}</Comment.Author>
+                    <Comment.Author as='a'>{author}</Comment.Author>
                     <Comment.Metadata>
                         <div>{moment(new Date(createdTimestamp)).locale('es').fromNow()}</div>
                     </Comment.Metadata>
@@ -72,10 +128,10 @@ export class CommentsComponent extends Component {
                     <Form reply style={{ display: this.state.commentBeingReplied === id ? 'block' : 'none' }}>
                         <Row>
                             <Col xs={12} md={12} ld={12} className="commentTextArea">
-                                <MentionsInput value={this.state.commentReply} onChange={this.handleChangeReply} className="mentions">
+                                <MentionsInput value={this.state.commentReply} onChange={event => this.handleChange(event, 'reply')} className="mentions">
                                     <Mention
                                         trigger="@"
-                                        data={this.state.users}
+                                        data={this.fetchUsers}
                                         className="mentions__mention"
                                     />
                                 </MentionsInput>
@@ -83,7 +139,7 @@ export class CommentsComponent extends Component {
                         </Row>
                         <Row style={{ marginTop: 10 }}>
                             <Col xs={12} md={12} ld={12}>
-                                <button className="btn btn-primary" style={{ float: 'right' }}>Responder</button>
+                                <button className="btn btn-primary" style={{ float: 'right' }} onClick={() => this.addComment(id, this.state.commentReply)}>Responder</button>
                             </Col>
                         </Row>
                     </Form>
@@ -103,18 +159,23 @@ export class CommentsComponent extends Component {
             <div>
                 <Comment.Group style={{ width: '100%', margin: 0, maxWidth: 'initial' }} threaded>
                     {header &&
-                        <Header as='h3' dividing style={{ lineHeight: '3em' }}>
+                        <Header as='p' dividing style={{ minHeight: 30 }}>
                             {header}
                         </Header>
                     }
-                    {this.renderComments(comments)}
+                    <br></br>
+                    {comments && comments.length ? this.renderComments(comments) :
+                        <p style={{fontStyle: 'italic',
+                            textAlign: 'center',
+                            fontWeight: 600}}>Sin notas asociadas</p>
+                    }
                     <Form reply>
                         <Row>
                             <Col xs={12} md={12} lg={12}>
-                                <MentionsInput value={this.state.comment} onChange={this.handleChange} className="mentions">
+                                <MentionsInput value={this.state.comment} onChange={event => this.handleChange(event, 'new')} className="mentions">
                                     <Mention
                                         trigger="@"
-                                        data={this.state.users}
+                                        data={this.fetchUsers}
                                         className="mentions__mention"
                                     />
                                 </MentionsInput>
@@ -122,7 +183,7 @@ export class CommentsComponent extends Component {
                         </Row>
                         <Row style={{ margin: '10px 0 0 0' }}>
                             <Col xs={12} md={12} lg={12}>
-                                <button className="btn btn-primary" style={{ float: 'right' }}>Agregar nota</button>
+                                <button className="btn btn-primary" style={{ float: 'right' }} onClick={() => this.addComment(null, this.state.comment)}>Agregar nota</button>
                             </Col>
                         </Row>
                     </Form>
@@ -131,3 +192,29 @@ export class CommentsComponent extends Component {
         )
     }
 }
+
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({
+        dispatchFilterUsers: filterUsersBanco,
+        /*Funciones para pasar al TaskPage*/
+        dispatchCreateComment: createComment,
+        dispatchAddCommentList: addCommentToList,
+        dispatchGetCommentsByTaskId: getCommentsByTaskId,
+        dispatchClearComments: clearComments,
+        dispatchSwtShowMessage: swtShowMessage
+    }, dispatch);
+}
+
+function mapStateToProps({ commentsReducer: { comments } }) {
+    return {
+        comments
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(CommentsComponent);
+
+
+

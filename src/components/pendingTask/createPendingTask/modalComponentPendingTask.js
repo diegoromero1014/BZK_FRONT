@@ -22,7 +22,7 @@ import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 import _ from "lodash";
 import $ from "jquery";
 import moment from "moment";
-import { CommentsComponent } from "../../globalComponents/comments/commentsComponent";
+import CommentsComponent from "../../globalComponents/comments/commentsComponent";
 
 var usersBanco = [];
 var idUsuario, nameUsuario;
@@ -41,21 +41,21 @@ class ModalComponentPendingTask extends Component {
             {
                 id: 3123123,
                 initials: 'MC',
-                autor: 'Monica Castillo',
+                author: 'Monica Castillo',
                 createdTimestamp: 1517597630576,
                 content: 'Recuerda hacer la diligencia a la dirección pactada',
                 replies: [
                     {
                         id: 48489477,
                         initials: 'CR',
-                        autor: 'Cristhian Rios',
+                        author: 'Cristhian Rios',
                         createdTimestamp: 1517597630576,
                         content: 'Ya está listo',
                     },
                     {
                         id: 4890984,
                         initials: 'AA',
-                        autor: 'Alvaro Agudelo',
+                        author: 'Alvaro Agudelo',
                         createdTimestamp: 1517597630576,
                         content: 'Moni, tenemos un inconveniente.',
                     }
@@ -64,7 +64,7 @@ class ModalComponentPendingTask extends Component {
             {
                 id: 43223,
                 initials: 'DG',
-                autor: 'Daniel Gallego',
+                author: 'Daniel Gallego',
                 createdTimestamp: 1517597630576,
                 content: 'Enterado'
             },
@@ -280,7 +280,7 @@ class ModalComponentPendingTask extends Component {
                         </Row>
                         <Row style={{ padding: "20px 10px 0px 0px" }}>
                             <Col xs={12} md={12} lg={12}>
-                                <CommentsComponent header="Notas" comments={this.notes}/>
+                                <CommentsComponent header="Notas"/>
                             </Col>
                         </Row>
                     </div>
