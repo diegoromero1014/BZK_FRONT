@@ -5,16 +5,18 @@ import { Row, Col } from "react-flexbox-grid";
 import { Icon } from 'semantic-ui-react';
 import ItemList from "../elements/itemList";
 import ElementsComponent from "../elements";
+import { addToList } from '../elements/actions';
 import { OBJECTIVES_PLACEHOLDER } from "../participants/constants";
 import { schema } from "../participants/schema";
-import { OPORTUNITIES , WEAKNESSES} from './constants';
+import { OPPORTUNITIES, WEAKNESSES } from './constants';
 
 class SelectOpportunitiesWeaknesses extends Component {
 
-  componentWillMount() {
+  handleOnSelect = (name, element, associated) => {
+    const { dispatchAddToList } = this.props;
 
+    dispatchAddToList({ name, data: Object.assign({}, element, { associated }), old: element });
   }
-
 
   render() {
     const { visual, opportunities, weaknesses } = this.props;
@@ -37,14 +39,14 @@ class SelectOpportunitiesWeaknesses extends Component {
 
         <Row style={{ width: '99%', paddingLeft: 20 }}>
           <Col xs={6}>
-            {!(opportunities && opportunities.length) ?
+            {!opportunities.length ?
               <ElementsComponent
                 schema={schema}
                 placeholder={OBJECTIVES_PLACEHOLDER}
                 messageButton='Agregar'
-                name={OPORTUNITIES}
+                name={OPPORTUNITIES}
                 max={3}
-                title={'Oportunidades'}
+                title={'Oportunidades 1'}
                 isEditable={true}
                 singularTitle={'oportunidad'}
                 showCheck={true}
@@ -60,20 +62,18 @@ class SelectOpportunitiesWeaknesses extends Component {
                       size='huge'
                       name={'add square'}
                       style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
-                      onClick={() => {
-
-                      }}
+                      onClick={() => console.log('hola')}
                     />
                   </Col>
                 </Row>
                 <Row style={{ padding: "10px 10px 20px 30px", marginBottom: 70, width: '99%' }} end="xs">
                   <ItemList
-                    data={opportunities}
+                    data={opportunities.filter(opportunity => opportunity.associated)}
                     handleDelete={undefined}
                     handleEdit={undefined}
-                    handleOnSelect={() => console.log('')}
+                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(OPPORTUNITIES, element, checked)}
                     showCheck={true}
-                    title={"Oportunidades"}
+                    title={"Oportunidades 2"}
                     isEditable={true}
                   />
                 </Row>
@@ -83,7 +83,7 @@ class SelectOpportunitiesWeaknesses extends Component {
           </Col>
 
           <Col xs={6}>
-            {!(weaknesses && weaknesses.length) ?
+            {!weaknesses.length ?
               <ElementsComponent
                 schema={schema}
                 placeholder={OBJECTIVES_PLACEHOLDER}
@@ -106,18 +106,16 @@ class SelectOpportunitiesWeaknesses extends Component {
                       size='huge'
                       name={'add square'}
                       style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
-                      onClick={() => {
-
-                      }}
+                      onClick={() => console.log('hola')}
                     />
                   </Col>
                 </Row>
                 <Row style={{ padding: "10px 10px 20px 30px", marginBottom: 70, width: '99%' }} end="xs">
                   <ItemList
-                    data={[]}
+                    data={weaknesses.filter(weakness => weakness.associated)}
                     handleDelete={undefined}
                     handleEdit={undefined}
-                    handleOnSelect={() => console.log('')}
+                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(WEAKNESSES, element, checked)}
                     showCheck={true}
                     title={"Debilidades 2"}
                     isEditable={true}
@@ -133,15 +131,16 @@ class SelectOpportunitiesWeaknesses extends Component {
   }
 }
 
-const mapStateToProps = ({ elementsReducer, clientInformacion }) => ({
+const mapStateToProps = ({ elementsReducer }) => ({
   elementsReducer,
-  clientInformacion,
-  weaknesses: clientInformacion.get('responseClientInfo').clientDetailsRequest.weaknesses.map(element => Object.assign({}, element, { idObject: element.id })) || [],
-  opportunities: clientInformacion.get('responseClientInfo').clientDetailsRequest.opportunities.map(element => Object.assign({}, element, { idObject: element.id })) || []
+  weaknesses: elementsReducer[WEAKNESSES].elements || [],
+  opportunities: elementsReducer[OPPORTUNITIES].elements || [],
 });
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({}, dispatch)
+  return bindActionCreators({
+    dispatchAddToList: addToList,
+  }, dispatch)
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectOpportunitiesWeaknesses);

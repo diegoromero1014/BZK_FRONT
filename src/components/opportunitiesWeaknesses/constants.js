@@ -1,2 +1,2 @@
-export const OPORTUNITIES = "opportunities";
+export const OPPORTUNITIES = "opportunities";
 export const WEAKNESSES = "weaknesses";
