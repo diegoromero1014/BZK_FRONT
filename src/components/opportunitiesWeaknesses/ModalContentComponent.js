@@ -2,39 +2,24 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { cleanList, addToList, createList } from '../elements/actions';
-import { 
-    TITLE_OPPORTUNITIES,
-    TITLE_WEAKNESSES,
-    OPPORTUNITIES_PLACEHOLDER,
-    WEAKNESSES_PLACEHOLDER,
-    SINGULAR_TITLE_OPPORTUNITIES,
-    SINGULAR_TITLE_WEAKNESSES,
-} from './constants';
-
 import ElementsComponent from '../elements';
 import { schemaoOportunitiesWeaknesses } from './schema';
 
 class ModalContentComponent extends Component {
 
-    componentWillMount() {
-        const { dispatchCleanList, dispatchAddToList, dispatchCreateList } = this.props;
-
-        dispatchCleanList("opportunities");
-        dispatchCreateList("opportunities");
-    }
-
     render() {
+        const { name, singularTitle, title, placeholder, isEditable } = this.props;
         return (
             <div>
                 <ElementsComponent
-                    schema={schema}
-                    placeholder={OBJECTIVES_PLACEHOLDER}
-                    messageButton='Agregar'
-                    name={"opportunities"}
+                    schema={schemaoOportunitiesWeaknesses}
+                    placeholder={placeholder}
+                    messageButton={`Agregar ${singularTitle}`}
+                    name={name}
                     max={3}
-                    title={'Oportunidades'}
-                    isEditable={true}
-                    singularTitle={'oportunidad'}
+                    title={title}
+                    isEditable={isEditable}
+                    singularTitle={singularTitle}
                     showCheck={true}
                 />
             </div>

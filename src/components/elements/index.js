@@ -18,7 +18,8 @@ export class ElementsComponent extends Component {
         super(props);
 
         this.state = {
-            show: false
+            show: false,
+            selectedRecord: null
         }
     }
 
@@ -45,19 +46,19 @@ export class ElementsComponent extends Component {
         );
     }
 
-    handleOnEdit = data => {
+    handleOnEdit = (data, index) => {
         const { id, text } = data;
         const { setValues, dispatchSetToShow, name } = this.props;
 
         setValues({ id, text, objectEdited: data, didChange: true });
-        this.setState({ show: true });
+        this.setState({ show: true, selectedRecord: index });
         dispatchSetToShow({ name, show: true });
     }
 
     handleOnSelect = (element, { target: { checked } }) => {
         const { name, dispatchAddToList } = this.props;
 
-        dispatchAddToList({ name: name, data: Object.assign({}, element, { associated: checked }),  old: element });
+        dispatchAddToList({ name: name, data: Object.assign({}, element, { associated: checked }), old: element });
     }
 
     render() {
@@ -132,8 +133,8 @@ export class ElementsComponent extends Component {
                                             handleSubmit();
 
                                             if (this.props.isValid) {
-                                                this.setState({ show: false });
-                                                dispatchSetToShow({ name, show: false });
+                                                this.setState({ show: false, selectedRecord: null });
+                                                dispatchSetToShow({ name, show: false, selectedRecord: null });
                                             }
                                         }}
                                     >
@@ -146,8 +147,8 @@ export class ElementsComponent extends Component {
                                         type="reset"
                                         className='button-secondary'
                                         onClick={() => {
-                                            this.setState({ show: false });
-                                            dispatchSetToShow({ name, show: false });
+                                            this.setState({ show: false, selectedRecord: null });
+                                            dispatchSetToShow({ name, show: false, selectedRecord: null });
                                             resetForm({ id: null, text: '' });
                                         }}
                                     >
@@ -168,6 +169,7 @@ export class ElementsComponent extends Component {
                             title={title}
                             show={show}
                             isEditable={isEditable}
+                            selectedRecord={this.state.selectedRecord}
                         />
                     </Row>
                 </div>
@@ -206,7 +208,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(
                 order = old.order;
             }
 
-            const data = Object.assign({}, values, { order });
+            const data = Object.assign({}, values, { order, associated: true });
             delete data.objectEdited;
 
             props.dispatchAddToList({ name: props.name, data, old });

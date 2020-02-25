@@ -10,7 +10,10 @@ export default (state = initialState, { type, payload }) => {
     switch (type) {
 
         case CREATE_LIST:
-            return Object.assign({}, state, { [payload]: Object.assign({}, defaultProps) });
+            if (!state[payload]) {
+                return Object.assign({}, state, { [payload]: Object.assign({}, defaultProps) });    
+            }
+            return state;
 
         case ADD_LIST:
             let { data, name, old } = payload;
