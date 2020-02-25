@@ -31,9 +31,9 @@ import { participantIsClient, changeParticipantClientDataStructure, participantI
 import CommercialReportInfoFooter from '../globalComponents/commercialReportInfoFooter';
 
 import { getLinkedClientDetails, buildLinkedClientDetailsRequestForSubmit, combineClientDetails } from '../listaObjetos/ListaObjetos';
-import {
-   addInitialLinkedElements
-} from '../listaObjetos/actions';
+
+import { cleanList, addToList, createList } from '../elements/actions';
+import { OPPORTUNITIES, WEAKNESSES } from '../opportunitiesWeaknesses/constants';
 
 export class PrevisitPage extends Component {
 
@@ -71,18 +71,31 @@ export class PrevisitPage extends Component {
       };
    }
 
+   clearList = () => {
+      const { dispatchCleanList, dispatchCreateList } = this.props;
+
+      dispatchCleanList(OPPORTUNITIES);
+      dispatchCreateList(OPPORTUNITIES);
+
+      dispatchCleanList(WEAKNESSES);
+      dispatchCreateList(WEAKNESSES);
+   }
+
    componentWillMount() {
       const { clientInformacion } = this.props;
       const infoClient = clientInformacion.get('responseClientInfo');
       if (_.isEmpty(infoClient)) {
          redirectUrl(ComponentClientInformationURL)
       }
+
+      this.clearList();
    }
 
 
    componentDidMount() {
 
-      const { params: { id }, dispatchShowLoading, clientInformacion, dispatchAddInitialLinkedElements } = this.props;
+      const { params: { id }, dispatchShowLoading, clientInformacion, dispatchAddToList } = this.props;
+
       dispatchShowLoading(true, "Cargando...");
       //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA;
       Promise.all([this.masterDataFields(), this.getPrevisitData(id), this.getChallengerQuestions()]).then((data) => {
@@ -90,34 +103,30 @@ export class PrevisitPage extends Component {
             renderForm: true,
             isMounted: true
          });
-         
+
          dispatchShowLoading(false, "");
 
-         let infoClient = clientInformacion.get('responseClientInfo');
+         let weaknesses = clientInformacion.get('responseClientInfo').clientDetailsRequest.weaknesses;
+         let opportunities = clientInformacion.get('responseClientInfo').clientDetailsRequest.opportunities;
 
          //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA;
          if (!data[1]) {
-            dispatchAddInitialLinkedElements(
-               "Oportunidades",
-               infoClient.clientDetailsRequest.opportunities || []
-            );
-            dispatchAddInitialLinkedElements(
-               "Debilidades",
-               infoClient.clientDetailsRequest.weaknesses || []
-            );
-            return;
+            this.clearList();
+            
+            opportunities.forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1), associated: false  }), name: OPPORTUNITIES, old: null }));
+            weaknesses.forEach((item, index) => dispatchAddToList({ data: Object.assign({}, item, { order: (index + 1), associated: false }), name: WEAKNESSES, old: null }));
+         } else {
+            let linkedClientDetails = data[1].payload.data.data.clientDetails;
+
+            weaknesses = combineClientDetails(linkedClientDetails.weaknesses, weaknesses);
+            opportunities = combineClientDetails(linkedClientDetails.opportunities, opportunities);
+
+            this.clearList();
+
+            opportunities.forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1) }), name: OPPORTUNITIES, old: null }));
+            weaknesses.forEach((item, index) => dispatchAddToList({ data: Object.assign({}, item, { order: (index + 1) }), name: WEAKNESSES, old: null }));
          }
 
-         let linkedClientDetails = data[1].payload.data.data.clientDetails
-         
-         dispatchAddInitialLinkedElements(
-            "Oportunidades",
-            combineClientDetails(linkedClientDetails.opportunities, infoClient.clientDetailsRequest.opportunities || [])
-         )
-         dispatchAddInitialLinkedElements(
-            "Debilidades",
-            combineClientDetails(linkedClientDetails.weaknesses, infoClient.clientDetailsRequest.weaknesses || [])
-         )
       });
    }
 
@@ -165,7 +174,7 @@ export class PrevisitPage extends Component {
          dispatchAddListParticipant(participants);
          dispatchSetConfidential(previsitDetail.commercialReport.isConfidential);
          fillUsersPermissions(previsitDetail.commercialReport.usersWithPermission, dispatchAddUsers);
-         
+
          previsitDetail.answers.forEach(element => {
             dispatchAddAnswer(null, { id: element.id, [element.field]: element.answer });
          });
@@ -353,7 +362,7 @@ export class PrevisitPage extends Component {
          const clientDetailsErrors = this.errorClientDetails(previsit);
 
          if (clientDetailsErrors.length != 0) {
-            dispatchSwtShowMessage("error", "Error", "Señor usuario, para guardar una previsita como definitivo debe asociar información en las siguientes secciones: "+this.renderErrorMessage(clientDetailsErrors));
+            dispatchSwtShowMessage("error", "Error", "Señor usuario, para guardar una previsita como definitivo debe asociar información en las siguientes secciones: " + this.renderErrorMessage(clientDetailsErrors));
             return;
          }
 
@@ -549,7 +558,7 @@ export class PrevisitPage extends Component {
    }
 
    renderForm = () => {
-      const { params: { id }, previsitReducer, selectsReducer, fromModal, questions, answers ,clientInformacion} = this.props;
+      const { params: { id }, previsitReducer, selectsReducer, fromModal, questions, answers, clientInformacion } = this.props;
       const infoClient = clientInformacion.get('responseClientInfo');
       const previsitDetail = previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null;
       return (
@@ -662,7 +671,9 @@ function mapDispatchToProps(dispatch) {
       dispatchClearAnswer: clearAnswer,
       dispatchAddAnswer: addAnswer,
       dispatchGetAllQuestions: getAllQuestions,
-      dispatchAddInitialLinkedElements: addInitialLinkedElements
+      dispatchCleanList: cleanList,
+      dispatchAddToList: addToList,
+      dispatchCreateList: createList,
    }, dispatch);
 }
 

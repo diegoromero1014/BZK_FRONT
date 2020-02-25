@@ -6,26 +6,26 @@ import { Icon } from 'semantic-ui-react';
 import Tooltip from '../toolTip/toolTipComponent';
 import ItemList from "../elements/itemList";
 import ElementsComponent from "../elements";
+import { addToList } from '../elements/actions';
 import { schemaoOportunitiesWeaknesses } from "./schema";
-import {
+import { 
   OPPORTUNITIES,
   WEAKNESSES,
-  OPPORTUNITIES_PLACEHOLDER,
-  WEAKNESSES_PLACEHOLDER,
-  TITLE_OPPORTUNITIES,
-  TITLE_WEAKNESSES,
-  SINGULAR_TITLE_OPPORTUNITIES,
-  SINGULAR_TITLE_WEAKNESSES,
-  MSG_HELP_OPPORTUNITIES,
-  MSG_HELP_WEAKNESSES
+  TITLE_OPPORTUNITIES, 
+  TITLE_WEAKNESSES, 
+  OPPORTUNITIES_PLACEHOLDER, 
+  WEAKNESSES_PLACEHOLDER, 
+  SINGULAR_TITLE_OPPORTUNITIES, 
+  SINGULAR_TITLE_WEAKNESSES
 } from './constants';
 
 class SelectOpportunitiesWeaknesses extends Component {
 
-  componentWillMount() {
+  handleOnSelect = (name, element, associated) => {
+    const { dispatchAddToList } = this.props;
 
+    dispatchAddToList({ name, data: Object.assign({}, element, { associated }), old: element });
   }
-
 
   render() {
     const { visual, opportunities, weaknesses } = this.props;
@@ -47,16 +47,8 @@ class SelectOpportunitiesWeaknesses extends Component {
         }
 
         <Row style={{ width: '99%', paddingLeft: 20 }}>
-          <Col xs={6} md={6} lg={6}>
-            <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-              <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-              <i className="thumbs up outline icon" style={{ fontSize: "20px" }} />
-              <span style={{ fontSize: "20px" }}>{TITLE_OPPORTUNITIES}</span>
-              <Tooltip text={MSG_HELP_OPPORTUNITIES}>
-                <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
-              </Tooltip>
-            </div>
-            {!(opportunities && opportunities.length) ?
+          <Col xs={6}>
+            {!opportunities.length ?
               <ElementsComponent
                 schema={schemaoOportunitiesWeaknesses}
                 placeholder={OPPORTUNITIES_PLACEHOLDER}
@@ -77,18 +69,16 @@ class SelectOpportunitiesWeaknesses extends Component {
                       size='huge'
                       name={'add square'}
                       style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
-                      onClick={() => {
-                        console.log("es este boton")
-                      }}
+                      onClick={() => console.log('hola')}
                     />
                   </Col>
                 </Row>
                 <Row style={{ padding: "10px 10px 20px 30px", marginBottom: 70, width: '99%' }} end="xs">
                   <ItemList
-                    data={opportunities}
+                    data={opportunities.filter(opportunity => opportunity.associated)}
                     handleDelete={undefined}
                     handleEdit={undefined}
-                    handleOnSelect={() => console.log('')}
+                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(OPPORTUNITIES, element, checked)}
                     showCheck={true}
                     title={TITLE_OPPORTUNITIES}
                     isEditable={true}
@@ -99,54 +89,47 @@ class SelectOpportunitiesWeaknesses extends Component {
           </Col>
 
           <Col xs={6}>
-            <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-              <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-              <i className="thumbs up outline icon" style={{ fontSize: "20px" }} />
-              <span style={{ fontSize: "20px" }}>{TITLE_WEAKNESSES}</span>
-              <Tooltip text={MSG_HELP_WEAKNESSES}>
-                <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
-              </Tooltip>
-              {!(weaknesses && weaknesses.length) ?
-                <ElementsComponent
-                  schema={schemaoOportunitiesWeaknesses}
-                  placeholder={WEAKNESSES_PLACEHOLDER}
-                  messageButton={`Agregar ${SINGULAR_TITLE_WEAKNESSES}`}
-                  name={WEAKNESSES}
-                  max={5}
-                  title={TITLE_WEAKNESSES}
-                  isEditable={true}
-                  singularTitle={SINGULAR_TITLE_WEAKNESSES}
-                  showCheck={true}
-                />
-                :
-                <div>
-                  <Row style={{ padding: "10px 10px 20px 20px", marginBottom: 30, display: 'flex', flexDirection: 'row' }} end="xs">
-                    <Col xs={6} md={6} lg={6}>
-                      <Icon
-                        className='icon-message-elements'
-                        size='huge'
-                        name={'add square'}
-                        style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
-                        onClick={() => {
+            {!weaknesses.length ?
+              <ElementsComponent
+                schema={schemaoOportunitiesWeaknesses}
+                placeholder={WEAKNESSES_PLACEHOLDER}
+                messageButton={`Agregar ${SINGULAR_TITLE_WEAKNESSES}`}
+                name={WEAKNESSES}
+                max={3}
+                title={TITLE_WEAKNESSES}
+                isEditable={true}
+                singularTitle={SINGULAR_TITLE_WEAKNESSES}
+                showCheck={true}
+              />
 
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                  <Row style={{ padding: "10px 10px 20px 30px", marginBottom: 70, width: '99%' }} end="xs">
-                    <ItemList
-                      data={weaknesses}
-                      handleDelete={undefined}
-                      handleEdit={undefined}
-                      handleOnSelect={() => console.log('')}
-                      showCheck={true}
-                      title={TITLE_WEAKNESSES}
-                      isEditable={true}
+              :
+
+              <div>
+                <Row style={{ padding: "10px 10px 20px 20px", marginBottom: 30, display: 'flex', flexDirection: 'row' }} end="xs">
+                  <Col xs={1} md={1} lg={1} style={{ justifySelf: 'end' }}>
+                    <Icon
+                      className='icon-message-elements'
+                      size='huge'
+                      name={'add square'}
+                      style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
+                      onClick={() => console.log('hola')}
                     />
-                  </Row>
-                </div>
-              }
-            </div>
+                  </Col>
+                </Row>
+                <Row style={{ padding: "10px 10px 20px 30px", marginBottom: 70, width: '99%' }} end="xs">
+                  <ItemList
+                    data={weaknesses.filter(weakness => weakness.associated)}
+                    handleDelete={undefined}
+                    handleEdit={undefined}
+                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(WEAKNESSES, element, checked)}
+                    showCheck={true}
+                    title={"Debilidades 2"}
+                    isEditable={true}
+                  />
+                </Row>
+              </div>
+            }
+
           </Col>
         </Row>
       </div >
@@ -154,15 +137,16 @@ class SelectOpportunitiesWeaknesses extends Component {
   }
 }
 
-const mapStateToProps = ({ elementsReducer, clientInformacion }) => ({
+const mapStateToProps = ({ elementsReducer }) => ({
   elementsReducer,
-  clientInformacion,
-  weaknesses: clientInformacion.get('responseClientInfo').clientDetailsRequest.weaknesses.map(element => Object.assign({}, element, { idObject: element.id })) || [],
-  opportunities: clientInformacion.get('responseClientInfo').clientDetailsRequest.opportunities.map(element => Object.assign({}, element, { idObject: element.id })) || []
+  weaknesses: elementsReducer[WEAKNESSES].elements || [],
+  opportunities: elementsReducer[OPPORTUNITIES].elements || [],
 });
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({}, dispatch)
+  return bindActionCreators({
+    dispatchAddToList: addToList,
+  }, dispatch)
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectOpportunitiesWeaknesses);

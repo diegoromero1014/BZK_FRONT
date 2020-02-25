@@ -33,35 +33,11 @@ export function buildLinkedClientDetailsRequestForSubmit(store, clientId) {
   }
 }
 
-export function combineClientDetails(linkedDetails, clientDetails) {
-
-  if (!clientDetails) {
-    clientDetails = []
-  }
-
-  if (!linkedDetails) {
-    linkedDetails = []
-  }
-
-  let details = linkedDetails.map(element => {
-    return Object.assign({}, element, {
-      checked: true
-    });
-  });
-
-  let elementsToAdd = clientDetails.filter(element => {
-    let found = false;
-    linkedDetails.map(linkedDetail => {
-      if (element.id == linkedDetail.id) {
-        found = true;
-        return;
-      }
-    });
-    return !found;
-  });
+export function combineClientDetails(linkedDetails = [], clientDetails = []) {
+  const details = linkedDetails.map(element => Object.assign({}, element, { associated: true }));
+  const elementsToAdd = clientDetails.filter(element => !linkedDetails.find(item => item.id === element.id));
 
   return details.concat(elementsToAdd);
-
 }
 
 export class ListaObjetos extends Component {
