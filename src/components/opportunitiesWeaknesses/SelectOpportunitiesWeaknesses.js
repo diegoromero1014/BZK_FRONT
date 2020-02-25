@@ -3,13 +3,26 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from "react-flexbox-grid";
 import { Icon } from 'semantic-ui-react';
-import Modal from 'react-modal';
 import ItemList from "../elements/itemList";
+import Tooltip from '../toolTip/toolTipComponent';
 import ElementsComponent from "../elements";
 import { addToList } from '../elements/actions';
-import { OBJECTIVES_PLACEHOLDER } from "../participants/constants";
-import { schema } from "../participants/schema";
-import { OPPORTUNITIES, WEAKNESSES } from './constants';
+import { schemaoOportunitiesWeaknesses } from "./schema";
+import { 
+  OPPORTUNITIES,
+  WEAKNESSES,
+  TITLE_OPPORTUNITIES, 
+  TITLE_WEAKNESSES, 
+  OPPORTUNITIES_PLACEHOLDER, 
+  WEAKNESSES_PLACEHOLDER, 
+  SINGULAR_TITLE_OPPORTUNITIES, 
+  SINGULAR_TITLE_WEAKNESSES,
+  MSG_HELP_OPPORTUNITIES,
+  MSG_HELP_WEAKNESSES,
+  ICON_OPPORTUNITIES,
+  ICON_WEAKNESSES
+} from './constants';
+import Modal from 'react-modal';
 import ModalContentComponent from "./ModalContentComponent";
 
 class SelectOpportunitiesWeaknesses extends Component {
@@ -56,21 +69,27 @@ class SelectOpportunitiesWeaknesses extends Component {
 
         <Row style={{ width: '99%', paddingLeft: 20 }}>
           <Col xs={6}>
+            <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+              <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+              <i className={ICON_OPPORTUNITIES} style={{ fontSize: "20px" }} />
+              <span style={{ fontSize: "20px" }}>{TITLE_OPPORTUNITIES}</span>
+              <Tooltip text={MSG_HELP_OPPORTUNITIES}>
+                <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
+              </Tooltip>
+            </div>
             {!opportunities.length ?
               <ElementsComponent
-                schema={schema}
-                placeholder={OBJECTIVES_PLACEHOLDER}
-                messageButton='Agregar'
+                schema={schemaoOportunitiesWeaknesses}
+                placeholder={OPPORTUNITIES_PLACEHOLDER}
+                messageButton={`Agregar ${SINGULAR_TITLE_OPPORTUNITIES}`}
                 name={OPPORTUNITIES}
                 max={3}
-                title={'Oportunidades 1'}
+                title={TITLE_OPPORTUNITIES}
                 isEditable={!isEditable}
-                singularTitle={'oportunidad'}
+                singularTitle={SINGULAR_TITLE_OPPORTUNITIES}
                 showCheck={true}
               />
-
               :
-
               <div>
                 <Row style={{ padding: "10px 10px 20px 20px", marginBottom: 30, display: 'flex', flexDirection: 'row' }} end="xs">
                   <Col xs={1} md={1} lg={1} style={{ justifySelf: 'end' }}>
@@ -83,9 +102,9 @@ class SelectOpportunitiesWeaknesses extends Component {
                         this.setState({
                           open: true,
                           name: OPPORTUNITIES,
-                          singularTitle: 'oportunidad',
-                          title: 'Oportunidades',
-                          placeholder: 'Oportunidades'
+                          singularTitle: SINGULAR_TITLE_OPPORTUNITIES,
+                          title: TITLE_OPPORTUNITIES,
+                          placeholder: OPPORTUNITIES_PLACEHOLDER
                         })
                       }
                     />
@@ -98,27 +117,34 @@ class SelectOpportunitiesWeaknesses extends Component {
                     handleEdit={undefined}
                     handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(OPPORTUNITIES, element, checked)}
                     showCheck={true}
-                    title={"Oportunidades 2"}
+                    title={TITLE_OPPORTUNITIES}
                     isEditable={!isEditable}
                     show={false}
                   />
                 </Row>
               </div>
             }
-
           </Col>
 
           <Col xs={6}>
+            <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+              <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+              <i className={ICON_WEAKNESSES} style={{ fontSize: "20px" }} />
+              <span style={{ fontSize: "20px" }}>{TITLE_WEAKNESSES}</span>
+              <Tooltip text={MSG_HELP_WEAKNESSES}>
+                <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
+              </Tooltip>
+            </div>
             {!weaknesses.length ?
               <ElementsComponent
-                schema={schema}
-                placeholder={OBJECTIVES_PLACEHOLDER}
-                messageButton='Agregar'
+                schema={schemaoOportunitiesWeaknesses}
+                placeholder={WEAKNESSES_PLACEHOLDER}
+                messageButton={`Agregar ${SINGULAR_TITLE_WEAKNESSES}`}
                 name={WEAKNESSES}
                 max={3}
-                title={'Debilidades 1'}
+                title={TITLE_WEAKNESSES}
                 isEditable={!isEditable}
-                singularTitle={'oportunidad'}
+                singularTitle={SINGULAR_TITLE_WEAKNESSES}
                 showCheck={true}
               />
 
@@ -136,9 +162,9 @@ class SelectOpportunitiesWeaknesses extends Component {
                         this.setState({
                           open: true,
                           name: WEAKNESSES,
-                          singularTitle: 'debilidad',
-                          title: 'Debilidades',
-                          placeholder: 'Debilidades'
+                          singularTitle: SINGULAR_TITLE_WEAKNESSES,
+                          title: TITLE_WEAKNESSES,
+                          placeholder: WEAKNESSES_PLACEHOLDER
                         })
                       }
                     />
@@ -151,7 +177,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                     handleEdit={undefined}
                     handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(WEAKNESSES, element, checked)}
                     showCheck={true}
-                    title={"Debilidades 2"}
+                    title={TITLE_WEAKNESSES}
                     isEditable={!isEditable}
                     show={false}
                   />

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { cleanList, addToList, createList } from '../elements/actions';
 import ElementsComponent from '../elements';
-import { schema } from '../participants/schema';
+import { schemaoOportunitiesWeaknesses } from './schema';
 
 class ModalContentComponent extends Component {
 
@@ -12,9 +12,9 @@ class ModalContentComponent extends Component {
         return (
             <div>
                 <ElementsComponent
-                    schema={schema}
+                    schema={schemaoOportunitiesWeaknesses}
                     placeholder={placeholder}
-                    messageButton='Agregar'
+                    messageButton={`Agregar ${singularTitle}`}
                     name={name}
                     max={3}
                     title={title}

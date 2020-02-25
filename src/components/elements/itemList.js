@@ -60,7 +60,7 @@ const ItemList = ({ data, handleDelete, handleEdit, handleOnSelect, showCheck, t
     } else {
         return (
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', border: '1px solid #e1e1e1', color: '#3f3f3f', borderRadius: 3, }}>
-                <p>{`No se han adicionado ${title}`}</p>
+                <p>{`No se han ${showCheck ? 'asociado': 'adicionado'} ${title}`}</p>
             </div>
         )
     }
