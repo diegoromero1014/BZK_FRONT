@@ -37,38 +37,6 @@ class ModalComponentPendingTask extends Component {
         this._closeCreate = this._closeCreate.bind(this);
         this._handleCreatePendingTask = this._handleCreatePendingTask.bind(this);
         this.processValidation =this.processValidation.bind(this);
-        this.notes = [
-            {
-                id: 3123123,
-                initials: 'MC',
-                author: 'Monica Castillo',
-                createdTimestamp: 1517597630576,
-                content: 'Recuerda hacer la diligencia a la dirección pactada',
-                replies: [
-                    {
-                        id: 48489477,
-                        initials: 'CR',
-                        author: 'Cristhian Rios',
-                        createdTimestamp: 1517597630576,
-                        content: 'Ya está listo',
-                    },
-                    {
-                        id: 4890984,
-                        initials: 'AA',
-                        author: 'Alvaro Agudelo',
-                        createdTimestamp: 1517597630576,
-                        content: 'Moni, tenemos un inconveniente.',
-                    }
-                ]
-            },
-            {
-                id: 43223,
-                initials: 'DG',
-                author: 'Daniel Gallego',
-                createdTimestamp: 1517597630576,
-                content: 'Enterado'
-            },
-        ]
         this.state = {
             showEx: false,
             showEr: false,

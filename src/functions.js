@@ -22,3 +22,12 @@ export const renderMessageError = err => (
        <div className="ui pointing red basic label"> {err} </div>
     </div>
 );
+
+
+export function getUsernameInitials(username){
+    let usernameSplit = username.split(' ');
+    if(usernameSplit.length > 1){
+        return usernameSplit[0].charAt(0).toUpperCase() + usernameSplit[1].charAt(0).toUpperCase();
+    }
+    return usernameSplit[0].charAt(0).toUpperCase() + usernameSplit[0].charAt(1).toUpperCase();
+}

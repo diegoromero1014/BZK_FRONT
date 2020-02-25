@@ -14,6 +14,7 @@ import _ from "lodash";
 import {REQUEST_SUCCESS} from "../../../constantsGlobal";
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import {COMMENT_CREATED_ERROR, COMMENT_CREATED_SUCCESS, COMMENT_CREATED_TITLE} from "./constants";
+import {getUsernameInitials} from "../../../functions";
 
 export class CommentsComponent extends Component {
 
@@ -21,7 +22,6 @@ export class CommentsComponent extends Component {
         super(props);
         this.onSearch$ = new Subject();
         this.users = [];
-
         this.state = {
             commentBeingReplied: null,
             commentReply: '',
@@ -35,6 +35,8 @@ export class CommentsComponent extends Component {
     }
 
     componentWillUnmount() {
+        const { dispatchClearComments } = this.props;
+        dispatchClearComments();
         if(this.subscription){
             this.subscription.unsubscribe();
         }
@@ -78,20 +80,31 @@ export class CommentsComponent extends Component {
 
     /*****************Funciones para pasar al TaskPage*******************************/
     addComment = async (parentCommentId, content) => {
-        const { dispatchAddCommentList, dispatchSwtShowMessage} = this.props;
-        let taskId = 123;
+        const { taskId, dispatchAddCommentList } = this.props;
+        const author = window.localStorage.getItem('name');
+        const initials = getUsernameInitials(author);
         const comment = {
-            taskId,
+            id: _.uniqueId(),
+            taskId: taskId || null,
             content,
-            parentCommentId
+            parentCommentId,
+            initials,
+            author,
+            replies: [],
+            createdTimestamp: moment(new Date())
         };
 
         if(taskId){
+            delete comment.id;
             await this.createComment(comment);
         }else{
             dispatchAddCommentList(comment);
-            dispatchSwtShowMessage('success', COMMENT_CREATED_TITLE, COMMENT_CREATED_SUCCESS);
         }
+        this.setState({
+            comment: '',
+            commentReply: '',
+            commentBeingReplied: null
+        });
     };
 
     createComment = async (comment) => {
@@ -112,6 +125,13 @@ export class CommentsComponent extends Component {
 
     /***************************************************************/
 
+    renderCommentContent = (content) => {
+        const regexTag = new RegExp('\\]\\(\\d*\\)');
+        let chain = content.split('@[');
+        chain = chain.map(element => element.replace(regexTag, '').trim());
+        return chain.join(' ');
+    }
+
     renderComments = (comments) => {
         return comments.map(({ id, initials, author, createdTimestamp, content, replies }) =>
             <Comment key={id}>
@@ -121,7 +141,7 @@ export class CommentsComponent extends Component {
                     <Comment.Metadata>
                         <div>{moment(new Date(createdTimestamp)).locale('es').fromNow()}</div>
                     </Comment.Metadata>
-                    <Comment.Text>{content}</Comment.Text>
+                    <Comment.Text className="commentText">{this.renderCommentContent(content)}</Comment.Text>
                     <Comment.Actions>
                         <Comment.Action onClick={() => this.replyCommentAction(id)}>Responder</Comment.Action>
                     </Comment.Actions>
@@ -157,7 +177,7 @@ export class CommentsComponent extends Component {
         const { header, comments } = this.props;
         return (
             <div>
-                <Comment.Group style={{ width: '100%', margin: 0, maxWidth: 'initial' }} threaded>
+                <Comment.Group style={{ width: '100%', margin: 0, maxWidth: 'initial' }}>
                     {header &&
                         <Header as='p' dividing style={{ minHeight: 30 }}>
                             {header}
@@ -172,7 +192,7 @@ export class CommentsComponent extends Component {
                     <Form reply>
                         <Row>
                             <Col xs={12} md={12} lg={12}>
-                                <MentionsInput value={this.state.comment} onChange={event => this.handleChange(event, 'new')} className="mentions">
+                                <MentionsInput value={this.state.comment} onChange={event => this.handleChange(event, 'new')} className="mentions" placeholder="Escribe aquí tu nota">
                                     <Mention
                                         trigger="@"
                                         data={this.fetchUsers}
