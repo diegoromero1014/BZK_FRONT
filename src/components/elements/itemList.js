@@ -2,11 +2,7 @@ import React from 'react';
 import { Table } from 'semantic-ui-react';
 import ToolTip from '../toolTip/toolTipComponent';
 
-let selectedRecord;
-
-const ItemList = ({ data, handleDelete, handleEdit, handleOnSelect, showCheck, title, show, isEditable }) => {
-
-    if (!show) { selectedRecord = null; }
+const ItemList = ({ data, handleDelete, handleEdit, handleOnSelect, showCheck, title, show, isEditable, selectedRecord }) => {
 
     if (data.length) {
         return (
@@ -18,15 +14,20 @@ const ItemList = ({ data, handleDelete, handleEdit, handleOnSelect, showCheck, t
                                 <Table.Cell textAlign='left' style={{ width: 10 }} verticalAlign='middle'>
                                     {showCheck && handleOnSelect ?
                                         <ToolTip text={'Asociar'}>
-                                            <input type="checkbox" name="select" id="select" defaultChecked={element.associated} onClick={event => handleOnSelect(element, event)} />
+                                            <input 
+                                                type="checkbox" 
+                                                name="select" 
+                                                id="select" 
+                                                checked={element.associated} 
+                                                onClick={event => handleOnSelect(element, event)} 
+                                            />
                                         </ToolTip>
                                         :
 
                                         handleEdit &&
                                         <ToolTip text={'Editar'}>
                                             <i style={{ cursor: 'pointer' }} className="pencil icon" onClick={() => {
-                                                handleEdit(element);
-                                                selectedRecord = index;
+                                                handleEdit(element, index);
                                             }} />
                                         </ToolTip>
                                     }
@@ -37,8 +38,7 @@ const ItemList = ({ data, handleDelete, handleEdit, handleOnSelect, showCheck, t
                                     style={handleEdit ? { cursor: 'pointer', textAlign: 'justify', whiteSpace: 'pre-line' } : { textAlign: 'justify', whiteSpace: 'pre-line' }}
                                     onClick={() => {
                                         if (handleEdit) {
-                                            handleEdit(element);
-                                            selectedRecord = index;
+                                            handleEdit(element, index);
                                         }
                                     }} >
                                     {element.text}

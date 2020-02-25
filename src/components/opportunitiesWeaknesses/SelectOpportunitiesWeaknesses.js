@@ -3,14 +3,30 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from "react-flexbox-grid";
 import { Icon } from 'semantic-ui-react';
+import Modal from 'react-modal';
 import ItemList from "../elements/itemList";
 import ElementsComponent from "../elements";
 import { addToList } from '../elements/actions';
 import { OBJECTIVES_PLACEHOLDER } from "../participants/constants";
 import { schema } from "../participants/schema";
 import { OPPORTUNITIES, WEAKNESSES } from './constants';
+import ModalContentComponent from "./ModalContentComponent";
 
 class SelectOpportunitiesWeaknesses extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      open: false,
+      name: '',
+      singularTitle: '',
+      title: '',
+      placeholder: ''
+    }
+  }
+
+  handleCloseModal = () => this.setState({ open: false });
+
 
   handleOnSelect = (name, element, associated) => {
     const { dispatchAddToList } = this.props;
@@ -19,7 +35,8 @@ class SelectOpportunitiesWeaknesses extends Component {
   }
 
   render() {
-    const { visual, opportunities, weaknesses } = this.props;
+    const { visual, opportunities, weaknesses, isEditable } = this.props;
+    const { open, name, singularTitle, title, placeholder } = this.state;
 
     return (
       <div>
@@ -47,7 +64,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                 name={OPPORTUNITIES}
                 max={3}
                 title={'Oportunidades 1'}
-                isEditable={true}
+                isEditable={!isEditable}
                 singularTitle={'oportunidad'}
                 showCheck={true}
               />
@@ -62,7 +79,15 @@ class SelectOpportunitiesWeaknesses extends Component {
                       size='huge'
                       name={'add square'}
                       style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
-                      onClick={() => console.log('hola')}
+                      onClick={() =>
+                        this.setState({
+                          open: true,
+                          name: OPPORTUNITIES,
+                          singularTitle: 'oportunidad',
+                          title: 'Oportunidades',
+                          placeholder: 'Oportunidades'
+                        })
+                      }
                     />
                   </Col>
                 </Row>
@@ -74,7 +99,8 @@ class SelectOpportunitiesWeaknesses extends Component {
                     handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(OPPORTUNITIES, element, checked)}
                     showCheck={true}
                     title={"Oportunidades 2"}
-                    isEditable={true}
+                    isEditable={!isEditable}
+                    show={false}
                   />
                 </Row>
               </div>
@@ -91,7 +117,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                 name={WEAKNESSES}
                 max={3}
                 title={'Debilidades 1'}
-                isEditable={true}
+                isEditable={!isEditable}
                 singularTitle={'oportunidad'}
                 showCheck={true}
               />
@@ -106,7 +132,15 @@ class SelectOpportunitiesWeaknesses extends Component {
                       size='huge'
                       name={'add square'}
                       style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
-                      onClick={() => console.log('hola')}
+                      onClick={() =>
+                        this.setState({
+                          open: true,
+                          name: WEAKNESSES,
+                          singularTitle: 'debilidad',
+                          title: 'Debilidades',
+                          placeholder: 'Debilidades'
+                        })
+                      }
                     />
                   </Col>
                 </Row>
@@ -118,7 +152,8 @@ class SelectOpportunitiesWeaknesses extends Component {
                     handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(WEAKNESSES, element, checked)}
                     showCheck={true}
                     title={"Debilidades 2"}
-                    isEditable={true}
+                    isEditable={!isEditable}
+                    show={false}
                   />
                 </Row>
               </div>
@@ -126,6 +161,25 @@ class SelectOpportunitiesWeaknesses extends Component {
 
           </Col>
         </Row>
+
+        <Modal isOpen={open} onRequestClose={this.handleCloseModal} className="modalBt4-fade modal fade contact-detail-modal in" style={{ zIndex: 100 }}>
+          <div className="modalBt4-dialog modalBt4-lg" style={{ zIndex: 100 }}>
+            <div className="modalBt4-content modal-content" style={{ zIndex: 100 }}>
+              <div className="modalBt4-header modal-header">
+                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">{title}</h4>
+
+                <button type="button" onClick={this.handleCloseModal} className="close" data-dismiss="modal" role="close">
+                  <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
+                  <span className="sr-only">Close</span>
+                </button>
+              </div>
+
+              {name &&
+                <ModalContentComponent name={name} singularTitle={singularTitle} title={title} placeholder={placeholder} />
+              }
+            </div>
+          </div>
+        </Modal>
       </div >
     );
   }
