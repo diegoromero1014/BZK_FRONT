@@ -177,7 +177,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                     handleEdit={undefined}
                     handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(WEAKNESSES, element, checked)}
                     showCheck={true}
-                    title={"Debilidades 2"}
+                    title={TITLE_WEAKNESSES}
                     isEditable={!isEditable}
                     show={false}
                   />

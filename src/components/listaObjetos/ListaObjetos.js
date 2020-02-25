@@ -247,7 +247,7 @@ export class ListaObjetos extends Component {
     this.setState({
       objetos
     });
-    
+
   };
 
   newObjeto = event => {
@@ -363,64 +363,6 @@ export class ListaObjetos extends Component {
 
     return (
       <div className="container-listaObjetos" id={titulo}>
-        {previsit &&
-          (<Modal isOpen={modalPrevisit} className="modalBt3-fade modal fade contact-detail-modal in">
-            <div className="modalBt4-dialog modalBt4-lg">
-              <div className="modalBt4-content modal-content">
-                <div className="modalBt4-header modal-header">
-                  <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">{`Asociar ${tituloCompleto}`}</h4>
-                  <button type="button" onClick={this.cerrarCampoObjeto} className="close" data-dismiss="modal" role="close">
-                    <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
-                  </button>
-                </div>
-                <div style={{ width: "100%", padding: "15px" }}>
-                  <button
-                    style={{ marginLeft: "16px" }}
-                    className="button-add"
-                    onClick={this.saveObjetosAsociados}>
-                    Guardar
-                  </button>
-                  <button
-                    style={{ marginLeft: "10px" }}
-                    className="button-cancel"
-                    type="button"
-                    onClick={this.cerrarCampoObjeto}>
-                    Cancelar
-                  </button>
-                  <SweetAlert
-                    type="warning"
-                    show={alertAsociar}
-                    title="Atención"
-                    text={`Señor usuario, debe seleccionar al menos una ${(tituloCompleto === "Oportunidades (externas)") ? "Oportunidad (externa)" : "Debilidad (interna del cliente)"} para guardar.`}
-                    confirmButtonText="OK"
-                    onConfirm={() => this.setState({ alertAsociar: false })}
-                  />
-                  <SweetAlert
-                    type="warning"
-                    show={alertMaxAsociados}
-                    title="Atención"
-                    text={`Señor usuario, el maximo de ${titulo} que puede asociar son 5`}
-                    confirmButtonText="OK"
-                    onConfirm={() => this.setState({ alertMaxAsociados: false })}
-                  />
-                  <SweetAlert
-                    type="warning"
-                    show={modalEliminar}
-                    title="Confirmar Eliminacion"
-                    text={`Señor usuario el cambio realizado aplicara también en la pestaña Info de Mis clientes.`}
-                    confirmButtonColor="#DD6B55"
-                    confirmButtonText="Sí, estoy seguro!"
-                    cancelButtonText="Cancelar"
-                    showCancelButton={true}
-                    onCancel={() => this.setState({ modalEliminar: false })}
-                    onConfirm={() => this.eliminarObjeto(idObjetoEliminar)}
-                  />
-                </div>
-              </div>
-            </div>
-          </Modal>)
-        }
-
         <SweetAlert
           type="warning"
           show={maxObjects}
@@ -504,7 +446,7 @@ export class ListaObjetos extends Component {
         </Row>
 
         {
-          !previsit && (objetos.length !== 0 ? (
+          (objetos.length !== 0 ? (
             <Row style={{ padding: "5px 23px 5px 20px" }}>
               <Col
                 xs={12}
@@ -571,59 +513,6 @@ export class ListaObjetos extends Component {
                 </Col>
               </Row>
             ))
-        }
-
-        {previsit ?
-          (this.filterObjectsByCheckedValue("checked", objetosAsociados, true).length === 0 ?
-            (<Row style={{ padding: "5px 23px 5px 20px" }}>
-              <Col
-                xs={12}
-                md={12}
-                lg={12}
-                style={{ paddingRight: "15px", marginTop: "15px" }}>
-                <table className="ui striped table">
-                  <thead>
-                    <tr className="tr-void">
-                      <span>{`No se han asociado ${tituloCompleto}.`}</span>
-                    </tr>
-                  </thead>
-                </table>
-              </Col>
-            </Row>) :
-            (<Row style={{ padding: "5px 23px 5px 20px" }}>
-              <Col
-                xs={12}
-                md={12}
-                lg={12}
-                style={{ paddingRight: "15px", marginTop: "15px" }}>
-                <table className="ui striped table">
-                  <thead>
-                    {this.filterObjectsByCheckedValue("checked", objetosAsociados, true).map(elemento => (
-                      <tr key={elemento.idObject}>
-                        <td name="td-edit" className="collapsing">
-                          <input type="checkbox" disabled={!canEdit} checked={elemento.checked} onChange={(event) => this.desasociar(event, elemento.id)} style={{ marginTop: "4px" }} />
-                        </td>
-                        <td className="add-line-break">{elemento.text}</td>
-                      </tr>
-                    ))}
-                  </thead>
-                </table>
-                <SweetAlert
-                  type="warning"
-                  show={modalEliminar}
-                  title="Confirmar desasociación"
-                  text={` Señor usuario, ¿Esta seguro que desea desasociar esta ${(tituloCompleto === "Oportunidades (externas)") ? "Oportunidad (externa)" : "Debilidad (interna del cliente)"}?`}
-                  confirmButtonColor="#DD6B55"
-                  confirmButtonText="Sí, estoy seguro!"
-                  cancelButtonText="Cancelar"
-                  showCancelButton={true}
-                  onCancel={() => this.setState({ modalEliminar: false })}
-                  onConfirm={() => this.eliminarObjetoAsociado(idObjetoEliminar)}
-                />
-              </Col>
-            </Row>)
-          ) :
-          null
         }
       </div>
     );
