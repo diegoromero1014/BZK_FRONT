@@ -2,9 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { cleanList, addToList, createList } from '../elements/actions';
-import { OBJECTIVES_PLACEHOLDER } from '../participants/constants';
+import { 
+    TITLE_OPPORTUNITIES,
+    TITLE_WEAKNESSES,
+    OPPORTUNITIES_PLACEHOLDER,
+    WEAKNESSES_PLACEHOLDER,
+    SINGULAR_TITLE_OPPORTUNITIES,
+    SINGULAR_TITLE_WEAKNESSES,
+} from './constants';
+
 import ElementsComponent from '../elements';
-import { schema } from '../participants/schema';
+import { schemaoOportunitiesWeaknesses } from './schema';
 
 class ModalContentComponent extends Component {
 

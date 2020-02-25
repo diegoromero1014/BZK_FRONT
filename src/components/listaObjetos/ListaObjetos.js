@@ -262,30 +262,16 @@ export class ListaObjetos extends Component {
   };
 
   eliminarObjeto = idObject => {
-    const { previsit, dispatchUpdateElementFromList, dispatchUpdateElementoAsociado, dispatchSaveTemporalChanges, titulo } = this.props;
-    if (previsit) {
-      // dispatchUpdateElementoAsociado(idObject, titulo, false);
-      // const objetos = this.state.objetos.filter(elemento => elemento.id !== idObject);
-      // dispatchUpdateElementFromList(titulo, objetos);
-      // let [objetosAsociados] = this.getObjectsFromReducer();
-      // const newObjetosAsociados = objetosAsociados.filter(elemento => elemento.id !== idObject);
-      // this.setState({
-      //   modalEliminar: false
-      // });
-      // this.setState({
-      //   objetos,
-      //   objetosAsociados: newObjetosAsociados
-      // })
-    } else {
-      const objetos = this.state.objetos.filter(elemento => elemento.idObject !== idObject);
-      dispatchUpdateElementFromList(titulo, objetos);
-      this.setState({
-        modalEliminar: false
-      });
-      this.setState({
-        objetos
-      });
-    }
+    const { dispatchUpdateElementFromList, titulo } = this.props;
+    const objetos = this.state.objetos.filter(elemento => elemento.idObject !== idObject);
+    dispatchUpdateElementFromList(titulo, objetos);
+    this.setState({
+      modalEliminar: false
+    })
+    this.setState({
+      objetos
+    });
+    
   };
 
   newObjeto = event => {
