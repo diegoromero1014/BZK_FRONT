@@ -7,6 +7,7 @@ import ItemList from "../elements/itemList";
 import ElementsComponent from "../elements";
 import { OBJECTIVES_PLACEHOLDER } from "../participants/constants";
 import { schema } from "../participants/schema";
+import { OPORTUNITIES , WEAKNESSES} from './constants';
 
 class SelectOpportunitiesWeaknesses extends Component {
 
@@ -41,7 +42,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                 schema={schema}
                 placeholder={OBJECTIVES_PLACEHOLDER}
                 messageButton='Agregar'
-                name={"opportunities"}
+                name={OPORTUNITIES}
                 max={3}
                 title={'Oportunidades'}
                 isEditable={true}
@@ -87,7 +88,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                 schema={schema}
                 placeholder={OBJECTIVES_PLACEHOLDER}
                 messageButton='Agregar'
-                name={"opportunities"}
+                name={WEAKNESSES}
                 max={3}
                 title={'Debilidades 1'}
                 isEditable={true}
