@@ -29,7 +29,8 @@ import {
     checkOttherOperationsForeign,
     checkClientNeighborhood,
     checkRegexHtmlInjection,
-    validateDecimal
+    validateDecimal,
+    checkJustificationDetails
 } from '../../../src/validationsFields/rulesField';
 import {
     MESSAGE_WARNING_FORBIDDEN_CHARACTER,
@@ -879,4 +880,12 @@ describe('Test validateDecimal', ()=>{
         const expectedMessage = null;
         expect(validateDecimal(value)).equal(expectedMessage);
     });
+})
+
+describe('Test checkJustificationDetails validations', ()=>{
+    it('you must send a message when you have values ​​not allowed', ()=>{
+        const value = 'mess^~';
+        const expectedMessage = MESSAGE_WARNING_OPPORTUNITY_NAME;
+        expect(checkJustificationDetails(value)).equal(expectedMessage);
+    })
 })

@@ -9,6 +9,7 @@ let setValues;
 let dispatchSetToShow;
 let handleSubmit;
 let resetForm;
+let dispatchSwtShowMessage;
 
 describe('ElementsComponent Test', () => {
 
@@ -20,6 +21,7 @@ describe('ElementsComponent Test', () => {
         handleSubmit = spy(sinon.fake());
         dispatchSetToShow = spy(sinon.fake());
         resetForm = spy(sinon.fake());
+        dispatchSwtShowMessage = sinon.fake();
 
         defaultProps = {
             dispatchCreateList,
@@ -32,7 +34,10 @@ describe('ElementsComponent Test', () => {
             handleSubmit,
             isValid: false,
             dispatchSetToShow,
-            resetForm
+            resetForm,
+            isEditable: true,
+            name: 'any',
+            dispatchSwtShowMessage
         }
     });
 
@@ -44,6 +49,7 @@ describe('ElementsComponent Test', () => {
         const wrapper = shallow(<ElementsComponent {...defaultProps} />);
         const data = { id: 0, text: 'Any text' };
         wrapper.instance().handleOnDelete(data);
+        sinon.assert.calledOnce(dispatchSwtShowMessage);
     })
 
     it('When call handleOnEdit ', () => {
@@ -70,13 +76,14 @@ describe('ElementsComponent Test', () => {
         wrapper.find('.icon-message-elements').simulate('click');
     })
 
-    it('When onclick on icon', () => {
+    it('When onclick on icon 2', () => {
         defaultProps.elementsReducer = {
             'any': {
                 elements: []
             }
         };
-        defaultProps.max = 1;
+        defaultProps.isEditable = true;
+        defaultProps.max = 10;
         const wrapper = shallow(<ElementsComponent {...defaultProps} />);
         wrapper.find('.icon-message-elements').simulate('click');
         expect(dispatchSetToShow).to.have.been.called.exactly(1);

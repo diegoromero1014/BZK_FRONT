@@ -4,17 +4,19 @@ import thunk from "redux-thunk";
 import configureStore from "redux-mock-store";
 import { reducer as formReducer } from "redux-form";
 import {
+    BUSINESS_STATUS_NO_CONTACTADO, BUSINESS_STATUS_PERDIDO, HELP_SVA,
     NUEVO_NEGOCIO,
-    OPORTUNITIES_MANAGEMENT,
-    PRODUCT_FAMILY_LEASING
+    OPORTUNITIES_MANAGEMENT, PRODUCT_FAMILY_LEASING
 } from "../../../../../src/components/pipeline/constants";
 import Immutable from "immutable";
 import * as selectsComponent from "../../../../../src/components/selectsComponent/actions";
 import * as pipelineActions from '../../../../../src/components/pipeline/actions';
 import Input from "../../../../../src/ui/input/inputComponent";
+import TextareaComponent from '../../../../../src/ui/textarea/textareaComponent';
 import * as globalActions from '../../../../../src/components/globalComponents/actions';
 import * as actionsGlobal from "../../../../../src/actionsGlobal";
 import ComboBox from "../../../../../src/ui/comboBox/comboBoxComponent";
+import Tooltip from "../../../../../src/components/toolTip/toolTipComponent";
 
 const clientInfo = [{}, {}];
 const productFamily = [{}, {}];
@@ -134,6 +136,54 @@ describe('Pruebas unitarias editar pipeline', () =>{
 
     });
 
+    it('should render field justification when business status is no contactado', ()=>{
+
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_NO_CONTACTADO);
+        setTimeout(()=>{
+            expect(wrapper.state().showJustificationField).to.equal(true);
+            expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));
+        }, 1);
+
+    });
+
+    it('should render field justification when business status is perdido', ()=>{
+
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_PERDIDO);
+        setTimeout(()=>{
+            expect(wrapper.state().showJustificationField).to.equal(true);
+            expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));
+        }, 1);
+
+    });
+
+    it('should render field justification when business status is not perdido or no contactado', ()=>{
+
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields("gestion","buisiness");
+        setTimeout(()=>{
+            expect(wrapper.state().showJustificationField).to.equal(false);
+            expect(wrapper.find(Input).find({name:'txtJustificationDetail'})).to.have.length(0);
+        }, 1);
+
+    });
+
     it('should render SVA field', () => {
       const wrapper = shallow(<PipelineComponent store={store}  {...defaultProps}/>)
         .dive()
@@ -178,6 +228,18 @@ describe('Pruebas unitarias editar pipeline', () =>{
       expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
     });
 
+    it('field SVA should have a Tooltip', () => {
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+        const svaFieldTooltip = wrapper.find(Tooltip).find({ text: HELP_SVA, rendertooltip: HELP_SVA });
+        const svaField = wrapper.find(Input).find({ name: "sva" });
+        expect(svaFieldTooltip).to.have.lengthOf(1);
+        expect(svaFieldTooltip).contains(svaField);
+    });
+
     it('should render filed roe', ()=>{
       const wrapper = shallow(<PipelineComponent store={store}/>)
           .dive()
@@ -187,7 +249,38 @@ describe('Pruebas unitarias editar pipeline', () =>{
 
       expect(wrapper.find(Input).find({name:'roe'})).to.have.length(1);
   });
+  it("should render Margen field", () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+    wrapper.instance().showTypePolicy(1);
+    expect(wrapper.find(Input).find({ name: "margen" })).to.have.length(1);
+  });
 
+  it("should render field Margen with placeholder", () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+    wrapper.instance().showTypePolicy(1);
+    const input = wrapper.find(Input).find({ name: "margen" });
+    expect(input.props().placeholder).to.equal("Ingresa el valor sin el %.");
+  });
+
+  it("should call Margen onFocus function", () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+    wrapper.instance().showTypePolicy(1);
+    const margin = wrapper.find(Input).find({ name: "margen" });
+    margin.simulate("focus", { value: 35 });
+    expect(stubHandleFocusValueNumber.calledOnce).to.equal(true);
+  });
     it('should execute function _handleBlurValueNumber', ()=>{
         const wrapper = shallow(<PipelineComponent store={store}/>)
             .dive()
