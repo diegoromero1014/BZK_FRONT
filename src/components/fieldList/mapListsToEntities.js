@@ -33,7 +33,8 @@ export function getObjectListRequestFromReducer(opportunities, clientId) {
             client: clientId,
             id: opportunity.id,
             text: opportunity.text,
-            didChange: opportunity.didChange
+            didChange: opportunity.didChange,
+            associated: opportunity.associated
         }
     })
     return opportunitiesRequest;

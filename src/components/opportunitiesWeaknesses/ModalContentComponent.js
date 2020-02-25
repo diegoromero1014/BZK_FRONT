@@ -8,7 +8,7 @@ import { schema } from '../participants/schema';
 class ModalContentComponent extends Component {
 
     render() {
-        const { name, singularTitle, title, placeholder, isEditable } = this.props;
+        const { name, singularTitle, title, placeholder, isEditable, handleCloseModal } = this.props;
         return (
             <div>
                 <ElementsComponent
@@ -22,6 +22,16 @@ class ModalContentComponent extends Component {
                     singularTitle={singularTitle}
                     showCheck={true}
                 />
+
+                <div className="modalBt4-footer modal-footer">
+                    <button type="submit" className="btn btn-primary modal-button-edit" style={{ marginRight: 15 }}>
+                        <span>Guardar</span>
+                    </button>
+
+                    <button type="button" className="btn btn-default modal-button-edit" onClick={handleCloseModal}>
+                        <span>Cancelar</span>
+                    </button>
+                </div>
             </div>
         );
     }

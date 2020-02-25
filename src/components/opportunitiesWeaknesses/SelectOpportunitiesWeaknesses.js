@@ -175,7 +175,7 @@ class SelectOpportunitiesWeaknesses extends Component {
               </div>
 
               {name &&
-                <ModalContentComponent name={name} singularTitle={singularTitle} title={title} placeholder={placeholder} isEditable={!isEditable} />
+                <ModalContentComponent name={name} singularTitle={singularTitle} title={title} placeholder={placeholder} isEditable={!isEditable} handleCloseModal={this.handleCloseModal} />
               }
             </div>
           </div>

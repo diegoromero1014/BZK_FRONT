@@ -23,7 +23,7 @@ import {
 import "./styleListaObjetos.scss";
 
 export function getLinkedClientDetails(elements) {
-  return elements.filter(element => element['checked'])
+  return elements.filter(element => element['associated'])
 }
 
 export function buildLinkedClientDetailsRequestForSubmit(store, clientId) {
