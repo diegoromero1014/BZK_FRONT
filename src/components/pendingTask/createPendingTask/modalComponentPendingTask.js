@@ -49,11 +49,11 @@ export class ModalComponentPendingTask extends Component {
     }
 
     componentWillMount() {
-        const { getMasterDataFields, filterUsersBanco } = this.props;
+        const { getMasterDataFields, filterUsersBancoDispatch } = this.props;
         this.props.resetForm();
         getMasterDataFields([TASK_STATUS]);
         let userName = window.localStorage.getItem("userNameFront");
-        filterUsersBanco(userName).then((data)=>{
+        filterUsersBancoDispatch(userName).then((data)=>{
             this.setState({
                 nameUsuario: _.get(data, 'payload.data.data[0].title')
             });
@@ -70,7 +70,7 @@ export class ModalComponentPendingTask extends Component {
     }
 
     updateKeyValueUsersBanco(e) {
-        const { fields: { responsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
+        const { fields: { responsable, idEmployee }, filterUsersBancoDispatch, swtShowMessage } = this.props;
         const selector = $('.ui.search.responsable');
        
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
@@ -81,7 +81,7 @@ export class ModalComponentPendingTask extends Component {
                     return;
                 }
                 selector.toggleClass('loading');
-                filterUsersBanco(responsable.value).then((data) => {
+                filterUsersBancoDispatch(responsable.value).then((data) => {
                     usersBanco = _.get(data, 'payload.data.data');
                     selector.search({
                         cache: false,
@@ -272,7 +272,7 @@ export class ModalComponentPendingTask extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        filterUsersBanco,
+        filterUsersBancoDispatch:filterUsersBanco,
         createPendingTaskNew,
         getMasterDataFields,
         clearUserTaskOrder,
