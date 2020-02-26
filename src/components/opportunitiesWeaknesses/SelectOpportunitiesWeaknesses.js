@@ -25,6 +25,7 @@ import {
 import Modal from 'react-modal';
 import ModalContentComponent from "./ModalContentComponent";
 import Message from '../message';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 class SelectOpportunitiesWeaknesses extends Component {
   constructor(props) {
@@ -56,15 +57,40 @@ class SelectOpportunitiesWeaknesses extends Component {
     dispatchLinkedRecords(name);
   }
 
-  handleOnSelect = (name, element, associated) => {
-    const { dispatchAddToList, dispatchLinkedRecords } = this.props;
-    
-    dispatchAddToList({ name, data: Object.assign({}, element, { associated }), old: element });
-    dispatchLinkedRecords(name);
+  handleOnSelect = (name, element, associated, singularTitle) => {
+    const { dispatchAddToList, dispatchLinkedRecords, dispatchSwtShowMessage } = this.props;
+
+    if (!associated) {
+      dispatchSwtShowMessage(
+        'warning',
+        "Guardar información",
+        `¿Señor usuario, está seguro que desea desasociar la ${singularTitle}?`,
+        {
+          onConfirmCallback: () => {
+            dispatchAddToList({ name, data: Object.assign({}, element, { associated }), old: element });
+            dispatchLinkedRecords(name);
+          },
+          onCancelCallback: () => { }
+        },
+        {
+          "confirmButtonColor": '#DD6B55',
+          "confirmButtonText": 'Sí, estoy seguro!',
+          "cancelButtonText": "Cancelar",
+          "showCancelButton": true,
+        }
+      );
+    } else {
+      dispatchAddToList({ name, data: Object.assign({}, element, { associated }), old: element });
+      dispatchLinkedRecords(name);
+    }
+
+
+
+
   }
 
   render() {
-    const { visual, opportunities, weaknesses, isEditable, linkedWeaknesses, linkedOpportunities, elementsReducer } = this.props;
+    const { visual, opportunities, weaknesses, isEditable, linkedWeaknesses, linkedOpportunities, elementsReducer, dispatchLinkedRecords } = this.props;
     const { open, name, singularTitle, title, placeholder } = this.state;
 
     return (
@@ -87,9 +113,9 @@ class SelectOpportunitiesWeaknesses extends Component {
           <Col xs={6}>
             <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
               <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-              <i className={ICON_OPPORTUNITIES} style={{ fontSize: "20px" , marginLeft: "25px"}} />
-              <span style={{ fontSize: "20px"}}>{TITLE_OPPORTUNITIES}</span>
-              <span style={{fontSize: "20px"}}>(<span  style={{color: "red"}}>*</span>)</span>
+              <i className={ICON_OPPORTUNITIES} style={{ fontSize: "20px", marginLeft: "25px" }} />
+              <span style={{ fontSize: "20px" }}>{TITLE_OPPORTUNITIES}</span>
+              <span style={{ fontSize: "20px" }}>(<span style={{ color: "red" }}>*</span>)</span>
               <Tooltip text={MSG_HELP_OPPORTUNITIES}>
                 <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
               </Tooltip>
@@ -98,13 +124,14 @@ class SelectOpportunitiesWeaknesses extends Component {
               <ElementsComponent
                 schema={schemaoOportunitiesWeaknesses}
                 placeholder={OPPORTUNITIES_PLACEHOLDER}
-                messageButton={`Agregar ${SINGULAR_TITLE_OPPORTUNITIES}`}
+                messageButton={`Crear ${SINGULAR_TITLE_OPPORTUNITIES}`}
                 name={OPPORTUNITIES}
                 max={5}
                 title={TITLE_OPPORTUNITIES}
                 isEditable={!isEditable}
                 singularTitle={`la ${SINGULAR_TITLE_OPPORTUNITIES}`}
                 showCheck={true}
+                executeFunction={() => dispatchLinkedRecords(OPPORTUNITIES)}
               />
               :
               <div>
@@ -136,7 +163,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                     data={linkedOpportunities}
                     handleDelete={undefined}
                     handleEdit={undefined}
-                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(OPPORTUNITIES, element, checked)}
+                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(OPPORTUNITIES, element, checked, singularTitle)}
                     showCheck={true}
                     title={TITLE_OPPORTUNITIES}
                     isEditable={!isEditable}
@@ -150,9 +177,9 @@ class SelectOpportunitiesWeaknesses extends Component {
           <Col xs={6}>
             <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
               <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-              <i className={ICON_WEAKNESSES} style={{ fontSize: "20px" , marginLeft: "25px"}} />
-              <span style={{ fontSize: "20px"}}>{TITLE_WEAKNESSES}</span>
-              <span style={{fontSize: "20px"}}>(<span  style={{color: "red"}}>*</span>)</span>
+              <i className={ICON_WEAKNESSES} style={{ fontSize: "20px", marginLeft: "25px" }} />
+              <span style={{ fontSize: "20px" }}>{TITLE_WEAKNESSES}</span>
+              <span style={{ fontSize: "20px" }}>(<span style={{ color: "red" }}>*</span>)</span>
               <Tooltip text={MSG_HELP_WEAKNESSES}>
                 <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
               </Tooltip>
@@ -161,13 +188,14 @@ class SelectOpportunitiesWeaknesses extends Component {
               <ElementsComponent
                 schema={schemaoOportunitiesWeaknesses}
                 placeholder={WEAKNESSES_PLACEHOLDER}
-                messageButton={`Agregar ${SINGULAR_TITLE_WEAKNESSES}`}
+                messageButton={`Crear ${SINGULAR_TITLE_WEAKNESSES}`}
                 name={WEAKNESSES}
                 max={5}
                 title={TITLE_WEAKNESSES}
                 isEditable={!isEditable}
                 singularTitle={`la ${SINGULAR_TITLE_WEAKNESSES}`}
                 showCheck={true}
+                executeFunction={() => dispatchLinkedRecords(WEAKNESSES)}
               />
 
               :
@@ -201,7 +229,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                     data={linkedWeaknesses}
                     handleDelete={undefined}
                     handleEdit={undefined}
-                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(WEAKNESSES, element, checked)}
+                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(WEAKNESSES, element, checked, singularTitle)}
                     showCheck={true}
                     title={TITLE_WEAKNESSES}
                     isEditable={!isEditable}
@@ -259,7 +287,8 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     dispatchAddToList: addToList,
     dispatchResetRecords: resetRecords,
-    dispatchLinkedRecords: linkedRecords
+    dispatchLinkedRecords: linkedRecords,
+    dispatchSwtShowMessage: swtShowMessage
   }, dispatch)
 };
 

@@ -8,7 +8,7 @@ import { Field, ErrorMessage, withFormik } from 'formik';
 import { renderMessageError } from '../../functions';
 import ToolTip from '../toolTip/toolTipComponent';
 import '../../../styles/elements/main.scss';
-import { createList, addToList, removeFromList, setToShow } from './actions';
+import { createList, addToList, removeFromList, setToShow, linkedRecords } from './actions';
 import ItemList from './itemList';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
@@ -57,7 +57,15 @@ export class ElementsComponent extends Component {
     }
 
     handleOnSelect = (element, { target: { checked } }) => {
+<<<<<<< HEAD
         const { name, dispatchAddToList } = this.props;
+=======
+        const { name, dispatchAddToList, handleCloseModal } = this.props;
+        console.log(handleCloseModal);
+        if (handleCloseModal === undefined) {
+            console.log("estoy dandole al check en la previsita");
+        }
+>>>>>>> bec4f1a9eb59d9577a481904327076a886fbd51c
         dispatchAddToList({ name: name, data: Object.assign({}, element, { associated: checked }), old: element });
     }
 
@@ -188,7 +196,7 @@ const mapDispatchToProps = dispatch => {
         dispatchAddToList: addToList,
         dispatchRemoveFromList: removeFromList,
         dispatchSetToShow: setToShow,
-        dispatchSwtShowMessage: swtShowMessage
+        dispatchSwtShowMessage: swtShowMessage,
     }, dispatch)
 };
 
@@ -212,6 +220,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(
             delete data.objectEdited;
 
             props.dispatchAddToList({ name: props.name, data, old });
+
+            debugger;
+            
+            if (props.executeFunction) {
+                props.executeFunction();
+            }
 
             resetForm({ id: null, text: '' });
         },
