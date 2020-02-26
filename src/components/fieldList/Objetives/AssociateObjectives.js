@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Icon } from 'semantic-ui-react'
 import Objectives from './Objetives';
 
 import {
@@ -9,7 +9,7 @@ import {
     styles
 } from './utils';
 import TemplateObjectiveAndStrategies from './templateObjectiveAndStrategies';
-import ToolTipComponent from '../../toolTip/toolTipComponent';
+import ToolTip from '../../toolTip/toolTipComponent';
 import BiztrackModal from '../Objetives/BiztrackModal';
 
 
@@ -114,43 +114,49 @@ export default class AssociateObjectives extends React.Component {
     }
 
     render() {
+
+        const filteredElements = this.state.elements.filter(this.filterCheckedElements);
+
         return (
             <div>
                 <div style={{ position: "relative", marginBottom: "25px" }}>
                     <div className="add-section" style={{ position: "absolute", top: "10px", right: "10px" }} >
-                        <button className="btn" onClick={this.showAssociateSection} type="button">
                         <ToolTip text={"Asociar Objetivos"}>
-                                <Icon
-                                    className='icon-message-elements'
-                                    size='huge'
-                                    name={'add square'}
-                                    style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
-                                    disabled={!isEditable || length >= max}
-                                />
-                            </ToolTip>
-                        </button>
+                            <Icon
+                                className='icon-message-elements'
+                                size='huge'
+                                name={'add square'}
+                                style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
+                                onClick={this.showAssociateSection}
+                            />
+                        </ToolTip>
                     </div>
                 </div>
                 <div style={styles.main}>
                     {ObjectiveSectionTitle}
-                    {this.renderElements(this.state.elements.filter(this.filterCheckedElements), this.checkElement)}
-                    {this.state.showAssociateSection && <div>
-                        <BiztrackModal 
+                    {this.renderElements(filteredElements, this.checkElement)}
+                    {!filteredElements.length && <div className="elements-not-found">
+                        <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                            <span className="form-item">No se han asociado Objetivos</span>
+                        </div>
+                    </div>}
+                    {this.state.showAssociateSection &&
+                        <BiztrackModal
                             title={"Asociar Objetivos"}
                             body={
                                 <div>
                                     {this.renderElements(this.state.draftElements, this.checkDraftElement)}
-                                    <div style={{marginTop: "20px"}}>
-                                        <button style={{marginRight: "5px"}} className="btn btn-secondary section-btn-save" type="button" onClick={this.associateElements}>Guardar</button>
+                                    <div style={{ marginTop: "20px" }}>
+                                        <button style={{ marginRight: "5px" }} className="btn btn-secondary section-btn-save" type="button" onClick={this.associateElements}>Guardar</button>
                                         <button className="btn btn-primary cancel-btn" type="button" onClick={this.hideAssociateSection}>Cancelar</button>
                                     </div>
                                 </div>
                             }
                             onCancel={this.hideAssociateSection}
                         />
-                    </div>}
+                    }
                 </div>
-            </div>
+            </div >
         )
     }
 
