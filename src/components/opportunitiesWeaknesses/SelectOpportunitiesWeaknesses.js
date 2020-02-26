@@ -90,8 +90,8 @@ class SelectOpportunitiesWeaknesses extends Component {
   }
 
   render() {
-    const { visual, opportunities, weaknesses, isEditable, linkedWeaknesses, linkedOpportunities, elementsReducer } = this.props;
-    const { open, name, singularTitle, title, placeholder, dispatchLinkedRecords } = this.state;
+    const { visual, opportunities, weaknesses, isEditable, linkedWeaknesses, linkedOpportunities, elementsReducer, dispatchLinkedRecords } = this.props;
+    const { open, name, singularTitle, title, placeholder } = this.state;
 
     return (
       <div style={{ marginTop: "15px" }}>

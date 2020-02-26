@@ -217,6 +217,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(
 
             props.dispatchAddToList({ name: props.name, data, old });
 
+            debugger;
+            
             if (props.executeFunction) {
                 props.executeFunction();
             }
