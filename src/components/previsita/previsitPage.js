@@ -32,7 +32,7 @@ import CommercialReportInfoFooter from '../globalComponents/commercialReportInfo
 
 import { getLinkedClientDetails, combineClientDetails } from '../listaObjetos/ListaObjetos';
 
-import { cleanList, addToList, createList } from '../elements/actions';
+import { cleanList, addToList, createList, linkedRecords } from '../elements/actions';
 import { OPPORTUNITIES, WEAKNESSES } from '../opportunitiesWeaknesses/constants';
 
 export class PrevisitPage extends Component {
@@ -94,7 +94,7 @@ export class PrevisitPage extends Component {
 
    componentDidMount() {
 
-      const { params: { id }, dispatchShowLoading, clientInformacion, dispatchAddToList } = this.props;
+      const { params: { id }, dispatchShowLoading, clientInformacion, dispatchAddToList, dispatchLinkedRecords } = this.props;
 
       dispatchShowLoading(true, "Cargando...");
       //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA;
@@ -127,6 +127,8 @@ export class PrevisitPage extends Component {
             weaknesses.forEach((item, index) => dispatchAddToList({ data: Object.assign({}, item, { order: (index + 1) }), name: WEAKNESSES, old: null }));
          }
 
+         dispatchLinkedRecords(OPPORTUNITIES);
+         dispatchLinkedRecords(WEAKNESSES);
       });
    }
 
@@ -678,6 +680,7 @@ function mapDispatchToProps(dispatch) {
       dispatchCleanList: cleanList,
       dispatchAddToList: addToList,
       dispatchCreateList: createList,
+      dispatchLinkedRecords: linkedRecords
    }, dispatch);
 }
 

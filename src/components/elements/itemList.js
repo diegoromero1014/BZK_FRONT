@@ -13,7 +13,7 @@ const ItemList = ({ data, handleDelete, handleEdit, handleOnSelect, showCheck, t
                             <Table.Row key={index} disabled={(index === selectedRecord && show) || !isEditable}>
                                 {showCheck && handleOnSelect &&
                                     <Table.Cell textAlign='left' style={{ width: 5 }} verticalAlign='middle'>
-                                        <ToolTip text={'Asociar'}>
+                                        <ToolTip text={!element.associated ? 'Asociar' : 'Desasociar' }>
                                             <input
                                                 type="checkbox"
                                                 name="select"

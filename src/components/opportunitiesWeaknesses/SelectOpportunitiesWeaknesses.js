@@ -6,16 +6,16 @@ import { Icon } from 'semantic-ui-react';
 import ItemList from "../elements/itemList";
 import Tooltip from '../toolTip/toolTipComponent';
 import ElementsComponent from "../elements";
-import { addToList } from '../elements/actions';
+import { addToList, linkedRecords, resetRecords } from '../elements/actions';
 import { schemaoOportunitiesWeaknesses } from "./schema";
-import { 
+import {
   OPPORTUNITIES,
   WEAKNESSES,
-  TITLE_OPPORTUNITIES, 
-  TITLE_WEAKNESSES, 
-  OPPORTUNITIES_PLACEHOLDER, 
-  WEAKNESSES_PLACEHOLDER, 
-  SINGULAR_TITLE_OPPORTUNITIES, 
+  TITLE_OPPORTUNITIES,
+  TITLE_WEAKNESSES,
+  OPPORTUNITIES_PLACEHOLDER,
+  WEAKNESSES_PLACEHOLDER,
+  SINGULAR_TITLE_OPPORTUNITIES,
   SINGULAR_TITLE_WEAKNESSES,
   MSG_HELP_OPPORTUNITIES,
   MSG_HELP_WEAKNESSES,
@@ -24,6 +24,7 @@ import {
 } from './constants';
 import Modal from 'react-modal';
 import ModalContentComponent from "./ModalContentComponent";
+import Message from '../message';
 
 class SelectOpportunitiesWeaknesses extends Component {
   constructor(props) {
@@ -34,12 +35,26 @@ class SelectOpportunitiesWeaknesses extends Component {
       name: '',
       singularTitle: '',
       title: '',
-      placeholder: ''
+      placeholder: '',
+      elements: null,
     }
   }
 
-  handleCloseModal = () => this.setState({ open: false });
 
+  handleCloseModal = () => this.setState({ open: false, elements: null });
+
+  handleCancel = elements => {
+    this.handleOnReset(elements);
+    this.setState({ open: false, elements: null });
+  };
+
+  handleOnReset = elements => {
+    const { dispatchResetRecords, dispatchLinkedRecords } = this.props;
+    const { name } = this.state;
+
+    dispatchResetRecords({ name, elements });
+    dispatchLinkedRecords(name);
+  }
 
   handleOnSelect = (name, element, associated) => {
     const { dispatchAddToList } = this.props;
@@ -48,11 +63,11 @@ class SelectOpportunitiesWeaknesses extends Component {
   }
 
   render() {
-    const { visual, opportunities, weaknesses, isEditable } = this.props;
+    const { visual, opportunities, weaknesses, isEditable, linkedWeaknesses, linkedOpportunities, elementsReducer } = this.props;
     const { open, name, singularTitle, title, placeholder } = this.state;
 
     return (
-      <div style={{marginTop: "15px"}}>
+      <div style={{ marginTop: "15px" }}>
         {visual &&
           <Row className='title-section' style={{ padding: "0px 10px 10px 20px" }}>
             <Col xs={12} md={12} lg={12}>
@@ -71,8 +86,8 @@ class SelectOpportunitiesWeaknesses extends Component {
           <Col xs={6}>
             <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
               <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-              <i className={ICON_OPPORTUNITIES} style={{ fontSize: "20px" , marginLeft: "25px"}} />
-              <span style={{ fontSize: "20px"}}>{TITLE_OPPORTUNITIES}</span>
+              <i className={ICON_OPPORTUNITIES} style={{ fontSize: "20px", marginLeft: "25px" }} />
+              <span style={{ fontSize: "20px" }}>{TITLE_OPPORTUNITIES}</span>
               <Tooltip text={MSG_HELP_OPPORTUNITIES}>
                 <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
               </Tooltip>
@@ -98,21 +113,25 @@ class SelectOpportunitiesWeaknesses extends Component {
                       size='huge'
                       name={'add square'}
                       style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
-                      onClick={() =>
+                      onClick={() => {
+                        if (!this.state.elements) {
+                          this.setState({ elements: Object.assign([], elementsReducer[OPPORTUNITIES].elements) });
+                        }
+
                         this.setState({
                           open: true,
                           name: OPPORTUNITIES,
                           singularTitle: SINGULAR_TITLE_OPPORTUNITIES,
                           title: TITLE_OPPORTUNITIES,
                           placeholder: OPPORTUNITIES_PLACEHOLDER
-                        })
-                      }
+                        });
+                      }}
                     />
                   </Col>
                 </Row>
                 <Row style={{ padding: "10px 10px 20px 30px", marginBottom: 70, width: '99%' }} end="xs">
                   <ItemList
-                    data={opportunities.filter(opportunity => opportunity.associated)}
+                    data={linkedOpportunities}
                     handleDelete={undefined}
                     handleEdit={undefined}
                     handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(OPPORTUNITIES, element, checked)}
@@ -129,8 +148,8 @@ class SelectOpportunitiesWeaknesses extends Component {
           <Col xs={6}>
             <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
               <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-              <i className={ICON_WEAKNESSES} style={{ fontSize: "20px" , marginLeft: "25px"}} />
-              <span style={{ fontSize: "20px"}}>{TITLE_WEAKNESSES}</span>
+              <i className={ICON_WEAKNESSES} style={{ fontSize: "20px", marginLeft: "25px" }} />
+              <span style={{ fontSize: "20px" }}>{TITLE_WEAKNESSES}</span>
               <Tooltip text={MSG_HELP_WEAKNESSES}>
                 <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
               </Tooltip>
@@ -158,21 +177,25 @@ class SelectOpportunitiesWeaknesses extends Component {
                       size='huge'
                       name={'add square'}
                       style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
-                      onClick={() =>
+                      onClick={() => {
+                        if (!this.state.elements) {
+                          this.setState({ elements: Object.assign([], elementsReducer[WEAKNESSES].elements) });
+                        }
+
                         this.setState({
                           open: true,
                           name: WEAKNESSES,
                           singularTitle: SINGULAR_TITLE_WEAKNESSES,
                           title: TITLE_WEAKNESSES,
                           placeholder: WEAKNESSES_PLACEHOLDER
-                        })
-                      }
+                        });
+                      }}
                     />
                   </Col>
                 </Row>
                 <Row style={{ padding: "10px 10px 20px 30px", marginBottom: 70, width: '99%' }} end="xs">
                   <ItemList
-                    data={weaknesses.filter(weakness => weakness.associated)}
+                    data={linkedWeaknesses}
                     handleDelete={undefined}
                     handleEdit={undefined}
                     handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(WEAKNESSES, element, checked)}
@@ -187,20 +210,31 @@ class SelectOpportunitiesWeaknesses extends Component {
           </Col>
         </Row>
 
-        <Modal isOpen={open} onRequestClose={this.handleCloseModal} className="modalBt4-fade modal fade contact-detail-modal in" style={{ zIndex: 100 }}>
+        <Modal isOpen={open} onRequestClose={() => this.handleCancel(this.state.elements)} className="modalBt4-fade modal fade contact-detail-modal in" style={{ zIndex: 100 }}>
           <div className="modalBt4-dialog modalBt4-lg" style={{ zIndex: 100 }}>
             <div className="modalBt4-content modal-content" style={{ zIndex: 100 }}>
               <div className="modalBt4-header modal-header">
                 <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">{title}</h4>
 
-                <button type="button" onClick={this.handleCloseModal} className="close" data-dismiss="modal" role="close">
+                <button type="button" onClick={() => this.handleCancel(this.state.elements)} className="close" data-dismiss="modal" role="close">
                   <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                   <span className="sr-only">Close</span>
                 </button>
               </div>
 
               {name &&
-                <ModalContentComponent name={name} singularTitle={singularTitle} title={title} placeholder={placeholder} isEditable={!isEditable} handleCloseModal={this.handleCloseModal} />
+                <div>
+                  <Message message={"Los cambios realizados se ve verán reflejados en la información del cliente"} show={true} icon={'exclamation'} />
+                  <ModalContentComponent
+                    name={name}
+                    singularTitle={singularTitle}
+                    title={title}
+                    placeholder={placeholder}
+                    isEditable={!isEditable}
+                    handleCloseModal={this.handleCloseModal}
+                    handleCancel={this.handleCancel}
+                  />
+                </div>
               }
             </div>
           </div>
@@ -214,11 +248,15 @@ const mapStateToProps = ({ elementsReducer }) => ({
   elementsReducer,
   weaknesses: elementsReducer[WEAKNESSES].elements || [],
   opportunities: elementsReducer[OPPORTUNITIES].elements || [],
+  linkedWeaknesses: elementsReducer[WEAKNESSES].linkedRecords || [],
+  linkedOpportunities: elementsReducer[OPPORTUNITIES].linkedRecords || [],
 });
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     dispatchAddToList: addToList,
+    dispatchResetRecords: resetRecords,
+    dispatchLinkedRecords: linkedRecords
   }, dispatch)
 };
 
