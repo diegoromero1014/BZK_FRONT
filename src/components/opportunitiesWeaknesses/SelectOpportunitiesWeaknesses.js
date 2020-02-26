@@ -52,7 +52,7 @@ class SelectOpportunitiesWeaknesses extends Component {
     const { open, name, singularTitle, title, placeholder } = this.state;
 
     return (
-      <div>
+      <div style={{marginTop: "15px"}}>
         {visual &&
           <Row className='title-section' style={{ padding: "0px 10px 10px 20px" }}>
             <Col xs={12} md={12} lg={12}>
@@ -71,8 +71,8 @@ class SelectOpportunitiesWeaknesses extends Component {
           <Col xs={6}>
             <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
               <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-              <i className={ICON_OPPORTUNITIES} style={{ fontSize: "20px" }} />
-              <span style={{ fontSize: "20px" }}>{TITLE_OPPORTUNITIES}</span>
+              <i className={ICON_OPPORTUNITIES} style={{ fontSize: "20px" , marginLeft: "25px"}} />
+              <span style={{ fontSize: "20px"}}>{TITLE_OPPORTUNITIES}</span>
               <Tooltip text={MSG_HELP_OPPORTUNITIES}>
                 <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
               </Tooltip>
@@ -129,8 +129,8 @@ class SelectOpportunitiesWeaknesses extends Component {
           <Col xs={6}>
             <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
               <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-              <i className={ICON_WEAKNESSES} style={{ fontSize: "20px" }} />
-              <span style={{ fontSize: "20px" }}>{TITLE_WEAKNESSES}</span>
+              <i className={ICON_WEAKNESSES} style={{ fontSize: "20px" , marginLeft: "25px"}} />
+              <span style={{ fontSize: "20px"}}>{TITLE_WEAKNESSES}</span>
               <Tooltip text={MSG_HELP_WEAKNESSES}>
                 <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
               </Tooltip>
@@ -184,7 +184,6 @@ class SelectOpportunitiesWeaknesses extends Component {
                 </Row>
               </div>
             }
-
           </Col>
         </Row>
 
