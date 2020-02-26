@@ -25,23 +25,37 @@ class ModalContentComponent extends Component {
     }
 
     handleOnClick = () => {
-        const { dispatchSwtShowMessage } = this.props;
+        const { dispatchSwtShowMessage, element: { elements }, singularTitle, title } = this.props;
 
-        dispatchSwtShowMessage(
-            'warning',
-            "Guardar información",
-            "¿Señor usuario, está seguro que desea guardar esta información?",
-            {
-                onConfirmCallback: () => this.handleOnSave(),
-                onCancelCallback: () => { }
-            },
-            {
-                "confirmButtonColor": '#DD6B55',
-                "confirmButtonText": 'Sí, estoy seguro!',
-                "cancelButtonText": "Cancelar",
-                "showCancelButton": true,
-            }
-        );
+        if (elements.filter(item => item.associated).length === 0) {
+            dispatchSwtShowMessage(
+                "warning",
+                "Alerta",
+                `Señor usuario debe seleccionar al menos una ${singularTitle} para guardar`
+            )
+        } else if (elements.filter(item => item.associated).length > 5) {
+            dispatchSwtShowMessage(
+                "warning",
+                "Alerta",
+                `Señor usuario el maximo de ${title} son 5`
+            )
+        } else {
+            dispatchSwtShowMessage(
+                'warning',
+                "Guardar información",
+                "¿Señor usuario, está seguro que desea guardar esta información?",
+                {
+                    onConfirmCallback: () => this.handleOnSave(),
+                    onCancelCallback: () => { }
+                },
+                {
+                    "confirmButtonColor": '#DD6B55',
+                    "confirmButtonText": 'Sí, estoy seguro!',
+                    "cancelButtonText": "Cancelar",
+                    "showCancelButton": true,
+                }
+            );
+        }
     }
 
     handleOnSave = () => {

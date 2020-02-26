@@ -57,11 +57,7 @@ export class ElementsComponent extends Component {
     }
 
     handleOnSelect = (element, { target: { checked } }) => {
-        const { name, dispatchAddToList , handleCloseModal} = this.props;
-        console.log(handleCloseModal);
-        if(handleCloseModal === undefined){
-            console.log("estoy dandole al check en la previsita");
-        }
+        const { name, dispatchAddToList } = this.props;
         dispatchAddToList({ name: name, data: Object.assign({}, element, { associated: checked }), old: element });
     }
 
