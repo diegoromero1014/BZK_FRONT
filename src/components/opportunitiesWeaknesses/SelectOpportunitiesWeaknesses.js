@@ -73,6 +73,7 @@ class SelectOpportunitiesWeaknesses extends Component {
               <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
               <i className={ICON_OPPORTUNITIES} style={{ fontSize: "20px" , marginLeft: "25px"}} />
               <span style={{ fontSize: "20px"}}>{TITLE_OPPORTUNITIES}</span>
+              <span style={{fontSize: "20px"}}>(<span  style={{color: "red"}}>*</span>)</span>
               <Tooltip text={MSG_HELP_OPPORTUNITIES}>
                 <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
               </Tooltip>
@@ -83,7 +84,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                 placeholder={OPPORTUNITIES_PLACEHOLDER}
                 messageButton={`Agregar ${SINGULAR_TITLE_OPPORTUNITIES}`}
                 name={OPPORTUNITIES}
-                max={3}
+                max={5}
                 title={TITLE_OPPORTUNITIES}
                 isEditable={!isEditable}
                 singularTitle={SINGULAR_TITLE_OPPORTUNITIES}
@@ -131,6 +132,7 @@ class SelectOpportunitiesWeaknesses extends Component {
               <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
               <i className={ICON_WEAKNESSES} style={{ fontSize: "20px" , marginLeft: "25px"}} />
               <span style={{ fontSize: "20px"}}>{TITLE_WEAKNESSES}</span>
+              <span style={{fontSize: "20px"}}>(<span  style={{color: "red"}}>*</span>)</span>
               <Tooltip text={MSG_HELP_WEAKNESSES}>
                 <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
               </Tooltip>
@@ -141,7 +143,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                 placeholder={WEAKNESSES_PLACEHOLDER}
                 messageButton={`Agregar ${SINGULAR_TITLE_WEAKNESSES}`}
                 name={WEAKNESSES}
-                max={3}
+                max={5}
                 title={TITLE_WEAKNESSES}
                 isEditable={!isEditable}
                 singularTitle={SINGULAR_TITLE_WEAKNESSES}
@@ -191,8 +193,8 @@ class SelectOpportunitiesWeaknesses extends Component {
           <div className="modalBt4-dialog modalBt4-lg" style={{ zIndex: 100 }}>
             <div className="modalBt4-content modal-content" style={{ zIndex: 100 }}>
               <div className="modalBt4-header modal-header">
-                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">{title}</h4>
-
+                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">{`Asociar ${title}`}</h4>
+                
                 <button type="button" onClick={this.handleCloseModal} className="close" data-dismiss="modal" role="close">
                   <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
                   <span className="sr-only">Close</span>

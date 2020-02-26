@@ -16,7 +16,7 @@ class ModalContentComponent extends Component {
                     placeholder={placeholder}
                     messageButton={`Agregar ${singularTitle}`}
                     name={name}
-                    max={3}
+                    max={5}
                     title={title}
                     isEditable={isEditable}
                     singularTitle={singularTitle}
