@@ -6,7 +6,6 @@ import { mapKeys } from 'lodash';
 
 import ToolTip from "../toolTip/toolTipComponent";
 import SweetAlert from "../sweetalertFocus";
-import Modal from "react-modal";
 import {
   updateElementFromList, updateActiveFieldObject, openLinkModal,
   updateElementoAsociado, saveTemporalChanges, discardTemporalChanges
