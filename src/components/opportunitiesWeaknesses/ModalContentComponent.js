@@ -28,7 +28,7 @@ class ModalContentComponent extends Component {
                         <span>Guardar</span>
                     </button>
 
-                    <button type="button" className="btn btn-default modal-button-edit" onClick={handleCloseModal}>
+                    <button type="button" className="btn btn-default modal-button-edit" style={{background: "#C1C1C1"}} onClick={handleCloseModal}>
                         <span>Cancelar</span>
                     </button>
                 </div>
