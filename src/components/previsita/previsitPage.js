@@ -6,7 +6,6 @@ import moment from 'moment';
 import { Row, Col } from 'react-flexbox-grid';
 import SweetAlert from "../sweetalertFocus";
 
-import HeaderPrevisita from './headerPrevisita';
 import PrevisitFormComponent from './previsitFormComponent'
 import PermissionUserReports from "../commercialReport/permissionsUserReports";
 import { buildJsoncommercialReport, fillUsersPermissions } from '../commercialReport/functionsGenerics';
@@ -46,6 +45,7 @@ import { getLinkedClientDetails, buildLinkedClientDetailsRequestForSubmit, combi
 import {
    addInitialLinkedElements
 } from '../listaObjetos/actions';
+import ReportsHeader from "../globalComponents/reportsHeader/component";
 
 export class PrevisitPage extends Component {
 
@@ -595,7 +595,7 @@ export class PrevisitPage extends Component {
       const { documentCreatedInfo, isEditable } = this.state;
       return (
          <div className='previsit-container'>
-            <HeaderPrevisita />
+            <ReportsHeader showMessagge={true}/>
             <div style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
                <Row style={{ padding: "5px 10px 0px 20px" }}>
                   <Col xs={10} sm={10} md={10} lg={10}>

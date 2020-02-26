@@ -6,8 +6,8 @@ import {TASK_STATUS} from "../selectsComponent/constants";
 import {
     AFFIRMATIVE_ANSWER,
     CANCEL,
-    EDITAR,
-    MESSAGE_SAVE_DATA,
+    EDITAR, MESSAGE_ERROR,
+    MESSAGE_SAVE_DATA, REQUEST_ERROR,
     REQUEST_INVALID_INPUT,
     REQUEST_SUCCESS
 } from "../../constantsGlobal";
@@ -35,6 +35,8 @@ import {swtShowMessage} from "../sweetAlertMessages/actions";
 import moment from "moment";
 import {getInfoTaskUser} from '../myPendings/myTasks/actions';
 import {clearTask} from "./actions";
+import _ from 'lodash';
+import {TITLE_ERROR_VALIDITY_DATES} from "../previsita/constants";
 
 export class TaskPage extends React.Component {
     constructor(props) {
@@ -87,7 +89,6 @@ export class TaskPage extends React.Component {
         return _.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false) && this.state.isEditable;
     };
 
-
     submitForm = async (task) => {
         const {params: {id}, dispatchShowLoading, dispatchCreatePendingTaskNew, dispatchSwtShowMessage, fromModal, closeModal} = this.props;
         if (moment(task.finalDate, 'DD/MM/YYYY').isValid()) {
@@ -134,7 +135,7 @@ export class TaskPage extends React.Component {
         await this.canUserEditTask(usernameSession);
     };
 
-    canUserEditTask = async () => {
+    canUserEditTask = () => {
         if (this.state.isEditable) {
             this.setState({
                 showMessage: false,
@@ -208,9 +209,12 @@ export class TaskPage extends React.Component {
 
     render() {
         const {isEditable} = this.state;
+        const {fromModal} = this.props;
         return (
             <div className='previsit-container'>
-                <ReportsHeader/>
+                {!fromModal &&
+                    <ReportsHeader/>
+                }
                 <div style={{backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px"}}>
                     <Row style={{padding: "5px 10px 0px 20px"}}>
                         <Col xs={10} sm={10} md={10} lg={10}>

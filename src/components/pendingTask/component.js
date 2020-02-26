@@ -35,10 +35,10 @@ class UserTaskComponent extends Component {
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
-      const { tasksByClientFindServer, tasksByClient, clearUserTask, validatePermissionsByModule } = this.props;
-      clearUserTask();
-      tasksByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
-      validatePermissionsByModule(MODULE_TASKS).then((data) => {
+      const { dispatchTasksByClientFindServer, dispatchClearUserTask, dispatchValidatePermissionsByModule } = this.props;
+      dispatchClearUserTask();
+      dispatchTasksByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
+      dispatchValidatePermissionsByModule(MODULE_TASKS).then((data) => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
         } else {
@@ -59,8 +59,8 @@ class UserTaskComponent extends Component {
 
   render() {
     const { tasksByClient, reducerGlobal } = this.props;
-    var visibleTable = 'none';
-    var visibleMessage = 'block';
+    let visibleTable = 'none';
+    let visibleMessage = 'block';
     if (tasksByClient.get('rowCount') !== 0) {
       visibleTable = 'block';
       visibleMessage = 'none';
@@ -110,9 +110,9 @@ class UserTaskComponent extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    tasksByClientFindServer,
-    clearUserTask,
-    validatePermissionsByModule,
+    dispatchTasksByClientFindServer: tasksByClientFindServer,
+    dispatchClearUserTask: clearUserTask,
+    dispatchValidatePermissionsByModule: validatePermissionsByModule,
     dispatchUpdateTitleNavBar: updateTitleNavBar
   }, dispatch);
 }

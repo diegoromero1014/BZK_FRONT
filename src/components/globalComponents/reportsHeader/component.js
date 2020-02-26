@@ -4,11 +4,13 @@ import { bindActionCreators } from 'redux';
 import RaitingInternal from '../../clientInformation/ratingInternal';
 import SecurityMessageComponent from './../../globalComponents/securityMessageComponent';
 import { AEC_NO_APLIED } from '../../../constantsGlobal';
+import {MESSAGE_NEW_COMPONENTS} from "../../previsita/constants";
+import Message from "../../message";
 
 class ReportsHeader extends Component {
 
     render() {
-        const { clientInformacion } = this.props;
+        const { clientInformacion, showMessagge } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         const { aecStatus } = infoClient;
         let showAECNoAplica = false;
@@ -19,7 +21,9 @@ class ReportsHeader extends Component {
         }
         return (
             <div style={{ backgroundColor: "#FFFFFF", width: "100%", marginTop: "0px", paddingTop: "10px" }}>
-
+                {showMessagge &&
+                    <Message message={MESSAGE_NEW_COMPONENTS} show={true} icon={'newspaper outline'}/>
+                }
                 <header className="header-client-detail" style={{ padding: '10px' }}>
                     <div className="company-detail" style={{ marginLeft: "5px", marginRight: "20px" }}>
                         <div>

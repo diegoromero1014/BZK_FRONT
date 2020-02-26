@@ -65,7 +65,6 @@ class ListPendingTaskComponent extends Component {
       });
       var dateTaskFormat = moment(value.finalDate).locale('es');
       _.set(value, 'dateTaskFormat', dateTaskFormat.format("DD") + " " + dateTaskFormat.format("MMM") + " " + dateTaskFormat.format("YYYY"));
-
     });
   }
 
