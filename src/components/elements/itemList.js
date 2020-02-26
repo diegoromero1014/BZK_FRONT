@@ -11,28 +11,30 @@ const ItemList = ({ data, handleDelete, handleEdit, handleOnSelect, showCheck, t
                     {
                         data.sort((a, b) => a.order - b.order).map((element, index) =>
                             <Table.Row key={index} disabled={(index === selectedRecord && show) || !isEditable}>
-                                <Table.Cell textAlign='left' style={{ width: 10 }} verticalAlign='middle'>
-                                    {showCheck && handleOnSelect ?
+                                {showCheck && handleOnSelect &&
+                                    <Table.Cell textAlign='left' style={{ width: 5 }} verticalAlign='middle'>
                                         <ToolTip text={'Asociar'}>
-                                            <input 
-                                                type="checkbox" 
-                                                name="select" 
-                                                id="select" 
-                                                checked={element.associated} 
-                                                onClick={event => handleOnSelect(element, event)} 
+                                            <input
+                                                type="checkbox"
+                                                name="select"
+                                                id="select"
+                                                checked={element.associated}
+                                                onClick={event => handleOnSelect(element, event)}
+                                                style={{ marginTop: 5 }}
                                             />
                                         </ToolTip>
-                                        :
+                                    </Table.Cell>
+                                }
 
-                                        handleEdit &&
+                                {handleEdit &&
+                                    <Table.Cell textAlign='left' style={{ width: 5 }} verticalAlign='middle'>
                                         <ToolTip text={'Editar'}>
                                             <i style={{ cursor: 'pointer' }} className="pencil icon" onClick={() => {
                                                 handleEdit(element, index);
                                             }} />
                                         </ToolTip>
-                                    }
-
-                                </Table.Cell>
+                                    </Table.Cell>
+                                }
                                 <Table.Cell
                                     textAlign='left'
                                     style={handleEdit ? { cursor: 'pointer', textAlign: 'justify', whiteSpace: 'pre-line' } : { textAlign: 'justify', whiteSpace: 'pre-line' }}
@@ -60,7 +62,7 @@ const ItemList = ({ data, handleDelete, handleEdit, handleOnSelect, showCheck, t
     } else {
         return (
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', border: '1px solid #e1e1e1', color: '#3f3f3f', borderRadius: 3, }}>
-                <p>{`No se han ${showCheck ? 'asociado': 'adicionado'} ${title}`}</p>
+                <p>{`No se han ${showCheck ? 'asociado' : 'adicionado'} ${title}`}</p>
             </div>
         )
     }
