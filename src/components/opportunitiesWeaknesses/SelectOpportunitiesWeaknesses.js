@@ -57,9 +57,10 @@ class SelectOpportunitiesWeaknesses extends Component {
   }
 
   handleOnSelect = (name, element, associated) => {
-    const { dispatchAddToList } = this.props;
-
+    const { dispatchAddToList, dispatchLinkedRecords } = this.props;
+    
     dispatchAddToList({ name, data: Object.assign({}, element, { associated }), old: element });
+    dispatchLinkedRecords(name);
   }
 
   render() {
