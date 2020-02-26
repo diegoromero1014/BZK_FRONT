@@ -78,16 +78,33 @@ export class CommentsComponent extends Component {
             .then(callback);
     };
 
+    searchComment = (comments, commentId) => {
+        for (let i = 0; i < comments.length; i++) {
+            const comment = comments[i];
+            if(comment.id !== commentId){
+                if(comment.replies.length){
+                    const reply = this.searchComment(comment.replies, commentId);
+                    if(reply)
+                        return reply;
+                }
+            }else{
+                return comment;
+            }
+        }
+        return null;
+    };
+
     /*****************Funciones para pasar al TaskPage*******************************/
     addComment = async (parentCommentId, content) => {
-        const { taskId, dispatchAddCommentList } = this.props;
+        const { taskId, comments, dispatchAddCommentList } = this.props;
         const author = window.localStorage.getItem('name');
         const initials = getUsernameInitials(author);
+        const parentComment = this.searchComment(comments, parentCommentId);
         const comment = {
             id: _.uniqueId(),
             taskId: taskId || null,
             content,
-            parentCommentId,
+            parentCommentId: parentComment && parentComment.parentCommentId ? parentComment.parentCommentId : parentCommentId,
             initials,
             author,
             replies: [],
@@ -126,10 +143,13 @@ export class CommentsComponent extends Component {
     /***************************************************************/
 
     renderCommentContent = (content) => {
-        const regexTag = new RegExp('\\]\\(\\d*\\)');
-        let chain = content.split('@[');
-        chain = chain.map(element => element.replace(regexTag, '').trim());
-        return chain.join(' ');
+        const regexInitialTag = new RegExp('@\\[', 'g');
+        const regexEndTag = new RegExp('\\]\\([\\d]*\\)', 'g');
+        content = _.replace(content, regexInitialTag, '<b>');
+        content = _.replace(content, regexEndTag, '</b>');
+        return (
+            <div dangerouslySetInnerHTML={{__html: content}}/>
+        )
     }
 
     renderComments = (comments) => {
