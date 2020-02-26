@@ -193,7 +193,7 @@ class SelectOpportunitiesWeaknesses extends Component {
           <div className="modalBt4-dialog modalBt4-lg" style={{ zIndex: 100 }}>
             <div className="modalBt4-content modal-content" style={{ zIndex: 100 }}>
               <div className="modalBt4-header modal-header">
-                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">{`Asociar ${title}`}</h4>
+                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">{title}}</h4>
                 
                 <button type="button" onClick={this.handleCloseModal} className="close" data-dismiss="modal" role="close">
                   <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
