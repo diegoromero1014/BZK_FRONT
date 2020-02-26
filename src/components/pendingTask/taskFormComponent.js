@@ -67,12 +67,17 @@ export class TaskFormComponent extends Component {
         </div>
     );
 
-    onSelectEmployee = (employee) => {
-        const {setFieldValue} = this.props;
+    onSelectEmployee = employee => {
+        const { setFieldValue } = this.props;
         if (employee.idUsuario) {
-            setFieldValue('responsible', employee.idUsuario, false);
-            setFieldValue('employeeName', employee.title, false);
+            setFieldValue('responsible', employee.idUsuario, true);
+            setFieldValue('employeeName', employee.title, true);
         }
+    };
+
+    validateOnChangeEmployee = value => {
+        const { setFieldValue } = this.props;
+        setFieldValue('employeeName', value, true);
     };
 
     componentDidMount() {
@@ -81,7 +86,7 @@ export class TaskFormComponent extends Component {
 
     render() {
         const {fields: {closingDate, state, responsible, task, observations}} = this.state;
-        const {creatingReport, isEditable, setFieldValue, stateTask, values: {employeeName}, commercialReportButtons} = this.props;
+        const { isEditable, setFieldValue, stateTask, values: {employeeName}, commercialReportButtons} = this.props;
         return (
             <div>
                 <Form style={{backgroundColor: "#FFFFFF",  width: "100%", paddingBottom: "50px"}}>
@@ -94,8 +99,8 @@ export class TaskFormComponent extends Component {
                                         {renderLabel(closingDate)}
                                         <DateTimePickerUi
                                             culture='es'
-                                            format={"DD/MM/YYYY hh:mm a"}
-                                            time={true}
+                                            format={"DD/MM/YYYY"}
+                                            time={false}
                                             value={value}
                                             onChange={val => setFieldValue(name, val, false)}
                                             onBlur={onBlur}
@@ -111,7 +116,6 @@ export class TaskFormComponent extends Component {
                                 }
                             </Field>
                         </Col>
-                        {creatingReport &&
                         <Col xs={4}>
                             <Field type="text" name="idStatus">
                                 {({field: {value, name, onBlur}}) =>
@@ -141,19 +145,18 @@ export class TaskFormComponent extends Component {
                                 }
                             </Field>
                         </Col>
-                        }
                         <Col xs={4}>
-                            <Field type="text" name="userName">
+                            <Field type="text" name="employeeName">
                                 {({field: {value, name, onBlur}}) =>
                                     <div>
                                         {renderLabel(responsible)}
                                         <SearchEmployeeInput
                                             value={employeeName ? employeeName : value}
                                             onSelect={this.onSelectEmployee}
+                                            validateOnChange={this.validateOnChangeEmployee}
                                             isEditable={isEditable}
                                         />
-                                        <br/>
-                                        <ErrorMessage name="userName" component={'div'}>
+                                        <ErrorMessage name="employeeName" component={'div'}>
                                             {message => renderMessageError(message)}
                                         </ErrorMessage>
                                     </div>
@@ -231,19 +234,19 @@ export default withFormik({
             return Object.assign({}, fields, {
                 finalDate: new Date(finalDate),
                 idStatus,
-                idResponsable,
+                responsible: idResponsable,
                 task,
                 advance,
-                userName
+                employeeName: userName
             })
         } else {
             return Object.assign({}, fields, {
                 finalDate: new Date(),
                 idStatus: '',
-                idResponsable: '',
+                responsible: '',
                 task: '',
                 advance: '',
-                userName: ''
+                employeeName: ''
             });
         }
     },

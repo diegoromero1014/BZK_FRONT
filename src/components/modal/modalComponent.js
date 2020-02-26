@@ -27,6 +27,8 @@ import * as views from './constants';
 import _ from 'lodash';
 import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
 import AlertPortfolioExpirationObservationsActionModal from '../alertPortfolioExpirtation/alertPortfolioExpirationObservationsActionModal';
+import TaskPage from "../pendingTask/taskPage";
+import PrevisitPage from "../previsita/previsitPage";
 
 export class ModalComponentDialog extends Component {
     constructor(props) {
@@ -78,10 +80,14 @@ export class ModalComponentDialog extends Component {
                 cell = <ComponentShareHolderDetail shareHolderId={actions.id} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_TASK:
-                cell = <ModalTask taskEdit={actions.task} isOpen={this.closeModal} />;
+                //<ModalTask taskEdit={actions.task} isOpen={this.closeModal} />
+                console.log("Tarea", actions.task);
+                cell = <TaskPage params={{ id: actions.task.id }} fromModal={true} closeModal={this.closeModal}/>;
                 break;
             case views.VIEW_TASK_ADMIN:
-                cell = <ModalCreateTask taskEdit={actions.id} isOpen={this.closeModal} idClient={actions.idClient} functCloseModal={actions.functCloseModal} actionEdit={actions.actionEdit} />;
+                console.log("id", actions.id);
+                cell = <TaskPage params={{ id: actions.id.id }} fromModal={true} closeModal={this.closeModal}/>;
+                //cell = <ModalCreateTask taskEdit={actions.id} isOpen={this.closeModal} idClient={actions.idClient} functCloseModal={actions.functCloseModal} actionEdit={actions.actionEdit} />;
                 break;
             case views.VIEW_TRACKING_COVENANT:
                 cell = <ModalTrackingCovenant covenantId={actions.id} isOpen={this.closeModal} />;

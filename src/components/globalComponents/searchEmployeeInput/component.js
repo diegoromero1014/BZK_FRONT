@@ -40,7 +40,8 @@ class SearchEmployeeInput extends Component {
                         onSelect: onSelect
                     });
                     selector.toggleClass('loading');
-                    selector.search('search local', employeeValue);
+                    selector.search('search local',
+                        );
                     setTimeout(function () {
                         $('#employee').focus();
                     }, 150);
@@ -56,20 +57,28 @@ class SearchEmployeeInput extends Component {
         });
     }
 
+    onChangeValue = e => {
+        const { validateOnChange } = this.props;
+        this.setState({employeeValue: e.target.value});
+        validateOnChange(e.target.value);
+    };
+
     render() {
-        const { onSelect, isEditable } = this.props;
+        const { onSelect, isEditable, error } = this.props;
         const { employeeValue } = this.state;
         return (
             <div>
                 <ComboBoxFilter
                     name="employee"
+                    touched={true}
                     labelInput="Ingrese un criterio de búsqueda..."
                     parentId="dashboardComponentScroll"
-                    onChange={e => this.setState({employeeValue: e.target.value})}
+                    onChange={this.onChangeValue}
                     value={employeeValue}
                     onSelect={val => onSelect(val)}
                     onKeyPress={e => this.updateKeyValueUsersBanco(e)}
                     max="255"
+                    error={error}
                     disabled={isEditable ? 'disabled' : ''}
                 />
             </div>
@@ -77,7 +86,7 @@ class SearchEmployeeInput extends Component {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps() {
     return {};
 }
 

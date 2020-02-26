@@ -1,19 +1,18 @@
-import React, { Component } from 'react';
-import { Row, Grid, Col } from 'react-flexbox-grid';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { tasksByClientFindServer, clearUserTask } from './actions';
-import { Combobox } from 'react-widgets';
-import { NUMBER_RECORDS, TASK_STATUS } from './constants';
+import React, {Component} from 'react';
+import {Col, Grid, Row} from 'react-flexbox-grid';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {clearUserTask, tasksByClientFindServer} from './actions';
+import {NUMBER_RECORDS, TASK_STATUS} from './constants';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import PaginationPendingTaskComponent from './paginationPendingTaskComponent';
 import ListPendingTaskComponent from './listPendingTaskComponent';
-import ButtonCreatePendingTaskComponent from './createPendingTask/buttonCreatePendingTaskComponent';
-import { MODULE_TASKS, CREAR } from '../../constantsGlobal';
-import { validatePermissionsByModule } from '../../actionsGlobal';
+import {CREAR, MODULE_TASKS} from '../../constantsGlobal';
+import {validatePermissionsByModule} from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
-import { redirectUrl } from '../globalComponents/actions';
-import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _TASK } from '../../constantsAnalytics';
+import {redirectUrl} from '../globalComponents/actions';
+import {_TASK, BIZTRACK_MY_CLIENTS, nombreflujoAnalytics} from '../../constantsAnalytics';
+import {updateTitleNavBar} from '../navBar/actions';
 
 class UserTaskComponent extends Component {
 
@@ -23,7 +22,7 @@ class UserTaskComponent extends Component {
       openMessagePermissions: false,
       value1: ""
     };
-
+    this.createTask = this.createTask.bind(this);
   }
 
   componentWillMount() {
@@ -52,8 +51,14 @@ class UserTaskComponent extends Component {
     }
   }
 
+  createTask() {
+    const { dispatchUpdateTitleNavBar } = this.props;
+    dispatchUpdateTitleNavBar("Tareas");
+    redirectUrl("/dashboard/task");
+  };
+
   render() {
-    const { tasksByClient, reducerGlobal, actionEdit } = this.props;
+    const { tasksByClient, reducerGlobal } = this.props;
     var visibleTable = 'none';
     var visibleMessage = 'block';
     if (tasksByClient.get('rowCount') !== 0) {
@@ -73,7 +78,10 @@ class UserTaskComponent extends Component {
               </Col>
               <Col xs>
                 {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), CREAR), false) &&
-                  <ButtonCreatePendingTaskComponent actionEdit={actionEdit} />
+                  <button className="btn btn-primary" type="button" title="Crear Tarea"
+                          style={{marginTop: "21px"}} onClick={this.createTask}>
+                    <i className="file text outline icon" style={{color: "white", margin: '0em', fontSize: '1.2em'}}/>
+                  </button>
                 }
               </Col>
             </Row>
@@ -104,11 +112,12 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     tasksByClientFindServer,
     clearUserTask,
-    validatePermissionsByModule
+    validatePermissionsByModule,
+    dispatchUpdateTitleNavBar: updateTitleNavBar
   }, dispatch);
 }
 
-function mapStateToProps({ tasksByClient, reducerGlobal }, ownerProps) {
+function mapStateToProps({ tasksByClient, reducerGlobal }) {
   return {
     tasksByClient,
     reducerGlobal

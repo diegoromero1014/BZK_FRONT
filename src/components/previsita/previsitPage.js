@@ -13,7 +13,19 @@ import { buildJsoncommercialReport, fillUsersPermissions } from '../commercialRe
 import CommercialReportButtonsComponent from '../globalComponents/commercialReportButtonsComponent';
 
 import { detailPrevisit, canEditPrevisita, disableBlockedReport, clearPrevisitDetail, validateDatePreVisit, createPrevisit, pdfDescarga } from "./actions";
-import { TIME_REQUEST_BLOCK_REPORT, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, EDITAR, REQUEST_ERROR, MESSAGE_SAVE_DATA, REQUEST_INVALID_INPUT, REQUEST_SUCCESS, AFIRMATIVE_ANSWER, CANCEL, SAVE_PUBLISHED } from '../../constantsGlobal';
+import {
+   TIME_REQUEST_BLOCK_REPORT,
+   MESSAGE_ERROR,
+   MESSAGE_ERROR_SWEET_ALERT,
+   EDITAR,
+   REQUEST_ERROR,
+   MESSAGE_SAVE_DATA,
+   REQUEST_INVALID_INPUT,
+   REQUEST_SUCCESS,
+   AFFIRMATIVE_ANSWER,
+   CANCEL,
+   SAVE_PUBLISHED
+} from '../../constantsGlobal';
 import { showLoading } from '../loading/actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { getMasterDataFields } from '../selectsComponent/actions';
@@ -616,7 +628,7 @@ export class PrevisitPage extends Component {
                title={TITLE_EXIT_CONFIRMATION}
                text={MESSAGE_EXIT_CONFIRMATION}
                confirmButtonColor='#DD6B55'
-               confirmButtonText={AFIRMATIVE_ANSWER}
+               confirmButtonText={AFFIRMATIVE_ANSWER}
                cancelButtonText={CANCEL}
                showCancelButton={true}
                onCancel={() => this.setState({ showConfirmationCancelPrevisit: false })}
@@ -627,7 +639,7 @@ export class PrevisitPage extends Component {
                title={TITLE_VISIT_TYPE}
                text={MESSAGE_VISIT_TYPE_CHANGED}
                confirmButtonColor='#DD6B55'
-               confirmButtonText={AFIRMATIVE_ANSWER}
+               confirmButtonText={AFFIRMATIVE_ANSWER}
                cancelButtonText={CANCEL}
                showCancelButton={true}
                onCancel={this.cancelChangeTypePrevisit}

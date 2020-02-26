@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {ComponentClientInformationURL, LoginComponentURL} from "../../constantsAnalytics";
 import {TASK_STATUS} from "../selectsComponent/constants";
 import {
-    AFIRMATIVE_ANSWER,
+    AFFIRMATIVE_ANSWER,
     CANCEL,
     EDITAR,
     MESSAGE_SAVE_DATA,
@@ -12,15 +12,15 @@ import {
     REQUEST_SUCCESS
 } from "../../constantsGlobal";
 import {
+    MESSAGE_EXIT_CONFIRMATION,
     MESSAGE_TASK_CREATE_ERROR,
     MESSAGE_TASK_CREATE_SUCCESS,
     MESSAGE_TASK_EDIT_ERROR,
     MESSAGE_TASK_EDIT_SUCCESS,
     MESSAGE_TASK_INVALID_INPUT,
+    TITLE_EXIT_CONFIRMATION,
     TITLE_TASK_CREATE,
-    TITLE_TASK_EDIT,
-    MESSAGE_EXIT_CONFIRMATION,
-    TITLE_EXIT_CONFIRMATION
+    TITLE_TASK_EDIT
 } from "./constants";
 import {bindActionCreators} from "redux";
 import ReportsHeader from "../../components/globalComponents/reportsHeader/component";
@@ -33,8 +33,8 @@ import CommercialReportButtonsComponent from "../globalComponents/commercialRepo
 import {createPendingTaskNew} from "./createPendingTask/actions.js";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import moment from "moment";
-import { getInfoTaskUser } from '../myPendings/myTasks/actions';
-import {clearUserTask} from "./actions";
+import {getInfoTaskUser} from '../myPendings/myTasks/actions';
+import {clearTask} from "./actions";
 
 export class TaskPage extends React.Component {
     constructor(props) {
@@ -49,7 +49,7 @@ export class TaskPage extends React.Component {
     }
 
     componentWillMount() {
-        const { clientInformacion } = this.props;
+        const {clientInformacion} = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
         if (_.isEmpty(infoClient)) {
             redirectUrl(ComponentClientInformationURL)
@@ -57,7 +57,7 @@ export class TaskPage extends React.Component {
     }
 
     componentDidMount() {
-        const { params: { id }, dispatchShowLoading } = this.props;
+        const {params: {id}, dispatchShowLoading} = this.props;
         dispatchShowLoading(true, "Cargando...");
 
         Promise.all([this.masterDataFields(), this.getInfoTask(id)]).then(() => {
@@ -78,19 +78,18 @@ export class TaskPage extends React.Component {
     }
 
     masterDataFields = async () => {
-        const { dispatchGetMasterDataFields } = this.props;
+        const {dispatchGetMasterDataFields} = this.props;
         await dispatchGetMasterDataFields([TASK_STATUS]);
     };
 
     validatePermissionsTask = () => {
-        const { reducerGlobal } = this.props;
+        const {reducerGlobal} = this.props;
         return _.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), EDITAR), false) && this.state.isEditable;
     };
 
 
     submitForm = async (task) => {
-        const { params: { id }, dispatchShowLoading, dispatchCreatePendingTaskNew, dispatchSwtShowMessage, fromModal, closeModal } = this.props;
-
+        const {params: {id}, dispatchShowLoading, dispatchCreatePendingTaskNew, dispatchSwtShowMessage, fromModal, closeModal} = this.props;
         if (moment(task.finalDate, 'DD/MM/YYYY').isValid()) {
             const taskRequest = {
                 "id": id,
@@ -99,8 +98,8 @@ export class TaskPage extends React.Component {
                 "advance": task.advance,
                 "status": task.idStatus,
                 "closingDate": task.finalDate !== '' && task.finalDate !== null && task.finalDate !== undefined ? moment(task.finalDate, "DD/MM/YYYY").format('x') : null,
-                "employeeName": task.userName,
-                "employeeId": task.idResponsable !== undefined && task.idResponsable !== null && task.idResponsable !== '' ? task.idResponsable : null,
+                "employeeName": task.employeeName,
+                "employeeId": task.responsible !== undefined && task.responsible !== null && task.responsible !== '' ? task.responsible : null,
             };
             dispatchShowLoading(true, MESSAGE_SAVE_DATA);
             const responseCreateTask = await dispatchCreatePendingTaskNew(taskRequest);
@@ -122,11 +121,11 @@ export class TaskPage extends React.Component {
     };
 
     redirectionAfterSubmit = (taskId, url) => {
-        const {fromModal, closeModal, dispatchSwtShowMessage } = this.props;
+        const {fromModal, closeModal, dispatchSwtShowMessage} = this.props;
         if (fromModal) {
-            dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(taskId), this.renderMessageSubmitAlertSuccess(taskId), { onConfirmCallback: () => closeModal() });
+            dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(taskId), this.renderMessageSubmitAlertSuccess(taskId), {onConfirmCallback: () => closeModal()});
         } else {
-            dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(taskId), this.renderMessageSubmitAlertSuccess(taskId), { onConfirmCallback: () => redirectUrl(url) });
+            dispatchSwtShowMessage('success', this.renderTitleSubmitAlert(taskId), this.renderMessageSubmitAlertSuccess(taskId), {onConfirmCallback: () => redirectUrl(url)});
         }
     };
 
@@ -135,27 +134,22 @@ export class TaskPage extends React.Component {
         await this.canUserEditTask(usernameSession);
     };
 
-    canUserEditTask = async (myUserName) => {
-        /*debugger;
-        const {myPendingsReducer} = this.props;
-        let userName = myPendingsReducer.get('userName');
-        if (userName.toUpperCase() === myUserName.toUpperCase()) {*/
-            if (this.state.isEditable) {
-                this.setState({
-                    showMessage: false,
-                    isEditable: false
-                })
-            }
-        /*}*/
+    canUserEditTask = async () => {
+        if (this.state.isEditable) {
+            this.setState({
+                showMessage: false,
+                isEditable: false
+            })
+        }
     };
 
     onClickCancelCommercialReport = () => {
-        this.setState({ showConfirmationCancelTask: true });
+        this.setState({showConfirmationCancelTask: true});
     };
 
     onClickConfirmCancelCommercialReport = () => {
-        const { fromModal, closeModal } = this.props;
-        this.setState({ showConfirmationCancelTask: false });
+        const {fromModal, closeModal} = this.props;
+        this.setState({showConfirmationCancelTask: false});
         if (fromModal) {
             closeModal();
         } else {
@@ -176,14 +170,11 @@ export class TaskPage extends React.Component {
     };
 
     getInfoTask = async (id) => {
-        const { dispatchGetInfoTaskUser, selectsReducer } = this.props;
+        const {dispatchGetInfoTaskUser} = this.props;
         if (id) {
-            const response = await dispatchGetInfoTaskUser(id);
-            const taskDetail = response.payload.data.data;
-            const taskState = _.find(selectsReducer.get(TASK_STATUS), ['id', taskDetail.state]);
+            await dispatchGetInfoTaskUser(id);
             this.setState({
                 isEditable: true,
-                currentTaskState: taskState ? taskState.key.toUpperCase() : '',
                 formValid: true
             });
         } else {
@@ -194,7 +185,7 @@ export class TaskPage extends React.Component {
     };
 
     renderForm = () => {
-        const {params: { id }, selectsReducer, fromModal, myPendingsReducer} = this.props;
+        const {params: {id}, selectsReducer, fromModal, myPendingsReducer} = this.props;
         const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
         return (
             <TaskFormComponent
@@ -203,36 +194,34 @@ export class TaskPage extends React.Component {
                 onSubmit={this.submitForm}
                 isEditable={this.state.isEditable}
                 creatingReport={id}
-                commercialReportButtons={(setFieldValue) => (
+                commercialReportButtons={() => (
                     <CommercialReportButtonsComponent
                         definitiveSaveTitle={'Guardar'}
-                        onClickSave={draft => setFieldValue('documentStatus', draft, true)}
                         cancel={this.onClickCancelCommercialReport}
                         fromModal={fromModal}
                         isEditable={this.state.isEditable}
                         documentDraft={true}
-                        creatingReport={id}
                     />)}
             />
         );
     };
 
     render() {
-        const { isEditable } = this.state;
+        const {isEditable} = this.state;
         return (
             <div className='previsit-container'>
-                <ReportsHeader />
-                <div style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
-                    <Row style={{ padding: "5px 10px 0px 20px" }}>
+                <ReportsHeader/>
+                <div style={{backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px"}}>
+                    <Row style={{padding: "5px 10px 0px 20px"}}>
                         <Col xs={10} sm={10} md={10} lg={10}>
-                            <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
+                            <span>Los campos marcados con asterisco (<span style={{color: "red"}}>*</span>) son obligatorios.</span>
                         </Col>
                         <Col xs={2} sm={2} md={2} lg={2}>
                             {
                                 this.validatePermissionsTask() && isEditable &&
                                 <button type="button" onClick={this.editTask}
                                         className={'btn btn-primary modal-button-edit'}
-                                        style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>
+                                        style={{marginRight: '15px', float: 'right', marginTop: '-15px'}}>
                                     Editar <i className={'icon edit'}/>
                                 </button>
                             }
@@ -248,11 +237,11 @@ export class TaskPage extends React.Component {
                     title={TITLE_EXIT_CONFIRMATION}
                     text={MESSAGE_EXIT_CONFIRMATION}
                     confirmButtonColor='#DD6B55'
-                    confirmButtonText={AFIRMATIVE_ANSWER}
+                    confirmButtonText={AFFIRMATIVE_ANSWER}
                     cancelButtonText={CANCEL}
                     showCancelButton={true}
-                    onCancel={() => this.setState({ showConfirmationCancelTask: false })}
-                    onConfirm={this.onClickConfirmCancelCommercialReport} />
+                    onCancel={() => this.setState({showConfirmationCancelTask: false})}
+                    onConfirm={this.onClickConfirmCancelCommercialReport}/>
             </div>
         )
     }
@@ -265,11 +254,11 @@ function mapDispatchToProps(dispatch) {
         dispatchShowLoading: showLoading,
         dispatchGetMasterDataFields: getMasterDataFields,
         dispatchCreatePendingTaskNew: createPendingTaskNew,
-        dispatchClearUserTask: clearUserTask
+        dispatchClearUserTask: clearTask
     }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, reducerGlobal, selectsReducer, usersPermission, tasksByClient, myPendingsReducer }) {
+function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, usersPermission, tasksByClient, myPendingsReducer}) {
     return {
         clientInformacion,
         reducerGlobal,
