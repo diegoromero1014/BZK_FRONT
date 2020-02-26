@@ -7,7 +7,8 @@ import {
     CHANGE_LIST_STATE,
     REMOVE_ELEMENT_FROM_LIST,
     UPDATE_ELEMENT_FROM_LIST,
-    EDIT_ELEMENT_FROM_LIST
+    EDIT_ELEMENT_FROM_LIST,
+    CHANGE_DRAFT_LIST_STATE
 } from './constants';
 
 const ID = "fieldlist-id";
@@ -158,6 +159,13 @@ export default (state, action) => {
             let newList = Object.assign({}, list, action.newState);
             return addNewListToState(action.list, state, newList);
         }
+        case CHANGE_DRAFT_LIST_STATE: {
+            let list = state[action.list];
+            let newList = Object.assign({}, list, {
+                draftList: action.newState
+            })
+            return addNewListToState(action.list, state, newList);
+        }
         case UPDATE_ELEMENT_FROM_LIST: {
             let newState = addElementToList(state, action.list);
             return newState;
@@ -184,6 +192,7 @@ export default (state, action) => {
             addElementsToChildrenState(state, newList, action.element);
             return addNewListToState(action.list, state, newList);
         }
+        
         default:
             return state;
     }

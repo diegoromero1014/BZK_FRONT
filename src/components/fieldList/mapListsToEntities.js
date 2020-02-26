@@ -1,4 +1,4 @@
-import { listName } from './Objetives/Objetives';
+import { listName } from './Objetives/utils';
 
 function getStrategiesFromObjective(objective, clientId) {
 
@@ -60,16 +60,10 @@ function getStrategiesFromClientFromObjective(relations) {
     });
 }
 
-export function clientInformationToReducer(responseClientInfo) {
-
-    if (!responseClientInfo.clientDetailsRequest) {
-        return;
-    }
-
-    let objectives = responseClientInfo.clientDetailsRequest.objectives;
+export function clientInformationToReducer(objectives) {
     
     if (!objectives) {
-        return []
+        objectives = []
     }
 
     return objectives.map(function(objective) {

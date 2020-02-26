@@ -149,7 +149,7 @@ let API_URL;
 let GOOGLE_RECAPTCHA_PUBLIC_KEY;
 
 if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
-  API_URL = "http://localhost:8084/Centricity";
+  API_URL = "http://localhost:8080/Centricity";
   GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcpscUUAAAAAO2zIvHSyFrC4IS8Kfy72vWw7QD5';
 } else {
   if (WP_VAR_ENVIRONMENT === "production") {

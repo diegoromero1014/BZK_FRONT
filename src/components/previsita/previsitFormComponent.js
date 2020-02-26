@@ -17,7 +17,11 @@ import { renderLabel, renderMessageError } from '../../functions';
 import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER, HELP_VISIT_TYPE, TITLE_MESSAGE_PENDIENT, TITLE_MESSAGE_ALTERNATIVE_OBJECTIVE, PROPUEST_OF_BUSINESS } from './constants';
 import { checkRichTextRequiredBoolean } from '../../validationsFields/rulesField';
 import SectionOpportunitiesWeaknesses from '../opportunitiesWeaknesses/SectionOpportunitiesWeaknesses';
-import Objectives from '../fieldList/Objetives/AssociateObjectives';
+import makeAssociateList from '../fieldList/makeAssociateList';
+import {listName} from '../fieldList/Objetives/utils';
+
+
+const Objectives = makeAssociateList(listName);
 
 export class PrevisitFormComponent extends Component {
    constructor(props) {

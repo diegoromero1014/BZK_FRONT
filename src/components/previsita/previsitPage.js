@@ -35,6 +35,13 @@ import {
    addInitialLinkedElements
 } from '../listaObjetos/actions';
 
+import { clientInformationToReducer } from '../fieldList/mapListsToEntities';
+import { changeListState } from '../fieldList/actions';
+import { listName } from '../fieldList/Objetives/utils';
+
+
+const changeObjectiveState = changeListState(listName);
+
 export class PrevisitPage extends Component {
 
    constructor(props) {
@@ -82,7 +89,7 @@ export class PrevisitPage extends Component {
 
    componentDidMount() {
 
-      const { params: { id }, dispatchShowLoading, clientInformacion, dispatchAddInitialLinkedElements } = this.props;
+      const { params: { id }, dispatchShowLoading, clientInformacion, dispatchAddInitialLinkedElements, dispatchChangeObjectivesState } = this.props;
       dispatchShowLoading(true, "Cargando...");
       //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA PORQUE AFECTA EL LLAMADO A DATA[1];
       Promise.all([this.masterDataFields(), this.getPrevisitData(id), this.getChallengerQuestions()]).then((data) => {
@@ -105,6 +112,11 @@ export class PrevisitPage extends Component {
                "Debilidades",
                infoClient.clientDetailsRequest.weaknesses || []
             );
+
+            dispatchChangeObjectivesState({
+               elements: clientInformationToReducer(infoClient.clientDetailsRequest.objectives)
+            })
+
             return;
          }
 
@@ -118,6 +130,11 @@ export class PrevisitPage extends Component {
             "Debilidades",
             combineClientDetails(linkedClientDetails.weaknesses, infoClient.clientDetailsRequest.weaknesses || [])
          )
+
+         dispatchChangeObjectivesState({
+            elements: combineClientDetails(clientInformationToReducer(linkedClientDetails.objectives), clientInformationToReducer(infoClient.clientDetailsRequest.objectives))
+         })
+
       });
    }
 
@@ -662,7 +679,8 @@ function mapDispatchToProps(dispatch) {
       dispatchClearAnswer: clearAnswer,
       dispatchAddAnswer: addAnswer,
       dispatchGetAllQuestions: getAllQuestions,
-      dispatchAddInitialLinkedElements: addInitialLinkedElements
+      dispatchAddInitialLinkedElements: addInitialLinkedElements,
+      dispatchChangeObjectivesState: changeObjectiveState
    }, dispatch);
 }
 

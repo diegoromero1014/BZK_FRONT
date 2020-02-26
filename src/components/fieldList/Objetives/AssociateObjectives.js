@@ -17,31 +17,11 @@ export default class AssociateObjectives extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            elements: [
-                {
-                    id: 1,
-                    value: "Hola",
-                    strategies: []
-                },
-                {
-                    id: 2,
-                    value: "Mundo",
-                    strategies: []
-                }
-            ],
-            draftElements: [
-
-            ],
-            showAssociateSection: false
-        }
-
         this.showAssociateSection = this.showAssociateSection.bind(this);
         this.associateElements = this.associateElements.bind(this);
         this.checkDraftElement = this.checkDraftElement.bind(this);
         this.checkElement = this.checkElement.bind(this);
         this.hideAssociateSection = this.hideAssociateSection.bind(this);
-
     }
 
     changeAssociationOfElements(elements, changedElement) {
@@ -56,20 +36,35 @@ export default class AssociateObjectives extends React.Component {
     }
 
     checkDraftElement(elements, changedElement) {
-        debugger;
-        this.setState({
+        const { changeListState } = this.props;
+        changeListState({
             draftElements: this.changeAssociationOfElements(elements, changedElement)
-        })
+        });
     }
 
     checkElement(_, changedElement) {
-        debugger;
-        this.setState({
-            elements: this.changeAssociationOfElements(this.state.elements, changedElement)
-        })
+        const { elements, swtShowMessage, changeListState } = this.props;
+        swtShowMessage(
+            "warning",
+            "Confirmar eliminación",
+            `Señor usuario, ¿Esta seguro que desea desasociar el Objetivo?`,
+            {
+                onConfirmCallback: () => {
+                    changeListState({
+                        elements: this.changeAssociationOfElements(elements, changedElement)
+                    })
+                },
+                onCancelCallback: () => { }
+            },
+            {
+                confirmButtonText: 'Sí, estoy seguro!',
+                confirmButtonColor:'#DD6B55'
+            }
+        );
     }
 
-    renderElements(elements, checkedFunction) {
+    renderElements(elements=[], checkedFunction) {
+
         return elements.map(
             (element) => (
                 <TemplateObjectiveAndStrategies
@@ -84,27 +79,31 @@ export default class AssociateObjectives extends React.Component {
                         </div>
                     }
                     objetivo={element}
+                    strategies={element["children"]}
                 />
             )
         )
     }
 
     showAssociateSection() {
-        this.setState({
-            draftElements: [...this.state.elements],
+        const { elements, changeListState } = this.props;
+        changeListState({
+            draftElements: [...elements],
             showAssociateSection: true
         })
     }
 
     hideAssociateSection() {
-        this.setState({
+        const { changeListState } = this.props;
+        changeListState({
             showAssociateSection: false
         })
     }
 
     associateElements() {
-        this.setState({
-            elements: [...this.state.draftElements],
+        const { changeListState, draftElements } = this.props;
+        changeListState({
+            elements: [...draftElements],
             showAssociateSection: false
         })
     }
@@ -115,7 +114,13 @@ export default class AssociateObjectives extends React.Component {
 
     render() {
 
-        const filteredElements = this.state.elements.filter(this.filterCheckedElements);
+        const {
+            elements,
+            showAssociateSection,
+            draftElements
+        } = this.props;
+
+        const filteredElements = elements.filter(this.filterCheckedElements);
 
         return (
             <div>
@@ -140,12 +145,12 @@ export default class AssociateObjectives extends React.Component {
                             <span className="form-item">No se han asociado Objetivos</span>
                         </div>
                     </div>}
-                    {this.state.showAssociateSection &&
+                    {showAssociateSection &&
                         <BiztrackModal
                             title={"Asociar Objetivos"}
                             body={
                                 <div>
-                                    {this.renderElements(this.state.draftElements, this.checkDraftElement)}
+                                    {this.renderElements(draftElements, this.checkDraftElement)}
                                     <div style={{ marginTop: "20px" }}>
                                         <button style={{ marginRight: "5px" }} className="btn btn-secondary section-btn-save" type="button" onClick={this.associateElements}>Guardar</button>
                                         <button className="btn btn-primary cancel-btn" type="button" onClick={this.hideAssociateSection}>Cancelar</button>
