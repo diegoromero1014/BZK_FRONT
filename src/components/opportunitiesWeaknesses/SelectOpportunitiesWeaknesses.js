@@ -101,9 +101,7 @@ class SelectOpportunitiesWeaknesses extends Component {
               <div className="header-component">
                 <div className="line-topComponent" />
                 <i className="lightbulb icon" style={{ fontSize: "25px" }} />
-                <span className="title-middle">
-                  Oportunidades y Debilidades
-                </span>
+                <span className="title-middle">Oportunidades y Debilidades<span style={{ fontSize: "20px" }}>(<span style={{ color: "red" }}>*</span>)</span></span>
               </div>
             </Col>
           </Row>
@@ -115,7 +113,6 @@ class SelectOpportunitiesWeaknesses extends Component {
               <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
               <i className={ICON_OPPORTUNITIES} style={{ fontSize: "20px", marginLeft: "25px" }} />
               <span style={{ fontSize: "20px" }}>{TITLE_OPPORTUNITIES}</span>
-              <span style={{ fontSize: "20px" }}>(<span style={{ color: "red" }}>*</span>)</span>
               <Tooltip text={MSG_HELP_OPPORTUNITIES}>
                 <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
               </Tooltip>
@@ -179,7 +176,6 @@ class SelectOpportunitiesWeaknesses extends Component {
               <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
               <i className={ICON_WEAKNESSES} style={{ fontSize: "20px", marginLeft: "25px" }} />
               <span style={{ fontSize: "20px" }}>{TITLE_WEAKNESSES}</span>
-              <span style={{ fontSize: "20px" }}>(<span style={{ color: "red" }}>*</span>)</span>
               <Tooltip text={MSG_HELP_WEAKNESSES}>
                 <i className="help circle icon blue" style={{ fontSize: "16px", cursor: "pointer", marginLeft: "10px" }} />
               </Tooltip>
@@ -255,7 +251,7 @@ class SelectOpportunitiesWeaknesses extends Component {
 
               {name &&
                 <div>
-                  <Message message={"Los cambios realizados se ve verán reflejados en la información del cliente"} show={true} icon={'exclamation'} />
+                  <Message message={"Señor usurario, Los cambios realizados se verán reflejados en la información del cliente"} show={true} icon={'exclamation'} />
                   <ModalContentComponent
                     name={name}
                     singularTitle={singularTitle}

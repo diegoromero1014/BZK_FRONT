@@ -43,7 +43,7 @@ class ModalContentComponent extends Component {
             dispatchSwtShowMessage(
                 'warning',
                 "Guardar información",
-                "¿Señor usuario, está seguro que desea guardar esta información?",
+                "Señor usuario, los cambios realizados se verán reflejados en la información del cliente.",
                 {
                     onConfirmCallback: () => this.handleOnSave(),
                     onCancelCallback: () => { }
