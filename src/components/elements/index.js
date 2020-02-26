@@ -218,7 +218,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(
             props.dispatchAddToList({ name: props.name, data, old });
 
             if (props.executeFunction) {
-                this.executeFunction();
+                props.executeFunction();
             }
 
             resetForm({ id: null, text: '' });
