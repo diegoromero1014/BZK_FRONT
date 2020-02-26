@@ -26,7 +26,7 @@ import moment from "moment";
 var usersBanco = [];
 
 
-class ModalComponentPendingTask extends Component {
+export class ModalComponentPendingTask extends Component {
 
     constructor(props) {
         super(props);
@@ -173,7 +173,7 @@ class ModalComponentPendingTask extends Component {
                             style={{ color: "red" }}>*</span>) son obligatorios.</p>
                         <Row style={{ padding: "0px 10px 0px 0px" }}>
                             <Col xs={12} md={6} lg={6}>
-                                <dt><span>Asignador: {this.state.nameUsuario}</span></dt>
+                                <dt>Asignador:<span id="asignator" style={{fontWeight:'normal'}}> {this.state.nameUsuario}</span></dt>
                             </Col>
                         </Row>
                         <Row style={{ padding: "0px 10px 0px 0px" }}>

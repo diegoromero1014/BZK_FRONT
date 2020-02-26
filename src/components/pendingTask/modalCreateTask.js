@@ -268,7 +268,7 @@ export class ModalCreateTask extends Component {
             <p style={{ paddingTop: "10px", marginBottom: "0px" }} >Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</p>
             <Row style={{ padding: "0px 10px 0px 0px" }}>
               <Col xs={6} md={6} lg={6}>
-                <dt><span>Asignador: {this.state.nameUsuario}</span></dt>
+                <dt>Asignador: <span id="asignator" style={{fontWeight:'normal'}}>{this.state.nameUsuario}</span></dt>
               </Col>
             </Row>
             <Row style={{ padding: "0px 10px 0px 0px" }}>

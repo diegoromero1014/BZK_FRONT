@@ -58,5 +58,9 @@ describe('Test pendingTask/modalCreateTask', () => {
         const wrapper = shallow(<ModalCreateTask {...defaultProps} createPendingTaskNew={resolveData} getInfoTaskUser={resolveData} />);
         expect(wrapper.find(Textarea)).to.have.length(1);
     });
-   
+
+    it('should render asignator', ()=>{
+       const wrapper = shallow(<ModalCreateTask {...defaultProps} createPendingTaskNew={resolveData} getInfoTaskUser={resolveData} />);
+       expect(wrapper.find("span").find({id:'asignator'})).to.have.length(1);
+    });
 });
