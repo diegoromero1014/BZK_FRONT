@@ -4,7 +4,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import {helpText} from './utils';
 import Title from '../../clientEdit/sections/title';
 
-export default function template({buttons, objetivo}) {
+export default function template({buttons, objetivo, strategies}) {
 
     return (
         <Row className="row-element" style={{ margin: "5px" }}>
@@ -54,13 +54,13 @@ export default function template({buttons, objetivo}) {
                                                     <Col md={6} sm={12}>
                                                         <div style={{ padding: "10px" }} className="section-list-parent">
 
-                                                            {!objetivo["strategies"].length && <div className="elements-not-found">
+                                                            {!strategies.length && <div className="elements-not-found">
                                                                 <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px", padding: "5px", border: "1px solid #ECECEC" }}>
                                                                     <span className="form-item">No se han adicionado Estrategias.</span>
                                                                 </div>
                                                             </div>}
 
-                                                            {objetivo["strategies"] && objetivo["strategies"].map((strategy) => (
+                                                            {strategies && strategies.map((strategy) => (
                                                                 <Row className="section-list-divider">
                                                                     <div style={{ margin: "10px 0 10px 0" }}>
                                                                         <Col md={12} className="add-line-break">
