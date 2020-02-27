@@ -27,8 +27,8 @@ class ButtonCreatePendingTaskComponent extends Component {
   render() {
     const { actionEdit } = this.props;
     return (
-      <Col xs={2} sm={2} md={2} lg={2}>
-        <button className="btn btn-primary" type="button" title="Crear tarea" style={{ float: "right", marginTop: '18px' }} onClick={this.openModal}>
+      <Col xs={3} sm={3} md={3} lg={3}>
+        <button className="btn btn-primary" type="button" title="Crear tarea" style={{  marginTop: '18px' }} onClick={this.openModal}>
           <i className="plus  icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i> Crear
         </button>
         <Modal
