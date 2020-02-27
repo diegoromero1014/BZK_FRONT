@@ -15,6 +15,7 @@ import {REQUEST_SUCCESS} from "../../../constantsGlobal";
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import {COMMENT_CREATED_ERROR, COMMENT_CREATED_SUCCESS, COMMENT_CREATED_TITLE} from "./constants";
 import {getUsernameInitials} from "../../../functions";
+import TextArea from "../../../ui/textarea/textareaComponent";
 
 export class CommentsComponent extends Component {
 
@@ -168,13 +169,21 @@ export class CommentsComponent extends Component {
                     <Form reply style={{ display: this.state.commentBeingReplied === id ? 'block' : 'none' }}>
                         <Row>
                             <Col xs={12} md={12} ld={12} className="commentTextArea">
-                                <MentionsInput value={this.state.commentReply} onChange={event => this.handleChange(event, 'reply')} className="mentions">
+                                {/*<MentionsInput value={this.state.commentReply} onChange={event => this.handleChange(event, 'reply')} className="mentions">
                                     <Mention
                                         trigger="@"
                                         data={this.fetchUsers}
                                         className="mentions__mention"
                                     />
-                                </MentionsInput>
+                                </MentionsInput>*/}
+                                <TextArea
+                                    onChangeEvent={event => this.handleChange(event, 'reply')}
+                                    nameInput="commentReply"
+                                    value={this.state.commentReply}
+                                    placeholder="Escribe tú respuesta"
+                                    rows={7}
+                                    max="360"
+                                />
                             </Col>
                         </Row>
                         <Row style={{ marginTop: 10 }}>
@@ -212,13 +221,21 @@ export class CommentsComponent extends Component {
                     <Form reply>
                         <Row>
                             <Col xs={12} md={12} lg={12}>
-                                <MentionsInput value={this.state.comment} onChange={event => this.handleChange(event, 'new')} className="mentions" placeholder="Escribe aquí tu nota">
+                                {/*<MentionsInput value={this.state.comment} onChange={event => this.handleChange(event, 'new')} className="mentions" placeholder="Escribe aquí tu nota">
                                     <Mention
                                         trigger="@"
                                         data={this.fetchUsers}
                                         className="mentions__mention"
                                     />
-                                </MentionsInput>
+                                </MentionsInput>*/}
+                                <TextArea
+                                    onChangeEvent={event => this.handleChange(event, 'new')}
+                                    nameInput="comment"
+                                    value={this.state.comment}
+                                    placeholder="Escribe tú nota"
+                                    rows={7}
+                                    max="360"
+                                />
                             </Col>
                         </Row>
                         <Row style={{ margin: '10px 0 0 0' }}>
