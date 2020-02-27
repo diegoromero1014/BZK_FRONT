@@ -16,7 +16,8 @@ import { renderLabel, renderMessageError } from '../../functions';
 
 import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER, HELP_VISIT_TYPE, TITLE_MESSAGE_PENDIENT, TITLE_MESSAGE_ALTERNATIVE_OBJECTIVE, PROPUEST_OF_BUSINESS } from './constants';
 import { checkRichTextRequiredBoolean } from '../../validationsFields/rulesField';
-import SelectOpportunitiesWeaknesses from '../opportunitiesWeaknesses/SelectOpportunitiesWeaknesses';
+import SectionOpportunitiesWeaknesses from '../opportunitiesWeaknesses/SectionOpportunitiesWeaknesses';
+import Objectives from '../fieldList/Objetives/AssociateObjectives';
 
 export class PrevisitFormComponent extends Component {
    constructor(props) {
@@ -222,6 +223,7 @@ export class PrevisitFormComponent extends Component {
                   </Col>
                </Row>
 
+               <Objectives />
                <SelectOpportunitiesWeaknesses visual={true} infoClient={infoClient} isEditable={isEditable} /> 
                
                <Row style={{ padding: "20px 23px 20px 20px" }}>

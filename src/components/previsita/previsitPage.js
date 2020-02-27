@@ -97,7 +97,7 @@ export class PrevisitPage extends Component {
       const { params: { id }, dispatchShowLoading, clientInformacion, dispatchAddToList, dispatchLinkedRecords } = this.props;
 
       dispatchShowLoading(true, "Cargando...");
-      //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA;
+      //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA PORQUE AFECTA EL LLAMADO A DATA[1];
       Promise.all([this.masterDataFields(), this.getPrevisitData(id), this.getChallengerQuestions()]).then((data) => {
          this.setState({
             renderForm: true,
@@ -109,7 +109,7 @@ export class PrevisitPage extends Component {
          let weaknesses = clientInformacion.get('responseClientInfo').clientDetailsRequest.weaknesses;
          let opportunities = clientInformacion.get('responseClientInfo').clientDetailsRequest.opportunities;
 
-         //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA;
+         //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA PORQUE AFECTA EL LLAMADO A DATA[1];
          if (!data[1]) {
             this.clearList();
 

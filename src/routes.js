@@ -39,6 +39,8 @@ import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderCo
 import PageNotFound from "./components/notFoundPage/PageNotFound";
 import PrevisitPage from "./components/previsita/previsitPage";
 
+import AssociateObjectives from './components/fieldList/Objetives/AssociateObjectives';
+
 import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
     CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST, 
     LINKINGREQUESTS, MODALDRAFTDOCUMENTS, MODALCOMPONENTPENDING, ALERTCOVENANTS, 
@@ -245,6 +247,7 @@ export default (
                 <Route path="controlDashboard" component={ControlDashboard}></Route>
                 <Route path="sheduler" component={Sheduler}></Route>
             </Route>
+            <Route path="prueba" component={AssociateObjectives} />
             <Route path="*" component={PageNotFound}/>
         </Route>
     </Grid>
