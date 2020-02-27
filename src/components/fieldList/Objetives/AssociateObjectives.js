@@ -104,7 +104,20 @@ export default class AssociateObjectives extends React.Component {
     }
 
     associateElements() {
-        const { changeListState, draftElements } = this.props;
+        const { changeListState, draftElements, elements, swtShowMessage } = this.props;
+
+        const checkedElements = draftElements.filter(this.filterCheckedElements).length;
+
+        if (checkedElements === 0) {
+            swtShowMessage("warning", "Alerta", "Señor usuario debe asociar al menos un Objetivo del cliente para guardar.");
+            return;
+        }
+
+        if (checkedElements >= 3) {
+            swtShowMessage("warning", "Alerta", "Señor usuario, solo puede asociar un maximo de 3 Objetivos del cliente.");
+            return;
+        }
+
         changeListState({
             elements: [...draftElements],
             showAssociateSection: false

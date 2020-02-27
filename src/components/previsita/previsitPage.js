@@ -339,7 +339,7 @@ export class PrevisitPage extends Component {
    }
 
    errorClientDetails = (previsit) => {
-      const { elementsReducer } = this.props;
+      const { elementsReducer, fieldListReducer } = this.props;
 
       let errors = [];
 
@@ -350,6 +350,10 @@ export class PrevisitPage extends Component {
 
          if (getLinkedClientDetails(elementsReducer[WEAKNESSES].elements).length === 0) {
             errors.push("Debilidades (internas del cliente)");
+         }
+
+         if (getLinkedClientDetails(fieldListReducer[listName].elements).length === 0) {
+            errors.push("Objetivos del cliente")
          }
       }
       return errors;
