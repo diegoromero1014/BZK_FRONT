@@ -18,7 +18,8 @@ function getRequestFromElement(element, clientId) {
         id: element.id,
         client: clientId,
         text: element.value,
-        didChange: element.didChange
+        didChange: element.didChange,
+        associated: element.associated
     }
 }
 
@@ -44,9 +45,13 @@ function getObjectivesRequestFromReducer(objectives, clientId) {
     return objectivesRequest;
 }
 
+export function createObjectiveClientDetailRequestFromReducer(fieldListReducer, objectiveListName, clientId) {
+    return getObjectivesRequestFromReducer(fieldListReducer[objectiveListName].elements, clientId);
+}
+
 export function createClientDetailRequestFromReducer(fieldListReducer, objectListReducer, clientId) {
     return {
-        objectives: getObjectivesRequestFromReducer(fieldListReducer[listName].elements, clientId),
+        objectives: createObjectiveClientDetailRequestFromReducer(fieldListReducer, listName, clientId),
         opportunities: getObjectListRequestFromReducer(objectListReducer.Oportunidades.elements, clientId),
         weaknesses: getObjectListRequestFromReducer(objectListReducer.Debilidades.elements, clientId)
     }

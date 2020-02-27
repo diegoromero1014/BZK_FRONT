@@ -28,7 +28,7 @@ export default class AssociateObjectives extends React.Component {
         return elements.map((element) => {
             if (element.id == changedElement.id) {
                 return Object.assign({}, element, {
-                    checked: !element.checked
+                    associated: !element.associated
                 })
             }
             return element
@@ -75,7 +75,7 @@ export default class AssociateObjectives extends React.Component {
                             justifyContent: "space-around",
                             alignItems: "center"
                         }}>
-                            <input onChange={() => checkedFunction(elements, element)} type="checkbox" checked={element.checked} name="example" />
+                            <input onChange={() => checkedFunction(elements, element)} type="checkbox" checked={element.associated} name="example" />
                         </div>
                     }
                     objetivo={element}
@@ -109,7 +109,7 @@ export default class AssociateObjectives extends React.Component {
     }
 
     filterCheckedElements(element) {
-        return element.checked;
+        return element.associated;
     }
 
     render() {
