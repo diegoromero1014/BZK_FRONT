@@ -24,17 +24,7 @@ export default function makeAssociateList(listName) {
 
         componentDidMount() {
             const {dispatchCreateList} = this.props;
-            const childrenList = [];
-            const initialValues = {
-                elements: [
-                    {
-                        id: 1,
-                        value: "prueba",
-                        strategies: []
-                    }
-                ]
-            }
-            dispatchCreateList(listName, initialValues);
+            dispatchCreateList(listName);
         }
 
         render() {

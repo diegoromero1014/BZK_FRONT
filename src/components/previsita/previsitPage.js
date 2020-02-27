@@ -35,7 +35,7 @@ import { getLinkedClientDetails, combineClientDetails } from '../listaObjetos/Li
 import { cleanList, addToList, createList, linkedRecords } from '../elements/actions';
 import { OPPORTUNITIES, WEAKNESSES } from '../opportunitiesWeaknesses/constants';
 
-import { clientInformationToReducer } from '../fieldList/mapListsToEntities';
+import { clientInformationToReducer, createObjectiveClientDetailRequestFromReducer } from '../fieldList/mapListsToEntities';
 import { changeListState } from '../fieldList/actions';
 import { listName } from '../fieldList/Objetives/utils';
 
@@ -123,6 +123,11 @@ export class PrevisitPage extends Component {
 
             opportunities.forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1), associated: false }), name: OPPORTUNITIES, old: null }));
             weaknesses.forEach((item, index) => dispatchAddToList({ data: Object.assign({}, item, { order: (index + 1), associated: false }), name: WEAKNESSES, old: null }));
+         
+            dispatchChangeObjectivesState({
+               elements: clientInformationToReducer(objectives)
+            })
+         
          } else {
             let linkedClientDetails = data[1].payload.data.data.clientDetails;
 
@@ -363,7 +368,7 @@ export class PrevisitPage extends Component {
    }
 
    submitForm = async (previsit) => {
-      const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions, fromModal, closeModal, objectListReducer, elementsReducer } = this.props;
+      const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions, fromModal, closeModal, elementsReducer, fieldListReducer } = this.props;
       const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);
       if (validateDatePrevisitResponse) {
          const previsitParticipants = this.getPrevisitParticipants();
@@ -390,7 +395,10 @@ export class PrevisitPage extends Component {
          let clientDetailsRequest = {
             weaknesses: elementsReducer[WEAKNESSES].elements.map(element => Object.assign({}, element, { client })) || [],
             opportunities: elementsReducer[OPPORTUNITIES].elements.map(item => Object.assign({}, item, { client })) || [],
+            objectives: createObjectiveClientDetailRequestFromReducer(fieldListReducer, listName, client)
          }
+
+
 
          const previsitRequest = {
             "id": id,
@@ -697,7 +705,7 @@ function mapDispatchToProps(dispatch) {
    }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, selectsReducer, usersPermission, confidentialReducer, participants, questionsReducer: { answers, questions }, objectListReducer, elementsReducer }) {
+function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, selectsReducer, usersPermission, confidentialReducer, participants, questionsReducer: { answers, questions }, objectListReducer, elementsReducer, fieldListReducer }) {
    return {
       clientInformacion,
       previsitReducer,
@@ -709,7 +717,8 @@ function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, se
       answers,
       questions,
       objectListReducer,
-      elementsReducer
+      elementsReducer,
+      fieldListReducer
    };
 }
 
