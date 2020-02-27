@@ -90,22 +90,21 @@ class SelectOpportunitiesWeaknesses extends Component {
   }
 
   render() {
-    const { visual, opportunities, weaknesses, isEditable, linkedWeaknesses, linkedOpportunities, elementsReducer, dispatchLinkedRecords } = this.props;
+    const { opportunities, weaknesses, isEditable, linkedWeaknesses, linkedOpportunities, elementsReducer, dispatchLinkedRecords } = this.props;
     const { open, name, singularTitle, title, placeholder } = this.state;
 
     return (
       <div style={{ marginTop: "15px" }}>
-        {visual &&
-          <Row className='title-section' style={{ padding: "0px 10px 10px 20px" }}>
-            <Col xs={12} md={12} lg={12}>
-              <div className="header-component">
-                <div className="line-topComponent" />
-                <i className="lightbulb icon" style={{ fontSize: "25px" }} />
-                <span className="title-middle">Oportunidades y Debilidades<span style={{ fontSize: "20px" }}>(<span style={{ color: "red" }}>*</span>)</span></span>
-              </div>
-            </Col>
-          </Row>
-        }
+        <Row className='title-section' style={{ padding: "0px 10px 10px 20px" }}>
+          <Col xs={12} md={12} lg={12}>
+            <div className="header-component">
+              <div className="line-topComponent" />
+              <i className="lightbulb icon" style={{ fontSize: "25px" }} />
+              <span className="title-middle">Oportunidades y Debilidades<span style={{ fontSize: "20px" }}>(<span style={{ color: "red" }}>*</span>)</span></span>
+            </div>
+          </Col>
+        </Row>
+
 
         <Row style={{ width: '99%', paddingLeft: 20 }}>
           <Col xs={6}>

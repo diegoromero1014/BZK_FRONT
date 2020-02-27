@@ -228,7 +228,7 @@ export class PrevisitFormComponent extends Component {
                </Row>
 
                <Objectives />
-               <SelectOpportunitiesWeaknesses visual={true} infoClient={infoClient} isEditable={isEditable} /> 
+               <SelectOpportunitiesWeaknesses isEditable={isEditable} /> 
                
                <Row style={{ padding: "20px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
