@@ -15,6 +15,7 @@ import UserTeamCard from './userTeamCard';
 import {showLoading} from '../loading/actions';
 import {swtShowMessage} from '../sweetAlertMessages/actions';
 import {Menu, Segment} from 'semantic-ui-react'
+import {Checkbox} from "semantic-ui-react";
 
 class ModalComponentTeam extends Component {
     constructor(props) {
@@ -76,9 +77,26 @@ class ModalComponentTeam extends Component {
 
     render() {
         const {tabActive} = this.state;
+        const {infoClient} = this.props;
+
+        let check = infoClient.seniorBanker !== "" ? true : false;
+        let label = 'El cliente es gerenciado por un Banquero senior :' + infoClient.seniorBanker;
+
         return (
             <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                  style={{overflow: "hidden"}}>
+                <Row>
+                    <Col xs={12} md={12} lg={12}>
+                        <Checkbox
+                            id="checkbox-banquero"
+                            label={label}
+                            style={{ padding: "15px 10px 0px 20px", backgroundColor: '#ffffff ' }}
+                            disabled={check}
+                            readOnly={check}
+                            toggle
+                        />
+                    </Col>
+                </Row>
                 <Row style={{padding: "15px"}}>
                     <Col xs>
                         <Menu attached='top' tabular>
@@ -142,9 +160,11 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({teamParticipantsReducer}, ownerProps) {
+function mapStateToProps({teamParticipantsReducer, clientInformacion}, ownerProps) {
     return {
-        teamParticipantsReducer
+        teamParticipantsReducer,
+        infoClient: Object.assign({}, clientInformacion.get('responseClientInfo'))
+
     };
 }
 
