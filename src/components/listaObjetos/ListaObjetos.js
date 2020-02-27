@@ -33,7 +33,15 @@ export function buildLinkedClientDetailsRequestForSubmit(store, clientId) {
 }
 
 export function combineClientDetails(linkedDetails = [], clientDetails = []) {
-  const details = linkedDetails.map(element => Object.assign({}, element, { associated: true }));
+
+  const details = linkedDetails.map(element => {
+    const relatedDetail = clientDetails.find(clientDetail => clientDetail.id === element.id) || {};
+    return Object.assign({}, element, {
+      associated: true,
+      children: combineClientDetails(element.children, relatedDetail.children)
+    })
+  });
+  
   const elementsToAdd = clientDetails.filter(element => !linkedDetails.find(item => item.id === element.id));
 
   return details.concat(elementsToAdd);

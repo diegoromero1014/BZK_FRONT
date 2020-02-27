@@ -140,7 +140,7 @@ export class PrevisitPage extends Component {
             weaknesses.forEach((item, index) => dispatchAddToList({ data: Object.assign({}, item, { order: (index + 1) }), name: WEAKNESSES, old: null }));
 
             dispatchChangeObjectivesState({
-               elements: combineClientDetails(clientInformationToReducer(linkedClientDetails.objectives), clientInformationToReducer(objectives))
+               elements: clientInformationToReducer(combineClientDetails(linkedClientDetails.objectives, objectives))
             })
          }
 

@@ -28,7 +28,10 @@ export default class AssociateObjectives extends React.Component {
         return elements.map((element) => {
             if (element.id == changedElement.id) {
                 return Object.assign({}, element, {
-                    associated: !element.associated
+                    associated: !element.associated,
+                    strategies: element.strategies.map((strategy) => Object.assign({}, strategy, {
+                        associated: !element.associated
+                    }))
                 })
             }
             return element
@@ -63,7 +66,7 @@ export default class AssociateObjectives extends React.Component {
         );
     }
 
-    renderElements(elements=[], checkedFunction) {
+    renderElements(elements=[], checkedFunction, filterAssociatedElements) {
 
         return elements.map(
             (element) => (
@@ -79,7 +82,7 @@ export default class AssociateObjectives extends React.Component {
                         </div>
                     }
                     objetivo={element}
-                    strategies={element["children"]}
+                    strategies={filterAssociatedElements(element["strategies"])}
                 />
             )
         )
@@ -139,7 +142,7 @@ export default class AssociateObjectives extends React.Component {
                 </div>
                 <div style={styles.main}>
                     {ObjectiveSectionTitle}
-                    {this.renderElements(filteredElements, this.checkElement)}
+                    {this.renderElements(filteredElements, this.checkElement, (list) => list.filter((el) => el.associated ))}
                     {!filteredElements.length && <div className="elements-not-found">
                         <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
                             <span className="form-item">No se han asociado Objetivos</span>
@@ -150,7 +153,7 @@ export default class AssociateObjectives extends React.Component {
                             title={"Asociar Objetivos"}
                             body={
                                 <div>
-                                    {this.renderElements(draftElements, this.checkDraftElement)}
+                                    {this.renderElements(draftElements, this.checkDraftElement, (el) => el)}
                                     <div style={{ marginTop: "20px" }}>
                                         <button style={{ marginRight: "5px" }} className="btn btn-secondary section-btn-save" type="button" onClick={this.associateElements}>Guardar</button>
                                         <button className="btn btn-primary cancel-btn" type="button" onClick={this.hideAssociateSection}>Cancelar</button>
