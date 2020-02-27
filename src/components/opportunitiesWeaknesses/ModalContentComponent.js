@@ -75,7 +75,7 @@ class ModalContentComponent extends Component {
                 <ElementsComponent
                     schema={schemaoOportunitiesWeaknesses}
                     placeholder={placeholder}
-                    messageButton={`Agregar ${singularTitle}`}
+                    messageButton={`Crear ${singularTitle}`}
                     name={name}
                     max={5}
                     title={title}

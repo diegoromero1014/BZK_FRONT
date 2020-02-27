@@ -212,8 +212,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(
             delete data.objectEdited;
 
             props.dispatchAddToList({ name: props.name, data, old });
-
-            debugger;
             
             if (props.executeFunction) {
                 props.executeFunction();
