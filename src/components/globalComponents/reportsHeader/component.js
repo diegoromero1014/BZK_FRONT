@@ -7,7 +7,7 @@ import { AEC_NO_APLIED } from '../../../constantsGlobal';
 import {MESSAGE_NEW_COMPONENTS} from "../../previsita/constants";
 import Message from "../../message";
 
-class ReportsHeader extends Component {
+export class ReportsHeader extends Component {
 
     render() {
         const { clientInformacion, showMessagge } = this.props;
@@ -24,6 +24,7 @@ class ReportsHeader extends Component {
                 {showMessagge &&
                     <Message message={MESSAGE_NEW_COMPONENTS} show={true} icon={'newspaper outline'}/>
                 }
+                <SecurityMessageComponent />
                 <header className="header-client-detail" style={{ padding: '10px' }}>
                     <div className="company-detail" style={{ marginLeft: "5px", marginRight: "20px" }}>
                         <div>
@@ -47,7 +48,6 @@ class ReportsHeader extends Component {
                             </div>
                         </div>
                     </div>
-                <SecurityMessageComponent />
                 </header>
             </div>
         );
