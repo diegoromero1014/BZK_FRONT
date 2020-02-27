@@ -39,7 +39,7 @@ import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderCo
 import PageNotFound from "./components/notFoundPage/PageNotFound";
 import PrevisitPage from "./components/previsita/previsitPage";
 
-import AssociateObjectives from './components/fieldList/Objetives/AssociateObjectives';
+import makeAssociateList from './components/fieldList/makeAssociateList';
 
 import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
     CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST, 
@@ -89,6 +89,9 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     ADMINALERTCLIENTSPENDINGUPDATE,
     SHEDULER,
     DEFAULT} from "./constantsAnalytics";
+
+
+const  AssociateObjectives =  makeAssociateList("Objetivos");
 
 class App extends Component {
    
@@ -246,8 +249,9 @@ export default (
                 <Route path="walletShare" component={WalletShare}></Route>
                 <Route path="controlDashboard" component={ControlDashboard}></Route>
                 <Route path="sheduler" component={Sheduler}></Route>
+                <Route path="prueba" component={AssociateObjectives} />
             </Route>
-            <Route path="prueba" component={AssociateObjectives} />
+            
             <Route path="*" component={PageNotFound}/>
         </Route>
     </Grid>

@@ -87,7 +87,6 @@ export default class Objetivos extends React.Component {
                                 </Row>
                             }
                         />
-
                     )}
                     listenAddSection={this.listenAddSection}
                     renderElement={renderElements}
@@ -127,6 +126,7 @@ export function renderElements(elements, removeElement, editElement) {
                         </div>
                     }
                     objetivo={objetivo}
+                    strategies={objetivo["strategies"]}
                 />
             ))}
         </div>

@@ -35,6 +35,13 @@ import { getLinkedClientDetails, combineClientDetails } from '../listaObjetos/Li
 import { cleanList, addToList, createList, linkedRecords } from '../elements/actions';
 import { OPPORTUNITIES, WEAKNESSES } from '../opportunitiesWeaknesses/constants';
 
+import { clientInformationToReducer } from '../fieldList/mapListsToEntities';
+import { changeListState } from '../fieldList/actions';
+import { listName } from '../fieldList/Objetives/utils';
+
+
+const changeObjectiveState = changeListState(listName);
+
 export class PrevisitPage extends Component {
 
    constructor(props) {
@@ -94,7 +101,7 @@ export class PrevisitPage extends Component {
 
    componentDidMount() {
 
-      const { params: { id }, dispatchShowLoading, clientInformacion, dispatchAddToList, dispatchLinkedRecords } = this.props;
+      const { params: { id }, dispatchShowLoading, clientInformacion, dispatchAddToList, dispatchLinkedRecords, dispatchChangeObjectivesState } = this.props;
 
       dispatchShowLoading(true, "Cargando...");
       //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA PORQUE AFECTA EL LLAMADO A DATA[1];
@@ -108,6 +115,7 @@ export class PrevisitPage extends Component {
 
          let weaknesses = clientInformacion.get('responseClientInfo').clientDetailsRequest.weaknesses;
          let opportunities = clientInformacion.get('responseClientInfo').clientDetailsRequest.opportunities;
+         let objectives = clientInformacion.get('responseClientInfo').clientDetailsRequest.objectives;
 
          //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA PORQUE AFECTA EL LLAMADO A DATA[1];
          if (!data[1]) {
@@ -125,6 +133,10 @@ export class PrevisitPage extends Component {
 
             opportunities.forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1) }), name: OPPORTUNITIES, old: null }));
             weaknesses.forEach((item, index) => dispatchAddToList({ data: Object.assign({}, item, { order: (index + 1) }), name: WEAKNESSES, old: null }));
+
+            dispatchChangeObjectivesState({
+               elements: combineClientDetails(clientInformationToReducer(linkedClientDetails.objectives), clientInformationToReducer(objectives))
+            })
          }
 
          dispatchLinkedRecords(OPPORTUNITIES);
@@ -680,7 +692,8 @@ function mapDispatchToProps(dispatch) {
       dispatchCleanList: cleanList,
       dispatchAddToList: addToList,
       dispatchCreateList: createList,
-      dispatchLinkedRecords: linkedRecords
+      dispatchLinkedRecords: linkedRecords,
+      dispatchChangeObjectivesState: changeObjectiveState
    }, dispatch);
 }
 
