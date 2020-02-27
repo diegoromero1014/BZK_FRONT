@@ -13,6 +13,7 @@ import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions
 import {redirectUrl} from '../globalComponents/actions';
 import {_TASK, BIZTRACK_MY_CLIENTS, nombreflujoAnalytics} from '../../constantsAnalytics';
 import {updateTitleNavBar} from '../navBar/actions';
+import {Button, Icon} from "semantic-ui-react";
 
 class UserTaskComponent extends Component {
 
@@ -79,8 +80,9 @@ class UserTaskComponent extends Component {
               <Col xs>
                 {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), CREAR), false) &&
                   <button className="btn btn-primary" type="button" title="Crear Tarea"
-                          style={{marginTop: "21px"}} onClick={this.createTask}>
-                    <i className="file text outline icon" style={{color: "white", margin: '0em', fontSize: '1.2em'}}/>
+                          style={{marginTop: "18px"}} onClick={this.createTask}>
+                    <i className="plus icon" style={{color: "white", margin: 'em', fontSize: '1.2em'}}/>
+                    Crear
                   </button>
                 }
               </Col>
