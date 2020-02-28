@@ -4,7 +4,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import {helpText} from './utils';
 import Title from '../../clientEdit/sections/title';
 
-export default function template({buttons, objetivo, strategies}) {
+export default function TemplateObjectiveAndStrategies({buttons, objetivo, strategies}) {
 
     return (
         <Row className="row-element" style={{ margin: "5px" }}>
