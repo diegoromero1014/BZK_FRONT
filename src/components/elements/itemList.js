@@ -13,7 +13,7 @@ const ItemList = ({ data, handleDelete, handleEdit, handleOnSelect, showCheck, t
                             <Table.Row key={index} disabled={(index === selectedRecord && show) || !isEditable}>
                                 {showCheck && handleOnSelect &&
                                     <Table.Cell textAlign='left' style={{ width: 5 }} verticalAlign='middle'>
-                                        <ToolTip text={!element.associated ? 'Asociar' : 'Desasociar' }>
+                                        <ToolTip text={!element.associated ? 'Asociar' : 'Desasociar'}>
                                             <input
                                                 type="checkbox"
                                                 name="select"
@@ -29,7 +29,7 @@ const ItemList = ({ data, handleDelete, handleEdit, handleOnSelect, showCheck, t
                                 {handleEdit &&
                                     <Table.Cell textAlign='left' style={{ width: 5 }} verticalAlign='middle'>
                                         <ToolTip text={'Editar'}>
-                                            <i style={{ cursor: 'pointer' }} className="pencil icon" onClick={() => {
+                                            <i style={element.editable ? { cursor: 'pointer' } : { display: 'none' }} className="pencil icon" onClick={() => {
                                                 handleEdit(element, index);
                                             }} />
                                         </ToolTip>
@@ -37,9 +37,9 @@ const ItemList = ({ data, handleDelete, handleEdit, handleOnSelect, showCheck, t
                                 }
                                 <Table.Cell
                                     textAlign='left'
-                                    style={handleEdit ? { cursor: 'pointer', textAlign: 'justify', whiteSpace: 'pre-line' } : { textAlign: 'justify', whiteSpace: 'pre-line' }}
+                                    style={handleEdit && element.editable ? { cursor: 'pointer', textAlign: 'justify', whiteSpace: 'pre-line' } : { textAlign: 'justify', whiteSpace: 'pre-line' }}
                                     onClick={() => {
-                                        if (handleEdit) {
+                                        if (handleEdit && element.editable) {
                                             handleEdit(element, index);
                                         }
                                     }} >
@@ -48,7 +48,7 @@ const ItemList = ({ data, handleDelete, handleEdit, handleOnSelect, showCheck, t
                                 {handleDelete &&
                                     <Table.Cell textAlign='right' verticalAlign='middle' style={{ width: 10 }}>
                                         <ToolTip text={'Eliminar'}>
-                                            <i className="trash icon" onClick={() => handleDelete(element)} />
+                                            <i className="trash icon" style={element.editable ? { cursor: 'pointer' } : { display: 'none' }} onClick={() => handleDelete(element)} />
                                         </ToolTip>
                                     </Table.Cell>
                                 }

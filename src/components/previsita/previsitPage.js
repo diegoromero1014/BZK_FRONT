@@ -123,21 +123,27 @@ export class PrevisitPage extends Component {
 
             opportunities.forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1), associated: false }), name: OPPORTUNITIES, old: null }));
             weaknesses.forEach((item, index) => dispatchAddToList({ data: Object.assign({}, item, { order: (index + 1), associated: false }), name: WEAKNESSES, old: null }));
-         
+
             dispatchChangeObjectivesState({
                elements: clientInformationToReducer(objectives)
             })
-         
+
          } else {
             let linkedClientDetails = data[1].payload.data.data.clientDetails;
 
-            weaknesses = combineClientDetails(linkedClientDetails.weaknesses, weaknesses);
-            opportunities = combineClientDetails(linkedClientDetails.opportunities, opportunities);
+            let linkedWeaknesses = linkedClientDetails.weaknesses;
+            let linkedOpportunities = linkedClientDetails.opportunities;
+
+            linkedWeaknesses = linkedWeaknesses.map(weakness => Object.assign({}, weakness, { editable: weakness.status !== -1 }));
+            linkedOpportunities = linkedOpportunities.map(opportunity => Object.assign({}, opportunity, { editable: opportunity.status !== -1 }));
+
+            weaknesses = combineClientDetails(linkedWeaknesses, weaknesses);
+            opportunities = combineClientDetails(linkedOpportunities, opportunities);
 
             this.clearList();
 
-            opportunities.forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1) }), name: OPPORTUNITIES, old: null }));
-            weaknesses.forEach((item, index) => dispatchAddToList({ data: Object.assign({}, item, { order: (index + 1) }), name: WEAKNESSES, old: null }));
+            opportunities.sort((a, b) => (a.status > b.status) ? -1 : 1).forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1) }), name: OPPORTUNITIES, old: null }));
+            weaknesses.sort((a, b) => (a.status > b.status) ? -1 : 1).forEach((item, index) => dispatchAddToList({ data: Object.assign({}, item, { order: (index + 1) }), name: WEAKNESSES, old: null }));
 
             dispatchChangeObjectivesState({
                elements: clientInformationToReducer(combineClientDetails(linkedClientDetails.objectives, objectives))

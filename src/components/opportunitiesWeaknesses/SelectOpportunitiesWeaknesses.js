@@ -94,8 +94,8 @@ class SelectOpportunitiesWeaknesses extends Component {
     const { open, name, singularTitle, title, placeholder } = this.state;
 
     return (
-      <div style={{ marginTop: "15px" }}>
-        <Row className='title-section' style={{ padding: "0px 10px 10px 20px" }}>
+      <div>
+        <Row className='title-section' style={{ padding: "0px 10px 10px 0px" }}>
           <Col xs={12} md={12} lg={12}>
             <div className="header-component">
               <div className="line-topComponent" />
@@ -106,7 +106,7 @@ class SelectOpportunitiesWeaknesses extends Component {
         </Row>
 
 
-        <Row style={{ width: '99%', paddingLeft: 20 }}>
+        <Row style={{ width: '100%', marginTop: 15 }}>
           <Col xs={6}>
             <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
               <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />

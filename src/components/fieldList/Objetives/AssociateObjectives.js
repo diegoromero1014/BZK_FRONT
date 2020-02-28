@@ -153,7 +153,7 @@ export default class AssociateObjectives extends React.Component {
                         </ToolTip>
                     </div>
                 </div>
-                <div style={styles.main}>
+                <div style={styles.main} className='container-associate-objetives'>
                     {ObjectiveSectionTitle}
                     {this.renderElements(filteredElements, this.checkElement, (list) => list.filter((el) => el.associated ))}
                     {!filteredElements.length && <div className="elements-not-found">

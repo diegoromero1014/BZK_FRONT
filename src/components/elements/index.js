@@ -208,7 +208,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(
                 order = old.order;
             }
 
-            const data = Object.assign({}, values, { order, associated: true });
+            const data = Object.assign({}, values, { order, associated: true, editable: true });
             delete data.objectEdited;
 
             props.dispatchAddToList({ name: props.name, data, old });
