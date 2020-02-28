@@ -17,12 +17,13 @@ export const strategiesInitialValues = {
     value: ""
 }
 
-export const ObjectiveSectionTitle =
-    <Title
-        text="Objetivos del cliente"
-        icon={<i className="users icon" style={{ fontSize: "25px" }} />}
-        helpText={helpText}
-    />
+export const makeObjectiveSectionTitle = (isObligatory) => (<Title
+    text="Objetivos del cliente"
+    icon={<i className="users icon" style={{ fontSize: "25px" }} />}
+    helpText={helpText}
+    isObligatory={isObligatory}
+/>);
+    
 
 export const StrategieSectionTitle = <Title
     text="Estrategias"

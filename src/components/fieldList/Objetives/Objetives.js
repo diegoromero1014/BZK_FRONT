@@ -19,13 +19,13 @@ import {
     helpText,
     objectivesInitialValues,
     strategiesInitialValues,
-    ObjectiveSectionTitle,
+    makeObjectiveSectionTitle,
     StrategieSectionTitle,
     styles
 } from './utils'
 
 
-
+const ObjectiveSectionTitle = makeObjectiveSectionTitle();
 
 
 export default class Objetivos extends React.Component {
