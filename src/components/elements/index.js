@@ -8,7 +8,7 @@ import { Field, ErrorMessage, withFormik } from 'formik';
 import { renderMessageError } from '../../functions';
 import ToolTip from '../toolTip/toolTipComponent';
 import '../../../styles/elements/main.scss';
-import { createList, addToList, removeFromList, setToShow, linkedRecords } from './actions';
+import { createList, addToList, removeFromList, setToShow } from './actions';
 import ItemList from './itemList';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 

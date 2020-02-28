@@ -1,17 +1,15 @@
 import React from 'react';
 import { Icon } from 'semantic-ui-react'
-import Objectives from './Objetives';
 
 import {
-    ListaObjetivos,
-    ObjectiveSectionTitle,
-    objectivesInitialValues,
+    makeObjectiveSectionTitle,
     styles
 } from './utils';
 import TemplateObjectiveAndStrategies from './templateObjectiveAndStrategies';
 import ToolTip from '../../toolTip/toolTipComponent';
 import BiztrackModal from '../Objetives/BiztrackModal';
 
+const ObjectiveSectionTitle = makeObjectiveSectionTitle(true)
 
 export default class AssociateObjectives extends React.Component {
 
@@ -167,7 +165,7 @@ export default class AssociateObjectives extends React.Component {
                             body={
                                 <div>
                                     {this.renderElements(draftElements, this.checkDraftElement, (el) => el)}
-                                    <div style={{ marginTop: "20px" }}>
+                                    <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
                                         <button style={{ marginRight: "5px" }} className="btn btn-secondary section-btn-save" type="button" onClick={this.associateElements}>Guardar</button>
                                         <button className="btn btn-primary cancel-btn" type="button" onClick={this.hideAssociateSection}>Cancelar</button>
                                     </div>
