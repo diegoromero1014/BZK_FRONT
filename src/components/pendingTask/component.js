@@ -13,7 +13,6 @@ import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions
 import {redirectUrl} from '../globalComponents/actions';
 import {_TASK, BIZTRACK_MY_CLIENTS, nombreflujoAnalytics} from '../../constantsAnalytics';
 import {updateTitleNavBar} from '../navBar/actions';
-import {Button, Icon} from "semantic-ui-react";
 
 class UserTaskComponent extends Component {
 
@@ -56,7 +55,7 @@ class UserTaskComponent extends Component {
     const { dispatchUpdateTitleNavBar } = this.props;
     dispatchUpdateTitleNavBar("Tareas");
     redirectUrl("/dashboard/task");
-  };
+  }
 
   render() {
     const { tasksByClient, reducerGlobal } = this.props;

@@ -1,7 +1,8 @@
 import * as Yup from 'yup';
 import {
-    patternOfForbiddenCharacter, patternOfForbiddenCharacter2,
-    patternOfOnlyAlphabetical, patternOfTaskObservation, regexHtmlInjection
+    patternOfForbiddenCharacter2,
+    patternOfOnlyAlphabetical,
+    patternOfTaskObservation
 } from '../../validationsFields/patternsToValidateField';
 import {
     MESSAGE_ERROR_INJECTION_HTML,
@@ -12,15 +13,15 @@ import {
     MESSAGE_WARNING_ONLY_ALPHABETICAL,
     MESSAGE_WARNING_TASK_OBSERVATIONS
 } from '../../validationsFields/validationsMessages';
-import {validateHtmlInjection} from "../../validationsFields/rulesField";
+import {checkRichTextRequiredBoolean, validateHtmlInjection} from "../../validationsFields/rulesField";
 
 export const schema = {
     finalDate: Yup.date()
-        .required(MESSAGE_REQUIRED_VALUE)
+        .required(MESSAGE_REQUIRED_FIELD("Fecha de cierre"))
         .typeError(MESSAGE_REQUIRED_FIELD("Fecha de cierre")),
     idStatus: Yup.string()
         .trim()
-        .required(MESSAGE_REQUIRED_VALUE)
+        .required(MESSAGE_REQUIRED_FIELD("Estado"))
         .typeError(MESSAGE_REQUIRED_FIELD("Estado")),
     employeeName: Yup.string()
         .trim()
@@ -29,12 +30,11 @@ export const schema = {
         .typeError(MESSAGE_REQUIRED_EMPLOYEE),
     task: Yup.string()
         .trim()
-        .required(MESSAGE_REQUIRED_FIELD("Tarea"))
-        .test('validateInjectionHtml', MESSAGE_ERROR_INJECTION_HTML, validateHtmlInjection),
+        .test('validateHtmlInjection', MESSAGE_REQUIRED_FIELD("Tarea"), checkRichTextRequiredBoolean),
     advance: Yup.string()
         .trim()
         .matches(patternOfTaskObservation, MESSAGE_WARNING_TASK_OBSERVATIONS)
-        .matches(patternOfForbiddenCharacter2, { message: MESSAGE_WARNING_FORBIDDEN_CHARACTER, excludeEmptyString: true })
+        .matches(patternOfForbiddenCharacter2, {message: MESSAGE_WARNING_FORBIDDEN_CHARACTER, excludeEmptyString: true})
         .test('validateInjectionHtml', MESSAGE_ERROR_INJECTION_HTML, validateHtmlInjection)
         .nullable()
 };
