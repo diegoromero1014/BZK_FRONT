@@ -6,10 +6,7 @@ import { mapKeys } from 'lodash';
 
 import ToolTip from "../toolTip/toolTipComponent";
 import SweetAlert from "../sweetalertFocus";
-import {
-  updateElementFromList, updateActiveFieldObject, openLinkModal,
-  updateElementoAsociado, saveTemporalChanges, discardTemporalChanges
-} from "./actions";
+import { updateElementFromList, updateActiveFieldObject} from "./actions";
 
 import {
   processRules, checkRequired, checkPatternClientObjective, checkRegexHtmlInjection, checkFirstCharacter
@@ -60,12 +57,7 @@ export class ListaObjetos extends Component {
     switchGuardarEditar: false,
     stylePlus: false,
     maxObjects: false,
-    error: "",
-
-    modalPrevisit: false,
-    objetosAsociados: [],
-    alertAsociar: false,
-    alertMaxAsociados: false
+    error: ""
   };
 
   componentDidMount() {
@@ -82,37 +74,24 @@ export class ListaObjetos extends Component {
 
   abrirCampoObjeto = () => {
     const { objetos } = this.state;
-    const { dispatchUpdateActiveFieldObject, titulo, previsit, dispatchOpenLinkModal } = this.props;
+    const { dispatchUpdateActiveFieldObject, titulo } = this.props;
 
-    if (previsit) {
-      dispatchOpenLinkModal(titulo);
+    dispatchUpdateActiveFieldObject(true, titulo);
+    if (objetos.length < 5) {
       this.setState({
-        modalPrevisit: true
-      })
+        campoObjeto: true,
+        stylePlus: true
+      });
     } else {
-      dispatchUpdateActiveFieldObject(true, titulo);
-      if (objetos.length < 5) {
-        this.setState({
-          campoObjeto: true,
-          stylePlus: true
-        });
-      } else {
-        dispatchUpdateActiveFieldObject(false, titulo);
-        this.setState({
-          maxObjects: true
-        });
-      }
+      dispatchUpdateActiveFieldObject(false, titulo);
+      this.setState({
+        maxObjects: true
+      });
     }
   };
 
   cerrarCampoObjeto = () => {
-    const { dispatchUpdateActiveFieldObject, titulo, previsit, dispatchDiscardTemporalChanges } = this.props;
-    if (previsit) {
-      dispatchDiscardTemporalChanges(titulo);
-      this.setState({
-        modalPrevisit: false
-      })
-    }
+    const { dispatchUpdateActiveFieldObject, titulo } = this.props;
     dispatchUpdateActiveFieldObject(false, titulo);
     this.setState({
       objeto: {
@@ -211,12 +190,7 @@ export class ListaObjetos extends Component {
   }
 
   agregarObjetoLista = () => {
-
-    const {
-      dispatchUpdateElementFromList,
-      titulo,
-      dispatchUpdateActiveFieldObject
-    } = this.props;
+    const { dispatchUpdateElementFromList, titulo, dispatchUpdateActiveFieldObject } = this.props;
     const campoVacio = this.state.objeto.text;
 
     const isValid = this.checkValidations(campoVacio);
@@ -268,78 +242,23 @@ export class ListaObjetos extends Component {
     });
   };
 
-  saveObjetosAsociados = () => {
-    const { dispatchSaveTemporalChanges, titulo } = this.props;
-    let [objetosAsociados] = this.getObjectsFromReducer();
-
-    if (this.filterObjectsByCheckedValue("temporalChecked", objetosAsociados, true).length > 5) {
-      this.setState({
-        alertMaxAsociados: true
-      })
-    } else {
-      if (this.filterObjectsByCheckedValue("temporalChecked", objetosAsociados, true).length === 0) {
-        this.setState({
-          alertAsociar: true
-        })
-      } else {
-        dispatchSaveTemporalChanges(titulo);
-        this.setState({
-          modalPrevisit: false
-        })
-      }
-    }
-  }
-
-  desasociar = (event, idObject) => {
-    const { checked } = event.target
-    if (!checked) {
-      this.setState({
-        idObjetoEliminar: idObject,
-        modalEliminar: true
-      });
-    }
-  }
-
-  eliminarObjetoAsociado = idObject => {
-    const { dispatchUpdateElementoAsociado, titulo, dispatchSaveTemporalChanges } = this.props;
-    this.setState({
-      modalEliminar: false
-    })
-    dispatchUpdateElementoAsociado(idObject, titulo, false);
-    dispatchSaveTemporalChanges(titulo);
-  }
-
-  isCheck = (event, elemento) => {
-    const { checked } = event.target;
-    const { dispatchUpdateElementoAsociado, titulo } = this.props;
-    dispatchUpdateElementoAsociado(elemento.id, titulo, checked);
-
-  }
-
   getObjectsFromReducer = () => {
-    const { objectListReducer, titulo } = this.props;
+    const { titulo } = this.props;
 
-    let objectosAsociados;
     let tituloCompleto;
 
     if (titulo === "Oportunidades") {
-      objectosAsociados = objectListReducer.Oportunidades.linked;
       tituloCompleto = "Oportunidades (externas)";
     } else if (titulo === "Debilidades") {
-      objectosAsociados = objectListReducer.Debilidades.linked;
       tituloCompleto = "Debilidades (internas del cliente)";
     }
 
-    return [objectosAsociados, tituloCompleto]
+    return [ tituloCompleto ]
 
-  }
-
-  filterObjectsByCheckedValue(prop, objects, checkedValue) {
-    return objects.filter(object => !!object[prop] == checkedValue);
   }
 
   render() {
-    const { titulo, ayuda, visual, icon, previsit, canEdit } = this.props;
+    const { titulo, ayuda, visual, icon, canEdit } = this.props;
 
     const {
       objetos,
@@ -349,10 +268,7 @@ export class ListaObjetos extends Component {
       switchGuardarEditar,
       stylePlus,
       maxObjects,
-      error,
-      modalPrevisit,
-      alertAsociar,
-      alertMaxAsociados
+      error
     } = this.state;
 
 
@@ -366,7 +282,7 @@ export class ListaObjetos extends Component {
       ? "button-openFieldChecked"
       : "button-openField";
 
-    let [objetosAsociados, tituloCompleto] = this.getObjectsFromReducer();
+    let [ tituloCompleto ] = this.getObjectsFromReducer();
 
     return (
       <div className="container-listaObjetos" id={titulo}>
@@ -530,11 +446,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       dispatchUpdateElementFromList: updateElementFromList,
-      dispatchUpdateActiveFieldObject: updateActiveFieldObject,
-      dispatchUpdateElementoAsociado: updateElementoAsociado,
-      dispatchSaveTemporalChanges: saveTemporalChanges,
-      dispatchDiscardTemporalChanges: discardTemporalChanges,
-      dispatchOpenLinkModal: openLinkModal
+      dispatchUpdateActiveFieldObject: updateActiveFieldObject
     },
     dispatch
   );
