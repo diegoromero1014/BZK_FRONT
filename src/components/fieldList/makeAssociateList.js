@@ -6,13 +6,7 @@ import AssociateListComponent from './Objetives/AssociateObjectives';
 
 import {
     createList,
-    addFieldToList,
-    setFieldsToList,
-    changeListState,
-    removeElementFromList,
-    updateElementFromList,
-    editElementFromList,
-    changeDraftListState
+    changeListState
 } from './actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 

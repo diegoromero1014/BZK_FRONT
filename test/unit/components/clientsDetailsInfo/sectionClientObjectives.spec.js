@@ -38,7 +38,7 @@ describe('SectionClientObjectives Test', () => {
     })
     
     it('Should render one element when there is one relation', () => {
-        defaultProps.infoClient = { clientDetailsRequest: { objectives: [{ text: 'Any text', relations: [{ clientDetailRelation: { text: 'Any text' } }] }] }}
+        defaultProps.infoClient = { clientDetailsRequest: { objectives: [{ text: 'Any text', children: [ { text: 'Any text' }] }] }};
         const wrapper = shallow(<SectionClientObjectives {...defaultProps}/>);
         expect(wrapper.find('.row-element-child')).to.have.length(1);
     })

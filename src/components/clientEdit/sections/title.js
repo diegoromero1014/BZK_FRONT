@@ -22,13 +22,13 @@ const styles = {
 
 class Title extends React.Component {
     render() {
-        const {text, icon, isSection, helpText} = this.props;
+        const {text, icon, isSection, helpText, isObligatory} = this.props;
         return (
             <Row>
             <Col md={12}>
                 <div className="tab-content-row" style={isSection ? styles.sectionDiv : styles.bordererDiv}>
                     {icon}
-                    <span style={styles.span} className="title-middle">{text}</span>
+                    <span style={styles.span} className="title-middle">{text}  {isObligatory && <span>(<span style={{color: "red"}}>*</span>)</span>} </span>
                     {helpText && <ToolTipComponent text={helpText}>
                                 <i style={{ marginLeft: "5px", cursor: "pointer", fontSize: "16px" }}
                                     className="help circle icon blue" />
