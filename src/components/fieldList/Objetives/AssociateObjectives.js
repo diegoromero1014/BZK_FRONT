@@ -64,7 +64,7 @@ export default class AssociateObjectives extends React.Component {
         );
     }
 
-    renderElements(elements=[], checkedFunction, filterAssociatedElements) {
+    renderElements(checkedFunction, filterAssociatedElements, elements=[]) {
 
         return elements.map(
             (element) => (
@@ -102,7 +102,7 @@ export default class AssociateObjectives extends React.Component {
     }
 
     associateElements() {
-        const { changeListState, draftElements, elements, swtShowMessage } = this.props;
+        const { changeListState, draftElements, swtShowMessage } = this.props;
 
         const checkedElements = draftElements.filter(this.filterCheckedElements).length;
 
@@ -153,7 +153,7 @@ export default class AssociateObjectives extends React.Component {
                 </div>
                 <div style={styles.main} className='container-associate-objetives'>
                     {ObjectiveSectionTitle}
-                    {this.renderElements(filteredElements, this.checkElement, (list) => list.filter((el) => el.associated ))}
+                    {this.renderElements(this.checkElement, (list) => list.filter((el) => el.associated ), filteredElements)}
                     {!filteredElements.length && <div className="elements-not-found">
                         <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
                             <span className="form-item">No se han asociado Objetivos</span>
@@ -164,7 +164,7 @@ export default class AssociateObjectives extends React.Component {
                             title={"Asociar Objetivos"}
                             body={
                                 <div>
-                                    {this.renderElements(draftElements, this.checkDraftElement, (el) => el)}
+                                    {this.renderElements(this.checkDraftElement, (el) => el, draftElements)}
                                     <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
                                         <button style={{ marginRight: "5px" }} className="btn btn-secondary section-btn-save" type="button" onClick={this.associateElements}>Guardar</button>
                                         <button className="btn btn-primary cancel-btn" type="button" onClick={this.hideAssociateSection}>Cancelar</button>
