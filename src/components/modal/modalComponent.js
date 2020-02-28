@@ -26,6 +26,7 @@ import _ from 'lodash';
 import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
 import AlertPortfolioExpirationObservationsActionModal from '../alertPortfolioExpirtation/alertPortfolioExpirationObservationsActionModal';
 import TaskPage from "../pendingTask/taskPage";
+import ModalTask from "../visit/tasks/modalTask";
 
 export class ModalComponentDialog extends Component {
     constructor(props) {
@@ -77,10 +78,10 @@ export class ModalComponentDialog extends Component {
                 cell = <ComponentShareHolderDetail shareHolderId={actions.id} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_TASK:
-                cell = <TaskPage params={{ id: actions.task.id }} fromModal={true} closeModal={this.closeModal}/>;
+                cell = <ModalTask taskEdit={actions.task} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_TASK_ADMIN:
-                cell = <TaskPage params={{ id: actions.id.id }} fromModal={true} closeModal={this.closeModal}/>;
+                cell = <TaskPage params={{ id: actions.id.id ? actions.id.id : actions.id }} fromModal={true} closeModal={this.closeModal}/>;
                 break;
             case views.VIEW_TRACKING_COVENANT:
                 cell = <ModalTrackingCovenant covenantId={actions.id} isOpen={this.closeModal} />;

@@ -15,7 +15,8 @@ import {
 import {checkRichTextRequiredBoolean, validateHtmlInjection} from "../../validationsFields/rulesField";
 
 export const schema = {
-    finalDate: Yup.date()
+    finalDate: Yup.string()
+        .trim()
         .required(MESSAGE_REQUIRED_FIELD("Fecha de cierre"))
         .typeError(MESSAGE_REQUIRED_FIELD("Fecha de cierre")),
     idStatus: Yup.string()
