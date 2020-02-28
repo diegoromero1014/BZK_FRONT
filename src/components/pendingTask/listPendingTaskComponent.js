@@ -5,7 +5,7 @@ import { tasksByClientFindServer, orderColumnUserTask, clearUserTaskOrder, clear
 import GridComponent from '../grid/component';
 import { NUMBER_RECORDS } from './constants';
 import moment from 'moment';
-import { shorterStringValue } from '../../actionsGlobal';
+
 import {MODULE_TASKS} from "../../constantsGlobal";
 
 let v1 = "";
