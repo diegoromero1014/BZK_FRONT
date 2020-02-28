@@ -1,17 +1,15 @@
 import React from 'react';
 import { Icon } from 'semantic-ui-react'
-import Objectives from './Objetives';
 
 import {
-    ListaObjetivos,
-    ObjectiveSectionTitle,
-    objectivesInitialValues,
+    makeObjectiveSectionTitle,
     styles
 } from './utils';
 import TemplateObjectiveAndStrategies from './templateObjectiveAndStrategies';
 import ToolTip from '../../toolTip/toolTipComponent';
 import BiztrackModal from '../Objetives/BiztrackModal';
 
+const ObjectiveSectionTitle = makeObjectiveSectionTitle(true)
 
 export default class AssociateObjectives extends React.Component {
 
