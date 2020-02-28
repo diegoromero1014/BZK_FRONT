@@ -62,7 +62,7 @@ export class ElementsComponent extends Component {
     }
 
     render() {
-        const { placeholder, messageButton, handleSubmit, name, elementsReducer, max, resetForm, title, dispatchSetToShow, values: { objectEdited }, isEditable } = this.props;
+        const { placeholder, messageButton, handleSubmit, name, elementsReducer, max, resetForm, title, dispatchSetToShow, values: { objectEdited }, isEditable, idButton } = this.props;
         const { show } = this.state;
 
         let data = elementsReducer[name];
@@ -81,6 +81,7 @@ export class ElementsComponent extends Component {
                             <ToolTip text={messageButton}>
                                 <Icon
                                     className='icon-message-elements'
+                                    id={idButton ? idButton : 'element'}
                                     size='huge'
                                     name={'add square'}
                                     style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}

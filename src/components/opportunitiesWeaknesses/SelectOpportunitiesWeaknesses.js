@@ -128,6 +128,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                 singularTitle={`la ${SINGULAR_TITLE_OPPORTUNITIES}`}
                 showCheck={true}
                 executeFunction={() => dispatchLinkedRecords(OPPORTUNITIES)}
+                idButton={'Oportunidades'}
               />
               :
               <div>
@@ -191,6 +192,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                 singularTitle={`la ${SINGULAR_TITLE_WEAKNESSES}`}
                 showCheck={true}
                 executeFunction={() => dispatchLinkedRecords(WEAKNESSES)}
+                idButton={'Debilidades'}
               />
 
               :
