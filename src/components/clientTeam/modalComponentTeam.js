@@ -79,14 +79,14 @@ export class ModalComponentTeam extends Component {
     };
 
     componentWillMount() {
-        const {getClientTeam, showLoadingDispatch, swtShowMessageDispatch, filterUsersBancoDispatch, infoClient} = this.props;
+        const {getClientTeamDispatch, showLoadingDispatch, swtShowMessageDispatch, filterUsersBancoDispatch, infoClient} = this.props;
         this.setState({
             teamManagers: [],
             teamOthers: [],
             teamAssistants: []
         });
         showLoadingDispatch(true, MESSAGE_LOAD_DATA);
-        getClientTeam(window.sessionStorage.getItem('idClientSelected')).then((data) => {
+        getClientTeamDispatch(window.sessionStorage.getItem('idClientSelected')).then((data) => {
             const status = data.payload.data.status;
             const validateLogin = data.payload.data.validateLogin;
             showLoadingDispatch(false, '');
@@ -136,7 +136,7 @@ export class ModalComponentTeam extends Component {
     }
 
     render() {
-        const {tabActive} = this.state; 
+        const {tabActive} = this.state;
 
         let label = 'El cliente es gerenciado por un Banquero senior : ' + this.state.userSession;
         return (
@@ -218,7 +218,7 @@ export class ModalComponentTeam extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getClientTeam,
+        getClientTeamDispatch: getClientTeam,
         saveSeniorBankerDispatch: saveSeniorBanker,
         showLoadingDispatch: showLoading,
         swtShowMessageDispatch: swtShowMessage,
