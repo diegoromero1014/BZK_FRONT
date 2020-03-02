@@ -27,7 +27,7 @@ import ModalContentComponent from "./ModalContentComponent";
 import Message from '../message';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
-class SelectOpportunitiesWeaknesses extends Component {
+export class SelectOpportunitiesWeaknesses extends Component {
   constructor(props) {
     super(props);
 
