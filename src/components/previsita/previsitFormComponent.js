@@ -229,7 +229,7 @@ export class PrevisitFormComponent extends Component {
 
                <Row style={{ padding: "20px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
-                     <Objectives />
+                     <Objectives isEditable={!isEditable}/>
                   </Col>
                </Row>
 

@@ -34,6 +34,7 @@ export default function makeAssociateList(listName) {
             return (
                 <div>
                     <AssociateListComponent
+                        {...this.props}
                         changeListState={dispatchChangeListState}
                         swtShowMessage={dispatchSwtShowMessage}
                         elements={elements}
