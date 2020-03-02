@@ -12,7 +12,7 @@ import {
     MESSAGE_WARNING_ONLY_ALPHABETICAL,
     MESSAGE_WARNING_TASK_OBSERVATIONS
 } from '../../validationsFields/validationsMessages';
-import {checkRichTextRequiredBoolean, validateHtmlInjection} from "../../validationsFields/rulesField";
+import {validateHtmlInjection} from "../../validationsFields/rulesField";
 
 export const schema = {
     finalDate: Yup.string()
