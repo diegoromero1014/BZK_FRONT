@@ -1,12 +1,14 @@
 import React from 'react';
 import {ModalComponentTeam} from "../../../../src/components/clientTeam/modalComponentTeam";
 import {Checkbox} from "semantic-ui-react";
+import Immutable from "immutable";
 
+const infoClient = Immutable.Map({seniorBankerId:1});
 describe('Test modalComponentTeam', ()=>{
 
     let defaultProps;
     let showLoadingDispatch;
-    let getClientTeam;
+    let getClientTeamDispatch;
     let filterUsersBancoDispatch;
     let saveSeniorBankerDispatch;
     let user;
@@ -15,22 +17,25 @@ describe('Test modalComponentTeam', ()=>{
     beforeEach(() => {
         showLoadingDispatch = sinon.fake();
         const success = { payload: { data: { data: {  } } } };
-        getClientTeam = sinon.stub();
-        getClientTeam.resolves(success);
+        const successUsers =  { payload: { data: { data:[{description:'heurrea', cargo:'Banquero Senior', idUsuario:1}] } }};
+        getClientTeamDispatch = sinon.stub();
+        getClientTeamDispatch.resolves(success);
         filterUsersBancoDispatch = sinon.stub();
-        filterUsersBancoDispatch.resolves("");
+        filterUsersBancoDispatch.resolves(successUsers);
         saveSeniorBankerDispatch = sinon.stub();
         saveSeniorBankerDispatch.resolves(success);
         user = {
-          cargo:'Banquero Senior'
+          cargo:'Banquero Senior',
+          idUsuario:1
         };
+
 
         defaultProps = {
             showLoadingDispatch,
-            getClientTeam,
+            getClientTeamDispatch,
             filterUsersBancoDispatch,
             saveSeniorBankerDispatch,
-            user
+            infoClient
         }
     });
 
@@ -44,6 +49,13 @@ describe('Test modalComponentTeam', ()=>{
         const wrapper = shallow(<ModalComponentTeam {...defaultProps}/>);
         wrapper.instance().user = user;
         wrapper.instance().handledChangeCheck(()=>{}, true);
+    });
+
+
+    it('execute handledChangeCheck is check false', ()=>{
+        const wrapper = shallow(<ModalComponentTeam {...defaultProps}/>);
+        wrapper.instance().user = user;
+        wrapper.instance().handledChangeCheck(()=>{}, false);
     });
 
     it('execute handledChangeCheck when status 200', ()=>{
@@ -62,6 +74,22 @@ describe('Test modalComponentTeam', ()=>{
         const wrapper = shallow(<ModalComponentTeam {...defaultProps}/>);
         wrapper.instance().user = user;
         wrapper.instance().handledChangeCheck(()=>{}, true);
+    });
+
+    it('active seniorBanker check when baquero is equals', ()=>{
+       const success =  {data:{ payload: { data: { data:{user:[]} } } } };
+        filterUsersBancoDispatch = sinon.stub();
+        filterUsersBancoDispatch.resolves(success);
+        const wrapper = shallow(<ModalComponentTeam {...defaultProps}/>);
+        wrapper.instance().user = user;
+        wrapper.instance().handledChangeCheck(()=>{}, true);
+
+    });
+
+    it('execute handledChangeCheck is check false', ()=>{
+        const wrapper = shallow(<ModalComponentTeam {...defaultProps}/>);
+        wrapper.instance().user = user;
+        wrapper.instance().handledChangeCheck(()=>{}, false);
     });
 
 });
