@@ -5,8 +5,7 @@ import {
     CHANGE_LIST_STATE,
     REMOVE_ELEMENT_FROM_LIST,
     UPDATE_ELEMENT_FROM_LIST,
-    EDIT_ELEMENT_FROM_LIST,
-    CHANGE_DRAFT_LIST_STATE
+    EDIT_ELEMENT_FROM_LIST
 } from './constants';
 
 export function createList(name, defaultValues = {
@@ -39,14 +38,6 @@ export const setFieldsToList = list => (fields) => {
 export const changeListState = list => (newState) => {
     return {
         type: CHANGE_LIST_STATE,
-        list,
-        newState
-    }
-}
-
-export const changeDraftListState = list => (newState) => {
-    return {
-        type: CHANGE_DRAFT_LIST_STATE,
         list,
         newState
     }
