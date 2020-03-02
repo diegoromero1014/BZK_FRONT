@@ -30,7 +30,7 @@ export const schema = {
         .typeError(MESSAGE_REQUIRED_EMPLOYEE),
     task: Yup.string()
         .trim()
-        .test('validateHtmlInjection', MESSAGE_REQUIRED_FIELD("Tarea"), checkRichTextRequiredBoolean),
+        .required(MESSAGE_REQUIRED_FIELD("Tarea")),
     advance: Yup.string()
         .trim()
         .matches(patternOfTaskObservation, MESSAGE_WARNING_TASK_OBSERVATIONS)

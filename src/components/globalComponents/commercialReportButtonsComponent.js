@@ -3,10 +3,6 @@ import { SAVE_DRAFT, SAVE_PUBLISHED } from '../../constantsGlobal';
 
 export default class CommercialReportButtonsComponent extends Component {
 
-    constructor(props){
-        super(props);
-    }
-
     render() {
         const { onClickSave, onClickDownloadPDF, cancel, fromModal, isEditable, documentDraft, creatingReport, definitiveSaveTitle } = this.props;
         return (
