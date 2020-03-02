@@ -116,4 +116,40 @@ describe("Test AssociateObjectives", () => {
         expect(swtShowMessage.callCount).to.equal(0);
         expect(changeListState.callCount).to.equal(1)
     })
+
+    it('should checkDraftElement', () => {
+        const changeListState = sinon.fake();
+        const wrapper = shallow(<AssociateObjectives 
+            {...defaultProps}
+            changeListState={changeListState}
+        />)
+
+        wrapper.instance().checkDraftElement([])
+
+        expect(changeListState.callCount).to.equal(1)
+    })
+
+    it('should checkElement', () => {
+        const swtShowMessage = sinon.fake();
+        const wrapper = shallow(<AssociateObjectives 
+            {...defaultProps}
+            swtShowMessage={swtShowMessage}
+        />)
+        wrapper.instance().checkElement([]);
+
+        expect(swtShowMessage.callCount).to.equal(1)
+    })
+
+    it('shoukd hideAssociateSection', () => {
+        const changeListState = sinon.fake();
+        const wrapper = shallow(<AssociateObjectives 
+            {...defaultProps}
+            changeListState={changeListState}
+        />)
+
+        wrapper.instance().hideAssociateSection();
+
+        expect(changeListState.callCount).to.equal(1);
+        expect(changeListState.firstCall.lastArg.showAssociateSection).to.equal(false)
+    })
 })
