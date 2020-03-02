@@ -139,18 +139,22 @@ export class SelectOpportunitiesWeaknesses extends Component {
                       size='huge'
                       name={'add square'}
                       style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
+                      disabled={isEditable}
                       onClick={() => {
-                        if (!this.state.elements) {
-                          this.setState({ elements: Object.assign([], elementsReducer[OPPORTUNITIES].elements) });
+                        if (!isEditable) {
+                          if (!this.state.elements) {
+                            this.setState({ elements: Object.assign([], elementsReducer[OPPORTUNITIES].elements) });
+                          }
+
+                          this.setState({
+                            open: true,
+                            name: OPPORTUNITIES,
+                            singularTitle: SINGULAR_TITLE_OPPORTUNITIES,
+                            title: TITLE_OPPORTUNITIES,
+                            placeholder: OPPORTUNITIES_PLACEHOLDER
+                          });
                         }
 
-                        this.setState({
-                          open: true,
-                          name: OPPORTUNITIES,
-                          singularTitle: SINGULAR_TITLE_OPPORTUNITIES,
-                          title: TITLE_OPPORTUNITIES,
-                          placeholder: OPPORTUNITIES_PLACEHOLDER
-                        });
                       }}
                     />
                   </Col>
@@ -205,18 +209,21 @@ export class SelectOpportunitiesWeaknesses extends Component {
                       size='huge'
                       name={'add square'}
                       style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
+                      disabled={isEditable}
                       onClick={() => {
-                        if (!this.state.elements) {
-                          this.setState({ elements: Object.assign([], elementsReducer[WEAKNESSES].elements) });
-                        }
+                        if (!isEditable) {
+                          if (!this.state.elements) {
+                            this.setState({ elements: Object.assign([], elementsReducer[WEAKNESSES].elements) });
+                          }
 
-                        this.setState({
-                          open: true,
-                          name: WEAKNESSES,
-                          singularTitle: SINGULAR_TITLE_WEAKNESSES,
-                          title: TITLE_WEAKNESSES,
-                          placeholder: WEAKNESSES_PLACEHOLDER
-                        });
+                          this.setState({
+                            open: true,
+                            name: WEAKNESSES,
+                            singularTitle: SINGULAR_TITLE_WEAKNESSES,
+                            title: TITLE_WEAKNESSES,
+                            placeholder: WEAKNESSES_PLACEHOLDER
+                          });
+                        }
                       }}
                     />
                   </Col>
