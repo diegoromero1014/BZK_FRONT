@@ -599,7 +599,6 @@ export class PrevisitPage extends Component {
       const previsitDetail = previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null;
       return (
          <PrevisitFormComponent
-            infoClient={infoClient}
             previsitData={previsitDetail}
             previsitTypes={selectsReducer.get(PREVISIT_TYPE)}
             onChangeShowChallengerSection={this.showChallengerSection}

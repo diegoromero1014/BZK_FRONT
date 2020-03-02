@@ -98,7 +98,7 @@ export class PrevisitFormComponent extends Component {
 
    render() {
       const { fields: { type, date, duration, place, objective, challenger, observations, alternativeObjective } } = this.state;
-      const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue, infoClient, previsitType } = this.props;
+      const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue, previsitType } = this.props;
 
       return (
          <div>
