@@ -5,8 +5,9 @@ import {bindActionCreators} from "redux";
 import {filterUsersBanco} from "../../participantsVisitPre/actions";
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import $ from "jquery";
+import _ from 'lodash';
 
-class SearchEmployeeInput extends Component {
+export class SearchEmployeeInput extends Component {
 
     constructor(props) {
         super(props);
