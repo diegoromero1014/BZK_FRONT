@@ -29,8 +29,7 @@ export const schema = {
         .typeError(MESSAGE_REQUIRED_EMPLOYEE),
     task: Yup.string()
         .trim()
-        .required(MESSAGE_REQUIRED_FIELD("Tarea"))
-        .test('validateInjectionHtml', MESSAGE_ERROR_INJECTION_HTML, validateHtmlInjection),
+        .required(MESSAGE_REQUIRED_FIELD("Tarea")),
     advance: Yup.string()
         .trim()
         .matches(patternOfTaskObservation, MESSAGE_WARNING_TASK_OBSERVATIONS)
