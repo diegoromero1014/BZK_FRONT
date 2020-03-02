@@ -128,7 +128,7 @@ export class ModalComponentTeam extends Component {
                 })
             } else {
                 this.setState({
-                    checkActive: true,
+                    checkActive: false,
                     userSession: infoClient.seniorBanker
                 })
             }
@@ -136,7 +136,7 @@ export class ModalComponentTeam extends Component {
     }
 
     render() {
-        const {tabActive} = this.state;
+        const {tabActive} = this.state; 
 
         let label = 'El cliente es gerenciado por un Banquero senior : ' + this.state.userSession;
         return (
