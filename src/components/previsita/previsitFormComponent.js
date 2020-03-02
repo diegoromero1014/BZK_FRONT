@@ -19,7 +19,8 @@ import { checkRichTextRequiredBoolean } from '../../validationsFields/rulesField
 import SelectOpportunitiesWeaknesses from '../opportunitiesWeaknesses/SelectOpportunitiesWeaknesses';
 import makeAssociateList from '../fieldList/makeAssociateList';
 import { listName } from '../fieldList/Objetives/utils';
-import  '../../../styles/app/previsit.scss';
+import '../../../styles/app/previsit.scss';
+import Carousel from '../carousel';
 
 const Objectives = makeAssociateList(listName);
 
@@ -100,6 +101,25 @@ export class PrevisitFormComponent extends Component {
       const { fields: { type, date, duration, place, objective, challenger, observations, alternativeObjective } } = this.state;
       const { previsitTypes, commercialReportButtons, showChallengerSection, isEditable, setFieldValue, infoClient, previsitType } = this.props;
 
+      let data = [
+         {
+            component: <div style={{ width: '100%', height: '100%', background: 'green'}}>
+               <h1>Hola 1</h1>
+            </div>
+         },
+         {
+            component: <div style={{ width: '100%', height: '100%', background: 'green'}}>
+            <h1>Hola 1</h1>
+         </div>
+         },
+         {
+            component: <h1>Hola 3</h1>
+         },
+         {
+            component: <h1>Hola 4</h1>
+         }
+      ]
+
       return (
          <div>
             <Form style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
@@ -111,6 +131,12 @@ export class PrevisitFormComponent extends Component {
                         <i className="browser icon" style={{ fontSize: "20px" }} />
                         <span style={{ fontSize: "20px" }}> Datos de visita</span>
                      </div>
+                  </Col>
+               </Row>
+
+               <Row style={{ paddingTop: 70, width: '99%', paddingLeft: 20, marginTop: 100, marginBottom: 100 }}>
+                  <Col xs>
+                     <Carousel dots={true} infinite={true} data={data} slidesToShow={3} />
                   </Col>
                </Row>
 
