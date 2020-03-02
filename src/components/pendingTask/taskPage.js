@@ -6,8 +6,8 @@ import {TASK_STATUS} from "../selectsComponent/constants";
 import {
     AFFIRMATIVE_ANSWER,
     CANCEL,
-    EDITAR, MESSAGE_ERROR,
-    MESSAGE_SAVE_DATA, REQUEST_ERROR,
+    EDITAR,
+    MESSAGE_SAVE_DATA,
     REQUEST_INVALID_INPUT,
     REQUEST_SUCCESS
 } from "../../constantsGlobal";
@@ -36,7 +36,6 @@ import moment from "moment";
 import {getInfoTaskUser} from '../myPendings/myTasks/actions';
 import {clearTask} from "./actions";
 import _ from 'lodash';
-import {TITLE_ERROR_VALIDITY_DATES} from "../previsita/constants";
 
 export class TaskPage extends React.Component {
     constructor(props) {

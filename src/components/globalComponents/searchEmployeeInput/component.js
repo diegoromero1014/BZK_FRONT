@@ -40,8 +40,7 @@ class SearchEmployeeInput extends Component {
                         onSelect: onSelect
                     });
                     selector.toggleClass('loading');
-                    selector.search('search local',
-                        );
+                    selector.search('search local', employeeValue);
                     setTimeout(function () {
                         $('#employee').focus();
                     }, 150);
@@ -64,13 +63,12 @@ class SearchEmployeeInput extends Component {
     };
 
     render() {
-        const { onSelect, isEditable, error } = this.props;
+        const { onSelect, isEditable } = this.props;
         const { employeeValue } = this.state;
         return (
             <div>
                 <ComboBoxFilter
                     name="employee"
-                    touched={true}
                     labelInput="Ingrese un criterio de búsqueda..."
                     parentId="dashboardComponentScroll"
                     onChange={this.onChangeValue}
@@ -78,7 +76,6 @@ class SearchEmployeeInput extends Component {
                     onSelect={val => onSelect(val)}
                     onKeyPress={e => this.updateKeyValueUsersBanco(e)}
                     max="255"
-                    error={error}
                     disabled={isEditable ? 'disabled' : ''}
                 />
             </div>

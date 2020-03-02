@@ -5,8 +5,6 @@ import { bindActionCreators } from 'redux';
 
 import ContactDetailsModalComponent from '../contact/contactDetail/contactDetailsModalComponent';
 import ComponentShareHolderDetail from '../clients/partners/shareholder/shareholderDetail/componentShareHolderDetail';
-import ModalTask from '../visit/tasks/modalTask';
-import ModalCreateTask from '../pendingTask/modalCreateTask';
 import ModalTrackingCovenant from '../risksManagement/covenants/createTracking/modalTrackingCovenant';
 import ModalObservation from '../alertPortfolioExpirtation/modalObservation';
 import ModalDetailAEC from '../risksManagement/AEC/modalDetailAEC';
@@ -28,7 +26,7 @@ import _ from 'lodash';
 import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
 import AlertPortfolioExpirationObservationsActionModal from '../alertPortfolioExpirtation/alertPortfolioExpirationObservationsActionModal';
 import TaskPage from "../pendingTask/taskPage";
-import PrevisitPage from "../previsita/previsitPage";
+import ModalTask from "../visit/tasks/modalTask";
 
 export class ModalComponentDialog extends Component {
     constructor(props) {
@@ -69,9 +67,9 @@ export class ModalComponentDialog extends Component {
         }
     }
 
-    _contectViewModal(actions, idx) {
+    _contectViewModal(actions) {
         var cell;
-        const { closeModal, origin } = this.props;
+        const { origin } = this.props;
         switch (actions.component) {
             case views.VIEW_CONTACT:
                 cell = <ContactDetailsModalComponent contactId={actions.id} isOpen={this.closeModal} origin={origin}/>;
@@ -80,14 +78,10 @@ export class ModalComponentDialog extends Component {
                 cell = <ComponentShareHolderDetail shareHolderId={actions.id} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_TASK:
-                //<ModalTask taskEdit={actions.task} isOpen={this.closeModal} />
-                console.log("Tarea", actions.task);
-                cell = <TaskPage params={{ id: actions.task.id }} fromModal={true} closeModal={this.closeModal}/>;
+                cell = <ModalTask taskEdit={actions.task} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_TASK_ADMIN:
-                console.log("id", actions.id);
-                cell = <TaskPage params={{ id: actions.id.id }} fromModal={true} closeModal={this.closeModal}/>;
-                //cell = <ModalCreateTask taskEdit={actions.id} isOpen={this.closeModal} idClient={actions.idClient} functCloseModal={actions.functCloseModal} actionEdit={actions.actionEdit} />;
+                cell = <TaskPage params={{ id: actions.id.id ? actions.id.id : actions.id }} fromModal={true} closeModal={this.closeModal}/>;
                 break;
             case views.VIEW_TRACKING_COVENANT:
                 cell = <ModalTrackingCovenant covenantId={actions.id} isOpen={this.closeModal} />;
