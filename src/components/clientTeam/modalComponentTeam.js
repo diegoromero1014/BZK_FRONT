@@ -18,7 +18,7 @@ import {Menu, Segment} from 'semantic-ui-react'
 import {Checkbox} from "semantic-ui-react";
 import {filterUsersBanco} from "../participantsVisitPre/actions";
 
-var user;
+
 
 export class ModalComponentTeam extends Component {
     constructor(props) {
@@ -32,6 +32,7 @@ export class ModalComponentTeam extends Component {
             checkDisable: true,
             userSession: ""
         };
+        this.user = null
 
     }
 
@@ -55,18 +56,15 @@ export class ModalComponentTeam extends Component {
                 checkActive: false,
                 userSession: ""
             })
-        } else if (user.cargo === 'Banquero Senior') {
+        } else if (this.user.cargo === 'Banquero Senior') {
             this.setState({
                 checkActive: !this.state.checkActive,
-                userSession: user.title
+                userSession: this.user.title
             })
         }
-        const json = {
-            "clietnId": window.sessionStorage.getItem('idClientSelected'),
-            "check": !checked
-        };
         showLoadingDispatch(true, MESSAGE_LOAD_DATA);
-        saveSeniorBankerDispatch(json).then((data) => {
+        saveSeniorBankerDispatch(checked).then((data) => {
+
             const status = data.payload.data.status;
             const validateLogin = data.payload.data.validateLogin;
             if(status === REQUEST_ERROR){
@@ -115,14 +113,14 @@ export class ModalComponentTeam extends Component {
 
         filterUsersBancoDispatch(window.localStorage.getItem('userNameFront')).then((data) => {
             let users = _.get(data, 'payload.data.data');
-            user = users.find(usr => usr.description === window.localStorage.getItem('userNameFront'));
+            this.user = users.find(usr => usr.description === window.localStorage.getItem('userNameFront'));
 
-            if (null === infoClient.seniorBankerId && user.cargo === 'Banquero Senior') {
+            if (null === infoClient.seniorBankerId && this.user.cargo === 'Banquero Senior') {
                 this.setState({
                     checkActive: false,
                     checkDisable: false,
                 })
-            } else if (user.idUsuario === infoClient.seniorBankerId && user.cargo === 'Banquero Senior') {
+            } else if (this.user.idUsuario === infoClient.seniorBankerId && this.user.cargo === 'Banquero Senior') {
                 this.setState({
                     checkActive: true,
                     checkDisable: false,

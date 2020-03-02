@@ -28,21 +28,15 @@ export function getClientTeam(id){
   }
 }
 
-export function saveSeniorBanker(json) {
+export function saveSeniorBanker(checked) {
   const jsonComplete = {
     messageHeader:{
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "timestamp": new Date().getTime(),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
+      "sessionToken": window.localStorage.getItem('sessionTokenFront')
     },
-    messageBody: json
+    messageBody: {
+      "clietnId": window.sessionStorage.getItem('idClientSelected'),
+      "check": !checked
+    }
   };
 
   var request = axios.post(APP_URL + "/checkSeniorBanker", jsonComplete);
