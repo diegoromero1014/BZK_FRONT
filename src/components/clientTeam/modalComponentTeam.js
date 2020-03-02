@@ -10,22 +10,29 @@ import {
     MESSAGE_LOAD_DATA
 } from '../../constantsGlobal';
 import {OPTION_MANAGER, OPTION_OTHERS, OPTION_ASSISTANTS, MANAGER, OTHER, ASSISTANT} from './constants';
-import {getClientTeam} from './actions';
+import {getClientTeam, saveSeniorBanker} from './actions';
 import UserTeamCard from './userTeamCard';
 import {showLoading} from '../loading/actions';
 import {swtShowMessage} from '../sweetAlertMessages/actions';
 import {Menu, Segment} from 'semantic-ui-react'
 import {Checkbox} from "semantic-ui-react";
+import {filterUsersBanco} from "../participantsVisitPre/actions";
 
-class ModalComponentTeam extends Component {
+var user;
+
+export class ModalComponentTeam extends Component {
     constructor(props) {
         super(props);
         this.state = {
             teamManagers: [],
             teamOthers: [],
             teamAssistants: [],
-            tabActive: OPTION_MANAGER
+            tabActive: OPTION_MANAGER,
+            checkActive: true,
+            checkDisable: true,
+            userSession: ""
         };
+
     }
 
     _mapTeam(item, idx) {
@@ -41,23 +48,55 @@ class ModalComponentTeam extends Component {
 
     handleItemClick = (e, {name}) => this.setState({tabActive: name});
 
+    handledChangeCheck = (e, {checked}) => {
+        const {saveSeniorBankerDispatch, showLoadingDispatch,swtShowMessageDispatch} = this.props;
+        if (checked) {
+            this.setState({
+                checkActive: false,
+                userSession: ""
+            })
+        } else if (user.cargo === 'Banquero Senior') {
+            this.setState({
+                checkActive: !this.state.checkActive,
+                userSession: user.title
+            })
+        }
+        const json = {
+            "clietnId": window.sessionStorage.getItem('idClientSelected'),
+            "check": !checked
+        };
+        showLoadingDispatch(true, MESSAGE_LOAD_DATA);
+        saveSeniorBankerDispatch(json).then((data) => {
+            const status = data.payload.data.status;
+            const validateLogin = data.payload.data.validateLogin;
+            if(status === REQUEST_ERROR){
+                swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
+            }
+            if (validateLogin === false) {
+                swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
+            }
+            showLoadingDispatch(false, MESSAGE_LOAD_DATA);
+        });
+
+    };
+
     componentWillMount() {
-        const {getClientTeam, showLoading, swtShowMessage} = this.props;
+        const {getClientTeam, showLoadingDispatch, swtShowMessageDispatch, filterUsersBancoDispatch, infoClient} = this.props;
         this.setState({
             teamManagers: [],
             teamOthers: [],
             teamAssistants: []
         });
-        showLoading(true, MESSAGE_LOAD_DATA);
+        showLoadingDispatch(true, MESSAGE_LOAD_DATA);
         getClientTeam(window.sessionStorage.getItem('idClientSelected')).then((data) => {
             const status = data.payload.data.status;
             const validateLogin = data.payload.data.validateLogin;
-            showLoading(false, '');
+            showLoadingDispatch(false, '');
             if (status === REQUEST_ERROR) {
-                swtShowMessage('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
+                swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
             } else {
                 if (validateLogin === false) {
-                    swtShowMessage('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
+                    swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
                 } else {
                     const team = data.payload.data.data;
                     const teamManagersArray = _.orderBy(_.filter(team, ['employeeType', MANAGER]), ['positionOrder', 'name'], ['asc', 'asc']);
@@ -71,17 +110,37 @@ class ModalComponentTeam extends Component {
                 }
             }
         }, (reason) => {
-            swtShowMessage('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
+            swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
         });
+
+        filterUsersBancoDispatch(window.localStorage.getItem('userNameFront')).then((data) => {
+            let users = _.get(data, 'payload.data.data');
+            user = users.find(usr => usr.description === window.localStorage.getItem('userNameFront'));
+
+            if (null === infoClient.seniorBankerId && user.cargo === 'Banquero Senior') {
+                this.setState({
+                    checkActive: false,
+                    checkDisable: false,
+                })
+            } else if (user.idUsuario === infoClient.seniorBankerId && user.cargo === 'Banquero Senior') {
+                this.setState({
+                    checkActive: true,
+                    checkDisable: false,
+                    userSession: infoClient.seniorBanker
+                })
+            } else {
+                this.setState({
+                    checkActive: true,
+                    userSession: infoClient.seniorBanker
+                })
+            }
+        })
     }
 
     render() {
         const {tabActive} = this.state;
-        const {infoClient} = this.props;
 
-        let check = infoClient.seniorBanker !== "" ? true : false;
-        let label = 'El cliente es gerenciado por un Banquero senior :' + infoClient.seniorBanker;
-
+        let label = 'El cliente es gerenciado por un Banquero senior : ' + this.state.userSession;
         return (
             <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                  style={{overflow: "hidden"}}>
@@ -90,9 +149,11 @@ class ModalComponentTeam extends Component {
                         <Checkbox
                             id="checkbox-banquero"
                             label={label}
-                            style={{ padding: "15px 10px 0px 20px", backgroundColor: '#ffffff ' }}
-                            disabled={check}
-                            readOnly={check}
+                            readOnly={false}
+                            style={{padding: "15px 10px 0px 20px", backgroundColor: '#ffffff '}}
+                            checked={this.state.checkActive}
+                            disabled={this.state.checkDisable}
+                            onClick={this.handledChangeCheck}
                             toggle
                         />
                     </Col>
@@ -100,9 +161,12 @@ class ModalComponentTeam extends Component {
                 <Row style={{padding: "15px"}}>
                     <Col xs>
                         <Menu attached='top' tabular>
-                            <Menu.Item name={OPTION_MANAGER} active={tabActive === OPTION_MANAGER} onClick={this.handleItemClick}/>
-                            <Menu.Item name={OPTION_ASSISTANTS} active={tabActive === OPTION_ASSISTANTS} onClick={this.handleItemClick}/>
-                            <Menu.Item name={OPTION_OTHERS} active={tabActive === OPTION_OTHERS} onClick={this.handleItemClick}/>
+                            <Menu.Item name={OPTION_MANAGER} active={tabActive === OPTION_MANAGER}
+                                       onClick={this.handleItemClick}/>
+                            <Menu.Item name={OPTION_ASSISTANTS} active={tabActive === OPTION_ASSISTANTS}
+                                       onClick={this.handleItemClick}/>
+                            <Menu.Item name={OPTION_OTHERS} active={tabActive === OPTION_OTHERS}
+                                       onClick={this.handleItemClick}/>
                         </Menu>
                         <Segment attached='bottom' style={{height: "370px", overflowY: "auto"}}>
                             {tabActive === OPTION_MANAGER &&
@@ -111,7 +175,8 @@ class ModalComponentTeam extends Component {
                                     <div className="team-modal">
                                         {this.state.teamManagers.length === 0 ?
                                             <div style={{textAlign: "center", marginTop: "15px"}}>
-                                                <h4 className="form-item">Señor usuario, no se encontraron gerentes.</h4>
+                                                <h4 className="form-item">Señor usuario, no se encontraron
+                                                    gerentes.</h4>
                                             </div> :
                                             this.state.teamManagers.map(this._mapTeam)}
                                     </div>
@@ -124,7 +189,8 @@ class ModalComponentTeam extends Component {
                                     <div className="team-modal">
                                         {this.state.teamAssistants.length === 0 ?
                                             <div style={{textAlign: "center", marginTop: "15px"}}>
-                                                <h4 className="form-item">Señor usuario, no se encontraron asistentes.</h4>
+                                                <h4 className="form-item">Señor usuario, no se encontraron
+                                                    asistentes.</h4>
                                             </div> :
                                             this.state.teamAssistants.map(this._mapTeam)}
                                     </div>
@@ -155,8 +221,10 @@ class ModalComponentTeam extends Component {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getClientTeam,
-        showLoading,
-        swtShowMessage
+        saveSeniorBankerDispatch: saveSeniorBanker,
+        showLoadingDispatch: showLoading,
+        swtShowMessageDispatch: swtShowMessage,
+        filterUsersBancoDispatch: filterUsersBanco,
     }, dispatch);
 }
 
