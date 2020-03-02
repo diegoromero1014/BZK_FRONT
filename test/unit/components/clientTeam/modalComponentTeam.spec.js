@@ -12,6 +12,7 @@ describe('Test modalComponentTeam', ()=>{
     let filterUsersBancoDispatch;
     let saveSeniorBankerDispatch;
     let user;
+    let stubLocalStorage;
 
 
     beforeEach(() => {
@@ -24,6 +25,7 @@ describe('Test modalComponentTeam', ()=>{
         filterUsersBancoDispatch.resolves(successUsers);
         saveSeniorBankerDispatch = sinon.stub();
         saveSeniorBankerDispatch.resolves(success);
+        stubLocalStorage = sinon.stub(window.localStorage, 'getItem').returns("icherrer");
         user = {
           cargo:'Banquero Senior',
           idUsuario:1
@@ -35,10 +37,16 @@ describe('Test modalComponentTeam', ()=>{
             getClientTeamDispatch,
             filterUsersBancoDispatch,
             saveSeniorBankerDispatch,
-            infoClient
+            infoClient,
+            stubLocalStorage,
+            user
         }
     });
 
+    afterEach(function () {
+        // runs after each test in this block
+        stubLocalStorage.restore();
+    });
 
     it('should render check senior banker', ()=>{
         const wrapper = shallow(<ModalComponentTeam {...defaultProps}/>);
@@ -59,27 +67,52 @@ describe('Test modalComponentTeam', ()=>{
     });
 
     it('execute handledChangeCheck when status 200', ()=>{
-        const success = {data:{ payload: { data: { status: 200 } } } };
+        const success = { payload: { data: { status: 200 } } } ;
         saveSeniorBankerDispatch = sinon.stub();
         saveSeniorBankerDispatch.resolves(success);
+        defaultProps.saveSeniorBankerDispatch = saveSeniorBankerDispatch;
+        const wrapper = shallow(<ModalComponentTeam {...defaultProps}/>);
+        wrapper.instance().user = user;
+        wrapper.instance().handledChangeCheck(()=>{}, true);
+    });
+
+    it('execute handledChangeCheck when validateLogin true', ()=>{
+        const success = { payload: { data: { validateLogin: true } } } ;
+        saveSeniorBankerDispatch = sinon.stub();
+        saveSeniorBankerDispatch.resolves(success);
+        defaultProps.saveSeniorBankerDispatch = saveSeniorBankerDispatch;
+        const wrapper = shallow(<ModalComponentTeam {...defaultProps}/>);
+        wrapper.instance().user = user;
+        wrapper.instance().handledChangeCheck(()=>{}, true);
+    });
+
+    it('execute handledChangeCheck when validateLogin false', ()=>{
+        const success = { payload: { data: { validateLogin: false } } } ;
+        saveSeniorBankerDispatch = sinon.stub();
+        saveSeniorBankerDispatch.resolves(success);
+        defaultProps.saveSeniorBankerDispatch = saveSeniorBankerDispatch;
         const wrapper = shallow(<ModalComponentTeam {...defaultProps}/>);
         wrapper.instance().user = user;
         wrapper.instance().handledChangeCheck(()=>{}, true);
     });
 
     it('execute handledChangeCheck when status 500', ()=>{
-        const success = {data:{ payload: { data: { status: 500 } } } };
+        const success = { payload: { data: { status: 500 } }  };
         saveSeniorBankerDispatch = sinon.stub();
         saveSeniorBankerDispatch.resolves(success);
+        defaultProps.saveSeniorBankerDispatch = saveSeniorBankerDispatch;
         const wrapper = shallow(<ModalComponentTeam {...defaultProps}/>);
         wrapper.instance().user = user;
         wrapper.instance().handledChangeCheck(()=>{}, true);
     });
 
     it('active seniorBanker check when baquero is equals', ()=>{
-       const success =  {data:{ payload: { data: { data:{user:[]} } } } };
+       const success =  { payload: { data: { data:{user:[]} } } };
+        const infoClient = Immutable.Map({seniorBankerId:null});
         filterUsersBancoDispatch = sinon.stub();
         filterUsersBancoDispatch.resolves(success);
+        defaultProps.saveSeniorBankerDispatch = filterUsersBancoDispatch;
+        defaultProps.infoClient = infoClient;
         const wrapper = shallow(<ModalComponentTeam {...defaultProps}/>);
         wrapper.instance().user = user;
         wrapper.instance().handledChangeCheck(()=>{}, true);
