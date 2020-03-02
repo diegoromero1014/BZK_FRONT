@@ -113,22 +113,29 @@ export class ModalComponentTeam extends Component {
 
         filterUsersBancoDispatch(window.localStorage.getItem('userNameFront')).then((data) => {
             let users = _.get(data, 'payload.data.data');
-            this.user = users.find(usr => usr.description === window.localStorage.getItem('userNameFront'));
+            this.user = users.find(usr => usr.description.toLowerCase() === window.localStorage.getItem('userNameFront').toLowerCase());
 
-            if (null === infoClient.seniorBankerId && this.user.cargo === 'Banquero Senior') {
-                this.setState({
-                    checkActive: false,
-                    checkDisable: false,
-                })
-            } else if (this.user.idUsuario === infoClient.seniorBankerId && this.user.cargo === 'Banquero Senior') {
+            if(this.user.cargo === 'Banquero Senior'){
+                if (null === infoClient.seniorBankerId) {
+                    this.setState({
+                        checkActive: false,
+                        checkDisable: false,
+                    })
+                } else if (this.user.idUsuario === infoClient.seniorBankerId ) {
+                    this.setState({
+                        checkActive: true,
+                        checkDisable: false,
+                        userSession: infoClient.seniorBanker
+                    })
+                } else {
+                    this.setState({
+                        checkActive: true,
+                        userSession: infoClient.seniorBanker
+                    })
+                }
+            }else{
                 this.setState({
                     checkActive: true,
-                    checkDisable: false,
-                    userSession: infoClient.seniorBanker
-                })
-            } else {
-                this.setState({
-                    checkActive: false,
                     userSession: infoClient.seniorBanker
                 })
             }
