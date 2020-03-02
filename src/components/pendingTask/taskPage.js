@@ -36,6 +36,7 @@ import moment from "moment";
 import {getInfoTaskUser} from '../myPendings/myTasks/actions';
 import {clearTask} from "./actions";
 import _ from 'lodash';
+import {consultInfoClient} from "../clientInformation/actions";
 
 export class TaskPage extends React.Component {
     constructor(props) {
@@ -50,10 +51,12 @@ export class TaskPage extends React.Component {
     }
 
     componentWillMount() {
-        const {clientInformacion} = this.props;
-        const infoClient = clientInformacion.get('responseClientInfo');
-        if (_.isEmpty(infoClient)) {
-            redirectUrl(ComponentClientInformationURL)
+        const { idClient, dispatchConsultInfoClient } = this.props;
+        if(idClient){
+            window.sessionStorage.setItem('idClientSelected', idClient);
+            dispatchConsultInfoClient().then(this.validateClientSelected);
+        }else{
+            this.validateClientSelected();
         }
     }
 
@@ -77,6 +80,13 @@ export class TaskPage extends React.Component {
         });
         dispatchClearUserTask();
     }
+
+    validateClientSelected = () => {
+        const { clientInformacion } = this.props;
+        if (_.isEmpty(clientInformacion.get('responseClientInfo'))) {
+            redirectUrl(ComponentClientInformationURL)
+        }
+    };
 
     masterDataFields = async () => {
         const {dispatchGetMasterDataFields} = this.props;
@@ -257,7 +267,8 @@ function mapDispatchToProps(dispatch) {
         dispatchShowLoading: showLoading,
         dispatchGetMasterDataFields: getMasterDataFields,
         dispatchCreatePendingTaskNew: createPendingTaskNew,
-        dispatchClearUserTask: clearTask
+        dispatchClearUserTask: clearTask,
+        dispatchConsultInfoClient: consultInfoClient
     }, dispatch);
 }
 
