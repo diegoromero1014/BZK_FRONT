@@ -92,7 +92,7 @@ export class SelectOpportunitiesWeaknesses extends Component {
   render() {
     const { opportunities, weaknesses, isEditable, linkedWeaknesses, linkedOpportunities, elementsReducer, dispatchLinkedRecords } = this.props;
     const { open, name, singularTitle, title, placeholder } = this.state;
-    console.log(this.state);
+
     return (
       <div>
         <Row className='title-section' style={{ padding: "0px 10px 10px 0px" }}>
