@@ -111,7 +111,7 @@ export default class AssociateObjectives extends React.Component {
             return;
         }
 
-        if (checkedElements >= 3) {
+        if (checkedElements > 3) {
             swtShowMessage("warning", "Alerta", "Señor usuario, solo puede asociar un maximo de 3 Objetivos del cliente.");
             return;
         }
