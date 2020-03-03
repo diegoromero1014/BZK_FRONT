@@ -63,7 +63,7 @@ export class SelectOpportunitiesWeaknesses extends Component {
     if (!associated) {
       dispatchSwtShowMessage(
         'warning',
-        "Guardar información",
+        "Confirmar desasociación",
         `¿Señor usuario, está seguro que desea desasociar la ${singularTitle}?`,
         {
           onConfirmCallback: () => {
@@ -92,7 +92,7 @@ export class SelectOpportunitiesWeaknesses extends Component {
   render() {
     const { opportunities, weaknesses, isEditable, linkedWeaknesses, linkedOpportunities, elementsReducer, dispatchLinkedRecords } = this.props;
     const { open, name, singularTitle, title, placeholder } = this.state;
-
+    console.log(this.state);
     return (
       <div>
         <Row className='title-section' style={{ padding: "0px 10px 10px 0px" }}>
@@ -164,7 +164,7 @@ export class SelectOpportunitiesWeaknesses extends Component {
                     data={linkedOpportunities}
                     handleDelete={undefined}
                     handleEdit={undefined}
-                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(OPPORTUNITIES, element, checked, singularTitle)}
+                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(OPPORTUNITIES, element, checked, SINGULAR_TITLE_OPPORTUNITIES)}
                     showCheck={true}
                     title={TITLE_OPPORTUNITIES}
                     isEditable={!isEditable}
@@ -233,7 +233,7 @@ export class SelectOpportunitiesWeaknesses extends Component {
                     data={linkedWeaknesses}
                     handleDelete={undefined}
                     handleEdit={undefined}
-                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(WEAKNESSES, element, checked, singularTitle)}
+                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(WEAKNESSES, element, checked, SINGULAR_TITLE_WEAKNESSES)}
                     showCheck={true}
                     title={TITLE_WEAKNESSES}
                     isEditable={!isEditable}
@@ -259,7 +259,7 @@ export class SelectOpportunitiesWeaknesses extends Component {
 
               {name &&
                 <div>
-                  <Message message={"Señor usurario, Los cambios realizados se verán reflejados en la información del cliente"} show={true} icon={'exclamation'} />
+                  <Message message={"Señor usuario, los cambios realizados se verán reflejados en la información del cliente."} show={true} icon={'exclamation'} />
                   <ModalContentComponent
                     name={name}
                     singularTitle={singularTitle}

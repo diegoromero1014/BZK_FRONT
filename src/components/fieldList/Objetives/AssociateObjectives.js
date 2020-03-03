@@ -48,7 +48,7 @@ export default class AssociateObjectives extends React.Component {
         const { elements, swtShowMessage, changeListState } = this.props;
         swtShowMessage(
             "warning",
-            "Confirmar eliminación",
+            "Confirmar desasociación",
             `Señor usuario, ¿Esta seguro que desea desasociar el Objetivo?`,
             {
                 onConfirmCallback: () => {
