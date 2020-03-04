@@ -6,19 +6,16 @@ import {filterUsersBanco} from "../../participantsVisitPre/actions";
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import $ from "jquery";
 import _ from 'lodash';
+import {addEmployeeValue, clearEmployeeValue} from "./actions";
 
 export class SearchEmployeeInput extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            employeeValue: ''
-        }
     }
 
     updateKeyValueUsersBanco = (e) => {
-        const { dispatchFilterUserBanco, dispatchSwtShowMessage, onSelect } = this.props;
-        const { employeeValue } = this.state;
+        const { dispatchFilterUserBanco, searchEmployeeInputReducer: { employeeValue }, dispatchSwtShowMessage, onSelect } = this.props;
         const selector = $('.ui.search.employee');
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.consultclick ? "" : e.preventDefault();
@@ -50,22 +47,25 @@ export class SearchEmployeeInput extends Component {
         }
     };
 
-    componentDidMount() {
-        const { value } = this.props;
-        this.setState({
-            employeeValue: value
-        });
-    }
-
     onChangeValue = e => {
-        const { validateOnChange } = this.props;
-        this.setState({employeeValue: e.target.value});
+        const { validateOnChange, dispatchAddEmployeeValue } = this.props;
+        dispatchAddEmployeeValue(e.target.value);
         validateOnChange(e.target.value);
     };
 
+    componentDidMount() {
+        const { value, dispatchAddEmployeeValue } = this.props;
+        if(value)
+            dispatchAddEmployeeValue(value);
+    }
+
+    componentWillUnmount() {
+        const { dispatchClearEmployeeValue } = this.props;
+        dispatchClearEmployeeValue();
+    }
+
     render() {
-        const { onSelect, isEditable } = this.props;
-        const { employeeValue } = this.state;
+        const { onSelect, isEditable, searchEmployeeInputReducer: { employeeValue } } = this.props;
         return (
             <div>
                 <ComboBoxFilter
@@ -84,14 +84,18 @@ export class SearchEmployeeInput extends Component {
     }
 }
 
-function mapStateToProps() {
-    return {};
+function mapStateToProps({searchEmployeeInputReducer}) {
+    return {
+        searchEmployeeInputReducer
+    };
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         dispatchFilterUserBanco: filterUsersBanco,
-        dispatchSwtShowMessage: swtShowMessage
+        dispatchSwtShowMessage: swtShowMessage,
+        dispatchAddEmployeeValue: addEmployeeValue,
+        dispatchClearEmployeeValue: clearEmployeeValue
     }, dispatch);
 }
 

@@ -151,6 +151,7 @@ export class TaskFormComponent extends Component {
                                     <div>
                                         {renderLabel(responsible)}
                                         <SearchEmployeeInput
+                                            inputName={name}
                                             value={employeeName ? employeeName : value}
                                             onSelect={this.onSelectEmployee}
                                             validateOnChange={this.validateOnChangeEmployee}

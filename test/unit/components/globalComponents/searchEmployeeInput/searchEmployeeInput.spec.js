@@ -1,12 +1,14 @@
-import SearchEmployeeInputRedux, { SearchEmployeeInput } from "../../../../src/components/globalComponents/searchEmployeeInput/component";
-import ComboBoxFilter from "../../../../src/ui/comboBoxFilter/comboBoxFilter";
+import SearchEmployeeInputRedux, {SearchEmployeeInput} from "../../../../../src/components/globalComponents/searchEmployeeInput/component";
+import ComboBoxFilter from "../../../../../src/ui/comboBoxFilter/comboBoxFilter";
 import thunk from "redux-thunk";
 import configureStore from "redux-mock-store";
+import React from 'react';
 
 let defaultProps;
 let store;
 let dispatchFilterUserBanco;
 let dispatchSwtShowMessage;
+let dispatchAddEmployeeValue;
 let validateOnChange;
 let onSelect;
 let preventDefault;
@@ -14,7 +16,7 @@ let consultclick;
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-describe('Test globalComponents/commercialReportButtonsComponent', () => {
+describe('Test globalComponents/searchEmployeeInput', () => {
 
     beforeEach(() => {
         dispatchFilterUserBanco = sinon.stub();
@@ -36,11 +38,16 @@ describe('Test globalComponents/commercialReportButtonsComponent', () => {
         preventDefault = sinon.fake();
         consultclick = sinon.fake();
         dispatchSwtShowMessage = sinon.fake();
+        dispatchAddEmployeeValue = sinon.fake();
         validateOnChange = sinon.fake();
         onSelect = sinon.fake();
         defaultProps = {
+            searchEmployeeInputReducer: {
+                employeeValue: ''
+            },
             dispatchFilterUserBanco,
             dispatchSwtShowMessage,
+            dispatchAddEmployeeValue,
             validateOnChange,
             onSelect,
             isEditable: false
@@ -95,44 +102,43 @@ describe('Test globalComponents/commercialReportButtonsComponent', () => {
         });
 
         it('updateKeyValueUserBanco should call dispatchSwtShowMessage when employeeValue length is less than 3', () => {
+            defaultProps.searchEmployeeInputReducer.employeeValue = 'Da';
             const wrapper = shallow(<SearchEmployeeInput {...defaultProps}/>);
-            wrapper.setState({employeeValue: 'Da'});
             wrapper.instance().updateKeyValueUsersBanco({ keyCode: 13, which: 13, preventDefault});
             expect(dispatchSwtShowMessage.called).to.equals(true);
         });
 
         it('updateKeyValueUserBanco should not call preventDefault', () => {
+            defaultProps.searchEmployeeInputReducer.employeeValue = 'Da';
             const wrapper = shallow(<SearchEmployeeInput {...defaultProps}/>);
-            wrapper.setState({employeeValue: 'Da'});
             wrapper.instance().updateKeyValueUsersBanco({ keyCode: 13, which: 13, consultclick});
             expect(preventDefault.called).to.equals(false);
         });
 
         it('updateKeyValueUserBanco should call dispatchFilterUserBanco when employeeValue length is greater than 3', () => {
+            defaultProps.searchEmployeeInputReducer.employeeValue = 'Dani';
             const wrapper = shallow(<SearchEmployeeInput {...defaultProps}/>);
-            wrapper.setState({employeeValue: 'Dani'});
             wrapper.instance().updateKeyValueUsersBanco({ keyCode: 13, which: 13, preventDefault});
             expect(dispatchSwtShowMessage.called).to.equals(false);
             expect(dispatchFilterUserBanco.called).to.equals(true);
         });
 
         it('updateKeyValueUserBanco should do nothing when employeeValue is null', () => {
+            defaultProps.searchEmployeeInputReducer.employeeValue = null;
             const wrapper = shallow(<SearchEmployeeInput {...defaultProps}/>);
-            wrapper.setState({employeeValue: null});
             expect(dispatchSwtShowMessage.called).to.equals(false);
             expect(dispatchFilterUserBanco.called).to.equals(false);
         });
 
         it('updateKeyValueUserBanco should do nothing when employeeValue is empty', () => {
             const wrapper = shallow(<SearchEmployeeInput {...defaultProps}/>);
-            wrapper.setState({employeeValue: ''});
             expect(dispatchSwtShowMessage.called).to.equals(false);
             expect(dispatchFilterUserBanco.called).to.equals(false);
         });
 
         it('updateKeyValueUserBanco should do nothing when employeeValue is undefined', () => {
+            defaultProps.searchEmployeeInputReducer.employeeValue = undefined;
             const wrapper = shallow(<SearchEmployeeInput {...defaultProps}/>);
-            wrapper.setState({employeeValue: undefined});
             expect(dispatchSwtShowMessage.called).to.equals(false);
             expect(dispatchFilterUserBanco.called).to.equals(false);
         });
