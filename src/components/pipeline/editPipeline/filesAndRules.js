@@ -25,7 +25,7 @@ export const fieldsWithRules = {
     sva: { rules: [checkNumberLength(15)] },
     roe: { rules: [validateDecimal] },
     termInMonths: { rules: [checkRequiredTermInMonths, checkNumberLength(4)] },
-    businessStatus: { rules: [] }, 
+    businessStatus: { rules: [checkRequired] }, 
     businessCategory: { rules: [checkRequiredWithGlobalCondition] }, 
     currency: { rules: [checkRequired] }, 
     indexing: { rules: [] }, 
