@@ -166,7 +166,7 @@ export default class AssociateObjectives extends React.Component {
                     {this.renderElements(this.checkElement, (list) => list.filter((el) => el.associated ), filteredElements)}
                     {!filteredElements.length && <div className="elements-not-found">
                         <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                            <span className="form-item">No se han asociado Objetivos</span>
+                            <span className="form-item">No se han asociado Objetivos del cliente</span>
                         </div>
                     </div>}
                     {showAssociateSection &&
