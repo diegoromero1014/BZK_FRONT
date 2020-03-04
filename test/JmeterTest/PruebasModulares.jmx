@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.1.1 r1855137">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.2.1">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -15,7 +15,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="host" elementType="Argument">
             <stringProp name="Argument.name">host</stringProp>
-            <stringProp name="Argument.value">biztrackqa.apps.ambientesbc.com</stringProp>
+            <stringProp name="Argument.value">https://localhost:8443/Centricity/adminLogin</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="scheme" elementType="Argument">
@@ -30,8 +30,8 @@
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">${__P(SERVER,was-biztrackqa.apps.ambientesbc.com)}</stringProp>
-        <stringProp name="HTTPSampler.port">443</stringProp>
+        <stringProp name="HTTPSampler.domain">${__P(SERVER,localhost)}</stringProp>
+        <stringProp name="HTTPSampler.port">8443</stringProp>
         <stringProp name="HTTPSampler.protocol">https</stringProp>
         <stringProp name="HTTPSampler.contentEncoding"></stringProp>
         <stringProp name="HTTPSampler.path"></stringProp>
@@ -43,10 +43,11 @@
       <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
         <collectionProp name="CookieManager.cookies"/>
         <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+        <boolProp name="CookieManager.controlledByThreadGroup">false</boolProp>
       </CookieManager>
       <hashTree/>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Clientes" enabled="true">
-        <stringProp name="filename">${__P(CLIENT_FILE,D:\jmeter\clients.csv)}</stringProp>
+        <stringProp name="filename">${__P(CLIENT_FILE,E:\jmeter\clients.csv)}</stringProp>
         <stringProp name="fileEncoding"></stringProp>
         <stringProp name="variableNames">clientNumber</stringProp>
         <boolProp name="ignoreFirstLine">false</boolProp>
@@ -60,7 +61,7 @@
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Usuarios" enabled="true">
         <stringProp name="delimiter">,</stringProp>
         <stringProp name="fileEncoding"></stringProp>
-        <stringProp name="filename">${__P(USER_FILE,D:\jmeter\users.csv)}</stringProp>
+        <stringProp name="filename">${__P(USER_FILE,E:\jmeter\users.csv)}</stringProp>
         <boolProp name="ignoreFirstLine">false</boolProp>
         <boolProp name="quotedData">false</boolProp>
         <boolProp name="recycle">true</boolProp>
@@ -69,7 +70,7 @@
         <stringProp name="variableNames">username,password</stringProp>
       </CSVDataSet>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Login" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Login" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -80,12 +81,13 @@
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Usuarios LDAP" enabled="true">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">${__P(USER_LDAP_FILE,D:\jmeter\users_ldap.csv)}</stringProp>
+          <stringProp name="filename">${__P(USER_LDAP_FILE,E:\jmeter\users_ldap.csv)}</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -1327,7 +1329,7 @@
           </hashTree>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Vincular" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Vincular" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -1340,6 +1342,7 @@
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login Front" enabled="true"/>
@@ -3467,7 +3470,7 @@
         </DurationAssertion>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Pipeline" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Pipeline" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -3478,6 +3481,7 @@
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login Front" enabled="true"/>
@@ -6411,7 +6415,7 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Certificar Cliente" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Certificar Cliente" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -6422,6 +6426,7 @@
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login Front" enabled="true"/>
@@ -9065,7 +9070,7 @@
         </DurationAssertion>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Plan de negocio" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Plan de negocio" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -9076,6 +9081,7 @@
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login Front" enabled="true"/>
@@ -11767,7 +11773,7 @@
         </DurationAssertion>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Previsita" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Previsita" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -11778,6 +11784,7 @@
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login Front" enabled="true"/>
@@ -14628,7 +14635,7 @@
         </DurationAssertion>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Visita" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Visita" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -14639,6 +14646,7 @@
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login Front" enabled="true"/>
@@ -17350,7 +17358,7 @@
         </DurationAssertion>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Estudio de credito" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Estudio de credito" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -17361,6 +17369,7 @@
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login Front" enabled="true"/>
@@ -19874,7 +19883,7 @@
         </DurationAssertion>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Entrega estructurada" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Entrega estructurada" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -19885,6 +19894,7 @@
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login Front" enabled="true"/>
@@ -22413,7 +22423,7 @@
         </DurationAssertion>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Descarga AEC" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Descarga AEC" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -22424,6 +22434,7 @@
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login Front" enabled="true"/>
@@ -23691,7 +23702,7 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Descarga Vista Gerencial" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Descarga Vista Gerencial" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -23702,6 +23713,7 @@
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration">300</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login Front" enabled="true"/>
@@ -24980,6 +24992,7 @@
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="consultarInformacionGeneral" enabled="true">
@@ -25055,6 +25068,59 @@
   &quot;messageBody&quot;: {&#xd;
     &quot;identificacionCliente&quot;: &quot;${clientNumber}&quot;,&#xd;
     &quot;tipoIdentificacionCliente&quot;: &quot;1&quot;&#xd;
+  }&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">Centricity/consultarRelacionGrupoEconomico</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">X-FORWARDED-FOR</stringProp>
+                <stringProp name="Header.value">${__P(SERVER_IP,10.8.87.145)}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="consultarRelacionGrupoEconomicoSegmento" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;messageHeader&quot;: {&#xd;
+    &quot;usuarioConsume&quot;: &quot;DEFAULT&quot;,&#xd;
+    &quot;aplicacionConsume&quot;: &quot;AW0856&quot;,&#xd;
+    &quot;paisCliente&quot;: &quot;COL&quot;,&#xd;
+    &quot;systemId&quot;: &quot;AW0856&quot;,&#xd;
+    &quot;nombreEquipoConsumidor&quot;: &quot;Broker&quot;,&#xd;
+    &quot;ipConsumidor&quot;: &quot;0.0.0.0&quot;,&#xd;
+    &quot;messageId&quot;: &quot;DIGCHE&quot;,&#xd;
+    &quot;fechaEjecucion&quot;: 15251067,&#xd;
+    &quot;nombreServicio&quot;: &quot;consultarInformacionGeneral&quot;&#xd;
+  },&#xd;
+  &quot;messageBody&quot;: {&#xd;
+    &quot;identificacionCliente&quot;: &quot;${clientNumber}&quot;,&#xd;
+    &quot;tipoIdentificacionCliente&quot;: &quot;1&quot;,&#xd;
+    &quot;segmentos&quot;: [82]&#xd;
   }&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -25359,6 +25425,7 @@
         <stringProp name="ProxyControlGui.proxy_prefix_http_sampler_name"></stringProp>
         <intProp name="ProxyControlGui.proxy_http_sampler_naming_mode">1</intProp>
         <stringProp name="ProxyControlGui.proxy_pause_http_sampler"></stringProp>
+        <stringProp name="ProxyControlGui.default_encoding">UTF-8</stringProp>
       </ProxyControl>
       <hashTree>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -25412,6 +25479,7 @@
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Crear usuarios" enabled="true">
