@@ -1,4 +1,4 @@
-import {ADD_COMMENT_LIST, CLEAR_COMMENTS, GET_COMMENTS_BY_TASK_ID} from "./constants";
+import {ADD_COMMENT_LIST, CLEAR_COMMENTS, GET_COMMENTS_BY_REPORT_ID, GET_CURRENT_COMMENTS_LIST} from "./constants";
 
 const initialState = {
     comments: []
@@ -6,7 +6,7 @@ const initialState = {
 
 export default (state = initialState, {type, payload}) => {
     switch (type) {
-        case GET_COMMENTS_BY_TASK_ID:
+        case GET_COMMENTS_BY_REPORT_ID:
             return Object.assign({}, state, { comments: payload.data.data });
         case CLEAR_COMMENTS:
             return Object.assign({}, state, { comments: [] });
@@ -23,6 +23,13 @@ export default (state = initialState, {type, payload}) => {
                 comments.push(comment);
             }
             return Object.assign({}, state, { comments: Object.assign([], comments)});
+        case GET_CURRENT_COMMENTS_LIST:
+            return Object.assign({}, state, {
+                comments: state.comments.map(comment => {
+                    comment.id = comment.id.contains('new') ? null : comment.id;
+                    return comment;
+                })
+            });
         default:
             return state;
     }

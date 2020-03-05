@@ -1,5 +1,6 @@
 export const MESSAGE_WARNING_ONLY_ALPHABETICAL = "Solo se permiten caracteres alfabéticos";
 export const MESSAGE_REQUIRED_VALUE = "Requiere que especifique un valor";
+export const MESSAGE_REQUIRED_FIELD = field => "El campo " + field + " es requerido";
 export const MESSAGE_WARNING_MIN_LENGTH = minLength => "Requiere " + minLength + " o más caracteres";
 export const MESSAGE_WARNING_MAX_LENGTH = maxLength => "Solo se permiten " + maxLength + " caracteres";
 export const MESSAGE_WARNING_NUMBER_DOCUMENT = "Solo se permiten valores alfanuméricos y -";

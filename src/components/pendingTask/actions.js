@@ -2,7 +2,7 @@ import { APP_URL } from '../../constantsGlobal';
 import {
     CLEAR_USER_TASK_CREATE, CLEAR_USER_TASK_ORDER, ORDER_COLUMN_TASK,
     GET_USER_TASK_LIST_CLIENT, CHANGE_PAGE, LIMITE_INF, CLEAR_USER_TASK,
-    CLEAR_USER_TASK_PAGINATOR, GET_XLS_TASK
+    CLEAR_USER_TASK_PAGINATOR, GET_XLS_TASK, CLEAR_TASK
 } from './constants';
 import axios from 'axios';
 
@@ -59,6 +59,13 @@ export function clearUserTask() {
         type: CLEAR_USER_TASK
     };
 }
+
+export function clearTask() {
+    return {
+        type: CLEAR_TASK
+    };
+}
+
 
 export function clearUserTaskPaginator() {
     return {

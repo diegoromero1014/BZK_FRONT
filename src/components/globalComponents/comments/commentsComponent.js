@@ -9,13 +9,22 @@ import {Mention, MentionsInput} from 'react-mentions';
 import {bindActionCreators} from "redux";
 import {filterUsersBanco} from "../../participantsVisitPre/actions";
 import {Subject} from "rxjs";
-import {addCommentToList, clearComments, createComment, getCommentsByTaskId} from "./actions";
+import {addCommentToList, clearComments, getCommentsByReportId} from "./actions";
 import _ from "lodash";
-import {REQUEST_SUCCESS} from "../../../constantsGlobal";
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
-import {COMMENT_CREATED_ERROR, COMMENT_CREATED_SUCCESS, COMMENT_CREATED_TITLE} from "./constants";
 import {getUsernameInitials} from "../../../functions";
 import TextArea from "../../../ui/textarea/textareaComponent";
+import {ERROR_COMMENT_LENGTH} from "./constants";
+import {
+    patternOfForbiddenCharacter2,
+    patternOfTaskObservation
+} from "../../../validationsFields/patternsToValidateField";
+import {
+    MESSAGE_ERROR_INJECTION_HTML,
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER,
+    MESSAGE_WARNING_TASK_OBSERVATIONS
+} from "../../../validationsFields/validationsMessages";
+import {validateHtmlInjection} from "../../../validationsFields/rulesField";
 
 export class CommentsComponent extends Component {
 
@@ -26,7 +35,9 @@ export class CommentsComponent extends Component {
         this.state = {
             commentBeingReplied: null,
             commentReply: '',
-            comment: ''
+            comment: '',
+            showNewCommentError: null,
+            showReplyCommentError: null
         }
     }
 
@@ -60,7 +71,7 @@ export class CommentsComponent extends Component {
         if(source === 'new'){
             await this.setState({ comment });
         }else{
-            await this.setState({ commentReply: event.target.value });
+            await this.setState({ commentReply: comment });
         }
     };
 
@@ -95,15 +106,42 @@ export class CommentsComponent extends Component {
         return null;
     };
 
-    /*****************Funciones para pasar al TaskPage*******************************/
-    addComment = async (parentCommentId, content) => {
-        const { taskId, comments, dispatchAddCommentList } = this.props;
+    validateCommentContent = (content, source) => {
+        if(!content.length){
+            this.showContentError(content, source, ERROR_COMMENT_LENGTH);
+            return false;
+        }else {
+            if (!content.match(patternOfTaskObservation)) {
+                this.showContentError(content, source, MESSAGE_WARNING_TASK_OBSERVATIONS);
+                return false;
+            } else if (!content.match(patternOfForbiddenCharacter2)) {
+                this.showContentError(content, source, MESSAGE_WARNING_FORBIDDEN_CHARACTER);
+                return false;
+            }else if(!validateHtmlInjection(content)){
+                this.showContentError(content, source, MESSAGE_ERROR_INJECTION_HTML);
+                return false;
+            }else{
+                this.showContentError(content, source);
+                return true;
+            }
+        }
+    };
+
+    showContentError = (content, source, error) => {
+        if(source === 'new')
+            this.setState({ showNewCommentError: error });
+        else
+            this.setState({ showReplyCommentError: error });
+    };
+
+    addComment = async (e, parentCommentId, content, source) => {
+        const { reportId, comments, dispatchAddCommentList } = this.props;
         const author = window.localStorage.getItem('name');
         const initials = getUsernameInitials(author);
         const parentComment = this.searchComment(comments, parentCommentId);
         const comment = {
-            id: _.uniqueId(),
-            taskId: taskId || null,
+            id: _.uniqueId('new'),
+            reportId,
             content,
             parentCommentId: parentComment && parentComment.parentCommentId ? parentComment.parentCommentId : parentCommentId,
             initials,
@@ -112,36 +150,16 @@ export class CommentsComponent extends Component {
             createdTimestamp: moment(new Date())
         };
 
-        if(taskId){
-            delete comment.id;
-            await this.createComment(comment);
-        }else{
+        if(this.validateCommentContent(content, source)){
             dispatchAddCommentList(comment);
+            this.setState({
+                comment: '',
+                commentReply: '',
+                commentBeingReplied: null
+            });
         }
-        this.setState({
-            comment: '',
-            commentReply: '',
-            commentBeingReplied: null
-        });
+        e.preventDefault();
     };
-
-    createComment = async (comment) => {
-        const { dispatchCreateComment, dispatchSwtShowMessage } = this.props;
-        const request = {
-            messageHeader: {
-                "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-            },
-            messageBody: comment
-        };
-        const response = await dispatchCreateComment(request);
-        if(_.get(response, 'payload.data.status') === REQUEST_SUCCESS){
-            dispatchSwtShowMessage('success', COMMENT_CREATED_TITLE, COMMENT_CREATED_SUCCESS);
-        }else{
-            dispatchSwtShowMessage('success', COMMENT_CREATED_TITLE, COMMENT_CREATED_ERROR);
-        }
-    };
-
-    /***************************************************************/
 
     renderCommentContent = (content) => {
         const regexInitialTag = new RegExp('@\\[', 'g');
@@ -154,6 +172,7 @@ export class CommentsComponent extends Component {
     }
 
     renderComments = (comments) => {
+        const { showReplyCommentError } = this.state;
         return comments.map(({ id, initials, author, createdTimestamp, content, replies }) =>
             <Comment key={id}>
                 <CommentsAvatar>{initials}</CommentsAvatar>
@@ -166,7 +185,7 @@ export class CommentsComponent extends Component {
                     <Comment.Actions>
                         <Comment.Action onClick={() => this.replyCommentAction(id)}>Responder</Comment.Action>
                     </Comment.Actions>
-                    <Form reply style={{ display: this.state.commentBeingReplied === id ? 'block' : 'none' }}>
+                    <Form reply style={{ display: this.state.commentBeingReplied === id ? 'block' : 'none', paddingLeft: 60 }}>
                         <Row>
                             <Col xs={12} md={12} ld={12} className="commentTextArea">
                                 {/*<MentionsInput value={this.state.commentReply} onChange={event => this.handleChange(event, 'reply')} className="mentions">
@@ -182,13 +201,20 @@ export class CommentsComponent extends Component {
                                     value={this.state.commentReply}
                                     placeholder="Escribe tú respuesta"
                                     rows={7}
-                                    max="360"
+                                    max="340"
                                 />
+                                {showReplyCommentError &&
+                                    <div>
+                                        <div className="ui pointing red basic label">
+                                            {showReplyCommentError}
+                                        </div>
+                                    </div>
+                                }
                             </Col>
                         </Row>
                         <Row style={{ marginTop: 10 }}>
                             <Col xs={12} md={12} ld={12}>
-                                <button className="btn btn-primary" style={{ float: 'right' }} onClick={() => this.addComment(id, this.state.commentReply)}>Responder</button>
+                                <button className="btn btn-primary" style={{ float: 'right' }} onClick={e => this.addComment(e, id, this.state.commentReply, 'reply')}>Responder</button>
                             </Col>
                         </Row>
                     </Form>
@@ -200,10 +226,11 @@ export class CommentsComponent extends Component {
                 }
             </Comment>
         );
-    }
+    };
 
     render() {
-        const { header, comments } = this.props;
+        const { header, comments, disabled } = this.props;
+        const { showNewCommentError } = this.state;
         return (
             <div>
                 <Comment.Group style={{ width: '100%', margin: 0, maxWidth: 'initial' }}>
@@ -229,18 +256,27 @@ export class CommentsComponent extends Component {
                                     />
                                 </MentionsInput>*/}
                                 <TextArea
+                                    disabled={disabled && 'disabled'}
                                     onChangeEvent={event => this.handleChange(event, 'new')}
                                     nameInput="comment"
                                     value={this.state.comment}
                                     placeholder="Escribe tú nota"
                                     rows={7}
-                                    max="360"
+                                    max="340"
                                 />
+                                {showNewCommentError &&
+                                    <div>
+                                        <div className="ui pointing red basic label">
+                                            {showNewCommentError}
+                                        </div>
+                                    </div>
+                                }
                             </Col>
                         </Row>
                         <Row style={{ margin: '10px 0 0 0' }}>
                             <Col xs={12} md={12} lg={12}>
-                                <button className="btn btn-primary" style={{ float: 'right' }} onClick={() => this.addComment(null, this.state.comment)}>Agregar nota</button>
+                                <button className="btn btn-primary" style={{ float: 'right' }} onClick={e => this.addComment(e,null, this.state.comment, 'new')}
+                                    disabled={disabled && 'disabled'}>Agregar nota</button>
                             </Col>
                         </Row>
                     </Form>
@@ -254,9 +290,8 @@ function mapDispatchToProps(dispatch){
     return bindActionCreators({
         dispatchFilterUsers: filterUsersBanco,
         /*Funciones para pasar al TaskPage*/
-        dispatchCreateComment: createComment,
         dispatchAddCommentList: addCommentToList,
-        dispatchGetCommentsByTaskId: getCommentsByTaskId,
+        dispatchGetCommentsByreportId: getCommentsByReportId,
         dispatchClearComments: clearComments,
         dispatchSwtShowMessage: swtShowMessage
     }, dispatch);

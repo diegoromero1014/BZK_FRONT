@@ -73,7 +73,7 @@ export class ModalComponentPendingTask extends Component {
     updateKeyValueUsersBanco(e) {
         const { fields: { responsable, idEmployee }, filterUsersBancoDispatch, swtShowMessage } = this.props;
         const selector = $('.ui.search.responsable');
-       
+
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.consultclick ? "" : e.preventDefault();
             if (responsable.value !== "" && responsable.value !== null && responsable.value !== undefined) {
@@ -126,21 +126,21 @@ export class ModalComponentPendingTask extends Component {
                 changeStateSaveData(false, "");
                 if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                     redirectUrl("/login");
-                } else { 
-                    
+                } else {
+
                     if ((_.get(data, 'payload.data.status') === REQUEST_SUCCESS)) {
                         swtShowMessage('success','Creación de tarea','Señor usuario, la tarea se creó exitosamente.',{onConfirmCallback: this._closeCreate})
                         tasksByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
-                    } else { 
-                        
+                    } else {
+
                         if ((_.get(data, 'payload.data.status') === REQUEST_INVALID_INPUT)) {
-                            
+
                             const validationsErrorFromServer = _.get(data, 'payload.data.data[0].detail');
                                 _.forEach(validationsErrorFromServer, (field) => {
                                 this.processValidation(field);
                             });
                         } else {
-                                         
+
                             swtShowMessage('error','Error creando la tarea',"Señor usuario, ocurrió un error creando la tarea.");
                         }
                     }
@@ -158,7 +158,7 @@ export class ModalComponentPendingTask extends Component {
             switch (field.field) {
                 case "task":
                     this.setState({ tareaError: field.message[0] });
-                    break;   
+                    break;
                 default:
                     break;
             }
@@ -259,7 +259,7 @@ export class ModalComponentPendingTask extends Component {
                         </Row>
                         <Row style={{ padding: "20px 10px 0px 0px" }}>
                             <Col xs={12} md={12} lg={12}>
-                                <CommentsComponent header="Notas"/>
+                                <CommentsComponent header="Notas" />
                             </Col>
                         </Row>
                     </div>
@@ -269,8 +269,8 @@ export class ModalComponentPendingTask extends Component {
                         className="btn btn-primary modal-button-edit">Guardar
                     </button>
                 </div>
-                
-                
+
+
             </form>
         );
     }
