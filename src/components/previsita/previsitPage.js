@@ -30,10 +30,17 @@ import { ComponentClientInformationURL, LoginComponentURL } from '../../constant
 import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure, fillParticipants } from './participantsActions';
 import CommercialReportInfoFooter from '../globalComponents/commercialReportInfoFooter';
 
-import { getLinkedClientDetails, buildLinkedClientDetailsRequestForSubmit, combineClientDetails } from '../listaObjetos/ListaObjetos';
-import {
-   addInitialLinkedElements
-} from '../listaObjetos/actions';
+import { getLinkedClientDetails, combineClientDetails } from '../listaObjetos/ListaObjetos';
+
+import { cleanList, addToList, createList, linkedRecords } from '../elements/actions';
+import { OPPORTUNITIES, WEAKNESSES } from '../opportunitiesWeaknesses/constants';
+
+import { clientInformationToReducer, createObjectiveClientDetailRequestFromReducer } from '../fieldList/mapListsToEntities';
+import { changeListState } from '../fieldList/actions';
+import { listName } from '../fieldList/Objetives/utils';
+
+
+const changeObjectiveState = changeListState(listName);
 
 export class PrevisitPage extends Component {
 
@@ -71,53 +78,80 @@ export class PrevisitPage extends Component {
       };
    }
 
+   clearList = () => {
+      const { dispatchCleanList, dispatchCreateList } = this.props;
+
+      dispatchCleanList(OPPORTUNITIES);
+      dispatchCreateList(OPPORTUNITIES);
+
+      dispatchCleanList(WEAKNESSES);
+      dispatchCreateList(WEAKNESSES);
+   }
+
    componentWillMount() {
       const { clientInformacion } = this.props;
       const infoClient = clientInformacion.get('responseClientInfo');
       if (_.isEmpty(infoClient)) {
          redirectUrl(ComponentClientInformationURL)
       }
+
+      this.clearList();
    }
 
 
    componentDidMount() {
 
-      const { params: { id }, dispatchShowLoading, clientInformacion, dispatchAddInitialLinkedElements } = this.props;
+      const { params: { id }, dispatchShowLoading, clientInformacion, dispatchAddToList, dispatchLinkedRecords, dispatchChangeObjectivesState } = this.props;
+
       dispatchShowLoading(true, "Cargando...");
-      //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA;
+      //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA PORQUE AFECTA EL LLAMADO A DATA[1];
       Promise.all([this.masterDataFields(), this.getPrevisitData(id), this.getChallengerQuestions()]).then((data) => {
          this.setState({
             renderForm: true,
             isMounted: true
          });
-         
+
          dispatchShowLoading(false, "");
 
-         let infoClient = clientInformacion.get('responseClientInfo');
+         let weaknesses = clientInformacion.get('responseClientInfo').clientDetailsRequest.weaknesses;
+         let opportunities = clientInformacion.get('responseClientInfo').clientDetailsRequest.opportunities;
+         let objectives = clientInformacion.get('responseClientInfo').clientDetailsRequest.objectives;
 
-         //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA;
+         //IMPORTANTE: MANTENER EL ORDEN DEL LLAMADO A GETPREVISITDATA PORQUE AFECTA EL LLAMADO A DATA[1];
          if (!data[1]) {
-            dispatchAddInitialLinkedElements(
-               "Oportunidades",
-               infoClient.clientDetailsRequest.opportunities || []
-            );
-            dispatchAddInitialLinkedElements(
-               "Debilidades",
-               infoClient.clientDetailsRequest.weaknesses || []
-            );
-            return;
+            this.clearList();
+
+            opportunities.forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1), associated: false }), name: OPPORTUNITIES, old: null }));
+            weaknesses.forEach((item, index) => dispatchAddToList({ data: Object.assign({}, item, { order: (index + 1), associated: false }), name: WEAKNESSES, old: null }));
+
+            dispatchChangeObjectivesState({
+               elements: clientInformationToReducer(objectives)
+            })
+
+         } else {
+            let linkedClientDetails = data[1].payload.data.data.clientDetails;
+
+            let linkedWeaknesses = linkedClientDetails.weaknesses;
+            let linkedOpportunities = linkedClientDetails.opportunities;
+
+            linkedWeaknesses = linkedWeaknesses.map(weakness => Object.assign({}, weakness, { editable: weakness.status !== -1 }));
+            linkedOpportunities = linkedOpportunities.map(opportunity => Object.assign({}, opportunity, { editable: opportunity.status !== -1 }));
+
+            weaknesses = combineClientDetails(linkedWeaknesses, weaknesses);
+            opportunities = combineClientDetails(linkedOpportunities, opportunities);
+
+            this.clearList();
+
+            opportunities.sort((a, b) => (a.status > b.status) ? -1 : 1).forEach((element, index) => dispatchAddToList({ data: Object.assign({}, element, { order: (index + 1) }), name: OPPORTUNITIES, old: null }));
+            weaknesses.sort((a, b) => (a.status > b.status) ? -1 : 1).forEach((item, index) => dispatchAddToList({ data: Object.assign({}, item, { order: (index + 1) }), name: WEAKNESSES, old: null }));
+
+            dispatchChangeObjectivesState({
+               elements: clientInformationToReducer(combineClientDetails(linkedClientDetails.objectives, objectives))
+            })
          }
 
-         let linkedClientDetails = data[1].payload.data.data.clientDetails
-         
-         dispatchAddInitialLinkedElements(
-            "Oportunidades",
-            combineClientDetails(linkedClientDetails.opportunities, infoClient.clientDetailsRequest.opportunities || [])
-         )
-         dispatchAddInitialLinkedElements(
-            "Debilidades",
-            combineClientDetails(linkedClientDetails.weaknesses, infoClient.clientDetailsRequest.weaknesses || [])
-         )
+         dispatchLinkedRecords(OPPORTUNITIES);
+         dispatchLinkedRecords(WEAKNESSES);
       });
    }
 
@@ -165,7 +199,7 @@ export class PrevisitPage extends Component {
          dispatchAddListParticipant(participants);
          dispatchSetConfidential(previsitDetail.commercialReport.isConfidential);
          fillUsersPermissions(previsitDetail.commercialReport.usersWithPermission, dispatchAddUsers);
-         
+
          previsitDetail.answers.forEach(element => {
             dispatchAddAnswer(null, { id: element.id, [element.field]: element.answer });
          });
@@ -311,17 +345,21 @@ export class PrevisitPage extends Component {
    }
 
    errorClientDetails = (previsit) => {
-      const { objectListReducer } = this.props;
+      const { elementsReducer, fieldListReducer } = this.props;
 
       let errors = [];
 
       if (previsit.documentStatus == SAVE_PUBLISHED) {
-         if (getLinkedClientDetails(objectListReducer.Oportunidades.linked).length === 0) {
+         if (getLinkedClientDetails(elementsReducer[OPPORTUNITIES].elements).length === 0) {
             errors.push("Oportunidades (externas)");
          }
 
-         if (getLinkedClientDetails(objectListReducer.Debilidades.linked).length === 0) {
+         if (getLinkedClientDetails(elementsReducer[WEAKNESSES].elements).length === 0) {
             errors.push("Debilidades (internas del cliente)");
+         }
+
+         if (getLinkedClientDetails(fieldListReducer[listName].elements).length === 0) {
+            errors.push("Objetivos del cliente")
          }
       }
       return errors;
@@ -340,11 +378,11 @@ export class PrevisitPage extends Component {
    }
 
    submitForm = async (previsit) => {
-      const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions,
-         fromModal, closeModal, objectListReducer } = this.props;
+      const { params: { id }, dispatchShowLoading, dispatchCreatePrevisit, dispatchSwtShowMessage, usersPermission, confidentialReducer, answers, questions, fromModal, closeModal, elementsReducer, fieldListReducer } = this.props;
       const validateDatePrevisitResponse = await this.validateDatePrevisit(previsit);
       if (validateDatePrevisitResponse) {
          const previsitParticipants = this.getPrevisitParticipants();
+         const client = window.sessionStorage.getItem('idClientSelected');
 
          if (!this.validateParticipantsByClient()) {
             return;
@@ -353,7 +391,7 @@ export class PrevisitPage extends Component {
          const clientDetailsErrors = this.errorClientDetails(previsit);
 
          if (clientDetailsErrors.length != 0) {
-            dispatchSwtShowMessage("error", "Error", "Señor usuario, para guardar una previsita como definitivo debe asociar información en las siguientes secciones: "+this.renderErrorMessage(clientDetailsErrors));
+            dispatchSwtShowMessage("error", "Error", "Señor usuario, para guardar una previsita como definitivo debe asociar información en las siguientes secciones: " + this.renderErrorMessage(clientDetailsErrors));
             return;
          }
 
@@ -362,8 +400,15 @@ export class PrevisitPage extends Component {
             return;
          }
 
-         let clientDetailsRequest = buildLinkedClientDetailsRequestForSubmit(objectListReducer, window.sessionStorage.getItem('idClientSelected'));
-         clientDetailsRequest.objectives = [];
+         /* let clientDetailsRequest = buildLinkedClientDetailsRequestForSubmit(objectListReducer, window.sessionStorage.getItem('idClientSelected')); */
+
+         let clientDetailsRequest = {
+            weaknesses: elementsReducer[WEAKNESSES].elements.map(element => Object.assign({}, element, { client })) || [],
+            opportunities: elementsReducer[OPPORTUNITIES].elements.map(item => Object.assign({}, item, { client })) || [],
+            objectives: createObjectiveClientDetailRequestFromReducer(fieldListReducer, listName, client)
+         }
+
+
 
          const previsitRequest = {
             "id": id,
@@ -549,12 +594,10 @@ export class PrevisitPage extends Component {
    }
 
    renderForm = () => {
-      const { params: { id }, previsitReducer, selectsReducer, fromModal, questions, answers ,clientInformacion} = this.props;
-      const infoClient = clientInformacion.get('responseClientInfo');
+      const { params: { id }, previsitReducer, selectsReducer, fromModal, questions, answers } = this.props;
       const previsitDetail = previsitReducer.get('detailPrevisit') ? previsitReducer.get('detailPrevisit').data : null;
       return (
          <PrevisitFormComponent
-            infoClient={infoClient}
             previsitData={previsitDetail}
             previsitTypes={selectsReducer.get(PREVISIT_TYPE)}
             onChangeShowChallengerSection={this.showChallengerSection}
@@ -662,11 +705,15 @@ function mapDispatchToProps(dispatch) {
       dispatchClearAnswer: clearAnswer,
       dispatchAddAnswer: addAnswer,
       dispatchGetAllQuestions: getAllQuestions,
-      dispatchAddInitialLinkedElements: addInitialLinkedElements
+      dispatchCleanList: cleanList,
+      dispatchAddToList: addToList,
+      dispatchCreateList: createList,
+      dispatchLinkedRecords: linkedRecords,
+      dispatchChangeObjectivesState: changeObjectiveState
    }, dispatch);
 }
 
-function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, selectsReducer, usersPermission, confidentialReducer, participants, questionsReducer: { answers, questions }, objectListReducer }) {
+function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, selectsReducer, usersPermission, confidentialReducer, participants, questionsReducer: { answers, questions }, objectListReducer, elementsReducer, fieldListReducer }) {
    return {
       clientInformacion,
       previsitReducer,
@@ -677,7 +724,9 @@ function mapStateToProps({ clientInformacion, reducerGlobal, previsitReducer, se
       participants,
       answers,
       questions,
-      objectListReducer
+      objectListReducer,
+      elementsReducer,
+      fieldListReducer
    };
 }
 
