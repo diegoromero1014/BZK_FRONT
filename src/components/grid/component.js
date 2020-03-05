@@ -53,7 +53,7 @@ class GridComponent extends Component {
       } else if (value.key === 'trafficLight') {
         cell = <TrafficLightComponent key={idx} colorTraffict={_.get(row, value.key)} />
       } else if (value.key === 'trafficLightIndicator') {
-        cell = <TrafficLightIndicator days={_.get(row, value.key)} />
+        cell = <TrafficLightIndicator days={_.get(row, value.key).days} isFinalized={_.get(row, value.key).isFinalized} />
       } else if (value.key === 'delete' && _.get(row, value.key)) {
         if (_.get(row, value.key).permissionsDelete !== undefined && !_.get(row, value.key).permissionsDelete) {
           cell = <TdComponent key={idx} columnRow={""} styles={value.style} />

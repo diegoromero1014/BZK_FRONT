@@ -7,23 +7,26 @@ import {
 } from './../../components/clientInformation/constants';
 import TrafficLightComponent from './../../components/grid/trafficLightComponent';
 
-const TrafficLightIndicator = ({days}) => {
-    if (days <= 0) {
+const TrafficLightIndicator = ({days, isFinalized}) => {
+    if (days <= 0 && !isFinalized) {
       return (
-        <TrafficLightComponent color={COLOR_RED}></TrafficLightComponent>
+        <TrafficLightComponent colorTraffict={{color:COLOR_RED}}></TrafficLightComponent>
       );
-    } else if (days <= 3) {
+    } else if (days <= 3 && !isFinalized) {
       return (
-        <TrafficLightComponent color={COLOR_ORANGE}></TrafficLightComponent>
+        <TrafficLightComponent colorTraffict={{color:COLOR_ORANGE}}></TrafficLightComponent>
       );
-    } else {
+    } else if (days > 3 && !isFinalized)  {
       return (
-        <TrafficLightComponent color={COLOR_GREEN}></TrafficLightComponent>
+        <TrafficLightComponent colorTraffict={{color:COLOR_GREEN}}></TrafficLightComponent>
       );
+    }else{
+      return null;
     }
 }
 TrafficLightIndicator.propTypes = {
     days : PropTypes.number.isRequired,
+    isFinalized: PropTypes.bool.isRequired,
 }
 
 

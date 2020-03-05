@@ -91,6 +91,7 @@ class ListPendingTaskComponent extends Component {
         mensaje: mensaje + value.task + "?",
         json: json1
       });
+      _.set(value, "trafficLightIndicator", { days: 7, isFinalized: false});
     });
   }
 
@@ -112,6 +113,10 @@ class ListPendingTaskComponent extends Component {
         title: "Fecha de cierre",
         key: "dateTaskFormat",
         orderColumn: <span><i className="caret down icon" style={{ cursor: 'pointer', display: this.state.orderD }} onClick={() => this._orderColumn(0, "finalDate")}></i><i className="caret up icon" style={{ cursor: 'pointer', display: this.state.orderA }} onClick={() => this._orderColumn(1, "finalDate")}></i></span>
+      },
+      {
+        title:"",
+        key:"trafficLightIndicator"
       },
       {
         title: "Estado",
