@@ -41,12 +41,8 @@ import { ComponentClientInformationURL, LoginComponentURL } from '../../constant
 import { participantIsClient, changeParticipantClientDataStructure, participantIsBank, participantIsOther, changeParticipantBankDataStructure, changeParticipantOtherDataStructure, fillParticipants } from './participantsActions';
 import CommercialReportInfoFooter from '../globalComponents/commercialReportInfoFooter';
 
-import { getLinkedClientDetails, buildLinkedClientDetailsRequestForSubmit, combineClientDetails } from '../listaObjetos/ListaObjetos';
-import {
-   addInitialLinkedElements
-} from '../listaObjetos/actions';
-import ReportsHeader from "../globalComponents/reportsHeader/component";
 import { getLinkedClientDetails, combineClientDetails } from '../listaObjetos/ListaObjetos';
+import ReportsHeader from "../globalComponents/reportsHeader/component";
 
 import { cleanList, addToList, createList, linkedRecords } from '../elements/actions';
 import { OPPORTUNITIES, WEAKNESSES } from '../opportunitiesWeaknesses/constants';

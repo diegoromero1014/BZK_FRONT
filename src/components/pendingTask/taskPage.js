@@ -37,6 +37,7 @@ import {getInfoTaskUser} from '../myPendings/myTasks/actions';
 import {clearTask} from "./actions";
 import _ from 'lodash';
 import {consultInfoClient} from "../clientInformation/actions";
+import {filterUsers} from "../commercialReport/actions";
 
 export class TaskPage extends React.Component {
     constructor(props) {
@@ -46,31 +47,45 @@ export class TaskPage extends React.Component {
             showMessage: false,
             showConfirmationCancelTask: false,
             shouldRedirect: false,
-            renderForm: false
+            renderForm: false,
+            nameUsuario: ''
         }
     }
 
     componentWillMount() {
-        const { idClient, dispatchConsultInfoClient } = this.props;
+        const { idClient, dispatchConsultInfoClient, filterUsersBancoDispatch, myPendingsReducer } = this.props;
         if(idClient){
             window.sessionStorage.setItem('idClientSelected', idClient);
             dispatchConsultInfoClient().then(this.validateClientSelected);
         }else{
             this.validateClientSelected();
         }
+
     }
 
-    componentDidMount() {
-        const {params: {id}, dispatchShowLoading} = this.props;
+    async componentDidMount() {
+        const {params: {id}, dispatchShowLoading, filterUsersBancoDispatch, myPendingsReducer} = this.props;
         dispatchShowLoading(true, "Cargando...");
 
-        Promise.all([this.masterDataFields(), this.getInfoTask(id)]).then(() => {
-            this.setState({
-                renderForm: true,
-                isMounted: true
-            });
-            dispatchShowLoading(false, "");
+        await this.masterDataFields();
+        await this.getInfoTask(id);
+        this.setState({
+            renderForm: true,
+            isMounted: true
         });
+        dispatchShowLoading(false, "");
+        debugger;
+        let userName = window.localStorage.getItem("userNameFront");
+        const filterUserResponse = await filterUsersBancoDispatch(userName);
+        this.setState({
+            nameUsuario: _.get(filterUserResponse, 'payload.data.data[0].title')
+        });
+        const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
+        if(taskDetail) {
+            this.setState({
+                nameUsuario: taskDetail.assignedBy
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -241,6 +256,12 @@ export class TaskPage extends React.Component {
                         </Col>
                     </Row>
                 </div>
+                <div style={{backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px"}}>
+                    <Col style={{padding: "5px 10px 0px 20px"}}>
+                        <strong>Asignador</strong><br/>
+                        <span id="asignator" style={{fontWeight: 'normal'}}> {this.state.nameUsuario}</span>
+                    </Col>
+                </div>
                 {
                     this.state.renderForm ? this.renderForm() : null
                 }
@@ -268,7 +289,8 @@ function mapDispatchToProps(dispatch) {
         dispatchGetMasterDataFields: getMasterDataFields,
         dispatchCreatePendingTaskNew: createPendingTaskNew,
         dispatchClearUserTask: clearTask,
-        dispatchConsultInfoClient: consultInfoClient
+        dispatchConsultInfoClient: consultInfoClient,
+        filterUsersBancoDispatch: filterUsers
     }, dispatch);
 }
 
