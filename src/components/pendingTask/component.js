@@ -3,7 +3,6 @@ import { Row, Grid, Col } from 'react-flexbox-grid';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { tasksByClientFindServer, clearUserTask } from './actions';
-import { Combobox } from 'react-widgets';
 import { NUMBER_RECORDS, TASK_STATUS } from './constants';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import PaginationPendingTaskComponent from './paginationPendingTaskComponent';

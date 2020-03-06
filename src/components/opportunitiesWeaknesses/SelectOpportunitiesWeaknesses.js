@@ -27,7 +27,7 @@ import ModalContentComponent from "./ModalContentComponent";
 import Message from '../message';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
-class SelectOpportunitiesWeaknesses extends Component {
+export class SelectOpportunitiesWeaknesses extends Component {
   constructor(props) {
     super(props);
 
@@ -63,7 +63,7 @@ class SelectOpportunitiesWeaknesses extends Component {
     if (!associated) {
       dispatchSwtShowMessage(
         'warning',
-        "Guardar información",
+        "Confirmar desasociación",
         `¿Señor usuario, está seguro que desea desasociar la ${singularTitle}?`,
         {
           onConfirmCallback: () => {
@@ -139,18 +139,22 @@ class SelectOpportunitiesWeaknesses extends Component {
                       size='huge'
                       name={'add square'}
                       style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
+                      disabled={isEditable}
                       onClick={() => {
-                        if (!this.state.elements) {
-                          this.setState({ elements: Object.assign([], elementsReducer[OPPORTUNITIES].elements) });
+                        if (!isEditable) {
+                          if (!this.state.elements) {
+                            this.setState({ elements: Object.assign([], elementsReducer[OPPORTUNITIES].elements) });
+                          }
+
+                          this.setState({
+                            open: true,
+                            name: OPPORTUNITIES,
+                            singularTitle: SINGULAR_TITLE_OPPORTUNITIES,
+                            title: TITLE_OPPORTUNITIES,
+                            placeholder: OPPORTUNITIES_PLACEHOLDER
+                          });
                         }
 
-                        this.setState({
-                          open: true,
-                          name: OPPORTUNITIES,
-                          singularTitle: SINGULAR_TITLE_OPPORTUNITIES,
-                          title: TITLE_OPPORTUNITIES,
-                          placeholder: OPPORTUNITIES_PLACEHOLDER
-                        });
                       }}
                     />
                   </Col>
@@ -160,7 +164,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                     data={linkedOpportunities}
                     handleDelete={undefined}
                     handleEdit={undefined}
-                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(OPPORTUNITIES, element, checked, singularTitle)}
+                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(OPPORTUNITIES, element, checked, SINGULAR_TITLE_OPPORTUNITIES)}
                     showCheck={true}
                     title={TITLE_OPPORTUNITIES}
                     isEditable={!isEditable}
@@ -205,18 +209,21 @@ class SelectOpportunitiesWeaknesses extends Component {
                       size='huge'
                       name={'add square'}
                       style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
+                      disabled={isEditable}
                       onClick={() => {
-                        if (!this.state.elements) {
-                          this.setState({ elements: Object.assign([], elementsReducer[WEAKNESSES].elements) });
-                        }
+                        if (!isEditable) {
+                          if (!this.state.elements) {
+                            this.setState({ elements: Object.assign([], elementsReducer[WEAKNESSES].elements) });
+                          }
 
-                        this.setState({
-                          open: true,
-                          name: WEAKNESSES,
-                          singularTitle: SINGULAR_TITLE_WEAKNESSES,
-                          title: TITLE_WEAKNESSES,
-                          placeholder: WEAKNESSES_PLACEHOLDER
-                        });
+                          this.setState({
+                            open: true,
+                            name: WEAKNESSES,
+                            singularTitle: SINGULAR_TITLE_WEAKNESSES,
+                            title: TITLE_WEAKNESSES,
+                            placeholder: WEAKNESSES_PLACEHOLDER
+                          });
+                        }
                       }}
                     />
                   </Col>
@@ -226,7 +233,7 @@ class SelectOpportunitiesWeaknesses extends Component {
                     data={linkedWeaknesses}
                     handleDelete={undefined}
                     handleEdit={undefined}
-                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(WEAKNESSES, element, checked, singularTitle)}
+                    handleOnSelect={(element, { target: { checked } }) => this.handleOnSelect(WEAKNESSES, element, checked, SINGULAR_TITLE_WEAKNESSES)}
                     showCheck={true}
                     title={TITLE_WEAKNESSES}
                     isEditable={!isEditable}
@@ -252,7 +259,7 @@ class SelectOpportunitiesWeaknesses extends Component {
 
               {name &&
                 <div>
-                  <Message message={"Señor usurario, Los cambios realizados se verán reflejados en la información del cliente"} show={true} icon={'exclamation'} />
+                  <Message message={"Señor usuario, los cambios realizados se verán reflejados en la información del cliente."} show={true} icon={'exclamation'} />
                   <ModalContentComponent
                     name={name}
                     singularTitle={singularTitle}

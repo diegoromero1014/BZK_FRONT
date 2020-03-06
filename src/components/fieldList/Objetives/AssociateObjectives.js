@@ -20,6 +20,7 @@ export default class AssociateObjectives extends React.Component {
         this.checkDraftElement = this.checkDraftElement.bind(this);
         this.checkElement = this.checkElement.bind(this);
         this.hideAssociateSection = this.hideAssociateSection.bind(this);
+        this.renderElements = this.renderElements.bind(this);
     }
 
     changeAssociationOfElements(elements, changedElement) {
@@ -47,8 +48,8 @@ export default class AssociateObjectives extends React.Component {
         const { elements, swtShowMessage, changeListState } = this.props;
         swtShowMessage(
             "warning",
-            "Confirmar eliminación",
-            `Señor usuario, ¿Esta seguro que desea desasociar el Objetivo?`,
+            "Confirmar desasociación",
+            `Señor usuario, ¿está seguro que desea desasociar el Objetivo del cliente?`,
             {
                 onConfirmCallback: () => {
                     changeListState({
@@ -66,6 +67,8 @@ export default class AssociateObjectives extends React.Component {
 
     renderElements(checkedFunction, filterAssociatedElements, elements=[]) {
 
+        const {isEditable} = this.props;
+
         return elements.map(
             (element) => (
                 <TemplateObjectiveAndStrategies
@@ -76,7 +79,13 @@ export default class AssociateObjectives extends React.Component {
                             justifyContent: "space-around",
                             alignItems: "center"
                         }}>
-                            <input onChange={() => checkedFunction(elements, element)} type="checkbox" checked={element.associated} name="example" />
+                            <input
+                                onChange={() => checkedFunction(elements, element)}
+                                type="checkbox"
+                                checked={element.associated}
+                                name="example"
+                                disabled={!isEditable}
+                            />
                         </div>
                     }
                     objetivo={element}
@@ -111,7 +120,7 @@ export default class AssociateObjectives extends React.Component {
             return;
         }
 
-        if (checkedElements >= 3) {
+        if (checkedElements > 3) {
             swtShowMessage("warning", "Alerta", "Señor usuario, solo puede asociar un maximo de 3 Objetivos del cliente.");
             return;
         }
@@ -131,14 +140,15 @@ export default class AssociateObjectives extends React.Component {
         const {
             elements,
             showAssociateSection,
-            draftElements
+            draftElements,
+            isEditable
         } = this.props;
 
         const filteredElements = elements.filter(this.filterCheckedElements);
 
         return (
             <div>
-                <div style={{ position: "relative", marginBottom: "25px" }}>
+                { isEditable && <div style={{ position: "relative", marginBottom: "25px" }}>
                     <div className="add-section" style={{ position: "absolute", top: "10px", right: "10px" }} >
                         <ToolTip text={"Asociar Objetivos"}>
                             <Icon
@@ -150,13 +160,13 @@ export default class AssociateObjectives extends React.Component {
                             />
                         </ToolTip>
                     </div>
-                </div>
+                </div> }
                 <div style={styles.main} className='container-associate-objetives'>
                     {ObjectiveSectionTitle}
                     {this.renderElements(this.checkElement, (list) => list.filter((el) => el.associated ), filteredElements)}
                     {!filteredElements.length && <div className="elements-not-found">
                         <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-                            <span className="form-item">No se han asociado Objetivos</span>
+                            <span className="form-item">No se han asociado Objetivos del cliente</span>
                         </div>
                     </div>}
                     {showAssociateSection &&

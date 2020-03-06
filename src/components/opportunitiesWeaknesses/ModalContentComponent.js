@@ -6,7 +6,7 @@ import ElementsComponent from '../elements';
 import { schemaoOportunitiesWeaknesses } from './schema';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
-class ModalContentComponent extends Component {
+export class ModalContentComponent extends Component {
 
     constructor(props) {
         super(props);
