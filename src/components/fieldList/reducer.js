@@ -184,6 +184,7 @@ export default (state, action) => {
             addElementsToChildrenState(state, newList, action.element);
             return addNewListToState(action.list, state, newList);
         }
+        
         default:
             return state;
     }

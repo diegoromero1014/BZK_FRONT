@@ -17,6 +17,7 @@ import {swtShowMessage} from '../sweetAlertMessages/actions';
 import {Menu, Segment} from 'semantic-ui-react'
 import {Checkbox} from "semantic-ui-react";
 import {filterUsersBanco} from "../participantsVisitPre/actions";
+import {consultInfoClient} from '../clientInformation/actions';
 
 
 
@@ -49,8 +50,8 @@ export class ModalComponentTeam extends Component {
 
     handleItemClick = (e, {name}) => this.setState({tabActive: name});
 
-    handledChangeCheck = (e, {checked}) => {
-        const {saveSeniorBankerDispatch, showLoadingDispatch,swtShowMessageDispatch} = this.props;
+    handledChangeCheck = async (e, {checked}) => {
+        const {saveSeniorBankerDispatch, showLoadingDispatch, swtShowMessageDispatch, dispatchConsultInfoClient} = this.props;
         if (checked) {
             this.setState({
                 checkActive: false,
@@ -63,18 +64,18 @@ export class ModalComponentTeam extends Component {
             })
         }
         showLoadingDispatch(true, MESSAGE_LOAD_DATA);
-        saveSeniorBankerDispatch(checked).then((data) => {
+        const data = await saveSeniorBankerDispatch(checked);
+        const status = data.payload.data.status;
+        const validateLogin = data.payload.data.validateLogin;
+        if(status === REQUEST_ERROR){
+            swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
+        }
+        if (validateLogin === false) {
+            swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
+        }
 
-            const status = data.payload.data.status;
-            const validateLogin = data.payload.data.validateLogin;
-            if(status === REQUEST_ERROR){
-                swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
-            }
-            if (validateLogin === false) {
-                swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
-            }
-            showLoadingDispatch(false, MESSAGE_LOAD_DATA);
-        });
+        await dispatchConsultInfoClient(window.sessionStorage.getItem('idClientSelected'));
+        showLoadingDispatch(false, MESSAGE_LOAD_DATA);
 
     };
 
@@ -133,9 +134,14 @@ export class ModalComponentTeam extends Component {
                         userSession: infoClient.seniorBanker
                     })
                 }
-            }else{
+            }else if(null !== infoClient.seniorBankerId){
                 this.setState({
                     checkActive: true,
+                    userSession: infoClient.seniorBanker
+                })
+            }else{
+                this.setState({
+                    checkActive: false,
                     userSession: infoClient.seniorBanker
                 })
             }
@@ -153,9 +159,9 @@ export class ModalComponentTeam extends Component {
                     <Col xs={12} md={12} lg={12}>
                         <Checkbox
                             id="checkbox-banquero"
+                            className="checkBankerSeniorDisable"
                             label={label}
-                            readOnly={false}
-                            style={{padding: "15px 10px 0px 20px", backgroundColor: '#ffffff '}}
+                            style={{padding: "15px 10px 0px 20px"}}
                             checked={this.state.checkActive}
                             disabled={this.state.checkDisable}
                             onClick={this.handledChangeCheck}
@@ -230,6 +236,7 @@ function mapDispatchToProps(dispatch) {
         showLoadingDispatch: showLoading,
         swtShowMessageDispatch: swtShowMessage,
         filterUsersBancoDispatch: filterUsersBanco,
+        dispatchConsultInfoClient: consultInfoClient
     }, dispatch);
 }
 

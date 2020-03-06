@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Objectives, { renderElements } from '../../../../../src/components/fieldList/Objetives/Objetives';
-
+import TemplateObjectiveAndStrategies from '../../../../../src/components/fieldList/Objetives/templateObjectiveAndStrategies';
 describe("Test Objectives", () => {
 
     let elements = [];
@@ -35,12 +35,5 @@ describe("Test Objectives", () => {
 
     it("should render components", () => {
         itRenders(<Objectives />);
-    });
-
-    it('renderElements should show two row-element', () => {
-        const removeElement = sinon.fake();
-        const editElement = sinon.fake();        
-        const response = renderElements(elements, removeElement, editElement);                  
-        itRendersChildComponent(response, '.row-element', 2);
     });
 })
