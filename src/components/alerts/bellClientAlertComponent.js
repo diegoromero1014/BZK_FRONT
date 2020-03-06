@@ -8,15 +8,14 @@ import _ from 'lodash';
 
 const styleNumAlert = {
     position: "absolute",
-    right: "30px",
+    right: "20px",
     top: "-15px",
-    fontSize: "15px",
+    fontSize: "13px",
     background: RED_COLOR,
     borderRadius: "14px",
-    padding: "2px 4px",
     color: "#fff",
-    width: "25px",
-    height: "25px",
+    width: "18px",
+    height: "18px",
     textAlign: "center"
 };
 
@@ -29,9 +28,7 @@ const styleAlert = {
 
 const styles = {
     iconAlert: {
-        position: "fixed",
-        right: "10px",
-        top: "18px"
+        position: "relative"
     }
 };
 
@@ -72,11 +69,14 @@ class BellClientAlertComponent extends Component {
             <div style={styles.iconAlert}>
                 <div style={{
                     background: "#ececec",
-                    padding: "10px 0 0 5px",
+                    padding: "4px 4px",
+                    width : 28,
+                    height: 28,
                     position: "relative",
                     top: "-10px",
                     borderRadius: "30px",
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    textAlign: 'center'
                 }}>
                     <Popup
                         trigger={<Icon name='alarm outline'/>}
