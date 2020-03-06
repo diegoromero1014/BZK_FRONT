@@ -24,10 +24,9 @@ import $ from "jquery";
 import moment from "moment";
 
 var usersBanco = [];
-var idUsuario, nameUsuario;
 
 
-class ModalComponentPendingTask extends Component {
+export class ModalComponentPendingTask extends Component {
 
     constructor(props) {
         super(props);
@@ -39,7 +38,8 @@ class ModalComponentPendingTask extends Component {
         this.state = {
             showEx: false,
             showEr: false,
-            tareaError: null
+            tareaError: null,
+            nameUsuario: ""
         }
     }
 
@@ -49,9 +49,15 @@ class ModalComponentPendingTask extends Component {
     }
 
     componentWillMount() {
-        const { getMasterDataFields } = this.props;
+        const { getMasterDataFields, filterUsersBancoDispatch } = this.props;
         this.props.resetForm();
         getMasterDataFields([TASK_STATUS]);
+        let userName = window.localStorage.getItem("userNameFront");
+        filterUsersBancoDispatch(userName).then((data)=>{
+            this.setState({
+                nameUsuario: _.get(data, 'payload.data.data[0].title')
+            });
+        });
     }
 
     _closeCreate() {
@@ -64,7 +70,7 @@ class ModalComponentPendingTask extends Component {
     }
 
     updateKeyValueUsersBanco(e) {
-        const { fields: { responsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
+        const { fields: { responsable, idEmployee }, filterUsersBancoDispatch, swtShowMessage } = this.props;
         const selector = $('.ui.search.responsable');
        
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
@@ -75,7 +81,7 @@ class ModalComponentPendingTask extends Component {
                     return;
                 }
                 selector.toggleClass('loading');
-                filterUsersBanco(responsable.value).then((data) => {
+                filterUsersBancoDispatch(responsable.value).then((data) => {
                     usersBanco = _.get(data, 'payload.data.data');
                     selector.search({
                         cache: false,
@@ -165,6 +171,11 @@ class ModalComponentPendingTask extends Component {
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <p style={{ paddingTop: "10px", marginBottom: "0px" }}>Los campos marcados con asterisco (<span
                             style={{ color: "red" }}>*</span>) son obligatorios.</p>
+                        <Row style={{ padding: "0px 10px 0px 0px" }}>
+                            <Col xs={12} md={6} lg={6}>
+                                <dt>Asignador:<span id="asignator" style={{fontWeight:'normal'}}> {this.state.nameUsuario}</span></dt>
+                            </Col>
+                        </Row>
                         <Row style={{ padding: "0px 10px 0px 0px" }}>
                             <Col xs={12} md={4} lg={4}>
                                 <dt><span>Fecha de cierre - DD/MM/YYYY (<span style={{ color: "red" }}>*</span>)</span>
@@ -261,7 +272,7 @@ class ModalComponentPendingTask extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        filterUsersBanco,
+        filterUsersBancoDispatch:filterUsersBanco,
         createPendingTaskNew,
         getMasterDataFields,
         clearUserTaskOrder,

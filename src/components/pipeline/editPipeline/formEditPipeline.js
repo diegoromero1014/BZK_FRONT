@@ -496,7 +496,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
             if (businessStatus.value) {
                 businessStatusSelected = this._getBusinessStatusById(businessStatus.value);
-                businessStatusSelectedKey = businessStatusSelected.key ? businessStatusSelected.key.toLowerCase() : '';
+                businessStatusSelectedKey = businessStatusSelected ? businessStatusSelected.key.toLowerCase() : '';
             }
 
             this._validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey);

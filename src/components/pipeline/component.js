@@ -16,8 +16,9 @@ import { validatePermissionsByModule } from '../../actionsGlobal';
 
 import { NUMBER_RECORDS, FILTER_STATUS_PIPELINE_ID, PIPELINE_STATUS } from './constants';
 import { MODULE_PIPELINE, CREAR, DESCARGAR } from '../../constantsGlobal';
+import _ from "lodash";
 
-class PipelineComponent extends Component {
+export class PipelineComponent extends Component {
 
   constructor(props) {
     super(props);
@@ -85,8 +86,8 @@ class PipelineComponent extends Component {
               </Col>
               <Col xs>
                 {_.get(reducerGlobal.get('permissionsPipeline'), _.indexOf(reducerGlobal.get('permissionsPipeline'), CREAR), false) &&
-                  <button className="btn btn-primary" onClick={this._createPipeline} type="button" title="Crear pipeline" style={{ marginTop: '21px' }}>
-                    <i className="file text outline icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
+                  <button className="btn btn-primary" onClick={this._createPipeline} type="button" title="Crear pipeline" style={{ marginTop: '18px' }}>
+                    <i className="plus icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i> Crear
                   </button>
                 }
               </Col>
