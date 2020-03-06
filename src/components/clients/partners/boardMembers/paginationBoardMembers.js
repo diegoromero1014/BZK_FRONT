@@ -9,7 +9,7 @@ import {
   MESSAGE_LOAD_DATA
 } from '../../../../constantsGlobal';
 import { validateResponse } from '../../../../actionsGlobal';
-import { changeStateSaveData } from '../../../dashboard/actions';
+import { changeStateSaveData } from '../../../main/actions';
 
 class PaginationBoardMembers extends Component {
 

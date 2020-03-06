@@ -7,7 +7,7 @@ import { getCsv } from '../../viewManagement/actions';
 import { APP_URL, MESSAGE_DOWNLOAD_DATA } from '../../../constantsGlobal';
 import { getCsvPreVisitsByClient } from '../actions';
 import moment from 'moment';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 
 class DownloadPrevisits extends Component {
 

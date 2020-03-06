@@ -19,7 +19,7 @@ import {
     setContactsByFunctionOrType
 } from '../actions';
 import { FIRST_PAGE, NUMBER_RECORDS, MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP } from '../constants';
-import { changeStateSaveData } from '../../../dashboard/actions';
+import { changeStateSaveData } from '../../../main/actions';
 
 const fields = ["typeOfContact", "functionOfContact", "keyword"];
 

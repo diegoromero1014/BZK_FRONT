@@ -8,7 +8,7 @@ import {TAB_BUSINESS} from '../../viewManagement/constants';
 import {getCsvBusinessPlan} from '../actions';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import {changeStateSaveData} from '../../dashboard/actions';
+import {changeStateSaveData} from '../../main/actions';
 
 class DownloadBusinessPlan extends Component {
 

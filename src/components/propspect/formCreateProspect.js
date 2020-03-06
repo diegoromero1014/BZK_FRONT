@@ -15,7 +15,7 @@ import { redirectUrl } from '../globalComponents/actions';
 import DateTimePickerUi from '../../ui/dateTimePicker/dateTimePickerComponent';
 
 import { createProspect } from './actions';
-import { changeStateSaveData } from '../dashboard/actions';
+import { changeStateSaveData } from '../main/actions';
 import { getMasterDataFields, consultListByCatalogType } from '../selectsComponent/actions';
 import {
     consultDataSelect,

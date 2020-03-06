@@ -12,7 +12,7 @@ import SecurityMessageComponent from './../../globalComponents/securityMessageCo
 
 import { validatePermissionsByModule, validateValueExist, validateResponse } from '../../../actionsGlobal';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import {
     getSurveyQualitativeVarible,
     changeFieldsEditables,

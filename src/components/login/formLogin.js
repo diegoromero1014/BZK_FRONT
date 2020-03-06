@@ -20,7 +20,7 @@ import { isInternetExplorer } from '../../utils/browserValidation';
 import SweetAlert from "../sweetalertFocus";
 import ReCaptcha from '../recaptcha/ReCaptcha';
 import {clearCache} from '../../utils/catchRequest';
-import { changeTokenStatus } from '../dashboard/actions';
+import { changeTokenStatus } from '../main/actions';
 
 class FormLogin extends Component {
     constructor(props) {
@@ -112,11 +112,11 @@ class FormLogin extends Component {
     }
 
     componentWillMount() {
-        const { showLoading, stopObservablesLeftTimer, clearStateLogin, dashboardReducer } = this.props;
+        const { showLoading, stopObservablesLeftTimer, clearStateLogin, mainReducer } = this.props;
 
         let token = window.localStorage.getItem('sessionTokenFront');
 
-        const validToken = dashboardReducer.get("validToken");
+        const validToken = mainReducer.get("validToken");
 
         clearCache();
         showLoading(false, null);        
@@ -208,10 +208,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ login, dashboardReducer }, ownerProps) {
+function mapStateToProps({ login, mainReducer }, ownerProps) {
     return {
         login,
-        dashboardReducer
+        mainReducer
     };
 }
 

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {consultManagementDocumentaryService, clearManagementDocumentary} from '../actions';
-import {changeStateSaveData} from '../../dashboard/actions';
+import {changeStateSaveData} from '../../main/actions';
 import {CONSUMING_SERVICE} from '../../../constantsGlobal';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import SweetAlert from '../../sweetalertFocus';

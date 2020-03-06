@@ -10,7 +10,7 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 
 import { MESSAGE_ERROR, MESSAGE_DOWNLOAD_DATA, DATE_FORMAT, DATETIME_FORMAT, APP_URL } from '../../../constantsGlobal';

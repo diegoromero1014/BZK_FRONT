@@ -9,7 +9,7 @@ import {
 } from '../../../constantsGlobal';
 import { validateResponse, formValidateKeyEnter, stringValidate, mapDateValueFromTask, xssValidation } from '../../../actionsGlobal';
 import {MAX_LENGTH_EVENT_NAME} from '../../../constantsGlobal';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import SweetAlert from '../../sweetalertFocus';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import Textarea from '../../../ui/textarea/textareaComponent';

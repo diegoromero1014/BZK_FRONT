@@ -11,7 +11,7 @@ import {
 } from '../../constantsGlobal';
 import Tooltip from '../toolTip/toolTipComponent';
 import { deleteRecentClient, getRecentClients } from './actions';
-import { changeStateSaveData } from '../dashboard/actions';
+import { changeStateSaveData } from '../main/actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { validateResponse, shorterStringValue } from '../../actionsGlobal';
 import { MAX_LENGTH_NAME_CLIENT, MAX_LENGTH_DOCUMENT, MAX_LENGTH_ECONOMIC_GROUP } from './constants';

@@ -20,7 +20,7 @@ import { getMasterDataFields } from '../selectsComponent/actions';
 import { redirectUrl } from '../globalComponents/actions';
 import { setConfidential, addUsers } from '../commercialReport/actions';
 import { addListParticipant, clearParticipants } from '../participantsVisitPre/actions';
-import { changeStateSaveData } from '../dashboard/actions';
+import { changeStateSaveData } from '../main/actions';
 import { getAnswerQuestionRelationship, clearAnswer, addAnswer, getAllQuestions } from '../challenger/actions';
 
 import { PREVISIT_TYPE, FILTER_SOCIAL_STYLE } from '../selectsComponent/constants';

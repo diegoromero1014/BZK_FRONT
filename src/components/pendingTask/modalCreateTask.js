@@ -17,7 +17,7 @@ import { clearUserTask, tasksByClientFindServer } from './actions';
 import { MESSAGE_SAVE_DATA, EDITAR, REQUEST_SUCCESS, REQUEST_INVALID_INPUT } from '../../constantsGlobal';
 import { redirectUrl } from '../globalComponents/actions';
 import { NUMBER_RECORDS } from './constants';
-import { changeStateSaveData } from '../dashboard/actions';
+import { changeStateSaveData } from '../main/actions';
 import { getInfoTaskUser, tasksByUser, clearMyPendingPaginator, updateUserNameTask } from '../myPendings/myTasks/actions';
 import { validateValue } from '../../actionsGlobal';
 import RichText from '../richText/richTextComponent';
