@@ -652,7 +652,7 @@ class ModalComponentContact extends Component {
                                     max={3}
                                     title={'Objetivos del interlocutor'}
                                     isEditable={true}
-                                    singularTitle={'objetivo del interlocutor'}
+                                    singularTitle={'el objetivo del interlocutor'}
                                 />
                             </Col>
                         </Row>

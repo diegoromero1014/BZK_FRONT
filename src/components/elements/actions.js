@@ -1,4 +1,4 @@
-import { CREATE_LIST, ADD_LIST, DELETE_LIST, CLEAN_LIST, SET_TO_SHOW } from "./constants";
+import { CREATE_LIST, ADD_LIST, DELETE_LIST, CLEAN_LIST, SET_TO_SHOW, LINKED_RECORDS, RESET_RECORDS } from "./constants";
 
 export const createList = payload => ({
     type: CREATE_LIST,
@@ -24,3 +24,13 @@ export const setToShow = payload => ({
     type: SET_TO_SHOW,
     payload
 })
+
+export const linkedRecords = payload => ({
+    type: LINKED_RECORDS,
+    payload
+});
+
+export const resetRecords = payload => ({
+    type: RESET_RECORDS,
+    payload
+});
