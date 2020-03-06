@@ -9,8 +9,9 @@ const PrevArrow = ({ onClick }) => {
         left: '-45px',
         width: 40,
         position: 'absolute',
-        fontSize: 6,
-        cursor: 'pointer'
+        fontSize: '5px',
+        cursor: 'pointer',
+        color: 'darkgrey'
     }
 
     return (

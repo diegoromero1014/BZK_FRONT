@@ -13,7 +13,9 @@ const NextArrow = ({ className, style, onClick }) => {
         content: '→',
         width: 40,
         transform: 'translate(0,-50%)',
-        fontSize: 6,
+        fontSize: '5px',
+        cursor: 'pointer',
+        color: 'darkgrey'
     }
     return (
         <div
