@@ -3,7 +3,7 @@ import { Redirect, Route } from "react-router";
 import { Grid } from "react-flexbox-grid";
 import LoginComponent from "./components/login/component";
 import MainComponent from "./components/main/mainComponent";
-import Dashboard from "./components/dashboard/dashboard";
+import Dashboard from "./components/dashboard";
 import ClientsFind from "./components/clients/clientsFind";
 import ShareholderComponent from "./components/clients/partners/shareholder/component";
 import ComponentClientInformation from "./components/clientInformation/componentClientInformation";
