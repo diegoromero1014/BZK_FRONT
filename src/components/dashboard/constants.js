@@ -1,1 +1,1 @@
-export const MESSAGE_CONFIDENTIAl = "Recuerda que la información almacenada en los aplicativos del Banco es confidencial y no puede ser compartida ni usada con fines diferentes a los definidos dentro de tu rol como colaborador en Bancolombia.";
+export const MESSAGE_CONFIDENTIAL = "Recuerda que la información almacenada en los aplicativos del Banco es confidencial y no puede ser compartida ni usada con fines diferentes a los definidos dentro de tu rol como colaborador en Bancolombia.";
