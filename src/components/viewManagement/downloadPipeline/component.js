@@ -9,7 +9,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 
 import {

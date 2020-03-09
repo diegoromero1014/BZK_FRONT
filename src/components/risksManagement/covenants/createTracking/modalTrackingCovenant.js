@@ -5,7 +5,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import _ from 'lodash';
 
 import { redirectUrl } from '../../../globalComponents/actions';
-import { changeStateSaveData } from '../../../dashboard/actions';
+import { changeStateSaveData } from '../../../main/actions';
 import CreateTracking from './createTacking';
 import { getInfoCovenant, clearCovenant, changeStatusCreate } from '../actions';
 import { mapDateValueFromTaskByFormat } from '../../../../actionsGlobal';

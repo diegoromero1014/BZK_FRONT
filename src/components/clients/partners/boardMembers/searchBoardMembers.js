@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { changeKeyword, getBoardMembers, clearFilters } from './actions';
-import { changeStateSaveData } from '../../../dashboard/actions';
+import { changeStateSaveData } from '../../../main/actions';
 import { validateResponse, xssValidation } from '../../../../actionsGlobal';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 import { NUMBER_RECORDS, LOWER_INITIAL_LIMIT } from './constants';

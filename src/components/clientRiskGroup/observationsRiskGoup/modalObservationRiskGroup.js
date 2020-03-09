@@ -5,7 +5,7 @@ import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid';
 import { validateResponse } from '../../../actionsGlobal';
 import Textarea from "../../../ui/textarea/textareaComponent";
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import {
     MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, TITLE_ERROR_SWEET_ALERT, MESSAGE_SAVE_DATA,

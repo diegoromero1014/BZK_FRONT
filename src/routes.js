@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { Redirect, Route } from "react-router";
 import { Grid } from "react-flexbox-grid";
 import LoginComponent from "./components/login/component";
-import DashboardComponent from "./components/dashboard/dashboardComponent";
+import MainComponent from "./components/main/mainComponent";
+import Dashboard from "./components/dashboard";
 import ClientsFind from "./components/clients/clientsFind";
 import ShareholderComponent from "./components/clients/partners/shareholder/component";
 import ComponentClientInformation from "./components/clientInformation/componentClientInformation";
@@ -47,10 +48,11 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     ADMINALERTCLIENTSPORTFOLIOEXPIRATION, EDITBUSINESSPLAN, BUSINESSPLAN, 
     EDITFORMPIPELINE, CREATEFORMPIPELINE, VISITEDIT, VISIT, EDITPREVISITA, 
     PREVISITA, CLIENTCERTIFY, CLIENTSFIND, CLIENTEDIT, CREATEPROPSPECT, STUDYCREDIT, 
-    COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, VIEWMANAGEMENT, DASHBOARDCOMPONENT, 
+    COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, VIEWMANAGEMENT, DASHBOARD, 
     LOGINCOMPONENT,     
     LoginComponentURL,
-    DashboardComponentURL,
+    MainComponentURL,
+    DashboardURL,
     ViewManagementURL,
     ShareholderComponentURL,
     ComponentClientInformationURL,
@@ -88,19 +90,17 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     VIEWALERT,
     ADMINALERTCLIENTSPENDINGUPDATE,
     SHEDULER,
-    DEFAULT} from "./constantsAnalytics";
+    DEFAULT
+} from "./constantsAnalytics";
 
 
-const  AssociateObjectives =  makeAssociateList("Objetivos");
+const AssociateObjectives =  makeAssociateList("Objetivos");
 
 class App extends Component {
    
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
           this.onRouteChanged();
-         
-
-
         }
       }
 
@@ -108,10 +108,8 @@ class App extends Component {
           var routeActive =this.validateRouteActive();
           window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
-            'event': BIZTRACK_+routeActive,
+            'event': BIZTRACK_ + routeActive,
             'pagina':routeActive
-
-
           });
         
        
@@ -122,8 +120,10 @@ class App extends Component {
         switch (this.props.location.pathname) {
             case LoginComponentURL:
                 return LOGINCOMPONENT;
-            case DashboardComponentURL:
-                return DASHBOARDCOMPONENT;
+            case MainComponentURL:
+                return MAINCOMPONENT;
+            case DashboardURL:
+                return DASHBOARD
             case ViewManagementURL:
                 return VIEWMANAGEMENT;                                
             case ShareholderComponentURL:
@@ -211,7 +211,8 @@ export default (
             <Route path="login" component={LoginComponent}></Route>
             <Route path="logout" component={LoginComponent}></Route>
             <Route path="pageUnderConstruction" component={pageUnderConstructor} />
-            <Route path="dashboard" component={DashboardComponent}>
+            <Route path="dashboard" component={MainComponent}>
+                <Route path="dashboard" component={Dashboard}></Route>
                 <Route path="clients" component={ClientsFind}></Route>
                 <Route path="viewManagement" component={ViewManagement}></Route>
                 <Route path="shareholder" component={ShareholderComponent}></Route>

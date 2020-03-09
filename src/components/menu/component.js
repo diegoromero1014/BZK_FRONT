@@ -31,6 +31,12 @@ const itemManagerialView = {
     link: "/dashboard/viewManagement"
 };
 
+const itemDashboard = {
+    text: "Dashboard",
+    icon: "bar chart",
+    link: "/dashboard/dashboard"
+};
+
 const itemClients = {
     text: "Mis clientes",
     icon: "building",
@@ -96,6 +102,9 @@ class MenuComponent extends Component {
         const permissions = navBar.get("mapModulesAccess");
 
         let menuItems = [];
+
+        menuItems.push(itemDashboard);
+
         itemMyPendings.children = [];
         itemMyPendings.children.push(childrenMyPendingsMyTaks);
         itemMyPendings.children.push(childrenMyPendingsMyDraftDocuments);

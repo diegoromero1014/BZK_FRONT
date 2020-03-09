@@ -14,7 +14,7 @@ import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 import { checkNumberDocument, checkFirstCharacter } from './../../../../../validationsFields/rulesField';
 import { getClientNeeds, getMasterDataFields } from "../../../../selectsComponent/actions";
 import { changeKeyword, clearFilters, getBoardMembers, saveBoardMember, validateExistsBoardMember } from "../actions";
-import { changeStateSaveData } from "../../../../dashboard/actions";
+import { changeStateSaveData } from "../../../../main/actions";
 import { stringValidate, validateResponse } from "../../../../../actionsGlobal";
 import { swtShowMessage } from "../../../../sweetAlertMessages/actions";
 import { CONTACT_ID_TYPE } from "../../../../selectsComponent/constants";

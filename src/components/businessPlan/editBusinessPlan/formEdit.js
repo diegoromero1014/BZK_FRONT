@@ -18,7 +18,7 @@ import { getMasterDataFields } from "../../selectsComponent/actions";
 import { addUsers, setConfidential } from "../../commercialReport/actions";
 import { buildJsoncommercialReport, fillUsersPermissions } from '../../commercialReport/functionsGenerics';
 import { consultParameterServer, formValidateKeyEnter, htmlToText, nonValidateEnter, onSessionExpire } from "../../../actionsGlobal";
-import { changeStateSaveData } from "../../dashboard/actions";
+import { changeStateSaveData } from "../../main/actions";
 import { createBusiness, detailBusiness, pdfDescarga, validateRangeDates } from "../actions";
 import { addNeed } from "../need/actions";
 import { addArea } from "../area/actions";

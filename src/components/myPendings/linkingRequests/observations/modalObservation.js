@@ -12,7 +12,7 @@ import {
 } from '../../../../constantsGlobal';
 import ItemObservation from './itemObservation';
 import Textarea from "../../../../ui/textarea/textareaComponent";
-import { changeStateSaveData } from '../../../dashboard/actions';
+import { changeStateSaveData } from '../../../main/actions';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 import {
     checkRequired,

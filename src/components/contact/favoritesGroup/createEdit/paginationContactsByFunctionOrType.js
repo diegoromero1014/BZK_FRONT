@@ -10,7 +10,7 @@ import {
   TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_LOAD_DATA
 } from '../../../../constantsGlobal';
 import { validateResponse, stringValidate } from '../../../../actionsGlobal';
-import { changeStateSaveData } from '../../../dashboard/actions';
+import { changeStateSaveData } from '../../../main/actions';
 
 class PaginationContactsByFunctionOrType extends Component {
 

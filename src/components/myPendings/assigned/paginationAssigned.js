@@ -6,7 +6,7 @@ import { getAssigned, limitInf, changePage } from './actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT, MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
 import { validateResponse } from '../../../actionsGlobal';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 
 class paginationAssigned extends Component {
 

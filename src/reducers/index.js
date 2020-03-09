@@ -33,7 +33,7 @@ import viewManagementReducer from '../components/viewManagement/reducer';
 import teamParticipantsReducer from '../components/clientTeam/reducer';
 import businessPlanReducer from '../components/businessPlan/reducer';
 import clientEconomicGroupReducer from '../components/clientEconomicGroup/reducer';
-import dashboardReducer from '../components/dashboard/reducer';
+import mainReducer from '../components/main/reducer';
 import clientProductReducer from '../components/clientEdit/products/reducer';
 import myPendingsReducer from '../components/myPendings/myTasks/reducer';
 import draftDocumentsReducer from '../components/myPendings/draftDocuments/reducer';
@@ -108,7 +108,7 @@ export default combineReducers({
     teamParticipantsReducer: teamParticipantsReducer,
     businessPlanReducer: businessPlanReducer,
     clientEconomicGroupReducer: clientEconomicGroupReducer,
-    dashboardReducer: dashboardReducer,
+    mainReducer: mainReducer,
     clientProductReducer: clientProductReducer,
     reducerGlobal: reducerGlobal,
     alerts: alertsReducer,
