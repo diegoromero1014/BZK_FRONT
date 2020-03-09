@@ -23,7 +23,7 @@ import { setGlobalCondition } from './../../../validationsFields/rulesField';
 import { redirectUrl } from "../../globalComponents/actions";
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { changeStateSaveData } from "../../dashboard/actions";
+import { changeStateSaveData } from "../../main/actions";
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import {
     getClientNeeds, getMasterDataFields, consultListWithParameterUbication,

@@ -23,7 +23,7 @@ import { patternOfNumberDocument, patternOfForbiddenCharacter } from '../../../v
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { toggleModalContact, createContactNew, searchContact, clearSearchContact } from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate, downloadFilePDF } from '../actions'
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import { getListContactGroupById } from '../favoritesGroup/actions';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
 import {

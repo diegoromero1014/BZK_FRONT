@@ -13,9 +13,7 @@ import WorkerSetup from '../../worker/WorkerSetup';
 import { consultParameterServer } from '../../actionsGlobal';
 import { RANGO_PASO_PRODUCCION } from '../../constantsParameters';
 
-/* moment.tz.setDefault('America/Bogota'); */
-
-class Dashboard extends Component {
+export class MainComponent extends Component {
   constructor(props) {
     super(props);
 
@@ -84,11 +82,11 @@ class Dashboard extends Component {
       document.cookie = 'estadoconexion=activa;path=/';
       redirectUrl("/login");
     } else {
-      const { loadObservablesLeftTimer, dashboardReducer } = this.props;
+      const { loadObservablesLeftTimer, mainReducer } = this.props;
 
       loadObservablesLeftTimer();
 
-      let productionUpgradeNotified = dashboardReducer.get('productionUpgradeNotified');
+      let productionUpgradeNotified = mainReducer.get('productionUpgradeNotified');
 
       if (!productionUpgradeNotified) {
         notifiedProductionUpgrade();
@@ -112,9 +110,9 @@ class Dashboard extends Component {
 
   componentDidUpdate() {
 
-    const { dashboardReducer } = this.props;
+    const { mainReducer } = this.props;
 
-    const validToken = dashboardReducer.get("validToken");
+    const validToken = mainReducer.get("validToken");
 
     if(!validToken) {
       redirectUrl('/login');
@@ -123,7 +121,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { dashboardReducer } = this.props;
+    const { mainReducer } = this.props;
 
     return (
       <div style={{ width: "100%", height: "100%", position: "absolute", overflow: "hidden" }}>
@@ -137,9 +135,9 @@ class Dashboard extends Component {
             style={{ backgroundColor: "#ECECEC", width: "100%", height: "94%", float: "left", top: "60px", overflowY: "auto", overflowX: "hidden" }}>
             {this.props.children}
             <LoadingComponent />
-            {dashboardReducer.get('showSaveData') &&
+            {mainReducer.get('showSaveData') &&
               <div className="ui active inverted dimmer">
-                <div className="ui text loader">{dashboardReducer.get('messageData')}</div>
+                <div className="ui text loader">{mainReducer.get('messageData')}</div>
               </div>
             }
           </div>
@@ -168,11 +166,11 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({ login, dashboardReducer }, ownerProps) {
+function mapStateToProps({ login, mainReducer }, ownerProps) {
   return {
     login,
-    dashboardReducer
+    mainReducer
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(MainComponent);

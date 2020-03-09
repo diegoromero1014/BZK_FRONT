@@ -19,7 +19,7 @@ import { checkRichTextRequiredBoolean } from '../../validationsFields/rulesField
 import SelectOpportunitiesWeaknesses from '../opportunitiesWeaknesses/SelectOpportunitiesWeaknesses';
 import makeAssociateList from '../fieldList/makeAssociateList';
 import { listName } from '../fieldList/Objetives/utils';
-import  '../../../styles/app/previsit.scss';
+import '../../../styles/app/previsit.scss';
 
 const Objectives = makeAssociateList(listName);
 

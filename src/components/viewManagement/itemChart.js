@@ -9,7 +9,7 @@ import SelectYearComponent from '../selectsComponent/selectFilterYear/selectYear
 import { TYPE_YEAR, TAB_PREVISIT, TAB_VISIT, TAB_PIPELINE, TAB_BUSINESS, TAB_TASKS } from './constants';
 import { DESCARGAR } from '../../constantsGlobal';
 import ButtonDownloadModal from './buttonDownloadModal';
-import { changeStateSaveData } from '../dashboard/actions';
+import { changeStateSaveData } from '../main/actions';
 
 class ItemChart extends Component {
 

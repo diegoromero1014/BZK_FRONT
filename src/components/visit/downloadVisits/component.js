@@ -6,7 +6,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import moment from 'moment';
 
 import { getCsvVisitsByClient } from '../actions';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import { getCsv } from '../../viewManagement/actions';
 
 import { APP_URL, MESSAGE_DOWNLOAD_DATA } from '../../../constantsGlobal';

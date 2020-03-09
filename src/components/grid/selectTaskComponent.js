@@ -6,7 +6,7 @@ import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import { updateStatusTask, tasksByUser } from '../myPendings/myTasks/actions';
 import { NUMBER_RECORDS } from '../myPendings/myTasks/constants';
 import { MESSAGE_SAVE_DATA } from '../../constantsGlobal';
-import { changeStateSaveData } from '../dashboard/actions';
+import { changeStateSaveData } from '../main/actions';
 import { validateIsNullOrUndefined } from '../../actionsGlobal';
 
 let key = 1;

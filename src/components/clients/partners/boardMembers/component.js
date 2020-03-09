@@ -10,7 +10,7 @@ import {
     CREAR, MODULE_BOARD_MEMBERS
 } from '../../../../constantsGlobal';
 import { validateResponse, validatePermissionsByModule } from '../../../../actionsGlobal';
-import { changeStateSaveData } from '../../../dashboard/actions';
+import { changeStateSaveData } from '../../../main/actions';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 import _ from 'lodash';
 import { getMasterDataFields } from '../../../selectsComponent/actions';

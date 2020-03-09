@@ -5,7 +5,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import { getDetailAEC, clearDetailAEC, downloadPDF } from './actions';
 import { formatLongDateToDateWithNameMonth, formatCurrency, validateResponse } from '../../../actionsGlobal';
 import { MESSAGE_LOAD_DATA } from '../../../constantsGlobal';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import ModalClientName from '../../globalComponents/modalClientName/component';
 

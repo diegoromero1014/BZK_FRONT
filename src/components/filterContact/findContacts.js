@@ -9,7 +9,7 @@ import SweetAlert from '../sweetalertFocus';
 import {updateTitleNavBar} from '../navBar/actions';
 import ContactListItem from './contactListItem';
 import {MESSAGE_LOAD_DATA} from '../../constantsGlobal';
-import {changeStateSaveData} from '../dashboard/actions';
+import {changeStateSaveData} from '../main/actions';
 import Pagination from './pagination';
 import _ from 'lodash';
 import Tooltip from '../toolTip/toolTipComponent';

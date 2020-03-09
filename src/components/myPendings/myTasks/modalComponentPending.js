@@ -17,7 +17,7 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import { redirectUrl } from "../../globalComponents/actions";
 import { updateTitleNavBar } from "../../navBar/actions";
 import { swtShowMessage } from "../../sweetAlertMessages/actions";
-import { changeStateSaveData } from "../../dashboard/actions";
+import { changeStateSaveData } from "../../main/actions";
 import { showLoading } from "../../loading/actions";
 import { filterUsersBanco } from '../../participantsVisitPre/actions';
 import { formValidateKeyEnter, onSessionExpire, validateResponse } from '../../../actionsGlobal';

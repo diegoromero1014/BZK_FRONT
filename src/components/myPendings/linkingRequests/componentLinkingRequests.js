@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { updateTitleNavBar } from '../../navBar/actions';
 import _ from 'lodash';
 import { NUMBER_RECORDS, PAGE_INITIAL } from './constants';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import ListLinkingRequests from './listLinkingRequests';
 import { getLinkRequests, limitInf, changePage, clearLinkRequestPaginator, clearLinkRequests } from './actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';

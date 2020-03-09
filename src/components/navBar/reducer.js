@@ -3,7 +3,7 @@ import * as actions from './constants';
 
 const initialState = Immutable.Map({
     status: "opened",
-    titleNavBar: 'Mis clientes',
+    titleNavBar: 'Dashboard',
     viewAlertClient:false,
     mapModulesAccess: [],
     confidential: false

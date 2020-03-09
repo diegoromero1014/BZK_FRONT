@@ -1,0 +1,20 @@
+.title {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.4em !important;
+    font-weight: bolder;
+    text-transform: uppercase;
+    color: #767676;
+}
+
+.report-card-view {
+    border: 1px solid #ececec;
+    background-color: #fff;
+    width: 65%; 
+    height: 280px; 
+    cursor: pointer; 
+    position: relative;
+    box-shadow: 13px 16px 8px -10px rgba(0,0,0,0.47);
+    margin-bottom: 10px;
+    border-radius: 7px;
+}
