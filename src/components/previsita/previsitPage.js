@@ -6,14 +6,25 @@ import moment from 'moment';
 import { Row, Col } from 'react-flexbox-grid';
 import SweetAlert from "../sweetalertFocus";
 
-import HeaderPrevisita from './headerPrevisita';
 import PrevisitFormComponent from './previsitFormComponent'
 import PermissionUserReports from "../commercialReport/permissionsUserReports";
 import { buildJsoncommercialReport, fillUsersPermissions } from '../commercialReport/functionsGenerics';
 import CommercialReportButtonsComponent from '../globalComponents/commercialReportButtonsComponent';
 
 import { detailPrevisit, canEditPrevisita, disableBlockedReport, clearPrevisitDetail, validateDatePreVisit, createPrevisit, pdfDescarga } from "./actions";
-import { TIME_REQUEST_BLOCK_REPORT, MESSAGE_ERROR, MESSAGE_ERROR_SWEET_ALERT, EDITAR, REQUEST_ERROR, MESSAGE_SAVE_DATA, REQUEST_INVALID_INPUT, REQUEST_SUCCESS, AFIRMATIVE_ANSWER, CANCEL, SAVE_PUBLISHED } from '../../constantsGlobal';
+import {
+   TIME_REQUEST_BLOCK_REPORT,
+   MESSAGE_ERROR,
+   MESSAGE_ERROR_SWEET_ALERT,
+   EDITAR,
+   REQUEST_ERROR,
+   MESSAGE_SAVE_DATA,
+   REQUEST_INVALID_INPUT,
+   REQUEST_SUCCESS,
+   AFFIRMATIVE_ANSWER,
+   CANCEL,
+   SAVE_PUBLISHED
+} from '../../constantsGlobal';
 import { showLoading } from '../loading/actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { getMasterDataFields } from '../selectsComponent/actions';
@@ -31,6 +42,7 @@ import { participantIsClient, changeParticipantClientDataStructure, participantI
 import CommercialReportInfoFooter from '../globalComponents/commercialReportInfoFooter';
 
 import { getLinkedClientDetails, combineClientDetails } from '../listaObjetos/ListaObjetos';
+import ReportsHeader from "../globalComponents/reportsHeader/component";
 
 import { cleanList, addToList, createList, linkedRecords } from '../elements/actions';
 import { OPPORTUNITIES, WEAKNESSES } from '../opportunitiesWeaknesses/constants';
@@ -610,6 +622,7 @@ export class PrevisitPage extends Component {
             commercialReportButtons={(setFieldValue) => (
                <CommercialReportButtonsComponent
                   onClickSave={draft => setFieldValue('documentStatus', draft, true)}
+                  definitiveSaveTitle={'Guardar definitivo'}
                   onClickDownloadPDF={id ? this.onClickDownloadPDF : null}
                   cancel={this.onClickCancelCommercialReport}
                   fromModal={fromModal}
@@ -625,7 +638,7 @@ export class PrevisitPage extends Component {
       const { documentCreatedInfo, isEditable } = this.state;
       return (
          <div className='previsit-container'>
-            <HeaderPrevisita />
+            <ReportsHeader showMessagge={true}/>
             <div style={{ backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px" }}>
                <Row style={{ padding: "5px 10px 0px 20px" }}>
                   <Col xs={10} sm={10} md={10} lg={10}>
@@ -658,7 +671,7 @@ export class PrevisitPage extends Component {
                title={TITLE_EXIT_CONFIRMATION}
                text={MESSAGE_EXIT_CONFIRMATION}
                confirmButtonColor='#DD6B55'
-               confirmButtonText={AFIRMATIVE_ANSWER}
+               confirmButtonText={AFFIRMATIVE_ANSWER}
                cancelButtonText={CANCEL}
                showCancelButton={true}
                onCancel={() => this.setState({ showConfirmationCancelPrevisit: false })}
@@ -669,7 +682,7 @@ export class PrevisitPage extends Component {
                title={TITLE_VISIT_TYPE}
                text={MESSAGE_VISIT_TYPE_CHANGED}
                confirmButtonColor='#DD6B55'
-               confirmButtonText={AFIRMATIVE_ANSWER}
+               confirmButtonText={AFFIRMATIVE_ANSWER}
                cancelButtonText={CANCEL}
                showCancelButton={true}
                onCancel={this.cancelChangeTypePrevisit}

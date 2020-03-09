@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { redirectUrl } from '../../globalComponents/actions';
-import HeaderBusinessPlan from '../headerBusinessPlan';
 import FormEdit from './formEdit';
 import _ from "lodash";
+import ReportsHeader from "../../globalComponents/reportsHeader/component";
 
 class EditBusinessPlan extends Component {
 
@@ -20,7 +20,7 @@ class EditBusinessPlan extends Component {
     const { params: { id } } = this.props;
     return (
       <div>
-        <HeaderBusinessPlan />
+        <ReportsHeader/>
         <FormEdit id={id} />
       </div>
     );

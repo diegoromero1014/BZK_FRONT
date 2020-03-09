@@ -14,6 +14,7 @@ import { updateStatusModal } from '../myPendings/draftDocuments/actions';
 import { toggleMenu } from '../navBar/actions';
 import { MENU_OPENED } from '../navBar/constants';
 import { MODULE_VISIT, MODULE_PREVISIT, MODULE_PIPELINE, MODULE_BUSINESS_PLAN } from './constants';
+import {MODULE_TASKS} from "../../constantsGlobal";
 
 class ButtonDetailsRedirectComponent extends Component {
 
@@ -64,6 +65,15 @@ class ButtonDetailsRedirectComponent extends Component {
             }
         } else if (redirectObject.typeClickDetail === MODULE_BUSINESS_PLAN) {
             updateTitleNavBar("Informe de plan de negocio");
+            changeOwnerDraftPipeline(redirectObject.ownerDraft);
+            if (!isUndefined(redirectObject.idClient)) {
+                this._handleRedirect(redirectObject.urlRedirect + '/' + redirectObject.id, redirectObject.idClient);
+            } else {
+                showLoading(false, null);
+                redirectUrl(redirectObject.urlRedirect + '/' + redirectObject.id);
+            }
+        } else if (redirectObject.typeClickDetail === MODULE_TASKS) {
+            updateTitleNavBar("Tareas");
             changeOwnerDraftPipeline(redirectObject.ownerDraft);
             if (!isUndefined(redirectObject.idClient)) {
                 this._handleRedirect(redirectObject.urlRedirect + '/' + redirectObject.id, redirectObject.idClient);
