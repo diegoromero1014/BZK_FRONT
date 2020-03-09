@@ -4,7 +4,7 @@
     font-size: 1.4em !important;
     font-weight: bolder;
     text-transform: uppercase;
-    color: #767676;
+    color: rgb(0, 68, 140);
 }
 
 .report-card-view {
@@ -17,4 +17,5 @@
     box-shadow: 13px 16px 8px -10px rgba(0,0,0,0.47);
     margin-bottom: 10px;
     border-radius: 7px;
+    overflow: hidden;
 }
