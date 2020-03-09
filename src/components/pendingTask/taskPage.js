@@ -53,7 +53,7 @@ export class TaskPage extends React.Component {
     }
 
     componentWillMount() {
-        const { idClient, dispatchConsultInfoClient, filterUsersBancoDispatch, myPendingsReducer } = this.props;
+        const { idClient, dispatchConsultInfoClient } = this.props;
         if(idClient){
             window.sessionStorage.setItem('idClientSelected', idClient);
             dispatchConsultInfoClient().then(this.validateClientSelected);
@@ -63,29 +63,28 @@ export class TaskPage extends React.Component {
 
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         const {params: {id}, dispatchShowLoading, filterUsersBancoDispatch, myPendingsReducer} = this.props;
         dispatchShowLoading(true, "Cargando...");
 
-        await this.masterDataFields();
-        await this.getInfoTask(id);
-        this.setState({
-            renderForm: true,
-            isMounted: true
-        });
-        dispatchShowLoading(false, "");
-        debugger;
-        let userName = window.localStorage.getItem("userNameFront");
-        const filterUserResponse = await filterUsersBancoDispatch(userName);
-        this.setState({
-            nameUsuario: _.get(filterUserResponse, 'payload.data.data[0].title')
-        });
-        const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
-        if(taskDetail) {
+        Promise.all([this.masterDataFields(), this.getInfoTask(id)]).then(async () => {
             this.setState({
-                nameUsuario: taskDetail.assignedBy
+                renderForm: true,
+                isMounted: true
             });
-        }
+            dispatchShowLoading(false, "");
+            let userName = window.localStorage.getItem("userNameFront");
+            const filterUserResponse = await filterUsersBancoDispatch(userName);
+            this.setState({
+                nameUsuario: _.get(filterUserResponse, 'payload.data.data[0].title')
+            });
+            const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
+            if(taskDetail) {
+                this.setState({
+                    nameUsuario: taskDetail.assignedBy
+                });
+            }
+        });
     }
 
     componentWillUnmount() {
