@@ -66,7 +66,12 @@ export class ModalContentComponent extends Component {
     }
 
     render() {
-        const { name, singularTitle, title, placeholder, isEditable, handleCancel } = this.props;
+        const { name, singularTitle, title, placeholder, isEditable, handleCancel, element } = this.props;
+
+        const { elements } = element;
+
+        let max = 5 ;
+        max += elements.filter(item => item.status === -1).length;
 
         this.handleBackup();
 
@@ -77,7 +82,7 @@ export class ModalContentComponent extends Component {
                     placeholder={placeholder}
                     messageButton={`Crear ${singularTitle}`}
                     name={name}
-                    max={5}
+                    max={max}
                     title={title}
                     isEditable={isEditable}
                     singularTitle={singularTitle}
