@@ -23,13 +23,17 @@ class TabComponent extends Component {
     return (
       <div className="tabGenericComponent">
         <Menu pointing secondary>
-          {tabs.map(({ name, number, callback }) => (
+          {tabs.map(({ name, number, disable }) => (
             <Menu.Item
               name={name}
               className="tabItem"
-              style={{ width: "250px" }}
+              style={
+                !disable
+                  ? { width: "250px" }
+                  : { backgroundColor: "rgba(0, 0, 0, 0.09)", width: "250px" }
+              }
               onClick={() => {
-                this.handleItemClick(name);
+                !disable ? this.handleItemClick(name) : null;
               }}
               active={tabActive === name}
             >
@@ -64,6 +68,7 @@ TabComponent.propTypes = {
       content: PropTypes.element.isRequired,
       callback: PropTypes.func,
       number: PropTypes.number,
+      disable: PropTypes.bool,
     })
   )
 };
