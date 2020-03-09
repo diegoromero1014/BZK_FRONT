@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.2.1">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.1.1 r1855137">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -43,7 +43,6 @@
       <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
         <collectionProp name="CookieManager.cookies"/>
         <boolProp name="CookieManager.clearEachIteration">false</boolProp>
-        <boolProp name="CookieManager.controlledByThreadGroup">false</boolProp>
       </CookieManager>
       <hashTree/>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Clientes" enabled="true">
@@ -14328,7 +14327,92 @@
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;timestamp&quot;:1570451953492,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;id&quot;:&quot;${previsitId}&quot;,&quot;client&quot;:&quot;${clientId}&quot;,&quot;visitTime&quot;:1578675409759,&quot;participatingContacts&quot;:null,&quot;participatingEmployees&quot;:[{&quot;id&quot;:null,&quot;employee&quot;:120,&quot;order&quot;:1}],&quot;relatedEmployees&quot;:null,&quot;principalObjective&quot;:&quot;&lt;p&gt;ad&lt;/p&gt;&quot;,&quot;documentType&quot;:&quot;5054315&quot;,&quot;visitLocation&quot;:&quot;1&quot;,&quot;observations&quot;:&quot;&lt;p&gt;asd&lt;/p&gt;&quot;,&quot;documentStatus&quot;:1,&quot;endTime&quot;:1,&quot;commercialReport&quot;:{&quot;id&quot;:null,&quot;isConfidential&quot;:false,&quot;usersWithPermission&quot;:[],&quot;status&quot;:null,&quot;documentStatus&quot;:1},&quot;answers&quot;:[], &quot;clientDetails&quot;:{&quot;opportunities&quot;:[{&quot;client&quot;:&quot;5077004&quot;,&quot;id&quot;:6898994,&quot;text&quot;:&quot;No tengo oprotunodades, estoy quebrado :(&quot;,&quot;didChange&quot;:false}],&quot;weaknesses&quot;:[{&quot;client&quot;:&quot;5077004&quot;,&quot;id&quot;:6898995,&quot;text&quot;:&quot;Mis empleados no venden mis productos &quot;,&quot;didChange&quot;:false},{&quot;client&quot;:&quot;5077004&quot;,&quot;id&quot;:6898996,&quot;text&quot;:&quot;HolaLorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, te&quot;,&quot;didChange&quot;:false},{&quot;client&quot;:&quot;5077004&quot;,&quot;id&quot;:6898997,&quot;text&quot;:&quot;Una debilidada \n&quot;,&quot;didChange&quot;:false},{&quot;client&quot;:&quot;5077004&quot;,&quot;id&quot;:6898998,&quot;text&quot;:&quot;Hasta cuento se puede ingrear&quot;,&quot;didChange&quot;:false},{&quot;client&quot;:&quot;5077004&quot;,&quot;id&quot;:6898999,&quot;text&quot;:&quot;Esta es la ultima creo&quot;,&quot;didChange&quot;:false}]}}}</stringProp>
+                  <stringProp name="Argument.value">{&#xd;
+   &quot;messageHeader&quot;:{&#xd;
+      &quot;sessionToken&quot;:&quot;${token}&quot;,&#xd;
+      &quot;timestamp&quot;:1570451953492,&#xd;
+      &quot;service&quot;:&quot;&quot;,&#xd;
+      &quot;status&quot;:&quot;0&quot;,&#xd;
+      &quot;language&quot;:&quot;es&quot;,&#xd;
+      &quot;displayErrorMessage&quot;:&quot;&quot;,&#xd;
+      &quot;technicalErrorMessage&quot;:&quot;&quot;,&#xd;
+      &quot;applicationVersion&quot;:&quot;&quot;,&#xd;
+      &quot;debug&quot;:true,&#xd;
+      &quot;isSuccessful&quot;:true&#xd;
+   },&#xd;
+   &quot;messageBody&quot;:{&#xd;
+      &quot;id&quot;:&quot;${previsitId}&quot;,&#xd;
+      &quot;client&quot;:&quot;${clientId}&quot;,&#xd;
+      &quot;visitTime&quot;:1578675409759,&#xd;
+      &quot;participatingContacts&quot;:null,&#xd;
+      &quot;participatingEmployees&quot;:[&#xd;
+         {&#xd;
+            &quot;id&quot;:null,&#xd;
+            &quot;employee&quot;:120,&#xd;
+            &quot;order&quot;:1&#xd;
+         }&#xd;
+      ],&#xd;
+      &quot;relatedEmployees&quot;:null,&#xd;
+      &quot;principalObjective&quot;:&quot;&lt;p&gt;ad&lt;/p&gt;&quot;,&#xd;
+      &quot;documentType&quot;:&quot;5054315&quot;,&#xd;
+      &quot;visitLocation&quot;:&quot;1&quot;,&#xd;
+      &quot;observations&quot;:&quot;&lt;p&gt;asd&lt;/p&gt;&quot;,&#xd;
+      &quot;documentStatus&quot;:1,&#xd;
+      &quot;endTime&quot;:1,&#xd;
+      &quot;commercialReport&quot;:{&#xd;
+         &quot;id&quot;:null,&#xd;
+         &quot;isConfidential&quot;:false,&#xd;
+         &quot;usersWithPermission&quot;:[&#xd;
+&#xd;
+         ],&#xd;
+         &quot;status&quot;:null,&#xd;
+         &quot;documentStatus&quot;:1&#xd;
+      },&#xd;
+      &quot;answers&quot;:[&#xd;
+&#xd;
+      ],&#xd;
+      &quot;clientDetails&quot;:{&#xd;
+         &quot;weaknesses&quot;:[&#xd;
+            {&#xd;
+               &quot;id&quot;:null,&#xd;
+               &quot;text&quot;:&quot;Una debilidad&quot;,&#xd;
+               &quot;order&quot;:2,&#xd;
+               &quot;associated&quot;:true,&#xd;
+               &quot;editable&quot;:true,&#xd;
+               &quot;client&quot;:&quot;${clientId}&quot;&#xd;
+            }&#xd;
+         ],&#xd;
+         &quot;opportunities&quot;:[&#xd;
+            {&#xd;
+               &quot;id&quot;:null,&#xd;
+               &quot;text&quot;:&quot;oportunidad&quot;,&#xd;
+               &quot;order&quot;:1,&#xd;
+               &quot;associated&quot;:true,&#xd;
+               &quot;editable&quot;:true,&#xd;
+               &quot;client&quot;:&quot;${clientId}&quot;&#xd;
+            }&#xd;
+         ],&#xd;
+         &quot;objectives&quot;:[&#xd;
+            {&#xd;
+               &quot;id&quot;:null,&#xd;
+               &quot;client&quot;:&quot;${clientId}&quot;,&#xd;
+               &quot;text&quot;:&quot;objetivo&quot;,&#xd;
+               &quot;didChange&quot;:false,&#xd;
+               &quot;associated&quot;:true,&#xd;
+               &quot;children&quot;:[&#xd;
+                  {&#xd;
+                     &quot;id&quot;:null,&#xd;
+                     &quot;client&quot;:&quot;${clientId}&quot;,&#xd;
+                     &quot;text&quot;:&quot;estrategia&quot;,&#xd;
+                     &quot;didChange&quot;:false,&#xd;
+                     &quot;associated&quot;:true&#xd;
+                  }&#xd;
+               ]&#xd;
+            }&#xd;
+         ]&#xd;
+   }&#xd;
+}&#xd;
+}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
@@ -25381,7 +25465,7 @@
         <stringProp name="filename"></stringProp>
       </ResultCollector>
       <hashTree/>
-      <ProxyControl guiclass="ProxyControlGui" testclass="ProxyControl" testname="HTTP(S) Test Script Recorder" enabled="true">
+      <ProxyControl guiclass="ProxyControlGui" testclass="ProxyControl" testname="HTTP(S) Test Script Recorder" enabled="false">
         <stringProp name="ProxyControlGui.port">8888</stringProp>
         <collectionProp name="ProxyControlGui.exclude_list">
           <stringProp name="805311387">windowsupdate\.microsoft\.com.*</stringProp>
@@ -25468,7 +25552,7 @@
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Crear usuarios" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Crear usuarios" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
