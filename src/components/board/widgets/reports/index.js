@@ -29,7 +29,6 @@ class Reports extends Component {
                         background: previsit,
                         onClick: () => this.handleOnClick(PREVISIT_TITLE),
                     },
-                    onClick: () => this.handleOnClick(PREVISIT_TITLE),
                     name: PREVISIT_TITLE,
                     renderModal: ModalDownloadPreVisit
                 },
@@ -40,7 +39,6 @@ class Reports extends Component {
                         background: visit,
                         onClick: () => this.handleOnClick(VISIT_TITLE),
                     },
-                    onClick: () => this.handleOnClick(VISIT_TITLE),
                     name: VISIT_TITLE,
                     renderModal: ModalDownloadVisit
                 },
@@ -51,7 +49,6 @@ class Reports extends Component {
                         background: task,
                         onClick: () => this.handleOnClick(BUSINESS_PLAN_TITLE),
                     },
-                    onClick: () => this.handleOnClick(BUSINESS_PLAN_TITLE),
                     name: BUSINESS_PLAN_TITLE,
                     renderModal: ModalDownloadBusinessPlan
                 },
@@ -62,7 +59,6 @@ class Reports extends Component {
                         background: pipeline,
                         onClick: () => this.handleOnClick(PIPELINE_TITLE),
                     },
-                    onClick: () => this.handleOnClick(PIPELINE_TITLE),
                     name: PIPELINE_TITLE,
                     renderModal: DownloadPipeline
                 },
@@ -73,7 +69,6 @@ class Reports extends Component {
                         background: task,
                         onClick: () => this.handleOnClick(TASK_TITLE),
                     },
-                    onClick: () => this.handleOnClick(TASK_TITLE),
                     name: TASK_TITLE,
                     renderModal: DownloadTask
                 },
@@ -104,9 +99,9 @@ class Reports extends Component {
                     slidesToShow={4}
                 />
 
-                <Modal isOpen={open} onRequestClose={this.handleCloseModal} className="modalBt4-fade modal fade contact-detail-modal in" style={{ zIndex: 100 }}>
-                    <div className="modalBt4-dialog modalBt4-lg" style={{ zIndex: 100 }}>
-                        <div className="modalBt4-content modal-content" style={{ zIndex: 100 }}>
+                <Modal isOpen={open} onRequestClose={this.handleCloseModal} className="modalBt4-fade modal fade contact-detail-modal in">
+                    <div className="modalBt4-dialog modalBt4-lg">
+                        <div className="modalBt4-content modal-content">
                             <div className="modalBt4-header modal-header">
                                 <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">{report.name}</h4>
 
