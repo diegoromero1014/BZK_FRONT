@@ -23,6 +23,11 @@ export class Dashboard extends Component {
     dispatchUpdateTitleNavBar("Dashboard");
   }
 
+  formatName = () => {
+    const name = getUsername().toLowerCase();
+    return name.split(' ')[0];
+  }
+
   render() {
 
     return (
@@ -33,7 +38,7 @@ export class Dashboard extends Component {
             <Row>
                 <Col md={3}>
                     <div style={{ marginTop: 30, fontSize: 20, textTransform: 'capitalize' }}>
-                        Bienvenid@ {getUsername().toLowerCase()}
+                        Bienvenid@ {this.formatName()}
                     </div>
                 </Col>
                 <Col mdOffset={8} md={1} >
