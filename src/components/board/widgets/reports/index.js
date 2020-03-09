@@ -5,6 +5,13 @@ import ReportCardView from './ReportCardView';
 import pipeline from '../../../../../img/reports/pipeline.png';
 import visit from '../../../../../img/reports/visit.png';
 import task from '../../../../../img/reports/task.png';
+import previsit from '../../../../../img/reports/previsit.png';
+import ModalDownloadPreVisit from '../../../previsita/downloadPrevisits/component';
+import ModalDownloadVisit from '../../../visit/downloadVisits/component';
+import ModalDownloadBusinessPlan from '../../../businessPlan/downloadBusinessPlan/component';
+import DownloadTask from '../../../pendingTask/downloadTask/component';
+import DownloadPipeline from "./../../../viewManagement/downloadPipeline/component";
+
 import { PREVISIT_TITLE, VISIT_TITLE, BUSINESS_PLAN_TITLE, PIPELINE_TITLE, TASK_TITLE } from './constants';
 
 class Reports extends Component {
@@ -16,29 +23,59 @@ class Reports extends Component {
             report: {},
             reports: [
                 {
-                    component: <ReportCardView title={PREVISIT_TITLE} />,
+                    component: ReportCardView,
+                    componentProps: {
+                        title: PREVISIT_TITLE,
+                        background: previsit,
+                        onClick: () => this.handleOnClick(PREVISIT_TITLE),
+                    },
                     onClick: () => this.handleOnClick(PREVISIT_TITLE),
-                    name: PREVISIT_TITLE
+                    name: PREVISIT_TITLE,
+                    renderModal: ModalDownloadPreVisit
                 },
                 {
-                    component: <ReportCardView title={VISIT_TITLE} background={visit} />,
+                    component: ReportCardView,
+                    componentProps: {
+                        title: VISIT_TITLE,
+                        background: visit,
+                        onClick: () => this.handleOnClick(VISIT_TITLE),
+                    },
                     onClick: () => this.handleOnClick(VISIT_TITLE),
-                    name: VISIT_TITLE
+                    name: VISIT_TITLE,
+                    renderModal: ModalDownloadVisit
                 },
                 {
-                    component: <ReportCardView title={BUSINESS_PLAN_TITLE} />,
+                    component: ReportCardView,
+                    componentProps: {
+                        title: BUSINESS_PLAN_TITLE,
+                        background: task,
+                        onClick: () => this.handleOnClick(BUSINESS_PLAN_TITLE),
+                    },
                     onClick: () => this.handleOnClick(BUSINESS_PLAN_TITLE),
-                    name: BUSINESS_PLAN_TITLE
+                    name: BUSINESS_PLAN_TITLE,
+                    renderModal: ModalDownloadBusinessPlan
                 },
                 {
-                    component: <ReportCardView title={PIPELINE_TITLE} background={pipeline} />,
+                    component: ReportCardView,
+                    componentProps: {
+                        title: PIPELINE_TITLE,
+                        background: pipeline,
+                        onClick: () => this.handleOnClick(PIPELINE_TITLE),
+                    },
                     onClick: () => this.handleOnClick(PIPELINE_TITLE),
-                    name: PIPELINE_TITLE
+                    name: PIPELINE_TITLE,
+                    renderModal: DownloadPipeline
                 },
                 {
-                    component: <ReportCardView title={TASK_TITLE} background={task} />,
+                    component: ReportCardView,
+                    componentProps: {
+                        title: TASK_TITLE,
+                        background: task,
+                        onClick: () => this.handleOnClick(TASK_TITLE),
+                    },
                     onClick: () => this.handleOnClick(TASK_TITLE),
-                    name: TASK_TITLE
+                    name: TASK_TITLE,
+                    renderModal: DownloadTask
                 },
             ]
         }
@@ -79,11 +116,7 @@ class Reports extends Component {
                                 </button>
                             </div>
 
-                            <div className="modalBt4-footer modal-footer">
-                                <button type="submit" className="btn btn-primary modal-button-edit" style={{ marginRight: 15 }}>
-                                    <span>Descargar</span>
-                                </button>
-                            </div>
+                            <report.renderModal isOpen={this.handleCloseModal} />
 
                         </div>
                     </div>
