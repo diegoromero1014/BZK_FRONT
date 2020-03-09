@@ -31,12 +31,10 @@ class ListPendingTaskComponent extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { value1 } = nextProps;
-    if ((v1 !== nextProps.value1)) {
-      v1 = nextProps.value1;
-      const { clearUserTaskOrder } = this.props;
-      clearUserTaskOrder();
-      this._orderColumn(0, "finalDate");
-    }
+    const { clearUserTaskOrder } = this.props;
+    v1 = value1;
+    clearUserTaskOrder();
+    this._orderColumn(0, "finalDate");
   }
 
 

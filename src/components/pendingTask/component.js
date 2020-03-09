@@ -3,7 +3,7 @@ import { Row, Grid, Col } from 'react-flexbox-grid';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { tasksByClientFindServer, clearUserTask } from './actions';
-import { NUMBER_RECORDS, TASK_STATUS } from './constants';
+import { NUMBER_RECORDS, TASK_STATUS, PENDING_TASKS, FINALIZED_TASKS } from './constants';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import PaginationPendingTaskComponent from './paginationPendingTaskComponent';
 import ListPendingTaskComponent from './listPendingTaskComponent';
@@ -13,7 +13,7 @@ import { validatePermissionsByModule } from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import { redirectUrl } from '../globalComponents/actions';
 import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _TASK } from '../../constantsAnalytics';
-
+import TabComponent from './../../ui/Tab';
 class UserTaskComponent extends Component {
 
   constructor(props) {
@@ -35,7 +35,7 @@ class UserTaskComponent extends Component {
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
-      const { tasksByClientFindServer, tasksByClient, clearUserTask, validatePermissionsByModule } = this.props;
+      const { tasksByClientFindServer, clearUserTask, validatePermissionsByModule } = this.props;
       clearUserTask();
       tasksByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
       validatePermissionsByModule(MODULE_TASKS).then((data) => {
@@ -78,11 +78,21 @@ class UserTaskComponent extends Component {
             </Row>
           </Grid>
         </div>
-        <Grid style={{ display: visibleTable, width: "100%" }}>
+        <Grid style={{ width: "100%" }}>
           <Row>
             <Col xs>
-              <ListPendingTaskComponent value1={this.state.value1} />
-              <PaginationPendingTaskComponent value1={this.state.value1} />
+              <TabComponent tabs = {[{
+                name: PENDING_TASKS,
+                content: (<div>
+                  <ListPendingTaskComponent value1={this.state.value1} />
+                  <PaginationPendingTaskComponent value1={this.state.value1} />
+                </div>)
+              },{
+                name: FINALIZED_TASKS,
+                content:(<div></div>),
+                disable: true
+              }
+              ]}/>
             </Col>
           </Row>
         </Grid>
