@@ -6,3 +6,4 @@ export const MANAGER = "MANAGER";
 export const OTHER = "OTHER";
 export const ASSISTANT = "ASSISTANT";
 export const SAVE_SENIOR_BANKER = "SAVE_SENIOR_BANKER";
+export const SENIOR_BANKER_BACK_UP = "Banquero Senior (Backup)";
