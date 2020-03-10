@@ -51,6 +51,7 @@ let dispatchSwtShowMessage;
 let dispatchGetInfoTaskUser;
 let dispatchCreatePendingTaskNew;
 let dispatchClearUserTask;
+let filterUsersBancoDispatch;
 let selectsReducer;
 let setFieldValue;
 let closeModal;
@@ -69,6 +70,7 @@ describe('Test taskPage', () => {
         dispatchGetInfoTaskUser = sinon.stub();
         dispatchClearUserTask = sinon.stub();
         dispatchCreatePendingTaskNew = sinon.stub();
+        filterUsersBancoDispatch = sinon.stub();
         dispatchCreatePendingTaskNew.resolves({
             payload: {
                 data: {
@@ -104,6 +106,7 @@ describe('Test taskPage', () => {
             dispatchCreatePendingTaskNew,
             dispatchClearUserTask,
             dispatchGetInfoTaskUser,
+            filterUsersBancoDispatch,
             fromModal: false,
             closeModal,
         };

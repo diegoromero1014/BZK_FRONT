@@ -25,11 +25,11 @@ export default (state = initialState, {type, payload}) => {
         case GET_CURRENT_COMMENTS_LIST:
             return Object.assign({}, state, {
                 comments: state.comments.map(comment => {
-                    comment.id = comment.id.includes('new') ? null : comment.id;
+                    comment.id = typeof comment.id === 'string' && comment.id.includes('new') ? null : comment.id;
                     comment.createdTimestamp = moment(comment.createdTimestamp).valueOf();
                     if(comment.replies.length){
                         comment.replies.map(reply => {
-                            reply.id = reply.id.includes('new') ? null : reply.id;
+                            reply.id = typeof reply.id === 'string' && reply.id.includes('new') ? null : reply.id;
                             reply.parentCommentId = comment.id;
                             reply.createdTimestamp = moment(reply.createdTimestamp).valueOf();
                         });

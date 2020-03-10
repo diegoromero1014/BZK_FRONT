@@ -173,6 +173,7 @@ export class CommentsComponent extends Component {
 
     renderComments = (comments) => {
         const { showReplyCommentError } = this.state;
+        const { disabled } = this.props;
         return comments.map(({ id, initials, author, createdTimestamp, content, replies }) =>
             <Comment key={id}>
                 <CommentsAvatar>{initials}</CommentsAvatar>
@@ -182,9 +183,11 @@ export class CommentsComponent extends Component {
                         <div>{moment(new Date(createdTimestamp)).locale('es').fromNow()}</div>
                     </Comment.Metadata>
                     <Comment.Text className="commentText">{this.renderCommentContent(content)}</Comment.Text>
-                    <Comment.Actions>
-                        <Comment.Action onClick={() => this.replyCommentAction(id)}>Responder</Comment.Action>
-                    </Comment.Actions>
+                    {!disabled &&
+                        <Comment.Actions>
+                            <Comment.Action onClick={() => this.replyCommentAction(id)}>Responder</Comment.Action>
+                        </Comment.Actions>
+                    }
                     <Form reply style={{ display: id && this.state.commentBeingReplied === id ? 'block' : 'none', paddingLeft: 60 }}>
                         <Row>
                             <Col xs={12} md={12} ld={12} className="commentTextArea">

@@ -17,6 +17,7 @@ import { htmlToText } from "../../../actionsGlobal";
 import { swtShowMessage } from "../../sweetAlertMessages/actions";
 
 import { fields, validations as validate } from './rulesAndFieldsTaskVisit';
+import CommentsComponent from "../../globalComponents/comments/commentsComponent";
 
 
 var usersBanco = [];
@@ -153,7 +154,7 @@ class ModalTask extends Component {
     }
 
     render() {
-        const { fields: { responsable, fecha, tarea, idEmployee }, handleSubmit } = this.props;
+        const { fields: { responsable, fecha, tarea, idEmployee, id }, handleSubmit } = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateTask)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
@@ -207,6 +208,13 @@ class ModalTask extends Component {
                                     error={this.errorTask}
                                     placeholder="Ingrese la descripción"
                                 />
+                            </Col>
+                        </Row>
+                        <Row style={{paddingTop: 40, width: '99%', paddingLeft: 20}}>
+                            <Col xs={12} md={12} lg={12}>
+                                <CommentsComponent
+                                    header="Notas"
+                                    reportId={id}/>
                             </Col>
                         </Row>
                     </div>

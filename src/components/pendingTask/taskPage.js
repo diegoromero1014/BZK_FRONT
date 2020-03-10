@@ -39,6 +39,7 @@ import _ from 'lodash';
 import {consultInfoClient} from "../clientInformation/actions";
 import CommentsComponent from "../globalComponents/comments/commentsComponent";
 import {fillComments, getCurrentComments} from "../globalComponents/comments/actions";
+import {filterUsers} from "../commercialReport/actions";
 
 export class TaskPage extends React.Component {
     constructor(props) {
@@ -48,7 +49,8 @@ export class TaskPage extends React.Component {
             showMessage: false,
             showConfirmationCancelTask: false,
             shouldRedirect: false,
-            renderForm: false
+            renderForm: false,
+            nameUsuario: ''
         }
     }
 
@@ -60,18 +62,31 @@ export class TaskPage extends React.Component {
         }else{
             this.validateClientSelected();
         }
+
     }
 
-    componentDidMount() {
-        const {params: {id}, dispatchShowLoading} = this.props;
+    async componentDidMount() {
+        const {params: {id}, dispatchShowLoading, filterUsersBancoDispatch, myPendingsReducer, dispatchFillComments} = this.props;
         dispatchShowLoading(true, "Cargando...");
 
-        Promise.all([this.masterDataFields(), this.getInfoTask(id)]).then(() => {
+        Promise.all([this.masterDataFields(), this.getInfoTask(id)]).then(async () => {
             this.setState({
                 renderForm: true,
                 isMounted: true
             });
             dispatchShowLoading(false, "");
+            let userName = window.localStorage.getItem("userNameFront");
+            const filterUserResponse = await filterUsersBancoDispatch(userName);
+            await this.setState({
+                nameUsuario: _.get(filterUserResponse, 'payload.data.data[0].title')
+            });
+            const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
+            if(taskDetail) {
+                dispatchFillComments(taskDetail.notes);
+                this.setState({
+                    nameUsuario: taskDetail.assignedBy
+                });
+            }
         });
     }
 
@@ -184,9 +199,11 @@ export class TaskPage extends React.Component {
     };
 
     getInfoTask = async (id) => {
-        const {dispatchGetInfoTaskUser} = this.props;
+        const { dispatchGetInfoTaskUser, dispatchFillComments } = this.props;
         if (id) {
-            await dispatchGetInfoTaskUser(id);
+            const response = await dispatchGetInfoTaskUser(id);
+            const taskInfo = _.get(response, 'payload.data.data');
+            dispatchFillComments(taskInfo.notes);
             this.setState({
                 isEditable: true,
                 formValid: true
@@ -228,7 +245,7 @@ export class TaskPage extends React.Component {
         const {isEditable} = this.state;
         const {fromModal} = this.props;
         return (
-            <div className='previsit-container'>
+            <div style={{marginBottom: '5em'}}>
                 {!fromModal &&
                     <ReportsHeader/>
                 }
@@ -248,6 +265,12 @@ export class TaskPage extends React.Component {
                             }
                         </Col>
                     </Row>
+                </div>
+                <div style={{backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px"}}>
+                    <Col style={{padding: "5px 10px 0px 20px"}}>
+                        <strong>Asignador</strong><br/>
+                        <span id="asignator" style={{fontWeight: 'normal'}}> {this.state.nameUsuario}</span>
+                    </Col>
                 </div>
                 {
                     this.state.renderForm ? this.renderForm() : null
@@ -277,6 +300,7 @@ function mapDispatchToProps(dispatch) {
         dispatchCreatePendingTaskNew: createPendingTaskNew,
         dispatchClearUserTask: clearTask,
         dispatchConsultInfoClient: consultInfoClient,
+        filterUsersBancoDispatch: filterUsers,
         dispatchGetCurrentComments: getCurrentComments,
         dispatchFillComments: fillComments
     }, dispatch);
