@@ -84,13 +84,13 @@ export class BankParticipants extends Component {
                                 'idUsuario',
                                 'cargo'
                             ],
-                            onSelect: e => {
+                            onSelect: async e => {
                                 if (limit && this.length() >= limit) {
                                     dispatchSwtShowMessage('error', "Límite de participantes", "Señor usuario, sólo se pueden agregar máximo 10 participantes por parte del banco");
                                     return;
                                 } else {
-                                    this.setState({ selectedRecord: '' });
                                     this.addBankParticipant(e);
+                                    await this.setState({ selectedRecord: '' });
                                     return 'default';
                                 }
                             }

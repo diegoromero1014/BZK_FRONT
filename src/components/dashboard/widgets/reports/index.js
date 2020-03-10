@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import Modal from 'react-modal';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { get } from 'lodash';
 import Carousel from '../../../carousel';
 import ReportCardView from './ReportCardView';
 import pipeline from '../../../../../img/reports/pipeline.png';
@@ -11,8 +13,10 @@ import ModalDownloadVisit from '../../../visit/downloadVisits/component';
 import ModalDownloadBusinessPlan from '../../../businessPlan/downloadBusinessPlan/component';
 import DownloadTask from '../../../pendingTask/downloadTask/component';
 import DownloadPipeline from "./../../../viewManagement/downloadPipeline/component";
-
+import { validatePermissionsByModule } from '../../../../actionsGlobal';
 import { PREVISIT_TITLE, VISIT_TITLE, BUSINESS_PLAN_TITLE, PIPELINE_TITLE, TASK_TITLE } from './constants';
+import { MODULE_MANAGERIAL_VIEW, DOWNLOAD_TASK, DESCARGAR } from '../../../../constantsGlobal';
+import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 
 class Reports extends Component {
     constructor(props) {
@@ -21,104 +25,113 @@ class Reports extends Component {
         this.state = {
             open: false,
             report: {},
-            reports: [
-                {
-                    component: ReportCardView,
-                    componentProps: {
-                        title: PREVISIT_TITLE,
-                        background: previsit,
-                        onClick: () => this.handleOnClick(PREVISIT_TITLE),
-                    },
-                    name: PREVISIT_TITLE,
-                    renderModal: ModalDownloadPreVisit
-                },
-                {
-                    component: ReportCardView,
-                    componentProps: {
-                        title: VISIT_TITLE,
-                        background: visit,
-                        onClick: () => this.handleOnClick(VISIT_TITLE),
-                    },
-                    name: VISIT_TITLE,
-                    renderModal: ModalDownloadVisit
-                },
-                {
-                    component: ReportCardView,
-                    componentProps: {
-                        title: BUSINESS_PLAN_TITLE,
-                        background: task,
-                        onClick: () => this.handleOnClick(BUSINESS_PLAN_TITLE),
-                    },
-                    name: BUSINESS_PLAN_TITLE,
-                    renderModal: ModalDownloadBusinessPlan
-                },
-                {
-                    component: ReportCardView,
-                    componentProps: {
-                        title: PIPELINE_TITLE,
-                        background: pipeline,
-                        onClick: () => this.handleOnClick(PIPELINE_TITLE),
-                    },
-                    name: PIPELINE_TITLE,
-                    renderModal: DownloadPipeline
-                },
-                {
-                    component: ReportCardView,
-                    componentProps: {
-                        title: TASK_TITLE,
-                        background: task,
-                        onClick: () => this.handleOnClick(TASK_TITLE),
-                    },
-                    name: TASK_TITLE,
-                    renderModal: DownloadTask
-                },
-            ]
+            reports: []
         }
     }
 
-    handleOnClick = async name => {
-        const { reports } = this.state;
 
-        await this.setState({
-            open: true,
-            report: reports.find(element => element.name === name)
-        });
+    async componentDidMount() {
+        const isEditable = await this.validatePermissions(DESCARGAR);
+
+        const reports = [
+            {
+                component: ReportCardView,
+                componentProps: {
+                    title: PREVISIT_TITLE,
+                    background: previsit,
+                    renderModal: ModalDownloadPreVisit,
+                    editable: isEditable,
+                },
+                visualize: true,
+            },
+            {
+                component: ReportCardView,
+                componentProps: {
+                    title: VISIT_TITLE,
+                    background: visit,
+                    renderModal: ModalDownloadVisit,
+                    editable: isEditable,
+                },
+                visualize: true,
+            },
+            {
+                component: ReportCardView,
+                componentProps: {
+                    title: BUSINESS_PLAN_TITLE,
+                    background: task,
+                    renderModal: ModalDownloadBusinessPlan,
+                    editable: isEditable,
+                },
+                visualize: true,
+            },
+            {
+                component: ReportCardView,
+                componentProps: {
+                    title: PIPELINE_TITLE,
+                    background: pipeline,
+                    renderModal: DownloadPipeline,
+                    editable: isEditable,
+                },
+                visualize: true,
+            },
+            {
+                component: ReportCardView,
+                componentProps: {
+                    title: TASK_TITLE,
+                    background: task,
+                    renderModal: DownloadTask,
+                    editable: isEditable,
+                },
+                visualize: await this.validatePermissions(DOWNLOAD_TASK),
+            },
+        ]
+
+        await this.setState({ reports });
     }
 
-    handleCloseModal = () => this.setState({ open: false });
+
+    validatePermissions = async permission => {
+        const { dispatchValidate } = this.props;
+
+        let hasPermissions = false;
+
+        await dispatchValidate(MODULE_MANAGERIAL_VIEW).then(data => {
+            const permissionList = get(data, 'payload.data.data.permissions') || [];
+
+            if (permissionList.find(element => element === permission)) {
+                hasPermissions = true;
+            }
+        });
+
+        return hasPermissions;
+    }
 
     render() {
-        const { reports, open, report } = this.state;
+        const { reports } = this.state;
+
+        const elements = reports.filter(r => r.visualize);
 
         return (
             <div>
                 <Carousel
                     dots={true}
                     infinite={true}
-                    data={reports}
-                    slidesToShow={4}
+                    data={elements}
+                    slidesToShow={elements.length - 1}
                 />
-
-                <Modal isOpen={open} onRequestClose={this.handleCloseModal} className="modalBt4-fade modal fade contact-detail-modal in">
-                    <div className="modalBt4-dialog modalBt4-lg">
-                        <div className="modalBt4-content modal-content">
-                            <div className="modalBt4-header modal-header">
-                                <h4 className="modal-title" style={{ float: 'left', marginBottom: '0px' }} id="myModalLabel">{report.name}</h4>
-
-                                <button type="button" onClick={this.handleCloseModal} className="close" data-dismiss="modal" role="close">
-                                    <span className="modal-title" aria-hidden="true" role="close"><i className="remove icon modal-icon-close" role="close"></i></span>
-                                    <span className="sr-only">Close</span>
-                                </button>
-                            </div>
-
-                            <report.renderModal isOpen={this.handleCloseModal} />
-
-                        </div>
-                    </div>
-                </Modal>
             </div>
         );
     }
 }
 
-export default Reports;
+const mapStateToProps = ({ }) => ({
+});
+
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators({
+        dispatchValidate: validatePermissionsByModule,
+        dispatchShowMessage: swtShowMessage
+    }, dispatch)
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Reports);
