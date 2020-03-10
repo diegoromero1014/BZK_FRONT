@@ -1,5 +1,6 @@
 import React from 'react'
-import { avatarColors, numberFromText } from '../../../utils/avatarColors'
+import { avatarColors, numberFromText} from "./functions";
+
 
 export default function CommentsAvatar(props) {
     return (

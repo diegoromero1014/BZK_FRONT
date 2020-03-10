@@ -1,23 +1,4 @@
-import axios from 'axios';
-import {ADD_COMMENT_LIST, CLEAR_COMMENTS, GET_COMMENTS_BY_REPORT_ID, GET_CURRENT_COMMENTS_LIST} from "./constants";
-import {APP_URL} from "../../../constantsGlobal";
-
-export function getCommentsByReportId(reportId, reportType){
-    const json = {
-        messageHeader: {
-            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-        },
-        messageBody: {
-            reportId,
-            reportType
-        }
-    }
-    const request = axios.post(APP_URL + "/getCommentsByTaskId", json);
-    return {
-        type: GET_COMMENTS_BY_REPORT_ID,
-        payload: request
-    };
-}
+import {ADD_COMMENT_LIST, CLEAR_COMMENTS, FILL_COMMENTS, GET_CURRENT_COMMENTS_LIST} from "./constants";
 
 export function addCommentToList(comment){
     return {
@@ -37,5 +18,14 @@ export function clearComments(){
 export function getCurrentComments(){
     return {
         type: GET_CURRENT_COMMENTS_LIST
+    };
+}
+
+export function fillComments(comments){
+    return{
+        type: FILL_COMMENTS,
+        payload: {
+            comments
+        }
     };
 }

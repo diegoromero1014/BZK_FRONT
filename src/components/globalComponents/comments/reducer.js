@@ -1,4 +1,5 @@
-import {ADD_COMMENT_LIST, CLEAR_COMMENTS, GET_COMMENTS_BY_REPORT_ID, GET_CURRENT_COMMENTS_LIST} from "./constants";
+import {ADD_COMMENT_LIST, CLEAR_COMMENTS, FILL_COMMENTS, GET_CURRENT_COMMENTS_LIST} from "./constants";
+import moment from "moment";
 
 const initialState = {
     comments: []
@@ -6,8 +7,6 @@ const initialState = {
 
 export default (state = initialState, {type, payload}) => {
     switch (type) {
-        case GET_COMMENTS_BY_REPORT_ID:
-            return Object.assign({}, state, { comments: payload.data.data });
         case CLEAR_COMMENTS:
             return Object.assign({}, state, { comments: [] });
         case ADD_COMMENT_LIST:
@@ -26,10 +25,20 @@ export default (state = initialState, {type, payload}) => {
         case GET_CURRENT_COMMENTS_LIST:
             return Object.assign({}, state, {
                 comments: state.comments.map(comment => {
-                    comment.id = comment.id.contains('new') ? null : comment.id;
+                    comment.id = comment.id.includes('new') ? null : comment.id;
+                    comment.createdTimestamp = moment(comment.createdTimestamp).valueOf();
+                    if(comment.replies.length){
+                        comment.replies.map(reply => {
+                            reply.id = reply.id.includes('new') ? null : reply.id;
+                            reply.parentCommentId = comment.id;
+                            reply.createdTimestamp = moment(reply.createdTimestamp).valueOf();
+                        });
+                    }
                     return comment;
                 })
             });
+        case FILL_COMMENTS:
+            return Object.assign({}, state, { comments: Object.assign([], payload.comments) });
         default:
             return state;
     }

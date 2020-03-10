@@ -169,7 +169,7 @@ export class CommentsComponent extends Component {
         return (
             <div dangerouslySetInnerHTML={{__html: content}}/>
         )
-    }
+    };
 
     renderComments = (comments) => {
         const { showReplyCommentError } = this.state;
@@ -185,7 +185,7 @@ export class CommentsComponent extends Component {
                     <Comment.Actions>
                         <Comment.Action onClick={() => this.replyCommentAction(id)}>Responder</Comment.Action>
                     </Comment.Actions>
-                    <Form reply style={{ display: this.state.commentBeingReplied === id ? 'block' : 'none', paddingLeft: 60 }}>
+                    <Form reply style={{ display: id && this.state.commentBeingReplied === id ? 'block' : 'none', paddingLeft: 60 }}>
                         <Row>
                             <Col xs={12} md={12} ld={12} className="commentTextArea">
                                 {/*<MentionsInput value={this.state.commentReply} onChange={event => this.handleChange(event, 'reply')} className="mentions">
@@ -204,11 +204,11 @@ export class CommentsComponent extends Component {
                                     max="340"
                                 />
                                 {showReplyCommentError &&
-                                    <div>
-                                        <div className="ui pointing red basic label">
-                                            {showReplyCommentError}
-                                        </div>
+                                <div>
+                                    <div className="ui pointing red basic label">
+                                        {showReplyCommentError}
                                     </div>
+                                </div>
                                 }
                             </Col>
                         </Row>
@@ -220,9 +220,9 @@ export class CommentsComponent extends Component {
                     </Form>
                 </Comment.Content>
                 {replies &&
-                    <Comment.Group threaded>
-                        {this.renderComments(replies)}
-                    </Comment.Group>
+                <Comment.Group threaded>
+                    {this.renderComments(replies)}
+                </Comment.Group>
                 }
             </Comment>
         );
@@ -235,9 +235,9 @@ export class CommentsComponent extends Component {
             <div>
                 <Comment.Group style={{ width: '100%', margin: 0, maxWidth: 'initial' }}>
                     {header &&
-                        <Header as='p' dividing style={{ minHeight: 30 }}>
-                            {header}
-                        </Header>
+                    <Header as='p' dividing style={{ minHeight: 30 }}>
+                        {header}
+                    </Header>
                     }
                     <br></br>
                     {comments && comments.length ? this.renderComments(comments) :
@@ -265,18 +265,18 @@ export class CommentsComponent extends Component {
                                     max="340"
                                 />
                                 {showNewCommentError &&
-                                    <div>
-                                        <div className="ui pointing red basic label">
-                                            {showNewCommentError}
-                                        </div>
+                                <div>
+                                    <div className="ui pointing red basic label">
+                                        {showNewCommentError}
                                     </div>
+                                </div>
                                 }
                             </Col>
                         </Row>
                         <Row style={{ margin: '10px 0 0 0' }}>
                             <Col xs={12} md={12} lg={12}>
                                 <button className="btn btn-primary" style={{ float: 'right' }} onClick={e => this.addComment(e,null, this.state.comment, 'new')}
-                                    disabled={disabled && 'disabled'}>Agregar nota</button>
+                                        disabled={disabled && 'disabled'}>Agregar nota</button>
                             </Col>
                         </Row>
                     </Form>

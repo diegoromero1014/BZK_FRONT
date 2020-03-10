@@ -38,7 +38,7 @@ import {clearTask} from "./actions";
 import _ from 'lodash';
 import {consultInfoClient} from "../clientInformation/actions";
 import CommentsComponent from "../globalComponents/comments/commentsComponent";
-import {getCurrentComments} from "../globalComponents/comments/actions";
+import {fillComments, getCurrentComments} from "../globalComponents/comments/actions";
 
 export class TaskPage extends React.Component {
     constructor(props) {
@@ -101,8 +101,9 @@ export class TaskPage extends React.Component {
     };
 
     submitForm = async (task) => {
-        const {params: {id}, dispatchShowLoading, dispatchCreatePendingTaskNew, dispatchSwtShowMessage, fromModal, closeModal} = this.props;
+        const {params: {id}, dispatchShowLoading, dispatchCreatePendingTaskNew, dispatchSwtShowMessage, dispatchGetCurrentComments, fromModal, closeModal, commentsReducer} = this.props;
         if (moment(task.finalDate, 'DD/MM/YYYY').isValid()) {
+            dispatchGetCurrentComments();
             const taskRequest = {
                 "id": id,
                 "clientId": window.sessionStorage.getItem('idClientSelected'),
@@ -112,6 +113,7 @@ export class TaskPage extends React.Component {
                 "closingDate": task.finalDate !== '' && task.finalDate !== null && task.finalDate !== undefined ? moment(task.finalDate, "DD/MM/YYYY").format('x') : null,
                 "employeeName": task.employeeName,
                 "employeeId": task.responsible !== undefined && task.responsible !== null && task.responsible !== '' ? task.responsible : null,
+                "notes": commentsReducer.comments
             };
             dispatchShowLoading(true, MESSAGE_SAVE_DATA);
             const responseCreateTask = await dispatchCreatePendingTaskNew(taskRequest);
@@ -275,18 +277,20 @@ function mapDispatchToProps(dispatch) {
         dispatchCreatePendingTaskNew: createPendingTaskNew,
         dispatchClearUserTask: clearTask,
         dispatchConsultInfoClient: consultInfoClient,
-        dispatchGetCurrentComments: getCurrentComments
+        dispatchGetCurrentComments: getCurrentComments,
+        dispatchFillComments: fillComments
     }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, usersPermission, tasksByClient, myPendingsReducer}) {
+function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, usersPermission, tasksByClient, myPendingsReducer, commentsReducer}) {
     return {
         clientInformacion,
         reducerGlobal,
         selectsReducer,
         usersPermission,
         tasksByClient,
-        myPendingsReducer
+        myPendingsReducer,
+        commentsReducer
     };
 }
 
