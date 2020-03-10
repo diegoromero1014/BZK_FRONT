@@ -18,7 +18,7 @@ import { PREVISIT_TITLE, VISIT_TITLE, BUSINESS_PLAN_TITLE, PIPELINE_TITLE, TASK_
 import { MODULE_MANAGERIAL_VIEW, DOWNLOAD_TASK, DESCARGAR } from '../../../../constantsGlobal';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 
-class Reports extends Component {
+export class Reports extends Component {
     constructor(props) {
         super(props);
 
@@ -124,9 +124,6 @@ class Reports extends Component {
     }
 }
 
-const mapStateToProps = ({ }) => ({
-});
-
 const mapDispatchToProps = dispatch => {
     return bindActionCreators({
         dispatchValidate: validatePermissionsByModule,
@@ -134,4 +131,4 @@ const mapDispatchToProps = dispatch => {
     }, dispatch)
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Reports);
+export default connect(null, mapDispatchToProps)(Reports);
