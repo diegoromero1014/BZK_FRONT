@@ -23,7 +23,7 @@ export default function TemplateObjectiveAndStrategies({buttons, objetivo, strat
                             <Row>
                                 <Col md={12} sm={12}>
                                     <Row>
-                                        <Col md={6} sm={12} style={{ display: "flex" }}>
+                                        <Col md={6} sm={12}>
                                             <Title
                                                 text="Objetivo"
                                                 isSection={false}
