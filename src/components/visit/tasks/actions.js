@@ -1,6 +1,4 @@
 import * as constants from './constants';
-import axios from 'axios';
-import { APP_URL } from '../../../constantsGlobal';
 
 export function deleteTask(index){
   return {
