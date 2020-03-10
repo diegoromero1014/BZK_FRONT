@@ -123,7 +123,7 @@ export class ModalComponentTeam extends Component {
         filterUsersBancoDispatch(window.localStorage.getItem('userNameFront')).then((data) => {
             let users = _.get(data, 'payload.data.data');
             this.user = users.find(usr => usr.description.toLowerCase() === window.localStorage.getItem('userNameFront').toLowerCase());
-            const seniorBanker = this.state.teamManagers.find(seniorBanker =>  seniorBanker.id ===  this.user.idUsuario);
+            const seniorBanker = this.state.teamManagers.find(seniorBankerTeam =>  seniorBankerTeam.id ===  this.user.idUsuario);
             if(SENIOR_BANKER_BACK_UP !== seniorBanker.position){
                 if (null === infoClient.seniorBankerId) {
                     this.setState({
