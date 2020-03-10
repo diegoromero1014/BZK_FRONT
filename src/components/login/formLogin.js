@@ -131,7 +131,7 @@ class FormLogin extends Component {
 
             dispatchStopObservablesLeftTimer();
             //Limpiar variables de sesion (idClientSelected)
-            clearSessionUserName();+
+            clearSessionUserName();
             //Esto no hace nada
             dispatchClearStateLogin();
         } else {
