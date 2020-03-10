@@ -7,6 +7,7 @@ import BellAlert from '../alerts/bellClientAlertComponent';
 import { redirectUrl } from '../globalComponents/actions';
 import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
 import MenuListFatherComponent from '../menu/menuListFatherComponent';
+import {getUsername} from '../dashboard/actions';
 
 
 const menuItemLogOut = [
@@ -54,7 +55,7 @@ class NavBarComponent extends Component {
         const viewAlertClient = navBar.get('viewAlertClient');
         const confidential = navBar.get('confidential');
         const btnLogoutStyle = {width: '100%' };
-        const userNameLogged = _.toLower(window.localStorage.getItem('userNameFront'));
+        const userNameLogged =  getUsername().toLowerCase();
 
         return (
             <div className="header-quick-nav" style={{ padding: 0,  height: "60px", width: "100%", display: "flex", justifyContent: "space-between"}}>
