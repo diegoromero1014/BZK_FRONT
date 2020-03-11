@@ -33,7 +33,7 @@ const itemManagerialView = {
 
 const itemDashboard = {
     text: "Dashboard",
-    icon: "bar chart",
+    icon: "computer",
     link: "/dashboard/dashboard"
 };
 
@@ -103,8 +103,6 @@ class MenuComponent extends Component {
 
         let menuItems = [];
 
-        menuItems.push(itemDashboard);
-
         itemMyPendings.children = [];
         itemMyPendings.children.push(childrenMyPendingsMyTaks);
         itemMyPendings.children.push(childrenMyPendingsMyDraftDocuments);
@@ -116,6 +114,7 @@ class MenuComponent extends Component {
         itemContacts.children.push(childrenContactsGroupFavorito);
 
         if (_.get(permissions, MODULE_MANAGERIAL_VIEW)) {
+            menuItems.push(itemDashboard);
             menuItems.push(itemManagerialView);
         }
         if (_.get(permissions, MODULE_CLIENTS)) {
