@@ -1,10 +1,10 @@
 import React from 'react';
-import { Dashboard } from '../../../../src/components/dashboard';
+import { ManagementView } from '../../../../src/components/managementView';
 
 let defaultProps;
 let dispatchUpdateTitleNavBar;
 
-describe('Dashboard Test', () => {
+describe('ManagementView Test', () => {
     beforeEach(() => {
         dispatchUpdateTitleNavBar = sinon.fake();
         defaultProps = {
@@ -13,6 +13,6 @@ describe('Dashboard Test', () => {
     })
 
     it('Should render component', () => {
-        itRenders(<Dashboard {...defaultProps}/>);
+        itRenders(<ManagementView {...defaultProps}/>);
     })
 })

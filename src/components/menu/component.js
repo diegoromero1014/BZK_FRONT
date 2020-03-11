@@ -26,15 +26,15 @@ import ImageBrand from '../../../img/svg/logo_bancolombia_blanco_biztrack.svg';
 import _ from "lodash";
 
 const itemManagerialView = {
-    text: "Vista gerencial",
+    text: "Vista gerencial X",
     icon: "bar chart",
     link: "/dashboard/viewManagement"
 };
 
 const itemDashboard = {
-    text: "Dashboard",
+    text: "Vista gerencial",
     icon: "computer",
-    link: "/dashboard/dashboard"
+    link: "/dashboard/managementView"
 };
 
 const itemClients = {

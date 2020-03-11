@@ -3,26 +3,28 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 
+import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
 import Reports from './widgets/reports';
 import Header from './header';
 
 import { updateTitleNavBar } from '../navBar/actions';
 
-import { MESSAGE_CONFIDENTIAL } from './constants';
-
-export class Dashboard extends Component {
+export class ManagementView extends Component {
 
   componentWillMount() {
-    const { dispatchUpdateTitleNavBar } = this.props;
-    dispatchUpdateTitleNavBar("Dashboard");
+
+    if (window.localStorage.getItem('sessionTokenFront') === "") {
+      redirectUrl("/login");
+    } else {
+      const { dispatchUpdateTitleNavBar } = this.props;
+      dispatchUpdateTitleNavBar("Vista gerencial");
+    }
   }
 
   render() {
     return (
         <div className="ui segment" style={{ paddingLeft: 50, paddingRigth: 50, height: '100%' }}>  
-            <div style={{ color: "#7f7f7f" }}>
-                <span style={{ fontStyle: "italic" }}>{MESSAGE_CONFIDENTIAL}</span>
-            </div>
+            <SecurityMessageComponent />
             <Header />
             <Row>
                 <Col md={12} style={{ marginTop: 50 }}>
@@ -40,4 +42,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(Dashboard);
+export default connect(null, mapDispatchToProps)(ManagementView);

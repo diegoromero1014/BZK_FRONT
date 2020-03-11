@@ -7,12 +7,12 @@ import moment from 'moment';
 
 import { getCsvVisitsByClient } from '../actions';
 import { changeStateSaveData } from '../../main/actions';
-import { getCsv } from '../../viewManagement/actions';
+import { getCsv } from '../../managementView/actions';
 
 import { APP_URL, MESSAGE_DOWNLOAD_DATA } from '../../../constantsGlobal';
 import { TAB_VISIT } from '../constants';
 import SelectYearComponent from '../../selectsComponent/selectFilterYear/selectYearComponent';
-import { TYPE_YEAR } from '../../viewManagement/constants';
+import { TYPE_YEAR } from '../../managementView/constants';
 
 class DownloadVisits extends Component {
 
