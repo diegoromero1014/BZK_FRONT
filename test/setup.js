@@ -84,3 +84,5 @@ global.itRendersChildComponent = (parent, child, num = 1) => {
 require.extensions['.scss'] = function() {
     return null;
 };
+
+sinon.stub(window.sessionStorage, 'getItem').returns("Any Name");
