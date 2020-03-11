@@ -128,9 +128,7 @@ export class FormLogin extends Component {
         const validToken = mainReducer.get("validToken");
 
         clearCache();
-        dispatchShowLoading(false, null);        
-
-        console.log(token);
+        dispatchShowLoading(false, null);    
         
         if (token == null || token === '' || !validToken) {
 

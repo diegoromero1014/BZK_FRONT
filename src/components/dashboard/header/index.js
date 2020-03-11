@@ -11,9 +11,9 @@ export default function Header() {
                     Bienvenido(a) <span style={{ textTransform: 'capitalize' }}>{getUsername().toLowerCase().split(' ')[0]}</span>
                 </div>
             </Col>
-            {/* <Col mdOffset={8} md={1} >
+            <Col mdOffset={8} md={1} style={{ display: 'none'}}>
                 <img src={'../../../img/icon/settings.png'} alt={'title'} style={{ fontSize: 40, marginLeft: '50px', marginTop: 30, cursor: 'pointer' }} />
-            </Col> */}
+            </Col>
         </Row>
     );
 }
