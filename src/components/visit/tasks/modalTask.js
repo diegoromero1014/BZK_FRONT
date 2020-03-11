@@ -22,7 +22,7 @@ import { fields, validations as validate } from './rulesAndFieldsTaskVisit';
 var usersBanco = [];
 var idUsuario, nameUsuario;
 
-class ModalTask extends Component {
+export class ModalTask extends Component {
 
     constructor(props) {
         super(props);
@@ -119,9 +119,10 @@ class ModalTask extends Component {
             nameUsuario = responsable.value;
             idUsuario = null;
         }
-
             if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
                 if (taskEdit !== undefined) {
+
+                    console.log("tarea",tarea.value);
                     taskEdit.tarea = tarea.value;
                     taskEdit.textTarea = htmlToText(tarea.value);
                     taskEdit.idResponsable = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
