@@ -38,7 +38,7 @@ export default (state = initialState, {type, payload}) => {
                 })
             });
         case FILL_COMMENTS:
-            return Object.assign({}, state, { comments: Object.assign([], payload.comments) });
+            return {comments: payload.comments};
         default:
             return state;
     }

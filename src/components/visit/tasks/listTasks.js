@@ -44,7 +44,7 @@ class ListTasks extends Component {
 
     if (tasks.size > 0) {
       var data = _.chain(tasks.toArray()).map(task => {
-        const { uuid, responsable, fechaForm, fecha, tarea, textTarea, idResponsable, id } = task;
+        const { uuid, responsable, fechaForm, fecha, tarea, textTarea, idResponsable, id, notes } = task;
         var descripcionTarea = textTarea.length > 120 ? textTarea.substring(0, 120) + "..." : textTarea;
         var fechaDateMoment = moment(fecha, "DD/MM/YYYY").locale('es');
         var fechaDateMomentString = fechaDateMoment.format("DD") + " " + fechaDateMoment.format("MMM") + " " + fechaDateMoment.format("YYYY");
@@ -55,14 +55,15 @@ class ListTasks extends Component {
             urlServer: "./component",
             component: "VIEW_TASK"
           },
-          uuid: uuid,
-          id: id,
-          idResponsable: idResponsable,
-          responsable: responsable,
+          uuid,
+          id,
+          idResponsable,
+          responsable,
           fechaForm: fechaForm,
           fecha: fechaDateMomentString,
-          tarea: tarea,
-          descripcionTarea: descripcionTarea,
+          tarea,
+          descripcionTarea,
+          notes,
           'delete': {
             typeDelete: DELETE_TASK_VIEW,
             id: uuid,

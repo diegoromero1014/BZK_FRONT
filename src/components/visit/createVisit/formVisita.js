@@ -246,8 +246,9 @@ class FormVisita extends Component {
               "employee": task.idResponsable,
               "employeeName": task.responsable,
               "closingDate": moment(task.fecha, "DD/MM/YYYY").format('x'),
-              "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
-            }
+              "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick),
+              "notes": task.notes
+            };
             tareas.push(data);
           }
         );
