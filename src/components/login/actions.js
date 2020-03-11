@@ -78,7 +78,7 @@ export function getUserDataFrontOfficeEmployee(username) {
         messageHeader: {
             "sessionToken": window.localStorage.getItem('sessionTokenFront')
         },
-        messageBody: username
+        messageBody: null
     };
     
     return { 

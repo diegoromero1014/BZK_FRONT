@@ -27,7 +27,7 @@ import { MESSAGE_SERVER_ERROR, REQUEST_SUCCESS } from '../../constantsGlobal';
 import { changeTokenStatus } from '../main/actions';
 
 
-class FormLogin extends Component {
+export class FormLogin extends Component {
     constructor(props) {
         super(props);
 
@@ -129,6 +129,8 @@ class FormLogin extends Component {
 
         clearCache();
         dispatchShowLoading(false, null);        
+
+        console.log(token);
         
         if (token == null || token === '' || !validToken) {
 

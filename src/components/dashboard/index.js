@@ -11,12 +11,6 @@ import { updateTitleNavBar } from '../navBar/actions';
 import { MESSAGE_CONFIDENTIAL } from './constants';
 
 export class Dashboard extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-    }
-  }
 
   componentWillMount() {
     const { dispatchUpdateTitleNavBar } = this.props;
@@ -46,10 +40,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({ }, ownerProps) {
-  return {
-
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default connect(null, mapDispatchToProps)(Dashboard);
