@@ -47,7 +47,7 @@ class MenuListFatherComponent extends Component {
         const { iconClassName, labelText, linkUrlFather, style, children, labelTextFather, menu} = this.props;
         const activeItem = _.isEqual(menu.get('activeItem'), labelText) ? 'active' : '';
         const iconAndText = (
-            <span>
+            <span style={{fontSize: "15px"}}>
                 <Icon name={iconClassName} /> {labelText}
             </span>
         );
@@ -56,7 +56,7 @@ class MenuListFatherComponent extends Component {
                 <Dropdown.Menu style={{zIndex: '10000'}}>
                     {!_.isUndefined(linkUrlFather) &&
                         <Dropdown.Item key={_.uniqueId("MenuListFatherComponent_")} onClick={this._handleClickMenuItemChildren.bind(this, linkUrlFather)} >
-                            {labelTextFather}
+                            <span style={{textTransform : "capitalize"}}>{labelTextFather}</span>
                         </Dropdown.Item>
                     }
                     {children.map(this._mapMenuItemsChildren.bind(this))}
@@ -85,3 +85,4 @@ function mapStateToProps({ menu}, ownerProps) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuListFatherComponent);
+
