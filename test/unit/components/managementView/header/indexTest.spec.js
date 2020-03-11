@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../../../../../src/components/dashboard/header';
+import Header from '../../../../../src/components/managementView/header';
 
 describe('Header Test', () => {
 

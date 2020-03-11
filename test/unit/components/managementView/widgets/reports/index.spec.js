@@ -1,5 +1,5 @@
-import ReportsRedux from "../../../../../../src/components/dashboard/widgets/reports";
-import { Reports } from "../../../../../../src/components/dashboard/widgets/reports";
+import ReportsRedux from "../../../../../../src/components/managementView/widgets/reports";
+import { Reports } from "../../../../../../src/components/managementView/widgets/reports";
 import thunk from "redux-thunk";
 import configureStore from 'redux-mock-store';
 

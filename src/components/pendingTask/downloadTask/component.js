@@ -14,7 +14,7 @@ import { changeStateSaveData } from '../../main/actions';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 
 import { MESSAGE_ERROR, MESSAGE_DOWNLOAD_DATA, DATE_FORMAT, DATETIME_FORMAT, APP_URL } from '../../../constantsGlobal';
-import { TAB_TASKS } from '../../viewManagement/constants';
+import { TAB_TASKS } from '../../managementView/constants';
 import { TASK_STATUS } from '../../selectsComponent/constants';
 
 

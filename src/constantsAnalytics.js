@@ -22,7 +22,7 @@ export const _TASK = "TASK";
 
 export const LOGINCOMPONENT ="LOGINCOMPONENT";
 export const MAINCOMPONENT ="MAINCOMPONENT";
-export const DASHBOARD ="DASHBOARD";
+export const MANAGEMENTVIEW ="MANAGEMENTVIEW";
 export const VIEWMANAGEMENT ="VIEWMANAGEMENT";
 export const VIEWALERT ="VIEWALERT";
 export const SHAREHOLDERCOMPONENT ="SHAREHOLDERCOMPONENT";
@@ -61,7 +61,7 @@ export const DEFAULT="";
 
 export const LoginComponentURL ="/login";
 export const MainComponentURL ="/dashboard";
-export const DashboardURL ="/dashboard/dashboard";
+export const ManagementViewURL ="/dashboard/managementView";
 export const ViewManagementURL ="/dashboard/viewManagement";
 export const ShareholderComponentURL ="/dashboard/shareholder";
 export const ComponentClientInformationURL ="/dashboard/clientInformation";

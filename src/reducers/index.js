@@ -29,7 +29,7 @@ import areaReducer from '../components/businessPlan/area/reducer';
 import tasksByClientReducer from '../components/pendingTask/reducer';
 import tabReducer from '../components/clientDetailsInfo/reducer';
 import taskReducerCreate from '../components/pendingTask/createPendingTask/reducer';
-import viewManagementReducer from '../components/viewManagement/reducer';
+import viewManagementReducer from '../components/managementView/reducer';
 import teamParticipantsReducer from '../components/clientTeam/reducer';
 import businessPlanReducer from '../components/businessPlan/reducer';
 import clientEconomicGroupReducer from '../components/clientEconomicGroup/reducer';
