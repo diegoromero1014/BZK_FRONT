@@ -21,7 +21,19 @@ const validateExpiredPortfolio = () => {
     return new Promise((resolve) => resolve(dataPromise))
 };           
 const reducerGlobal = Immutable.Map({ permissionsClients: { 'Grupo de Riesgo' : ''} });
-const defaultProps = { tabReducer: {}, clientInformacion, reducerGlobal, validateExpiredPortfolio }
+const defaultProps = { 
+    tabReducer: Immutable.Map({ tabSelected: null }), 
+    clientInformacion, 
+    reducerGlobal, 
+    validateExpiredPortfolio ,
+    resetAccordion: sinon.fake(),
+    updateTitleNavBar: sinon.fake(),
+    showLoading: sinon.fake(),
+    validatePermissionsByModule: sinon.stub().resolves({}),
+    consultInfoClient: sinon.stub().resolves({}),
+    viewAlertClient: sinon.fake(),
+    updateTabSeletedCS: sinon.fake(),
+}
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
