@@ -1,56 +1,32 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {tasksByClientFindServer,changePage, limitiInf,clearUserTask,clearUserTaskOrder} from './actions';
 import {NUMBER_RECORDS} from './constants';
-
-let v1 ="" ;
 class PaginationPendingTaskComponent extends Component {
 
   constructor(props) {
      super(props);
-     this._handleTaskByClientsFind = this._handleTaskByClientsFind.bind(this);
   }
 
-
-  componentWillMount(){
-    const{clearUserTask} = this.props;
+  componentDidMount(){
+    const { clearUserTask } = this.props;
     clearUserTask();
   }
 
-  componentWillReceiveProps(nextProps){
-    const {
-        value1
-    } = nextProps;
-    if ((v1 !== nextProps.value1)){
-      v1 = nextProps.value1;
-      const {clearUserTaskOrder} = this.props;
-      clearUserTaskOrder();
-      this._handleTaskByClientsFind(0);
-    }
+  _handlePaginar = page => {
+    const { handlePaginar} = this.props;
+    handlePaginar(page);
   }
 
-  _handlePaginar(page) {
-    const {changePage, limitiInf, tasksByClient} = this.props;
-    var limInf = (page - 1);
-    limitiInf(limInf);
-    this._handleTaskByClientsFind(limInf);
-    changePage(page);
-  }
-
-  _handleTaskByClientsFind(limInf) {
-      const {tasksByClient, tasksByClientFindServer} = this.props;
-      tasksByClientFindServer(limInf, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, tasksByClient.get('columnTask'), tasksByClient.get('orderTask'), v1);
+  _handleTaskByClientsFind = limInf => {
+      const { handleTaskByClientsFind } = this.props;
+      handleTaskByClientsFind(limInf);
   }
 
   render() {
-    const {tasksByClient, config} = this.props;
-    var page = tasksByClient.get('page');
+    const { page, rowCount } = this.props;
     var firstPage = 1;
     if(page > 7) {
       firstPage = page - 6;
     }
-    var rowCount = tasksByClient.get('rowCount');
     var lastPage = Math.ceil(rowCount / NUMBER_RECORDS);
     return (
       <div>
@@ -93,16 +69,5 @@ class PaginationPendingTaskComponent extends Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    tasksByClientFindServer, changePage, limitiInf,clearUserTask,clearUserTaskOrder
-  }, dispatch);
-}
 
-function mapStateToProps({tasksByClient}, ownerProps) {
-  return {
-    tasksByClient
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PaginationPendingTaskComponent);
+export default PaginationPendingTaskComponent;

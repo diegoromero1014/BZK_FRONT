@@ -38,11 +38,11 @@ class TabComponent extends Component {
               active={tabActive === name}
             >
               <div className="tabTextItem">{name}</div>
-              {number && (
+              {number && number > 0 ? (
                 <Label circular color="red">
                   {number}
                 </Label>
-              )}
+              ):""}
             </Menu.Item>
           ))}
         </Menu>
@@ -57,7 +57,7 @@ class TabComponent extends Component {
     return tabs.filter(({ name }) => name === tabActive).map(({ content }) => <Segment>{content}</Segment>);
   };
   render() {
-    return <div>{this.getMenu(this.state.tabActive)}</div>;
+    return <div>{this.getMenu(this.state.tabActive)}</div>
   }
 }
 
@@ -68,6 +68,7 @@ TabComponent.propTypes = {
       content: PropTypes.element.isRequired,
       callback: PropTypes.func,
       number: PropTypes.number,
+      disable: PropTypes.bool,
     })
   )
 };
