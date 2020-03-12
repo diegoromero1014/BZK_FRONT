@@ -42,7 +42,7 @@ export class MainComponent extends Component {
   }
 
   startBlocking = () => {
-    const { dispatchConsultParameterServer } = this.props;
+    const { dispatchConsultParameterServer, dispatchRedirectUrl } = this.props;
 
     dispatchConsultParameterServer(RANGO_PASO_PRODUCCION).then(resolve => {
       if (resolve && resolve.payload && resolve.payload.data) {
@@ -53,7 +53,7 @@ export class MainComponent extends Component {
             showMessageNotification: false
           });
 
-          redirectUrl('/pageUnderConstruction');
+          dispatchRedirectUrl('/pageUnderConstruction');
         }
       }
     });
@@ -76,14 +76,14 @@ export class MainComponent extends Component {
   }
 
   componentWillMount() {
-    const { dispatchNotifiedProductionUpgrade, dispatchValidateUpgrateProductionActive } = this.props;
+    const { dispatchNotifiedProductionUpgrade, dispatchValidateUpgrateProductionActive, dispatchRedirectUrl } = this.props;
 
     let token = window.localStorage.getItem('sessionTokenFront');
 
     if (token == null || token === "" || document.cookie.indexOf('estadoconexion=') == -1) {
       window.localStorage.setItem('sessionTokenFront', '');
       document.cookie = 'estadoconexion=activa;path=/';
-      redirectUrl("/login");
+      dispatchRedirectUrl("/login");
     } else {
       const { dispatchLoadObservablesLeftTimer, mainReducer } = this.props;
 
@@ -113,12 +113,12 @@ export class MainComponent extends Component {
 
   componentDidUpdate() {
 
-    const { mainReducer } = this.props;
+    const { mainReducer, dispatchRedirectUrl } = this.props;
 
     const validToken = mainReducer.get("validToken");
 
     if(!validToken) {
-      redirectUrl('/login');
+      dispatchRedirectUrl('/login');
     }
 
   }
@@ -159,16 +159,17 @@ export class MainComponent extends Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     dispatchLoadObservablesLeftTimer: loadObservablesLeftTimer,
     dispatchNotifiedProductionUpgrade: notifiedProductionUpgrade,
     dispatchValidateUpgrateProductionActive: validateUpgrateProductionActive,
-    dispatchConsultParameterServer: consultParameterServer
+    dispatchConsultParameterServer: consultParameterServer,
+    dispatchRedirectUrl: redirectUrl
   }, dispatch);
 }
 
-function mapStateToProps({ login, mainReducer }, ownerProps) {
+const mapStateToProps = ({ login, mainReducer }) => {
   return {
     login,
     mainReducer

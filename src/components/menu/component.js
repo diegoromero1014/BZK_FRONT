@@ -19,7 +19,6 @@ import {
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { consultModulesAccess } from "../navBar/actions";
-import { showLoading } from "../loading/actions";
 import { initialMenuPermissions } from "../menu/actions";
 import { Header, Image } from "semantic-ui-react";
 import ImageBrand from '../../../img/svg/logo_bancolombia_blanco_biztrack.svg';
@@ -90,14 +89,14 @@ const childrenAlertPortExpiration = {
 const childrenAlertCovenants = { text: "Covenants", link: "/dashboard/alertCovenants" };
 const childrenAlertBlackList = { text: "Listas de control", link: "/dashboard/alertBlackList" };
 
-class MenuComponent extends Component {
+export class MenuComponent extends Component {
     constructor(props) {
         super(props);
         this.getMenuListPermission = this.getMenuListPermission.bind(this);
     }
 
-    getMenuListPermission() {
-        const { initialMenuPermissions, navBar } = this.props;
+    getMenuListPermission = () => {
+        const { dispatchInitialMenuPermissions, navBar } = this.props;
 
         const permissions = navBar.get("mapModulesAccess");
 
@@ -147,15 +146,15 @@ class MenuComponent extends Component {
             itemMyPendings.children.push(childrenMyPendingsAEC);
         }
         menuItems.push(itemMyPendings);
-        initialMenuPermissions(menuItems);
+        dispatchInitialMenuPermissions(menuItems);
     }
 
     componentWillMount() {
-        const { consultModulesAccess, showLoading, navBar } = this.props;
+        const { dispatchConsultModulesAccess } = this.props;
         if (window.localStorage.getItem('sessionTokenFront') === "") {
             return;
         }
-        consultModulesAccess().then((data) => {
+        dispatchConsultModulesAccess().then((data) => {
             const permissions = _.get(data, 'payload.data.data');
             this.getMenuListPermission(permissions);
         });
@@ -174,15 +173,14 @@ class MenuComponent extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
-        consultModulesAccess,
-        showLoading,
-        initialMenuPermissions
+        dispatchConsultModulesAccess: consultModulesAccess,
+        dispatchInitialMenuPermissions: initialMenuPermissions
     }, dispatch);
 }
 
-function mapStateToProps({ menu, navBar }, ownerProps) {
+const mapStateToProps = ({ menu, navBar }) => {
     return { menu, navBar };
 }
 
