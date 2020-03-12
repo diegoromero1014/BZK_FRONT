@@ -1,6 +1,7 @@
 import React from 'react';
 import TaskFormComponentFormik, { TaskFormComponent } from "../../../../src/components/pendingTask/taskFormComponent";
 import {Field} from "formik";
+import {CommentsComponent} from "../../../../src/components/globalComponents/comments/commentsComponent";
 
 let defaultProps;
 let onSubmit;
@@ -149,11 +150,5 @@ describe('Test TaskFormComponent', () => {
             const wrapper = shallow(<TaskFormComponent {...defaultProps}/>);
             expect(wrapper.find(Field).find({ name: 'task' })).to.have.lengthOf(1);
         });
-
-        it('should render advance field', () => {
-            const wrapper = shallow(<TaskFormComponent {...defaultProps}/>);
-            expect(wrapper.find(Field).find({ name: 'advance' })).to.have.lengthOf(1);
-        });
-
     });
 });

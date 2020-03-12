@@ -51,6 +51,9 @@ let dispatchSwtShowMessage;
 let dispatchGetInfoTaskUser;
 let dispatchCreatePendingTaskNew;
 let dispatchClearUserTask;
+let dispatchFillComments;
+let dispatchGetCurrentComments;
+let dispatchConsultInfoClient;
 let filterUsersBancoDispatch;
 let selectsReducer;
 let setFieldValue;
@@ -68,6 +71,16 @@ describe('Test taskPage', () => {
         dispatchGetMasterDataFields = sinon.stub();
         dispatchSwtShowMessage = spy(sinon.fake());
         dispatchGetInfoTaskUser = sinon.stub();
+        dispatchGetInfoTaskUser.resolves({
+           payload:{
+               data:{
+                   data:{
+                       id: 1234,
+                       notes: []
+                   }
+               }
+           }
+        });
         dispatchClearUserTask = sinon.stub();
         dispatchCreatePendingTaskNew = sinon.stub();
         filterUsersBancoDispatch = sinon.stub();
@@ -79,6 +92,10 @@ describe('Test taskPage', () => {
                 }
             }
         });
+        dispatchFillComments = sinon.fake();
+        dispatchGetCurrentComments = sinon.fake();
+        dispatchConsultInfoClient = sinon.stub();
+        dispatchConsultInfoClient.resolves({});
         selectsReducer = Immutable.Map({taskStates: taskStates});
         dispatchGetMasterDataFields.resolves({
             masterDataDetailEntries: taskStates
@@ -94,11 +111,22 @@ describe('Test taskPage', () => {
                     clientDetailsRequest: {opportunities: []}
                 }
             }),
-            myPendingsReducer: Immutable.Map({}),
+            myPendingsReducer: Immutable.Map({
+                task:{
+                    data: {
+                        id: 53453,
+                        notes: [],
+                        assignedBy: 'Daniel Gallego'
+                    }
+                }
+            }),
             reducerGlobal: Immutable.Map({
                 validateEnter,
                 permissionsTasks: [EDITAR]
             }),
+            commentsReducer: {
+                comments: []
+            },
             selectsReducer,
             dispatchShowLoading,
             dispatchGetMasterDataFields,
@@ -107,6 +135,9 @@ describe('Test taskPage', () => {
             dispatchClearUserTask,
             dispatchGetInfoTaskUser,
             filterUsersBancoDispatch,
+            dispatchFillComments,
+            dispatchGetCurrentComments,
+            dispatchConsultInfoClient,
             fromModal: false,
             closeModal,
         };
@@ -222,6 +253,12 @@ describe('Test taskPage', () => {
             const wrapper = shallow(<TaskPage {...defaultProps}/>);
             const result = wrapper.instance().renderMessageSubmitAlertError();
             expect(result).to.equal(MESSAGE_TASK_CREATE_ERROR);
+        });
+
+        it('should call dispatchConsultInfoClient when idClient is not null in componentWillMount', () => {
+            defaultProps.idClient = 123132;
+            itRenders(<TaskPage {...defaultProps}/>);
+            expect(dispatchConsultInfoClient.called).to.equal(true);
         });
     });
 

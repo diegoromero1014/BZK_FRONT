@@ -77,14 +77,15 @@ export class TaskPage extends React.Component {
             dispatchShowLoading(false, "");
             let userName = window.localStorage.getItem("userNameFront");
             const filterUserResponse = await filterUsersBancoDispatch(userName);
-            await this.setState({
-                nameUsuario: _.get(filterUserResponse, 'payload.data.data[0].title')
-            });
             const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
             if(taskDetail) {
                 dispatchFillComments(taskDetail.notes);
                 this.setState({
                     nameUsuario: taskDetail.assignedBy
+                });
+            }else{
+                await this.setState({
+                    nameUsuario: _.get(filterUserResponse, 'payload.data.data[0].title')
                 });
             }
         });

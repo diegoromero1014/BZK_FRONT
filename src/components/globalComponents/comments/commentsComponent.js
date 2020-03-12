@@ -9,12 +9,12 @@ import {Mention, MentionsInput} from 'react-mentions';
 import {bindActionCreators} from "redux";
 import {filterUsersBanco} from "../../participantsVisitPre/actions";
 import {Subject} from "rxjs";
-import {addCommentToList, clearComments, getCommentsByReportId} from "./actions";
+import {addCommentToList, clearComments } from "./actions";
 import _ from "lodash";
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import {getUsernameInitials} from "../../../functions";
 import TextArea from "../../../ui/textarea/textareaComponent";
-import {ERROR_COMMENT_LENGTH} from "./constants";
+import {ERROR_COMMENT_LENGTH, NO_NOTES_MESSAGE} from "./constants";
 import {
     patternOfForbiddenCharacter2,
     patternOfTaskObservation
@@ -121,7 +121,7 @@ export class CommentsComponent extends Component {
                 this.showContentError(content, source, MESSAGE_ERROR_INJECTION_HTML);
                 return false;
             }else{
-                this.showContentError(content, source);
+                this.showContentError(content, source, null);
                 return true;
             }
         }
@@ -135,7 +135,7 @@ export class CommentsComponent extends Component {
     };
 
     addComment = async (e, parentCommentId, content, source) => {
-        const { reportId, comments, dispatchAddCommentList } = this.props;
+        const { reportId, commentsReducer: { comments }, dispatchAddCommentList } = this.props;
         const author = window.localStorage.getItem('name');
         const initials = getUsernameInitials(author);
         const parentComment = this.searchComment(comments, parentCommentId);
@@ -185,7 +185,7 @@ export class CommentsComponent extends Component {
                     <Comment.Text className="commentText">{this.renderCommentContent(content)}</Comment.Text>
                     {!disabled &&
                         <Comment.Actions>
-                            <Comment.Action onClick={() => this.replyCommentAction(id)}>Responder</Comment.Action>
+                            <Comment.Action key={`reply${id}`} onClick={() => this.replyCommentAction(id)}>Responder</Comment.Action>
                         </Comment.Actions>
                     }
                     <Form reply style={{ display: id && this.state.commentBeingReplied === id ? 'block' : 'none', paddingLeft: 60 }}>
@@ -217,7 +217,7 @@ export class CommentsComponent extends Component {
                         </Row>
                         <Row style={{ marginTop: 10 }}>
                             <Col xs={12} md={12} ld={12}>
-                                <button className="btn btn-primary" style={{ float: 'right' }} onClick={e => this.addComment(e, id, this.state.commentReply, 'reply')}>Responder</button>
+                                <button id="replyCommentButton" className="btn btn-primary" style={{ float: 'right' }} onClick={e => this.addComment(e, id, this.state.commentReply, 'reply')}>Responder</button>
                             </Col>
                         </Row>
                     </Form>
@@ -232,7 +232,7 @@ export class CommentsComponent extends Component {
     };
 
     render() {
-        const { header, comments, disabled } = this.props;
+        const { header, commentsReducer: { comments }, disabled } = this.props;
         const { showNewCommentError } = this.state;
         return (
             <div>
@@ -246,7 +246,7 @@ export class CommentsComponent extends Component {
                     {comments && comments.length ? this.renderComments(comments) :
                         <p style={{fontStyle: 'italic',
                             textAlign: 'center',
-                            fontWeight: 600}}>Sin notas asociadas</p>
+                            fontWeight: 600}}>{NO_NOTES_MESSAGE}</p>
                     }
                     <Form reply>
                         <Row>
@@ -278,7 +278,7 @@ export class CommentsComponent extends Component {
                         </Row>
                         <Row style={{ margin: '10px 0 0 0' }}>
                             <Col xs={12} md={12} lg={12}>
-                                <button className="btn btn-primary" style={{ float: 'right' }} onClick={e => this.addComment(e,null, this.state.comment, 'new')}
+                                <button id="addCommentButton" className="btn btn-primary" style={{ float: 'right' }} onClick={e => this.addComment(e,null, this.state.comment, 'new')}
                                         disabled={disabled && 'disabled'}>Agregar nota</button>
                             </Col>
                         </Row>
@@ -292,17 +292,15 @@ export class CommentsComponent extends Component {
 function mapDispatchToProps(dispatch){
     return bindActionCreators({
         dispatchFilterUsers: filterUsersBanco,
-        /*Funciones para pasar al TaskPage*/
         dispatchAddCommentList: addCommentToList,
-        dispatchGetCommentsByreportId: getCommentsByReportId,
         dispatchClearComments: clearComments,
         dispatchSwtShowMessage: swtShowMessage
     }, dispatch);
 }
 
-function mapStateToProps({ commentsReducer: { comments } }) {
+function mapStateToProps({ commentsReducer }) {
     return {
-        comments
+        commentsReducer
     };
 }
 

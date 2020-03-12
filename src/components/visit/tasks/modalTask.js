@@ -24,7 +24,7 @@ import {fillComments, getCurrentComments} from "../../globalComponents/comments/
 var usersBanco = [];
 var idUsuario, nameUsuario;
 
-class ModalTask extends Component {
+export class ModalTask extends Component {
 
     constructor(props) {
         super(props);

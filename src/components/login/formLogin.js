@@ -22,7 +22,7 @@ import ReCaptcha from '../recaptcha/ReCaptcha';
 import {clearCache} from '../../utils/catchRequest';
 import { changeTokenStatus } from '../dashboard/actions';
 
-class FormLogin extends Component {
+export class FormLogin extends Component {
     constructor(props) {
         super(props);
 
