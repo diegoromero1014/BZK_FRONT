@@ -122,7 +122,6 @@ export class ModalTask extends Component {
             if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
                 if (taskEdit !== undefined) {
 
-                    console.log("tarea",tarea.value);
                     taskEdit.tarea = tarea.value;
                     taskEdit.textTarea = htmlToText(tarea.value);
                     taskEdit.idResponsable = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;

@@ -331,12 +331,8 @@ export function validateIsNullOrUndefined(value) {
 
 // converts HTML to text using Javascript
 export function htmlToText(html) {
-    console.log({html});
     const tag = document.createElement('div');
-    console.log("tag",tag.innerHTML = html);
     tag.innerHTML = html;
-    console.log(tag.innerHTML.trim());
-    console.log(tag.innerHTML);
     return tag.innerText.trim();
 }
 
