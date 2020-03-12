@@ -36,7 +36,7 @@ export class ManagementView extends Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     dispatchUpdateTitleNavBar: updateTitleNavBar,
   }, dispatch);
