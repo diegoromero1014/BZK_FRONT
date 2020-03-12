@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux';
 import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
 import PaginationPendingTaskComponent from './paginationPendingTaskComponent';
 import ListPendingTaskComponent from './listPendingTaskComponent';
-import ButtonCreatePendingTaskComponent from './createPendingTask/buttonCreatePendingTaskComponent';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 
 
@@ -70,7 +69,7 @@ class ClientTaskList extends Component {
   }
 
   render() {
-    const {tasksByClient, reducerGlobal, actionEdit} = this.props;
+    const {tasksByClient, reducerGlobal} = this.props;
     let visibleTable = 'none';
     let visibleMessage = 'block';
     if (tasksByClient.get('rowCount') !== 0) {
@@ -93,7 +92,11 @@ class ClientTaskList extends Component {
               </Col>
               <Col xs>
                 {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), CREAR), false) &&
-                <ButtonCreatePendingTaskComponent actionEdit={actionEdit}/>
+                <button className="btn btn-primary" type="button" title="Crear Tarea"
+                        style={{marginTop: "18px"}} onClick={this.createTask}>
+                  <i className="plus icon" style={{color: "white", margin: 'em', fontSize: '1.2em'}}/>
+                  Crear
+                </button>
                 }
               </Col>
             </Row>
