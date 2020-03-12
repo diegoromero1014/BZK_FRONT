@@ -5,30 +5,20 @@ import {
 
 describe("Test ClientInformationToReducer", () => {
 
-    it("clientInformationToReducer", () => {
-        const result = clientInformationToReducer({});
-        expect(result).to.equal(undefined);
-    });
-    
     it("return empty array when there is not objectives", () => {
-        const result = clientInformationToReducer({
-            clientDetailsRequest: {}
-        });
+        const result = clientInformationToReducer();
         expect(result.length).to.equal(0);
     });
 
     it("should return objectives", () => {
-        const result = clientInformationToReducer({
-            clientDetailsRequest: {
-                objectives: [
-                    {
-                        text: "objetivo",
-                        id: 1,
-                        relations: []
-                    }
-                ]
+        const result = clientInformationToReducer([
+            {
+                text: "objetivo",
+                id: 1,
+                children: []
             }
-        });
+        ]
+        );
 
         expect(result.length).to.equal(1);
         expect(result[0].value).to.equal("objetivo");
@@ -37,24 +27,20 @@ describe("Test ClientInformationToReducer", () => {
     });
 
     it("should return strategies inside objective", () => {
-        const result = clientInformationToReducer({
-            clientDetailsRequest: {
-                objectives: [
+        const result = clientInformationToReducer([
+            {
+                text: "objetivo",
+                id: 1,
+                children: [
                     {
-                        text: "objetivo",
-                        id: 1,
-                        relations: [
-                            {
-                                clientDetailRelation: {
-                                    text: "estrategia",
-                                    id: 2
-                                }
-                            }
-                        ]
+
+                        text: "estrategia",
+                        id: 2
+
                     }
                 ]
             }
-        });
+        ]);
 
         expect(result.length).to.equal(1);
         expect(result[0].value).to.equal("objetivo");
@@ -75,7 +61,7 @@ describe("Test createClientDetailRequestFromReducer", () => {
                 elements: []
             }
         }
-    
+
         const objectListReducer = {
             Oportunidades: {
                 elements: []
@@ -84,7 +70,7 @@ describe("Test createClientDetailRequestFromReducer", () => {
                 elements: []
             }
         }
-    
+
         const clientId = 1;
 
         const result = createClientDetailRequestFromReducer(fieldListReducer, objectListReducer, clientId);
@@ -108,7 +94,7 @@ describe("Test createClientDetailRequestFromReducer", () => {
                 ]
             }
         }
-    
+
         const objectListReducer = {
             Oportunidades: {
                 elements: []
@@ -117,7 +103,7 @@ describe("Test createClientDetailRequestFromReducer", () => {
                 elements: []
             }
         }
-    
+
         const clientId = 1;
 
         const result = createClientDetailRequestFromReducer(fieldListReducer, objectListReducer, clientId);
@@ -144,7 +130,7 @@ describe("Test createClientDetailRequestFromReducer", () => {
                 ]
             }
         }
-    
+
         const objectListReducer = {
             Oportunidades: {
                 elements: []
@@ -153,14 +139,14 @@ describe("Test createClientDetailRequestFromReducer", () => {
                 elements: []
             }
         }
-    
+
         const clientId = 1;
 
         const result = createClientDetailRequestFromReducer(fieldListReducer, objectListReducer, clientId);
 
         expect(result.objectives.length).to.equal(1);
-        expect(result.objectives[0].relations.length).to.equal(1);
-        expect(result.objectives[0].relations[0].clientDetailRelation.text).to.equal("estrategia");
+        expect(result.objectives[0].children.length).to.equal(1);
+        expect(result.objectives[0].children[0].text).to.equal("estrategia");
         expect(result.opportunities.length).to.equal(0);
         expect(result.weaknesses.length).to.equal(0);
     });
@@ -173,7 +159,7 @@ describe("Test createClientDetailRequestFromReducer", () => {
                 ]
             }
         }
-    
+
         const objectListReducer = {
             Oportunidades: {
                 elements: [
@@ -186,7 +172,7 @@ describe("Test createClientDetailRequestFromReducer", () => {
                 elements: []
             }
         }
-    
+
         const clientId = 1;
 
         const result = createClientDetailRequestFromReducer(fieldListReducer, objectListReducer, clientId);

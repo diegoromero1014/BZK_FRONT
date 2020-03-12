@@ -13,7 +13,7 @@ export const schema = {
         .required('La duración es obligatoria')
         .matches(regexNumbers, MESSAGE_WARNING_ONLY_NUMBERS)
         .max(4, MESSAGE_WARNING_NUMBER_LENGTH(4))
-        .typeError('El valor debe ser númerico'),
+        .typeError('El valor debe ser numérico'),
     visitLocation: Yup.string()
         .required('El lugar es obligatorio')
         .matches(patternOfPlaceOfPrevisit, MESSAGE_WARNING_PLACE_OF_PREVISIT)

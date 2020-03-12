@@ -1,4 +1,4 @@
-import { listName } from './Objetives/Objetives';
+import { listName } from './Objetives/utils';
 
 function getStrategiesFromObjective(objective, clientId) {
 
@@ -7,12 +7,7 @@ function getStrategiesFromObjective(objective, clientId) {
     }
 
     let strategies = objective.strategies.map((strategy) => {
-        let strategyRequest = getRequestFromElement(strategy, clientId);
-        delete strategyRequest.id;
-        let clientDetailRelation = {
-            "clientDetailRelation": strategyRequest
-        }
-        return clientDetailRelation;
+        return getRequestFromElement(strategy, clientId);
     });
 
     return strategies;
@@ -23,7 +18,8 @@ function getRequestFromElement(element, clientId) {
         id: element.id,
         client: clientId,
         text: element.value,
-        didChange: element.didChange
+        didChange: element.didChange,
+        associated: element.associated
     }
 }
 
@@ -33,7 +29,8 @@ export function getObjectListRequestFromReducer(opportunities, clientId) {
             client: clientId,
             id: opportunity.id,
             text: opportunity.text,
-            didChange: opportunity.didChange
+            didChange: opportunity.didChange,
+            associated: opportunity.associated
         }
     })
     return opportunitiesRequest;
@@ -42,16 +39,19 @@ export function getObjectListRequestFromReducer(opportunities, clientId) {
 function getObjectivesRequestFromReducer(objectives, clientId) {
     let objectivesRequest = objectives.map((objective) => {
         let objectiveRequest = getRequestFromElement(objective, clientId);
-        delete objectiveRequest.id
-        objectiveRequest.relations = getStrategiesFromObjective(objective, clientId);
+        objectiveRequest.children = getStrategiesFromObjective(objective, clientId);
         return objectiveRequest;
     })
     return objectivesRequest;
 }
 
+export function createObjectiveClientDetailRequestFromReducer(fieldListReducer, objectiveListName, clientId) {
+    return getObjectivesRequestFromReducer(fieldListReducer[objectiveListName].elements, clientId);
+}
+
 export function createClientDetailRequestFromReducer(fieldListReducer, objectListReducer, clientId) {
     return {
-        objectives: getObjectivesRequestFromReducer(fieldListReducer[listName].elements, clientId),
+        objectives: createObjectiveClientDetailRequestFromReducer(fieldListReducer, listName, clientId),
         opportunities: getObjectListRequestFromReducer(objectListReducer.Oportunidades.elements, clientId),
         weaknesses: getObjectListRequestFromReducer(objectListReducer.Debilidades.elements, clientId)
     }
@@ -59,23 +59,17 @@ export function createClientDetailRequestFromReducer(fieldListReducer, objectLis
 
 function getStrategiesFromClientFromObjective(relations) {
     return relations.map(function(relation) {
-        return Object.assign({}, relation.clientDetailRelation, { 
-            value: relation.clientDetailRelation.text,
-            "fieldlist-id": relation.clientDetailRelation.id
+        return Object.assign({}, relation, { 
+            value: relation.text,
+            "fieldlist-id": relation.id
         });
     });
 }
 
-export function clientInformationToReducer(responseClientInfo) {
-
-    if (!responseClientInfo.clientDetailsRequest) {
-        return;
-    }
-
-    let objectives = responseClientInfo.clientDetailsRequest.objectives;
+export function clientInformationToReducer(objectives) {
     
     if (!objectives) {
-        return []
+        objectives = []
     }
 
     return objectives.map(function(objective) {
@@ -83,7 +77,7 @@ export function clientInformationToReducer(responseClientInfo) {
             value: objective.text,
             "fieldlist-id": objective.id
         });
-        element.strategies = getStrategiesFromClientFromObjective(objective.relations);
+        element.strategies = getStrategiesFromClientFromObjective(objective.children);
         return element;
     });
 

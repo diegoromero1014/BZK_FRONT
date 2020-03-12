@@ -4,9 +4,9 @@ import thunk from 'redux-thunk';
 import Immutable from 'immutable';
 import { reducer as formReducer } from "redux-form";
 import * as globalActions from '~/src/components/globalComponents/actions';
-import HeaderBusinessPlan from '~/src/components/businessPlan/headerBusinessPlan';
 import FormEdit from "~/src/components/businessPlan/editBusinessPlan/formEdit";
 import EditBusinessPlan from '~/src/components/businessPlan/editBusinessPlan/editBusinessPlan';
+import ReportsHeader from "../../../../../src/components/globalComponents/reportsHeader/component";
 
 const clientInformacion = Immutable.Map({ 'responseClientInfo': "the_info" });
 const reducerGlobal = Immutable.Map({'rowCount':{}});
@@ -31,9 +31,9 @@ describe('Test BusinessPlan/editBusinessPlan/editBusinessPlan', () => {
         redirect.restore();
     });
 
-    it('should render HeaderBusinessPlan', () => {
+    it('should render ReportsHeader', () => {
         const wrapper = shallow(<EditBusinessPlan {...defaultProps} store={store} />).dive();
-        expect(wrapper.find(HeaderBusinessPlan)).to.have.length(1);
+        expect(wrapper.find(ReportsHeader)).to.have.length(1);
     });
 
     it('should render FormEdit', () => {

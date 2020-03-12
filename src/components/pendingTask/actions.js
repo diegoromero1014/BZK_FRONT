@@ -1,14 +1,14 @@
 import { APP_URL } from '../../constantsGlobal';
 import {
   CHANGE_PAGE,
+  CLEAR_TASK,
   CLEAR_USER_TASK,
-  CLEAR_USER_TASK_CREATE,
   CLEAR_USER_TASK_ORDER,
   CLEAR_USER_TASK_PAGINATOR,
   GET_USER_TASK_LIST_CLIENT,
   GET_XLS_TASK,
-  LOAD_PENDING,
   LIMITE_INF,
+  LOAD_PENDING,
   ORDER_COLUMN_TASK
 } from './constants';
 import axios from 'axios';
@@ -67,6 +67,13 @@ export function clearUserTask() {
   };
 }
 
+export function clearTask() {
+  return {
+    type: CLEAR_TASK
+  };
+}
+
+
 export function clearUserTaskPaginator() {
   return {
     type: CLEAR_USER_TASK_PAGINATOR
@@ -76,12 +83,6 @@ export function clearUserTaskPaginator() {
 export function clearUserTaskOrder() {
   return {
     type: CLEAR_USER_TASK_ORDER
-  };
-}
-
-export function clearUserTaskCreate() {
-  return {
-    type: CLEAR_USER_TASK_CREATE
   };
 }
 
@@ -122,13 +123,13 @@ export function getXlsTask(initialDate, finalDate, states) {
 }
 
 export function loadTaskPending(data) {
-    return {
+  return {
     type: LOAD_PENDING,
     data: data
   }
 }
 
-export function searchTaskPending(){
+export function searchTaskPending() {
   const json = {
     "messageHeader": {
       "sessionToken": window.localStorage.getItem('sessionTokenFront'),

@@ -41,9 +41,9 @@ export class SectionClientObjectives extends Component {
                                                     </Col>
                                                     <Col md={6} sm={12}>
                                                         <div style={{ padding: "10px" }} className="section-list-parent">
-                                                            {objetive["relations"] && objetive["relations"].length ? objetive["relations"].map((strategy) => (
+                                                            {objetive["children"] && objetive["children"].length ? objetive["children"].map((strategy) => (
                                                                 <Row className="section-list-divider row-element-child">
-                                                                    <div style={{ margin: "10px 0 10px 0" }}><Col md={12} className='add-line-break'>{strategy.clientDetailRelation.text}</Col></div>
+                                                                    <div style={{ margin: "10px 0 10px 0" }}><Col md={12} className='add-line-break'>{strategy.text}</Col></div>
                                                                 </Row>
                                                             )) : (
                                                                 <Row className='row-no-element-child' style={{ padding: "5px 23px 5px 20px" }}>

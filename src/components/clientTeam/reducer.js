@@ -12,6 +12,11 @@ export default (state = initialState, action) => {
         return state.withMutations(map => {
             map.set('teamParticipants', response);
         });
+      case actions.SAVE_SENIOR_BANKER:
+      const resp = action.payload.data;
+        return state.withMutations(map=>{
+            map.set('seniorBanker', resp);
+        });
     default:
       return state;
   }

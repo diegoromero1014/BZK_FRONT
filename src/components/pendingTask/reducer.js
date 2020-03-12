@@ -2,7 +2,6 @@ import Immutable from 'immutable';
 import {
   CHANGE_PAGE,
   CLEAR_USER_TASK,
-  CLEAR_USER_TASK_CREATE,
   CLEAR_USER_TASK_ORDER,
   CLEAR_USER_TASK_PAGINATOR,
   GET_USER_TASK_LIST_CLIENT,
@@ -58,7 +57,6 @@ export default (state = initialState, action) => {
         .set('orderTask', 0)
         .set('columnTask', "finalDate");
       });
-    case CLEAR_USER_TASK_CREATE:
     case CLEAR_USER_TASK_PAGINATOR:
       return state.withMutations(map => {
         map
