@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 import * as constants from './constants';
 import _ from 'lodash';
+import {CLEAR_TASK} from "../../pendingTask/constants";
 
 const initialState = Immutable.Map({
     status: "processed",
@@ -36,6 +37,8 @@ export default (state = initialState, action = {}) => {
                     .set('userName', _.get(responseTask, 'data.userName'));
 
             });
+        case CLEAR_TASK:
+            return state.set('task', null);
         case constants.CLEAR_MY_PENDINGS_ORDER:
             return state.withMutations(map => {
                 map
