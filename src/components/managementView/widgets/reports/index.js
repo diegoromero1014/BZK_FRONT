@@ -8,6 +8,8 @@ import pipeline from '../../../../../img/reports/pipeline.png';
 import visit from '../../../../../img/reports/visit.png';
 import task from '../../../../../img/reports/task.png';
 import previsit from '../../../../../img/reports/previsit.png';
+import business from '../../../../../img/reports/business.png';
+
 import ModalDownloadPreVisit from '../../../previsita/downloadPrevisits/component';
 import ModalDownloadVisit from '../../../visit/downloadVisits/component';
 import ModalDownloadBusinessPlan from '../../../businessPlan/downloadBusinessPlan/component';
@@ -58,7 +60,7 @@ export class Reports extends Component {
                 component: ReportCardView,
                 componentProps: {
                     title: BUSINESS_PLAN_TITLE,
-                    background: task,
+                    background: business,
                     renderModal: ModalDownloadBusinessPlan,
                     editable: isEditable,
                 },
