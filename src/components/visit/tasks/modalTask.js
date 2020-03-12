@@ -22,7 +22,7 @@ import { fields, validations as validate } from './rulesAndFieldsTaskVisit';
 var usersBanco = [];
 var idUsuario, nameUsuario;
 
-class ModalTask extends Component {
+export class ModalTask extends Component {
 
     constructor(props) {
         super(props);
@@ -35,7 +35,8 @@ class ModalTask extends Component {
             showSuccessEdit: false,
             showEr: false,
             prueba: [],
-            showErrorYa: false
+            showErrorYa: false,
+            nameAsignator: window.localStorage.getItem('name')
         }
         this.errorTask = null;
         momentLocalizer(moment);
@@ -49,6 +50,9 @@ class ModalTask extends Component {
             responsable.onChange(taskEdit.responsable);
             tarea.onChange(taskEdit.tarea);
             fecha.onChange(moment(taskEdit.fechaForm, 'DD/MM/YYYY'));
+            this.setState({
+                nameAsignator: taskEdit.taskAsignator
+            })
         }
     }
 
@@ -70,7 +74,7 @@ class ModalTask extends Component {
     }
 
     updateKeyValueUsersBanco(e) {
-        const { fields: { responsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
+        const { fields: { responsable, idEmployee }, filterUsersBancoDispatch, swtShowMessage } = this.props;
         const selector = $('.ui.search.responsable');
 
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
@@ -80,7 +84,7 @@ class ModalTask extends Component {
                     return;
                 }
                 selector.toggleClass('loading');
-                filterUsersBanco(responsable.value).then((data) => {
+                filterUsersBancoDispatch(responsable.value).then((data) => {
                     usersBanco = _.get(data, 'payload.data.data');
                     selector.search({
                         cache: false,
@@ -115,9 +119,9 @@ class ModalTask extends Component {
             nameUsuario = responsable.value;
             idUsuario = null;
         }
-
             if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
                 if (taskEdit !== undefined) {
+
                     taskEdit.tarea = tarea.value;
                     taskEdit.textTarea = htmlToText(tarea.value);
                     taskEdit.idResponsable = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
@@ -139,8 +143,9 @@ class ModalTask extends Component {
                         idResponsable: idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
                         responsable: nameUsuario,
                         fecha: fecha.value,
-                        fechaForm: fecha.value
-                    }
+                        fechaForm: fecha.value,
+                        taskAsignator : window.localStorage.getItem('name')
+                    };
                     addTask(task);
 
                     // Aqui hay que llamar la accion
@@ -164,6 +169,11 @@ class ModalTask extends Component {
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <p style={{ paddingTop: "10px", marginBottom: "0px" }}>Los campos marcados con asterisco (<span
                             style={{ color: "red" }}>*</span>) son obligatorios.</p>
+                        <Row style={{ padding: "0px 10px 0px 0px" }}>
+                            <Col xs={12} md={6} lg={6}>
+                                <dt>Asignador:<span id="asignator" style={{fontWeight:'normal'}}> {this.state.nameAsignator}</span></dt>
+                            </Col>
+                        </Row>
                         <Row style={{ padding: "0px 10px 0px 0px" }}>
                             <Col xs={6} md={6} lg={6}>
                                 <dt><span>Responsable (<span style={{ color: "red" }}>*</span>)</span></dt>
@@ -227,7 +237,7 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         addTask,
         editTask,
-        filterUsersBanco,
+        filterUsersBancoDispatch: filterUsersBanco,
         swtShowMessage
     }, dispatch);
 }
