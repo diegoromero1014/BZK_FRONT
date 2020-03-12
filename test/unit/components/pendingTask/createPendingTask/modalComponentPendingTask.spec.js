@@ -4,7 +4,7 @@ import {ModalComponentPendingTask}
 import Immutable from "immutable";
 
 
-let filterUsersBanco;
+let filterUsersBancoDispatch;
 const selectsReducer = Immutable.Map({});
 const fields = {"responsable":  { value: '', error:'', onChange: () => {} }, "id": { onChange: () => {}},"fecha":{ onChange: () => {}}, "idEstado": {onChange: () => {}}, "tarea": {onChange: () => {}}, "advance": {onChange: () => {}}, "dateVisit":"", "idEmployee":{value:"val", onChange: () => {}}};
 describe('Test pendingTask/modalComponentPendingTask', ()=>{
@@ -19,8 +19,8 @@ describe('Test pendingTask/modalComponentPendingTask', ()=>{
         resetForm = sinon.fake();
         getMasterDataFields = sinon.fake();
         handleSubmit = sinon.fake();
-        filterUsersBanco = sinon.stub();
-        filterUsersBanco.resolves({
+        filterUsersBancoDispatch = sinon.stub();
+        filterUsersBancoDispatch.resolves({
             payload: { data: { data: [{ title: 'a', cargo: 'a', empresa: 'a' }]}}
         });
 
@@ -28,7 +28,7 @@ describe('Test pendingTask/modalComponentPendingTask', ()=>{
             fields: fields,
             resetForm,
             getMasterDataFields,
-            filterUsersBanco,
+            filterUsersBancoDispatch,
             handleSubmit,
             selectsReducer
 

@@ -9,7 +9,15 @@ import {
     ERROR_MESSAGE_REQUEST_TITLE,
     MESSAGE_LOAD_DATA
 } from '../../constantsGlobal';
-import {OPTION_MANAGER, OPTION_OTHERS, OPTION_ASSISTANTS, MANAGER, OTHER, ASSISTANT} from './constants';
+import {
+    OPTION_MANAGER,
+    OPTION_OTHERS,
+    OPTION_ASSISTANTS,
+    MANAGER,
+    OTHER,
+    ASSISTANT,
+    SENIOR_BANKER_BACK_UP
+} from './constants';
 import {getClientTeam, saveSeniorBanker} from './actions';
 import UserTeamCard from './userTeamCard';
 import {showLoading} from '../loading/actions';
@@ -17,6 +25,7 @@ import {swtShowMessage} from '../sweetAlertMessages/actions';
 import {Menu, Segment} from 'semantic-ui-react'
 import {Checkbox} from "semantic-ui-react";
 import {filterUsersBanco} from "../participantsVisitPre/actions";
+import {consultInfoClient} from '../clientInformation/actions';
 
 
 
@@ -49,8 +58,8 @@ export class ModalComponentTeam extends Component {
 
     handleItemClick = (e, {name}) => this.setState({tabActive: name});
 
-    handledChangeCheck = (e, {checked}) => {
-        const {saveSeniorBankerDispatch, showLoadingDispatch,swtShowMessageDispatch} = this.props;
+    handledChangeCheck = async (e, {checked}) => {
+        const {saveSeniorBankerDispatch, showLoadingDispatch, swtShowMessageDispatch, dispatchConsultInfoClient} = this.props;
         if (checked) {
             this.setState({
                 checkActive: false,
@@ -63,18 +72,18 @@ export class ModalComponentTeam extends Component {
             })
         }
         showLoadingDispatch(true, MESSAGE_LOAD_DATA);
-        saveSeniorBankerDispatch(checked).then((data) => {
+        const data = await saveSeniorBankerDispatch(checked);
+        const status = data.payload.data.status;
+        const validateLogin = data.payload.data.validateLogin;
+        if(status === REQUEST_ERROR){
+            swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
+        }
+        if (validateLogin === false) {
+            swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
+        }
 
-            const status = data.payload.data.status;
-            const validateLogin = data.payload.data.validateLogin;
-            if(status === REQUEST_ERROR){
-                swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
-            }
-            if (validateLogin === false) {
-                swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
-            }
-            showLoadingDispatch(false, MESSAGE_LOAD_DATA);
-        });
+        await dispatchConsultInfoClient(window.sessionStorage.getItem('idClientSelected'));
+        showLoadingDispatch(false, MESSAGE_LOAD_DATA);
 
     };
 
@@ -105,47 +114,54 @@ export class ModalComponentTeam extends Component {
                         teamOthers: teamOthersArray,
                         teamAssistants: teamAssistantsArray
                     });
+
+                    filterUsersBancoDispatch(window.localStorage.getItem('userNameFront')).then((data) => {
+                        let users = _.get(data, 'payload.data.data');
+                        this.user = users.find(usr => usr.description.toLowerCase() === window.localStorage.getItem('userNameFront').toLowerCase());
+                        const seniorBanker = this.state.teamManagers.find(seniorBankerTeam =>  seniorBankerTeam.id ===  this.user.idUsuario);
+                        if(SENIOR_BANKER_BACK_UP !== seniorBanker.position && this.user.cargo === 'Banquero Senior'){
+                            if (null === infoClient.seniorBankerId) {
+                                this.setState({
+                                    checkActive: false,
+                                    checkDisable: false,
+                                })
+                            } else if (this.user.idUsuario === infoClient.seniorBankerId ) {
+                                this.setState({
+                                    checkActive: true,
+                                    checkDisable: false,
+                                    userSession: infoClient.seniorBanker
+                                })
+                            } else {
+                                this.setState({
+                                    checkActive: true,
+                                    userSession: infoClient.seniorBanker
+                                })
+                            }
+                        }else if(null !== infoClient.seniorBankerId){
+                            this.setState({
+                                checkActive: true,
+                                userSession: infoClient.seniorBanker
+                            })
+                        }else{
+                            this.setState({
+                                checkActive: false,
+                                userSession: infoClient.seniorBanker
+                            })
+                        }
+                    })
                 }
             }
         }, (reason) => {
             swtShowMessageDispatch('error', ERROR_MESSAGE_REQUEST_TITLE, ERROR_MESSAGE_REQUEST);
         });
 
-        filterUsersBancoDispatch(window.localStorage.getItem('userNameFront')).then((data) => {
-            let users = _.get(data, 'payload.data.data');
-            this.user = users.find(usr => usr.description.toLowerCase() === window.localStorage.getItem('userNameFront').toLowerCase());
 
-            if(this.user.cargo === 'Banquero Senior'){
-                if (null === infoClient.seniorBankerId) {
-                    this.setState({
-                        checkActive: false,
-                        checkDisable: false,
-                    })
-                } else if (this.user.idUsuario === infoClient.seniorBankerId ) {
-                    this.setState({
-                        checkActive: true,
-                        checkDisable: false,
-                        userSession: infoClient.seniorBanker
-                    })
-                } else {
-                    this.setState({
-                        checkActive: true,
-                        userSession: infoClient.seniorBanker
-                    })
-                }
-            }else{
-                this.setState({
-                    checkActive: true,
-                    userSession: infoClient.seniorBanker
-                })
-            }
-        })
     }
 
     render() {
         const {tabActive} = this.state;
 
-        let label = 'El cliente es gerenciado por un Banquero senior : ' + this.state.userSession;
+        let label = '¿El cliente es gerenciado por un Banquero senior? ' + this.state.userSession;
         return (
             <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
                  style={{overflow: "hidden"}}>
@@ -153,9 +169,9 @@ export class ModalComponentTeam extends Component {
                     <Col xs={12} md={12} lg={12}>
                         <Checkbox
                             id="checkbox-banquero"
+                            className="checkBankerSeniorDisable"
                             label={label}
-                            readOnly={false}
-                            style={{padding: "15px 10px 0px 20px", backgroundColor: '#ffffff '}}
+                            style={{padding: "15px 10px 0px 20px"}}
                             checked={this.state.checkActive}
                             disabled={this.state.checkDisable}
                             onClick={this.handledChangeCheck}
@@ -230,6 +246,7 @@ function mapDispatchToProps(dispatch) {
         showLoadingDispatch: showLoading,
         swtShowMessageDispatch: swtShowMessage,
         filterUsersBancoDispatch: filterUsersBanco,
+        dispatchConsultInfoClient: consultInfoClient
     }, dispatch);
 }
 
