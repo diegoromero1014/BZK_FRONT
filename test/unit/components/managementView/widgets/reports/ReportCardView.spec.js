@@ -1,6 +1,4 @@
-import ReportCardView from "../../../../../../src/components/dashboard/widgets/reports/ReportCardView";
-import download from '../../../../../../img/icon/descargar.png';
-
+import ReportCardView from "../../../../../../src/components/managementView/widgets/reports/ReportCardView";
 
 const defaultProps = {}
 

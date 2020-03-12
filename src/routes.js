@@ -3,7 +3,7 @@ import { Redirect, Route } from "react-router";
 import { Grid } from "react-flexbox-grid";
 import LoginComponent from "./components/login/component";
 import MainComponent from "./components/main/mainComponent";
-import Dashboard from "./components/dashboard";
+import ManagementView from "./components/managementView";
 import ClientsFind from "./components/clients/clientsFind";
 import ShareholderComponent from "./components/clients/partners/shareholder/component";
 import ComponentClientInformation from "./components/clientInformation/componentClientInformation";
@@ -48,11 +48,11 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     ADMINALERTCLIENTSPORTFOLIOEXPIRATION, EDITBUSINESSPLAN, BUSINESSPLAN, 
     EDITFORMPIPELINE, CREATEFORMPIPELINE, VISITEDIT, VISIT, EDITPREVISITA, 
     PREVISITA, CLIENTCERTIFY, CLIENTSFIND, CLIENTEDIT, CREATEPROPSPECT, STUDYCREDIT, 
-    COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, VIEWMANAGEMENT, DASHBOARD, 
+    COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, VIEWMANAGEMENT, MANAGEMENTVIEW, 
     LOGINCOMPONENT,     
     LoginComponentURL,
     MainComponentURL,
-    DashboardURL,
+    ManagementViewURL,
     ViewManagementURL,
     ShareholderComponentURL,
     ComponentClientInformationURL,
@@ -122,8 +122,8 @@ class App extends Component {
                 return LOGINCOMPONENT;
             case MainComponentURL:
                 return MAINCOMPONENT;
-            case DashboardURL:
-                return DASHBOARD
+            case ManagementViewURL:
+                return MANAGEMENTVIEW;
             case ViewManagementURL:
                 return VIEWMANAGEMENT;                                
             case ShareholderComponentURL:
@@ -212,7 +212,7 @@ export default (
             <Route path="logout" component={LoginComponent}></Route>
             <Route path="pageUnderConstruction" component={pageUnderConstructor} />
             <Route path="dashboard" component={MainComponent}>
-                <Route path="dashboard" component={Dashboard}></Route>
+                <Route path="managementView" component={ManagementView}></Route>
                 <Route path="clients" component={ClientsFind}></Route>
                 <Route path="viewManagement" component={ViewManagement}></Route>
                 <Route path="shareholder" component={ShareholderComponent}></Route>

@@ -56,7 +56,7 @@ global.PropTypes = PropTypes;
 global.ReactDOM = ReactDOM;
 global.Node = {};
 global.window.localStorage = { getItem: () => {}, setItem: () => {} };
-global.window.sessionStorage = { getItem: () => {}, setItem: () => {}, removeItem: () => {} };
+global.window.sessionStorage = { getItem: () => {}, setItem: () => {}, removeItem: () => {}, clear: () => {}};
 global.window.open = () => {}
 global.window.dataLayer = [];
 global.window.Object = Object;
@@ -84,3 +84,5 @@ global.itRendersChildComponent = (parent, child, num = 1) => {
 require.extensions['.scss'] = function() {
     return null;
 };
+
+sinon.stub(window.sessionStorage, 'getItem').returns("Any Name");

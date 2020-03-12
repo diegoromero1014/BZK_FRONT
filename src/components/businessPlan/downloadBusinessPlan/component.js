@@ -4,7 +4,7 @@ import {getCsvBusinessPlanByClient} from '../actions';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {APP_URL, MESSAGE_DOWNLOAD_DATA} from '../../../constantsGlobal';
-import {TAB_BUSINESS, TYPE_YEAR} from '../../viewManagement/constants';
+import {TAB_BUSINESS, TYPE_YEAR} from '../../managementView/constants';
 import {getCsvBusinessPlan} from '../actions';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
