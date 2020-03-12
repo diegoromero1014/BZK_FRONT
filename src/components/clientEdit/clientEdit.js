@@ -31,7 +31,8 @@ import ComponentListIntOperations from "../contextClient/listInternationalOperat
 import ComponentInfoClient from './components/InfoClient';
 import ActividadEconomica from './components/ActividadEconomica';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
-import Objetivos, { listName } from '../fieldList/Objetives/Objetives';
+import Objetivos from '../fieldList/Objetives/Objetives';
+import {listName} from '../fieldList/Objetives/utils';
 import SectionOpportunitiesWeaknesses from '../opportunitiesWeaknesses/SectionOpportunitiesWeaknesses';
 
 import { clearProducts, setProducts } from "./products/actions";
@@ -1152,7 +1153,7 @@ class clientEdit extends Component {
         document.getElementById('dashboardComponentScroll').scrollTop = 0;
 
         dispatchChangeObjectiveState({
-            elements: clientInformationToReducer(clientInformacion.get("responseClientInfo"))
+            elements: clientInformationToReducer(clientInformacion.get("responseClientInfo").clientDetailsRequest.objectives)
         });
 
     }
@@ -1343,7 +1344,7 @@ class clientEdit extends Component {
                 />
                 
                 <Objetivos />
-                {!_.isEmpty(infoClient) && <SectionOpportunitiesWeaknesses infoClient={infoClient} visual={true} previsit={false}/>}
+                {!_.isEmpty(infoClient) && <SectionOpportunitiesWeaknesses infoClient={infoClient} visual={true}/>}
                 <ActividadEconomica idSubCIIU={idSubCIIU} idCIIU={idCIIU} taxNature={taxNature} isMethodEditClient={isMethodEditClient} />
                 <Row>
 

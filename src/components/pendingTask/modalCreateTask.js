@@ -44,7 +44,8 @@ export class ModalCreateTask extends Component {
       isEditable: false,
       taskEdited: false,
       showErrtask: false,
-      tareaError: null
+      tareaError: null,
+      nameUsuario: ""
     };
     this.cancelSubmit = false;
     this.entityId = null;
@@ -130,6 +131,7 @@ export class ModalCreateTask extends Component {
         this.entityId = task.entityId;
         this.clientId = task.clientId;
       tarea.onChange(task.task);
+      this.setState({nameUsuario:task.assignedBy});
     });
   }
 
@@ -264,6 +266,11 @@ export class ModalCreateTask extends Component {
           style={{ paddingBottom: "20px" }}>
           <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
             <p style={{ paddingTop: "10px", marginBottom: "0px" }} >Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</p>
+            <Row style={{ padding: "0px 10px 0px 0px" }}>
+              <Col xs={6} md={6} lg={6}>
+                <dt>Asignador: <span id="asignator" style={{fontWeight:'normal'}}>{this.state.nameUsuario}</span></dt>
+              </Col>
+            </Row>
             <Row style={{ padding: "0px 10px 0px 0px" }}>
               <Col xs={12} md={4} lg={4}>
                 <dt><span>Fecha de cierre - DD/MM/YYYY (<span style={{ color: "red" }}>*</span>)</span></dt>
