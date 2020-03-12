@@ -19,6 +19,7 @@ import { validatePermissionsByModule } from '../../../../actionsGlobal';
 import { PREVISIT_TITLE, VISIT_TITLE, BUSINESS_PLAN_TITLE, PIPELINE_TITLE, TASK_TITLE } from './constants';
 import { MODULE_MANAGERIAL_VIEW, DOWNLOAD_TASK, DESCARGAR } from '../../../../constantsGlobal';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
+import { TAB_PREVISIT, TAB_VISIT, TAB_BUSINESS, TAB_PIPELINE, TAB_TASKS } from '../../constants';
 
 export class Reports extends Component {
     constructor(props) {
@@ -31,7 +32,6 @@ export class Reports extends Component {
         }
     }
 
-
     async componentDidMount() {
         const isEditable = await this.validatePermissions(DESCARGAR);
 
@@ -42,6 +42,7 @@ export class Reports extends Component {
                     title: PREVISIT_TITLE,
                     background: previsit,
                     renderModal: ModalDownloadPreVisit,
+                    itemSeletedModal: TAB_PREVISIT,
                     editable: isEditable,
                 },
                 visualize: true,
@@ -52,6 +53,7 @@ export class Reports extends Component {
                     title: VISIT_TITLE,
                     background: visit,
                     renderModal: ModalDownloadVisit,
+                    itemSeletedModal: TAB_VISIT,
                     editable: isEditable,
                 },
                 visualize: true,
@@ -62,6 +64,7 @@ export class Reports extends Component {
                     title: BUSINESS_PLAN_TITLE,
                     background: business,
                     renderModal: ModalDownloadBusinessPlan,
+                    itemSeletedModal: TAB_BUSINESS,
                     editable: isEditable,
                 },
                 visualize: true,
@@ -72,6 +75,7 @@ export class Reports extends Component {
                     title: PIPELINE_TITLE,
                     background: pipeline,
                     renderModal: DownloadPipeline,
+                    itemSeletedModal: TAB_PIPELINE,
                     editable: isEditable,
                 },
                 visualize: true,
@@ -82,6 +86,7 @@ export class Reports extends Component {
                     title: TASK_TITLE,
                     background: task,
                     renderModal: DownloadTask,
+                    itemSeletedModal: TAB_TASKS,
                     editable: isEditable,
                 },
                 visualize: await this.validatePermissions(DOWNLOAD_TASK),
