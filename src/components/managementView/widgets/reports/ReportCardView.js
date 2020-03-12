@@ -42,13 +42,13 @@ class ReportCardView extends Component {
                         <img src={download} alt="download" />
                     </div>
                 }
-                <Modal 
-                    isOpen={open} 
+                <Modal
+                    isOpen={open}
                     onRequestClose={this.handleCloseModal}
                     contentLabel="Reportes"
-                    className="modalBt4-fade modal fade contact-detail-modal in" 
+                    className="modalBt4-fade modal fade contact-detail-modal in"
                     style={{ width: 640 }}
-                    >
+                >
                     <div className="modalBt4-dialog modalBt4-lg" style={{ width: 640 }}>
                         <div className="modalBt4-content modal-content">
                             <div className="modalBt4-header modal-header">
@@ -63,7 +63,7 @@ class ReportCardView extends Component {
                             </div>
 
                             {this.props.renderModal &&
-                                <this.props.renderModal isOpen={this.handleCloseModal} />
+                                <this.props.renderModal isOpen={this.handleCloseModal} itemSeletedModal={this.props.itemSeletedModal} />
                             }
                         </div>
                     </div>

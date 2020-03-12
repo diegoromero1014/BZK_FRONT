@@ -87,6 +87,7 @@ class NavBarComponent extends Component {
                             key={_.uniqueId("MenuListFatherComponent_")}
                             iconClassName='user outline'
                             labelText={userNameLogged}
+                            labelTextFather={userNameLogged}
                             style={btnLogoutStyle}
                             children={menuItemLogOut}
                         />
