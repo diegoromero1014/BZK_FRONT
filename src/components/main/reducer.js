@@ -10,7 +10,7 @@ const initialState = Immutable.Map({
   validToken: true
 });
 
-export default (state = initialState, action) => {
+export default (state = initialState, action = {}) => {
   switch (action.type) {
     case VALID_TOKEN:
       return state.withMutations(map => {

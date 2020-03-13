@@ -12,7 +12,7 @@ const initialState = Immutable.Map({
     errorYearSeleted: false
 });
 
-export default (state = initialState, action) => {
+export default (state = initialState, action = {}) => {
   switch (action.type) {
     case TAB_SELETED_ACTIVE:
         return state.set('tabSeleted', action.tabSeleted);
