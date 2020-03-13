@@ -55,7 +55,7 @@ class NavBarComponent extends Component {
         const viewAlertClient = navBar.get('viewAlertClient');
         const confidential = navBar.get('confidential');
         const btnLogoutStyle = {width: '100%' };
-        const userNameLogged =  "Teo debe organizar esto aquí :D"; //getUsername().toLowerCase();
+        const userNameLogged =  getUsername();
 
         return (
             <div className="header-quick-nav" style={{ padding: 0,  height: "60px", width: "100%", display: "flex", justifyContent: "space-between"}}>
@@ -87,6 +87,7 @@ class NavBarComponent extends Component {
                             key={_.uniqueId("MenuListFatherComponent_")}
                             iconClassName='user outline'
                             labelText={userNameLogged}
+                            labelTextFather={userNameLogged}
                             style={btnLogoutStyle}
                             children={menuItemLogOut}
                         />
