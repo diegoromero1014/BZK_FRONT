@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Row, Col } from 'react-flexbox-grid';
 
 import Reports from './widgets/reports';
+import TabAlerts from './widgets/alerts/alertSection'
 
 import { getUsername } from './actions';
 import { updateTitleNavBar } from '../navBar/actions';
@@ -26,7 +27,7 @@ export class Dashboard extends Component {
   render() {
 
     return (
-        <div className="ui segment" style={{ paddingLeft: 50, paddingRigth: 50, height: '100%' }}>  
+        <div className="ui segment" style={{ paddingLeft: 50, paddingRigth: 50, height: 'auto' }}>  
             <div style={{ color: "#7f7f7f" }}>
                 <span style={{ fontStyle: "italic" }}>{MESSAGE_CONFIDENTIAL}</span>
             </div>
@@ -43,6 +44,12 @@ export class Dashboard extends Component {
             <Row>
                 <Col md={12} style={{ marginTop: 50 }}>
                     <Reports />
+                </Col>
+            </Row>
+            <Row>
+                <Col md={12} style={{ marginTop: 50, marginBottom: 50 }}>
+                    <h2 style={{marginBottom: "15px" , marginBottom: "10px"}}>Alertas</h2>
+                    <TabAlerts />
                 </Col>
             </Row>
         </div>
