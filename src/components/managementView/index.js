@@ -8,6 +8,7 @@ import Reports from './widgets/reports';
 import Header from './header';
 
 import { updateTitleNavBar } from '../navBar/actions';
+import { TabAlerts } from './widgets/alerts/alertSection';
 
 export class ManagementView extends Component {
 
@@ -29,6 +30,11 @@ export class ManagementView extends Component {
             <Row>
                 <Col md={12} style={{ marginTop: 50 }}>
                     <Reports />
+                </Col>
+            </Row>
+            <Row>
+                <Col md={12} style={{ marginTop: 50 }}>
+                    <TabAlerts />
                 </Col>
             </Row>
         </div>
