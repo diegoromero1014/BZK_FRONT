@@ -16,7 +16,7 @@ import { DELETE_TASK_VIEW } from './constants';
 
 var arrayValueTask = [];
 var idTaskSeleted = null;
-class ListTasks extends Component {
+export class ListTasks extends Component {
 
   constructor(props) {
     super(props);
