@@ -1,19 +1,29 @@
-import { APP_URL } from '../../../constantsGlobal';
-import {
-  FIND_PENDING_TASKS, LIMITE_INF, CHANGE_PAGE, CLEAR_PENDING_TASK, CLEAR_MY_PENDINGS_ORDER,
-  CLEAR_MY_PENDINGS_PAGINATOR, ORDER_COLUMN_MY_PENDING, GET_INFO_USERTASK, UPDATE_STATUS_TASK, CLEAR_LIST_MY_PENDINGS, GET_DOWNLOAD_PENDINGS_TASKS, UPDATE_USERNAME_TASK,
-  FIND_PENDING_TASKS_TEAM,
-  CHANGE_PAGE_TEAM,
-  LIMITE_INF_TEAM,
-  CLEAR_MY_PENDINGS_PAGINATOR_TEAM,
-  CLEAR_LIST_MY_PENDINGS_TEAM,
-  CLEAR_PENDING_TASK_TEAM,
-  CLEAR_MY_PENDINGS_TEAM_ORDER,
-  ORDER_COLUMN_MY_PENDING_TEAM,
-  GET_DOWNLOAD_MY_PENDINGS_TASKS
-} from './constants';
 import axios from 'axios';
 import { downloadReport } from '../../../utils';
+
+import { APP_URL } from '../../../constantsGlobal';
+import {
+  CHANGE_PAGE,
+  CHANGE_PAGE_TEAM,
+  CLEAR_LIST_MY_PENDINGS,
+  CLEAR_LIST_MY_PENDINGS_TEAM,
+  CLEAR_MY_PENDINGS_ORDER,
+  CLEAR_MY_PENDINGS_PAGINATOR,
+  CLEAR_MY_PENDINGS_PAGINATOR_TEAM,
+  CLEAR_MY_PENDINGS_TEAM_ORDER,
+  CLEAR_PENDING_TASK,
+  CLEAR_PENDING_TASK_TEAM,
+  FIND_PENDING_TASKS,
+  FIND_PENDING_TASKS_TEAM,
+  GET_DOWNLOAD_MY_PENDINGS_TASKS,
+  GET_DOWNLOAD_PENDINGS_TASKS,
+  GET_INFO_USERTASK,
+  LIMITE_INF,
+  LIMITE_INF_TEAM,
+  ORDER_COLUMN_MY_PENDING,
+  ORDER_COLUMN_MY_PENDING_TEAM,
+  UPDATE_STATUS_TASK
+} from './constants';
 
 export function tasksByUser(pageNum, maxRows, keyWord, orderMyPending, columnMyPending) {
   const json = {
@@ -182,6 +192,7 @@ export function getDownloadPendingTask(region, zone, team, taskStatus, dateTaskT
     payload: request
   }
 }
+
 export function getDownloadMyPendingTask(keyWord) {
   const json = {
     "messageHeader": {
@@ -207,7 +218,7 @@ export function getDownloadMyPendingTask(keyWord) {
       'idUsuario': '',
       "order": '',
       "columnOrder": '',
-      "keyWord":keyWord
+      "keyWord": keyWord
     }
   };
 
@@ -217,14 +228,6 @@ export function getDownloadMyPendingTask(keyWord) {
     payload: request
   }
 }
-
-export function updateUserNameTask(username) {
-  return {
-    type: UPDATE_USERNAME_TASK,
-    username
-  }
-}
-
 
 export function tasksTeamByUser(pageNum, maxRows, region, zone, team, taskStatus, dateTaskTeam, idUsuario, orderMyPending, columnMyPending) {
   const json = {
@@ -310,28 +313,6 @@ export function clearMyPendingsTeamOrder() {
   return {
     type: CLEAR_MY_PENDINGS_TEAM_ORDER
   };
-}
-
-export function getXlsTask(initialDate, finalDate, states) {
-  const json = {
-    "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "timestamp": new Date().getTime(),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
-    },
-    "messageBody": {
-        "initialDate": initialDate,
-        "finalDate": finalDate,
-        "states": states
-     }
-  }
 }
 
 export function downloadPendingTask(listTask, changeStateSaveData) {

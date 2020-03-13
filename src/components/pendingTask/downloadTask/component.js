@@ -69,8 +69,7 @@ class DownloadTask extends Component {
 
 	_downloadTask() {
 		const { fields: { initialValidityDate, finalValidityDate, taskStatus }, changeStateSaveData, getXlsTask, swtShowMessage, itemSeletedModal } = this.props;
-		var errorInForm = false;
-		let url;
+		let errorInForm = false;
 
 		const states = JSON.parse('[' + ((taskStatus.value) ? taskStatus.value : "") + ']');
 		if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value) || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid()) {
@@ -97,7 +96,6 @@ class DownloadTask extends Component {
 		if (!errorInForm) {
 			changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
 			if (TAB_TASKS === itemSeletedModal) {
-				url = '/getXlsTask';
 				getXlsTask(initialValidityDate.value, finalValidityDate.value, states).then(function (data) {
 					if (data.payload.data.status === 200) {
 						window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
