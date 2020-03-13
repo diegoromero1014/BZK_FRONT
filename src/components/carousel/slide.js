@@ -3,7 +3,7 @@ import '../../../styles/slide/main.scss';
 
 const Slide = (props) => {
     return (
-        <div {...props} className={'slide'} style={{ width: '100%' }}>
+        <div {...props} className={'slide'} style={{ width: '100%', margin: 15 }}>
             <props.component {...props.componentProps} />
         </div>
     );

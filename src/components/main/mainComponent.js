@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
-import MenuComponent from '../menu/component';
-import { changeStateSaveData, notifiedProductionUpgrade, validateUpgrateProductionActive } from './actions';
-import NavBarComponent from '../navBar/navBarComponent';
-import { redirectUrl } from '../globalComponents/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+import MenuComponent from '../menu/component';
+import NavBarComponent from '../navBar/navBarComponent';
 import LoadingComponent from '../loading/loadingComponent';
-import { loadObservablesLeftTimer } from '../login/actions';
 import SweetAlert from "../sweetalertFocus";
 import Worker from '../../worker/Worker';
 import WorkerSetup from '../../worker/WorkerSetup';
+
+import { notifiedProductionUpgrade, validateUpgrateProductionActive } from './actions';
+import { redirectUrl } from '../globalComponents/actions';
+import { loadObservablesLeftTimer } from '../login/actions';
 import { consultParameterServer } from '../../actionsGlobal';
+
 import { RANGO_PASO_PRODUCCION } from '../../constantsParameters';
 
 export class MainComponent extends Component {
@@ -39,9 +42,9 @@ export class MainComponent extends Component {
   }
 
   startBlocking = () => {
-    const { consultParameterServer } = this.props;
+    const { dispatchConsultParameterServer } = this.props;
 
-    consultParameterServer(RANGO_PASO_PRODUCCION).then(resolve => {
+    dispatchConsultParameterServer(RANGO_PASO_PRODUCCION).then(resolve => {
       if (resolve && resolve.payload && resolve.payload.data) {
         this.initializeRanges(resolve.payload.data);
 
@@ -73,7 +76,7 @@ export class MainComponent extends Component {
   }
 
   componentWillMount() {
-    const { notifiedProductionUpgrade, validateUpgrateProductionActive } = this.props;
+    const { dispatchNotifiedProductionUpgrade, dispatchValidateUpgrateProductionActive } = this.props;
 
     let token = window.localStorage.getItem('sessionTokenFront');
 
@@ -82,16 +85,16 @@ export class MainComponent extends Component {
       document.cookie = 'estadoconexion=activa;path=/';
       redirectUrl("/login");
     } else {
-      const { loadObservablesLeftTimer, mainReducer } = this.props;
+      const { dispatchLoadObservablesLeftTimer, mainReducer } = this.props;
 
-      loadObservablesLeftTimer();
+      dispatchLoadObservablesLeftTimer();
 
       let productionUpgradeNotified = mainReducer.get('productionUpgradeNotified');
 
       if (!productionUpgradeNotified) {
-        notifiedProductionUpgrade();
+        dispatchNotifiedProductionUpgrade();
 
-        validateUpgrateProductionActive().then(resolve => {
+        dispatchValidateUpgrateProductionActive().then(resolve => {
           const { data } = resolve.payload.data;
 
           if (data) {
@@ -158,11 +161,10 @@ export class MainComponent extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    changeStateSaveData,
-    loadObservablesLeftTimer,
-    notifiedProductionUpgrade,
-    validateUpgrateProductionActive,
-    consultParameterServer
+    dispatchLoadObservablesLeftTimer: loadObservablesLeftTimer,
+    dispatchNotifiedProductionUpgrade: notifiedProductionUpgrade,
+    dispatchValidateUpgrateProductionActive: validateUpgrateProductionActive,
+    dispatchConsultParameterServer: consultParameterServer
   }, dispatch);
 }
 

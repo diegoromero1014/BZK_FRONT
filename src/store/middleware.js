@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { VALID_TOKEN } from '../components/dashboard/constants';
+import { VALID_TOKEN } from '../components/main/constants';
 
 export const invalidTokenMiddleware = store => next => action => {
     const status = _.get(action, "payload.data.status", 200);

@@ -3,6 +3,8 @@ import Slider from "react-slick";
 import NextArrow from "./nextArrow";
 import PrevArrow from "./prevArrow";
 import Slide from "./slide";
+import "slick-carousel/slick/slick.scss"; 
+import "slick-carousel/slick/slick-theme.scss";
 
 class Carousel extends Component {
 

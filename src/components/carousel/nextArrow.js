@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from 'semantic-ui-react';
 
-const NextArrow = ({ className, style, onClick }) => {
+const NextArrow = ({ onClick }) => {
 
     const styles = {
         display: 'flex',
