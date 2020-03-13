@@ -15,19 +15,19 @@ import {
   clearFilter
 } from "../../../alertPortfolioExpirtation/actions";
 
-export class TabAlerts extends Component {
+export class AlertSection extends Component {
   constructor(props) {
     super(props);
     this.countAlerts = this.countAlerts.bind(this);
   }
 
   async componentWillMount() {
-    const { dispatchClearFilter } = this.props;
+    const { dispatchClearFilter } = this.props;    
     await dispatchClearFilter();
   }
 
   countAlerts() {
-    const { alertPortfolioExpiration } = this.props;
+    const { alertPortfolioExpiration } = this.props;    
     const numberTotalClientFiltered = alertPortfolioExpiration.get(
       "totalClientsByFiltered"
     );
@@ -68,19 +68,16 @@ export class TabAlerts extends Component {
     );
   }
 
-  render() {
+  render() {    
     return this.countAlerts();
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(
-    {
-      dispatchAlerts: clientsPendingUpdateFindServerAlerts,
-      dispatchClearFilter: clearFilter
-    },
-    dispatch
-  );
+function mapDispatchToProps(dispatch) {  
+  return bindActionCreators({
+    dispatchAlerts: clientsPendingUpdateFindServerAlerts,
+    dispatchClearFilter: clearFilter
+  }, dispatch);
 }
 
 function mapStateToProps({ alertPortfolioExpiration }) {
@@ -89,4 +86,5 @@ function mapStateToProps({ alertPortfolioExpiration }) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TabAlerts);
+export default connect(mapStateToProps, mapDispatchToProps)(AlertSection);
+
