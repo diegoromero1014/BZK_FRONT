@@ -23,7 +23,7 @@ export default function TemplateObjectiveAndStrategies({buttons, objetivo, strat
                             <Row>
                                 <Col md={12} sm={12}>
                                     <Row>
-                                        <Col md={6} sm={12} style={{ display: "flex" }}>
+                                        <Col md={6} sm={12}>
                                             <Title
                                                 text="Objetivo"
                                                 isSection={false}
@@ -54,7 +54,7 @@ export default function TemplateObjectiveAndStrategies({buttons, objetivo, strat
                                                     <Col md={6} sm={12}>
                                                         <div style={{ padding: "10px" }} className="section-list-parent">
 
-                                                            {!strategies.length && <div className="elements-not-found">
+                                                            {(!strategies || !strategies.length) && <div className="elements-not-found">
                                                                 <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px", padding: "5px", border: "1px solid #ECECEC" }}>
                                                                     <span className="form-item">No se han adicionado Estrategias.</span>
                                                                 </div>

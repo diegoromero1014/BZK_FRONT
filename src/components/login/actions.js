@@ -47,8 +47,9 @@ export function saveSessionName(name) {
     window.sessionStorage.setItem('name', name);
 }
 
-export function saveSessionUserName(userName) {
+export function saveSessionUserName(userName, name) {
     window.localStorage.setItem('userNameFront', userName);
+    window.localStorage.setItem('name', name);
 }
 
 export function clearSessionUserName() {
