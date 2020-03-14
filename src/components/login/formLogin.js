@@ -204,7 +204,7 @@ export class FormLogin extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         dispatchStopObservablesLeftTimer: stopObservablesLeftTimer,
         dispatchValidateLogin: validateLogin,
@@ -218,7 +218,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ login, mainReducer }, ownerProps) {
+const mapStateToProps = ({ login, mainReducer }) => {
     return {
         login,
         mainReducer
