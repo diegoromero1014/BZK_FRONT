@@ -23,7 +23,7 @@ class MenuItem extends Component {
         const {iconClassName, labelText, style, menu} = this.props;
         const activeItem = _.isEqual(menu.get('activeItem'), labelText);
         const iconAndText = (
-            <span>
+            <span style={{fontSize : "15px"}}>
                 <Icon name={iconClassName}/> {labelText}
             </span>
         );
