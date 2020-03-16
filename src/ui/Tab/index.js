@@ -39,7 +39,7 @@ class TabComponent extends Component {
             >
               <div className="tabTextItem">{name}</div>
               {number && (
-                <Label circular color="red">
+                <Label circular color="blue">
                   {number}
                 </Label>
               )}
