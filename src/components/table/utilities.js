@@ -3,11 +3,12 @@ import { Table, Icon } from 'semantic-ui-react';
 import { get } from 'lodash';
 import { PROPERTY, ALL_OBJECT, ASCENDING } from './constants';
 
-export const buildHeaders = (columns, orderedColumn, direction, handleSort) => columns.map(({ header, prop }, index) => (
+export const buildHeaders = (columns, orderedColumn, direction, handleSort) => columns.map(({ header, prop, width }, index) => (
     <Table.HeaderCell
         key={index}
         style={{ cursor: 'pointer' }}
         onClick={async () => await handleSort(prop)}
+        width={width ? width : null}
     >
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <p style={{ margin: 0, padding: 0 }}>{header}</p>
@@ -42,7 +43,7 @@ export const buildRows = tableSettings => {
 
 export const validateData = data => Array.isArray(data) && data.length;
 
-const buildRow = (element, index, { columns, onClick }) => {
+const buildRow = (element, index, { columns, onClick, Component, propsComponent }) => {
     const props = columns.map(column => get(column, PROPERTY, ALL_OBJECT));
 
     return (
@@ -54,12 +55,14 @@ const buildRow = (element, index, { columns, onClick }) => {
                         whiteSpace: 'pre-line',
                         textOverflow: 'ellipsis',
                         wordWrap: 'break-word',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        overflow: 'inherit'
                     }}
                     key={index}
                     verticalAlign='middle'
                 >
-                    {extractValueByKey(element, prop)}
+
+                    {Component && prop === ALL_OBJECT ? <Component data={extractValueByKey(element, prop)} {...propsComponent} /> : extractValueByKey(element, prop)}
                 </Table.Cell>
             ))}
         </Table.Row>

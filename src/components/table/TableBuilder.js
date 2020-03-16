@@ -31,8 +31,13 @@ export default class TableBuilder {
         return this;
     }
 
-    setOptions = options => {
-        this.options = options;
+    setComponent = Component => {
+        this.Component = Component;
+        return this;
+    }
+
+    setPropsComponent = propsComponent => {
+        this.propsComponent = propsComponent;
         return this;
     }
 
