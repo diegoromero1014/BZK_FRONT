@@ -1,26 +1,58 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Table } from 'semantic-ui-react';
 import { buildHeaders, buildRows } from './utilities';
 import Pagination from './Pagination';
 
-const TableComponent = ({ tableSettings }) => {
-    return (
-        <Table fixed>
-            <Table.Header>
-                <Table.Row>
-                    {buildHeaders(tableSettings.columns)}
-                </Table.Row>
-            </Table.Header>
+class TableComponent extends Component {
+    constructor(props) {
+        super(props);
 
-            <Table.Body>
-                {buildRows(tableSettings)}
-            </Table.Body>
+        this.state = {
+            orderedColumn: null,
+            direction: null
+        }
+    }
 
-            <Table.Footer>
-                <Pagination {...tableSettings} />
-            </Table.Footer>
-        </Table>
-    );
-};
+    handleSort = async clickedColumn => {
+        const { orderedColumn, direction } = this.state;
+        const { tableSettings: { onSort } } = this.props;
 
-export default TableComponent; 
+        if (orderedColumn !== clickedColumn) {
+            await this.setState({
+                orderedColumn: clickedColumn,
+                direction: 'ascending',
+            })
+        } else {
+            await this.setState({ direction: direction === 'ascending' ? 'descending' : 'ascending' });
+        }
+
+        if (onSort) {
+            onSort(this.state.orderedColumn, this.state.direction);
+        }
+    }
+
+    render() {
+        const { tableSettings } = this.props;
+        const { orderedColumn, direction } = this.state;
+
+        return (
+            <Table sortable fixed>
+                <Table.Header>
+                    <Table.Row>
+                        {buildHeaders(tableSettings.columns, orderedColumn, direction, this.handleSort)}
+                    </Table.Row>
+                </Table.Header>
+
+                <Table.Body>
+                    {buildRows(tableSettings)}
+                </Table.Body>
+
+                <Table.Footer>
+                    <Pagination {...tableSettings} />
+                </Table.Footer>
+            </Table>
+        );
+    }
+}
+
+export default TableComponent;

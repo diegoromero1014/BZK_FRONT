@@ -36,5 +36,10 @@ export default class TableBuilder {
         return this;
     }
 
+    setOnSort = onSort => {
+        this.onSort = onSort;
+        return this;
+    }
+
     build = () => new TableSettings(this);
 }
