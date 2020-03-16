@@ -37,7 +37,8 @@ export class ModalTask extends Component {
             showSuccessEdit: false,
             showEr: false,
             prueba: [],
-            showErrorYa: false
+            showErrorYa: false,
+            nameAsignator: window.localStorage.getItem('name')
         };
         this.errorTask = null;
         momentLocalizer(moment);
@@ -52,6 +53,9 @@ export class ModalTask extends Component {
             tarea.onChange(taskEdit.tarea);
             fecha.onChange(moment(taskEdit.fechaForm, 'DD/MM/YYYY'));
             dispatchFillComments(taskEdit.notes);
+            this.setState({
+                nameAsignator: taskEdit.taskAsignator
+            })
         }
     }
 
@@ -73,7 +77,7 @@ export class ModalTask extends Component {
     }
 
     updateKeyValueUsersBanco(e) {
-        const {fields: {responsable, idEmployee}, filterUsersBanco, swtShowMessage} = this.props;
+        const { fields: { responsable, idEmployee }, filterUsersBancoDispatch, swtShowMessage } = this.props;
         const selector = $('.ui.search.responsable');
 
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
@@ -83,7 +87,7 @@ export class ModalTask extends Component {
                     return;
                 }
                 selector.toggleClass('loading');
-                filterUsersBanco(responsable.value).then((data) => {
+                filterUsersBancoDispatch(responsable.value).then((data) => {
                     usersBanco = _.get(data, 'payload.data.data');
                     selector.search({
                         cache: false,
@@ -108,7 +112,7 @@ export class ModalTask extends Component {
     }
 
     _updateValue(value) {
-        const {fields: {responsable}} = this.props;
+        const { fields: { responsable } } = this.props;
         responsable.onChange(value);
     }
 
@@ -145,7 +149,8 @@ export class ModalTask extends Component {
                     responsable: nameUsuario,
                     fecha: fecha.value,
                     fechaForm: fecha.value,
-                    notes: Object.assign(commentsReducer.comments)
+                    notes: Object.assign(commentsReducer.comments),
+                    taskAsignator : window.localStorage.getItem('name')
                 };
                 addTask(task);
 
@@ -166,14 +171,19 @@ export class ModalTask extends Component {
                      id="modalComponentScroll"
                      style={{paddingBottom: "0px"}}>
                     <dt className="business-title"><span
-                        style={{paddingLeft: '20px'}}>Adicionar pendiente a la reunión</span></dt>
-                    <div style={{paddingLeft: '20px', paddingRight: '20px'}}>
-                        <p style={{paddingTop: "10px", marginBottom: "0px"}}>Los campos marcados con asterisco (<span
-                            style={{color: "red"}}>*</span>) son obligatorios.</p>
-                        <Row style={{padding: "0px 10px 0px 0px"}}>
+                        style={{ paddingLeft: '20px' }}>Adicionar pendiente a la reunión</span></dt>
+                    <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                        <p style={{ paddingTop: "10px", marginBottom: "0px" }}>Los campos marcados con asterisco (<span
+                            style={{ color: "red" }}>*</span>) son obligatorios.</p>
+                        <Row style={{ padding: "0px 10px 0px 0px" }}>
+                            <Col xs={12} md={6} lg={6}>
+                                <dt>Asignador:<span id="asignator" style={{fontWeight:'normal'}}> {this.state.nameAsignator}</span></dt>
+                            </Col>
+                        </Row>
+                        <Row style={{ padding: "0px 10px 0px 0px" }}>
                             <Col xs={6} md={6} lg={6}>
-                                <dt><span>Responsable (<span style={{color: "red"}}>*</span>)</span></dt>
-                                <dt style={{paddingTop: "0px"}}>
+                                <dt><span>Responsable (<span style={{ color: "red" }}>*</span>)</span></dt>
+                                <dt style={{ paddingTop: "0px" }}>
                                     <ComboBoxFilter
                                         id="PendingResponsible"
                                         name="responsableTask"
@@ -194,9 +204,9 @@ export class ModalTask extends Component {
                                 </dt>
                             </Col>
                             <Col xs={6} md={6} lg={6}>
-                                <dt><span>Fecha de cierre - DD/MM/YYYY (<span style={{color: "red"}}>*</span>)</span>
+                                <dt><span>Fecha de cierre - DD/MM/YYYY (<span style={{ color: "red" }}>*</span>)</span>
                                 </dt>
-                                <dt style={{paddingTop: "0px"}}>
+                                <dt style={{ paddingTop: "0px" }}>
                                     <DateTimePickerUi
                                         {...fecha}
                                         culture='es'
@@ -208,11 +218,11 @@ export class ModalTask extends Component {
                         </Row>
                         <Row>
                             <Col xs={12} md={12} lg={12}>
-                                <dt><span>Tarea (<span style={{color: "red"}}>*</span>)</span></dt>
+                                <dt><span>Tarea (<span style={{ color: "red" }}>*</span>)</span></dt>
                                 <RichText
                                     name="description"
                                     type="text"
-                                    style={{width: '100%', height: '150pt'}}
+                                    style={{ width: '100%', height: '150pt' }}
                                     {...tarea}
                                     touched={true}
                                     error={this.errorTask}
@@ -245,7 +255,7 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         addTask,
         editTask,
-        filterUsersBanco,
+        filterUsersBancoDispatch: filterUsersBanco,
         swtShowMessage,
         dispatchGetCurrentComments: getCurrentComments,
         dispatchFillComments: fillComments

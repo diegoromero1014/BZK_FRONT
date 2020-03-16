@@ -18,7 +18,8 @@ export default (state = initialState, action) => {
         fecha: task.fecha,
         fechaForm: task.fechaForm,
         commercialReport: task.commercialReport,
-        notes: task.notes
+        notes: task.notes,
+        taskAsignator: task.taskAsignator
       });
       return state.push(newTask);
     case constants.DELETE_TASK:

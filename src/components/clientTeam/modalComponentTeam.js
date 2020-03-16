@@ -119,7 +119,7 @@ export class ModalComponentTeam extends Component {
                         let users = _.get(data, 'payload.data.data');
                         this.user = users.find(usr => usr.description.toLowerCase() === window.localStorage.getItem('userNameFront').toLowerCase());
                         const seniorBanker = this.state.teamManagers.find(seniorBankerTeam =>  seniorBankerTeam.id ===  this.user.idUsuario);
-                        if(SENIOR_BANKER_BACK_UP !== seniorBanker.position && this.user.cargo === 'Banquero Senior'){
+                        if(seniorBanker !== undefined && SENIOR_BANKER_BACK_UP !== seniorBanker.position && this.user.cargo === 'Banquero Senior'){
                             if (null === infoClient.seniorBankerId) {
                                 this.setState({
                                     checkActive: false,

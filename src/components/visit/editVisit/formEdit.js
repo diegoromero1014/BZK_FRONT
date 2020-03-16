@@ -481,6 +481,7 @@ class FormEdit extends Component {
                     fecha: moment(value.closingDate).format('DD/MM/YYYY'),
                     fechaForm: moment(value.closingDate).format('DD/MM/YYYY'),
                     commercialReport: value.commercialReport,
+                    taskAsignator: value.taskAsignator,
                     notes: value.notes
                 };
                 addTask(task);

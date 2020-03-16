@@ -5,11 +5,32 @@ import * as actionsGlobal from "../../../../../src/actionsGlobal";
 let defaultProps = {};
 
 let htmlToTextStub;
+let preventDefault;
+let filterUsersBancoDispatch;
+let consultclick;
 
 describe('Test ModalTask component', () => {
 
     beforeEach(() => {
+        preventDefault = sinon.fake();
+        consultclick = sinon.fake();
         htmlToTextStub = sinon.stub(actionsGlobal, 'htmlToText');
+        filterUsersBancoDispatch = sinon.stub();
+        filterUsersBancoDispatch.resolves({
+            payload: {
+                data: {
+                    data: [
+                        {
+                            id: 1,
+                            title: 'Daniel Gallego'
+                        },
+                        {
+                            id: 2,
+                            title: 'Daniel Rodriguez'
+                        }]
+                }
+            }
+        });
         defaultProps = {
             fields: {
                 id: {
@@ -44,7 +65,8 @@ describe('Test ModalTask component', () => {
             handleSubmit: sinon.fake(),
             dispatchGetCurrentComments: sinon.fake(),
             dispatchFillComments: sinon.fake(),
-            swtShowMessage: sinon.fake()
+            swtShowMessage: sinon.fake(),
+            filterUsersBancoDispatch
         };
     });
 
@@ -77,6 +99,28 @@ describe('Test ModalTask component', () => {
             expect(defaultProps.dispatchGetCurrentComments.called).to.equal(true);
             expect(defaultProps.dispatchFillComments.called).to.equal(true);
             expect(defaultProps.swtShowMessage.called).to.equal(true);
+        });
+
+        it('updateKeyValueUserBanco should call dispatchSwtShowMessage when employeeValue length is less than 3', () => {
+            defaultProps.fields.responsable.value = 'Da';
+            const wrapper = shallow(<ModalTask {...defaultProps}/>);
+            wrapper.instance().updateKeyValueUsersBanco({ keyCode: 13, which: 13, preventDefault});
+            expect(defaultProps.swtShowMessage.called).to.equals(true);
+        });
+
+        it('updateKeyValueUserBanco should not call preventDefault', () => {
+            defaultProps.fields.responsable.value = 'Da';
+            const wrapper = shallow(<ModalTask {...defaultProps}/>);
+            wrapper.instance().updateKeyValueUsersBanco({ keyCode: 13, which: 13, consultclick});
+            expect(preventDefault.called).to.equals(false);
+        });
+
+        it('updateKeyValueUserBanco should call dispatchFilterUserBanco when employeeValue length is greater than 3', () => {
+            defaultProps.fields.responsable.value = 'Dani';
+            const wrapper = shallow(<ModalTask {...defaultProps}/>);
+            wrapper.instance().updateKeyValueUsersBanco({ keyCode: 13, which: 13, preventDefault});
+            expect(defaultProps.swtShowMessage.called).to.equals(false);
+            expect(filterUsersBancoDispatch.called).to.equals(true);
         });
     });
 });
