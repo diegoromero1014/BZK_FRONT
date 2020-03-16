@@ -3,6 +3,7 @@ import moment from 'moment';
 import GridComponent from '../grid/component';
 import { MODAL_TITLE } from './constants';
 import {MODULE_TASKS} from "../../constantsGlobal";
+import _ from 'lodash';
 
 class ListPendingTaskComponent extends Component {
 
@@ -45,7 +46,7 @@ class ListPendingTaskComponent extends Component {
         urlRedirect: '/dashboard/task',
         component: 'VIEW_TASK_ADMIN'
       });
-      var dateTaskFormat = moment(value.finalDate).locale('es');
+      let dateTaskFormat = moment(value.finalDate).locale('es');
       _.set(value, 'dateTaskFormat', dateTaskFormat.format("DD") + " " + dateTaskFormat.format("MMM") + " " + dateTaskFormat.format("YYYY"));
       _.set(value, "responsable", value.responsible);
       _.set(value, "assignedBy", value.assignedBy);
@@ -53,7 +54,7 @@ class ListPendingTaskComponent extends Component {
       let isFinalized = value.statusTask === 'Cancelada' || value.statusTask === 'Cerrada';
       _.set(value, "trafficLightIndicator", {days:value.workDaysToClose, isFinalized:isFinalized});
     });
-  }
+  };
 
   _renderHeaders = () => {
     return [
@@ -87,7 +88,7 @@ class ListPendingTaskComponent extends Component {
         key: "commercialReport.isConfidential"
       }
     ]
-  }
+  };
 
   render() {
     const { tasks } = this.props;
