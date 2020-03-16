@@ -39,7 +39,6 @@ class Pagination extends Component {
 
         for (let i = 0; i < totalPage; i++) {
             pages.push(i + 1);
-
         }
 
         await this.setState({ totalPage, pages });
