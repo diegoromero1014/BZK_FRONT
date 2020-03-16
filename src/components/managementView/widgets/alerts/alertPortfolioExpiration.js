@@ -4,33 +4,29 @@ import Table from "../../../table";
 import { COLUMNS_VENCIMIENTO_CARTERA } from './constants';
 import TableBuilder from "../../../table/TableBuilder";
 import { get } from 'lodash';
+import { bindActionCreators } from 'redux';
+import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExpirtation/actions';
 
-class alertPortfolioExpiration extends Component {
+class AlertPortfolioExpiration extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            totalRecords : 0
-        }
       }
 
-  async componentWillMount() {
-    const { dispatchGetAlertPortfolioExpirationDashboard } = this.props;
-    const response = await dispatchGetAlertPortfolioExpirationDashboard(1);
-    await this.setState({
-      totalRecords: get(response, "payload.data.data.pagination.rowCount")
-    });
+  async componentDidMount() {
+    const { dispatchGetAlertPortfolioExpirationDashboard, alertPortfolioExpiration } = this.props;
+    await dispatchGetAlertPortfolioExpirationDashboard(alertPortfolioExpiration.get('pageNum'));
   }
 
   render() {
-    const { alertPortfolioExpiration } = this.props;
-    const { totalRecords } = this.state;
+    const { alertPortfolioExpiration, dispatchGetAlertPortfolioExpirationDashboard } = this.props;
     const data = alertPortfolioExpiration.get("responseClients");
+    const totalRecords = alertPortfolioExpiration.get('totalClientsByFiltered');
     const tableSettings = new TableBuilder(data, COLUMNS_VENCIMIENTO_CARTERA)
       .setNoRowMessage("Aun no se han creado registros ")
       .setRecordsPerPage(5)
       .setTotalRecords(totalRecords || 0)
-      .setOnPageChange( async (page) => { await dispatchGetAlertPortfolioExpirationDashboard(page); debugger; })
+      .setOnPageChange( async (page) => { await dispatchGetAlertPortfolioExpirationDashboard(page); })
       .build();
 
     return (
@@ -44,7 +40,6 @@ class alertPortfolioExpiration extends Component {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-        dispatchAlerts: clientsPendingUpdateFindServerAlerts,
       dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard
     },
     dispatch
@@ -61,4 +56,4 @@ function mapStateToProps({ alertPortfolioExpiration }) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(alertPortfolioExpiration);
+)(AlertPortfolioExpiration);

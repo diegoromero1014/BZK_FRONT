@@ -8,7 +8,7 @@ import Reports from './widgets/reports';
 import Header from './header';
 
 import { updateTitleNavBar } from '../navBar/actions';
-import AlertSection from './widgets/alerts/alertSection';
+import AlertSection from './widgets/alerts';
 
 export class ManagementView extends Component {
 

@@ -2,17 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import TabComponent from "../../../../ui/Tab";
-import alertPortfolioExpiration from './alertPortfolioExpiration';
+import AlertPortfolioExpiration from './alertPortfolioExpiration';
 import {
   PORTFOLIO_EXPIRATION_TAB,
   COVENANTS_TAB,
   DEACTIVATED_CONTACTS_TABS,
   CONTROL_LISTS_TAB
 } from "./constants";
-
-import {
-  clientsPendingUpdateFindServerAlerts
-} from "../../../alertPortfolioExpirtation/actions";
 
 export class AlertSection extends Component {
   constructor(props) {
@@ -26,10 +22,10 @@ export class AlertSection extends Component {
         name: PORTFOLIO_EXPIRATION_TAB,
         content: (
           <div>
-            <alertPortfolioExpiration /> 
+            <AlertPortfolioExpiration /> 
           </div>
         ),
-        number: totalRecords
+        number: 8
       },
       {
         name: COVENANTS_TAB,
@@ -61,7 +57,6 @@ export class AlertSection extends Component {
 
 function mapDispatchToProps(dispatch) {  
   return bindActionCreators({
-    dispatchAlerts: clientsPendingUpdateFindServerAlerts,
   }, dispatch);
 }
 
