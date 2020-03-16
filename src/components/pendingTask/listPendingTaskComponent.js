@@ -17,20 +17,22 @@ class ListPendingTaskComponent extends Component {
   }
 
   componentDidMount() {
+    const { handleTaskByClientsFind, mode } = this.props;
     this.state = {
       orderA: 'inline-block',
       orderD: 'none'
     }
+    handleTaskByClientsFind(0, mode);
   }
 
-  _orderColumn(orderTask, columnTask) {
-    const { orderColumn } = this.props;
+  _orderColumn(orderTask) {
+    const { orderColumn, mode } = this.props;
     if (orderTask === 1) {
       this.setState({ orderA: 'none', orderD: 'inline-block' });
     } else {
       this.setState({ orderA: 'inline-block', orderD: 'none' });
     }
-    orderColumn(orderTask, columnTask);
+    orderColumn(orderTask, mode);
   }
 
 
@@ -45,6 +47,11 @@ class ListPendingTaskComponent extends Component {
       });
       var dateTaskFormat = moment(value.finalDate).locale('es');
       _.set(value, 'dateTaskFormat', dateTaskFormat.format("DD") + " " + dateTaskFormat.format("MMM") + " " + dateTaskFormat.format("YYYY"));
+      _.set(value, "responsable", value.responsible);
+      _.set(value, "assignedBy", value.assignedBy);
+      _.set(value, "status", value.statusTask);
+      let isFinalized = value.statusTask === 'Cancelada' || value.statusTask === 'Cerrada';
+      _.set(value, "trafficLightIndicator", {days:value.workDaysToClose, isFinalized:isFinalized});
     });
   }
 
@@ -70,6 +77,10 @@ class ListPendingTaskComponent extends Component {
       {
         title: "Estado",
         key: "status"
+      },
+      {
+        title: "",
+        key: "trafficLightIndicator"
       },
       {
         title: "",

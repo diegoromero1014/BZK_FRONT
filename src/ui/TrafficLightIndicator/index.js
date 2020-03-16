@@ -8,7 +8,7 @@ import {
 import TrafficLightComponent from './../../components/grid/trafficLightComponent';
 
 const TrafficLightIndicator = ({days, isFinalized}) => {
-    if (days <= 0 && !isFinalized) {
+    if (days === 0 && !isFinalized) {
       return (
         <TrafficLightComponent colorTraffict={{color:COLOR_RED}}></TrafficLightComponent>
       );
