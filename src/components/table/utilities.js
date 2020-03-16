@@ -1,9 +1,34 @@
 import React from 'react';
-import { Table } from 'semantic-ui-react';
+import { Table, Icon } from 'semantic-ui-react';
 import { get } from 'lodash';
-import { PROPERTY, ALL_OBJECT } from './constants';
+import { PROPERTY, ALL_OBJECT, ASCENDING } from './constants';
 
-export const buildHeaders = columns => columns.map(({ header }, index) => <Table.HeaderCell key={index}>{header}</Table.HeaderCell>);
+export const buildHeaders = (columns, orderedColumn, direction, handleSort) => columns.map(({ header, prop }, index) => (
+    <Table.HeaderCell
+        key={index}
+        style={{ cursor: 'pointer' }}
+        onClick={async () => await handleSort(prop)}
+    >
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <p style={{ margin: 0, padding: 0 }}>{header}</p>
+
+            {direction &&
+                renderSortedIcon(prop, orderedColumn, direction)
+            }
+
+        </div>
+    </Table.HeaderCell>
+));
+
+const renderSortedIcon = (prop, orderedColumn, direction) => {
+    if (prop === orderedColumn) {
+        if (direction === ASCENDING) {
+            return <Icon name='caret up' />;
+        } else {
+            return <Icon name='caret down' />;
+        }
+    }
+}
 
 export const buildRows = tableSettings => {
     const { data, colSpan, defaultNoRowMessage } = tableSettings;
