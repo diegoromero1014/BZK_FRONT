@@ -60,6 +60,7 @@ class Pagination extends Component {
     }
 
     handleOnChangePage = async page => {
+        debugger;
         const { onPageChange } = this.props;
 
         await this.setState({ page });
