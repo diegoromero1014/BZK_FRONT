@@ -2,7 +2,17 @@ import { DEFAULT_NO_ROW_MESSAGE } from "./constants";
 import { noop } from 'lodash';
 
 export default class TableSettings {
-    constructor({ data = [], columns = [], message = DEFAULT_NO_ROW_MESSAGE, onClick = noop(), totalRecords = 0, recordsPerPage = 10, onPageChange = noop(), options = [] }) {
+    constructor({ 
+        data = [], 
+        columns = [], 
+        message = DEFAULT_NO_ROW_MESSAGE, 
+        onClick = noop(), 
+        totalRecords = 0, 
+        recordsPerPage = 10, 
+        onPageChange = noop(), 
+        options = [],
+        onSort = noop()
+     }) {
         this.data = data
         this.columns = columns;
         this.message = message;
@@ -12,5 +22,6 @@ export default class TableSettings {
         this.recordsPerPage = recordsPerPage;
         this.onPageChange = onPageChange;
         this.options = options;
+        this.onSort = onSort;
     }
 }
