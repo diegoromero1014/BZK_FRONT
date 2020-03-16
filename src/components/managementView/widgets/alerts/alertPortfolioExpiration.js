@@ -9,24 +9,19 @@ import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExp
 
 class AlertPortfolioExpiration extends Component {
 
-    constructor(props) {
-        super(props);
-      }
-
-  async componentDidMount() {
-    const { dispatchGetAlertPortfolioExpirationDashboard, alertPortfolioExpiration } = this.props;
-    await dispatchGetAlertPortfolioExpirationDashboard(alertPortfolioExpiration.get('pageNum'));
+  componentDidMount() {
+    this.forceUpdate();
   }
+  
 
   render() {
-    const { alertPortfolioExpiration, dispatchGetAlertPortfolioExpirationDashboard } = this.props;
+    const { alertPortfolioExpiration, dispatchGetAlertPortfolioExpirationDashboard, total } = this.props;
     const data = alertPortfolioExpiration.get("responseClients");
-    const totalRecords = alertPortfolioExpiration.get('totalClientsByFiltered');
     const tableSettings = new TableBuilder(data, COLUMNS_VENCIMIENTO_CARTERA)
       .setNoRowMessage("Aun no se han creado registros ")
       .setRecordsPerPage(5)
-      .setTotalRecords(totalRecords || 0)
-      .setOnPageChange( async (page) => { await dispatchGetAlertPortfolioExpirationDashboard(page); })
+      .setTotalRecords(total)
+      .setOnPageChange(async page => await dispatchGetAlertPortfolioExpirationDashboard(page))
       .build();
 
     return (

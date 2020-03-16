@@ -9,23 +9,26 @@ import {
   DEACTIVATED_CONTACTS_TABS,
   CONTROL_LISTS_TAB
 } from "./constants";
+import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExpirtation/actions';
 
 export class AlertSection extends Component {
-  constructor(props) {
-    super(props);
-    this.countAlerts = this.countAlerts.bind(this);
+
+  async componentWillMount() {
+    const { dispatchGetAlertPortfolioExpirationDashboard } = this.props;
+
+    await dispatchGetAlertPortfolioExpirationDashboard(1);
   }
 
-  countAlerts() {
+  countAlerts = (total) => {
     const tabs = [
       {
         name: PORTFOLIO_EXPIRATION_TAB,
         content: (
           <div>
-            <AlertPortfolioExpiration /> 
+            <AlertPortfolioExpiration total={total} />
           </div>
         ),
-        number: 8
+        number: total
       },
       {
         name: COVENANTS_TAB,
@@ -51,16 +54,22 @@ export class AlertSection extends Component {
   }
 
   render() {
-    return this.countAlerts();
+    const { total } = this.props;
+
+    return this.countAlerts(total);
   }
 }
 
-function mapDispatchToProps(dispatch) {  
+const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
+    dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard
   }, dispatch);
 }
 
-const mapStateToProps = () => {}
+const mapStateToProps = ({ alertPortfolioExpiration }) => ({
+  alertPortfolioExpiration,
+  total: alertPortfolioExpiration.get('totalClientsByFiltered')
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlertSection);
 
