@@ -56,7 +56,7 @@ global.PropTypes = PropTypes;
 global.ReactDOM = ReactDOM;
 global.Node = {};
 global.window.localStorage = { getItem: () => {}, setItem: () => {} };
-global.window.sessionStorage = { getItem: () => {}, setItem: () => {}, removeItem: () => {} };
+global.window.sessionStorage = { getItem: () => {}, setItem: () => {}, removeItem: () => {}, clear: () => {} };
 global.window.open = () => {}
 global.window.dataLayer = [];
 global.window.Object = Object;
