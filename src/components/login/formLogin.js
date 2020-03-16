@@ -61,6 +61,7 @@ export class FormLogin extends Component {
     }
 
     redirectLogin = () => {
+        const { dispatchRedirectUrl } = this.props;
         this.setState({ showMessageNotification: false });
         dispatchRedirectUrl("/dashboard/clients");
     }

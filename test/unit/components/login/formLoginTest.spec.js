@@ -9,6 +9,7 @@ let defaultProps;
 let dispatchRedirectUrl;
 let dispatchChangeTokenStatus;
 let dispatchValidateLogin;
+let dispatchShowLoading;
 
 let store;
 const middlewares = [thunk];
@@ -24,7 +25,7 @@ describe('FormLogin Test', () => {
             dispatchClearStateLogin: sinon.fake(),
             login: Immutable.Map({ validateLogin: false}),
             dispatchRedirectUrl: sinon.fake(),
-            dispatchChangeTokenStatus: spy(sinon.fake()),
+            dispatchChangeTokenStatus: sinon.fake(),
             dispatchValidateLogin: sinon.stub().resolves({}),
         };
 
@@ -55,11 +56,11 @@ describe('FormLogin Test', () => {
         expect(wrapper.state().password).to.equal('any');
     })
 
-    // it('when instanced redirectLogin', () => {
-    //     const wrapper = shallow(<FormLogin {...defaultProps}/>);
-    //     wrapper.instance().redirectLogin();
-    //     sinon.assert.calledOnce(dispatchRedirectUrl);
-    // })
+    it('when instanced redirectLogin', () => {
+        const wrapper = shallow(<FormLogin {...defaultProps}/>);
+        wrapper.instance().redirectLogin();
+        expect(defaultProps.dispatchRedirectUrl.called).to.equal(true);
+    })
 
     it('when instanced getValueRecaptcha', () => {
         const wrapper = shallow(<FormLogin {...defaultProps}/>);
@@ -70,9 +71,60 @@ describe('FormLogin Test', () => {
 
     it('when instanced handleValidateLogin', () => {
         const wrapper = shallow(<FormLogin {...defaultProps}/>);
-        wrapper.instance().handleValidateLogin({ preventDefault: sinon.fake() });
-        sinon.assert.calledOnce(dispatchChangeTokenStatus);
-        // sinon.assert.calledOnce(dispatchShowLoading);
-        // sinon.assert.calledOnce(dispatchValidateLogin);
+        wrapper.instance().handleValidateLogin({ preventDefault: sinon.fake()});
+        expect(defaultProps.dispatchChangeTokenStatus.called).to.equal(true);
+        expect(defaultProps.dispatchShowLoading.called).to.equal(true);
+        expect(defaultProps.dispatchValidateLogin.called).to.equal(true);
+    })
+
+    it('when instanced handleValidateLogin when dispatchValidateLogin -> status is 0.', () => {
+        defaultProps.dispatchValidateLogin = sinon.stub().resolves({
+            payload: {
+                data: {
+                    status: null
+                }
+            }
+        })
+        const wrapper = shallow(<FormLogin {...defaultProps}/>);
+        wrapper.instance().handleValidateLogin({ preventDefault: sinon.fake()});
+        expect(defaultProps.dispatchChangeTokenStatus.called).to.equal(true);
+        expect(defaultProps.dispatchShowLoading.called).to.equal(true);
+        expect(defaultProps.dispatchValidateLogin.called).to.equal(true);
+    })
+
+    it('when instanced handleValidateLogin when dispatchValidateLogin -> status is 200 and message is not empty', () => {
+        defaultProps.dispatchValidateLogin = sinon.stub().resolves({
+            payload: {
+                data: {
+                    status: 200,
+                    data: {
+                        message: 'Any message'
+                    }
+                }
+            }
+        })
+        const wrapper = shallow(<FormLogin {...defaultProps}/>);
+        wrapper.instance().handleValidateLogin({ preventDefault: sinon.fake()});
+        expect(defaultProps.dispatchChangeTokenStatus.called).to.equal(true);
+        expect(defaultProps.dispatchShowLoading.called).to.equal(true);
+        expect(defaultProps.dispatchValidateLogin.called).to.equal(true);
+    })
+
+    it('when instanced handleValidateLogin when dispatchValidateLogin -> status is 200 and message is not defined', () => {
+        defaultProps.dispatchValidateLogin = sinon.stub().resolves({
+            payload: {
+                data: {
+                    status: 200,
+                    data: {
+                        message: null
+                    }
+                }
+            }
+        })
+        const wrapper = shallow(<FormLogin {...defaultProps}/>);
+        wrapper.instance().handleValidateLogin({ preventDefault: sinon.fake()});
+        expect(defaultProps.dispatchChangeTokenStatus.called).to.equal(true);
+        expect(defaultProps.dispatchShowLoading.called).to.equal(true);
+        expect(defaultProps.dispatchValidateLogin.called).to.equal(true);
     })
 })
