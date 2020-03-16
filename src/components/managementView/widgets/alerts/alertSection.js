@@ -6,14 +6,17 @@ import {
   PORTFOLIO_EXPIRATION_TAB,
   COVENANTS_TAB,
   DEACTIVATED_CONTACTS_TABS,
-  CONTROL_LISTS_TAB
+  CONTROL_LISTS_TAB,
+  COLUMNS_VENCIMIENTO_CARTERA
 } from "./constants";
+import TableComponent from '../../../table/index';
 import ListClientsAlertPortfolioExp from "../../../alertPortfolioExpirtation/listPortfolioExpiration";
 
 import {
   clientsPendingUpdateFindServerAlerts,
   clearFilter
 } from "../../../alertPortfolioExpirtation/actions";
+import TableBuilder from "../../../table/TableBuilder";
 
 export class AlertSection extends Component {
   constructor(props) {
@@ -28,6 +31,12 @@ export class AlertSection extends Component {
 
   countAlerts() {
     const { alertPortfolioExpiration } = this.props;    
+    const data = alertPortfolioExpiration.get('responseClients');
+    const tableSettings = new TableBuilder(data, COLUMNS_VENCIMIENTO_CARTERA)
+      .setNoRowMessage("Aun no se han creado registros ")
+      .setRecordsPerPage(5)
+      .setTotalRecords(10)
+      .build()
     const numberTotalClientFiltered = alertPortfolioExpiration.get(
       "totalClientsByFiltered"
     );
@@ -36,19 +45,16 @@ export class AlertSection extends Component {
         name: PORTFOLIO_EXPIRATION_TAB,
         content: (
           <div>
-            <ListClientsAlertPortfolioExp />
+            {/* <ListClientsAlertPortfolioExp /> */}
+            <TableComponent tableSettings={tableSettings}/> 
           </div>
         ),
         number: numberTotalClientFiltered
       },
       {
         name: COVENANTS_TAB,
-        content: (
-          <div>
-            <ListClientsAlertPortfolioExp />
-          </div>
-        ),
-        number: numberTotalClientFiltered
+        content: <div>Tab 3 Content</div>,
+        disable: false
       },
       {
         name: DEACTIVATED_CONTACTS_TABS,
