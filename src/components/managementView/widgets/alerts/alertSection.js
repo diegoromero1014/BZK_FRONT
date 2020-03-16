@@ -10,36 +10,48 @@ import {
   COLUMNS_VENCIMIENTO_CARTERA
 } from "./constants";
 import TableComponent from '../../../table/index';
-import ListClientsAlertPortfolioExp from "../../../alertPortfolioExpirtation/listPortfolioExpiration";
+import { get } from 'lodash';
 
 import {
   clientsPendingUpdateFindServerAlerts,
-  clearFilter
+  getAlertPortfolioExpirationDashboard
 } from "../../../alertPortfolioExpirtation/actions";
 import TableBuilder from "../../../table/TableBuilder";
 
 export class AlertSection extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      totalRecords: 0
+    }
+
     this.countAlerts = this.countAlerts.bind(this);
   }
 
   async componentWillMount() {
-    const { dispatchClearFilter } = this.props;    
-    await dispatchClearFilter();
+    const { dispatchGetAlertPortfolioExpirationDashboard } = this.props;    
+    const response = await dispatchGetAlertPortfolioExpirationDashboard(1);
+    await this.setState({
+      totalRecords: get(response, 'payload.data.data.pagination.rowCount')
+    })
   }
 
   countAlerts() {
-    const { alertPortfolioExpiration } = this.props;    
+    
+    const { alertPortfolioExpiration } = this.props;
+    const { totalRecords } = this.state;
+
     const data = alertPortfolioExpiration.get('responseClients');
+
+    debugger;
+
     const tableSettings = new TableBuilder(data, COLUMNS_VENCIMIENTO_CARTERA)
       .setNoRowMessage("Aun no se han creado registros ")
       .setRecordsPerPage(5)
-      .setTotalRecords(10)
+      .setTotalRecords(totalRecords)
       .build()
-    const numberTotalClientFiltered = alertPortfolioExpiration.get(
-      "totalClientsByFiltered"
-    );
+    
     const tabs = [
       {
         name: PORTFOLIO_EXPIRATION_TAB,
@@ -49,7 +61,7 @@ export class AlertSection extends Component {
             <TableComponent tableSettings={tableSettings}/> 
           </div>
         ),
-        number: numberTotalClientFiltered
+        number: totalRecords
       },
       {
         name: COVENANTS_TAB,
@@ -74,7 +86,7 @@ export class AlertSection extends Component {
     );
   }
 
-  render() {    
+  render() {
     return this.countAlerts();
   }
 }
@@ -82,13 +94,14 @@ export class AlertSection extends Component {
 function mapDispatchToProps(dispatch) {  
   return bindActionCreators({
     dispatchAlerts: clientsPendingUpdateFindServerAlerts,
-    dispatchClearFilter: clearFilter
+    dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard
   }, dispatch);
 }
 
 function mapStateToProps({ alertPortfolioExpiration }) {
   return {
-    alertPortfolioExpiration
+    alertPortfolioExpiration,
+    totalRecords: alertPortfolioExpiration.get('totalClientsByFiltered')
   };
 }
 

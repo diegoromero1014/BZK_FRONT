@@ -21,7 +21,7 @@ export const COLUMNS_VENCIMIENTO_CARTERA = [
         prop : 'daysOverdue'
     },
     {
-        header : 'Linea de negocio',
+        header : 'Línea de negocio',
         prop : 'entity'
     },
 ]
