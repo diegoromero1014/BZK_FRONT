@@ -7,7 +7,7 @@ import {
     AFFIRMATIVE_ANSWER,
     CANCEL,
     EDITAR,
-    MESSAGE_SAVE_DATA,
+    MESSAGE_SAVE_DATA, MODULE_BUSSINESS_PLAN, MODULE_VISITS,
     REQUEST_INVALID_INPUT,
     REQUEST_SUCCESS
 } from "../../constantsGlobal";
@@ -41,6 +41,9 @@ import CommentsComponent from "../globalComponents/comments/commentsComponent";
 import {fillComments, getCurrentComments} from "../globalComponents/comments/actions";
 import {filterUsers} from "../commercialReport/actions";
 import ButtonDetailsRedirectComponent from "../grid/buttonDetailsRedirectComponent";
+import {detailBusiness} from "../businessPlan/actions";
+import {detailVisit} from "../visit/actions";
+import {validatePermissionsByModule} from "../../actionsGlobal";
 
 let nameEntity;
 
@@ -82,17 +85,17 @@ export class TaskPage extends React.Component {
             let userName = window.localStorage.getItem("userNameFront");
             const filterUserResponse = await filterUsersBancoDispatch(userName);
             const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
-            if (taskDetail) {
-                dispatchFillComments(taskDetail.notes);
+            if (id) {
                 this.setState({
                     nameUsuario: taskDetail.assignedBy
                 });
-                nameEntity = taskDetail.nameEntity;
-                this.entityId = taskDetail.entityId;
-            }else{
+            } else {
                 await this.setState({
                     nameUsuario: _.get(filterUserResponse, 'payload.data.data[0].title')
                 });
+            }
+            if (taskDetail) {
+                dispatchFillComments(taskDetail.notes);
             }
         });
     }
@@ -206,14 +209,24 @@ export class TaskPage extends React.Component {
     };
 
     getInfoTask = async (id) => {
-        const { dispatchGetInfoTaskUser, dispatchFillComments } = this.props;
+        const { dispatchGetInfoTaskUser, dispatchFillComments, dispatchDetailBusiness, dispatchDetailVisit, dispatchValidatePermissionsByModule } = this.props;
         if (id) {
             const response = await dispatchGetInfoTaskUser(id);
             const taskInfo = _.get(response, 'payload.data.data');
             dispatchFillComments(taskInfo.notes);
+            nameEntity = taskInfo.nameEntity;
+            this.entityId = taskInfo.entityId;
+            if (taskInfo.nameEntity === 'Plan de negocio') {
+                dispatchValidatePermissionsByModule(MODULE_BUSSINESS_PLAN);
+                dispatchDetailBusiness(taskInfo.entityId);
+            } else if (taskInfo.nameEntity === 'Visita') {
+                dispatchValidatePermissionsByModule(MODULE_VISITS);
+                dispatchDetailVisit(taskInfo.entityId);
+            }
             this.setState({
                 isEditable: true,
-                formValid: true
+                formValid: true,
+                nameUsuario: taskInfo.assignedBy
             });
         } else {
             this.setState({
@@ -282,7 +295,6 @@ export class TaskPage extends React.Component {
     render() {
         const {isEditable} = this.state;
         const {fromModal} = this.props;
-        console.log(nameEntity);
         return (
             <div style={{marginBottom: '5em'}}>
                 {!fromModal &&
@@ -314,8 +326,9 @@ export class TaskPage extends React.Component {
                 {
                     this.state.renderForm ? this.renderForm() : null
                 }
+                {nameEntity &&
                 <div className="modalBt4-footer modal-footer" style={{zIndex: 2}}>
-                    {nameEntity &&
+
                         <Row xs={12} md={12} lg={12}>
                             <Col xs={6} md={10} lg={10}
                                  style={{textAlign: "left", varticalAlign: "middle", marginLeft: "0px"}}>
@@ -331,16 +344,10 @@ export class TaskPage extends React.Component {
                                         style={{fontWeight: "bold", color: "#818282"}}>Pendiente de {nameEntity}</span>
                                 }
                             </Col>
-                            <Col xs={6} md={2} lg={2}>
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary modal-button-edit"
-                                    disabled={this.state.isEditable ? '' : 'disabled'}
-                                >{'Guardar'}</button>
-                            </Col>
                         </Row>
-                    }
+
                 </div>
+                }
                 <SweetAlert
                     type="warning"
                     show={this.state.showConfirmationCancelTask}
@@ -368,12 +375,25 @@ function mapDispatchToProps(dispatch) {
         dispatchConsultInfoClient: consultInfoClient,
         filterUsersBancoDispatch: filterUsers,
         dispatchGetCurrentComments: getCurrentComments,
-        dispatchFillComments: fillComments
+        dispatchFillComments: fillComments,
+        dispatchDetailBusiness: detailBusiness,
+        dispatchDetailVisit: detailVisit,
+        dispatchValidatePermissionsByModule: validatePermissionsByModule
     }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, usersPermission, tasksByClient, myPendingsReducer, commentsReducer}) {
-function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, usersPermission, tasksByClient, myPendingsReducer, businessPlanReducer, visitReducer}) {
+function mapStateToProps(
+    {
+        clientInformacion,
+        reducerGlobal,
+        selectsReducer,
+        usersPermission,
+        tasksByClient,
+        myPendingsReducer,
+        commentsReducer,
+        businessPlanReducer,
+        visitReducer
+    }) {
     return {
         clientInformacion,
         reducerGlobal,
@@ -382,8 +402,7 @@ function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, user
         tasksByClient,
         myPendingsReducer,
         businessPlanReducer,
-        visitReducer
-        myPendingsReducer,
+        visitReducer,
         commentsReducer
     };
 }
