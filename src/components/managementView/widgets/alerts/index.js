@@ -33,12 +33,12 @@ export class AlertSection extends Component {
       {
         name: COVENANTS_TAB,
         content: <div>Tab 3 Content</div>,
-        disable: false
+        disable: true
       },
       {
         name: DEACTIVATED_CONTACTS_TABS,
         content: <div>Tab 3 Content</div>,
-        disable: false
+        disable: true
       },
       {
         name: CONTROL_LISTS_TAB,

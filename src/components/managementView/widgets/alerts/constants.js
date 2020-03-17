@@ -17,7 +17,7 @@ export const COLUMNS_VENCIMIENTO_CARTERA = [
         prop : 'balanceOverdue',
     },
     {
-        header : 'Días mora proyectado',
+        header : 'Días mora proyectados',
         prop : 'daysOverdue',
     },
     {

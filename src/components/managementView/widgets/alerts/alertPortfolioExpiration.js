@@ -5,6 +5,8 @@ import { COLUMNS_VENCIMIENTO_CARTERA } from './constants';
 import TableBuilder from "../../../table/TableBuilder";
 import { bindActionCreators } from 'redux';
 import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExpirtation/actions';
+import { Button } from 'semantic-ui-react'
+import { redirectUrl } from "../../../globalComponents/actions";
 
 class AlertPortfolioExpiration extends Component {
 
@@ -25,8 +27,11 @@ class AlertPortfolioExpiration extends Component {
     return (
       <div>
         <Table tableSettings={tableSettings} />
+        <Button fluid onClick = {() =>{
+            redirectUrl("/dashboard/alertClientsPortfolioExpiration");
+        } }>Ver detalle</Button>
       </div>
-    );
+    );  
   }
 }
 
