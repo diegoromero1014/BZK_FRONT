@@ -49,6 +49,7 @@ describe("Test TrafficLightIndicator",  () => {
       const wrapper = shallow(
         <TrafficLightIndicator {...props}></TrafficLightIndicator>
       );      
-      expect(Object.keys(wrapper).length).to.equals(0);
+      expect(wrapper).to.have.length(1);
+      expect(wrapper.props().colorTraffict.color).to.equals("rgba(255, 255, 255,0)");
     });
 });

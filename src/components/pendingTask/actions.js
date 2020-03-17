@@ -191,7 +191,7 @@ export function searchTaskPending() {
   return axios.post(APP_URL + "/getTask", json);
 }
 
-export function pendingTasksByClientPromise(pageNum, clientId, maxRows, order){
+export function pendingTasksByClientPromise(pageNum, clientId, maxRows, order, textToSearch){
   const json = {
     messageHeader: {
       sessionToken: window.localStorage.getItem("sessionTokenFront"),
@@ -213,13 +213,14 @@ export function pendingTasksByClientPromise(pageNum, clientId, maxRows, order){
       mode: "CLIENT",
       filter: {
         clientId,
-        order
+        order,
+        textToSearch
       }
     }
   };
   return axios.post(APP_URL + "/getTask", json);
 }
-export function finalizedTasksByClientPromise(pageNum, clientId, maxRows, order){
+export function finalizedTasksByClientPromise(pageNum, clientId, maxRows, order, textToSearch){
   const json = {
     messageHeader: {
       sessionToken: window.localStorage.getItem("sessionTokenFront"),
@@ -241,7 +242,8 @@ export function finalizedTasksByClientPromise(pageNum, clientId, maxRows, order)
       mode: "CLIENT",
       filter: {
         clientId,
-        order
+        order,
+        textToSearch
       }
     }
   };

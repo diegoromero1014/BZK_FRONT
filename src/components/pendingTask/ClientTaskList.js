@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Dimmer, Loader } from 'semantic-ui-react';
+import { Row, Grid, Col } from 'react-flexbox-grid';
 import {
   pendingTasksByClientPromise,
   pendingTasksByClientFindServer,
@@ -22,26 +22,24 @@ import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions
 import { redirectUrl } from '../globalComponents/actions';
 import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _TASK } from '../../constantsAnalytics';
 import TabComponent from './../../ui/Tab';
-import PendingTasksIndicatorHelp from './pendingTasksHelp';
+import PendingTasksHelp from "./pendingTasksHelp";
 import SearchInputComponent from "../../ui/searchInput/SearchInputComponent";
-class ClientTaskList extends Component {
+export class ClientTaskList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       openMessagePermissions: false,
       loading: false    
     };
-    this.createTask= this.createTask.bind(this);
-    this._onChangeSearch = this._onChangeSearch.bind(this);
   }
-  dispatchPendingTasks = async (pageNum, order) => {
+  dispatchPendingTasks = async (pageNum, order, textToSearch) => {
     const {dispatchPendingTasksByClientFindServer} = this.props;
     this.setState({loading: true});
     const result = await pendingTasksByClientPromise(
       pageNum,
       window.sessionStorage.getItem("idClientSelected"),
       NUMBER_RECORDS,
-      order
+      order,textToSearch
     );
     if (REQUEST_SUCCESS === result.data.status) {
       const dataPending = result.data.data;
@@ -49,14 +47,14 @@ class ClientTaskList extends Component {
     }
     this.setState({ loading: false });
   }
-  dispatchFinalizedTask = async (pageNum, order) => {
+  dispatchFinalizedTask = async (pageNum, order, textToSearch) => {
     const { dispatchFinalizedTasksByClientFindServer } = this.props;
     this.setState({ loading: true });
     const result = await finalizedTasksByClientPromise(
       pageNum,
       window.sessionStorage.getItem("idClientSelected"),
       NUMBER_RECORDS,
-      order
+      order,textToSearch
     );
     if (REQUEST_SUCCESS === result.data.status) {
       const data = result.data.data;
@@ -81,8 +79,8 @@ class ClientTaskList extends Component {
       } = this.props;
       dispatchCleanPagAndOrderColumnPendingUserTask(0);
       dispatchCleanPagAndOrderColumnFinalizedUserTask(0);
-      this.dispatchPendingTasks(0, 0);
-      this.dispatchFinalizedTask(0, 0);
+      this.dispatchPendingTasks(0, 0, "");
+      this.dispatchFinalizedTask(0, 0, "");
       dispatchValidatePermissionsByModule(MODULE_TASKS).then(data => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
@@ -103,27 +101,29 @@ class ClientTaskList extends Component {
     switch (mode) {
       case PENDING:
         dispatchCleanPagAndOrderColumnPendingUserTask(orderTask);
-        this.dispatchPendingTasks(0, orderTask);
+        this.dispatchPendingTasks(0, orderTask, "");
         break;
       case FINISHED:
         dispatchCleanPagAndOrderColumnFinalizedUserTask(orderTask);
-        dispatchFinalizedTask(0, orderTask);
+        this.dispatchFinalizedTask(0, orderTask, "");
         break;
     }
   };
 
-    _onChangeSearch(value){
 
+    _onChangeSearch(value){
+      this.dispatchPendingTasks(0, tasksByClient.get("tabPending").order, value);
+      this.dispatchFinalizedTask(0, tasksByClient.get("tabFinished").order, value);
     }
 
   handleTaskByClientsFind = (limInf, mode )=> {
     const { tasksByClient } = this.props;
     switch (mode) {
       case PENDING:   
-        this.dispatchPendingTasks(limInf, tasksByClient.get("tabPending").order);
+        this.dispatchPendingTasks(limInf, tasksByClient.get("tabPending").order, "");
         break;
       case FINISHED:
-        this.dispatchFinalizedTask(limInf, tasksByClient.get("tabFinished").order);
+        this.dispatchFinalizedTask(limInf, tasksByClient.get("tabFinished").order, "");
         break;
     }
     
@@ -156,7 +156,7 @@ class ClientTaskList extends Component {
         break;
     }
   }
-  createTask() {
+  createTask = () => {
     const { dispatchUpdateTitleNavBar } = this.props;
     dispatchUpdateTitleNavBar("Tareas");
     redirectUrl("/dashboard/task");
@@ -193,9 +193,6 @@ class ClientTaskList extends Component {
                   </Col>
               </Row>
             <Row>
-              <PendingTasksIndicatorHelp></PendingTasksIndicatorHelp>
-            </Row>
-            <Row>
               <Col xs>
                 {_.get(
                   reducerGlobal.get("permissionsTasks"),
@@ -224,6 +221,9 @@ class ClientTaskList extends Component {
             </Row>
           </Grid>
         </div>
+        <Row>
+          <PendingTasksHelp></PendingTasksHelp>
+        </Row>
         <div>
           {this.state.loading === true ? "Cargando..." : ""}
           <Grid style={{ width: "100%" }}>

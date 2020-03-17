@@ -3,6 +3,7 @@ import moment from 'moment';
 import GridComponent from '../grid/component';
 import { MODAL_TITLE } from './constants';
 import {MODULE_TASKS} from "../../constantsGlobal";
+import _ from 'lodash';
 
 class ListPendingTaskComponent extends Component {
 
@@ -45,7 +46,7 @@ class ListPendingTaskComponent extends Component {
         urlRedirect: '/dashboard/task',
         component: 'VIEW_TASK_ADMIN'
       });
-      var dateTaskFormat = moment(value.finalDate).locale('es');
+      let dateTaskFormat = moment(value.finalDate).locale('es');
       _.set(value, 'dateTaskFormat', dateTaskFormat.format("DD") + " " + dateTaskFormat.format("MMM") + " " + dateTaskFormat.format("YYYY"));
       _.set(value, "responsable", value.responsible);
       _.set(value, "assignedBy", value.assignedBy);
@@ -53,41 +54,45 @@ class ListPendingTaskComponent extends Component {
       let isFinalized = value.statusTask === 'Cancelada' || value.statusTask === 'Cerrada';
       _.set(value, "trafficLightIndicator", {days:value.workDaysToClose, isFinalized:isFinalized});
     });
-  }
+  };
 
   _renderHeaders = () => {
     return [
       {
-        title: "",
-        key: "actionsRedirect"
+        title: "Asignado por",
+        key: "assignedBy"
       },
       {
         title: "Responsable",
         key: "responsable"
       },
       {
-        title: "Asignado por",
-        key: "assignedBy"
+        title: "",
+        style:{width:"1px"},
+        key: "trafficLightIndicator"
       },
       {
         title: "Fecha de cierre",
         key: "dateTaskFormat",
+        style:{ width:"200px" },
         orderColumn: <span><i className="caret down icon" style={{ cursor: 'pointer', display: this.state.orderD }} onClick={() => this._orderColumn(0, "finalDate")}></i><i className="caret up icon" style={{ cursor: 'pointer', display: this.state.orderA }} onClick={() => this._orderColumn(1, "finalDate")}></i></span>
       },
+      
       {
         title: "Estado",
         key: "status"
       },
       {
-        title: "",
-        key: "trafficLightIndicator"
+        title: "Ver",
+        style:{ width:"50px" },
+        key: "actionsRedirect"
       },
       {
         title: "",
         key: "commercialReport.isConfidential"
       }
     ]
-  }
+  };
 
   render() {
     const { tasks } = this.props;
