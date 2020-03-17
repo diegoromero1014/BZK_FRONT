@@ -17,18 +17,16 @@ class TableComponent extends Component {
         const { orderedColumn, direction } = this.state;
         const { tableSettings: { onSort } } = this.props;
 
-        if (onSort) {
-            if (orderedColumn !== clickedColumn) {
-                await this.setState({
-                    orderedColumn: clickedColumn,
-                    direction: 'ascending',
-                })
-            } else {
-                await this.setState({ direction: direction === 'ascending' ? 'descending' : 'ascending' });
-            }
-
-            onSort(this.state.orderedColumn, this.state.direction);
+        if (orderedColumn !== clickedColumn) {
+            await this.setState({
+                orderedColumn: clickedColumn,
+                direction: 'ascending',
+            })
+        } else {
+            await this.setState({ direction: direction === 'ascending' ? 'descending' : 'ascending' });
         }
+
+        onSort(this.state.orderedColumn, this.state.direction);
     }
 
     render() {

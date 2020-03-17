@@ -32,12 +32,12 @@ const renderSortedIcon = (prop, orderedColumn, direction) => {
 }
 
 export const buildRows = tableSettings => {
-    const { data, colSpan, defaultNoRowMessage } = tableSettings;
+    const { data, colSpan, message } = tableSettings;
 
     if (validateData(data)) {
         return data.map((element, index) => buildRow(element, index, tableSettings));
     } else {
-        return <Table.HeaderCell colSpan={colSpan} textAlign='center'>{defaultNoRowMessage}</Table.HeaderCell>
+        return <Table.HeaderCell colSpan={colSpan} textAlign='center'>{message}</Table.HeaderCell>
     }
 }
 
