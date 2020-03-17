@@ -38,6 +38,9 @@ import {clearTask} from "./actions";
 import _ from 'lodash';
 import {consultInfoClient} from "../clientInformation/actions";
 import {filterUsers} from "../commercialReport/actions";
+import ButtonDetailsRedirectComponent from "../grid/buttonDetailsRedirectComponent";
+
+let nameEntity;
 
 export class TaskPage extends React.Component {
     constructor(props) {
@@ -49,15 +52,16 @@ export class TaskPage extends React.Component {
             shouldRedirect: false,
             renderForm: false,
             nameUsuario: ''
-        }
+        };
+        this.entityId = null;
     }
 
     componentWillMount() {
-        const { idClient, dispatchConsultInfoClient } = this.props;
-        if(idClient){
+        const {idClient, dispatchConsultInfoClient} = this.props;
+        if (idClient) {
             window.sessionStorage.setItem('idClientSelected', idClient);
             dispatchConsultInfoClient().then(this.validateClientSelected);
-        }else{
+        } else {
             this.validateClientSelected();
         }
 
@@ -79,10 +83,12 @@ export class TaskPage extends React.Component {
                 nameUsuario: _.get(filterUserResponse, 'payload.data.data[0].title')
             });
             const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
-            if(taskDetail) {
+            if (taskDetail) {
                 this.setState({
                     nameUsuario: taskDetail.assignedBy
                 });
+                nameEntity = taskDetail.nameEntity;
+                this.entityId = taskDetail.entityId;
             }
         });
     }
@@ -96,7 +102,7 @@ export class TaskPage extends React.Component {
     }
 
     validateClientSelected = () => {
-        const { clientInformacion } = this.props;
+        const {clientInformacion} = this.props;
         if (_.isEmpty(clientInformacion.get('responseClientInfo'))) {
             redirectUrl(ComponentClientInformationURL)
         }
@@ -208,6 +214,37 @@ export class TaskPage extends React.Component {
         }
     };
 
+    handleRelationLink = () => {
+        const {businessPlanReducer, visitReducer} = this.props;
+        let actionsRedirect;
+        let detail;
+        switch (nameEntity) {
+            case "Plan de negocio":
+                detail = businessPlanReducer.get("detailBusiness");
+                actionsRedirect = {
+                    typeClickDetail: "businessPlan",
+                    ownerDraft: detail.data.documentStatus,
+                    idClient: this.clientId,
+                    urlRedirect: "/dashboard/businessPlanEdit",
+                    id: this.entityId
+                };
+                break;
+            case"Visita":
+                detail = visitReducer.get("detailVisit");
+                actionsRedirect = {
+                    typeClickDetail: "visita",
+                    ownerDraft: detail.data.documentStatus,
+                    idClient: this.clientId,
+                    urlRedirect: "/dashboard/visitaEditar",
+                    id: this.entityId
+                };
+                break;
+            default:
+                break;
+        }
+        return actionsRedirect;
+    };
+
     renderForm = () => {
         const {params: {id}, selectsReducer, fromModal, myPendingsReducer} = this.props;
         const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
@@ -233,10 +270,11 @@ export class TaskPage extends React.Component {
     render() {
         const {isEditable} = this.state;
         const {fromModal} = this.props;
+        console.log(nameEntity);
         return (
             <div className='previsit-container'>
                 {!fromModal &&
-                    <ReportsHeader/>
+                <ReportsHeader/>
                 }
                 <div style={{backgroundColor: "#FFFFFF", paddingTop: "10px", width: "100%", paddingBottom: "50px"}}>
                     <Row style={{padding: "5px 10px 0px 20px"}}>
@@ -264,6 +302,33 @@ export class TaskPage extends React.Component {
                 {
                     this.state.renderForm ? this.renderForm() : null
                 }
+                <div className="modalBt4-footer modal-footer" style={{zIndex: 2}}>
+                    {nameEntity &&
+                        <Row xs={12} md={12} lg={12}>
+                            <Col xs={6} md={10} lg={10}
+                                 style={{textAlign: "left", varticalAlign: "middle", marginLeft: "0px"}}>
+                                {!_.isNull(this.entityId) ?
+                                    <span style={{fontWeight: "bold", color: "#818282"}}>Pendiente de {nameEntity}
+                                        <span style={{paddingLeft: "2em"}}>
+                                        <ButtonDetailsRedirectComponent actionsRedirect={() => {
+                                            return this.handleRelationLink()
+                                        }}/>
+                                      </span>
+                                    </span>
+                                    : <span
+                                        style={{fontWeight: "bold", color: "#818282"}}>Pendiente de {nameEntity}</span>
+                                }
+                            </Col>
+                            <Col xs={6} md={2} lg={2}>
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary modal-button-edit"
+                                    disabled={this.state.isEditable ? '' : 'disabled'}
+                                >{'Guardar'}</button>
+                            </Col>
+                        </Row>
+                    }
+                </div>
                 <SweetAlert
                     type="warning"
                     show={this.state.showConfirmationCancelTask}
@@ -293,14 +358,16 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, usersPermission, tasksByClient, myPendingsReducer}) {
+function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, usersPermission, tasksByClient, myPendingsReducer, businessPlanReducer, visitReducer}) {
     return {
         clientInformacion,
         reducerGlobal,
         selectsReducer,
         usersPermission,
         tasksByClient,
-        myPendingsReducer
+        myPendingsReducer,
+        businessPlanReducer,
+        visitReducer
     };
 }
 
