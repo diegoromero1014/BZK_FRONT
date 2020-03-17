@@ -23,6 +23,7 @@ import { redirectUrl } from '../globalComponents/actions';
 import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _TASK } from '../../constantsAnalytics';
 import TabComponent from './../../ui/Tab';
 import PendingTasksIndicatorHelp from './pendingTasksHelp';
+import SearchInputComponent from "../../ui/searchInput/SearchInputComponent";
 class ClientTaskList extends Component {
   constructor(props) {
     super(props);
@@ -31,6 +32,7 @@ class ClientTaskList extends Component {
       loading: false    
     };
     this.createTask= this.createTask.bind(this);
+    this._onChangeSearch = this._onChangeSearch.bind(this);
   }
   dispatchPendingTasks = async (pageNum, order) => {
     const {dispatchPendingTasksByClientFindServer} = this.props;
@@ -110,6 +112,10 @@ class ClientTaskList extends Component {
     }
   };
 
+    _onChangeSearch(value){
+
+    }
+
   handleTaskByClientsFind = (limInf, mode )=> {
     const { tasksByClient } = this.props;
     switch (mode) {
@@ -181,6 +187,11 @@ class ClientTaskList extends Component {
           }}
         >
           <Grid style={{ width: "100%" }}>
+              <Row>
+                  <Col xs={12} sm={8} md={6} lg={6}>
+                      <SearchInputComponent onChangeSearch={(text)=> this._onChangeSearch(text)}/>
+                  </Col>
+              </Row>
             <Row>
               <PendingTasksIndicatorHelp></PendingTasksIndicatorHelp>
             </Row>
