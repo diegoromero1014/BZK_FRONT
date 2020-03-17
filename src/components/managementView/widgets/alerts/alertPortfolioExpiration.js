@@ -16,7 +16,7 @@ class AlertPortfolioExpiration extends Component {
     const { alertPortfolioExpiration, dispatchGetAlertPortfolioExpirationDashboard, total } = this.props;
     const data = alertPortfolioExpiration.get("responseClients");
     const tableSettings = new TableBuilder(data, COLUMNS_VENCIMIENTO_CARTERA)
-      .setNoRowMessage("Aun no se han creado registros ")
+      .setNoRowMessage("Aún no se han creado registros.")
       .setRecordsPerPage(5)
       .setTotalRecords(total)
       .setOnPageChange(async page => await dispatchGetAlertPortfolioExpirationDashboard(page))
