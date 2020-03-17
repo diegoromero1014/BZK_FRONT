@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Row, Grid, Col } from 'react-flexbox-grid';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Dimmer, Loader } from 'semantic-ui-react';
+import { Row, Grid, Col } from 'react-flexbox-grid';
 import {
   pendingTasksByClientPromise,
   pendingTasksByClientFindServer,
@@ -23,14 +23,13 @@ import { redirectUrl } from '../globalComponents/actions';
 import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _TASK } from '../../constantsAnalytics';
 import TabComponent from './../../ui/Tab';
 import PendingTasksIndicatorHelp from './pendingTasksHelp';
-class ClientTaskList extends Component {
+export class ClientTaskList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       openMessagePermissions: false,
       loading: false    
     };
-    this.createTask= this.createTask.bind(this);
   }
   dispatchPendingTasks = async (pageNum, order) => {
     const {dispatchPendingTasksByClientFindServer} = this.props;
@@ -105,12 +104,12 @@ class ClientTaskList extends Component {
         break;
       case FINISHED:
         dispatchCleanPagAndOrderColumnFinalizedUserTask(orderTask);
-        dispatchFinalizedTask(0, orderTask);
+        this.dispatchFinalizedTask(0, orderTask);
         break;
     }
   };
 
-  handleTaskByClientsFind = (limInf, mode )=> {
+  handleTaskByClientsFind = (limInf, mode)=> {
     const { tasksByClient } = this.props;
     switch (mode) {
       case PENDING:   
@@ -150,7 +149,7 @@ class ClientTaskList extends Component {
         break;
     }
   }
-  createTask() {
+  createTask = () => {
     const { dispatchUpdateTitleNavBar } = this.props;
     dispatchUpdateTitleNavBar("Tareas");
     redirectUrl("/dashboard/task");

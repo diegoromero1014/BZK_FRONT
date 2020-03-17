@@ -5,13 +5,11 @@ import {
   ORANGE_COLOR,
   RED_COLOR
 } from "./../../constantsGlobal";
-import Segment from 'semantic-ui-react/dist/commonjs/elements/Segment';
 
 
 const PendingTasksIndicatorHelp = _ =>{
     return (
       <div>
-        <h5>Indicador del estado de las tareas:</h5>
         <Col xs={12} sm={12} md={12} lg={12}>
           <div
             style={{
