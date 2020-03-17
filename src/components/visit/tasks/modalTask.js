@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import moment from "moment";
-import { reduxForm } from "redux-form";
-import { bindActionCreators } from "redux";
-import { Col, Row } from "react-flexbox-grid";
+import {reduxForm} from "redux-form";
+import {bindActionCreators} from "redux";
+import {Col, Row} from "react-flexbox-grid";
 import _ from "lodash";
 import $ from "jquery";
 
@@ -11,18 +11,20 @@ import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
 import RichText from "../../richText/richTextComponent";
 
-import { addTask, editTask} from "./actions";
-import { filterUsersBanco } from "../../participantsVisitPre/actions";
-import { htmlToText } from "../../../actionsGlobal";
-import { swtShowMessage } from "../../sweetAlertMessages/actions";
+import {addTask, editTask} from "./actions";
+import {filterUsersBanco} from "../../participantsVisitPre/actions";
+import {htmlToText} from "../../../actionsGlobal";
+import {swtShowMessage} from "../../sweetAlertMessages/actions";
 
-import { fields, validations as validate } from './rulesAndFieldsTaskVisit';
+import {fields, validations as validate} from './rulesAndFieldsTaskVisit';
+import CommentsComponent from "../../globalComponents/comments/commentsComponent";
+import {fillComments, getCurrentComments} from "../../globalComponents/comments/actions";
 
 
 var usersBanco = [];
 var idUsuario, nameUsuario;
 
-class ModalTask extends Component {
+export class ModalTask extends Component {
 
     constructor(props) {
         super(props);
@@ -35,25 +37,30 @@ class ModalTask extends Component {
             showSuccessEdit: false,
             showEr: false,
             prueba: [],
-            showErrorYa: false
-        }
+            showErrorYa: false,
+            nameAsignator: window.localStorage.getItem('name')
+        };
         this.errorTask = null;
         momentLocalizer(moment);
     }
 
     componentDidMount() {
-        const { fields: { idEmployee, responsable, fecha, tarea, id }, taskEdit } = this.props;
+        const {fields: {idEmployee, responsable, fecha, tarea, id}, taskEdit, dispatchFillComments} = this.props;
         if (taskEdit !== undefined) {
             id.onChange(taskEdit.id);
             idEmployee.onChange(taskEdit.idResponsable);
             responsable.onChange(taskEdit.responsable);
             tarea.onChange(taskEdit.tarea);
             fecha.onChange(moment(taskEdit.fechaForm, 'DD/MM/YYYY'));
+            dispatchFillComments(taskEdit.notes);
+            this.setState({
+                nameAsignator: taskEdit.taskAsignator
+            })
         }
     }
 
     _closeCreate() {
-        const { isOpen, taskEdit } = this.props;
+        const {isOpen, taskEdit} = this.props;
         if (taskEdit !== undefined) {
             // Esto se puede borrar
             this.setState({
@@ -70,7 +77,7 @@ class ModalTask extends Component {
     }
 
     updateKeyValueUsersBanco(e) {
-        const { fields: { responsable, idEmployee }, filterUsersBanco, swtShowMessage } = this.props;
+        const { fields: { responsable, idEmployee }, filterUsersBancoDispatch, swtShowMessage } = this.props;
         const selector = $('.ui.search.responsable');
 
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
@@ -80,7 +87,7 @@ class ModalTask extends Component {
                     return;
                 }
                 selector.toggleClass('loading');
-                filterUsersBanco(responsable.value).then((data) => {
+                filterUsersBancoDispatch(responsable.value).then((data) => {
                     usersBanco = _.get(data, 'payload.data.data');
                     selector.search({
                         cache: false,
@@ -110,60 +117,69 @@ class ModalTask extends Component {
     }
 
     _handleCreateTask() {
-        const { fields: { responsable, fecha, tarea, idEmployee, id },  addTask, editTask, taskEdit, swtShowMessage } = this.props;
+        const {fields: {responsable, fecha, tarea, idEmployee, id}, addTask, editTask, taskEdit, swtShowMessage, dispatchGetCurrentComments, commentsReducer} = this.props;
+        dispatchGetCurrentComments();
         if (responsable.value !== nameUsuario) {
             nameUsuario = responsable.value;
             idUsuario = null;
         }
 
-            if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
-                if (taskEdit !== undefined) {
-                    taskEdit.tarea = tarea.value;
-                    taskEdit.textTarea = htmlToText(tarea.value);
-                    taskEdit.idResponsable = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
-                    taskEdit.responsable = nameUsuario;
-                    taskEdit.fecha = fecha.value;
-                    taskEdit.fechaForm = fecha.value;
-                    taskEdit.id = id.value;
-                    editTask(taskEdit);
+        if (moment(fecha.value, 'DD/MM/YYYY').isValid()) {
+            if (taskEdit !== undefined) {
+                taskEdit.tarea = tarea.value;
+                taskEdit.textTarea = htmlToText(tarea.value);
+                taskEdit.idResponsable = idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null;
+                taskEdit.responsable = nameUsuario;
+                taskEdit.fecha = fecha.value;
+                taskEdit.fechaForm = fecha.value;
+                taskEdit.id = id.value;
+                taskEdit.notes = Object.assign(commentsReducer.comments);
+                editTask(taskEdit);
 
-                    swtShowMessage('success', 'Tarea editada', 'Señor usuario, la tarea fue editada exitosamente', { onConfirmCallback: this._closeCreate })
+                swtShowMessage('success', 'Tarea editada', 'Señor usuario, la tarea fue editada exitosamente', {onConfirmCallback: this._closeCreate})
 
-                } else {
-                    const uuid = _.uniqueId('task_');
-                    var task = {
-                        uuid,
-                        id: null,
-                        tarea: tarea.value,
-                        textTarea: htmlToText(tarea.value),
-                        idResponsable: idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
-                        responsable: nameUsuario,
-                        fecha: fecha.value,
-                        fechaForm: fecha.value
-                    }
-                    addTask(task);
-
-                    // Aqui hay que llamar la accion
-                    swtShowMessage('success', 'Tarea agregada', 'Señor usuario, la tarea fue agregada exitosamente', { onConfirmCallback: this._closeCreate })
-                }
             } else {
-                fecha.onChange('');
+                const uuid = _.uniqueId('task_');
+                let task = {
+                    uuid,
+                    id: null,
+                    tarea: tarea.value,
+                    textTarea: htmlToText(tarea.value),
+                    idResponsable: idEmployee.value !== undefined && idEmployee.value !== null && idEmployee.value !== '' ? idEmployee.value : null,
+                    responsable: nameUsuario,
+                    fecha: fecha.value,
+                    fechaForm: fecha.value,
+                    notes: Object.assign(commentsReducer.comments),
+                    taskAsignator : window.localStorage.getItem('name')
+                };
+                addTask(task);
+
+                // Aqui hay que llamar la accion
+                swtShowMessage('success', 'Tarea agregada', 'Señor usuario, la tarea fue agregada exitosamente', {onConfirmCallback: this._closeCreate})
             }
-        
+        } else {
+            fecha.onChange('');
+        }
+
     }
 
     render() {
-        const { fields: { responsable, fecha, tarea, idEmployee }, handleSubmit } = this.props;
+        const {fields: {responsable, fecha, tarea, idEmployee, id}, handleSubmit} = this.props;
         return (
             <form onSubmit={handleSubmit(this._handleCreateTask)}>
                 <div className="modalBt4-body modal-body business-content editable-form-content clearfix"
-                    id="modalComponentScroll"
-                    style={{ paddingBottom: "0px" }}>
+                     id="modalComponentScroll"
+                     style={{paddingBottom: "0px"}}>
                     <dt className="business-title"><span
                         style={{ paddingLeft: '20px' }}>Adicionar pendiente a la reunión</span></dt>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <p style={{ paddingTop: "10px", marginBottom: "0px" }}>Los campos marcados con asterisco (<span
                             style={{ color: "red" }}>*</span>) son obligatorios.</p>
+                        <Row style={{ padding: "0px 10px 0px 0px" }}>
+                            <Col xs={12} md={6} lg={6}>
+                                <dt>Asignador:<span id="asignator" style={{fontWeight:'normal'}}> {this.state.nameAsignator}</span></dt>
+                            </Col>
+                        </Row>
                         <Row style={{ padding: "0px 10px 0px 0px" }}>
                             <Col xs={6} md={6} lg={6}>
                                 <dt><span>Responsable (<span style={{ color: "red" }}>*</span>)</span></dt>
@@ -174,7 +190,12 @@ class ModalTask extends Component {
                                         labelInput="Ingrese un criterio de búsqueda..."
                                         {...responsable}
                                         parentId="dashboardComponentScroll"
-                                        onChange={(val) => { if (idEmployee.value) { idEmployee.onChange(null) } responsable.onChange(val) }}
+                                        onChange={(val) => {
+                                            if (idEmployee.value) {
+                                                idEmployee.onChange(null)
+                                            }
+                                            responsable.onChange(val)
+                                        }}
                                         value={responsable.value}
                                         onKeyPress={val => this.updateKeyValueUsersBanco(val)}
                                         onSelect={val => this._updateValue(val)}
@@ -209,6 +230,13 @@ class ModalTask extends Component {
                                 />
                             </Col>
                         </Row>
+                        <Row style={{paddingTop: 40, width: '99%', paddingLeft: 20}}>
+                            <Col xs={12} md={12} lg={12}>
+                                <CommentsComponent
+                                    header="Notas"
+                                    reportId={id.value ? id.value : null}/>
+                            </Col>
+                        </Row>
                     </div>
                 </div>
                 <div className="modalBt4-footer modal-footer">
@@ -227,17 +255,20 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         addTask,
         editTask,
-        filterUsersBanco,
-        swtShowMessage
+        filterUsersBancoDispatch: filterUsersBanco,
+        swtShowMessage,
+        dispatchGetCurrentComments: getCurrentComments,
+        dispatchFillComments: fillComments
     }, dispatch);
 }
 
-function mapStateToProps({ tasks, selectsReducer, participants }, { taskEdit }) {
+function mapStateToProps({tasks, selectsReducer, participants, commentsReducer}, {taskEdit}) {
     if (taskEdit !== undefined) {
         return {
             participants,
             tasks,
             selectsReducer,
+            commentsReducer,
             initialValues: {
                 idEmployee: taskEdit.idResponsable,
                 responsable: taskEdit.responsable,
@@ -251,6 +282,7 @@ function mapStateToProps({ tasks, selectsReducer, participants }, { taskEdit }) 
         return {
             tasks,
             selectsReducer,
+            commentsReducer,
             initialValues: {
                 idEmployee: '',
                 responsable: '',

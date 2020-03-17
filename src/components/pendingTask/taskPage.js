@@ -37,6 +37,8 @@ import {getInfoTaskUser} from '../myPendings/myTasks/actions';
 import {clearTask} from "./actions";
 import _ from 'lodash';
 import {consultInfoClient} from "../clientInformation/actions";
+import CommentsComponent from "../globalComponents/comments/commentsComponent";
+import {fillComments, getCurrentComments} from "../globalComponents/comments/actions";
 import {filterUsers} from "../commercialReport/actions";
 import ButtonDetailsRedirectComponent from "../grid/buttonDetailsRedirectComponent";
 
@@ -67,8 +69,8 @@ export class TaskPage extends React.Component {
 
     }
 
-    componentDidMount() {
-        const {params: {id}, dispatchShowLoading, filterUsersBancoDispatch, myPendingsReducer} = this.props;
+    async componentDidMount() {
+        const {params: {id}, dispatchShowLoading, filterUsersBancoDispatch, myPendingsReducer, dispatchFillComments} = this.props;
         dispatchShowLoading(true, "Cargando...");
 
         Promise.all([this.masterDataFields(), this.getInfoTask(id)]).then(async () => {
@@ -79,16 +81,18 @@ export class TaskPage extends React.Component {
             dispatchShowLoading(false, "");
             let userName = window.localStorage.getItem("userNameFront");
             const filterUserResponse = await filterUsersBancoDispatch(userName);
-            this.setState({
-                nameUsuario: _.get(filterUserResponse, 'payload.data.data[0].title')
-            });
             const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
             if (taskDetail) {
+                dispatchFillComments(taskDetail.notes);
                 this.setState({
                     nameUsuario: taskDetail.assignedBy
                 });
                 nameEntity = taskDetail.nameEntity;
                 this.entityId = taskDetail.entityId;
+            }else{
+                await this.setState({
+                    nameUsuario: _.get(filterUserResponse, 'payload.data.data[0].title')
+                });
             }
         });
     }
@@ -119,8 +123,9 @@ export class TaskPage extends React.Component {
     };
 
     submitForm = async (task) => {
-        const {params: {id}, dispatchShowLoading, dispatchCreatePendingTaskNew, dispatchSwtShowMessage, fromModal, closeModal} = this.props;
+        const {params: {id}, dispatchShowLoading, dispatchCreatePendingTaskNew, dispatchSwtShowMessage, dispatchGetCurrentComments, fromModal, closeModal, commentsReducer} = this.props;
         if (moment(task.finalDate, 'DD/MM/YYYY').isValid()) {
+            dispatchGetCurrentComments();
             const taskRequest = {
                 "id": id,
                 "clientId": window.sessionStorage.getItem('idClientSelected'),
@@ -130,6 +135,7 @@ export class TaskPage extends React.Component {
                 "closingDate": task.finalDate !== '' && task.finalDate !== null && task.finalDate !== undefined ? moment(task.finalDate, "DD/MM/YYYY").format('x') : null,
                 "employeeName": task.employeeName,
                 "employeeId": task.responsible !== undefined && task.responsible !== null && task.responsible !== '' ? task.responsible : null,
+                "notes": commentsReducer.comments
             };
             dispatchShowLoading(true, MESSAGE_SAVE_DATA);
             const responseCreateTask = await dispatchCreatePendingTaskNew(taskRequest);
@@ -200,9 +206,11 @@ export class TaskPage extends React.Component {
     };
 
     getInfoTask = async (id) => {
-        const {dispatchGetInfoTaskUser} = this.props;
+        const { dispatchGetInfoTaskUser, dispatchFillComments } = this.props;
         if (id) {
-            await dispatchGetInfoTaskUser(id);
+            const response = await dispatchGetInfoTaskUser(id);
+            const taskInfo = _.get(response, 'payload.data.data');
+            dispatchFillComments(taskInfo.notes);
             this.setState({
                 isEditable: true,
                 formValid: true
@@ -262,8 +270,12 @@ export class TaskPage extends React.Component {
                         fromModal={fromModal}
                         isEditable={this.state.isEditable}
                         documentDraft={true}
-                    />)}
-            />
+                    />)}>
+                <CommentsComponent
+                    header="Notas"
+                    reportId={id}
+                    disabled={this.state.isEditable}/>
+            </TaskFormComponent>
         );
     };
 
@@ -272,7 +284,7 @@ export class TaskPage extends React.Component {
         const {fromModal} = this.props;
         console.log(nameEntity);
         return (
-            <div className='previsit-container'>
+            <div style={{marginBottom: '5em'}}>
                 {!fromModal &&
                 <ReportsHeader/>
                 }
@@ -354,10 +366,13 @@ function mapDispatchToProps(dispatch) {
         dispatchCreatePendingTaskNew: createPendingTaskNew,
         dispatchClearUserTask: clearTask,
         dispatchConsultInfoClient: consultInfoClient,
-        filterUsersBancoDispatch: filterUsers
+        filterUsersBancoDispatch: filterUsers,
+        dispatchGetCurrentComments: getCurrentComments,
+        dispatchFillComments: fillComments
     }, dispatch);
 }
 
+function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, usersPermission, tasksByClient, myPendingsReducer, commentsReducer}) {
 function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, usersPermission, tasksByClient, myPendingsReducer, businessPlanReducer, visitReducer}) {
     return {
         clientInformacion,
@@ -368,6 +383,8 @@ function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, user
         myPendingsReducer,
         businessPlanReducer,
         visitReducer
+        myPendingsReducer,
+        commentsReducer
     };
 }
 

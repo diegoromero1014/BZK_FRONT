@@ -246,8 +246,9 @@ class FormEdit extends Component {
                             "employee": task.idResponsable,
                             "employeeName": task.responsable,
                             "closingDate": moment(task.fecha, "DD/MM/YYYY").format('x'),
-                            "commercialReport": buildJsoncommercialReport(task.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
-                        }
+                            "commercialReport": buildJsoncommercialReport(task.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick),
+                            "notes": task.notes
+                        };
                         tareas.push(data);
                     }
                 );
@@ -265,7 +266,7 @@ class FormEdit extends Component {
                     "documentStatus": typeButtonClick,
                     "preVisitId": idPrevisitSeleted,
                     "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
-                }
+                };
                 const { createVisti } = this.props;
                 const that = this;
                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -479,7 +480,9 @@ class FormEdit extends Component {
                     responsable: value.employeeName,
                     fecha: moment(value.closingDate).format('DD/MM/YYYY'),
                     fechaForm: moment(value.closingDate).format('DD/MM/YYYY'),
-                    commercialReport: value.commercialReport
+                    commercialReport: value.commercialReport,
+                    taskAsignator: value.taskAsignator,
+                    notes: value.notes
                 };
                 addTask(task);
             });

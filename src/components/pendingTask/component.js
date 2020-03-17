@@ -12,7 +12,7 @@ import {validatePermissionsByModule} from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import {redirectUrl} from '../globalComponents/actions';
 import {_TASK, BIZTRACK_MY_CLIENTS, nombreflujoAnalytics} from '../../constantsAnalytics';
-import {updateTitleNavBar} from '../navBar/actions';
+import { updateTitleNavBar } from '../navBar/actions';
 
 class UserTaskComponent extends Component {
 

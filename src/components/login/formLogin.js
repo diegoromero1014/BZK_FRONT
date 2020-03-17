@@ -22,7 +22,7 @@ import ReCaptcha from '../recaptcha/ReCaptcha';
 import {clearCache} from '../../utils/catchRequest';
 import { changeTokenStatus } from '../dashboard/actions';
 
-class FormLogin extends Component {
+export class FormLogin extends Component {
     constructor(props) {
         super(props);
 
@@ -82,7 +82,7 @@ class FormLogin extends Component {
                     } else {
                         const { saveSessionToken, redirectUrl } = this.props;
                         saveSessionToken(_.get(response, 'payload.data.data.sessionToken'));
-                        saveSessionUserName(usuario);
+                        saveSessionUserName(usuario, _.get(response, 'payload.data.data.username'));
                         changeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
 
                         // Activar cookie
