@@ -59,29 +59,33 @@ class ListPendingTaskComponent extends Component {
   _renderHeaders = () => {
     return [
       {
-        title: "",
-        key: "actionsRedirect"
+        title: "Asignado por",
+        key: "assignedBy"
       },
       {
         title: "Responsable",
         key: "responsable"
       },
       {
-        title: "Asignado por",
-        key: "assignedBy"
+        title: "",
+        style:{width:"1px"},
+        key: "trafficLightIndicator"
       },
       {
         title: "Fecha de cierre",
         key: "dateTaskFormat",
+        style:{ width:"200px" },
         orderColumn: <span><i className="caret down icon" style={{ cursor: 'pointer', display: this.state.orderD }} onClick={() => this._orderColumn(0, "finalDate")}></i><i className="caret up icon" style={{ cursor: 'pointer', display: this.state.orderA }} onClick={() => this._orderColumn(1, "finalDate")}></i></span>
       },
+      
       {
         title: "Estado",
         key: "status"
       },
       {
-        title: "",
-        key: "trafficLightIndicator"
+        title: "Ver",
+        style:{ width:"50px" },
+        key: "actionsRedirect"
       },
       {
         title: "",

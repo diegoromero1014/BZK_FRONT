@@ -7,9 +7,9 @@ class TrafficLightComponent extends Component {
   }
 
   render(){
-  const {colorTraffict} = this.props;
+  const {colorTraffict, style} = this.props;
     return (
-      <td>
+      <td style={style}> 
         <div style={{borderRadius: '50%', width: '20px', height: '20px', backgroundColor: colorTraffict.color}}></div>
       </td>
     );

@@ -53,7 +53,7 @@ class GridComponent extends Component {
       } else if (value.key === 'trafficLight') {
         cell = <TrafficLightComponent key={idx} colorTraffict={_.get(row, value.key)} />
       } else if (value.key === 'trafficLightIndicator') {
-        cell = <TrafficLightIndicator days={_.get(row, value.key).days} isFinalized={_.get(row, value.key).isFinalized} />
+        cell = <TrafficLightIndicator days={_.get(row, value.key).days} isFinalized={_.get(row, value.key).isFinalized} style={value.style} />
       } else if (value.key === 'delete' && _.get(row, value.key)) {
         if (_.get(row, value.key).permissionsDelete !== undefined && !_.get(row, value.key).permissionsDelete) {
           cell = <TdComponent key={idx} columnRow={""} styles={value.style} />
@@ -74,7 +74,7 @@ class GridComponent extends Component {
         if (_.get(row, value.key).permissionsView !== undefined && !_.get(row, value.key).permissionsView) {
           cell = <TdComponent key={idx} columnRow={""} styles={value.style} />
         } else {
-          cell = <ButtonDetailsRedirectComponent key={idx} icon={value.icon} actionsRedirect={_.get(row, value.key)} />
+          cell = <ButtonDetailsRedirectComponent key={idx} icon={value.icon} actionsRedirect={_.get(row, value.key)} style={value.style} />
         }
       } else if (value.key === 'actionsPdf' && _.get(row, value.key)) {
         cell = <PdfLinkComponent key={idx} actionsPdf={_.get(row, value.key)} />

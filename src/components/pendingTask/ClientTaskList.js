@@ -22,7 +22,7 @@ import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions
 import { redirectUrl } from '../globalComponents/actions';
 import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _TASK } from '../../constantsAnalytics';
 import TabComponent from './../../ui/Tab';
-import PendingTasksIndicatorHelp from './pendingTasksHelp';
+import PendingTasksHelp from "./pendingTasksHelp";
 export class ClientTaskList extends Component {
   constructor(props) {
     super(props);
@@ -181,9 +181,6 @@ export class ClientTaskList extends Component {
         >
           <Grid style={{ width: "100%" }}>
             <Row>
-              <PendingTasksIndicatorHelp></PendingTasksIndicatorHelp>
-            </Row>
-            <Row>
               <Col xs>
                 {_.get(
                   reducerGlobal.get("permissionsTasks"),
@@ -212,6 +209,9 @@ export class ClientTaskList extends Component {
             </Row>
           </Grid>
         </div>
+        <Row>
+          <PendingTasksHelp></PendingTasksHelp>
+        </Row>
         <div>
           {this.state.loading === true ? "Cargando..." : ""}
           <Grid style={{ width: "100%" }}>

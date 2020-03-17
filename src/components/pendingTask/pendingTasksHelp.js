@@ -7,7 +7,7 @@ import {
 } from "./../../constantsGlobal";
 
 
-const PendingTasksIndicatorHelp = _ =>{
+const PendingTasksHelp = _ =>{
     return (
       <div>
         <Col xs={12} sm={12} md={12} lg={12}>
@@ -21,6 +21,24 @@ const PendingTasksIndicatorHelp = _ =>{
               alignItems: "center"
             }}
           >
+            <Row
+              style={{
+                width: "172px",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center"
+              }}
+            >
+              <div
+                style={{
+                  borderRadius: "50%",
+                  width: "20px",
+                  height: "20px",
+                  backgroundColor: GREEN_COLOR
+                }}
+              />
+              <span style={{ marginLeft: "10px" }}> Tarea con tiempo</span>
+            </Row>
             <Row
               style={{
                 width: "150px",
@@ -60,27 +78,9 @@ const PendingTasksIndicatorHelp = _ =>{
                 Tarea próxima a vencerse
               </span>
             </Row>
-            <Row
-              style={{
-                width: "150px",
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center"
-              }}
-            >
-              <div
-                style={{
-                  borderRadius: "50%",
-                  width: "20px",
-                  height: "20px",
-                  backgroundColor: GREEN_COLOR
-                }}
-              />
-              <span style={{ marginLeft: "10px" }}> Tarea con tiempo</span>
-            </Row>
           </div>
         </Col>
       </div>
     );
 }
-export default PendingTasksIndicatorHelp;
+export default PendingTasksHelp;
