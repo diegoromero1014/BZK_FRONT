@@ -17,7 +17,8 @@ import {
   CHANGE_PAGE_PENDING,
   CHANGE_PAGE_FINALIZED,
   PENDING,
-  FINISHED
+  FINISHED,
+  SET_TEXT_TO_SEARCH
 } from "./constants";
 import axios from 'axios';
 
@@ -264,4 +265,10 @@ export function finalizedTasksByClientFindServer(data, page, order) {
     page,
     order
   }
+}
+export function setTextToSearch(textToSearch){
+  return {
+    type: SET_TEXT_TO_SEARCH,
+    textToSearch
+  };
 }

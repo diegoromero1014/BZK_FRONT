@@ -13,7 +13,8 @@ import {
   CLEAN_PAG_ORDER_COLUMN_PENDING_TASK,
   CLEAN_PAG_ORDER_COLUMN_FINALIZED_TASK,
   CHANGE_PAGE_PENDING,
-  CHANGE_PAGE_FINALIZED
+  CHANGE_PAGE_FINALIZED,
+  SET_TEXT_TO_SEARCH
 } from "./constants";
 
 const initialState = Immutable.Map({
@@ -36,7 +37,8 @@ const initialState = Immutable.Map({
   limInf: 0,
   orderTask: 0,
   columnTask: "finalDate",
-  rowCount: 0
+  rowCount: 0,
+  textToSearch:null
 });
 
 export default (state = initialState, action) => {
@@ -146,6 +148,10 @@ export default (state = initialState, action) => {
         map
         .set('tabPending', result)
       });
+      case SET_TEXT_TO_SEARCH:
+        return state.withMutations(map => {
+            map.set("textToSearch", action.textToSearch);
+        });
     default:
       return state;
   }

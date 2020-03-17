@@ -11,12 +11,14 @@ import {
   cleanPagAndOrderColumnPendingUserTask,
   cleanPagAndOrderColumnFinalizedUserTask,
   changePagePending,
-  changePageFinalized
+  changePageFinalized,
+  setTextToSearch
 } from "./actions";
+import { showLoading } from "./../loading/actions";
 import { PENDING_TASKS, FINALIZED_TASKS, NUMBER_RECORDS, PENDING, FINISHED } from './constants';
 import PaginationPendingTaskComponent from './paginationPendingTaskComponent';
 import ListPendingTaskComponent from './listPendingTaskComponent';
-import { MODULE_TASKS, CREAR, REQUEST_SUCCESS } from "../../constantsGlobal";
+import { MODULE_TASKS, CREAR, REQUEST_SUCCESS, MESSAGE_LOAD_DATA } from "../../constantsGlobal";
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import { redirectUrl } from '../globalComponents/actions';
@@ -33,34 +35,43 @@ export class ClientTaskList extends Component {
     };
   }
   dispatchPendingTasks = async (pageNum, order, textToSearch) => {
-    const {dispatchPendingTasksByClientFindServer} = this.props;
+    const {dispatchPendingTasksByClientFindServer, dispatchSetTextToSearch,dispatchShowLoading} = this.props;
     this.setState({loading: true});
+    dispatchShowLoading(true, MESSAGE_LOAD_DATA);
+
     const result = await pendingTasksByClientPromise(
       pageNum,
       window.sessionStorage.getItem("idClientSelected"),
       NUMBER_RECORDS,
-      order,textToSearch
+      order,
+      textToSearch
     );
     if (REQUEST_SUCCESS === result.data.status) {
       const dataPending = result.data.data;
       dispatchPendingTasksByClientFindServer(dataPending, pageNum, order);
+      dispatchSetTextToSearch(textToSearch);
     }
     this.setState({ loading: false });
+    dispatchShowLoading(false, MESSAGE_LOAD_DATA);
   }
   dispatchFinalizedTask = async (pageNum, order, textToSearch) => {
-    const { dispatchFinalizedTasksByClientFindServer } = this.props;
+    const { dispatchFinalizedTasksByClientFindServer, dispatchSetTextToSearch, dispatchShowLoading } = this.props;
     this.setState({ loading: true });
+    dispatchShowLoading(true, MESSAGE_LOAD_DATA);
     const result = await finalizedTasksByClientPromise(
       pageNum,
       window.sessionStorage.getItem("idClientSelected"),
       NUMBER_RECORDS,
-      order,textToSearch
+      order,
+      textToSearch
     );
     if (REQUEST_SUCCESS === result.data.status) {
       const data = result.data.data;
       dispatchFinalizedTasksByClientFindServer(data, pageNum, order);
+      dispatchSetTextToSearch(textToSearch);
     }
     this.setState({ loading: false });
+    dispatchShowLoading(false, MESSAGE_LOAD_DATA);
   }
   componentDidMount() {
     window.dataLayer.push({
@@ -79,8 +90,8 @@ export class ClientTaskList extends Component {
       } = this.props;
       dispatchCleanPagAndOrderColumnPendingUserTask(0);
       dispatchCleanPagAndOrderColumnFinalizedUserTask(0);
-      this.dispatchPendingTasks(0, 0, "");
-      this.dispatchFinalizedTask(0, 0, "");
+      this.dispatchPendingTasks(0, 0, null);
+      this.dispatchFinalizedTask(0, 0, null);
       dispatchValidatePermissionsByModule(MODULE_TASKS).then(data => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
@@ -101,29 +112,30 @@ export class ClientTaskList extends Component {
     switch (mode) {
       case PENDING:
         dispatchCleanPagAndOrderColumnPendingUserTask(orderTask);
-        this.dispatchPendingTasks(0, orderTask, "");
+        this.dispatchPendingTasks(0, orderTask, tasksByClient.get("textToSearch"));
         break;
       case FINISHED:
         dispatchCleanPagAndOrderColumnFinalizedUserTask(orderTask);
-        this.dispatchFinalizedTask(0, orderTask, "");
+        this.dispatchFinalizedTask(0, orderTask, tasksByClient.get("textToSearch"));
         break;
     }
   };
 
 
     _onChangeSearch(value){
-      this.dispatchPendingTasks(0, tasksByClient.get("tabPending").order, value);
-      this.dispatchFinalizedTask(0, tasksByClient.get("tabFinished").order, value);
+      const {tasksByClient} = this.props;
+      this.dispatchPendingTasks(0, tasksByClient.get("tabPending").order, value === "" ? null : value);
+      this.dispatchFinalizedTask(0, tasksByClient.get("tabFinished").order, value === "" ? null : value);
     }
 
   handleTaskByClientsFind = (limInf, mode )=> {
     const { tasksByClient } = this.props;
     switch (mode) {
       case PENDING:   
-        this.dispatchPendingTasks(limInf, tasksByClient.get("tabPending").order, "");
+        this.dispatchPendingTasks(limInf, tasksByClient.get("tabPending").order, tasksByClient.get("textToSearch"));
         break;
       case FINISHED:
-        this.dispatchFinalizedTask(limInf, tasksByClient.get("tabFinished").order, "");
+        this.dispatchFinalizedTask(limInf, tasksByClient.get("tabFinished").order, tasksByClient.get("textToSearch"));
         break;
     }
     
@@ -145,7 +157,8 @@ export class ClientTaskList extends Component {
   clearUserTask = mode =>{
     const {
       dispatchCleanPagAndOrderColumnPendingUserTask,
-      dispatchCleanPagAndOrderColumnFinalizedUserTask
+      dispatchCleanPagAndOrderColumnFinalizedUserTask,
+      dispatchSetTextToSearch
     } = this.props;
     switch (mode) {
       case PENDING:
@@ -155,6 +168,7 @@ export class ClientTaskList extends Component {
         dispatchCleanPagAndOrderColumnFinalizedUserTask(0);
         break;
     }
+    dispatchSetTextToSearch(null);
   }
   createTask = () => {
     const { dispatchUpdateTitleNavBar } = this.props;
@@ -163,7 +177,7 @@ export class ClientTaskList extends Component {
   }
   
   render() {
-    const { tasksByClient, reducerGlobal } = this.props;
+    const { tasksByClient, reducerGlobal, dispatchShowLoading } = this.props;
     let tabPending = tasksByClient.get("tabPending");
     let tabFinished = tasksByClient.get("tabFinished");
     return (
@@ -187,11 +201,13 @@ export class ClientTaskList extends Component {
           }}
         >
           <Grid style={{ width: "100%" }}>
-              <Row>
-                  <Col xs={12} sm={8} md={6} lg={6}>
-                      <SearchInputComponent onChangeSearch={(text)=> this._onChangeSearch(text)}/>
-                  </Col>
-              </Row>
+            <Row>
+              <Col xs={12} sm={8} md={6} lg={6}>
+                <SearchInputComponent
+                  onChangeSearch={text => this._onChangeSearch(text)}
+                />
+              </Col>
+            </Row>
             <Row>
               <Col xs>
                 {_.get(
@@ -225,7 +241,6 @@ export class ClientTaskList extends Component {
           <PendingTasksHelp></PendingTasksHelp>
         </Row>
         <div>
-          {this.state.loading === true ? "Cargando..." : ""}
           <Grid style={{ width: "100%" }}>
             <Row>
               <Col xs>
@@ -298,7 +313,9 @@ function mapDispatchToProps(dispatch) {
       dispatchCleanPagAndOrderColumnPendingUserTask: cleanPagAndOrderColumnPendingUserTask,
       dispatchCleanPagAndOrderColumnFinalizedUserTask: cleanPagAndOrderColumnFinalizedUserTask,
       dispatchChangePagePending: changePagePending,
-      dispatchChangePageFinalized: changePageFinalized
+      dispatchChangePageFinalized: changePageFinalized,
+      dispatchSetTextToSearch: setTextToSearch,
+      dispatchShowLoading: showLoading
     },
     dispatch
   );

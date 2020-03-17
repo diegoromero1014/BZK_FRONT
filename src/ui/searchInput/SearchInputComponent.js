@@ -26,8 +26,8 @@ export class SearchInputComponent extends Component {
 
     onSearch(e) {
         const search = e.target.value;
-        if (search.length >= 3) {
-            this.onSearch$.next(search);
+        if (search.length >= 3 || search.length === 0) {
+          this.onSearch$.next(search);
         }
     }
 
