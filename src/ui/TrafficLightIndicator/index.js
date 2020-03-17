@@ -21,7 +21,12 @@ const TrafficLightIndicator = ({days, isFinalized, style}) => {
         <TrafficLightComponent colorTraffict={{color:COLOR_GREEN}} style={style}></TrafficLightComponent>
       );
     }else{
-      return null;
+      return (
+        <TrafficLightComponent
+          colorTraffict={{ color: "rgba(255, 255, 255,0)" }}
+          style={style}
+        ></TrafficLightComponent>
+      );
     }
 }
 TrafficLightIndicator.propTypes = {
