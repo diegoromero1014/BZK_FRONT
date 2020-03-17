@@ -54,9 +54,8 @@ export class AlertSection extends Component {
   }
 
   render() {
-    const { total } = this.props;
-
-    return this.countAlerts(total);
+    const { alertPortfolioExpiration } = this.props;
+    return this.countAlerts(alertPortfolioExpiration.get('totalClientsByFiltered'));
   }
 }
 
@@ -67,8 +66,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const mapStateToProps = ({ alertPortfolioExpiration }) => ({
-  alertPortfolioExpiration,
-  total: alertPortfolioExpiration.get('totalClientsByFiltered')
+  alertPortfolioExpiration
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlertSection);

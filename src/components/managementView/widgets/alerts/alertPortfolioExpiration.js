@@ -8,7 +8,7 @@ import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExp
 import { Button } from 'semantic-ui-react'
 import { redirectUrl } from "../../../globalComponents/actions";
 
-class AlertPortfolioExpiration extends Component {
+export class AlertPortfolioExpiration extends Component {
 
   componentDidMount() {
     this.forceUpdate();
@@ -35,7 +35,7 @@ class AlertPortfolioExpiration extends Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
     {
       dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard
@@ -44,10 +44,9 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-function mapStateToProps({ alertPortfolioExpiration }) {
+const mapStateToProps = ({ alertPortfolioExpiration }) => {
   return {
-    alertPortfolioExpiration,
-    totalRecords: alertPortfolioExpiration.get("totalClientsByFiltered")
+    alertPortfolioExpiration
   };
 }
 
