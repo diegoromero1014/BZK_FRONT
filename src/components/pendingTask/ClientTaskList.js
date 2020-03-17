@@ -107,7 +107,8 @@ export class ClientTaskList extends Component {
   orderColumn = (orderTask, mode) => {
     const {
       dispatchCleanPagAndOrderColumnPendingUserTask,
-      dispatchCleanPagAndOrderColumnFinalizedUserTask
+      dispatchCleanPagAndOrderColumnFinalizedUserTask,
+      tasksByClient
     } = this.props;
     switch (mode) {
       case PENDING:

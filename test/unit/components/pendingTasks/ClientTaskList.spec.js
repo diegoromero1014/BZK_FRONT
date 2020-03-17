@@ -6,7 +6,7 @@ import { shallow } from 'enzyme';
 import { PENDING, FINISHED } from "./../../../../src/components/pendingTask/constants";
 import * as globalActions from "../../../../src/components/globalComponents/actions";
 import * as actions from "../../../../src/components/pendingTask/actions";
-const tasksByClient = Immutable.Map({ "tabPending": {"order":0}, "tabFinished": {"order":0} });
+const tasksByClient = Immutable.Map({ "tabPending": {"order":0}, "tabFinished": {"order":0}, "textToSearch":"" });
 const reducerGlobal = Immutable.Map({"permissionsTasks": {} });
 const dispatchValidatePermissionsByModule = sinon
   .stub()
@@ -24,12 +24,16 @@ const dispatchCleanPagAndOrderColumnFinalizedUserTask = sinon.fake();
 const dispatchCleanPagAndOrderColumnPendingUserTask = sinon.fake();
 const dispatchPendingTasksByClientFindServer = spy(sinon.fake());
 const dispatchFinalizedTasksByClientFindServer = spy(sinon.fake());
+const dispatchSetTextToSearch = spy(sinon.fake());
+const dispatchShowLoading = sinon.fake();
 const defaultProps = {
   dispatchValidatePermissionsByModule,
   dispatchCleanPagAndOrderColumnPendingUserTask,
   dispatchCleanPagAndOrderColumnFinalizedUserTask,
   dispatchPendingTasksByClientFindServer,
   dispatchFinalizedTasksByClientFindServer,
+  dispatchSetTextToSearch,
+  dispatchShowLoading,
   tasksByClient,
   reducerGlobal
 };
@@ -55,6 +59,7 @@ describe("Test ClientTaskList", () =>{
         wrapper.instance().dispatchPendingTasks(0, 0);
         sinon.assert.called(pendingTasksByClientPromise);
         expect(dispatchPendingTasksByClientFindServer).to.have.been.called.exactly(1);
+        expect(dispatchSetTextToSearch).to.have.been.called.exactly(2);
     });
     //TODO: como hacer stub resolve en el action importado
     it("test dispatchFinalizedTask", () => {
@@ -62,6 +67,7 @@ describe("Test ClientTaskList", () =>{
         wrapper.instance().dispatchFinalizedTask(0, 0);
         sinon.assert.called(finalizedTasksByClientPromise);
         expect(dispatchFinalizedTasksByClientFindServer).to.have.been.called.exactly(2);
+        expect(dispatchSetTextToSearch).to.have.been.called.exactly(5);
     });
     it("test orderColumn when mode is PENDING", ()=>{
         let dispatchCleanPagAndOrderColumnPendingUserTask = spy(sinon.fake());
