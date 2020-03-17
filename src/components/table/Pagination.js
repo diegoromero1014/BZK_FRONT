@@ -11,7 +11,6 @@ class Pagination extends Component {
         this.state = {
             totalPage: 0,
             page: 1,
-            pages: []
         }
     }
 
@@ -19,7 +18,6 @@ class Pagination extends Component {
         const { totalRecords, recordsPerPage } = this.props;
         await this.setState({ totalPage: Math.ceil(totalRecords / recordsPerPage) });
     }
-
 
     renderItem = (totalRecords, recordsPerPage) => this.getPages(totalRecords, recordsPerPage).map((page, index) =>
         <Menu.Item

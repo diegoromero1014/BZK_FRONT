@@ -24,20 +24,20 @@ export class ManagementView extends Component {
 
   render() {
     return (
-        <div className="ui segment" style={{ paddingLeft: 50, paddingRigth: 50, height: 'auto%' }}>  
-            <SecurityMessageComponent />
-            <Header />
-            <Row>
-                <Col md={12} style={{ marginTop: 50 }}>
-                    <Reports />
-                </Col>
-            </Row>
-            <Row>
-                <Col md={12} style={{ marginTop: 70 }}>
-                    <AlertSection />
-                </Col>
-            </Row>
-        </div>
+      <div className="ui segment" style={{ paddingLeft: 50, paddingRigth: 50, height: 'auto' }}>
+        <SecurityMessageComponent />
+        <Header />
+        <Row>
+          <Col md={12} style={{ marginTop: 50 }}>
+            <Reports />
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12} style={{ marginTop: 70 }}>
+            <AlertSection />
+          </Col>
+        </Row>
+      </div>
     );
   }
 }

@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import Table from "../../../table";
 import { COLUMNS_VENCIMIENTO_CARTERA } from './constants';
 import TableBuilder from "../../../table/TableBuilder";
-import { get } from 'lodash';
 import { bindActionCreators } from 'redux';
 import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExpirtation/actions';
 
@@ -13,7 +12,6 @@ class AlertPortfolioExpiration extends Component {
     this.forceUpdate();
   }
   
-
   render() {
     const { alertPortfolioExpiration, dispatchGetAlertPortfolioExpirationDashboard, total } = this.props;
     const data = alertPortfolioExpiration.get("responseClients");
