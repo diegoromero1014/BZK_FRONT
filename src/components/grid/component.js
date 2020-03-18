@@ -17,6 +17,7 @@ import TdConfidentialComponent from './tdConfidentialComponent';
 import TdParticularityComponent from './tdParticularityComponent';
 import TdUpdatedInfoComponent from './tdUpdatedInfoComponent';
 import {mapDateValueFromTask} from '../../actionsGlobal';
+import TrafficLightIndicator from './../../ui/TrafficLightIndicator';
 
 import { ACTION_CHECK, DATE_CELL } from './constants';
 
@@ -51,6 +52,8 @@ class GridComponent extends Component {
         cell = <ModalComponent key={idx} idModal={_.uniqueId()} modalTitle={modalTitle} actions={_.get(row, value.key)} origin={origin} />
       } else if (value.key === 'trafficLight') {
         cell = <TrafficLightComponent key={idx} colorTraffict={_.get(row, value.key)} />
+      } else if (value.key === 'trafficLightIndicator') {
+        cell = <TrafficLightIndicator days={_.get(row, value.key).days} isFinalized={_.get(row, value.key).isFinalized} style={value.style} />
       } else if (value.key === 'delete' && _.get(row, value.key)) {
         if (_.get(row, value.key).permissionsDelete !== undefined && !_.get(row, value.key).permissionsDelete) {
           cell = <TdComponent key={idx} columnRow={""} styles={value.style} />
@@ -71,7 +74,7 @@ class GridComponent extends Component {
         if (_.get(row, value.key).permissionsView !== undefined && !_.get(row, value.key).permissionsView) {
           cell = <TdComponent key={idx} columnRow={""} styles={value.style} />
         } else {
-          cell = <ButtonDetailsRedirectComponent key={idx} icon={value.icon} actionsRedirect={_.get(row, value.key)} />
+          cell = <ButtonDetailsRedirectComponent key={idx} icon={value.icon} actionsRedirect={_.get(row, value.key)} style={value.style} />
         }
       } else if (value.key === 'actionsPdf' && _.get(row, value.key)) {
         cell = <PdfLinkComponent key={idx} actionsPdf={_.get(row, value.key)} />

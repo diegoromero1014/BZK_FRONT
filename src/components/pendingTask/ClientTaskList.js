@@ -1,51 +1,99 @@
 import React, { Component } from 'react';
-import { Col, Grid, Row } from 'react-flexbox-grid';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
-import SelectFilterContact from '../selectsComponent/selectFilterContact/selectFilterComponent';
+import { Row, Grid, Col } from 'react-flexbox-grid';
+import {
+  pendingTasksByClientPromise,
+  pendingTasksByClientFindServer,
+  finalizedTasksByClientPromise,
+  finalizedTasksByClientFindServer,
+  cleanPagAndOrderColumnPendingUserTask,
+  cleanPagAndOrderColumnFinalizedUserTask,
+  changePagePending,
+  changePageFinalized,
+  setTextToSearch,
+  cleanTextToSearch
+} from "./actions";
+import { showLoading } from "./../loading/actions";
+import { PENDING_TASKS, FINALIZED_TASKS, NUMBER_RECORDS, PENDING, FINISHED } from './constants';
 import PaginationPendingTaskComponent from './paginationPendingTaskComponent';
 import ListPendingTaskComponent from './listPendingTaskComponent';
-import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
-
-
-import { clearUserTask, loadTaskPending, searchTaskPending, tasksByClientFindServer } from './actions';
+import { MODULE_TASKS, CREAR, REQUEST_SUCCESS, MESSAGE_LOAD_DATA } from "../../constantsGlobal";
 import { validatePermissionsByModule } from '../../actionsGlobal';
+import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import { redirectUrl } from '../globalComponents/actions';
-
-import { NUMBER_RECORDS, TASK_STATUS } from './constants';
-import { CREAR, MODULE_TASKS } from '../../constantsGlobal';
-import { _TASK, BIZTRACK_MY_CLIENTS, nombreflujoAnalytics } from '../../constantsAnalytics';
-
-class ClientTaskList extends Component {
-
+import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _TASK } from '../../constantsAnalytics';
+import TabComponent from './../../ui/Tab';
+import PendingTasksHelp from "./pendingTasksHelp";
+import SearchInputComponent from "../../ui/searchInput/SearchInputComponent";
+export class ClientTaskList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       openMessagePermissions: false,
-      value1: ""
+      loading: false    
     };
-
   }
+  dispatchPendingTasks = async (pageNum, order, textToSearch) => {
+    const {dispatchPendingTasksByClientFindServer, dispatchSetTextToSearch,dispatchShowLoading} = this.props;
+    this.setState({loading: true});
+    dispatchShowLoading(true, MESSAGE_LOAD_DATA);
 
-  componentWillMount() {
+    const result = await pendingTasksByClientPromise(
+      pageNum,
+      window.sessionStorage.getItem("idClientSelected"),
+      NUMBER_RECORDS,
+      order,
+      textToSearch
+    );
+    if (REQUEST_SUCCESS === result.data.status) {
+      const dataPending = result.data.data;
+      dispatchPendingTasksByClientFindServer(dataPending, pageNum, order);
+      dispatchSetTextToSearch(textToSearch);
+    }
+    this.setState({ loading: false });
+    dispatchShowLoading(false, MESSAGE_LOAD_DATA);
+  }
+  dispatchFinalizedTask = async (pageNum, order, textToSearch) => {
+    const { dispatchFinalizedTasksByClientFindServer, dispatchSetTextToSearch, dispatchShowLoading } = this.props;
+    this.setState({ loading: true });
+    dispatchShowLoading(true, MESSAGE_LOAD_DATA);
+    const result = await finalizedTasksByClientPromise(
+      pageNum,
+      window.sessionStorage.getItem("idClientSelected"),
+      NUMBER_RECORDS,
+      order,
+      textToSearch
+    );
+    if (REQUEST_SUCCESS === result.data.status) {
+      const data = result.data.data;
+      dispatchFinalizedTasksByClientFindServer(data, pageNum, order);
+      dispatchSetTextToSearch(textToSearch);
+    }
+    this.setState({ loading: false });
+    dispatchShowLoading(false, MESSAGE_LOAD_DATA);
+  }
+  componentDidMount() {
     window.dataLayer.push({
       'nombreflujo': nombreflujoAnalytics,
       'event': BIZTRACK_MY_CLIENTS + _TASK,
       'pagina': _TASK
 
     });
-
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
-      const {dispatchTasksByClient, dispatchClearUserTask, dispatchValidatePermissions} = this.props;
-
-
-      dispatchClearUserTask();
-      dispatchTasksByClient(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "finalDate", 0, "");
-
-      dispatchValidatePermissions(MODULE_TASKS).then((data) => {
+      const {
+        dispatchValidatePermissionsByModule,
+        dispatchCleanPagAndOrderColumnFinalizedUserTask,
+        dispatchCleanPagAndOrderColumnPendingUserTask
+      } = this.props;
+      dispatchCleanPagAndOrderColumnPendingUserTask(1);
+      dispatchCleanPagAndOrderColumnFinalizedUserTask(1);
+      this.dispatchPendingTasks(0, 1, null);
+      this.dispatchFinalizedTask(0, 1, null);
+      dispatchValidatePermissionsByModule(MODULE_TASKS).then(data => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
         } else {
@@ -56,83 +104,232 @@ class ClientTaskList extends Component {
       });
     }
   }
-
-  componentDidMount() {
-    const {dispatchInitPending, updateCounterPending} = this.props;
-    searchTaskPending().then(result => {
-      if (200 === result.data.status) {
-        const data = result.data.data;
-        updateCounterPending(data.rowCount);
-        dispatchInitPending(data);
-      }
-    });
+  componentWillUnmount(){
+    const {dispatchCleanTextToSearch}= this.props;
+    dispatchCleanTextToSearch();
   }
 
-  render() {
-    const {tasksByClient, reducerGlobal} = this.props;
-    let visibleTable = 'none';
-    let visibleMessage = 'block';
-    if (tasksByClient.get('rowCount') !== 0) {
-      visibleTable = 'block';
-      visibleMessage = 'none';
+  orderColumn = (orderTask, mode) => {
+    const {
+      dispatchCleanPagAndOrderColumnPendingUserTask,
+      dispatchCleanPagAndOrderColumnFinalizedUserTask,
+      tasksByClient
+    } = this.props;
+    switch (mode) {
+      case PENDING:
+        dispatchCleanPagAndOrderColumnPendingUserTask(orderTask);
+        this.dispatchPendingTasks(0, orderTask, tasksByClient.get("textToSearch"));
+        break;
+      case FINISHED:
+        dispatchCleanPagAndOrderColumnFinalizedUserTask(orderTask);
+        this.dispatchFinalizedTask(0, orderTask, tasksByClient.get("textToSearch"));
+        break;
+    }
+  };
+
+
+    _onChangeSearch(value){
+      const {tasksByClient} = this.props;
+      this.dispatchPendingTasks(0, tasksByClient.get("tabPending").order, value === "" ? null : value);
+      this.dispatchFinalizedTask(0, tasksByClient.get("tabFinished").order, value === "" ? null : value);
     }
 
+  handleTaskByClientsFind = (limInf, mode )=> {
+    const { tasksByClient } = this.props;
+    switch (mode) {
+      case PENDING:   
+        this.dispatchPendingTasks(limInf, tasksByClient.get("tabPending").order, tasksByClient.get("textToSearch"));
+        break;
+      case FINISHED:
+        this.dispatchFinalizedTask(limInf, tasksByClient.get("tabFinished").order, tasksByClient.get("textToSearch"));
+        break;
+    }
+    
+  };
+
+  handlePaginar = (page, mode) => {
+    const { dispatchChangePagePending, dispatchChangePageFinalized, tasksByClient } = this.props;
+    switch (mode) {
+      case PENDING:
+        dispatchChangePagePending(page, tasksByClient.get("tabPending").order);
+        break;
+      case FINISHED:
+        dispatchChangePageFinalized(page, tasksByClient.get("tabFinished").order);
+        break;
+    }
+    this.handleTaskByClientsFind(page, mode);
+  };
+
+  clearUserTask = mode =>{
+    const {
+      dispatchCleanPagAndOrderColumnPendingUserTask,
+      dispatchCleanPagAndOrderColumnFinalizedUserTask,
+      dispatchSetTextToSearch
+    } = this.props;
+    switch (mode) {
+      case PENDING:
+        dispatchCleanPagAndOrderColumnPendingUserTask(1);
+        break;
+      case FINISHED:
+        dispatchCleanPagAndOrderColumnFinalizedUserTask(1);
+        break;
+    }
+    dispatchSetTextToSearch(null);
+  }
+  createTask = () => {
+    const { dispatchUpdateTitleNavBar } = this.props;
+    dispatchUpdateTitleNavBar("Tareas");
+    redirectUrl("/dashboard/task");
+  }
+  
+  render() {
+    const { tasksByClient, reducerGlobal } = this.props;
+    let tabPending = tasksByClient.get("tabPending");
+    let tabFinished = tasksByClient.get("tabFinished");
     return (
-      <div className="tab-pane quickZoomIn animated"
-           style={{width: "100%", marginTop: "10px", marginBottom: "70px", paddingTop: "20px"}}>
-        <div className="tab-content break-word"
-             style={{zIndex: 0, border: '1px solid #cecece', padding: '16px', borderRadius: '3px', overflow: 'visible'}}>
-          <Grid style={{width: "100%"}}>
+      <div
+        className="tab-pane quickZoomIn animated"
+        style={{
+          width: "100%",
+          marginTop: "10px",
+          marginBottom: "70px",
+          paddingTop: "20px"
+        }}
+      >
+        <div
+          className="tab-content break-word"
+          style={{
+            zIndex: 0,
+            border: "1px solid #cecece",
+            padding: "16px",
+            borderRadius: "3px",
+            overflow: "visible"
+          }}
+        >
+          <Grid style={{ width: "100%" }}>
             <Row>
-              <Col xs><span style={{fontWeight: 'bold', color: '#4C5360'}}>Estado de la tarea:</span>
-                <SelectFilterContact
-                  config={{onChange: (value) => this.setState({value1: value.id})}}
-                  idTypeFilter={TASK_STATUS}
+              <Col xs={12} sm={8} md={6} lg={6}>
+                <SearchInputComponent
+                  onChangeSearch={text => this._onChangeSearch(text)}
                 />
               </Col>
+            </Row>
+            <Row>
               <Col xs>
-                {_.get(reducerGlobal.get('permissionsTasks'), _.indexOf(reducerGlobal.get('permissionsTasks'), CREAR), false) &&
-                <button className="btn btn-primary" type="button" title="Crear Tarea"
-                        style={{marginTop: "18px"}} onClick={this.createTask}>
-                  <i className="plus icon" style={{color: "white", margin: 'em', fontSize: '1.2em'}}/>
-                  Crear
-                </button>
-                }
+                {_.get(
+                  reducerGlobal.get("permissionsTasks"),
+                  _.indexOf(reducerGlobal.get("permissionsTasks"), CREAR),
+                  false
+                ) && (
+                  <button
+                    className="btn btn-primary"
+                    type="button"
+                    title="Crear Tarea"
+                    style={{ marginTop: "18px" }}
+                    onClick={this.createTask}
+                  >
+                    <i
+                      className="plus icon"
+                      style={{
+                        color: "white",
+                        margin: "em",
+                        fontSize: "1.2em"
+                      }}
+                    />
+                    Crear
+                  </button>
+                )}
               </Col>
             </Row>
           </Grid>
         </div>
-        <Grid style={{display: visibleTable, width: "100%"}}>
-          <Row>
-            <Col xs>
-              <ListPendingTaskComponent value1={this.state.value1}/>
-              <PaginationPendingTaskComponent value1={this.state.value1}/>
-            </Col>
-          </Row>
-        </Grid>
-        <Grid style={{display: visibleMessage, width: "100%"}}>
-          <Row center="xs">
-            <Col xs={12} sm={8} md={12} lg={12}>
-              <span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span>
-            </Col>
-          </Row>
-        </Grid>
-        <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions}/>
+        <Row>
+          <PendingTasksHelp></PendingTasksHelp>
+        </Row>
+        <div>
+          <Grid style={{ width: "100%" }}>
+            {this.state.loading === true ? "Cargando..." : ""}
+            <Row>
+              <Col xs>
+                <TabComponent
+                  tabs={[
+                    {
+                      name: PENDING_TASKS,
+                      content: (
+                        <div>
+                          <ListPendingTaskComponent
+                            orderColumn={this.orderColumn}
+                            tasks={tabPending.data}
+                            handleTaskByClientsFind={
+                              this.handleTaskByClientsFind
+                            }
+                            mode={PENDING}
+                          />
+                          <PaginationPendingTaskComponent
+                            tab={tabPending}
+                            clearUserTask={this.clearUserTask}
+                            handlePaginar={this.handlePaginar}
+                            mode={PENDING}
+                          />
+                        </div>
+                      ),
+                      number: tabPending.rowCount
+                    },
+                    {
+                      name: FINALIZED_TASKS,
+                      content: (
+                        <div>
+                          <ListPendingTaskComponent
+                            orderColumn={this.orderColumn}
+                            tasks={tabFinished.data}
+                            handleTaskByClientsFind={
+                              this.handleTaskByClientsFind
+                            }
+                            mode={FINISHED}
+                          />
+                          <PaginationPendingTaskComponent
+                            tab={tabFinished}
+                            clearUserTask={this.clearUserTask}
+                            handlePaginar={this.handlePaginar}
+                            mode={FINISHED}
+                          />
+                        </div>
+                      ),
+                      number: tabFinished.rowCount
+                    }
+                  ]}
+                />
+              </Col>
+            </Row>
+          </Grid>
+        </div>
+        <AlertWithoutPermissions
+          openMessagePermissions={this.state.openMessagePermissions}
+        />
       </div>
     );
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    dispatchTasksByClient: tasksByClientFindServer,
-    dispatchClearUserTask: clearUserTask,
-    dispatchValidatePermissions: validatePermissionsByModule,
-    dispatchInitPending: loadTaskPending
-  }, dispatch);
+  return bindActionCreators(
+    {
+      dispatchValidatePermissionsByModule: validatePermissionsByModule,
+      dispatchPendingTasksByClientFindServer: pendingTasksByClientFindServer,
+      dispatchFinalizedTasksByClientFindServer: finalizedTasksByClientFindServer,
+      dispatchCleanPagAndOrderColumnPendingUserTask: cleanPagAndOrderColumnPendingUserTask,
+      dispatchCleanPagAndOrderColumnFinalizedUserTask: cleanPagAndOrderColumnFinalizedUserTask,
+      dispatchChangePagePending: changePagePending,
+      dispatchChangePageFinalized: changePageFinalized,
+      dispatchSetTextToSearch: setTextToSearch,
+      dispatchShowLoading: showLoading,
+      dispatchCleanTextToSearch: cleanTextToSearch
+    },
+    dispatch
+  );
 }
 
-function mapStateToProps({tasksByClient, reducerGlobal}, ownerProps) {
+function mapStateToProps({ tasksByClient, reducerGlobal }) {
   return {
     tasksByClient,
     reducerGlobal

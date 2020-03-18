@@ -101,7 +101,7 @@ class ButtonDetailsRedirectComponent extends Component {
     render() {
         const iconButton = isUndefined(this.props.icon) ? "zoom icon" : this.props.icon;
         return (
-            <td>
+            <td style={this.props.style}>
                 <button className="btn btn-primary btn-sm" onClick={this._detailVisit}>
                     <i className={iconButton} style={{ margin: '0em', fontSize: '1.2em' }} />
                 </button>
