@@ -9,6 +9,7 @@ import Header from './header';
 
 import { updateTitleNavBar } from '../navBar/actions';
 import AlertSection from './widgets/alerts/alertSection';
+import Chart from '../chart'
 
 export class ManagementView extends Component {
 
@@ -34,7 +35,7 @@ export class ManagementView extends Component {
             </Row>
             <Row>
                 <Col md={12} style={{ marginTop: 70 }}>
-                    <AlertSection />
+                    <Chart />
                 </Col>
             </Row>
         </div>
