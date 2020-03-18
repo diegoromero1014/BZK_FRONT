@@ -24,12 +24,6 @@ import { Header, Image } from "semantic-ui-react";
 import ImageBrand from '../../../img/svg/logo_bancolombia_blanco_biztrack.svg';
 import _ from "lodash";
 
-const itemManagerialView = {
-    text: "Vista gerencial X",
-    icon: "bar chart",
-    link: "/dashboard/viewManagement"
-};
-
 const itemDashboard = {
     text: "Vista gerencial",
     icon: "computer",
@@ -114,7 +108,6 @@ export class MenuComponent extends Component {
 
         if (_.get(permissions, MODULE_MANAGERIAL_VIEW)) {
             menuItems.push(itemDashboard);
-            menuItems.push(itemManagerialView);
         }
         if (_.get(permissions, MODULE_CLIENTS)) {
             menuItems.push(itemClients);
