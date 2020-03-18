@@ -55,7 +55,6 @@ class DownloadPipeline extends Component {
     }
 
     downloadPipeline() {
-        debugger;
         const {fields: {initialValidityDate, finalValidityDate}, changeStateSaveData, swtShowMessage, getPipelineXls, itemSelectedModal} = this.props;
         let errorInForm = false;
 
