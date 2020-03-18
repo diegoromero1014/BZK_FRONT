@@ -5,7 +5,10 @@ import Title from '../../clientEdit/sections/title';
 
 export const listName = "objectives";
 
-export const ListaObjetivos = makeFieldList(listName, [{ name: "strategies", alias: "strategies", initialValues: { value: "" } }]);
+export const objectiveChildrenList = [{ name: "strategies", alias: "strategies", initialValues: { value: "" } }];
+
+export const ListaObjetivos = makeFieldList(listName, objectiveChildrenList);
+
 export const ListaEstrategias = makeFieldList("strategies");
 export const helpText = "¿A dónde quiere llegar el cliente? ¿Cómo se visualiza en algunos años?";
 
