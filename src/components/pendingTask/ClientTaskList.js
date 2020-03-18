@@ -216,37 +216,37 @@ export class ClientTaskList extends Component {
                 />
               </Col>
             </Row>
-            <Row>
-              <Col xs>
-                {_.get(
-                  reducerGlobal.get("permissionsTasks"),
-                  _.indexOf(reducerGlobal.get("permissionsTasks"), CREAR),
-                  false
-                ) && (
-                  <button
-                    className="btn btn-primary"
-                    type="button"
-                    title="Crear Tarea"
-                    style={{ marginTop: "18px" }}
-                    onClick={this.createTask}
-                  >
-                    <i
-                      className="plus icon"
-                      style={{
-                        color: "white",
-                        margin: "em",
-                        fontSize: "1.2em"
-                      }}
-                    />
-                    Crear
-                  </button>
-                )}
-              </Col>
-            </Row>
           </Grid>
         </div>
         <Row>
-          <PendingTasksHelp></PendingTasksHelp>
+          <Col xs={8} sm={8} md={10} lg={11}>
+            <PendingTasksHelp></PendingTasksHelp>
+          </Col>
+          <Col xs={4} sm={4} md={2} lg={1}>
+            {_.get(
+              reducerGlobal.get("permissionsTasks"),
+              _.indexOf(reducerGlobal.get("permissionsTasks"), CREAR),
+              false
+            ) && (
+              <button
+                className="btn btn-primary"
+                type="button"
+                title="Crear Tarea"
+                style={{ marginTop: "18px" }}
+                onClick={this.createTask}
+              >
+                <i
+                  className="plus icon"
+                  style={{
+                    color: "white",
+                    margin: "em",
+                    fontSize: "1.2em"
+                  }}
+                />
+                Crear
+              </button>
+            )}
+          </Col>
         </Row>
         <div>
           <Grid style={{ width: "100%" }}>
