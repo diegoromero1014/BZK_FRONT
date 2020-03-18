@@ -14,7 +14,7 @@ import ModalDownloadPreVisit from '../../../previsita/downloadPrevisits/componen
 import ModalDownloadVisit from '../../../visit/downloadVisits/component';
 import ModalDownloadBusinessPlan from '../../../businessPlan/downloadBusinessPlan/component';
 import DownloadTask from '../../../pendingTask/downloadTask/component';
-import DownloadPipeline from "./../../../viewManagement/downloadPipeline/component";
+import DownloadPipeline from "./../../../pipeline/downloadReportPipeline/component";
 import { validatePermissionsByModule } from '../../../../actionsGlobal';
 import { PREVISIT_TITLE, VISIT_TITLE, BUSINESS_PLAN_TITLE, PIPELINE_TITLE, TASK_TITLE } from './constants';
 import { MODULE_MANAGERIAL_VIEW, DOWNLOAD_TASK, DESCARGAR } from '../../../../constantsGlobal';
@@ -42,7 +42,7 @@ export class Reports extends Component {
                     title: PREVISIT_TITLE,
                     background: previsit,
                     renderModal: ModalDownloadPreVisit,
-                    itemSeletedModal: TAB_PREVISIT,
+                    itemSelectedModal: TAB_PREVISIT,
                     editable: isEditable,
                 },
                 visualize: true,
@@ -53,7 +53,7 @@ export class Reports extends Component {
                     title: VISIT_TITLE,
                     background: visit,
                     renderModal: ModalDownloadVisit,
-                    itemSeletedModal: TAB_VISIT,
+                    itemSelectedModal: TAB_VISIT,
                     editable: isEditable,
                 },
                 visualize: true,
@@ -64,7 +64,7 @@ export class Reports extends Component {
                     title: BUSINESS_PLAN_TITLE,
                     background: business,
                     renderModal: ModalDownloadBusinessPlan,
-                    itemSeletedModal: TAB_BUSINESS,
+                    itemSelectedModal: TAB_BUSINESS,
                     editable: isEditable,
                 },
                 visualize: true,
@@ -75,7 +75,7 @@ export class Reports extends Component {
                     title: PIPELINE_TITLE,
                     background: pipeline,
                     renderModal: DownloadPipeline,
-                    itemSeletedModal: TAB_PIPELINE,
+                    itemSelectedModal: TAB_PIPELINE,
                     editable: isEditable,
                 },
                 visualize: true,
@@ -86,7 +86,7 @@ export class Reports extends Component {
                     title: TASK_TITLE,
                     background: task,
                     renderModal: DownloadTask,
-                    itemSeletedModal: TAB_TASKS,
+                    itemSelectedModal: TAB_TASKS,
                     editable: isEditable,
                 },
                 visualize: await this.validatePermissions(DOWNLOAD_TASK),
@@ -120,6 +120,7 @@ export class Reports extends Component {
 
         return (
             <div>
+                <h3>INFORMES</h3>
                 <Carousel
                     dots={true}
                     infinite={true}

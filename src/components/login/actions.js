@@ -43,12 +43,13 @@ export function saveSessionToken(sessionToken) {
     }
 }
 
-export function saveSessionUserName(userName) {
-    window.localStorage.setItem('userNameFront', userName);
-}
-
 export function saveSessionName(name) {
     window.sessionStorage.setItem('name', name);
+}
+
+export function saveSessionUserName(userName, name) {
+    window.localStorage.setItem('userNameFront', userName);
+    window.localStorage.setItem('name', name);
 }
 
 export function clearSessionUserName() {

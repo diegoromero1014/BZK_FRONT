@@ -17,7 +17,7 @@ import {
     DATE_FORMAT,
     DATETIME_FORMAT
 } from '../../../constantsGlobal';
-import { TAB_PIPELINE } from '../../viewManagement/constants';
+import { TAB_PIPELINE } from '../../managementView/constants';
 
 
 const fields = ["initialValidityDate", "finalValidityDate", "taskStatus"];

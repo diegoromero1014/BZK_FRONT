@@ -40,11 +40,7 @@ class NavBarComponent extends Component {
         const { consultModulesAccess, navBar } = this.props;
         
         if (window.localStorage.getItem('sessionTokenFront')) {
-
-            
-                consultModulesAccess()
-            
-
+            consultModulesAccess()
         }
 
     }
@@ -55,7 +51,7 @@ class NavBarComponent extends Component {
         const viewAlertClient = navBar.get('viewAlertClient');
         const confidential = navBar.get('confidential');
         const btnLogoutStyle = {width: '100%' };
-        const userNameLogged =  getUsername();
+        const userNameLogged = _.toLower(getUsername());
 
         return (
             <div className="header-quick-nav" style={{ padding: 0,  height: "60px", width: "100%", display: "flex", justifyContent: "space-between"}}>

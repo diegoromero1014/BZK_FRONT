@@ -79,7 +79,7 @@
         <stringProp name="ThreadGroup.num_threads">${__P(LOGIN_HILOS, 1)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(SUBIDA, 10)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
+        <stringProp name="ThreadGroup.duration">${__P(DURACION, 120)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
@@ -1340,7 +1340,7 @@
         <longProp name="ThreadGroup.start_time">1370726934000</longProp>
         <longProp name="ThreadGroup.end_time">1370726934000</longProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
+        <stringProp name="ThreadGroup.duration">${__P(DURACION, 120)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
@@ -3479,7 +3479,7 @@
         <stringProp name="ThreadGroup.num_threads">${__P(NUM_HILOS, 1)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(SUBIDA, 10)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
+        <stringProp name="ThreadGroup.duration">${__P(DURACION, 120)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
@@ -6424,7 +6424,7 @@
         <stringProp name="ThreadGroup.num_threads">${__P(NUM_HILOS, 1)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(SUBIDA, 10)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
+        <stringProp name="ThreadGroup.duration">${__P(DURACION, 120)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
@@ -9079,7 +9079,7 @@
         <stringProp name="ThreadGroup.num_threads">${__P(NUM_HILOS, 1)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(SUBIDA, 10)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
+        <stringProp name="ThreadGroup.duration">${__P(DURACION, 120)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
@@ -11782,7 +11782,7 @@
         <stringProp name="ThreadGroup.num_threads">${__P(NUM_HILOS, 1)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(SUBIDA, 10)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
+        <stringProp name="ThreadGroup.duration">${__P(DURACION, 120)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
@@ -14139,71 +14139,6 @@
             </JSONPathAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="115 /Centricity/listClientContacts" enabled="true">
-            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-              <collectionProp name="Arguments.arguments">
-                <elementProp name="" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;timestamp&quot;:1570451934884,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;clientId&quot;:&quot;${clientId}&quot;,&quot;groupId&quot;:&quot;&quot;,&quot;pageNum&quot;:0,&quot;maxRows&quot;:300,&quot;searchTerm&quot;:&quot;&quot;,&quot;columnOrder&quot;:&quot;&quot;,&quot;order&quot;:0,&quot;functionId&quot;:&quot;&quot;,&quot;lobId&quot;:&quot;&quot;,&quot;typeOfContactId&quot;:&quot;&quot;,&quot;outdatedContact&quot;:&quot;&quot;}}</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                </elementProp>
-              </collectionProp>
-            </elementProp>
-            <stringProp name="HTTPSampler.domain"></stringProp>
-            <stringProp name="HTTPSampler.port"></stringProp>
-            <stringProp name="HTTPSampler.protocol"></stringProp>
-            <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-            <stringProp name="HTTPSampler.path">/Centricity/listClientContacts</stringProp>
-            <stringProp name="HTTPSampler.method">POST</stringProp>
-            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          </HTTPSamplerProxy>
-          <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-              <collectionProp name="HeaderManager.headers">
-                <elementProp name="Referer" elementType="Header">
-                  <stringProp name="Header.name">Referer</stringProp>
-                  <stringProp name="Header.value">${scheme}://${host}/biztrack/dashboard/previsitaEditar/${previsitId}</stringProp>
-                </elementProp>
-                <elementProp name="Accept-Language" elementType="Header">
-                  <stringProp name="Header.name">Accept-Language</stringProp>
-                  <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                </elementProp>
-                <elementProp name="Content-Type" elementType="Header">
-                  <stringProp name="Header.name">Content-Type</stringProp>
-                  <stringProp name="Header.value">application/json;charset=utf-8</stringProp>
-                </elementProp>
-                <elementProp name="Accept-Encoding" elementType="Header">
-                  <stringProp name="Header.name">Accept-Encoding</stringProp>
-                  <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                </elementProp>
-                <elementProp name="User-Agent" elementType="Header">
-                  <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0</stringProp>
-                </elementProp>
-                <elementProp name="Accept" elementType="Header">
-                  <stringProp name="Header.name">Accept</stringProp>
-                  <stringProp name="Header.value">application/json, text/plain, */*</stringProp>
-                </elementProp>
-              </collectionProp>
-            </HeaderManager>
-            <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
-              <stringProp name="JSON_PATH">$.status</stringProp>
-              <stringProp name="EXPECTED_VALUE">200</stringProp>
-              <boolProp name="JSONVALIDATION">true</boolProp>
-              <boolProp name="EXPECT_NULL">false</boolProp>
-              <boolProp name="INVERT">false</boolProp>
-              <boolProp name="ISREGEX">true</boolProp>
-            </JSONPathAssertion>
-            <hashTree/>
-          </hashTree>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Guardar Previsita" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
@@ -14328,7 +14263,92 @@
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;timestamp&quot;:1570451953492,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;id&quot;:&quot;${previsitId}&quot;,&quot;client&quot;:&quot;${clientId}&quot;,&quot;visitTime&quot;:1578675409759,&quot;participatingContacts&quot;:null,&quot;participatingEmployees&quot;:[{&quot;id&quot;:null,&quot;employee&quot;:120,&quot;order&quot;:1}],&quot;relatedEmployees&quot;:null,&quot;principalObjective&quot;:&quot;&lt;p&gt;ad&lt;/p&gt;&quot;,&quot;documentType&quot;:&quot;5054315&quot;,&quot;visitLocation&quot;:&quot;1&quot;,&quot;observations&quot;:&quot;&lt;p&gt;asd&lt;/p&gt;&quot;,&quot;documentStatus&quot;:1,&quot;endTime&quot;:1,&quot;commercialReport&quot;:{&quot;id&quot;:null,&quot;isConfidential&quot;:false,&quot;usersWithPermission&quot;:[],&quot;status&quot;:null,&quot;documentStatus&quot;:1},&quot;answers&quot;:[], &quot;clientDetails&quot;:{&quot;opportunities&quot;:[{&quot;client&quot;:&quot;5077004&quot;,&quot;id&quot;:6898994,&quot;text&quot;:&quot;No tengo oprotunodades, estoy quebrado :(&quot;,&quot;didChange&quot;:false}],&quot;weaknesses&quot;:[{&quot;client&quot;:&quot;5077004&quot;,&quot;id&quot;:6898995,&quot;text&quot;:&quot;Mis empleados no venden mis productos &quot;,&quot;didChange&quot;:false},{&quot;client&quot;:&quot;5077004&quot;,&quot;id&quot;:6898996,&quot;text&quot;:&quot;HolaLorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, te&quot;,&quot;didChange&quot;:false},{&quot;client&quot;:&quot;5077004&quot;,&quot;id&quot;:6898997,&quot;text&quot;:&quot;Una debilidada \n&quot;,&quot;didChange&quot;:false},{&quot;client&quot;:&quot;5077004&quot;,&quot;id&quot;:6898998,&quot;text&quot;:&quot;Hasta cuento se puede ingrear&quot;,&quot;didChange&quot;:false},{&quot;client&quot;:&quot;5077004&quot;,&quot;id&quot;:6898999,&quot;text&quot;:&quot;Esta es la ultima creo&quot;,&quot;didChange&quot;:false}]}}}</stringProp>
+                  <stringProp name="Argument.value">{&#xd;
+   &quot;messageHeader&quot;:{&#xd;
+      &quot;sessionToken&quot;:&quot;${token}&quot;,&#xd;
+      &quot;timestamp&quot;:1570451953492,&#xd;
+      &quot;service&quot;:&quot;&quot;,&#xd;
+      &quot;status&quot;:&quot;0&quot;,&#xd;
+      &quot;language&quot;:&quot;es&quot;,&#xd;
+      &quot;displayErrorMessage&quot;:&quot;&quot;,&#xd;
+      &quot;technicalErrorMessage&quot;:&quot;&quot;,&#xd;
+      &quot;applicationVersion&quot;:&quot;&quot;,&#xd;
+      &quot;debug&quot;:true,&#xd;
+      &quot;isSuccessful&quot;:true&#xd;
+   },&#xd;
+   &quot;messageBody&quot;:{&#xd;
+      &quot;id&quot;:&quot;${previsitId}&quot;,&#xd;
+      &quot;client&quot;:&quot;${clientId}&quot;,&#xd;
+      &quot;visitTime&quot;:1578675409759,&#xd;
+      &quot;participatingContacts&quot;:null,&#xd;
+      &quot;participatingEmployees&quot;:[&#xd;
+         {&#xd;
+            &quot;id&quot;:null,&#xd;
+            &quot;employee&quot;:120,&#xd;
+            &quot;order&quot;:1&#xd;
+         }&#xd;
+      ],&#xd;
+      &quot;relatedEmployees&quot;:null,&#xd;
+      &quot;principalObjective&quot;:&quot;&lt;p&gt;ad&lt;/p&gt;&quot;,&#xd;
+      &quot;documentType&quot;:&quot;5054315&quot;,&#xd;
+      &quot;visitLocation&quot;:&quot;1&quot;,&#xd;
+      &quot;observations&quot;:&quot;&lt;p&gt;asd&lt;/p&gt;&quot;,&#xd;
+      &quot;documentStatus&quot;:1,&#xd;
+      &quot;endTime&quot;:1,&#xd;
+      &quot;commercialReport&quot;:{&#xd;
+         &quot;id&quot;:null,&#xd;
+         &quot;isConfidential&quot;:false,&#xd;
+         &quot;usersWithPermission&quot;:[&#xd;
+&#xd;
+         ],&#xd;
+         &quot;status&quot;:null,&#xd;
+         &quot;documentStatus&quot;:1&#xd;
+      },&#xd;
+      &quot;answers&quot;:[&#xd;
+&#xd;
+      ],&#xd;
+      &quot;clientDetails&quot;:{&#xd;
+         &quot;weaknesses&quot;:[&#xd;
+            {&#xd;
+               &quot;id&quot;:null,&#xd;
+               &quot;text&quot;:&quot;Una debilidad&quot;,&#xd;
+               &quot;order&quot;:2,&#xd;
+               &quot;associated&quot;:true,&#xd;
+               &quot;editable&quot;:true,&#xd;
+               &quot;client&quot;:&quot;${clientId}&quot;&#xd;
+            }&#xd;
+         ],&#xd;
+         &quot;opportunities&quot;:[&#xd;
+            {&#xd;
+               &quot;id&quot;:null,&#xd;
+               &quot;text&quot;:&quot;oportunidad&quot;,&#xd;
+               &quot;order&quot;:1,&#xd;
+               &quot;associated&quot;:true,&#xd;
+               &quot;editable&quot;:true,&#xd;
+               &quot;client&quot;:&quot;${clientId}&quot;&#xd;
+            }&#xd;
+         ],&#xd;
+         &quot;objectives&quot;:[&#xd;
+            {&#xd;
+               &quot;id&quot;:null,&#xd;
+               &quot;client&quot;:&quot;${clientId}&quot;,&#xd;
+               &quot;text&quot;:&quot;objetivo&quot;,&#xd;
+               &quot;didChange&quot;:false,&#xd;
+               &quot;associated&quot;:true,&#xd;
+               &quot;children&quot;:[&#xd;
+                  {&#xd;
+                     &quot;id&quot;:null,&#xd;
+                     &quot;client&quot;:&quot;${clientId}&quot;,&#xd;
+                     &quot;text&quot;:&quot;estrategia&quot;,&#xd;
+                     &quot;didChange&quot;:false,&#xd;
+                     &quot;associated&quot;:true&#xd;
+                  }&#xd;
+               ]&#xd;
+            }&#xd;
+         ]&#xd;
+   }&#xd;
+}&#xd;
+}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
@@ -14644,7 +14664,7 @@
         <stringProp name="ThreadGroup.num_threads">${__P(NUM_HILOS, 1)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(SUBIDA, 10)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
+        <stringProp name="ThreadGroup.duration">${__P(DURACION, 120)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
@@ -17048,71 +17068,6 @@
             </JSONPathAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="186 /Centricity/visitDocumentDetail" enabled="true">
-            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-              <collectionProp name="Arguments.arguments">
-                <elementProp name="" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;timestamp&quot;:1570452264113,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;id&quot;:&quot;${visitId}&quot;}}</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                </elementProp>
-              </collectionProp>
-            </elementProp>
-            <stringProp name="HTTPSampler.domain"></stringProp>
-            <stringProp name="HTTPSampler.port"></stringProp>
-            <stringProp name="HTTPSampler.protocol"></stringProp>
-            <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-            <stringProp name="HTTPSampler.path">/Centricity/visitDocumentDetail</stringProp>
-            <stringProp name="HTTPSampler.method">POST</stringProp>
-            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          </HTTPSamplerProxy>
-          <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-              <collectionProp name="HeaderManager.headers">
-                <elementProp name="Referer" elementType="Header">
-                  <stringProp name="Header.name">Referer</stringProp>
-                  <stringProp name="Header.value">${scheme}://${host}/biztrack/dashboard/visitaEditar/${visitId}</stringProp>
-                </elementProp>
-                <elementProp name="Accept-Language" elementType="Header">
-                  <stringProp name="Header.name">Accept-Language</stringProp>
-                  <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                </elementProp>
-                <elementProp name="Content-Type" elementType="Header">
-                  <stringProp name="Header.name">Content-Type</stringProp>
-                  <stringProp name="Header.value">application/json;charset=utf-8</stringProp>
-                </elementProp>
-                <elementProp name="Accept-Encoding" elementType="Header">
-                  <stringProp name="Header.name">Accept-Encoding</stringProp>
-                  <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                </elementProp>
-                <elementProp name="User-Agent" elementType="Header">
-                  <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0</stringProp>
-                </elementProp>
-                <elementProp name="Accept" elementType="Header">
-                  <stringProp name="Header.name">Accept</stringProp>
-                  <stringProp name="Header.value">application/json, text/plain, */*</stringProp>
-                </elementProp>
-              </collectionProp>
-            </HeaderManager>
-            <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
-              <stringProp name="JSON_PATH">$.status</stringProp>
-              <stringProp name="EXPECTED_VALUE">200</stringProp>
-              <boolProp name="JSONVALIDATION">true</boolProp>
-              <boolProp name="EXPECT_NULL">false</boolProp>
-              <boolProp name="INVERT">false</boolProp>
-              <boolProp name="ISREGEX">true</boolProp>
-            </JSONPathAssertion>
-            <hashTree/>
-          </hashTree>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Guardar Visita" enabled="true">
           <boolProp name="TransactionController.parent">true</boolProp>
@@ -17367,7 +17322,7 @@
         <stringProp name="ThreadGroup.num_threads">${__P(NUM_HILOS, 1)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(SUBIDA, 10)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
+        <stringProp name="ThreadGroup.duration">${__P(DURACION, 120)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
@@ -19892,7 +19847,7 @@
         <stringProp name="ThreadGroup.num_threads">${__P(NUM_HILOS, 1)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(SUBIDA, 10)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
+        <stringProp name="ThreadGroup.duration">${__P(DURACION, 120)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
@@ -22423,11 +22378,11 @@
         </DurationAssertion>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Descarga AEC" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Descargas" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">5</stringProp>
+          <stringProp name="LoopController.loops">2</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
@@ -23701,1253 +23656,6 @@
           </HTTPSamplerProxy>
           <hashTree/>
         </hashTree>
-      </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Descarga Vista Gerencial" enabled="true">
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">5</stringProp>
-        </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
-        <boolProp name="ThreadGroup.scheduler">false</boolProp>
-        <stringProp name="ThreadGroup.duration">300</stringProp>
-        <stringProp name="ThreadGroup.delay"></stringProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
-      </ThreadGroup>
-      <hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login Front" enabled="true"/>
-        <hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="20 /Centricity/userAuthentication" enabled="true">
-            <boolProp name="TransactionController.includeTimers">false</boolProp>
-            <boolProp name="TransactionController.parent">false</boolProp>
-          </TransactionController>
-          <hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="20 /Centricity/userAuthentication" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/userAuthentication</stringProp>
-              <stringProp name="HTTPSampler.method">OPTIONS</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Headers" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
-                    <stringProp name="Header.value">content-type</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Method" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Method</stringProp>
-                    <stringProp name="Header.value">POST</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="21 /Centricity/userAuthentication" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;timestamp&quot;:1569938527723,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;username&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;recaptcha&quot;:null,&quot;application&quot;:&quot;FRONT_OFFICE&quot;,&quot;timeZone&quot;:&quot;America/Bogota&quot;}}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/userAuthentication</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Content-Type" elementType="Header">
-                    <stringProp name="Header.name">Content-Type</stringProp>
-                    <stringProp name="Header.value">application/json;charset=utf-8</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">application/json, text/plain, */*</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-              <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Guardar Token" enabled="true">
-                <stringProp name="JSONPostProcessor.referenceNames">token</stringProp>
-                <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.sessionToken</stringProp>
-                <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
-              </JSONPostProcessor>
-              <hashTree/>
-              <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
-                <stringProp name="JSON_PATH">$.data.sessionToken</stringProp>
-                <stringProp name="EXPECTED_VALUE"></stringProp>
-                <boolProp name="JSONVALIDATION">true</boolProp>
-                <boolProp name="EXPECT_NULL">true</boolProp>
-                <boolProp name="INVERT">true</boolProp>
-                <boolProp name="ISREGEX">true</boolProp>
-              </JSONPathAssertion>
-              <hashTree/>
-              <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
-                <stringProp name="JSON_PATH">$.status</stringProp>
-                <stringProp name="EXPECTED_VALUE">200</stringProp>
-                <boolProp name="JSONVALIDATION">true</boolProp>
-                <boolProp name="EXPECT_NULL">false</boolProp>
-                <boolProp name="INVERT">false</boolProp>
-                <boolProp name="ISREGEX">true</boolProp>
-              </JSONPathAssertion>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="26 /Centricity/validatePermissionsModule" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/validatePermissionsModule</stringProp>
-              <stringProp name="HTTPSampler.method">OPTIONS</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Headers" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
-                    <stringProp name="Header.value">content-type</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Method" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Method</stringProp>
-                    <stringProp name="Header.value">POST</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="22 /Centricity/upgradeProductionEnabled" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/upgradeProductionEnabled</stringProp>
-              <stringProp name="HTTPSampler.method">OPTIONS</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Headers" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
-                    <stringProp name="Header.value">content-type</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Method" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Method</stringProp>
-                    <stringProp name="Header.value">POST</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="24 /Centricity/masterDataByFields" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/masterDataByFields</stringProp>
-              <stringProp name="HTTPSampler.method">OPTIONS</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Headers" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
-                    <stringProp name="Header.value">content-type</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Method" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Method</stringProp>
-                    <stringProp name="Header.value">POST</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="27 /Centricity/validatePermissionsModule" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/validatePermissionsModule</stringProp>
-              <stringProp name="HTTPSampler.method">OPTIONS</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Headers" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
-                    <stringProp name="Header.value">content-type</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Method" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Method</stringProp>
-                    <stringProp name="Header.value">POST</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="25 /Centricity/teamsByEmployee" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/teamsByEmployee</stringProp>
-              <stringProp name="HTTPSampler.method">OPTIONS</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Headers" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
-                    <stringProp name="Header.value">content-type</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Method" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Method</stringProp>
-                    <stringProp name="Header.value">POST</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="23 /Centricity/getModulesAccess" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/getModulesAccess</stringProp>
-              <stringProp name="HTTPSampler.method">OPTIONS</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Headers" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
-                    <stringProp name="Header.value">content-type</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Method" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Method</stringProp>
-                    <stringProp name="Header.value">POST</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="28 /Centricity/getRecentClients" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/getRecentClients</stringProp>
-              <stringProp name="HTTPSampler.method">OPTIONS</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Headers" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
-                    <stringProp name="Header.value">content-type</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Method" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Method</stringProp>
-                    <stringProp name="Header.value">POST</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="30 /Centricity/validatePermissionsModule" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;timestamp&quot;:1569938535300,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;module&quot;:&quot;Prospectos&quot;,&quot;typeApp&quot;:&quot;Front&quot;}}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/validatePermissionsModule</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Content-Type" elementType="Header">
-                    <stringProp name="Header.name">Content-Type</stringProp>
-                    <stringProp name="Header.value">application/json;charset=utf-8</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">application/json, text/plain, */*</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="29 /Centricity/masterDataByFields" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;timestamp&quot;:1569938535298,&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;fields&quot;:[&quot;certificationStatus&quot;,&quot;relationshipStatus&quot;,&quot;aecLevel&quot;,&quot;managementBrand&quot;],&quot;onlyWithoutParents&quot;:false}}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/masterDataByFields</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Content-Type" elementType="Header">
-                    <stringProp name="Header.name">Content-Type</stringProp>
-                    <stringProp name="Header.value">application/json;charset=utf-8</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">application/json, text/plain, */*</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="31 /Centricity/upgradeProductionEnabled" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;timestamp&quot;:1569938535269,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:&quot;&quot;}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/upgradeProductionEnabled</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Content-Type" elementType="Header">
-                    <stringProp name="Header.name">Content-Type</stringProp>
-                    <stringProp name="Header.value">application/json;charset=utf-8</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">application/json, text/plain, */*</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="33 /Centricity/validatePermissionsModule" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;timestamp&quot;:1569938535301,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;module&quot;:&quot;Clientes&quot;,&quot;typeApp&quot;:&quot;Front&quot;}}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/validatePermissionsModule</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Content-Type" elementType="Header">
-                    <stringProp name="Header.name">Content-Type</stringProp>
-                    <stringProp name="Header.value">application/json;charset=utf-8</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">application/json, text/plain, */*</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="32 /Centricity/getModulesAccess" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;timestamp&quot;:1569938535271,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;idRole&quot;:null,&quot;app&quot;:&quot;Front&quot;}}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/getModulesAccess</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Content-Type" elementType="Header">
-                    <stringProp name="Header.name">Content-Type</stringProp>
-                    <stringProp name="Header.value">application/json;charset=utf-8</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">application/json, text/plain, */*</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="34 /Centricity/teamsByEmployee" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;timestamp&quot;:1569938535298,&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{}}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/teamsByEmployee</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Content-Type" elementType="Header">
-                    <stringProp name="Header.name">Content-Type</stringProp>
-                    <stringProp name="Header.value">application/json;charset=utf-8</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">application/json, text/plain, */*</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="35 /Centricity/getRecentClients" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;timestamp&quot;:1569938535301,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:null}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/getRecentClients</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Content-Type" elementType="Header">
-                    <stringProp name="Header.name">Content-Type</stringProp>
-                    <stringProp name="Header.value">application/json;charset=utf-8</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">application/json, text/plain, */*</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="36 /Centricity/updateSessionLastDate" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/updateSessionLastDate</stringProp>
-              <stringProp name="HTTPSampler.method">OPTIONS</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Headers" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
-                    <stringProp name="Header.value">content-type</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Method" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Method</stringProp>
-                    <stringProp name="Header.value">POST</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="37 /Centricity/updateSessionLastDate" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/updateSessionLastDate</stringProp>
-              <stringProp name="HTTPSampler.method">OPTIONS</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Headers" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
-                    <stringProp name="Header.value">content-type</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Method" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Method</stringProp>
-                    <stringProp name="Header.value">POST</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="38 /Centricity/getParameterByName" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/getParameterByName</stringProp>
-              <stringProp name="HTTPSampler.method">OPTIONS</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Headers" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Headers</stringProp>
-                    <stringProp name="Header.value">content-type</stringProp>
-                  </elementProp>
-                  <elementProp name="Access-Control-Request-Method" elementType="Header">
-                    <stringProp name="Header.name">Access-Control-Request-Method</stringProp>
-                    <stringProp name="Header.value">POST</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="39 /Centricity/updateSessionLastDate" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;timestamp&quot;:1569938535447,&quot;sessionToken&quot;:&quot;${token}&quot;},&quot;messageBody&quot;:&quot;${token}&quot;}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/updateSessionLastDate</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Content-Type" elementType="Header">
-                    <stringProp name="Header.name">Content-Type</stringProp>
-                    <stringProp name="Header.value">application/json;charset=utf-8</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">application/json, text/plain, */*</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="40 /Centricity/updateSessionLastDate" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;timestamp&quot;:1569938535444,&quot;sessionToken&quot;:&quot;${token}&quot;},&quot;messageBody&quot;:&quot;${token}&quot;}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/updateSessionLastDate</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Content-Type" elementType="Header">
-                    <stringProp name="Header.name">Content-Type</stringProp>
-                    <stringProp name="Header.value">application/json;charset=utf-8</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">application/json, text/plain, */*</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="41 /Centricity/getParameterByName" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;timestamp&quot;:1569938536459,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;name&quot;:&quot;RANGO_PASO_PRODUCCION&quot;}}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-              <stringProp name="HTTPSampler.path">/Centricity/getParameterByName</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="Accept-Language" elementType="Header">
-                    <stringProp name="Header.name">Accept-Language</stringProp>
-                    <stringProp name="Header.value">es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3</stringProp>
-                  </elementProp>
-                  <elementProp name="Origin" elementType="Header">
-                    <stringProp name="Header.name">Origin</stringProp>
-                    <stringProp name="Header.value">${scheme}://${host}</stringProp>
-                  </elementProp>
-                  <elementProp name="Content-Type" elementType="Header">
-                    <stringProp name="Header.name">Content-Type</stringProp>
-                    <stringProp name="Header.value">application/json;charset=utf-8</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept-Encoding" elementType="Header">
-                    <stringProp name="Header.name">Accept-Encoding</stringProp>
-                    <stringProp name="Header.value">gzip, deflate, br</stringProp>
-                  </elementProp>
-                  <elementProp name="User-Agent" elementType="Header">
-                    <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0</stringProp>
-                  </elementProp>
-                  <elementProp name="Accept" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">application/json, text/plain, */*</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-            </hashTree>
-          </hashTree>
-        </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Descarga Pipeline Vista Gerencial" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
           <boolProp name="TransactionController.parent">false</boolProp>
@@ -24990,7 +23698,7 @@
         <stringProp name="ThreadGroup.num_threads">${__P(LOGIN_HILOS, 1)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(SUBIDA, 10)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${__P(DURACION, 60)}</stringProp>
+        <stringProp name="ThreadGroup.duration">${__P(DURACION, 120)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
@@ -25381,7 +24089,7 @@
         <stringProp name="filename"></stringProp>
       </ResultCollector>
       <hashTree/>
-      <ProxyControl guiclass="ProxyControlGui" testclass="ProxyControl" testname="HTTP(S) Test Script Recorder" enabled="true">
+      <ProxyControl guiclass="ProxyControlGui" testclass="ProxyControl" testname="HTTP(S) Test Script Recorder" enabled="false">
         <stringProp name="ProxyControlGui.port">8888</stringProp>
         <collectionProp name="ProxyControlGui.exclude_list">
           <stringProp name="805311387">windowsupdate\.microsoft\.com.*</stringProp>
@@ -25468,7 +24176,7 @@
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Crear usuarios" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Crear usuarios" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>

@@ -68,7 +68,7 @@ class DownloadTask extends Component {
 	}
 
 	_downloadTask() {
-		const { fields: { initialValidityDate, finalValidityDate, taskStatus }, changeStateSaveData, getXlsTask, swtShowMessage, itemSeletedModal } = this.props;
+		const { fields: { initialValidityDate, finalValidityDate, taskStatus }, changeStateSaveData, getXlsTask, swtShowMessage, itemSelectedModal } = this.props;
 		var errorInForm = false;
 		let url;
 
@@ -96,7 +96,7 @@ class DownloadTask extends Component {
 
 		if (!errorInForm) {
 			changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-			if (TAB_TASKS === itemSeletedModal) {
+			if (TAB_TASKS === itemSelectedModal) {
 				url = '/getXlsTask';
 				getXlsTask(initialValidityDate.value, finalValidityDate.value, states).then(function (data) {
 					if (data.payload.data.status === 200) {
