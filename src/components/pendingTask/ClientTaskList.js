@@ -27,6 +27,7 @@ import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _TASK } from '../../constant
 import TabComponent from './../../ui/Tab';
 import PendingTasksHelp from "./pendingTasksHelp";
 import SearchInputComponent from "../../ui/searchInput/SearchInputComponent";
+import { updateTitleNavBar } from '../navBar/actions';
 export class ClientTaskList extends Component {
   constructor(props) {
     super(props);
@@ -323,7 +324,8 @@ function mapDispatchToProps(dispatch) {
       dispatchChangePageFinalized: changePageFinalized,
       dispatchSetTextToSearch: setTextToSearch,
       dispatchShowLoading: showLoading,
-      dispatchCleanTextToSearch: cleanTextToSearch
+      dispatchCleanTextToSearch: cleanTextToSearch,
+      dispatchUpdateTitleNavBar: updateTitleNavBar
     },
     dispatch
   );
