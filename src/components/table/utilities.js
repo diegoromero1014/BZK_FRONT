@@ -45,7 +45,6 @@ export const validateData = data => Array.isArray(data) && data.length;
 
 export const buildRow = (element, index, { columns, onClick, Component, propsComponent }) => {
     const props = columns.map(column => get(column, PROPERTY, ALL_OBJECT));
-    console.log()
     return (
         <Table.Row key={index} onClick={event => onClick(element, event)}>
             {props.map((prop, index) => (
