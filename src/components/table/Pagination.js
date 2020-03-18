@@ -11,16 +11,24 @@ class Pagination extends Component {
         this.state = {
             totalPage: 0,
             page: 1,
-            pages: []
         }
     }
 
-    componentWillMount() {
-        this.getPages();
+    async componentWillMount() {
+        const { totalRecords, recordsPerPage } = this.props;
+        await this.setState({ totalPage: Math.ceil(totalRecords / recordsPerPage) });
+    }
+
+    async componentWillUpdate(nextProps) {
+        const { totalRecords } = this.props;
+
+        if (nextProps.totalRecords != totalRecords) {
+            await this.setState({ totalPage: Math.ceil(nextProps.totalRecords / nextProps.recordsPerPage) });
+        }
     }
 
 
-    renderItem = () => this.state.pages.map((page, index) =>
+    renderItem = (totalRecords, recordsPerPage) => this.getPages(totalRecords, recordsPerPage).map((page, index) =>
         <Menu.Item
             as='a'
             key={index}
@@ -31,18 +39,15 @@ class Pagination extends Component {
         </Menu.Item>
     );
 
-    getPages = async () => {
-        const { totalRecords, recordsPerPage } = this.props;
-
+    getPages = (totalRecords, recordsPerPage) => {
         const pages = [];
         const totalPage = Math.ceil(totalRecords / recordsPerPage);
 
         for (let i = 0; i < totalPage; i++) {
             pages.push(i + 1);
-
         }
 
-        await this.setState({ totalPage, pages });
+        return pages;
     }
 
     handleNextPage = () => {
@@ -83,7 +88,7 @@ class Pagination extends Component {
                                 <Icon name='chevron left' />
                             </Menu.Item>
 
-                            {this.renderItem()}
+                            {this.renderItem(totalRecords, recordsPerPage)}
 
                             <Menu.Item as='right' icon onClick={this.handleNextPage} disabled={page === totalPage} className={page === totalPage ? 'disabled' : ''} >
                                 <Icon name='chevron right' />

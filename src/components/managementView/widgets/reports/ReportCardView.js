@@ -63,7 +63,7 @@ class ReportCardView extends Component {
                             </div>
 
                             {this.props.renderModal &&
-                                <this.props.renderModal isOpen={this.handleCloseModal} itemSeletedModal={this.props.itemSeletedModal} />
+                                <this.props.renderModal isOpen={this.handleCloseModal} itemSelectedModal={this.props.itemSelectedModal} />
                             }
                         </div>
                     </div>

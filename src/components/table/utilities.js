@@ -3,11 +3,12 @@ import { Table, Icon } from 'semantic-ui-react';
 import { get } from 'lodash';
 import { PROPERTY, ALL_OBJECT, ASCENDING } from './constants';
 
-export const buildHeaders = (columns, orderedColumn, direction, handleSort) => columns.map(({ header, prop }, index) => (
+export const buildHeaders = (columns, orderedColumn, direction, handleSort) => columns.map(({ header, prop, width }, index) => (
     <Table.HeaderCell
         key={index}
         style={{ cursor: 'pointer' }}
         onClick={async () => await handleSort(prop)}
+        width={width ? width : null}
     >
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <p style={{ margin: 0, padding: 0 }}>{header}</p>
@@ -31,20 +32,20 @@ const renderSortedIcon = (prop, orderedColumn, direction) => {
 }
 
 export const buildRows = tableSettings => {
-    const { data, colSpan, defaultNoRowMessage } = tableSettings;
+    const { data, colSpan, message } = tableSettings;
 
     if (validateData(data)) {
         return data.map((element, index) => buildRow(element, index, tableSettings));
     } else {
-        return <Table.HeaderCell colSpan={colSpan} textAlign='center'>{defaultNoRowMessage}</Table.HeaderCell>
+        return <Table.HeaderCell colSpan={colSpan} textAlign='center'>{message}</Table.HeaderCell>
     }
 }
 
 export const validateData = data => Array.isArray(data) && data.length;
 
-const buildRow = (element, index, { columns, onClick }) => {
+export const buildRow = (element, index, { columns, onClick, Component, propsComponent }) => {
     const props = columns.map(column => get(column, PROPERTY, ALL_OBJECT));
-
+    console.log()
     return (
         <Table.Row key={index} onClick={event => onClick(element, event)}>
             {props.map((prop, index) => (
@@ -54,12 +55,14 @@ const buildRow = (element, index, { columns, onClick }) => {
                         whiteSpace: 'pre-line',
                         textOverflow: 'ellipsis',
                         wordWrap: 'break-word',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        overflow: 'inherit'
                     }}
                     key={index}
                     verticalAlign='middle'
                 >
-                    {extractValueByKey(element, prop)}
+
+                    {Component && prop === ALL_OBJECT ? <Component data={extractValueByKey(element, prop)} {...propsComponent} /> : extractValueByKey(element, prop)}
                 </Table.Cell>
             ))}
         </Table.Row>
