@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import {Label} from 'semantic-ui-react'
+import _ from 'lodash';
+
 import DetailsInfoClient from '../clientDetailsInfo/detailsInfoClient';
 import ContactInfo from '../contact/component';
 import Partners from '../clients/partners/tabComponent';
@@ -8,11 +11,12 @@ import PrevisitaInfo from '../previsita/component';
 import VisitaInfo from '../visit/component';
 import PipelineInfo from '../pipeline/component';
 import BusinessPlanInfo from '../businessPlan/component';
-import PendingInfo from '../pendingTask/component';
+import ClientTaskList from '../pendingTask/ClientTaskList';
 import RisksManagements from '../risksManagement/componentRisksManagement';
 import ComponentCustomerStory from '../customerStory/componentCustomerStory';
+
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
-import _ from 'lodash';
+import {searchTaskPending} from './../pendingTask/actions'
 import {
     MODULE_CONTACTS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS, MODULE_PIPELINE, MODULE_BUSSINESS_PLAN,
     MODULE_RISKS_MANAGEMENT, MODULE_CUSTOMER_STORY, MODULE_PARTNERS
@@ -21,13 +25,20 @@ import {
     TAB_INFO, TAB_CONTACTS, TAB_SHAREHOLDER, TAB_PREVISITS, TAB_VISITS, TAB_PENDING_TASK, TAB_PIPELINE,
     TAB_BUSINESS_PLAN, TAB_RISKS_MANAGEMENT, TAB_CUSTOMER_STORY
 } from '../../constantsGlobal';
-import { BIZTRACK_MY_CLIENTS, _PIPELINE, nombreflujoAnalytics, _BUSINESS_PLAN, _RISKS_MANAGEMENT } from '../../constantsAnalytics';
+import {
+    BIZTRACK_MY_CLIENTS,
+    _PIPELINE,
+    nombreflujoAnalytics,
+    _BUSINESS_PLAN,
+    _RISKS_MANAGEMENT
+} from '../../constantsAnalytics';
 
 export class TabClientInfo extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tabActive: 1
+            tabActive: 1,
+            counterTabPending: 0
         };
     }
 
@@ -39,10 +50,23 @@ export class TabClientInfo extends Component {
         });
     }
 
+    handleChangeCounterTabPending = counter => {
+        this.setState({counterTabPending: counter});
+    }
+
     componentWillUnmount() {
         this.setState({
             tabActive: 1
         })
+    }
+
+    componentDidMount() {
+        searchTaskPending().then(result => {
+            if (200 === result.data.status) {
+                const data = result.data.data;
+                this.setState({counterTabPending: data.rowCount});
+            }
+        });
     }
 
 
@@ -212,7 +236,7 @@ export class TabClientInfo extends Component {
             backgroundRisksManagement = { height: "60px", borderBottomStyle: "none", width: "140px" };
             backgroundCustomerStory = { height: "60px", borderBottomStyle: "none", width: "150px" };
         }
-        else if (tabActive === TAB_PIPELINE) {                       
+        else if (tabActive === TAB_PIPELINE) {
             window.dataLayer.push({
                 'nombreflujo': nombreflujoAnalytics,
                 'event': BIZTRACK_MY_CLIENTS + _PIPELINE,
@@ -390,6 +414,11 @@ export class TabClientInfo extends Component {
                         }
                         {_.get(navBar.get('mapModulesAccess'), MODULE_TASKS) &&
                             <li style={backgroundPending} onClick={this._handleClickTabItem.bind(this, TAB_PENDING_TASK)}>
+                                <Label
+                                  circular
+                                  color={'red'}
+                                  key={'counter'} content={this.state.counterTabPending > 99 ? '99+' : this.state.counterTabPending}
+                                />
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Tareas</a>
                             </li>
                         }
@@ -412,7 +441,12 @@ export class TabClientInfo extends Component {
                         {styleShareholders && <Partners infoClient={infoClient} />}
                         {stylePrevisitas && <PrevisitaInfo infoClient={infoClient} />}
                         {styleVisits && <VisitaInfo infoClient={infoClient} />}
-                        {stylePendings && <PendingInfo infoClient={infoClient} />}
+                        {
+                            stylePendings &&
+                            <ClientTaskList infoClient={infoClient}
+                                 updateCounterPending={(counter) => this.handleChangeCounterTabPending(counter)}
+                            />
+                        }
                         {stylePipeline && <PipelineInfo infoClient={infoClient} />}
                         {styleBusinessPlan && <BusinessPlanInfo infoClient={infoClient} />}
                         {styleRisksManagement && <RisksManagements infoClient={infoClient} />}
