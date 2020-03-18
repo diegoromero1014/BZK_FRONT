@@ -156,43 +156,6 @@ export function getXlsTask(initialDate, finalDate, states) {
   }
 }
 
-export function loadTaskPending(data) {
-  return {
-    type: LOAD_PENDING,
-    data: data
-  }
-}
-
-export function searchTaskPending() {
-  const json = {
-    "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "username": "",
-      "timestamp": new Date().getTime(),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
-    },
-    "messageBody": {
-      "pageNum": 0,
-      "maxRows": 10,
-      "section": PENDING,
-      "mode": "CLIENT",
-      "filter": {
-        "clientId": 5261530,
-        "order": 0
-      }
-    }
-  };
-
-  return axios.post(APP_URL + "/getTask", json);
-}
-
 export function pendingTasksByClientPromise(pageNum, clientId, maxRows, order, textToSearch){
   const json = {
     messageHeader: {

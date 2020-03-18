@@ -16,7 +16,7 @@ import RisksManagements from '../risksManagement/componentRisksManagement';
 import ComponentCustomerStory from '../customerStory/componentCustomerStory';
 
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
-import {searchTaskPending} from './../pendingTask/actions'
+import { pendingTasksByClientPromise } from "./../pendingTask/actions";
 import {
     MODULE_CONTACTS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS, MODULE_PIPELINE, MODULE_BUSSINESS_PLAN,
     MODULE_RISKS_MANAGEMENT, MODULE_CUSTOMER_STORY, MODULE_PARTNERS
@@ -32,6 +32,7 @@ import {
     _BUSINESS_PLAN,
     _RISKS_MANAGEMENT
 } from '../../constantsAnalytics';
+import { NUMBER_RECORDS } from '../pendingTask/constants';
 
 export class TabClientInfo extends Component {
     constructor(props) {
@@ -61,11 +62,17 @@ export class TabClientInfo extends Component {
     }
 
     componentDidMount() {
-        searchTaskPending().then(result => {
-            if (200 === result.data.status) {
-                const data = result.data.data;
-                this.setState({counterTabPending: data.rowCount});
-            }
+        pendingTasksByClientPromise(
+          0,
+          window.sessionStorage.getItem("idClientSelected"),
+          NUMBER_RECORDS,
+          1,
+          null
+        ).then(result => {
+          if (200 === result.data.status) {
+            const data = result.data.data;
+            this.setState({ counterTabPending: data.rowCount });
+          }
         });
     }
 
