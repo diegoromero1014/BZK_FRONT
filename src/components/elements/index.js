@@ -62,7 +62,21 @@ export class ElementsComponent extends Component {
     }
 
     render() {
-        const { placeholder, messageButton, handleSubmit, name, elementsReducer, max, resetForm, title, dispatchSetToShow, values: { objectEdited }, isEditable, idButton } = this.props;
+        const {
+            placeholder,
+            messageButton,
+            handleSubmit,
+            name,
+            elementsReducer,
+            max,
+            resetForm,
+            title,
+            dispatchSetToShow,
+            values: { objectEdited },
+            isEditable,
+            idButton,
+            dispatchSwtShowMessage
+        } = this.props;
         const { show } = this.state;
 
         let data = elementsReducer[name];
@@ -89,6 +103,11 @@ export class ElementsComponent extends Component {
                                         if (isEditable && length < max) {
                                             this.setState({ show: true });
                                             dispatchSetToShow({ name, show: true });
+                                        } else {
+                                            dispatchSwtShowMessage(
+                                                'warning',
+                                                "Advertencia", `Señor usuario, ya alcanzó el número máximo de ${title} que puede crear.`,
+                                            );
                                         }
                                     }}
                                     disabled={!isEditable || length >= max}
@@ -213,7 +232,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(
             delete data.objectEdited;
 
             props.dispatchAddToList({ name: props.name, data, old });
-            
+
             if (props.executeFunction) {
                 props.executeFunction();
             }

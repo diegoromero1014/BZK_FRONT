@@ -7,7 +7,9 @@ import {
     saveSessionToken,
     clearStateLogin,
     saveSessionUserName,
-    clearSessionUserName
+    clearSessionUserName,
+    saveSessionName,
+    getUserDataFrontOfficeEmployee
 } from './actions';
 import { redirectUrl } from '../globalComponents/actions';
 import _ from 'lodash';
@@ -22,7 +24,7 @@ import ReCaptcha from '../recaptcha/ReCaptcha';
 import {clearCache} from '../../utils/catchRequest';
 import { changeTokenStatus } from '../dashboard/actions';
 
-class FormLogin extends Component {
+export class FormLogin extends Component {
     constructor(props) {
         super(props);
 
@@ -69,7 +71,7 @@ class FormLogin extends Component {
         
         const { usuario, password } = this.state;
         const recaptcha = this.state.loginAttempts >= 2 ? this.state.valueRecaptcha : null;
-        const { validateLogin, showLoading, changeActiveItemMenu, changeTokenStatus } = this.props;
+        const { validateLogin, showLoading, changeActiveItemMenu, changeTokenStatus, getUserDataFrontOfficeEmployee } = this.props;
         changeTokenStatus(true);
         showLoading(true, LOADING_LOGIN);        
         validateLogin(usuario, password, recaptcha)
@@ -84,7 +86,9 @@ class FormLogin extends Component {
                         saveSessionToken(_.get(response, 'payload.data.data.sessionToken'));
                         saveSessionUserName(usuario, _.get(response, 'payload.data.data.username'));
                         changeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
-
+                        getUserDataFrontOfficeEmployee(usuario).then(data => {
+                            saveSessionName(_.get(data, 'payload.data.data.name'));
+                        })
                         // Activar cookie
                         document.cookie = 'estadoconexion=activa;path=/';                        
 
@@ -204,7 +208,8 @@ function mapDispatchToProps(dispatch) {
         redirectUrl,
         showLoading,
         changeActiveItemMenu,
-        changeTokenStatus
+        changeTokenStatus,
+        getUserDataFrontOfficeEmployee
     }, dispatch);
 }
 
