@@ -14,7 +14,7 @@ import ModalDownloadPreVisit from '../../../previsita/downloadPrevisits/componen
 import ModalDownloadVisit from '../../../visit/downloadVisits/component';
 import ModalDownloadBusinessPlan from '../../../businessPlan/downloadBusinessPlan/component';
 import DownloadTask from '../../../pendingTask/downloadTask/component';
-import DownloadPipeline from "./../../../viewManagement/downloadPipeline/component";
+import DownloadPipeline from "./../../../pipeline/downloadReportPipeline/component";
 import { validatePermissionsByModule } from '../../../../actionsGlobal';
 import { PREVISIT_TITLE, VISIT_TITLE, BUSINESS_PLAN_TITLE, PIPELINE_TITLE, TASK_TITLE } from './constants';
 import { MODULE_MANAGERIAL_VIEW, DOWNLOAD_TASK, DESCARGAR } from '../../../../constantsGlobal';

@@ -17,7 +17,7 @@ import {
     DATE_FORMAT,
     DATETIME_FORMAT
 } from '../../../constantsGlobal';
-import { TAB_PIPELINE } from '../../viewManagement/constants';
+import { TAB_PIPELINE } from '../../managementView/constants';
 
 
 const fields = ["initialValidityDate", "finalValidityDate", "taskStatus"];
@@ -55,7 +55,6 @@ class DownloadPipeline extends Component {
     }
 
     downloadPipeline() {
-        debugger;
         const {fields: {initialValidityDate, finalValidityDate}, changeStateSaveData, swtShowMessage, getPipelineXls, itemSelectedModal} = this.props;
         let errorInForm = false;
 

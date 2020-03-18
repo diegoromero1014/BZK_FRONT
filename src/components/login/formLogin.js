@@ -15,8 +15,8 @@ import {
     clearStateLogin,
     saveSessionUserName,
     clearSessionUserName,
-    getUserDataFrontOfficeEmployee,
-    saveSessionName
+    saveSessionName,
+    getUserDataFrontOfficeEmployee
 } from './actions';
 import { redirectUrl } from '../globalComponents/actions';
 import { showLoading } from '../loading/actions';
@@ -25,7 +25,6 @@ import { changeActiveItemMenu } from '../menu/actions';
 import { LOADING_LOGIN, ITEM_ACTIVE_MENU_DEFAULT } from './constants';
 import { MESSAGE_SERVER_ERROR, REQUEST_SUCCESS } from '../../constantsGlobal';
 import { changeTokenStatus } from '../main/actions';
-
 
 export class FormLogin extends Component {
     constructor(props) {
@@ -61,6 +60,7 @@ export class FormLogin extends Component {
     }
 
     redirectLogin = () => {
+        const { dispatchRedirectUrl } = this.props;
         this.setState({ showMessageNotification: false });
         dispatchRedirectUrl("/dashboard/clients");
     }
@@ -204,7 +204,7 @@ export class FormLogin extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         dispatchStopObservablesLeftTimer: stopObservablesLeftTimer,
         dispatchValidateLogin: validateLogin,
@@ -218,7 +218,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({ login, mainReducer }, ownerProps) {
+const mapStateToProps = ({ login, mainReducer }) => {
     return {
         login,
         mainReducer
