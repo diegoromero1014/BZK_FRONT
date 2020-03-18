@@ -40,9 +40,9 @@ class DownloadPrevisits extends Component {
 	_downloadPreVisits() {
 		let year;
 		let url;
-		const {changeStateSaveData, getCsvPreVisitsByClient, isOpen, itemSeletedModal, getCsv } = this.props;
+		const {changeStateSaveData, getCsvPreVisitsByClient, isOpen, itemSelectedModal, getCsv } = this.props;
 		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-		if (itemSeletedModal === TAB_PREVISIT) {
+		if (itemSelectedModal === TAB_PREVISIT) {
 			year = this.state.year !== '' ? this.state.year : moment().year();
 			url = '/getCsvPreVisits';
 			getCsv(year, url, this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {

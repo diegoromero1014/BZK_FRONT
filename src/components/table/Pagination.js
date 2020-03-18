@@ -19,6 +19,15 @@ class Pagination extends Component {
         await this.setState({ totalPage: Math.ceil(totalRecords / recordsPerPage) });
     }
 
+    async componentWillUpdate(nextProps) {
+        const { totalRecords } = this.props;
+
+        if (nextProps.totalRecords != totalRecords) {
+            await this.setState({ totalPage: Math.ceil(nextProps.totalRecords / nextProps.recordsPerPage) });
+        }
+    }
+
+
     renderItem = (totalRecords, recordsPerPage) => this.getPages(totalRecords, recordsPerPage).map((page, index) =>
         <Menu.Item
             as='a'

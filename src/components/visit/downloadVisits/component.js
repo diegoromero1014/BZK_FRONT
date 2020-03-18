@@ -44,9 +44,10 @@ class DownloadVisits extends Component {
 	_downloadVisits() {
 		let year;
 		let url;
-		const { dispatchChangeStateSaveData, disptachGetCsvVisitsByClient, isOpen, itemSeletedModal, dispatchGetCsv } = this.props;
+		const { dispatchChangeStateSaveData, disptachGetCsvVisitsByClient, isOpen, itemSelectedModal, dispatchGetCsv } = this.props;
 		dispatchChangeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-		if (TAB_VISIT === itemSeletedModal) {
+		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
+		if (TAB_VISIT === itemSelectedModal) {
 			year = this.state.year !== '' ? this.state.year : moment().year();
 			url = '/getCsvVisits';
 			dispatchGetCsv(year, url, this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function (data) {
