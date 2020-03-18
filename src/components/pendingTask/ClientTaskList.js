@@ -12,7 +12,8 @@ import {
   cleanPagAndOrderColumnFinalizedUserTask,
   changePagePending,
   changePageFinalized,
-  setTextToSearch
+  setTextToSearch,
+  cleanTextToSearch
 } from "./actions";
 import { showLoading } from "./../loading/actions";
 import { PENDING_TASKS, FINALIZED_TASKS, NUMBER_RECORDS, PENDING, FINISHED } from './constants';
@@ -88,10 +89,10 @@ export class ClientTaskList extends Component {
         dispatchCleanPagAndOrderColumnFinalizedUserTask,
         dispatchCleanPagAndOrderColumnPendingUserTask
       } = this.props;
-      dispatchCleanPagAndOrderColumnPendingUserTask(0);
-      dispatchCleanPagAndOrderColumnFinalizedUserTask(0);
-      this.dispatchPendingTasks(0, 0, null);
-      this.dispatchFinalizedTask(0, 0, null);
+      dispatchCleanPagAndOrderColumnPendingUserTask(1);
+      dispatchCleanPagAndOrderColumnFinalizedUserTask(1);
+      this.dispatchPendingTasks(0, 1, null);
+      this.dispatchFinalizedTask(0, 1, null);
       dispatchValidatePermissionsByModule(MODULE_TASKS).then(data => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
@@ -102,6 +103,10 @@ export class ClientTaskList extends Component {
         }
       });
     }
+  }
+  componentWillUnmount(){
+    const {dispatchCleanTextToSearch}= this.props;
+    dispatchCleanTextToSearch();
   }
 
   orderColumn = (orderTask, mode) => {
@@ -163,10 +168,10 @@ export class ClientTaskList extends Component {
     } = this.props;
     switch (mode) {
       case PENDING:
-        dispatchCleanPagAndOrderColumnPendingUserTask(0);
+        dispatchCleanPagAndOrderColumnPendingUserTask(1);
         break;
       case FINISHED:
-        dispatchCleanPagAndOrderColumnFinalizedUserTask(0);
+        dispatchCleanPagAndOrderColumnFinalizedUserTask(1);
         break;
     }
     dispatchSetTextToSearch(null);
@@ -178,7 +183,7 @@ export class ClientTaskList extends Component {
   }
   
   render() {
-    const { tasksByClient, reducerGlobal, dispatchShowLoading } = this.props;
+    const { tasksByClient, reducerGlobal } = this.props;
     let tabPending = tasksByClient.get("tabPending");
     let tabFinished = tasksByClient.get("tabFinished");
     return (
@@ -243,6 +248,7 @@ export class ClientTaskList extends Component {
         </Row>
         <div>
           <Grid style={{ width: "100%" }}>
+            {this.state.loading === true ? "Cargando..." : ""}
             <Row>
               <Col xs>
                 <TabComponent
@@ -316,7 +322,8 @@ function mapDispatchToProps(dispatch) {
       dispatchChangePagePending: changePagePending,
       dispatchChangePageFinalized: changePageFinalized,
       dispatchSetTextToSearch: setTextToSearch,
-      dispatchShowLoading: showLoading
+      dispatchShowLoading: showLoading,
+      dispatchCleanTextToSearch: cleanTextToSearch
     },
     dispatch
   );

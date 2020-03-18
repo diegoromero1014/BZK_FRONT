@@ -12,16 +12,16 @@ class ListPendingTaskComponent extends Component {
     this.state = {
       column: "",
       order: "",
-      orderA: "inline-block",
-      orderD: "none",
+      orderA: "none",
+      orderD: "inline-block",
     };
   }
 
   componentDidMount() {
     const { handleTaskByClientsFind, mode } = this.props;
     this.state = {
-      orderA: 'inline-block',
-      orderD: 'none'
+      orderA: 'none',
+      orderD: 'inline-block',
     }
     handleTaskByClientsFind(0, mode);
   }
