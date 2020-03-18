@@ -32,8 +32,8 @@ export class ManagementView extends Component {
             <Reports />
           </Col>
         </Row>
-        <Row>
-          <Col md={12} style={{ marginTop: 70 }}>
+        <Row style={{ marginTop: 170 }}>
+          <Col md={12}>
             <AlertSection />
           </Col>
         </Row>

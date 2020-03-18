@@ -13,10 +13,12 @@ export class AlertPortfolioExpiration extends Component {
   componentDidMount() {
     this.forceUpdate();
   }
-  
+
   render() {
     const { alertPortfolioExpiration, dispatchGetAlertPortfolioExpirationDashboard, total } = this.props;
+
     const data = alertPortfolioExpiration.get("responseClients");
+
     const tableSettings = new TableBuilder(data, COLUMNS_VENCIMIENTO_CARTERA)
       .setNoRowMessage("Aún no se han creado registros.")
       .setRecordsPerPage(5)
@@ -27,22 +29,23 @@ export class AlertPortfolioExpiration extends Component {
     return (
       <div>
         <Table tableSettings={tableSettings} />
-        <Button fluid onClick = {() =>{
-            redirectUrl("/dashboard/alertClientsPortfolioExpiration");
-        } }>Ver detalle</Button>
+        <Button
+          fluid
+          style={{ background: 'transparent' }}
+          onClick={() => redirectUrl("/dashboard/alertClientsPortfolioExpiration")}
+        >
+          Ver detalle
+        </Button>
       </div>
-    );  
+    );
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(
-    {
-      dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard
-    },
-    dispatch
-  );
-}
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({
+    dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard
+  }, dispatch)
+};
 
 const mapStateToProps = ({ alertPortfolioExpiration }) => {
   return {
