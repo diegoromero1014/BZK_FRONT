@@ -9,8 +9,18 @@ import {
   GET_XLS_TASK,
   LIMITE_INF,
   LOAD_PENDING,
-  ORDER_COLUMN_TASK
-} from './constants';
+  ORDER_COLUMN_TASK,
+  GET_PENDING_TASKS_CLIENT,
+  GET_FINALIZED_TASKS_CLIENT,
+  CLEAN_PAG_ORDER_COLUMN_PENDING_TASK,
+  CLEAN_PAG_ORDER_COLUMN_FINALIZED_TASK,
+  CHANGE_PAGE_PENDING,
+  CHANGE_PAGE_FINALIZED,
+  PENDING,
+  FINISHED,
+  SET_TEXT_TO_SEARCH,
+  CLEAN_TEXT_TO_SEARCH
+} from "./constants";
 import axios from 'axios';
 
 export function tasksByClientFindServer(pageNum, clientId, maxRows, columnOrder, order, status) {
@@ -59,8 +69,20 @@ export function limitiInf(limInf) {
     limInfe: limInf
   }
 }
-
-
+export function changePagePending(page, order) {
+  return {
+    type: CHANGE_PAGE_PENDING,
+    currentPage: page,
+    order
+  };
+}
+export function changePageFinalized(page, order) {
+  return {
+    type: CHANGE_PAGE_FINALIZED,
+    currentPage: page,
+    order
+  };
+}
 export function clearUserTask() {
   return {
     type: CLEAR_USER_TASK
@@ -91,6 +113,18 @@ export function orderColumnUserTask(orderTask, columnTask) {
     type: ORDER_COLUMN_TASK,
     orderTask: orderTask,
     columnTask: columnTask
+  };
+}
+export function cleanPagAndOrderColumnPendingUserTask(orderTask){
+  return {
+    type: CLEAN_PAG_ORDER_COLUMN_PENDING_TASK,
+    orderTask: orderTask,
+  }
+}
+export function cleanPagAndOrderColumnFinalizedUserTask(orderTask) {
+  return {
+    type: CLEAN_PAG_ORDER_COLUMN_FINALIZED_TASK,
+    orderTask: orderTask
   };
 }
 
@@ -147,7 +181,7 @@ export function searchTaskPending() {
     "messageBody": {
       "pageNum": 0,
       "maxRows": 10,
-      "section": "PENDING",
+      "section": PENDING,
       "mode": "CLIENT",
       "filter": {
         "clientId": 5261530,
@@ -157,4 +191,91 @@ export function searchTaskPending() {
   };
 
   return axios.post(APP_URL + "/getTask", json);
+}
+
+export function pendingTasksByClientPromise(pageNum, clientId, maxRows, order, textToSearch){
+  const json = {
+    messageHeader: {
+      sessionToken: window.localStorage.getItem("sessionTokenFront"),
+      username: "",
+      timestamp: new Date().getTime(),
+      service: "",
+      status: "0",
+      language: "es",
+      displayErrorMessage: "",
+      technicalErrorMessage: "",
+      applicationVersion: "",
+      debug: true,
+      isSuccessful: true
+    },
+    messageBody: {
+      pageNum,
+      maxRows,
+      section: PENDING,
+      mode: "CLIENT",
+      filter: {
+        clientId,
+        order,
+        textToSearch
+      }
+    }
+  };
+  return axios.post(APP_URL + "/getTask", json);
+}
+export function finalizedTasksByClientPromise(pageNum, clientId, maxRows, order, textToSearch){
+  const json = {
+    messageHeader: {
+      sessionToken: window.localStorage.getItem("sessionTokenFront"),
+      username: "",
+      timestamp: new Date().getTime(),
+      service: "",
+      status: "0",
+      language: "es",
+      displayErrorMessage: "",
+      technicalErrorMessage: "",
+      applicationVersion: "",
+      debug: true,
+      isSuccessful: true
+    },
+    messageBody: {
+      pageNum,
+      maxRows,
+      section: FINISHED,
+      mode: "CLIENT",
+      filter: {
+        clientId,
+        order,
+        textToSearch
+      }
+    }
+  };
+  return axios.post(APP_URL + "/getTask", json);
+}
+export function pendingTasksByClientFindServer(data, page, order) {
+  return{
+    type: GET_PENDING_TASKS_CLIENT,
+    data,
+    page,
+    order
+  }
+}
+export function finalizedTasksByClientFindServer(data, page, order) {
+  return{
+    type: GET_FINALIZED_TASKS_CLIENT,
+    data,
+    page,
+    order
+  }
+}
+export function setTextToSearch(textToSearch){
+  return {
+    type: SET_TEXT_TO_SEARCH,
+    textToSearch
+  };
+}
+
+export function cleanTextToSearch(){
+  return{
+    type: CLEAN_TEXT_TO_SEARCH
+  }
 }
