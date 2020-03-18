@@ -120,6 +120,7 @@ export class Reports extends Component {
 
         return (
             <div>
+                <h3>INFORMES</h3>
                 <Carousel
                     dots={true}
                     infinite={true}
