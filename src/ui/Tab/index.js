@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Segment, Label, Menu } from "semantic-ui-react";
 import PropTypes from "prop-types";
+import '../../../styles/tabs/main.scss';
 
 class TabComponent extends Component {
   constructor(props) {
@@ -19,7 +20,7 @@ class TabComponent extends Component {
   handleItemClick = name => this.setState({ tabActive: name });
 
   getMenu = tabActive => {
-    const { tabs } = this.props;
+    const { tabs, classNameColor = 'blue' } = this.props;
     return (
       <div className="tabGenericComponent">
         <Menu pointing secondary>
@@ -39,7 +40,7 @@ class TabComponent extends Component {
             >
               <div className="tabTextItem">{name}</div>
               {number && (
-                <Label circular color="blue">
+                <Label circular className={classNameColor}>
                   {number}
                 </Label>
               )}
