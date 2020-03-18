@@ -87,7 +87,7 @@ export class TaskPage extends React.Component {
             const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
             if (id) {
                 this.setState({
-                    nameUsuario: taskDetail.assignedBy
+                    nameUsuario: taskDetail ? taskDetail.assignedBy : ''
                 });
             } else {
                 await this.setState({
