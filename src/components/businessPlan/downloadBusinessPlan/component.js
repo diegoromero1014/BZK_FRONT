@@ -33,9 +33,9 @@ class DownloadBusinessPlan extends Component {
 	_downloadBusinessPlans() {
 		let year;
 		let url;
-		const {changeStateSaveData, getCsvBusinessPlanByClient, isOpen, itemSeletedModal, getCsvBusinessPlan} = this.props;
+		const {changeStateSaveData, getCsvBusinessPlanByClient, isOpen, itemSelectedModal, getCsvBusinessPlan} = this.props;
 		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-		if(TAB_BUSINESS === itemSeletedModal) {
+		if(TAB_BUSINESS === itemSelectedModal) {
 			year = this.state.year !== undefined && this.state.year !== '' ? this.state.year : moment().year();
 		  	url = '/getCsvBusinessPlan';
 			getCsvBusinessPlan(year, this.state.haveNeeds).then(function(data) {
