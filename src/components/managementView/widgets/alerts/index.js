@@ -3,12 +3,15 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import TabComponent from "../../../../ui/Tab";
 import AlertPortfolioExpiration from './alertPortfolioExpiration';
+import BlackListAlerts from './blackListAlerts';
+
 import {
   PORTFOLIO_EXPIRATION_TAB,
   COVENANTS_TAB,
   DEACTIVATED_CONTACTS_TABS,
   CONTROL_LISTS_TAB
 } from "./constants";
+
 import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExpirtation/actions';
 
 export class AlertSection extends Component {
@@ -42,8 +45,8 @@ export class AlertSection extends Component {
       },
       {
         name: CONTROL_LISTS_TAB,
-        content: <div>Tab 4 Content</div>,
-        disable: true
+        content: <BlackListAlerts />,
+        disable: false
       }
     ];
     return (
