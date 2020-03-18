@@ -25,15 +25,9 @@ export class ModalContentComponent extends Component {
     }
 
     handleOnClick = () => {
-        const { dispatchSwtShowMessage, element: { elements }, singularTitle, title } = this.props;
+        const { dispatchSwtShowMessage, element: { elements }, title } = this.props;
 
-        if (elements.filter(item => item.associated).length === 0) {
-            dispatchSwtShowMessage(
-                "warning",
-                "Alerta",
-                `Señor usuario debe seleccionar al menos una ${singularTitle} para guardar`
-            )
-        } else if (elements.filter(item => item.associated).length > 5) {
+        if (elements.filter(item => item.associated).length > 5) {
             dispatchSwtShowMessage(
                 "warning",
                 "Alerta",
