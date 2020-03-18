@@ -6,10 +6,6 @@ import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 
 let defaultProps;
-let dispatchRedirectUrl;
-let dispatchChangeTokenStatus;
-let dispatchValidateLogin;
-let dispatchShowLoading;
 
 let store;
 const middlewares = [thunk];
