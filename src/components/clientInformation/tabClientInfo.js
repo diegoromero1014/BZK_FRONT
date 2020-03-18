@@ -418,6 +418,7 @@ export class TabClientInfo extends Component {
                                   circular
                                   color={'red'}
                                   key={'counter'} content={this.state.counterTabPending > 99 ? '99+' : this.state.counterTabPending}
+                                  className="notificationTabTask"
                                 />
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Tareas</a>
                             </li>
