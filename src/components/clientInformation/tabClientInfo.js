@@ -421,7 +421,7 @@ export class TabClientInfo extends Component {
                                   key={'counter'} content={this.state.counterTabPending > 99 ? '99+' : this.state.counterTabPending}
                                   className="notificationTabTask"
                                 />
-                                <a className="button-link-url" >Tareas</a>
+                                <a className="button-link-url" style={{ marginLeft: "-20px"}}>Tareas</a>
                             </li>
                         }
                         {_.get(navBar.get('mapModulesAccess'), MODULE_RISKS_MANAGEMENT) &&
