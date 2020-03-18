@@ -10,15 +10,19 @@ import {
 } from './actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
-export default function makeAssociateList(listName) {
+export default function makeAssociateList(listName, childrenList=[]) {
 
     const changeState = changeListState(listName);
 
     class AssociateList extends React.Component {
 
         componentDidMount() {
-            const {dispatchCreateList} = this.props;
-            dispatchCreateList(listName);
+            const {dispatchCreateList, initialValues} = this.props;
+            dispatchCreateList(listName,{childrenList, initialValues});
+            for (let index = 0; index < childrenList.length; index++) {
+                const child = childrenList[index];
+                dispatchCreateList(child.name, { initialValues: child.initialValues });
+            }
         }
 
         render() {
