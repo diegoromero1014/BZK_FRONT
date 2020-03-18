@@ -14,7 +14,8 @@ import {
   CLEAN_PAG_ORDER_COLUMN_FINALIZED_TASK,
   CHANGE_PAGE_PENDING,
   CHANGE_PAGE_FINALIZED,
-  SET_TEXT_TO_SEARCH
+  SET_TEXT_TO_SEARCH,
+  CLEAN_TEXT_TO_SEARCH
 } from "./constants";
 
 const initialState = Immutable.Map({
@@ -151,6 +152,10 @@ export default (state = initialState, action) => {
       case SET_TEXT_TO_SEARCH:
         return state.withMutations(map => {
             map.set("textToSearch", action.textToSearch);
+        });
+      case CLEAN_TEXT_TO_SEARCH:
+        return state.withMutations(map => {
+          map.set("textToSearch", null);
         });
     default:
       return state;

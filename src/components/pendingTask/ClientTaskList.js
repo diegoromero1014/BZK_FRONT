@@ -12,7 +12,8 @@ import {
   cleanPagAndOrderColumnFinalizedUserTask,
   changePagePending,
   changePageFinalized,
-  setTextToSearch
+  setTextToSearch,
+  cleanTextToSearch
 } from "./actions";
 import { showLoading } from "./../loading/actions";
 import { PENDING_TASKS, FINALIZED_TASKS, NUMBER_RECORDS, PENDING, FINISHED } from './constants';
@@ -102,6 +103,10 @@ export class ClientTaskList extends Component {
         }
       });
     }
+  }
+  componentWillUnmount(){
+    const {dispatchCleanTextToSearch}= this.props;
+    dispatchCleanTextToSearch();
   }
 
   orderColumn = (orderTask, mode) => {
@@ -317,7 +322,8 @@ function mapDispatchToProps(dispatch) {
       dispatchChangePagePending: changePagePending,
       dispatchChangePageFinalized: changePageFinalized,
       dispatchSetTextToSearch: setTextToSearch,
-      dispatchShowLoading: showLoading
+      dispatchShowLoading: showLoading,
+      dispatchCleanTextToSearch: cleanTextToSearch
     },
     dispatch
   );

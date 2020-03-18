@@ -18,7 +18,8 @@ import {
   CHANGE_PAGE_FINALIZED,
   PENDING,
   FINISHED,
-  SET_TEXT_TO_SEARCH
+  SET_TEXT_TO_SEARCH,
+  CLEAN_TEXT_TO_SEARCH
 } from "./constants";
 import axios from 'axios';
 
@@ -271,4 +272,10 @@ export function setTextToSearch(textToSearch){
     type: SET_TEXT_TO_SEARCH,
     textToSearch
   };
+}
+
+export function cleanTextToSearch(){
+  return{
+    type: CLEAN_TEXT_TO_SEARCH
+  }
 }
