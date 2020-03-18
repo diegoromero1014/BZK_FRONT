@@ -16,6 +16,7 @@ import { redirectUrl } from '../globalComponents/actions';
 import { NUMBER_RECORDS, TASK_STATUS } from './constants';
 import { CREAR, MODULE_TASKS } from '../../constantsGlobal';
 import { _TASK, BIZTRACK_MY_CLIENTS, nombreflujoAnalytics } from '../../constantsAnalytics';
+import {updateTitleNavBar} from "../navBar/actions";
 
 class ClientTaskList extends Component {
 
@@ -25,7 +26,7 @@ class ClientTaskList extends Component {
       openMessagePermissions: false,
       value1: ""
     };
-
+    this.createTask = this.createTask.bind(this);
   }
 
   componentWillMount() {
@@ -66,6 +67,12 @@ class ClientTaskList extends Component {
         dispatchInitPending(data);
       }
     });
+  }
+
+  createTask() {
+    const { dispatchUpdateTitleNavBar } = this.props;
+    dispatchUpdateTitleNavBar("Tareas");
+    redirectUrl("/dashboard/task");
   }
 
   render() {
@@ -128,7 +135,8 @@ function mapDispatchToProps(dispatch) {
     dispatchTasksByClient: tasksByClientFindServer,
     dispatchClearUserTask: clearUserTask,
     dispatchValidatePermissions: validatePermissionsByModule,
-    dispatchInitPending: loadTaskPending
+    dispatchInitPending: loadTaskPending,
+    dispatchUpdateTitleNavBar: updateTitleNavBar
   }, dispatch);
 }
 
