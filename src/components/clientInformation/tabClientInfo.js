@@ -416,11 +416,12 @@ export class TabClientInfo extends Component {
                             <li style={backgroundPending} onClick={this._handleClickTabItem.bind(this, TAB_PENDING_TASK)}>
                                 <Label
                                   circular
+                                  floating
                                   color={'red'}
                                   key={'counter'} content={this.state.counterTabPending > 99 ? '99+' : this.state.counterTabPending}
                                   className="notificationTabTask"
                                 />
-                                <a className="button-link-url" style={{ marginRight: "15px" }}>Tareas</a>
+                                <a className="button-link-url" >Tareas</a>
                             </li>
                         }
                         {_.get(navBar.get('mapModulesAccess'), MODULE_RISKS_MANAGEMENT) &&
