@@ -7,7 +7,7 @@ import {
     AFFIRMATIVE_ANSWER,
     CANCEL,
     EDITAR,
-    MESSAGE_SAVE_DATA,
+    MESSAGE_SAVE_DATA, MODULE_BUSSINESS_PLAN, MODULE_VISITS,
     REQUEST_INVALID_INPUT,
     REQUEST_SUCCESS
 } from "../../constantsGlobal";
@@ -40,7 +40,13 @@ import {consultInfoClient} from "../clientInformation/actions";
 import CommentsComponent from "../globalComponents/comments/commentsComponent";
 import {fillComments, getCurrentComments} from "../globalComponents/comments/actions";
 import {filterUsers} from "../commercialReport/actions";
+import ButtonDetailsRedirectComponent from "../grid/buttonDetailsRedirectComponent";
+import {detailBusiness} from "../businessPlan/actions";
+import {detailVisit} from "../visit/actions";
+import {validatePermissionsByModule} from "../../actionsGlobal";
 import {getTaskNotesByUserTaskId, saveTaskNote} from "./createPendingTask/actions";
+
+let nameEntity;
 
 export class TaskPage extends React.Component {
     constructor(props) {
@@ -52,15 +58,16 @@ export class TaskPage extends React.Component {
             shouldRedirect: false,
             renderForm: false,
             nameUsuario: ''
-        }
+        };
+        this.entityId = null;
     }
 
     componentWillMount() {
-        const { idClient, dispatchConsultInfoClient } = this.props;
-        if(idClient){
+        const {idClient, dispatchConsultInfoClient} = this.props;
+        if (idClient) {
             window.sessionStorage.setItem('idClientSelected', idClient);
             dispatchConsultInfoClient().then(this.validateClientSelected);
-        }else{
+        } else {
             this.validateClientSelected();
         }
 
@@ -201,12 +208,25 @@ export class TaskPage extends React.Component {
     };
 
     getInfoTask = async (id) => {
-        const { dispatchGetInfoTaskUser, dispatchFillComments } = this.props;
+        const { dispatchGetInfoTaskUser, dispatchFillComments, dispatchDetailBusiness, dispatchDetailVisit, dispatchValidatePermissionsByModule } = this.props;
         if (id) {
             const response = await dispatchGetInfoTaskUser(id);
             const taskInfo = _.get(response, 'payload.data.data');
             dispatchFillComments(taskInfo.notes);
-            this.setState({ isEditable: true, formValid: true });
+            nameEntity = taskInfo.nameEntity;
+            this.entityId = taskInfo.entityId;
+            if (taskInfo.nameEntity === 'Plan de negocio') {
+                dispatchValidatePermissionsByModule(MODULE_BUSSINESS_PLAN);
+                dispatchDetailBusiness(taskInfo.entityId);
+            } else if (taskInfo.nameEntity === 'Visita') {
+                dispatchValidatePermissionsByModule(MODULE_VISITS);
+                dispatchDetailVisit(taskInfo.entityId);
+            }
+            this.setState({
+                isEditable: true,
+                formValid: true,
+                nameUsuario: taskInfo.assignedBy
+            });
         } else {
             this.setState({ isEditable: false });
         }
@@ -225,6 +245,37 @@ export class TaskPage extends React.Component {
             const notes = _.get(getNotesResponse, 'payload.data.data');
             dispatchFillComments(notes);
         }
+    };
+
+    handleRelationLink = () => {
+        const {businessPlanReducer, visitReducer} = this.props;
+        let actionsRedirect;
+        let detail;
+        switch (nameEntity) {
+            case "Plan de negocio":
+                detail = businessPlanReducer.get("detailBusiness");
+                actionsRedirect = {
+                    typeClickDetail: "businessPlan",
+                    ownerDraft: detail.data.documentStatus,
+                    idClient: this.clientId,
+                    urlRedirect: "/dashboard/businessPlanEdit",
+                    id: this.entityId
+                };
+                break;
+            case"Visita":
+                detail = visitReducer.get("detailVisit");
+                actionsRedirect = {
+                    typeClickDetail: "visita",
+                    ownerDraft: detail.data.documentStatus,
+                    idClient: this.clientId,
+                    urlRedirect: "/dashboard/visitaEditar",
+                    id: this.entityId
+                };
+                break;
+            default:
+                break;
+        }
+        return actionsRedirect;
     };
 
     renderForm = () => {
@@ -288,6 +339,28 @@ export class TaskPage extends React.Component {
                 {
                     this.state.renderForm ? this.renderForm() : null
                 }
+                {nameEntity &&
+                <div className="modalBt4-footer modal-footer" style={{zIndex: 2}}>
+
+                        <Row xs={12} md={12} lg={12}>
+                            <Col xs={6} md={10} lg={10}
+                                 style={{textAlign: "left", varticalAlign: "middle", marginLeft: "0px"}}>
+                                {!_.isNull(this.entityId) ?
+                                    <span style={{fontWeight: "bold", color: "#818282"}}>Pendiente de {nameEntity}
+                                        <span style={{paddingLeft: "2em"}}>
+                                        <ButtonDetailsRedirectComponent actionsRedirect={() => {
+                                            return this.handleRelationLink()
+                                        }}/>
+                                      </span>
+                                    </span>
+                                    : <span
+                                        style={{fontWeight: "bold", color: "#818282"}}>Pendiente de {nameEntity}</span>
+                                }
+                            </Col>
+                        </Row>
+
+                </div>
+                }
                 <SweetAlert
                     type="warning"
                     show={this.state.showConfirmationCancelTask}
@@ -317,11 +390,25 @@ function mapDispatchToProps(dispatch) {
         dispatchGetCurrentComments: getCurrentComments,
         dispatchFillComments: fillComments,
         dispatchSaveTaskNote: saveTaskNote,
-        dispatchGetTaskNotesByUserTaskId: getTaskNotesByUserTaskId
+        dispatchGetTaskNotesByUserTaskId: getTaskNotesByUserTaskId,
+        dispatchDetailBusiness: detailBusiness,
+        dispatchDetailVisit: detailVisit,
+        dispatchValidatePermissionsByModule: validatePermissionsByModule
     }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, usersPermission, tasksByClient, myPendingsReducer, commentsReducer}) {
+function mapStateToProps(
+    {
+        clientInformacion,
+        reducerGlobal,
+        selectsReducer,
+        usersPermission,
+        tasksByClient,
+        myPendingsReducer,
+        commentsReducer,
+        businessPlanReducer,
+        visitReducer
+    }) {
     return {
         clientInformacion,
         reducerGlobal,
@@ -329,6 +416,8 @@ function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, user
         usersPermission,
         tasksByClient,
         myPendingsReducer,
+        businessPlanReducer,
+        visitReducer,
         commentsReducer
     };
 }
