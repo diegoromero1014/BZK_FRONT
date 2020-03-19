@@ -6,8 +6,7 @@ import {
     styles,
     elementsKey,
     draftElementsKey,
-    validateSchema,
-    listName
+    validateSchema
 } from './utils';
 import TemplateObjectiveAndStrategies from './templateObjectiveAndStrategies';
 import ToolTip from '../../toolTip/toolTipComponent';
@@ -15,6 +14,7 @@ import BiztrackModal from '../Objetives/BiztrackModal';
 
 import { addObjectiveBody } from './Objetives';
 import schema from './ObjetiveSchema';
+import Message from '../../message';
 
 const ObjectiveSectionTitle = makeObjectiveSectionTitle(true)
 
@@ -37,6 +37,7 @@ export default class AssociateObjectives extends React.Component {
         this.handleOnAdd = this.handleOnAdd.bind(this);
         this.showEditSection = this.showEditSection.bind(this);
         this.clearFields = this.clearFields.bind(this);
+        this.handleOnRemoveElement = this.handleOnRemoveElement.bind(this);
     }
 
 
@@ -83,9 +84,31 @@ export default class AssociateObjectives extends React.Component {
         );
     }
 
-    renderElements(checkedFunction, filterAssociatedElements, elements = []) {
+    handleOnRemoveElement(element) {
 
-        const { isEditable } = this.props;
+        const {removeElement, swtShowMessage} = this.props;
+
+        swtShowMessage(
+            "warning",
+            "Confirmar eliminación",
+            `Señor usuario, ¿Esta seguro que desea eliminar este Objetivo del cliente?`,
+            {
+                onConfirmCallback: () => {
+                    removeElement(element, draftElementsKey);
+                },
+                onCancelCallback: () => { }
+            },
+            {
+                confirmButtonText: 'Sí, estoy seguro!',
+                confirmButtonColor:'#DD6B55'
+            }
+        );
+
+    }
+
+    renderElements(checkedFunction, filterAssociatedElements, elements = [], canEdit) {
+
+        const { isEditable, editElement } = this.props;
 
         return elements.map(
             (element) => (
@@ -97,6 +120,12 @@ export default class AssociateObjectives extends React.Component {
                             justifyContent: "space-around",
                             alignItems: "center"
                         }}>
+                            {canEdit && element.status !== -1 && <i
+                                className="edit icon"
+                                title="Editar Objetivo"
+                                style={{ cursor: "pointer", marginLeft: "5px" }}
+                                onClick={() => editElement(element)}
+                            />}
                             <input
                                 onChange={() => checkedFunction(elements, element)}
                                 type="checkbox"
@@ -104,6 +133,12 @@ export default class AssociateObjectives extends React.Component {
                                 name="example"
                                 disabled={!isEditable}
                             />
+                            {canEdit && element.status !== -1 && <i
+                                className="trash icon"
+                                title="Eliminar Objetivo"
+                                style={{ cursor: "pointer", marginLeft: "5px" }}
+                                onClick={() => this.handleOnRemoveElement(element)}
+                            />}
                         </div>
                     }
                     objetivo={element}
@@ -115,14 +150,14 @@ export default class AssociateObjectives extends React.Component {
 
     showEditSection() {
 
-        const { elements, swtShowMessage } = this.props;
+        const { draftElements, swtShowMessage, changeListState } = this.props;
 
-        if (elements.length == 3) {
+        if (draftElements.filter(element => element.status !== -1).length == 3) {
             swtShowMessage("warning", "Alerta", "Señor usuario, Señor usuario, el número máximo de Objetivos del cliente permitidos son 3");
             return;
         }
 
-        this.setState({
+        changeListState({
             showAddSection: true
         })
     }
@@ -145,6 +180,7 @@ export default class AssociateObjectives extends React.Component {
 
     hideAssociateSection() {
         const { changeListState } = this.props;
+        this.clearFields()
         changeListState({
             showAssociateSection: false
         })
@@ -154,11 +190,6 @@ export default class AssociateObjectives extends React.Component {
         const { changeListState, draftElements, swtShowMessage } = this.props;
 
         const checkedElements = draftElements.filter(this.filterCheckedElements).length;
-
-        if (checkedElements === 0) {
-            swtShowMessage("warning", "Alerta", "Señor usuario debe asociar al menos un Objetivo del cliente para guardar.");
-            return;
-        }
 
         if (checkedElements > 3) {
             swtShowMessage("warning", "Alerta", "Señor usuario, solo puede asociar un maximo de 3 Objetivos del cliente.");
@@ -225,8 +256,7 @@ export default class AssociateObjectives extends React.Component {
             showAssociateSection,
             draftElements,
             isEditable,
-            listState,
-            updateElement
+            listState
         } = this.props;
 
         const filteredElements = elements.filter(this.filterCheckedElements);
@@ -254,7 +284,7 @@ export default class AssociateObjectives extends React.Component {
                             <span className="form-item">No se han asociado Objetivos del cliente</span>
                         </div>
                     </div>}
-                    {this.state.showAddSection && !showAssociateSection && <div>
+                    {this.state.showAddSection && !showAssociateSection && <div style={{paddingTop: "10px"}}>
                         {addObjectiveBody(Object.assign({}, listState, {
                             onChange: this.handleChange,
                             onAddElement: this.handleOnAdd(elementsKey),
@@ -264,9 +294,10 @@ export default class AssociateObjectives extends React.Component {
                     {showAssociateSection &&
                         <BiztrackModal
                             title={"Asociar Objetivos"}
+                            head={<Message message={"Señor usuario, los cambios realizados se verán reflejados en la información del cliente."} show={true} icon={'exclamation'} />}
                             body={
                                 <div>
-                                    {this.state.showAddSection && <div>
+                                    {listState.showAddSection && <div>
                                         {addObjectiveBody(
                                             Object.assign({}, listState, {
                                                 onChange: this.handleChange,
@@ -274,7 +305,7 @@ export default class AssociateObjectives extends React.Component {
                                                 onCancel: this.clearFields
                                             })
                                         )}</div>}
-                                    {!this.state.showAddSection && <div className="add-section" style={{ position: "absolute", top: "60px", right: "10px" }} >
+                                    {!listState.showAddSection && <div className="add-section" style={{ position: "absolute", top: "60px", right: "10px" }} >
                                         <ToolTip text={"Asociar Objetivos"}>
                                             <Icon
                                                 className='icon-message-elements'
@@ -285,7 +316,7 @@ export default class AssociateObjectives extends React.Component {
                                             />
                                         </ToolTip>
                                     </div>}
-                                    {this.renderElements(this.checkDraftElement, (el) => el, draftElements)}
+                                    {this.renderElements(this.checkDraftElement, (el) => el, draftElements, true)}
                                     <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
                                         <button style={{ marginRight: "5px" }} className="btn btn-secondary section-btn-save" type="button" onClick={this.associateElements}>Guardar</button>
                                         <button className="btn btn-primary cancel-btn" type="button" onClick={this.hideAssociateSection}>Cancelar</button>
