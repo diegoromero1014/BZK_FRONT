@@ -121,7 +121,7 @@ export default class AssociateObjectives extends React.Component {
                             justifyContent: "space-around",
                             alignItems: "center"
                         }}>
-                            {canEdit && <i
+                            {canEdit && element.status !== -1 && <i
                                 className="edit icon"
                                 title="Editar Objetivo"
                                 style={{ cursor: "pointer", marginLeft: "5px" }}
@@ -134,7 +134,7 @@ export default class AssociateObjectives extends React.Component {
                                 name="example"
                                 disabled={!isEditable}
                             />
-                            {canEdit && <i
+                            {canEdit && element.status !== -1 && <i
                                 className="trash icon"
                                 title="Eliminar Objetivo"
                                 style={{ cursor: "pointer", marginLeft: "5px" }}
