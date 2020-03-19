@@ -22,9 +22,9 @@
     border-radius: 7px;
     overflow: hidden;
 
-    @media screen and (max-width: 1100px) {
+    @media screen and (max-width: 1200px) {
         width: 156px !important;
-        height: 250px !important;
+        height: 200px !important;
     }
 
     &.disabled {
