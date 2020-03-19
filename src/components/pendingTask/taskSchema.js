@@ -12,7 +12,7 @@ import {
     MESSAGE_WARNING_ONLY_ALPHABETICAL,
     MESSAGE_WARNING_TASK_OBSERVATIONS
 } from '../../validationsFields/validationsMessages';
-import {validateHtmlInjection} from "../../validationsFields/rulesField";
+import {checkRichTextRequiredBoolean, validateHtmlInjection} from "../../validationsFields/rulesField";
 
 export const schema = {
     finalDate: Yup.string()
@@ -31,7 +31,7 @@ export const schema = {
         .typeError(MESSAGE_REQUIRED_EMPLOYEE),
     task: Yup.string()
         .trim()
-        .required(MESSAGE_REQUIRED_FIELD("Tarea")),
+        .test('validateInjectionHtml', MESSAGE_REQUIRED_FIELD("Tarea"), checkRichTextRequiredBoolean),
     advance: Yup.string()
         .trim()
         .matches(patternOfTaskObservation, MESSAGE_WARNING_TASK_OBSERVATIONS)
