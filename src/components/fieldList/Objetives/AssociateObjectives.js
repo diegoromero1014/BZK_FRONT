@@ -106,7 +106,7 @@ export default class AssociateObjectives extends React.Component {
 
     }
 
-    renderElements(checkedFunction, filterAssociatedElements, elements = [], canEdit) {
+    renderElements(checkedFunction, filterAssociatedElements, canEdit, elements = []) {
 
         const { isEditable, editElement } = this.props;
 
@@ -278,7 +278,7 @@ export default class AssociateObjectives extends React.Component {
                 </div>}
                 <div style={styles.main} className='container-associate-objetives'>
                     {ObjectiveSectionTitle}
-                    {this.renderElements(this.checkElement, (list) => list.filter((el) => el.associated), filteredElements)}
+                    {this.renderElements(this.checkElement, (list) => list.filter((el) => el.associated), false, filteredElements)}
                     {!filteredElements.length && !this.state.showAddSection && <div className="elements-not-found">
                         <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
                             <span className="form-item">No se han asociado Objetivos del cliente</span>
@@ -316,7 +316,7 @@ export default class AssociateObjectives extends React.Component {
                                             />
                                         </ToolTip>
                                     </div>}
-                                    {this.renderElements(this.checkDraftElement, (el) => el, draftElements, true)}
+                                    {this.renderElements(this.checkDraftElement, (el) => el, true, draftElements)}
                                     <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
                                         <button style={{ marginRight: "5px" }} className="btn btn-secondary section-btn-save" type="button" onClick={this.associateElements}>Guardar</button>
                                         <button className="btn btn-primary cancel-btn" type="button" onClick={this.hideAssociateSection}>Cancelar</button>
