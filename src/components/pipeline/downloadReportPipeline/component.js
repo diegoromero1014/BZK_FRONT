@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Col, Row } from 'react-flexbox-grid';
-import { getPipelineXls } from '../actions';
+import { getPipelineXls } from '../../managementView/actions';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import moment from 'moment';
