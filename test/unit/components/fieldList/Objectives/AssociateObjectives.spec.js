@@ -4,9 +4,11 @@ import BiztrackModal from '../../../../../src/components/fieldList/Objetives/Biz
 describe("Test AssociateObjectives", () => {
 
     let elements = []
+    let listState = {}
 
     let defaultProps = {
-        elements
+        elements,
+        listState
     }
 
     it("should render AssociateObjectives", () => {
@@ -46,6 +48,7 @@ describe("Test AssociateObjectives", () => {
     })
 
     it("should show BiztrackModal when showAssociateSection is true", () => {
+
         const wrapper = shallow(<AssociateObjectives 
             {...defaultProps}
             showAssociateSection={true}
@@ -79,23 +82,6 @@ describe("Test AssociateObjectives", () => {
         expect(result[0].associated).to.equal(true);
         expect(result[0].strategies[0].associated).to.equal(true)
 
-    })
-
-    it("should show error message when there is not checked element", () => {
-        const swtShowMessage = sinon.fake();
-        const draftElements = [
-            {
-                id: 5,
-                associated: false
-            }
-        ]
-        const wrapper = shallow(<AssociateObjectives
-            {...defaultProps}
-            swtShowMessage={swtShowMessage}
-            draftElements={draftElements}
-        />)
-        wrapper.instance().associateElements();
-        expect(swtShowMessage.callCount).to.equal(1);
     })
 
     it("should changeListState when there is checked element", () => {
@@ -143,14 +129,17 @@ describe("Test AssociateObjectives", () => {
 
     it('shoukd hideAssociateSection', () => {
         const changeListState = sinon.fake();
+        const setFields = sinon.fake();
         const wrapper = shallow(<AssociateObjectives 
             {...defaultProps}
             changeListState={changeListState}
+            setFields={setFields}
         />)
 
         wrapper.instance().hideAssociateSection();
 
-        expect(changeListState.callCount).to.equal(1);
-        expect(changeListState.firstCall.lastArg.showAssociateSection).to.equal(false)
+        expect(changeListState.callCount).to.equal(2);
+        expect(changeListState.firstCall.lastArg.showAddSection).to.equal(false)
+        expect(setFields.callCount).to.equal(1);
     })
 })
