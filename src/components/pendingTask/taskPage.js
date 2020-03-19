@@ -342,7 +342,7 @@ export class TaskPage extends React.Component {
                 {
                     this.state.renderForm ? this.renderForm() : null
                 }
-                {nameEntity &&
+                {nameEntity && fromModal &&
                 <div className="modalBt4-footer modal-footer" style={{zIndex: 2}}>
 
                         <Row xs={12} md={12} lg={12}>
