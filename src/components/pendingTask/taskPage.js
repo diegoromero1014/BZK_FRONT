@@ -7,7 +7,7 @@ import {
     AFFIRMATIVE_ANSWER,
     CANCEL,
     EDITAR,
-    MESSAGE_SAVE_DATA,
+    MESSAGE_SAVE_DATA, MODULE_BUSSINESS_PLAN, MODULE_VISITS,
     REQUEST_INVALID_INPUT,
     REQUEST_SUCCESS
 } from "../../constantsGlobal";
@@ -37,7 +37,16 @@ import {getInfoTaskUser} from '../myPendings/myTasks/actions';
 import {clearTask} from "./actions";
 import _ from 'lodash';
 import {consultInfoClient} from "../clientInformation/actions";
+import CommentsComponent from "../globalComponents/comments/commentsComponent";
+import {fillComments, getCurrentComments} from "../globalComponents/comments/actions";
 import {filterUsers} from "../commercialReport/actions";
+import ButtonDetailsRedirectComponent from "../grid/buttonDetailsRedirectComponent";
+import {detailBusiness} from "../businessPlan/actions";
+import {detailVisit} from "../visit/actions";
+import {validatePermissionsByModule} from "../../actionsGlobal";
+import {getTaskNotesByUserTaskId, saveTaskNote} from "./createPendingTask/actions";
+
+let nameEntity;
 
 export class TaskPage extends React.Component {
     constructor(props) {
@@ -49,22 +58,23 @@ export class TaskPage extends React.Component {
             shouldRedirect: false,
             renderForm: false,
             nameUsuario: ''
-        }
+        };
+        this.entityId = null;
     }
 
     componentWillMount() {
-        const { idClient, dispatchConsultInfoClient } = this.props;
-        if(idClient){
+        const {idClient, dispatchConsultInfoClient} = this.props;
+        if (idClient) {
             window.sessionStorage.setItem('idClientSelected', idClient);
             dispatchConsultInfoClient().then(this.validateClientSelected);
-        }else{
+        } else {
             this.validateClientSelected();
         }
 
     }
 
-    componentDidMount() {
-        const {params: {id}, dispatchShowLoading, filterUsersBancoDispatch, myPendingsReducer} = this.props;
+    async componentDidMount() {
+        const {params: {id}, dispatchShowLoading, filterUsersBancoDispatch, myPendingsReducer, dispatchFillComments} = this.props;
         dispatchShowLoading(true, "Cargando...");
 
         Promise.all([this.masterDataFields(), this.getInfoTask(id)]).then(async () => {
@@ -75,13 +85,15 @@ export class TaskPage extends React.Component {
             dispatchShowLoading(false, "");
             let userName = window.localStorage.getItem("userNameFront");
             const filterUserResponse = await filterUsersBancoDispatch(userName);
-            this.setState({
-                nameUsuario: _.get(filterUserResponse, 'payload.data.data[0].title')
-            });
             const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
             if(taskDetail) {
+                dispatchFillComments(taskDetail.notes);
                 this.setState({
                     nameUsuario: taskDetail.assignedBy
+                });
+            }else{
+                await this.setState({
+                    nameUsuario: _.get(filterUserResponse, 'payload.data.data[0].title')
                 });
             }
         });
@@ -113,8 +125,9 @@ export class TaskPage extends React.Component {
     };
 
     submitForm = async (task) => {
-        const {params: {id}, dispatchShowLoading, dispatchCreatePendingTaskNew, dispatchSwtShowMessage, fromModal, closeModal} = this.props;
+        const {params: {id}, dispatchShowLoading, dispatchCreatePendingTaskNew, dispatchSwtShowMessage, dispatchGetCurrentComments, fromModal, closeModal, commentsReducer} = this.props;
         if (moment(task.finalDate, 'DD/MM/YYYY').isValid()) {
+            dispatchGetCurrentComments();
             const taskRequest = {
                 "id": id,
                 "clientId": window.sessionStorage.getItem('idClientSelected'),
@@ -124,6 +137,7 @@ export class TaskPage extends React.Component {
                 "closingDate": task.finalDate !== '' && task.finalDate !== null && task.finalDate !== undefined ? moment(task.finalDate, "DD/MM/YYYY").format('x') : null,
                 "employeeName": task.employeeName,
                 "employeeId": task.responsible !== undefined && task.responsible !== null && task.responsible !== '' ? task.responsible : null,
+                "notes": commentsReducer.comments
             };
             dispatchShowLoading(true, MESSAGE_SAVE_DATA);
             const responseCreateTask = await dispatchCreatePendingTaskNew(taskRequest);
@@ -194,18 +208,74 @@ export class TaskPage extends React.Component {
     };
 
     getInfoTask = async (id) => {
-        const {dispatchGetInfoTaskUser} = this.props;
+        const { dispatchGetInfoTaskUser, dispatchFillComments, dispatchDetailBusiness, dispatchDetailVisit, dispatchValidatePermissionsByModule } = this.props;
         if (id) {
-            await dispatchGetInfoTaskUser(id);
+            const response = await dispatchGetInfoTaskUser(id);
+            const taskInfo = _.get(response, 'payload.data.data');
+            dispatchFillComments(taskInfo.notes);
+            nameEntity = taskInfo.nameEntity;
+            this.entityId = taskInfo.entityId;
+            if (taskInfo.nameEntity === 'Plan de negocio') {
+                dispatchValidatePermissionsByModule(MODULE_BUSSINESS_PLAN);
+                dispatchDetailBusiness(taskInfo.entityId);
+            } else if (taskInfo.nameEntity === 'Visita') {
+                dispatchValidatePermissionsByModule(MODULE_VISITS);
+                dispatchDetailVisit(taskInfo.entityId);
+            }
             this.setState({
                 isEditable: true,
-                formValid: true
+                formValid: true,
+                nameUsuario: taskInfo.assignedBy
             });
         } else {
-            this.setState({
-                isEditable: false
-            });
+            this.setState({ isEditable: false });
         }
+    };
+
+    saveTaskComment = async (comment) => {
+        const { dispatchSaveTaskNote } = this.props;
+        await dispatchSaveTaskNote(comment);
+        await this.getTaskNotesByUserTaskId();
+    };
+
+    getTaskNotesByUserTaskId = async () => {
+        const { params: {id}, dispatchGetTaskNotesByUserTaskId, dispatchFillComments } = this.props;
+        const getNotesResponse = await dispatchGetTaskNotesByUserTaskId(id);
+        if(_.get(getNotesResponse, 'payload.data.status') === REQUEST_SUCCESS) {
+            const notes = _.get(getNotesResponse, 'payload.data.data');
+            dispatchFillComments(notes);
+        }
+    };
+
+    handleRelationLink = () => {
+        const {businessPlanReducer, visitReducer} = this.props;
+        let actionsRedirect;
+        let detail;
+        switch (nameEntity) {
+            case "Plan de negocio":
+                detail = businessPlanReducer.get("detailBusiness");
+                actionsRedirect = {
+                    typeClickDetail: "businessPlan",
+                    ownerDraft: detail.data.documentStatus,
+                    idClient: this.clientId,
+                    urlRedirect: "/dashboard/businessPlanEdit",
+                    id: this.entityId
+                };
+                break;
+            case"Visita":
+                detail = visitReducer.get("detailVisit");
+                actionsRedirect = {
+                    typeClickDetail: "visita",
+                    ownerDraft: detail.data.documentStatus,
+                    idClient: this.clientId,
+                    urlRedirect: "/dashboard/visitaEditar",
+                    id: this.entityId
+                };
+                break;
+            default:
+                break;
+        }
+        return actionsRedirect;
     };
 
     renderForm = () => {
@@ -225,8 +295,13 @@ export class TaskPage extends React.Component {
                         fromModal={fromModal}
                         isEditable={this.state.isEditable}
                         documentDraft={true}
-                    />)}
-            />
+                    />)}>
+                <CommentsComponent
+                    header="Notas"
+                    reportId={id}
+                    disabled={this.state.isEditable}
+                    saveCommentAction={this.saveTaskComment}/>
+            </TaskFormComponent>
         );
     };
 
@@ -234,7 +309,7 @@ export class TaskPage extends React.Component {
         const {isEditable} = this.state;
         const {fromModal} = this.props;
         return (
-            <div className='previsit-container'>
+            <div style={{marginBottom: '5em'}}>
                 {!fromModal &&
                     <ReportsHeader/>
                 }
@@ -264,6 +339,28 @@ export class TaskPage extends React.Component {
                 {
                     this.state.renderForm ? this.renderForm() : null
                 }
+                {nameEntity &&
+                <div className="modalBt4-footer modal-footer" style={{zIndex: 2}}>
+
+                        <Row xs={12} md={12} lg={12}>
+                            <Col xs={6} md={10} lg={10}
+                                 style={{textAlign: "left", varticalAlign: "middle", marginLeft: "0px"}}>
+                                {!_.isNull(this.entityId) ?
+                                    <span style={{fontWeight: "bold", color: "#818282"}}>Pendiente de {nameEntity}
+                                        <span style={{paddingLeft: "2em"}}>
+                                        <ButtonDetailsRedirectComponent actionsRedirect={() => {
+                                            return this.handleRelationLink()
+                                        }}/>
+                                      </span>
+                                    </span>
+                                    : <span
+                                        style={{fontWeight: "bold", color: "#818282"}}>Pendiente de {nameEntity}</span>
+                                }
+                            </Col>
+                        </Row>
+
+                </div>
+                }
                 <SweetAlert
                     type="warning"
                     show={this.state.showConfirmationCancelTask}
@@ -289,18 +386,39 @@ function mapDispatchToProps(dispatch) {
         dispatchCreatePendingTaskNew: createPendingTaskNew,
         dispatchClearUserTask: clearTask,
         dispatchConsultInfoClient: consultInfoClient,
-        filterUsersBancoDispatch: filterUsers
+        filterUsersBancoDispatch: filterUsers,
+        dispatchGetCurrentComments: getCurrentComments,
+        dispatchFillComments: fillComments,
+        dispatchSaveTaskNote: saveTaskNote,
+        dispatchGetTaskNotesByUserTaskId: getTaskNotesByUserTaskId,
+        dispatchDetailBusiness: detailBusiness,
+        dispatchDetailVisit: detailVisit,
+        dispatchValidatePermissionsByModule: validatePermissionsByModule
     }, dispatch);
 }
 
-function mapStateToProps({clientInformacion, reducerGlobal, selectsReducer, usersPermission, tasksByClient, myPendingsReducer}) {
+function mapStateToProps(
+    {
+        clientInformacion,
+        reducerGlobal,
+        selectsReducer,
+        usersPermission,
+        tasksByClient,
+        myPendingsReducer,
+        commentsReducer,
+        businessPlanReducer,
+        visitReducer
+    }) {
     return {
         clientInformacion,
         reducerGlobal,
         selectsReducer,
         usersPermission,
         tasksByClient,
-        myPendingsReducer
+        myPendingsReducer,
+        businessPlanReducer,
+        visitReducer,
+        commentsReducer
     };
 }
 

@@ -9,7 +9,6 @@ import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import RichText from "../richText/richTextComponent";
 import * as Yup from 'yup';
-import Textarea from "../../ui/textarea/textareaComponent";
 import SearchEmployeeInput from "../globalComponents/searchEmployeeInput/component";
 
 export class TaskFormComponent extends Component {
@@ -86,7 +85,7 @@ export class TaskFormComponent extends Component {
 
     render() {
         const {fields: {closingDate, state, responsible, task, observations}} = this.state;
-        const { isEditable, setFieldValue, stateTask, values: {employeeName}, commercialReportButtons} = this.props;
+        const { isEditable, setFieldValue, stateTask, values: {employeeName}, commercialReportButtons, children} = this.props;
         return (
             <div>
                 <Form style={{backgroundColor: "#FFFFFF",  width: "100%", paddingBottom: "50px"}}>
@@ -192,27 +191,7 @@ export class TaskFormComponent extends Component {
                     </Row>
                     <Row style={{paddingTop: 40, width: '99%', paddingLeft: 20}}>
                         <Col xs={12} md={12} lg={12}>
-                            <Field type="text" name="advance">
-                                {({field: {value, name, onBlur}}) =>
-                                    <div>
-                                        {renderLabel(observations)}
-                                        <Textarea
-                                            name="advance"
-                                            type="text"
-                                            max="1000"
-                                            value={value}
-                                            onChange={val => setFieldValue(name, val, false)}
-                                            title="La longitud máxima de caracteres es de 1000"
-                                            style={{width: '100%', height: '120px'}}
-                                            disabled={!isEditable ? '' : 'disabled'}
-                                        />
-                                        <br/>
-                                        <ErrorMessage name="advance" component={'div'}>
-                                            {message => renderMessageError(message)}
-                                        </ErrorMessage>
-                                    </div>
-                                }
-                            </Field>
+                            {children}
                         </Col>
                     </Row>
                     {commercialReportButtons(setFieldValue)}

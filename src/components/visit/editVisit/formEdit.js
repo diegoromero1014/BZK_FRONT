@@ -25,7 +25,7 @@ import { consultDataSelect, consultList, getMasterDataFields } from "../../selec
 import { addParticipant, filterUsersBanco, addListParticipant, clearParticipants } from "../../participantsVisitPre/actions";
 import { downloadFilePdf } from "../../clientInformation/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
-import { addTask } from "../tasks/actions";
+import {addTask, prepareTasksNotes} from "../tasks/actions";
 import { showLoading } from "../../loading/actions";
 import { detailPrevisit } from "../../previsita/actions";
 import { addUsers, setConfidential } from "../../commercialReport/actions";
@@ -165,7 +165,7 @@ class FormEdit extends Component {
     _submitCreateVisita() {
         const { participants, visitReducer, tasks,
             changeStateSaveData, clearIdPrevisit, usersPermission,
-            confidentialReducer
+            confidentialReducer, dispatchPrepareTasksNotes
         } = this.props;
         const detailVisit = visitReducer.get('detailVisit');
         let errorInForm = false;
@@ -238,6 +238,7 @@ class FormEdit extends Component {
 
             if (dataBanco.length > 0 || typeButtonClick === SAVE_DRAFT) {
                 let tareas = [];
+                dispatchPrepareTasksNotes();
                 _.map(tasks.toArray(),
                     function (task) {
                         let data = {
@@ -246,8 +247,9 @@ class FormEdit extends Component {
                             "employee": task.idResponsable,
                             "employeeName": task.responsable,
                             "closingDate": moment(task.fecha, "DD/MM/YYYY").format('x'),
-                            "commercialReport": buildJsoncommercialReport(task.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
-                        }
+                            "commercialReport": buildJsoncommercialReport(task.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick),
+                            "notes": task.notes
+                        };
                         tareas.push(data);
                     }
                 );
@@ -265,7 +267,7 @@ class FormEdit extends Component {
                     "documentStatus": typeButtonClick,
                     "preVisitId": idPrevisitSeleted,
                     "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
-                }
+                };
                 const { createVisti } = this.props;
                 const that = this;
                 changeStateSaveData(true, MESSAGE_SAVE_DATA);
@@ -480,7 +482,8 @@ class FormEdit extends Component {
                     fecha: moment(value.closingDate).format('DD/MM/YYYY'),
                     fechaForm: moment(value.closingDate).format('DD/MM/YYYY'),
                     commercialReport: value.commercialReport,
-                    taskAsignator: value.taskAsignator
+                    taskAsignator: value.taskAsignator,
+                    notes: value.notes
                 };
                 addTask(task);
             });
@@ -996,7 +999,8 @@ function mapDispatchToProps(dispatch) {
         changeIdPrevisit,
         addUsers,
         setConfidential,
-        clearParticipants
+        clearParticipants,
+        dispatchPrepareTasksNotes: prepareTasksNotes
     }, dispatch);
 }
 

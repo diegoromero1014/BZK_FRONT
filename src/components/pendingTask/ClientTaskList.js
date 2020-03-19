@@ -183,7 +183,7 @@ export class ClientTaskList extends Component {
     dispatchUpdateTitleNavBar("Tareas");
     redirectUrl("/dashboard/task");
   };
-  
+
   render() {
     const { tasksByClient, reducerGlobal } = this.props;
     let tabPending = tasksByClient.get("tabPending");

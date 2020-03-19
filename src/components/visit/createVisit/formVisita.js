@@ -50,6 +50,7 @@ import _ from "lodash";
 import moment from "moment";
 import { buildJsoncommercialReport } from "../../commercialReport/functionsGenerics";
 import { setConfidential } from "../../commercialReport/actions";
+import {prepareTasksNotes} from "../tasks/actions";
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral"];
 var dateVisitLastReview;
@@ -153,7 +154,7 @@ class FormVisita extends Component {
 
   _submitCreateVisita() {
     const {
-      participants, tasks, createVisti, clearIdPrevisit, clearParticipants, changeStateSaveData, usersPermission, confidentialReducer } = this.props;
+      participants, tasks, createVisti, clearIdPrevisit, clearParticipants, changeStateSaveData, usersPermission, confidentialReducer, dispatchPrepareTasksNotes } = this.props;
     var errorInForm = false;
     let errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
     let errorMessageTitle = "Campos obligatorios";
@@ -238,6 +239,7 @@ class FormVisita extends Component {
         );
 
         var tareas = [];
+        dispatchPrepareTasksNotes();
         _.map(tasks.toArray(),
           function (task) {
             var data = {
@@ -246,8 +248,9 @@ class FormVisita extends Component {
               "employee": task.idResponsable,
               "employeeName": task.responsable,
               "closingDate": moment(task.fecha, "DD/MM/YYYY").format('x'),
-              "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
-            }
+              "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick),
+              "notes": task.notes
+            };
             tareas.push(data);
           }
         );
@@ -780,7 +783,8 @@ function mapDispatchToProps(dispatch) {
     clearParticipants,
     changeStateSaveData,
     nonValidateEnter,
-    setConfidential
+    setConfidential,
+    dispatchPrepareTasksNotes: prepareTasksNotes
   }, dispatch);
 }
 

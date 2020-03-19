@@ -1,6 +1,6 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { FormLogin } from "../../../../src/components/login/formLogin";
+import {FormLogin} from "../../../../src/components/login/formLogin";
 
 let defaultProps;
 
@@ -63,12 +63,12 @@ describe('Test formLogin component', () => {
 
     describe('Actions tests', () => {
         it('handleValidateLogin should call', () => {
-            const wrapper = itRenders(<FormLogin {...defaultProps}/>);
-            wrapper.setState({
-                usuario: 'daegalle',
-                password: '1234'
-            });
-            wrapper.instance()._handleValidateLogin({ preventDefault: sinon.fake()});
+           const wrapper = itRenders(<FormLogin {...defaultProps}/>);
+           wrapper.setState({
+               usuario: 'daegalle',
+               password: '1234'
+           });
+           wrapper.instance()._handleValidateLogin({ preventDefault: sinon.fake()});
         });
     });
 });
