@@ -24,7 +24,7 @@ import { createVisti, detailVisit, pdfDescarga, clearIdPrevisit, changeIdPrevisi
 import { consultDataSelect, consultList, getMasterDataFields } from "../../selectsComponent/actions";
 import { addParticipant, filterUsersBanco, addListParticipant, clearParticipants } from "../../participantsVisitPre/actions";
 import { downloadFilePdf } from "../../clientInformation/actions";
-import { changeStateSaveData } from "../../dashboard/actions";
+import { changeStateSaveData } from "../../main/actions";
 import { addTask } from "../tasks/actions";
 import { showLoading } from "../../loading/actions";
 import { detailPrevisit } from "../../previsita/actions";

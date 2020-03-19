@@ -21,8 +21,8 @@ export const _VISIT = "VISIT";
 export const _TASK = "TASK";
 
 export const LOGINCOMPONENT ="LOGINCOMPONENT";
-export const DASHBOARDCOMPONENT ="DASHBOARDCOMPONENT";
-export const VIEWMANAGEMENT ="VIEWMANAGEMENT";
+export const MAINCOMPONENT ="MAINCOMPONENT";
+export const MANAGEMENTVIEW ="MANAGEMENTVIEW";
 export const VIEWALERT ="VIEWALERT";
 export const SHAREHOLDERCOMPONENT ="SHAREHOLDERCOMPONENT";
 export const COMPONENTCLIENTINFORMATION ="COMPONENTCLIENTINFORMATION";
@@ -59,8 +59,8 @@ export const BIZTRACK_="BIZTRACK_";
 export const DEFAULT="";
 
 export const LoginComponentURL ="/login";
-export const DashboardComponentURL ="/dashboard";
-export const ViewManagementURL ="/dashboard/viewManagement";
+export const MainComponentURL ="/dashboard";
+export const ManagementViewURL ="/dashboard/managementView";
 export const ShareholderComponentURL ="/dashboard/shareholder";
 export const ComponentClientInformationURL ="/dashboard/clientInformation";
 export const StudyCreditURL ="/dashboard/creditStudy";
@@ -94,7 +94,3 @@ export const TransactionalURL ="/dashboard/transactional";
 export const WalletShareURL ="/dashboard/walletShare";
 export const ControlDashboardURL="/dashboard/controlDashboard";
 export const ShedulerURL ="/dashboard/sheduler";
-
-
-
-

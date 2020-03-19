@@ -61,5 +61,5 @@ export const MESSAGE_PREVISIT_INVALID_INPUT = "Señor usuario, los datos enviado
 export const MESSAGE_PREVISIT_CREATE_ERROR = "Señor usuario, ocurrió un error creando la previsita.";
 export const MESSAGE_PREVISIT_EDIT_ERROR = "Señor usuario, ocurrió un error editando la previsita.";
 
-export const MESSAGE_NEW_COMPONENTS = "Señor usuario, próximamente podrá visualizar en el formulario las siguientes secciones: Objetivos del cliente - Estrategias y Oportunidades - Debilidades del cliente.";
+
 

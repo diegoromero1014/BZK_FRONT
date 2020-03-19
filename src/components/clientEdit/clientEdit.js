@@ -38,7 +38,7 @@ import SectionOpportunitiesWeaknesses from '../opportunitiesWeaknesses/SectionOp
 import { clearProducts, setProducts } from "./products/actions";
 import { clearNotes, deleteNote, setNotes } from "./notes/actions";
 import { createProspect } from "../propspect/actions";
-import { changeStateSaveData } from "../dashboard/actions";
+import { changeStateSaveData } from "../main/actions";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 import { showLoading } from "../loading/actions";
 import { saveCreditStudy } from "../clients/creditStudy/actions";

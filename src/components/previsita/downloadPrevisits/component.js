@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { TAB_PREVISIT } from '../../viewManagement/constants';
-import { getCsv } from '../../viewManagement/actions';
+import { TAB_PREVISIT, TYPE_YEAR } from '../../managementView/constants';
+import { getCsv } from '../../managementView/actions';
 import { APP_URL, MESSAGE_DOWNLOAD_DATA } from '../../../constantsGlobal';
 import { getCsvPreVisitsByClient } from '../actions';
 import moment from 'moment';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
+import SelectYearComponent from '../../selectsComponent/selectFilterYear/selectYearComponent';
 
 class DownloadPrevisits extends Component {
 
@@ -19,7 +20,8 @@ class DownloadPrevisits extends Component {
 	  this.state = {
 	  	hasParticipatingContacts: false,
 	  	hasParticipatingEmployees: false,
-	  	hasRelatedEmployees: false
+		  hasRelatedEmployees: false,
+		  year: ''
 	  };
 	}
 
@@ -38,10 +40,10 @@ class DownloadPrevisits extends Component {
 	_downloadPreVisits() {
 		let year;
 		let url;
-		const {changeStateSaveData, getCsvPreVisitsByClient, isOpen, itemSeletedModal, yearModal, getCsv } = this.props;
+		const {changeStateSaveData, getCsvPreVisitsByClient, isOpen, itemSelectedModal, getCsv } = this.props;
 		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-		if (itemSeletedModal === TAB_PREVISIT) {
-			year = yearModal !== '' ? yearModal : moment().year();
+		if (itemSelectedModal === TAB_PREVISIT) {
+			year = this.state.year !== '' ? this.state.year : moment().year();
 			url = '/getCsvPreVisits';
 			getCsv(year, url, this.state.hasParticipatingContacts, this.state.hasParticipatingEmployees, this.state.hasRelatedEmployees).then(function(data) {
 				changeStateSaveData(false, "");
@@ -66,6 +68,12 @@ class DownloadPrevisits extends Component {
 				<div style={{height: 'auto'}} className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
 					<div style={{paddingLeft:'20px', paddingRight:'20px', paddingTop: '20px'}}>
 						<span>{'En esta sección podrá descargar algunos campos de los informes de previsita del cliente.\n Seleccione los campos que desea descargar a excel:'}</span>
+						<div style={{ width: '100%'}}>
+							<SelectYearComponent 
+								idTypeFilter={TYPE_YEAR} 
+								config={{ onChange: (value) => this.setState({ year: value.id }) }} 
+							/>
+						</div>
 						<ul className="ui list" style={{marginLeft:'0px'}}>
 							<div className="item"><input name="participatingContacts" type="checkbox" onChange={this._checkCheckBox} /> {'Participantes en la reunión por parte del cliente'}</div>
 							<div className="item"><input name="participatingEmployees" type="checkbox" onChange={this._checkCheckBox} /> {'Participantes en la reunión por parte del Grupo Bancolombia'}</div>

@@ -39,7 +39,12 @@ describe('ModalContentComponent Test', () => {
             handleCloseModal,
             elementsReducer: {},
             element: {
-                elements: []
+                elements: [
+                    {
+                        id: 1,
+                        text: 'text'
+                    }
+                ]
             }
         }
         store = mockStore(defaultprops);
@@ -62,7 +67,7 @@ describe('ModalContentComponent Test', () => {
         it("test  handelBackup", () => {
             const wrapper = shallow(<ModalContentComponent {...defaultprops} />);
             wrapper.instance().handleBackup();
-            expect(wrapper.state().elements).to.length([]);
+            expect(wrapper.state().elements).to.length(1);
         })
 
         it("test handleOnClick ", () => {

@@ -84,12 +84,12 @@ export class BankParticipants extends Component {
                                 'idUsuario',
                                 'cargo'
                             ],
-                            onSelect: e => {
+                            onSelect: async e => {
                                 if (limit && this.length() >= limit) {
                                     dispatchSwtShowMessage('error', "Límite de participantes", "Señor usuario, sólo se pueden agregar máximo 10 participantes por parte del banco");
                                     return;
                                 } else {
-                                    this.setState({ selectedRecord: '' });
+                                    await this.setState({ selectedRecord: '' });
                                     this.addBankParticipant(e);
                                     return 'default';
                                 }
@@ -118,7 +118,7 @@ export class BankParticipants extends Component {
             <div className='bank-participants'>
                 <Row style={{ marginTop: 20, marginLeft: 7 }}>
                     <Col xs={12} md={12} lg={12} >
-                        {renderLabel({ name: 'Nombre', message: null, nullable: true })}
+                        {renderLabel({ name: 'Buscar participante', message: null, nullable: true })}
 
                         <div className="ui dropdown search participantBanc fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
                             <ComboBoxFilter

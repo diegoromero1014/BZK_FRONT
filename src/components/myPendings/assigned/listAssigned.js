@@ -16,7 +16,7 @@ import { NUMBER_RECORDS } from './constants';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { mapDateColor } from '../myTasks/pendingTaskUtilities';
 import { VIEW_TASK_ADMIN } from '../../modal/constants';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 
 class listAssignedComponent extends Component {
 

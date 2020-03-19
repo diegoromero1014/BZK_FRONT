@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { getCsvBusinessPlan } from '../actions';
 import { MESSAGE_DOWNLOAD_DATA } from '../../../constantsGlobal';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 
 class ButtonDownloadTaskComponent extends Component {
 
