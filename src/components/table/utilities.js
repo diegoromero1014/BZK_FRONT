@@ -48,7 +48,7 @@ export const buildRow = (element, index, { columns, onClick }) => {
 
     return (
         <Table.Row key={index} onClick={event => onClick(element, event)}>
-            {cells.map((cell, index) => (
+            {cells.map((cell, i) => (
                 <Table.Cell
                     style={{
                         textAlign: 'justify',
@@ -58,7 +58,7 @@ export const buildRow = (element, index, { columns, onClick }) => {
                         cursor: 'pointer',
                         overflow: 'inherit'
                     }}
-                    key={index}
+                    key={i}
                     verticalAlign='middle'
                 >
 
