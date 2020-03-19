@@ -45,46 +45,7 @@ export default class Objetivos extends React.Component {
                             onCancel={onCancel}
                             title={"Objetivos del cliente"}
                             body={
-                                <Row>
-                                    <Col md={12} sm={9} >
-                                        <div>
-                                            <dt><span>{helpText} (<span style={{ color: 'red' }}>*</span>)</span></dt>
-                                            <TextArea
-                                                placeholder=""
-                                                onChangeEvent={onChange}
-                                                nameInput="value"
-                                                value={fields["value"] || ""}
-                                                rows={7}
-                                                max="700"
-                                                error={errors["value"]}
-                                                touched={true}
-                                            />
-                                        </div>
-                                    </Col>
-
-                                    <Col md={12}>
-                                        <div style={styles.main} className="section-list-container" id="estrategias">
-                                            <ListaEstrategias
-                                                renderTitle={
-                                                    StrategieSectionTitle
-                                                }
-                                                schema={StrategySchema}
-                                                initialValues={strategiesInitialValues}
-                                                title="Estrategias"
-                                                renderAddSection={renderStrategyFields}
-                                                renderElement={renderStrategyElements}
-                                                shouldRenderAddCancelButton={false}
-                                                maxLength={3}
-                                            />
-                                        </div>
-                                    </Col>
-                                    <Col md={12} style={styles.buttonsDiv}>
-                                        <div style={styles.buttonsDiv}>
-                                            <button style={{ marginRight: "15px" }} className="btn btn-secondary save-btn" type="button" onClick={onAddElement}>{isEditing ? "Modificar" : "Agregar"}</button>
-                                            <button className="btn btn-primary cancel-btn" type="button" onClick={onCancel}>Cancelar</button>
-                                        </div>
-                                    </Col>
-                                </Row>
+                                addObjectiveBody({ fields, onChange, onAddElement, onCancel, isEditing, errors })
                             }
                         />
                     )}
@@ -95,6 +56,51 @@ export default class Objetivos extends React.Component {
             </div>
         )
     }
+}
+
+export function addObjectiveBody({ fields, onChange, onAddElement, onCancel, isEditing, errors }) {
+    return (
+        <Row>
+            <Col md={12} sm={9} >
+                <div>
+                    <dt><span>{helpText} (<span style={{ color: 'red' }}>*</span>)</span></dt>
+                    <TextArea
+                        placeholder=""
+                        onChangeEvent={onChange}
+                        nameInput="value"
+                        value={fields["value"] || ""}
+                        rows={7}
+                        max="700"
+                        error={errors["value"]}
+                        touched={true}
+                    />
+                </div>
+            </Col>
+
+            <Col md={12}>
+                <div style={styles.main} className="section-list-container" id="estrategias">
+                    <ListaEstrategias
+                        renderTitle={
+                            StrategieSectionTitle
+                        }
+                        schema={StrategySchema}
+                        initialValues={strategiesInitialValues}
+                        title="Estrategias"
+                        renderAddSection={renderStrategyFields}
+                        renderElement={renderStrategyElements}
+                        shouldRenderAddCancelButton={false}
+                        maxLength={3}
+                    />
+                </div>
+            </Col>
+            <Col md={12} style={styles.buttonsDiv}>
+                <div style={styles.buttonsDiv}>
+                    <button style={{ marginRight: "15px" }} className="btn btn-secondary save-btn" type="button" onClick={onAddElement}>{isEditing ? "Modificar" : "Agregar"}</button>
+                    <button className="btn btn-primary cancel-btn" type="button" onClick={onCancel}>Cancelar</button>
+                </div>
+            </Col>
+        </Row>
+    )
 }
 
 export function renderElements(elements, removeElement, editElement) {

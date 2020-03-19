@@ -3,11 +3,18 @@ import { Icon } from 'semantic-ui-react'
 
 import {
     makeObjectiveSectionTitle,
-    styles
+    styles,
+    elementsKey,
+    draftElementsKey,
+    validateSchema,
+    listName
 } from './utils';
 import TemplateObjectiveAndStrategies from './templateObjectiveAndStrategies';
 import ToolTip from '../../toolTip/toolTipComponent';
 import BiztrackModal from '../Objetives/BiztrackModal';
+
+import { addObjectiveBody } from './Objetives';
+import schema from './ObjetiveSchema';
 
 const ObjectiveSectionTitle = makeObjectiveSectionTitle(true)
 
@@ -15,17 +22,28 @@ export default class AssociateObjectives extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            showAddSection: false
+        }
+
         this.showAssociateSection = this.showAssociateSection.bind(this);
         this.associateElements = this.associateElements.bind(this);
         this.checkDraftElement = this.checkDraftElement.bind(this);
         this.checkElement = this.checkElement.bind(this);
         this.hideAssociateSection = this.hideAssociateSection.bind(this);
         this.renderElements = this.renderElements.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleOnAdd = this.handleOnAdd.bind(this);
+        this.showEditSection = this.showEditSection.bind(this);
+        this.clearFields = this.clearFields.bind(this);
     }
 
+
+    //TODO: LLamar variable MYID. Verificar que los registros del server se les agregue el ID
     changeAssociationOfElements(elements, changedElement) {
         return elements.map((element) => {
-            if (element.id == changedElement.id) {
+            if (element["fieldlist-id"] == changedElement["fieldlist-id"]) {
                 return Object.assign({}, element, {
                     associated: !element.associated,
                     strategies: element.strategies.map((strategy) => Object.assign({}, strategy, {
@@ -60,14 +78,14 @@ export default class AssociateObjectives extends React.Component {
             },
             {
                 confirmButtonText: 'Sí, estoy seguro!',
-                confirmButtonColor:'#DD6B55'
+                confirmButtonColor: '#DD6B55'
             }
         );
     }
 
-    renderElements(checkedFunction, filterAssociatedElements, elements=[]) {
+    renderElements(checkedFunction, filterAssociatedElements, elements = []) {
 
-        const {isEditable} = this.props;
+        const { isEditable } = this.props;
 
         return elements.map(
             (element) => (
@@ -95,12 +113,34 @@ export default class AssociateObjectives extends React.Component {
         )
     }
 
+    showEditSection() {
+
+        const { elements, swtShowMessage } = this.props;
+
+        if (elements.length == 3) {
+            swtShowMessage("warning", "Alerta", "Señor usuario, Señor usuario, el número máximo de Objetivos del cliente permitidos son 3");
+            return;
+        }
+
+        this.setState({
+            showAddSection: true
+        })
+    }
+
     showAssociateSection() {
         const { elements, changeListState } = this.props;
+
+        if (!elements.length) {
+            this.setState({
+                showAddSection: true
+            })
+            return;
+        }
+
         changeListState({
             draftElements: [...elements],
             showAssociateSection: true
-        })
+        });
     }
 
     hideAssociateSection() {
@@ -135,20 +175,65 @@ export default class AssociateObjectives extends React.Component {
         return element.associated;
     }
 
+    handleChange(e) {
+        const { addField } = this.props;
+        addField(e.target.name, e.target.value.trim());
+    }
+
+    clearFields() {
+        const { initialValues, setFields, changeListState } = this.props;
+        setFields(initialValues);
+        changeListState({
+            showAddSection: false
+        })
+        this.setState({
+            showAddSection: false
+        })
+    }
+
+    handleOnAdd(key) {
+
+        const { updateElement, listState, changeListState, addField } = this.props;
+
+        const clearFields = this.clearFields;
+
+        return function () {
+
+            const [errors, fieldErrors] = validateSchema(listState.fields, schema);
+
+            changeListState({
+                errors: fieldErrors
+            });
+
+            if (errors.length > 0) {
+                return;
+            }
+
+            addField("associated", true);
+
+            updateElement(key);
+
+            clearFields();
+        }
+
+    }
+
     render() {
 
         const {
             elements,
             showAssociateSection,
             draftElements,
-            isEditable
+            isEditable,
+            listState,
+            updateElement
         } = this.props;
 
         const filteredElements = elements.filter(this.filterCheckedElements);
 
         return (
             <div>
-                { isEditable && <div style={{ position: "relative", marginBottom: "25px" }}>
+                {isEditable && <div style={{ position: "relative", marginBottom: "25px" }}>
                     <div className="add-section" style={{ position: "absolute", top: "10px", right: "10px" }} >
                         <ToolTip text={"Asociar Objetivos"}>
                             <Icon
@@ -160,20 +245,46 @@ export default class AssociateObjectives extends React.Component {
                             />
                         </ToolTip>
                     </div>
-                </div> }
+                </div>}
                 <div style={styles.main} className='container-associate-objetives'>
                     {ObjectiveSectionTitle}
-                    {this.renderElements(this.checkElement, (list) => list.filter((el) => el.associated ), filteredElements)}
-                    {!filteredElements.length && <div className="elements-not-found">
+                    {this.renderElements(this.checkElement, (list) => list.filter((el) => el.associated), filteredElements)}
+                    {!filteredElements.length && !this.state.showAddSection && <div className="elements-not-found">
                         <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
                             <span className="form-item">No se han asociado Objetivos del cliente</span>
                         </div>
+                    </div>}
+                    {this.state.showAddSection && !showAssociateSection && <div>
+                        {addObjectiveBody(Object.assign({}, listState, {
+                            onChange: this.handleChange,
+                            onAddElement: this.handleOnAdd(elementsKey),
+                            onCancel: this.clearFields
+                        }))}
                     </div>}
                     {showAssociateSection &&
                         <BiztrackModal
                             title={"Asociar Objetivos"}
                             body={
                                 <div>
+                                    {this.state.showAddSection && <div>
+                                        {addObjectiveBody(
+                                            Object.assign({}, listState, {
+                                                onChange: this.handleChange,
+                                                onAddElement: this.handleOnAdd(draftElementsKey),
+                                                onCancel: this.clearFields
+                                            })
+                                        )}</div>}
+                                    {!this.state.showAddSection && <div className="add-section" style={{ position: "absolute", top: "60px", right: "10px" }} >
+                                        <ToolTip text={"Asociar Objetivos"}>
+                                            <Icon
+                                                className='icon-message-elements'
+                                                size='huge'
+                                                name={'add square'}
+                                                style={{ color: '#16498b', fontSize: '34pt !important', margin: '0px 20px 10px 20px', cursor: 'pointer' }}
+                                                onClick={this.showEditSection}
+                                            />
+                                        </ToolTip>
+                                    </div>}
                                     {this.renderElements(this.checkDraftElement, (el) => el, draftElements)}
                                     <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
                                         <button style={{ marginRight: "5px" }} className="btn btn-secondary section-btn-save" type="button" onClick={this.associateElements}>Guardar</button>
