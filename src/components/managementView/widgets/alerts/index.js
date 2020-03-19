@@ -48,12 +48,12 @@ export class AlertSection extends Component {
       }
     ];
     return (
-      <Segment attached>
       <div class="ui attached segment">
         <h3>ALERTAS</h3>
-        <TabComponent tabs={tabs} />
+        <Segment attached>
+          <TabComponent tabs={tabs} />
+        </Segment>
       </div>
-      </Segment>
     );
   }
 
