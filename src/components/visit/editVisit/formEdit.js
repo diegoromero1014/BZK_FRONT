@@ -25,7 +25,7 @@ import { consultDataSelect, consultList, getMasterDataFields } from "../../selec
 import { addParticipant, filterUsersBanco, addListParticipant, clearParticipants } from "../../participantsVisitPre/actions";
 import { downloadFilePdf } from "../../clientInformation/actions";
 import { changeStateSaveData } from "../../dashboard/actions";
-import { addTask } from "../tasks/actions";
+import {addTask, prepareTasksNotes} from "../tasks/actions";
 import { showLoading } from "../../loading/actions";
 import { detailPrevisit } from "../../previsita/actions";
 import { addUsers, setConfidential } from "../../commercialReport/actions";
@@ -165,7 +165,7 @@ class FormEdit extends Component {
     _submitCreateVisita() {
         const { participants, visitReducer, tasks,
             changeStateSaveData, clearIdPrevisit, usersPermission,
-            confidentialReducer
+            confidentialReducer, dispatchPrepareTasksNotes
         } = this.props;
         const detailVisit = visitReducer.get('detailVisit');
         let errorInForm = false;
@@ -238,6 +238,7 @@ class FormEdit extends Component {
 
             if (dataBanco.length > 0 || typeButtonClick === SAVE_DRAFT) {
                 let tareas = [];
+                dispatchPrepareTasksNotes();
                 _.map(tasks.toArray(),
                     function (task) {
                         let data = {
@@ -998,7 +999,8 @@ function mapDispatchToProps(dispatch) {
         changeIdPrevisit,
         addUsers,
         setConfidential,
-        clearParticipants
+        clearParticipants,
+        dispatchPrepareTasksNotes: prepareTasksNotes
     }, dispatch);
 }
 

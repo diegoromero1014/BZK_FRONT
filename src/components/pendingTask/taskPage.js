@@ -40,6 +40,7 @@ import {consultInfoClient} from "../clientInformation/actions";
 import CommentsComponent from "../globalComponents/comments/commentsComponent";
 import {fillComments, getCurrentComments} from "../globalComponents/comments/actions";
 import {filterUsers} from "../commercialReport/actions";
+import {getTaskNotesByUserTaskId, saveTaskNote} from "./createPendingTask/actions";
 
 export class TaskPage extends React.Component {
     constructor(props) {
@@ -205,14 +206,24 @@ export class TaskPage extends React.Component {
             const response = await dispatchGetInfoTaskUser(id);
             const taskInfo = _.get(response, 'payload.data.data');
             dispatchFillComments(taskInfo.notes);
-            this.setState({
-                isEditable: true,
-                formValid: true
-            });
+            this.setState({ isEditable: true, formValid: true });
         } else {
-            this.setState({
-                isEditable: false
-            });
+            this.setState({ isEditable: false });
+        }
+    };
+
+    saveTaskComment = async (comment) => {
+        const { dispatchSaveTaskNote } = this.props;
+        await dispatchSaveTaskNote(comment);
+        await this.getTaskNotesByUserTaskId();
+    };
+
+    getTaskNotesByUserTaskId = async () => {
+        const { params: {id}, dispatchGetTaskNotesByUserTaskId, dispatchFillComments } = this.props;
+        const getNotesResponse = await dispatchGetTaskNotesByUserTaskId(id);
+        if(_.get(getNotesResponse, 'payload.data.status') === REQUEST_SUCCESS) {
+            const notes = _.get(getNotesResponse, 'payload.data.data');
+            dispatchFillComments(notes);
         }
     };
 
@@ -237,7 +248,8 @@ export class TaskPage extends React.Component {
                 <CommentsComponent
                     header="Notas"
                     reportId={id}
-                    disabled={this.state.isEditable}/>
+                    disabled={this.state.isEditable}
+                    saveCommentAction={this.saveTaskComment}/>
             </TaskFormComponent>
         );
     };
@@ -303,7 +315,9 @@ function mapDispatchToProps(dispatch) {
         dispatchConsultInfoClient: consultInfoClient,
         filterUsersBancoDispatch: filterUsers,
         dispatchGetCurrentComments: getCurrentComments,
-        dispatchFillComments: fillComments
+        dispatchFillComments: fillComments,
+        dispatchSaveTaskNote: saveTaskNote,
+        dispatchGetTaskNotesByUserTaskId: getTaskNotesByUserTaskId
     }, dispatch);
 }
 

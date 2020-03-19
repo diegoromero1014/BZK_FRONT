@@ -19,6 +19,8 @@ import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import {fields, validations as validate} from './rulesAndFieldsTaskVisit';
 import CommentsComponent from "../../globalComponents/comments/commentsComponent";
 import {fillComments, getCurrentComments} from "../../globalComponents/comments/actions";
+import {REQUEST_SUCCESS} from "../../../constantsGlobal";
+import {getTaskNotesByUserTaskId, saveTaskNote} from "../../pendingTask/createPendingTask/actions";
 
 
 var usersBanco = [];
@@ -44,7 +46,7 @@ export class ModalTask extends Component {
         momentLocalizer(moment);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const {fields: {idEmployee, responsable, fecha, tarea, id}, taskEdit, dispatchFillComments} = this.props;
         if (taskEdit !== undefined) {
             id.onChange(taskEdit.id);
@@ -52,7 +54,10 @@ export class ModalTask extends Component {
             responsable.onChange(taskEdit.responsable);
             tarea.onChange(taskEdit.tarea);
             fecha.onChange(moment(taskEdit.fechaForm, 'DD/MM/YYYY'));
-            dispatchFillComments(taskEdit.notes);
+            if(id.value)
+                await this.getTaskNotesByUserTaskId();
+            else
+                dispatchFillComments(taskEdit.notes);
             this.setState({
                 nameAsignator: taskEdit.taskAsignator
             })
@@ -117,8 +122,7 @@ export class ModalTask extends Component {
     }
 
     _handleCreateTask() {
-        const {fields: {responsable, fecha, tarea, idEmployee, id}, addTask, editTask, taskEdit, swtShowMessage, dispatchGetCurrentComments, commentsReducer} = this.props;
-        dispatchGetCurrentComments();
+        const {fields: {responsable, fecha, tarea, idEmployee, id}, addTask, editTask, taskEdit, swtShowMessage, commentsReducer} = this.props;
         if (responsable.value !== nameUsuario) {
             nameUsuario = responsable.value;
             idUsuario = null;
@@ -162,6 +166,21 @@ export class ModalTask extends Component {
         }
 
     }
+
+    saveTaskComment = async (comment) => {
+        const { dispatchSaveTaskNote } = this.props;
+        await dispatchSaveTaskNote(comment);
+        await this.getTaskNotesByUserTaskId();
+    };
+
+    getTaskNotesByUserTaskId = async () => {
+        const { fields: {id}, dispatchGetTaskNotesByUserTaskId, dispatchFillComments } = this.props;
+        const getNotesResponse = await dispatchGetTaskNotesByUserTaskId(id.value);
+        if(_.get(getNotesResponse, 'payload.data.status') === REQUEST_SUCCESS) {
+            const notes = _.get(getNotesResponse, 'payload.data.data');
+            dispatchFillComments(notes);
+        }
+    };
 
     render() {
         const {fields: {responsable, fecha, tarea, idEmployee, id}, handleSubmit} = this.props;
@@ -234,7 +253,8 @@ export class ModalTask extends Component {
                             <Col xs={12} md={12} lg={12}>
                                 <CommentsComponent
                                     header="Notas"
-                                    reportId={id.value ? id.value : null}/>
+                                    reportId={id.value ? id.value : null}
+                                    saveCommentAction={this.saveTaskComment}/>
                             </Col>
                         </Row>
                     </div>
@@ -257,8 +277,9 @@ function mapDispatchToProps(dispatch) {
         editTask,
         filterUsersBancoDispatch: filterUsersBanco,
         swtShowMessage,
-        dispatchGetCurrentComments: getCurrentComments,
-        dispatchFillComments: fillComments
+        dispatchFillComments: fillComments,
+        dispatchGetTaskNotesByUserTaskId: getTaskNotesByUserTaskId,
+        dispatchSaveTaskNote: saveTaskNote
     }, dispatch);
 }
 

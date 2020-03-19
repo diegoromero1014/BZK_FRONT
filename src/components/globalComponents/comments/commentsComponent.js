@@ -9,7 +9,7 @@ import {Mention, MentionsInput} from 'react-mentions';
 import {bindActionCreators} from "redux";
 import {filterUsersBanco} from "../../participantsVisitPre/actions";
 import {Subject} from "rxjs";
-import {addCommentToList, clearComments } from "./actions";
+import {addCommentToList, clearComments, createComment} from "./actions";
 import _ from "lodash";
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import {getUsernameInitials} from "../../../functions";
@@ -135,30 +135,39 @@ export class CommentsComponent extends Component {
     };
 
     addComment = async (e, parentCommentId, content, source) => {
-        const { reportId, commentsReducer: { comments }, dispatchAddCommentList } = this.props;
+        const { reportId, commentsReducer: { comments }, dispatchAddCommentList, saveCommentAction } = this.props;
         const author = window.localStorage.getItem('name');
         const initials = getUsernameInitials(author);
-        const parentComment = this.searchComment(comments, parentCommentId);
-        const comment = {
+        let comment = {
             id: _.uniqueId('new'),
             reportId,
             content,
-            parentCommentId: parentComment && parentComment.parentCommentId ? parentComment.parentCommentId : parentCommentId,
+            parentCommentId: null,
             initials,
             author,
             replies: [],
             createdTimestamp: moment(new Date())
         };
 
+        if(parentCommentId){
+            const parentComment = this.searchComment(comments, parentCommentId);
+            comment.parentCommentId = parentComment && parentComment.parentCommentId ? parentComment.parentCommentId : parentCommentId;
+        }
+
         if(this.validateCommentContent(content, source)){
-            dispatchAddCommentList(comment);
+            e.preventDefault();
+            if(reportId != null){
+                await saveCommentAction(comment);
+            }else{
+                dispatchAddCommentList(comment);
+            }
+
             this.setState({
                 comment: '',
                 commentReply: '',
                 commentBeingReplied: null
             });
         }
-        e.preventDefault();
     };
 
     renderCommentContent = (content) => {
@@ -217,7 +226,7 @@ export class CommentsComponent extends Component {
                         </Row>
                         <Row style={{ marginTop: 10 }}>
                             <Col xs={12} md={12} ld={12}>
-                                <button id="replyCommentButton" className="btn btn-primary" style={{ float: 'right' }} onClick={e => this.addComment(e, id, this.state.commentReply, 'reply')}>Responder</button>
+                                <button id={`replyCommentButton${id}`} className="btn btn-primary" style={{ float: 'right' }} onClick={e => this.addComment(e, id, this.state.commentReply, 'reply')}>Responder</button>
                             </Col>
                         </Row>
                     </Form>

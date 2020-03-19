@@ -54,6 +54,8 @@ let dispatchClearUserTask;
 let dispatchFillComments;
 let dispatchGetCurrentComments;
 let dispatchConsultInfoClient;
+let dispatchSaveTaskNote;
+let dispatchGetTaskNotesByUserTaskId;
 let filterUsersBancoDispatch;
 let selectsReducer;
 let setFieldValue;
@@ -94,7 +96,17 @@ describe('Test taskPage', () => {
         });
         dispatchFillComments = sinon.fake();
         dispatchGetCurrentComments = sinon.fake();
+        dispatchSaveTaskNote = sinon.fake();
         dispatchConsultInfoClient = sinon.stub();
+        dispatchGetTaskNotesByUserTaskId = sinon.stub();
+        dispatchGetTaskNotesByUserTaskId.resolves({
+            payload: {
+                data: {
+                    status: REQUEST_SUCCESS,
+                    data: []
+                }
+            }
+        });
         dispatchConsultInfoClient.resolves({});
         selectsReducer = Immutable.Map({taskStates: taskStates});
         dispatchGetMasterDataFields.resolves({
@@ -138,6 +150,8 @@ describe('Test taskPage', () => {
             dispatchFillComments,
             dispatchGetCurrentComments,
             dispatchConsultInfoClient,
+            dispatchSaveTaskNote,
+            dispatchGetTaskNotesByUserTaskId,
             fromModal: false,
             closeModal,
         };
@@ -495,6 +509,44 @@ describe('Test taskPage', () => {
             wrapper.instance().canUserEditTask ();
             expect(wrapper.state().showMessage).to.equal(false);
             expect(wrapper.state().isEditable).to.equal(false);
+        });
+
+        it('saveTaskComment should call dispatchSaveTaskNote', async () => {
+            const wrapper = shallow(<TaskPage {...defaultProps}/>);
+            const getTaskNotesByUserTaskIdFunction = sinon.stub();
+            const comment = {
+                id: null,
+                content: 'Algo',
+                author: 'Daniel Gallego',
+                parentCommentId: null
+            };
+            wrapper.instance().getTaskNotesByUserTaskId = getTaskNotesByUserTaskIdFunction;
+            await wrapper.instance().saveTaskComment(comment);
+            expect(dispatchSaveTaskNote.called).to.equal(true);
+            expect(getTaskNotesByUserTaskIdFunction.called).to.equal(true);
+        });
+
+        it('getTaskNotesByUserTaskId should call dispatchFillComments when request is success', async () => {
+            defaultProps.params.id = 1231;
+            const wrapper = shallow(<TaskPage {...defaultProps}/>);
+            await wrapper.instance().getTaskNotesByUserTaskId();
+            expect(dispatchGetTaskNotesByUserTaskId.called).to.equal(true);
+            expect(dispatchFillComments.called).to.equal(true);
+        });
+
+        it('getTaskNotesByUserTaskId should not call dispatchFillComments when request is error', async () => {
+            defaultProps.params.id = 1231;
+            defaultProps.dispatchGetTaskNotesByUserTaskId.resolves({
+                payload: {
+                    data: {
+                        status: REQUEST_ERROR,
+                        data: []
+                    }
+                }
+            });
+            const wrapper = shallow(<TaskPage {...defaultProps}/>);
+            await wrapper.instance().getTaskNotesByUserTaskId();
+            expect(dispatchGetTaskNotesByUserTaskId.called).to.equal(true);
         });
 
     });

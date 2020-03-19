@@ -140,7 +140,7 @@ describe('Test commentsComponent', () => {
             defaultProps.disabled = true;
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
             const commentTextArea = wrapper.find(TextArea).find({nameInput: 'commentReply'}).at(0);
-            const buttonAddComment = wrapper.find('button').find({id: 'replyCommentButton'}).at(0);
+            const buttonAddComment = wrapper.find('button').find({id: 'replyCommentButton4342'}).at(0);
             commentTextArea.simulate('changeEvent', { target: { value: '@Daniel' } });
             buttonAddComment.simulate('click', { preventDefault: sinon.fake()});
             expect(wrapper.state().commentReply).to.equal('@Daniel');
@@ -151,7 +151,7 @@ describe('Test commentsComponent', () => {
             defaultProps.disabled = true;
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
             const commentTextArea = wrapper.find(TextArea).find({nameInput: 'commentReply'}).at(0);
-            const buttonAddComment = wrapper.find('button').find({id: 'replyCommentButton'}).at(0);
+            const buttonAddComment = wrapper.find('button').find({id: 'replyCommentButton4342'}).at(0);
             commentTextArea.simulate('changeEvent', { target: { value: '<script>Daniel</script>' } });
             buttonAddComment.simulate('click', { preventDefault: sinon.fake()});
             expect(wrapper.state().commentReply).to.equal('<script>Daniel</script>');
@@ -162,7 +162,7 @@ describe('Test commentsComponent', () => {
             defaultProps.disabled = true;
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
             const commentTextArea = wrapper.find(TextArea).find({nameInput: 'commentReply'}).at(0);
-            const buttonAddComment = wrapper.find('button').find({id: 'replyCommentButton'}).at(0);
+            const buttonAddComment = wrapper.find('button').find({id: 'replyCommentButton4342'}).at(0);
             commentTextArea.simulate('changeEvent', { target: { value: 'Daniel{}' } });
             buttonAddComment.simulate('click', { preventDefault: sinon.fake()});
             expect(wrapper.state().commentReply).to.equal('Daniel{}');
@@ -173,7 +173,7 @@ describe('Test commentsComponent', () => {
             defaultProps.disabled = true;
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
             const commentTextArea = wrapper.find(TextArea).find({nameInput: 'commentReply'}).at(0);
-            const buttonAddComment = wrapper.find('button').find({id: 'replyCommentButton'}).at(0);
+            const buttonAddComment = wrapper.find('button').find({id: 'replyCommentButton4342'}).at(0);
             commentTextArea.simulate('changeEvent', { target: { value: '' } });
             buttonAddComment.simulate('click', { preventDefault: sinon.fake()});
             expect(wrapper.state().commentReply).to.equal('');
