@@ -182,6 +182,7 @@ export class ClientTaskList extends Component {
 
   render() {
     const { tasksByClient, reducerGlobal } = this.props;
+    const { loading } = this.state;
     let tabPending = tasksByClient.get("tabPending");
     let tabFinished = tasksByClient.get("tabFinished");
     return (
@@ -246,13 +247,13 @@ export class ClientTaskList extends Component {
         </Row>
         <div>
           <Grid style={{ width: "100%" }}>
-             <div style={{ display:"flex" }}>
-                {this.state.loading === true && 
-                  <div>
-                    <Loader active inline></Loader>
-                    <span style={{ marginLeft:"10px" }}>Cargando...</span>
-                  </div>
-                }
+            <div style={{ display: "flex" }}>
+              {loading === true && (
+                <div>
+                  <Loader active inline></Loader>
+                  <span style={{ marginLeft: "10px" }}>Cargando...</span>
+                </div>
+              )}
             </div>
             <Row>
               <Col xs>
