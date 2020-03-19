@@ -11,7 +11,7 @@ import ElementsComponent from '../../elements';
 import Tooltip from '../../toolTip/toolTipComponent';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import { getContactDetails } from '../../contact/contactDetail/actions';
 import { redirectUrl } from '../../globalComponents/actions';
 import { updateRelationshipClientcontact } from '../actions';

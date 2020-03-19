@@ -4,11 +4,12 @@ import {getCsvBusinessPlanByClient} from '../actions';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {APP_URL, MESSAGE_DOWNLOAD_DATA} from '../../../constantsGlobal';
-import {TAB_BUSINESS} from '../../viewManagement/constants';
+import {TAB_BUSINESS, TYPE_YEAR} from '../../managementView/constants';
 import {getCsvBusinessPlan} from '../actions';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import {changeStateSaveData} from '../../dashboard/actions';
+import {changeStateSaveData} from '../../main/actions';
+import SelectYearComponent from '../../selectsComponent/selectFilterYear/selectYearComponent';
 
 class DownloadBusinessPlan extends Component {
 
@@ -18,7 +19,8 @@ class DownloadBusinessPlan extends Component {
 	  this._checkCheckBox = this._checkCheckBox.bind(this);
 	  this._downloadBusinessPlans = this._downloadBusinessPlans.bind(this);
 	  this.state = {
-	  	haveNeeds: false
+		  haveNeeds: false,
+		  year: ''
 	  };
 	}
 
@@ -31,10 +33,10 @@ class DownloadBusinessPlan extends Component {
 	_downloadBusinessPlans() {
 		let year;
 		let url;
-		const {changeStateSaveData, getCsvBusinessPlanByClient, isOpen, itemSeletedModal, yearModal, getCsvBusinessPlan} = this.props;
+		const {changeStateSaveData, getCsvBusinessPlanByClient, isOpen, itemSelectedModal, getCsvBusinessPlan} = this.props;
 		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-		if(TAB_BUSINESS === itemSeletedModal) {
-			year = yearModal !== undefined && yearModal !== '' ? yearModal : moment().year();
+		if(TAB_BUSINESS === itemSelectedModal) {
+			year = this.state.year !== undefined && this.state.year !== '' ? this.state.year : moment().year();
 		  	url = '/getCsvBusinessPlan';
 			getCsvBusinessPlan(year, this.state.haveNeeds).then(function(data) {
 				 if (data.payload.data.status === 200) {
@@ -59,6 +61,10 @@ class DownloadBusinessPlan extends Component {
 				<div style={{height: 'auto'}} className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
 					<div style={{paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px'}}>
 						<span>{'En esta sección podrá descargar algunos campos  de los "informes de plan de negocio" del cliente.\n Seleccione los campos que desea descargar a excel:'}</span>
+						<SelectYearComponent 
+							idTypeFilter={TYPE_YEAR} 
+							config={{ onChange: (value) => this.setState({ year: value.id }) }} 
+						/>
 						<ul className="ui list" style={{marginLeft:'0px'}}>
 							<div className="item"><input name="haveNeeds" type="checkbox" onChange={this._checkCheckBox} /> {'Necesidades'}</div>
 						</ul>

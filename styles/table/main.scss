@@ -1,0 +1,12 @@
+.ui.table thead th {
+    background: transparent !important;
+    transition: all .7s ease;
+
+    &:hover {
+        background: #c5c5c54d !important;
+    }
+}
+
+.ui.table tfoot th {
+    background: transparent !important;
+}

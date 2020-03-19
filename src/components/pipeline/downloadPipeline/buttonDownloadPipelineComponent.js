@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {getCsvPipelineByClient,clearPipeline} from '../actions'
-import {changeStateSaveData} from '../../dashboard/actions';
+import {changeStateSaveData} from '../../main/actions';
 
 class ButtonDownloadPipelineComponent extends Component {
 

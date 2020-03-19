@@ -1,0 +1,14 @@
+.tabGenericComponent .ui.secondary.pointing.menu .active.item {
+    border-bottom-color: #00448c;
+    &:hover {
+        border-bottom-color: #69abd6;
+        color: #383838;
+    }
+}
+.tabTextItem {
+    margin: 0 auto;
+    padding: 0.5em;
+}
+.tabItem{
+    background-color: #383838;
+}

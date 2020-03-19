@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { contactsFindServer, changePage } from './actions';
 import { NUMBER_RECORDS } from './constants';
 import { MESSAGE_LOAD_DATA } from '../../constantsGlobal';
-import { changeStateSaveData } from '../dashboard/actions';
+import { changeStateSaveData } from '../main/actions';
 
 class Pagination extends Component {
 
