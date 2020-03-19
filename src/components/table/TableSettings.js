@@ -12,7 +12,8 @@ export default class TableSettings {
         onPageChange = noop,
         propsComponent = {},
         Component,
-        onSort = noop
+        onSort = noop,
+        striped = false
     }) {
         this.data = data
         this.columns = columns;
@@ -25,5 +26,6 @@ export default class TableSettings {
         this.propsComponent = propsComponent;
         this.onSort = onSort;
         this.Component = Component;
+        this.striped = striped;
     }
 }

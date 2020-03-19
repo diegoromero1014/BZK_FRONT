@@ -5,6 +5,11 @@ import { blackListAlerts } from '../../../alertBlackList/actions';
 
 class BlackListAlerts extends Component {
 
+    componentWillMount() {
+        const { dispatchBlackListAlerts } = this.props;
+    }
+
+
     render() {
         return (
             <div>

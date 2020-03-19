@@ -13,13 +13,14 @@ import {
 } from "./constants";
 
 import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExpirtation/actions';
+import { blackListAlerts } from '../../../alertBlackList/actions';
 
 export class AlertSection extends Component {
 
-  async componentWillMount() {
-    const { dispatchGetAlertPortfolioExpirationDashboard } = this.props;
+  async componentDidMount() {
+    const { dispatchGetAlertPortfolioExpirationDashboard, dispatchBlackListAlerts } = this.props;
 
-    await dispatchGetAlertPortfolioExpirationDashboard(1);
+    await Promise.all(dispatchBlackListAlerts(0, 5), dispatchGetAlertPortfolioExpirationDashboard(1));
   }
 
   countAlerts = (total) => {
@@ -62,14 +63,16 @@ export class AlertSection extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return bindActionCreators({
-    dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard
-  }, dispatch);
-}
+    dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard,
+    dispatchBlackListAlerts: blackListAlerts
+  }, dispatch)
+};
 
-const mapStateToProps = ({ alertPortfolioExpiration }) => ({
-  alertPortfolioExpiration
+const mapStateToProps = ({ alertPortfolioExpiration, alertBlackList }) => ({
+  alertPortfolioExpiration,
+  alertBlackList
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlertSection);

@@ -46,5 +46,10 @@ export default class TableBuilder {
         return this;
     }
 
+    setStriped = striped => {
+        this.striped = striped;
+        return this;
+    }
+
     build = () => new TableSettings(this);
 }
