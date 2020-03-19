@@ -6,7 +6,7 @@ import { stringValidate } from '../../../../actionsGlobal';
 import { MESSAGE_ERROR } from '../../../../constantsGlobal';
 import GridComponent from '../../../grid/component';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
-import { changeStateSaveData } from '../../../dashboard/actions';
+import { changeStateSaveData } from '../../../main/actions';
 import { ACTION_CHECK } from '../../../grid/constants';
 import { changeStateContactByFunctionOrType } from '../actions';
 

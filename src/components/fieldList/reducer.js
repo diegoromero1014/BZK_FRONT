@@ -65,7 +65,9 @@ function addChildrenList(state, list, element) {
     for (let index = 0; index < childrenList.length; index++) {
         const childList = childrenList[index];
         const listName = childList.name;
-        const elements = state[listName].elements;
+        const elements = state[listName].elements.map(element => Object.assign({}, element, {
+            associated: true
+        }));
         element[childList.alias] = elements;
     }
 }
@@ -106,13 +108,13 @@ function clearElementsFromChild(state, list) {
     }
 }
 
-function addElementToList(state, listName) {
+function addElementToList(state, listName, elementsKey) {
     let list = state[listName];
     const element = addIdToElement(list.fields);
     addChildrenList(state, list, element);
-    const newElements = mergeElements(list.elements, element);
+    const newElements = mergeElements(list[elementsKey], element);
     let newList = Object.assign({}, list, {
-        elements: newElements
+        [elementsKey]: newElements
     });
     return addNewListToState(listName, state, newList);
 }
@@ -159,7 +161,7 @@ export default (state, action) => {
             return addNewListToState(action.list, state, newList);
         }
         case UPDATE_ELEMENT_FROM_LIST: {
-            let newState = addElementToList(state, action.list);
+            let newState = addElementToList(state, action.list, action.key);
             return newState;
         }
         case REMOVE_ELEMENT_FROM_LIST: {

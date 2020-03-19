@@ -43,11 +43,11 @@ export const changeListState = list => (newState) => {
     }
 }
 
-export const updateElementFromList = list => (element) => {
+export const updateElementFromList = list => (key) => {
     return {
         type: UPDATE_ELEMENT_FROM_LIST,
         list,
-        element
+        key
     }
 }
 

@@ -18,7 +18,7 @@ import { redirectUrl } from '../../globalComponents/actions';
 import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import { downloadFilePDF } from '../actions';
 import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer, markAsOutdated } from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions';

@@ -17,7 +17,7 @@ import { setConfidential } from '../../commercialReport/actions';
 import { buildJsoncommercialReport } from '../../commercialReport/functionsGenerics';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import { createBusiness, validateRangeDates } from '../actions';
 import {
     consultParameterServer, formValidateKeyEnter, htmlToText,

@@ -13,7 +13,7 @@ import { shareholdersByClientFindServer, clearShareholderCreate, clearShareholde
 import { getDetailShareHolder, toggleModalShareholder } from './actions';
 import { consultDataSelect, consultListWithParameterUbication, getMasterDataFields } from '../../../../selectsComponent/actions';
 import { createShareholder } from '../createShareholder/actions';
-import { changeStateSaveData } from '../../../../dashboard/actions';
+import { changeStateSaveData } from '../../../../main/actions';
 import { formValidateKeyEnter, nonValidateEnter, validateResponse } from '../../../../../actionsGlobal';
 import { redirectUrl } from '../../../../globalComponents/actions';
 import { showLoading } from '../../../../loading/actions';
