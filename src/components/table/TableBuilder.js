@@ -41,5 +41,10 @@ export default class TableBuilder {
         return this;
     }
 
+    setMaximumVisiblePages = maximumVisiblePages => {
+        this.maximumVisiblePages = maximumVisiblePages;
+        return this;
+    }
+
     build = () => new TableSettings(this);
 }

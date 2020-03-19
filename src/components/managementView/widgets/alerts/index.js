@@ -14,16 +14,19 @@ import {
 
 import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExpirtation/actions';
 import { blackListAlerts } from '../../../alertBlackList/actions';
+import { MAX_ROWS } from './constants';
 
 export class AlertSection extends Component {
 
   async componentDidMount() {
     const { dispatchGetAlertPortfolioExpirationDashboard, dispatchBlackListAlerts } = this.props;
 
-    await Promise.all(dispatchBlackListAlerts(0, 5), dispatchGetAlertPortfolioExpirationDashboard(1));
+    await Promise.all([dispatchBlackListAlerts(0, MAX_ROWS), dispatchGetAlertPortfolioExpirationDashboard(1)]);
   }
 
   countAlerts = (total) => {
+    const { totalBlackList } = this.props;
+
     const tabs = [
       {
         name: PORTFOLIO_EXPIRATION_TAB,
@@ -47,7 +50,8 @@ export class AlertSection extends Component {
       {
         name: CONTROL_LISTS_TAB,
         content: <BlackListAlerts />,
-        disable: false
+        disable: false,
+        number: totalBlackList || 0
       }
     ];
     return (
@@ -73,7 +77,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = ({ alertPortfolioExpiration, alertBlackList }) => ({
   alertPortfolioExpiration,
-  alertBlackList
+  totalBlackList: alertBlackList.get('totalBlackListFiltered')
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlertSection);

@@ -11,7 +11,8 @@ export default class TableSettings {
         recordsPerPage = 10,
         onPageChange = noop,
         onSort = noop,
-        striped = false
+        striped = false,
+        maximumVisiblePages = 5
     }) {
         this.data = data
         this.columns = columns;
@@ -23,5 +24,6 @@ export default class TableSettings {
         this.onPageChange = onPageChange;
         this.onSort = onSort;
         this.striped = striped;
+        this.maximumVisiblePages = maximumVisiblePages;
     }
 }
