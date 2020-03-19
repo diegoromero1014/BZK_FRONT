@@ -153,9 +153,8 @@ export class CommentsComponent extends Component {
             const parentComment = this.searchComment(comments, parentCommentId);
             comment.parentCommentId = parentComment && parentComment.parentCommentId ? parentComment.parentCommentId : parentCommentId;
         }
-
+        e.preventDefault();
         if(this.validateCommentContent(content, source)){
-            e.preventDefault();
             if(reportId != null){
                 await saveCommentAction(comment);
             }else{
