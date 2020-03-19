@@ -10,8 +10,6 @@ export default class TableSettings {
         totalRecords = 0,
         recordsPerPage = 10,
         onPageChange = noop,
-        propsComponent = {},
-        Component,
         onSort = noop
     }) {
         this.data = data
@@ -22,8 +20,6 @@ export default class TableSettings {
         this.totalRecords = totalRecords;
         this.recordsPerPage = recordsPerPage;
         this.onPageChange = onPageChange;
-        this.propsComponent = propsComponent;
         this.onSort = onSort;
-        this.Component = Component;
     }
 }

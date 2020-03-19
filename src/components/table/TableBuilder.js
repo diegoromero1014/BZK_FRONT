@@ -31,16 +31,6 @@ export default class TableBuilder {
         return this;
     }
 
-    setComponent = Component => {
-        this.Component = Component;
-        return this;
-    }
-
-    setPropsComponent = propsComponent => {
-        this.propsComponent = propsComponent;
-        return this;
-    }
-
     setOnSort = onSort => {
         this.onSort = onSort;
         return this;
