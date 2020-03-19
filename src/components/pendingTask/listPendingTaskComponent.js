@@ -53,6 +53,7 @@ class ListPendingTaskComponent extends Component {
       _.set(value, "status", value.statusTask);
       let isFinalized = value.statusTask === 'Cancelada' || value.statusTask === 'Cerrada';
       _.set(value, "trafficLightIndicator", {days:value.workDaysToClose, isFinalized:isFinalized});
+      _.set(value, "commercialReport.isConfidential", value.confidentiality);
     });
   };
 
@@ -77,19 +78,20 @@ class ListPendingTaskComponent extends Component {
         style:{ width:"200px" },
         orderColumn: <span><i className="caret down icon" style={{ cursor: 'pointer', display: this.state.orderD }} onClick={() => this._orderColumn(0, "finalDate")}></i><i className="caret up icon" style={{ cursor: 'pointer', display: this.state.orderA }} onClick={() => this._orderColumn(1, "finalDate")}></i></span>
       },
-      
       {
         title: "Estado",
+        style:{ width: "50px" },
         key: "status"
+      },
+      {
+        title: "",
+        style:{ width:"50px" },
+        key: "commercialReport.isConfidential"
       },
       {
         title: "Ver",
         style:{ width:"50px" },
         key: "actionsRedirect"
-      },
-      {
-        title: "",
-        key: "commercialReport.isConfidential"
       }
     ]
   };
