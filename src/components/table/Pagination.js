@@ -16,19 +16,35 @@ class Pagination extends Component {
 
     async componentWillMount() {
         const { totalRecords, recordsPerPage } = this.props;
-        await this.setState({ totalPage: Math.ceil(totalRecords / recordsPerPage) });
+
+        const pages = [];
+        const totalPage = Math.ceil(totalRecords / recordsPerPage);
+
+        for (let i = 0; i < totalPage; i++) {
+            pages.push(i + 1);
+        }
+
+        await this.setState({ totalPage, pages });
     }
 
     async componentWillUpdate(nextProps) {
         const { totalRecords } = this.props;
 
         if (nextProps.totalRecords != totalRecords) {
-            await this.setState({ totalPage: Math.ceil(nextProps.totalRecords / nextProps.recordsPerPage) });
+            const totalPage = Math.ceil(nextProps.totalRecords / nextProps.recordsPerPage);
+
+            const pages = [];
+
+            for (let i = 0; i < totalPage; i++) {
+                pages.push(i + 1);
+            }
+
+            await this.setState({ totalPage, pages });
         }
     }
 
 
-    renderItem = (totalRecords, recordsPerPage) => this.getPages(totalRecords, recordsPerPage).map((page, index) =>
+    renderItem = (totalRecords, recordsPerPage, current) => this.getPages(totalRecords, recordsPerPage, current).map((page, index) =>
         <Menu.Item
             as='a'
             key={index}
@@ -39,12 +55,18 @@ class Pagination extends Component {
         </Menu.Item>
     );
 
-    getPages = (totalRecords, recordsPerPage) => {
-        const pages = [];
-        const totalPage = Math.ceil(totalRecords / recordsPerPage);
+    getPages = (totalPage, current) => {
+        const { maximumVisiblePages } = this.props;
+        const { pages } = this.state;
 
-        for (let i = 0; i < totalPage; i++) {
-            pages.push(i + 1);
+        const limit = totalPage - maximumVisiblePages;
+
+        if (totalPage > maximumVisiblePages) {
+            if (current <= limit) {
+                return pages.slice(current - 1, current + maximumVisiblePages - 1);
+            }
+
+            return pages.slice(limit, current + maximumVisiblePages - 1);
         }
 
         return pages;
@@ -88,7 +110,7 @@ class Pagination extends Component {
                                 <Icon name='chevron left' />
                             </Menu.Item>
 
-                            {this.renderItem(totalRecords, recordsPerPage)}
+                            {this.renderItem(totalPage, page)}
 
                             <Menu.Item as='right' icon onClick={this.handleNextPage} disabled={page === totalPage} className={page === totalPage ? 'disabled' : ''} >
                                 <Icon name='chevron right' />
