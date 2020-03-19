@@ -6,8 +6,7 @@ import {
     styles,
     elementsKey,
     draftElementsKey,
-    validateSchema,
-    listName
+    validateSchema
 } from './utils';
 import TemplateObjectiveAndStrategies from './templateObjectiveAndStrategies';
 import ToolTip from '../../toolTip/toolTipComponent';
@@ -15,7 +14,7 @@ import BiztrackModal from '../Objetives/BiztrackModal';
 
 import { addObjectiveBody } from './Objetives';
 import schema from './ObjetiveSchema';
-import { removeElementFromList } from '../actions';
+import Message from '../../message';
 
 const ObjectiveSectionTitle = makeObjectiveSectionTitle(true)
 
@@ -257,8 +256,7 @@ export default class AssociateObjectives extends React.Component {
             showAssociateSection,
             draftElements,
             isEditable,
-            listState,
-            updateElement
+            listState
         } = this.props;
 
         const filteredElements = elements.filter(this.filterCheckedElements);
@@ -286,7 +284,7 @@ export default class AssociateObjectives extends React.Component {
                             <span className="form-item">No se han asociado Objetivos del cliente</span>
                         </div>
                     </div>}
-                    {this.state.showAddSection && !showAssociateSection && <div>
+                    {this.state.showAddSection && !showAssociateSection && <div style={{paddingTop: "10px"}}>
                         {addObjectiveBody(Object.assign({}, listState, {
                             onChange: this.handleChange,
                             onAddElement: this.handleOnAdd(elementsKey),
@@ -296,6 +294,7 @@ export default class AssociateObjectives extends React.Component {
                     {showAssociateSection &&
                         <BiztrackModal
                             title={"Asociar Objetivos"}
+                            head={<Message message={"Señor usuario, los cambios realizados se verán reflejados en la información del cliente."} show={true} icon={'exclamation'} />}
                             body={
                                 <div>
                                     {listState.showAddSection && <div>
