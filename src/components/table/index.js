@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Table } from 'semantic-ui-react';
 import { buildHeaders, buildRows } from './utilities';
 import Pagination from './Pagination';
+import '../../../styles/table/main.scss';
 
 class TableComponent extends Component {
     constructor(props) {

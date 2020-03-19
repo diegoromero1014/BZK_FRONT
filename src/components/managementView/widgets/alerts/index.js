@@ -52,6 +52,7 @@ export class AlertSection extends Component {
     ];
     return (
       <div>
+        <h3>ALERTAS</h3>
         <TabComponent tabs={tabs} />
       </div>
     );

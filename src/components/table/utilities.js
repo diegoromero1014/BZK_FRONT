@@ -43,12 +43,12 @@ export const buildRows = tableSettings => {
 
 export const validateData = data => Array.isArray(data) && data.length;
 
-export const buildRow = (element, index, { columns, onClick, Component, propsComponent }) => {
-    const props = columns.map(column => get(column, PROPERTY, ALL_OBJECT));
-    console.log()
+export const buildRow = (element, index, { columns, onClick }) => {
+    const cells = columns.map(column => Object.assign({}, column, { prop: get(column, PROPERTY, ALL_OBJECT) }));
+
     return (
         <Table.Row key={index} onClick={event => onClick(element, event)}>
-            {props.map((prop, index) => (
+            {cells.map((cell, index) => (
                 <Table.Cell
                     style={{
                         textAlign: 'justify',
@@ -62,11 +62,21 @@ export const buildRow = (element, index, { columns, onClick, Component, propsCom
                     verticalAlign='middle'
                 >
 
-                    {Component && prop === ALL_OBJECT ? <Component data={extractValueByKey(element, prop)} {...propsComponent} /> : extractValueByKey(element, prop)}
+                    {renderValue(cell, element)}
                 </Table.Cell>
             ))}
         </Table.Row>
     )
+}
+
+const renderValue = ({ prop, component }, element) => {
+    if (prop === ALL_OBJECT || (component && component.Component)) {
+        const { Component, propsComponent } = component;
+
+        return (<Component data={extractValueByKey(element, prop)} {...propsComponent} />)
+    } else {
+        return extractValueByKey(element, prop);
+    }
 }
 
 export const extractValueByKey = (object, prop) => get(object, prop, object);
