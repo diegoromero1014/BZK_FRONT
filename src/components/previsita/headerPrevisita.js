@@ -5,7 +5,6 @@ import _ from 'lodash';
 
 import RaitingInternal from '../clientInformation/ratingInternal';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
-import Message from '../message';
 
 import { AEC_NO_APLIED } from '../../constantsGlobal';
 
