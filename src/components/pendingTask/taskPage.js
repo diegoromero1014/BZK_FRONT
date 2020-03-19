@@ -45,6 +45,7 @@ import {detailBusiness} from "../businessPlan/actions";
 import {detailVisit} from "../visit/actions";
 import {validatePermissionsByModule} from "../../actionsGlobal";
 import {getTaskNotesByUserTaskId, saveTaskNote} from "./createPendingTask/actions";
+import {showBrandConfidential} from "../navBar/actions";
 
 let nameEntity;
 
@@ -100,11 +101,12 @@ export class TaskPage extends React.Component {
     }
 
     componentWillUnmount() {
-        const {dispatchClearUserTask} = this.props;
+        const {dispatchClearUserTask, dispatchShowBrandConfidential} = this.props;
         this.setState({
             isMounted: false
         });
         dispatchClearUserTask();
+        dispatchShowBrandConfidential(false);
     }
 
     validateClientSelected = () => {
@@ -208,11 +210,12 @@ export class TaskPage extends React.Component {
     };
 
     getInfoTask = async (id) => {
-        const { dispatchGetInfoTaskUser, dispatchFillComments, dispatchDetailBusiness, dispatchDetailVisit, dispatchValidatePermissionsByModule } = this.props;
+        const { dispatchGetInfoTaskUser, dispatchFillComments, dispatchDetailBusiness, dispatchDetailVisit, dispatchValidatePermissionsByModule, dispatchShowBrandConfidential } = this.props;
         if (id) {
             const response = await dispatchGetInfoTaskUser(id);
             const taskInfo = _.get(response, 'payload.data.data');
             dispatchFillComments(taskInfo.notes);
+            dispatchShowBrandConfidential(taskInfo.confidentiality);
             nameEntity = taskInfo.nameEntity;
             this.entityId = taskInfo.entityId;
             if (taskInfo.nameEntity === 'Plan de negocio') {
@@ -393,7 +396,8 @@ function mapDispatchToProps(dispatch) {
         dispatchGetTaskNotesByUserTaskId: getTaskNotesByUserTaskId,
         dispatchDetailBusiness: detailBusiness,
         dispatchDetailVisit: detailVisit,
-        dispatchValidatePermissionsByModule: validatePermissionsByModule
+        dispatchValidatePermissionsByModule: validatePermissionsByModule,
+        dispatchShowBrandConfidential: showBrandConfidential
     }, dispatch);
 }
 
