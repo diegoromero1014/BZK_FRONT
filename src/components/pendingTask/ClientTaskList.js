@@ -15,11 +15,10 @@ import {
   setTextToSearch,
   cleanTextToSearch
 } from "./actions";
-import { showLoading } from "./../loading/actions";
 import { PENDING_TASKS, FINALIZED_TASKS, NUMBER_RECORDS, PENDING, FINISHED } from './constants';
 import PaginationPendingTaskComponent from './paginationPendingTaskComponent';
 import ListPendingTaskComponent from './listPendingTaskComponent';
-import { MODULE_TASKS, CREAR, REQUEST_SUCCESS, MESSAGE_LOAD_DATA } from "../../constantsGlobal";
+import { MODULE_TASKS, CREAR, REQUEST_SUCCESS } from "../../constantsGlobal";
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
 import { redirectUrl } from '../globalComponents/actions';
@@ -27,6 +26,7 @@ import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _TASK } from '../../constant
 import TabComponent from './../../ui/Tab';
 import PendingTasksHelp from "./pendingTasksHelp";
 import SearchInputComponent from "../../ui/searchInput/SearchInputComponent";
+import { Loader } from 'semantic-ui-react';
 export class ClientTaskList extends Component {
   constructor(props) {
     super(props);
@@ -36,9 +36,8 @@ export class ClientTaskList extends Component {
     };
   }
   dispatchPendingTasks = async (pageNum, order, textToSearch) => {
-    const {dispatchPendingTasksByClientFindServer, dispatchSetTextToSearch,dispatchShowLoading} = this.props;
+    const {dispatchPendingTasksByClientFindServer, dispatchSetTextToSearch } = this.props;
     this.setState({loading: true});
-    dispatchShowLoading(true, MESSAGE_LOAD_DATA);
 
     const result = await pendingTasksByClientPromise(
       pageNum,
@@ -53,12 +52,10 @@ export class ClientTaskList extends Component {
       dispatchSetTextToSearch(textToSearch);
     }
     this.setState({ loading: false });
-    dispatchShowLoading(false, MESSAGE_LOAD_DATA);
   }
   dispatchFinalizedTask = async (pageNum, order, textToSearch) => {
-    const { dispatchFinalizedTasksByClientFindServer, dispatchSetTextToSearch, dispatchShowLoading } = this.props;
+    const { dispatchFinalizedTasksByClientFindServer, dispatchSetTextToSearch } = this.props;
     this.setState({ loading: true });
-    dispatchShowLoading(true, MESSAGE_LOAD_DATA);
     const result = await finalizedTasksByClientPromise(
       pageNum,
       window.sessionStorage.getItem("idClientSelected"),
@@ -72,7 +69,6 @@ export class ClientTaskList extends Component {
       dispatchSetTextToSearch(textToSearch);
     }
     this.setState({ loading: false });
-    dispatchShowLoading(false, MESSAGE_LOAD_DATA);
   }
   componentDidMount() {
     window.dataLayer.push({
@@ -248,7 +244,14 @@ export class ClientTaskList extends Component {
         </Row>
         <div>
           <Grid style={{ width: "100%" }}>
-            {this.state.loading === true ? "Cargando..." : ""}
+             <div style={{ display:"flex" }}>
+                {this.state.loading === true && 
+                  <div>
+                    <Loader active inline></Loader>
+                    <span style={{ marginLeft:"10px" }}>Cargando...</span>
+                  </div>
+                }
+            </div>
             <Row>
               <Col xs>
                 <TabComponent
@@ -322,7 +325,6 @@ function mapDispatchToProps(dispatch) {
       dispatchChangePagePending: changePagePending,
       dispatchChangePageFinalized: changePageFinalized,
       dispatchSetTextToSearch: setTextToSearch,
-      dispatchShowLoading: showLoading,
       dispatchCleanTextToSearch: cleanTextToSearch
     },
     dispatch
