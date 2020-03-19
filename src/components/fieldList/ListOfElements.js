@@ -100,7 +100,7 @@ class ListOfElements extends React.Component {
             `Señor usuario, ¿Esta seguro que desea eliminar ${title}?`,
             {
                 onConfirmCallback: () => {
-                    removeElement(elementToDelete)
+                    removeElement(elementToDelete, elementsKey)
                 },
                 onCancelCallback: () => { }
             },

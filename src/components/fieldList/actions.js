@@ -51,11 +51,12 @@ export const updateElementFromList = list => (key) => {
     }
 }
 
-export const removeElementFromList = list => (elementToDelete) => {
+export const removeElementFromList = list => (elementToDelete, key) => {
     return {
         type: REMOVE_ELEMENT_FROM_LIST,
         list,
-        elementToDelete
+        elementToDelete,
+        key
     }
 }
 
