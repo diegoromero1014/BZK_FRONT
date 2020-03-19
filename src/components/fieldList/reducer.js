@@ -166,11 +166,11 @@ export default (state, action) => {
         }
         case REMOVE_ELEMENT_FROM_LIST: {
             let list = state[action.list];
-            const elements = list.elements.filter(
+            const elements = list[action.key].filter(
                 (element) => element[ID] != action.elementToDelete[ID]
             )
             let newList = Object.assign({}, list, {
-                elements
+                [action.key] : elements
             });
             return addNewListToState(action.list, state, newList);
         }
