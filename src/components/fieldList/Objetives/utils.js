@@ -1,7 +1,10 @@
 import React from 'react';
+import { mapKeys } from 'lodash';
 
 import makeFieldList from '../makeFieldList';
 import Title from '../../clientEdit/sections/title';
+
+import { processRules } from '../../../validationsFields/rulesField';
 
 export const listName = "objectives";
 
@@ -11,6 +14,9 @@ export const ListaObjetivos = makeFieldList(listName, objectiveChildrenList);
 
 export const ListaEstrategias = makeFieldList("strategies");
 export const helpText = "¿A dónde quiere llegar el cliente? ¿Cómo se visualiza en algunos años?";
+
+export const elementsKey = "elements";
+export const draftElementsKey = "draftElements";
 
 export const objectivesInitialValues = {
     value: ""
@@ -26,7 +32,7 @@ export const makeObjectiveSectionTitle = (isObligatory) => (<Title
     helpText={helpText}
     isObligatory={isObligatory}
 />);
-    
+
 
 export const StrategieSectionTitle = <Title
     text="Estrategias"
@@ -42,4 +48,15 @@ export const styles = {
     buttonsDiv: {
         margin: "20px 0 20px 0"
     }
+}
+
+export const validateSchema = (fields, schema) => {
+    const fieldErrors = processRules(fields, schema);
+    let errors = []
+    mapKeys(fieldErrors, (value, _) => {
+        if (value) {
+            errors.push(value);
+        }
+    })
+    return [errors, fieldErrors];
 }

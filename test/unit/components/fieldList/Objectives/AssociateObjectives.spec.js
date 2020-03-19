@@ -38,7 +38,6 @@ describe("Test AssociateObjectives", () => {
             isEditable={true}
         />);
         const addButton = wrapper.find(".icon-message-elements");
-        console.log(wrapper.html());
         addButton.simulate("click");
 
         expect(changeListState.callCount).to.equals(1);
