@@ -100,8 +100,7 @@ describe("Test AssociateObjectives", () => {
             changeListState={changeListState}
         />)
         wrapper.instance().associateElements();
-        expect(swtShowMessage.callCount).to.equal(0);
-        expect(changeListState.callCount).to.equal(1)
+        expect(swtShowMessage.callCount).to.equal(1);
     })
 
     it('should checkDraftElement', () => {
