@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import { Segment } from 'semantic-ui-react'
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+
 import TabComponent from "../../../../ui/Tab";
 import AlertPortfolioExpiration from './alertPortfolioExpiration';
 import BlackListAlerts from './blackListAlerts';
+import OutdatedContactsComponent from './outdatedContacts';
 
 import {
   PORTFOLIO_EXPIRATION_TAB,
@@ -14,19 +16,24 @@ import {
 } from "./constants";
 
 import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExpirtation/actions';
+import { getOutdatedContacts } from '../../actions';
 import { blackListAlerts } from '../../../alertBlackList/actions';
 import { MAX_ROWS } from './constants';
 
 export class AlertSection extends Component {
 
   async componentDidMount() {
-    const { dispatchGetAlertPortfolioExpirationDashboard, dispatchBlackListAlerts } = this.props;
+    const { dispatchGetAlertPortfolioExpirationDashboard, dispatchBlackListAlerts, dispatchGetOutdatedContacts } = this.props;
 
-    await Promise.all([dispatchBlackListAlerts(0, MAX_ROWS), dispatchGetAlertPortfolioExpirationDashboard(1)]);
+    await Promise.all([
+      dispatchBlackListAlerts(0, MAX_ROWS), 
+      dispatchGetAlertPortfolioExpirationDashboard(1), 
+      dispatchGetOutdatedContacts(0, MAX_ROWS)
+    ]);
   }
 
   countAlerts = (total) => {
-    const { totalBlackList } = this.props;
+    const { totalBlackList, totalOutdatedContacts } = this.props;
 
     const tabs = [
       {
@@ -46,7 +53,8 @@ export class AlertSection extends Component {
       {
         name: OUTDATED_CONTACTS,
         content: <OutdatedContactsComponent />,
-        disable: false
+        disable: false,
+        number: totalOutdatedContacts || 0
       },
       {
         name: CONTROL_LISTS_TAB,
@@ -74,13 +82,15 @@ export class AlertSection extends Component {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard,
-    dispatchBlackListAlerts: blackListAlerts
+    dispatchBlackListAlerts: blackListAlerts,
+    dispatchGetOutdatedContacts: getOutdatedContacts,
   }, dispatch)
 };
 
-const mapStateToProps = ({ alertPortfolioExpiration, alertBlackList }) => ({
+const mapStateToProps = ({ alertPortfolioExpiration, alertBlackList, outdatedContacts }) => ({
   alertPortfolioExpiration,
-  totalBlackList: alertBlackList.get('totalBlackListFiltered')
+  totalBlackList: alertBlackList.get('totalBlackListFiltered'),
+  totalOutdatedContacts: outdatedContacts.rowCount
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlertSection);

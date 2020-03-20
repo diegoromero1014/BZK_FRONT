@@ -70,3 +70,35 @@ export const COLUMNS_BLACK_LIST_ALERTS = [
         width: 1
     },
 ]
+
+export const COLUMNS_OUTDATED_CONTACTS = [
+    {
+        header: 'Tipo de documento',
+        prop: 'documentType',
+        width: 1
+    },
+
+    {
+        header: 'Número de documento',
+        prop: 'documentNumber',
+        width: 1
+    },
+
+    {
+        header: 'Nombre de contacto',
+        prop: 'contactName',
+        width: 2
+    },
+
+    {
+        header: 'Observación',
+        prop: 'observation',
+        width: 3
+    },
+
+    {
+        header: 'Posición',
+        prop: 'position',
+        width: 1
+    },
+]
