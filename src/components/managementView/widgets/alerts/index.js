@@ -7,8 +7,8 @@ import AlertPortfolioExpiration from './alertPortfolioExpiration';
 import {
   PORTFOLIO_EXPIRATION_TAB,
   COVENANTS_TAB,
-  DEACTIVATED_CONTACTS_TABS,
-  CONTROL_LISTS_TAB
+  CONTROL_LISTS_TAB,
+  OUTDATED_CONTACTS
 } from "./constants";
 import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExpirtation/actions';
 
@@ -37,9 +37,9 @@ export class AlertSection extends Component {
         disable: true
       },
       {
-        name: DEACTIVATED_CONTACTS_TABS,
-        content: <div>Tab 3 Content</div>,
-        disable: true
+        name: OUTDATED_CONTACTS,
+        content: <OutdatedContactsComponent />,
+        disable: false
       },
       {
         name: CONTROL_LISTS_TAB,
