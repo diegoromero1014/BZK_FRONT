@@ -219,44 +219,29 @@ export class ClientTaskList extends Component {
           <Col xs={8} sm={8} md={10} lg={11}>
             <PendingTasksHelp></PendingTasksHelp>
           </Col>
-          <Col xs={4} sm={4} md={2} lg={1}>
-            {_.get(
-              reducerGlobal.get("permissionsTasks"),
-              _.indexOf(reducerGlobal.get("permissionsTasks"), CREAR),
-              false
-            ) && (
-              <button
-                className="btn btn-primary"
-                type="button"
-                title="Crear Tarea"
-                style={{ marginTop: "18px" }}
-                onClick={this.createTask}
-              >
-                <i
-                  className="plus icon"
-                  style={{
-                    color: "white",
-                    margin: "em",
-                    fontSize: "1.2em"
-                  }}
-                />
-                Crear
-              </button>
-            )}
-          </Col>
         </Row>
         <div>
           <Grid style={{ width: "100%" }}>
             <div style={{ display: "flex" }}>
               {loading === true && (
-                <div>
+                <div style={{padding:"10px"}}>
                   <Loader active inline></Loader>
                   <span style={{ marginLeft: "10px" }}>Cargando...</span>
                 </div>
               )}
             </div>
-            <Row>
-              <Col xs>
+            <Row style={{ position: "relative" }}>
+              <Col
+                style={{
+                  position: "absolute",
+                  width: "100%",
+                  borderRadius: "5px",
+                  backgroundColor: "white",
+                  padding: "10px",
+                  margin: "12px 0",
+                  boxShadow: "0px 0px 10px -7px rgba(0,0,0,0.75)"
+                }}
+              >
                 <TabComponent
                   tabs={[
                     {
@@ -305,6 +290,33 @@ export class ClientTaskList extends Component {
                     }
                   ]}
                 />
+              </Col>
+              <Col
+                style={{ position: "absolute", right: "45px", top: "10px" }}
+              >
+                {_.get(
+                  reducerGlobal.get("permissionsTasks"),
+                  _.indexOf(reducerGlobal.get("permissionsTasks"), CREAR),
+                  false
+                ) && (
+                  <button
+                    className="btn btn-primary"
+                    type="button"
+                    title="Crear Tarea"
+                    style={{ marginTop: "18px" }}
+                    onClick={this.createTask}
+                  >
+                    <i
+                      className="plus icon"
+                      style={{
+                        color: "white",
+                        margin: "em",
+                        fontSize: "1.2em"
+                      }}
+                    />
+                    Crear
+                  </button>
+                )}
               </Col>
             </Row>
           </Grid>
