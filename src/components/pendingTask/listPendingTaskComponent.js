@@ -99,7 +99,7 @@ class ListPendingTaskComponent extends Component {
   render() {
     const { tasks } = this.props;
     return (
-      <div className="horizontal-scroll-wrapper" style={{ overflow: 'scroll' }}>
+      <div >
         <GridComponent headers={this._renderHeaders} data={this._renderCellView(tasks)} modalTitle={MODAL_TITLE} />
       </div>
     );
