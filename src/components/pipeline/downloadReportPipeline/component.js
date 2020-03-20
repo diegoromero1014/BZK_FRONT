@@ -4,6 +4,7 @@ import { getPipelineXls } from '../../managementView/actions';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import moment from 'moment';
+import _ from 'lodash';
 
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
