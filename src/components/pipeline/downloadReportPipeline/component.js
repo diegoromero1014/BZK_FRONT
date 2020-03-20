@@ -58,7 +58,7 @@ export class DownloadPipeline extends Component {
                 dispatchGetPipelineXls(initialValidityDate.value, finalValidityDate.value, dispatchChangeStateSaveData);
             }
         } else {
-            dispatchSwtShowMessage(MESSAGE_ERROR, 'Campos obligatorios', 'Señor usuario, para descargar las tareas debe ingresar los campos obligatorios.');
+            dispatchSwtShowMessage(MESSAGE_ERROR, 'Campos obligatorios', 'Señor usuario, para descargar los pipelines debe ingresar los campos obligatorios.');
         }
     }
 
@@ -229,6 +229,6 @@ export default reduxForm({
     onSubmitFail: () => {
         document.getElementById('modalComponentScroll').scrollTop = 0;
         const { dispatchSwtShowMessage } = thisForm.props;
-        dispatchSwtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para descargar las tareas debe ingresar los campos obligatorios.");
+        dispatchSwtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para descargar los pipelines debe ingresar los campos obligatorios.");
     }
 }, mapStateToProps, mapDispatchToProps)(DownloadPipeline);
