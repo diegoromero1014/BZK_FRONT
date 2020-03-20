@@ -208,12 +208,14 @@ export class TaskPage extends React.Component {
     };
 
     getInfoTask = async (id) => {
-        const { dispatchGetInfoTaskUser, dispatchFillComments, dispatchDetailBusiness, dispatchDetailVisit, dispatchValidatePermissionsByModule, dispatchShowBrandConfidential } = this.props;
+        const { dispatchGetInfoTaskUser, dispatchFillComments, dispatchDetailBusiness, dispatchDetailVisit, dispatchValidatePermissionsByModule, dispatchShowBrandConfidential, fromModal } = this.props;
         if (id) {
             const response = await dispatchGetInfoTaskUser(id);
             const taskInfo = _.get(response, 'payload.data.data');
             dispatchFillComments(taskInfo.notes);
-            dispatchShowBrandConfidential(taskInfo.confidentiality);
+            if (!fromModal) {
+                dispatchShowBrandConfidential(taskInfo.confidentiality);
+            }
             nameEntity = taskInfo.nameEntity;
             this.entityId = taskInfo.entityId;
             if (taskInfo.nameEntity === 'Plan de negocio') {
