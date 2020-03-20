@@ -30,36 +30,43 @@ export const COLUMNS_VENCIMIENTO_CARTERA = [
 export const COLUMNS_BLACK_LIST_ALERTS = [
     {
         header: 'Número de documento del cliente',
-        prop: 'documentClient'
+        prop: 'documentClient',
+        width: 1
     },
 
     {
         header: 'Nombre / Razón social',
-        prop: 'nameClient'
+        prop: 'nameClient',
+        width: 3
     },
 
     {
         header: 'Tipo identificación',
-        prop: 'documentTypeEntity'
+        prop: 'documentTypeEntity',
+        width: 1
     },
 
     {
         header: 'Número de documento',
-        prop: 'documentEntity'
+        prop: 'documentEntity',
+        width: 1
     },
 
     {
         header: 'Nombre',
-        prop: 'nameEntity'
+        prop: 'nameEntity',
+        width: 3
     },
 
     {
         header: 'Tipo de entidad',
-        prop: 'typeEntity'
+        prop: 'typeEntity',
+        width: 1
     },
 
     {
         header: 'Nivel',
-        prop: 'levelBlackList'
+        prop: 'levelBlackList',
+        width: 1
     },
 ]

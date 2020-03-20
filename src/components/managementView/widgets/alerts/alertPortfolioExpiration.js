@@ -22,6 +22,7 @@ export class AlertPortfolioExpiration extends Component {
     const tableSettings = new TableBuilder(data, COLUMNS_VENCIMIENTO_CARTERA)
       .setNoRowMessage("Aún no se han creado registros.")
       .setRecordsPerPage(5)
+      .setStriped(true)
       .setTotalRecords(total)
       .setOnPageChange(async page => await dispatchGetAlertPortfolioExpirationDashboard(page))
       .build();
