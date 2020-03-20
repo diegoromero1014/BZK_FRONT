@@ -63,7 +63,6 @@ export default function makeAssociateList(listName, childrenList=[]) {
                         elements={elements}
                         draftElements={draftElements}
                         showAssociateSection={showAssociateSection}
-                        isEditable={true}
                         listState={listState}
                         addField={dispatchAddField}
                         initialValues={initialValues}
