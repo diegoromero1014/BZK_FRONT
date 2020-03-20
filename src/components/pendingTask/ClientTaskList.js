@@ -224,7 +224,7 @@ export class ClientTaskList extends Component {
           <Grid style={{ width: "100%" }}>
             <div style={{ display: "flex" }}>
               {loading === true && (
-                <div style={{padding:"10px"}}>
+                <div style={{ padding: "10px" }}>
                   <Loader active inline></Loader>
                   <span style={{ marginLeft: "10px" }}>Cargando...</span>
                 </div>
@@ -291,9 +291,7 @@ export class ClientTaskList extends Component {
                   ]}
                 />
               </Col>
-              <Col
-                style={{ position: "absolute", right: "45px", top: "10px" }}
-              >
+              <Col style={{ position: "absolute", right: "15px", top: "5px" }}>
                 {_.get(
                   reducerGlobal.get("permissionsTasks"),
                   _.indexOf(reducerGlobal.get("permissionsTasks"), CREAR),
