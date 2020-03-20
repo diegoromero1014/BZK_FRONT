@@ -65,7 +65,7 @@ function addChildrenList(state, list, element) {
     for (let index = 0; index < childrenList.length; index++) {
         const childList = childrenList[index];
         const listName = childList.name;
-        const elements = state[listName].elements.map(element => Object.assign({}, element, {
+        const elements = state[listName].elements.map(asociate => Object.assign({}, asociate, {
             associated: true
         }));
         element[childList.alias] = elements;

@@ -3,9 +3,9 @@ import { Dropdown } from 'semantic-ui-react';
 
 const DropdownComponent = ({ data, icon = 'ellipsis vertical', options }) => {
 
-    const buildOptions = () => options.map(({ icon, text, onClick }, index) => (
+    const buildOptions = () => options.map(({ iconOption, text, onClick }, index) => (
         <Dropdown.Item
-            icon={icon ? icon : null}
+            icon={iconOption ? iconOption : null}
             key={index}
             text={text} 
             onClick={() => onClick && onClick(data)}
@@ -28,7 +28,7 @@ DropdownComponent.PropTypes = {
     options: PropTypes.arrayOf(
         PropTypes.shape({
             text: PropTypes.string.isRequired,
-            icon: PropTypes.string,
+            iconOption: PropTypes.string,
             onClick: PropTypes.func.isRequired,
         })
     ).isRequired,

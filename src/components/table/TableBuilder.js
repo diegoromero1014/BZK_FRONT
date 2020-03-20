@@ -36,5 +36,15 @@ export default class TableBuilder {
         return this;
     }
 
+    setStriped = striped => {
+        this.striped = striped;
+        return this;
+    }
+
+    setMaximumVisiblePages = maximumVisiblePages => {
+        this.maximumVisiblePages = maximumVisiblePages;
+        return this;
+    }
+
     build = () => new TableSettings(this);
 }
