@@ -15,8 +15,6 @@ import {
     clearStateLogin,
     saveSessionUserName,
     clearSessionUserName,
-    saveSessionName,
-    getUserDataFrontOfficeEmployee
 } from './actions';
 import { redirectUrl } from '../globalComponents/actions';
 import { showLoading } from '../loading/actions';
@@ -74,7 +72,7 @@ export class FormLogin extends Component {
         
         const { usuario, password } = this.state;
         const recaptcha = this.state.loginAttempts >= 2 ? this.state.valueRecaptcha : null;
-        const { dispatchValidateLogin, dispatchGetUserDataFrontOfficeEmployee, dispatchShowLoading, dispatchChangeActiveItemMenu, dispatchChangeTokenStatus } = this.props;
+        const { dispatchValidateLogin, dispatchShowLoading, dispatchChangeActiveItemMenu, dispatchChangeTokenStatus } = this.props;
         dispatchChangeTokenStatus(true);
         dispatchShowLoading(true, LOADING_LOGIN);        
         dispatchValidateLogin(usuario, password, recaptcha)
@@ -87,12 +85,8 @@ export class FormLogin extends Component {
                     } else {
                         const { dispatchSaveSessionToken, dispatchRedirectUrl } = this.props;
                         dispatchSaveSessionToken(_.get(response, 'payload.data.data.sessionToken'));
-                        saveSessionUserName(usuario);
+                        saveSessionUserName(usuario, _.get(response, 'payload.data.data.username'));
                         dispatchChangeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
-
-                        dispatchGetUserDataFrontOfficeEmployee(usuario).then(data => {
-                            saveSessionName(_.get(data, 'payload.data.data.name'));
-                        })
 
                         // Activar cookie
                         document.cookie = 'estadoconexion=activa;path=/';                        
@@ -214,7 +208,6 @@ const mapDispatchToProps = (dispatch) => {
         dispatchShowLoading: showLoading,
         dispatchChangeActiveItemMenu: changeActiveItemMenu,
         dispatchChangeTokenStatus: changeTokenStatus,
-        dispatchGetUserDataFrontOfficeEmployee: getUserDataFrontOfficeEmployee
     }, dispatch);
 }
 
