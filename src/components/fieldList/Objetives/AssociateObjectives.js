@@ -196,10 +196,27 @@ export default class AssociateObjectives extends React.Component {
             return;
         }
 
-        changeListState({
-            elements: [...draftElements],
-            showAssociateSection: false
-        })
+        swtShowMessage(
+            'warning',
+            "Guardar información",
+            "Señor usuario, los cambios realizados se verán reflejados en la información del cliente.",
+            {
+                onConfirmCallback: () => {
+                    changeListState({
+                        elements: [...draftElements],
+                        showAssociateSection: false
+                    })
+                },
+                onCancelCallback: () => { }
+            },
+            {
+                "confirmButtonColor": '#DD6B55',
+                "confirmButtonText": 'Sí, estoy seguro!',
+                "cancelButtonText": "Cancelar",
+                "showCancelButton": true,
+            }
+        );
+
     }
 
     filterCheckedElements(element) {
@@ -239,6 +256,8 @@ export default class AssociateObjectives extends React.Component {
             if (errors.length > 0) {
                 return;
             }
+
+            listState.fields.didChange = true;
 
             addField("associated", true);
 
