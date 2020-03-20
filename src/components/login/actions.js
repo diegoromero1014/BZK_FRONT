@@ -43,10 +43,6 @@ export function saveSessionToken(sessionToken) {
     }
 }
 
-export function saveSessionName(name) {
-    window.sessionStorage.setItem('name', name);
-}
-
 export function saveSessionUserName(userName, name) {
     window.localStorage.setItem('userNameFront', userName);
     window.localStorage.setItem('name', name);
@@ -71,19 +67,5 @@ export function loadObservablesLeftTimer() {
 export function stopObservablesLeftTimer() {
     return {
         type: STOP_INPUT_EVENTS
-    }
-}
-
-export function getUserDataFrontOfficeEmployee(username) {
-    const json = {
-        messageHeader: {
-            "sessionToken": window.localStorage.getItem('sessionTokenFront')
-        },
-        messageBody: null
-    };
-    
-    return { 
-        type: GET_DATA_USER, 
-        payload: axios.post(APP_URL + "/getDataUserFrontOfficeEmployee", json) 
     }
 }

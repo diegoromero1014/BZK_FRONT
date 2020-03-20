@@ -2,9 +2,7 @@ import React from 'react';
 import { 
     changeTabSeletedChartView,
     changeErrorYearSeleted,
-    getCsv,
-    getPipelineXls,
-    getUsername
+    getCsv
 } from '../../../../src/components/managementView/actions';
 import {
     TAB_SELETED_ACTIVE,
@@ -27,10 +25,5 @@ describe('ManagementView Test Actions', () => {
     it('getCsv should return type GET_CSV', () => {
         const response = getCsv();
         expect(response.type).to.equal(GET_CSV);
-    })
-
-    it('getUsername should return "Any Name"', () => {
-        const response = getUsername();
-        expect(response).to.equal("Any Name");
     })
 })

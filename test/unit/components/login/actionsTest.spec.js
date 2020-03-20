@@ -29,11 +29,6 @@ describe('Login Test Actions', () => {
         const response = saveSessionUserName();
         expect(response).to.equal(undefined);
     })
-    
-    it('saveSessionName should return nothing', () => {
-        const response = saveSessionName();
-        expect(response).to.equal(undefined);
-    })
 
     it('clearSessionUserName should return nothing', () => {
         const response = clearSessionUserName();
@@ -53,10 +48,5 @@ describe('Login Test Actions', () => {
     it('stopObservablesLeftTimer should return type STOP_INPUT_EVENTS', () => {
         const response = stopObservablesLeftTimer();
         expect(response.type).to.equal(STOP_INPUT_EVENTS);
-    })
-
-    it('getUserDataFrontOfficeEmployee should return type GET_DATA_USER', () => {
-        const response = getUserDataFrontOfficeEmployee();
-        expect(response.type).to.equal(GET_DATA_USER);
     })
 })
