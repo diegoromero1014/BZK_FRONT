@@ -19,7 +19,7 @@ describe("DownloadPrevisits Test", () => {
     beforeEach(() => {
         dispatchChangeStateSaveData = sinon.fake();
         dispatchGetCsvPreVisitsByClient = sinon.stub().resolves({});
-        dispatchGetCsv = sinon.stub().resolves({})
+        dispatchGetCsv = sinon.stub().resolves({});
         defaultProps = {
             dispatchChangeStateSaveData,
             dispatchGetCsvPreVisitsByClient,
@@ -67,25 +67,67 @@ describe("DownloadPrevisits Test", () => {
     it('When downloadPreVisits is instanced and itemSelectedModal is 1', () => {
         defaultProps.itemSelectedModal = 1;
         const wrapper = shallow(<DownloadPrevisits {...defaultProps} />);
-        wrapper.setState({ year: '2020' })
+        wrapper.setState({ year: '' })
         wrapper.instance().downloadPreVisits();
         sinon.assert.calledOnce(dispatchChangeStateSaveData);
         sinon.assert.calledOnce(dispatchGetCsv);
     });
 
-    // it('When downloadPreVisits is instanced and itemSelectedModal is 1 and year is empty and status is 200', () => {
-    //     defaultProps.itemSelectedModal = 1;
-    //     defaultProps.dispatchGetCsv = sinon.stub().resolves({ 
-    //         payload: {
-    //             data: {
-    //                 status: 200
-    //             }
-    //         }
-    //     })
-    //     const wrapper = shallow(<DownloadPrevisits {...defaultProps} />);
-    //     wrapper.setState({ year: '' });
-    //     wrapper.instance().downloadPreVisits();
-    //     sinon.assert.calledOnce(dispatchChangeStateSaveData);
-    //     sinon.assert.calledOnce(dispatchGetCsv);
-    // });
+    it('When downloadPreVisits is instanced and itemSelectedModal is 1 and year is empty and status is 200', () => {
+        defaultProps.itemSelectedModal = 1;
+        defaultProps.dispatchGetCsv = sinon.stub().resolves({ 
+            payload: {
+                data: {
+                    status: 200
+                }
+            }
+        })
+        const wrapper = shallow(<DownloadPrevisits {...defaultProps} />);
+        wrapper.setState({ year: '2020' });
+        wrapper.instance().downloadPreVisits();
+        sinon.assert.calledOnce(dispatchChangeStateSaveData);
+    });
+
+    it('When downloadPreVisits is instanced and itemSelectedModal is 1 and year is empty and status is not 200', () => {
+        defaultProps.itemSelectedModal = 1;
+        defaultProps.dispatchGetCsv = sinon.stub().resolves({ 
+            payload: {
+                data: {
+                    status: 0
+                }
+            }
+        })
+        const wrapper = shallow(<DownloadPrevisits {...defaultProps} />);
+        wrapper.setState({ year: '2020' });
+        wrapper.instance().downloadPreVisits();
+        sinon.assert.calledOnce(dispatchChangeStateSaveData);
+    });
+
+    it('When downloadPreVisits is instanced and itemSelectedModal is not 1 and status is 200', () => {
+        defaultProps.itemSelectedModal = 0;
+        defaultProps.dispatchGetCsvPreVisitsByClient = sinon.stub().resolves({ 
+            payload: {
+                data: {
+                    status: 200
+                }
+            }
+        });
+        const wrapper = shallow(<DownloadPrevisits {...defaultProps} />);
+        wrapper.instance().downloadPreVisits();
+        sinon.assert.calledOnce(dispatchChangeStateSaveData);
+    });
+
+    it('When downloadPreVisits is instanced and itemSelectedModal is not 1 and status is not 200', () => {
+        defaultProps.itemSelectedModal = 0;
+        defaultProps.dispatchGetCsvPreVisitsByClient = sinon.stub().resolves({ 
+            payload: {
+                data: {
+                    status: 0
+                }
+            }
+        });
+        const wrapper = shallow(<DownloadPrevisits {...defaultProps} />);
+        wrapper.instance().downloadPreVisits();
+        sinon.assert.calledOnce(dispatchChangeStateSaveData);
+    });
 });
