@@ -25,7 +25,7 @@ export class SearchInputComponent extends Component {
     }
 
     onSearch(e) {
-        const search = e.target.value;
+        const search = e.target.value.trim();
         if (search.length >= 3 || search.length === 0) {
           this.onSearch$.next(search);
         }
@@ -39,6 +39,7 @@ export class SearchInputComponent extends Component {
                     placeholder='Buscar por Responsable, Palabras clave de la tarea, Palabras clave de la observación'
                     onChange={this.onSearch}
                     fluid
+                    maxLength="100"
                 />
             </div>
         );
