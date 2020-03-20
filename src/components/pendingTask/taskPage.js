@@ -213,8 +213,11 @@ export class TaskPage extends React.Component {
             const response = await dispatchGetInfoTaskUser(id);
             const taskInfo = _.get(response, 'payload.data.data');
             dispatchFillComments(taskInfo.notes);
-            if (_.isEqual(taskInfo.confidentiality, 1)) {
+            if (_.isEqual(taskInfo.confidentiality, 1) && !_.isNull(fromModal)) {
                 dispatchShowBrandConfidential(true);
+            }
+            if (!_.isNil(fromModal)) {
+                dispatchShowBrandConfidential(false);
             }
             nameEntity = taskInfo.nameEntity;
             this.entityId = taskInfo.entityId;
