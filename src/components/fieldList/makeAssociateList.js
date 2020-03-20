@@ -6,13 +6,23 @@ import AssociateListComponent from './Objetives/AssociateObjectives';
 
 import {
     createList,
-    changeListState
+    changeListState,
+    updateElementFromList,
+    addFieldToList,
+    setFieldsToList,
+    editElementFromList,
+    removeElementFromList
 } from './actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 export default function makeAssociateList(listName, childrenList=[]) {
 
     const changeState = changeListState(listName);
+    const updateElement = updateElementFromList(listName);
+    const addField = addFieldToList(listName);
+    const setFields = setFieldsToList(listName);
+    const editElement = editElementFromList(listName);
+    const removeElement = removeElementFromList(listName);
 
     class AssociateList extends React.Component {
 
@@ -30,9 +40,16 @@ export default function makeAssociateList(listName, childrenList=[]) {
             const {
                 dispatchChangeListState,
                 dispatchSwtShowMessage,
+                dispatchUpdateElement,
+                dispatchSetFields,
+                dispatchAddField,
+                dispatchEditElement,
+                dispatchRemoveElement,
                 elements,
                 draftElements,
-                showAssociateSection
+                showAssociateSection,
+                listState,
+                initialValues
             } = this.props;
 
             return (
@@ -41,9 +58,16 @@ export default function makeAssociateList(listName, childrenList=[]) {
                         {...this.props}
                         changeListState={dispatchChangeListState}
                         swtShowMessage={dispatchSwtShowMessage}
+                        updateElement={dispatchUpdateElement}
+                        setFields={dispatchSetFields}
                         elements={elements}
                         draftElements={draftElements}
                         showAssociateSection={showAssociateSection}
+                        listState={listState}
+                        addField={dispatchAddField}
+                        initialValues={initialValues}
+                        editElement={dispatchEditElement}
+                        removeElement={dispatchRemoveElement}
                     />
                 </div>
             )
@@ -67,7 +91,8 @@ export default function makeAssociateList(listName, childrenList=[]) {
         return {
             elements,
             draftElements,
-            showAssociateSection
+            showAssociateSection,
+            listState: values
         }
     }
 
@@ -75,7 +100,12 @@ export default function makeAssociateList(listName, childrenList=[]) {
         return bindActionCreators({
             dispatchCreateList: createList,
             dispatchSwtShowMessage: swtShowMessage,
-            dispatchChangeListState: changeState
+            dispatchChangeListState: changeState,
+            dispatchUpdateElement: updateElement,
+            dispatchAddField: addField,
+            dispatchSetFields: setFields,
+            dispatchEditElement: editElement,
+            dispatchRemoveElement: removeElement
         }, dispatch)
     }
 

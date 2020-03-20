@@ -24,7 +24,7 @@ class ReportCardView extends Component {
                     <img src={background} />
                 </div>
                 <div style={{ textAlign: 'center', zIndex: 1, position: 'absolute', width: '100%', top: 0 }}>
-                    <h3 className="title" style={{ zIndex: 1 }}>{title}</h3>
+                    <h3 className="title-report" style={{ zIndex: 1 }}>{title}</h3>
                 </div>
 
                 {editable &&

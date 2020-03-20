@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Segment } from 'semantic-ui-react'
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import TabComponent from "../../../../ui/Tab";
@@ -55,9 +56,11 @@ export class AlertSection extends Component {
       }
     ];
     return (
-      <div>
+      <div class="ui attached segment">
         <h3>ALERTAS</h3>
-        <TabComponent tabs={tabs} />
+        <Segment attached>
+          <TabComponent tabs={tabs} />
+        </Segment>
       </div>
     );
   }
