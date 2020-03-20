@@ -4,6 +4,7 @@ import { getPipelineXls } from '../../managementView/actions';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import moment from 'moment';
+import _ from 'lodash';
 
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
@@ -58,7 +59,7 @@ export class DownloadPipeline extends Component {
                 dispatchGetPipelineXls(initialValidityDate.value, finalValidityDate.value, dispatchChangeStateSaveData);
             }
         } else {
-            dispatchSwtShowMessage(MESSAGE_ERROR, 'Campos obligatorios', 'Señor usuario, para descargar las tareas debe ingresar los campos obligatorios.');
+            dispatchSwtShowMessage(MESSAGE_ERROR, 'Campos obligatorios', 'Señor usuario, para descargar los pipelines debe ingresar los campos obligatorios.');
         }
     }
 
@@ -229,6 +230,6 @@ export default reduxForm({
     onSubmitFail: () => {
         document.getElementById('modalComponentScroll').scrollTop = 0;
         const { dispatchSwtShowMessage } = thisForm.props;
-        dispatchSwtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para descargar las tareas debe ingresar los campos obligatorios.");
+        dispatchSwtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para descargar los pipelines debe ingresar los campos obligatorios.");
     }
 }, mapStateToProps, mapDispatchToProps)(DownloadPipeline);
