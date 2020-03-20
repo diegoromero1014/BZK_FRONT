@@ -216,6 +216,9 @@ export class TaskPage extends React.Component {
             if (_.isEqual(taskInfo.confidentiality, 1)) {
                 dispatchShowBrandConfidential(true);
             }
+            if (!_.isNil(fromModal)) {
+                dispatchShowBrandConfidential(false);
+            }
             nameEntity = taskInfo.nameEntity;
             this.entityId = taskInfo.entityId;
             if (taskInfo.nameEntity === 'Plan de negocio') {
