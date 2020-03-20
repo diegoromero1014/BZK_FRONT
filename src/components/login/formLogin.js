@@ -15,7 +15,6 @@ import {
     clearStateLogin,
     saveSessionUserName,
     clearSessionUserName,
-    getUserDataFrontOfficeEmployee
 } from './actions';
 import { redirectUrl } from '../globalComponents/actions';
 import { showLoading } from '../loading/actions';
@@ -73,7 +72,7 @@ export class FormLogin extends Component {
         
         const { usuario, password } = this.state;
         const recaptcha = this.state.loginAttempts >= 2 ? this.state.valueRecaptcha : null;
-        const { dispatchValidateLogin, dispatchGetUserDataFrontOfficeEmployee, dispatchShowLoading, dispatchChangeActiveItemMenu, dispatchChangeTokenStatus } = this.props;
+        const { dispatchValidateLogin, dispatchShowLoading, dispatchChangeActiveItemMenu, dispatchChangeTokenStatus } = this.props;
         dispatchChangeTokenStatus(true);
         dispatchShowLoading(true, LOADING_LOGIN);        
         dispatchValidateLogin(usuario, password, recaptcha)
@@ -209,7 +208,6 @@ const mapDispatchToProps = (dispatch) => {
         dispatchShowLoading: showLoading,
         dispatchChangeActiveItemMenu: changeActiveItemMenu,
         dispatchChangeTokenStatus: changeTokenStatus,
-        dispatchGetUserDataFrontOfficeEmployee: getUserDataFrontOfficeEmployee
     }, dispatch);
 }
 

@@ -1,5 +1,5 @@
 import { APP_URL } from '../../constantsGlobal';
-import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN, CLEAR_STATE, GET_DATA_USER } from './constants';
+import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN, CLEAR_STATE } from './constants';
 import { INIT_INPUT_EVENTS, STOP_INPUT_EVENTS, APP_NAME } from '../../constantsGlobal';
 import axios from 'axios';
 import momentTimeZone from 'moment-timezone';
