@@ -5,8 +5,6 @@ import { covenantsAlerts } from '../../../alertCovenants/actions';
 import Table from "../../../table";
 import TableBuilder from "../../../table/TableBuilder";
 import { COLUMNS_COVENANTS_ALERTS, MAX_ROWS } from './constants';
-import { redirectUrl } from "../../../globalComponents/actions";
-import { Button } from 'semantic-ui-react';
 
 export class CovenantsAlertsComponent extends Component {
 
@@ -14,6 +12,10 @@ export class CovenantsAlertsComponent extends Component {
         const { dispatchCovenantsAlerts } = this.props;
         
         dispatchCovenantsAlerts(page, MAX_ROWS);
+    }
+
+    handleOnClick = data => {
+        console.log(data);
     }
 
     render() {
@@ -29,16 +31,10 @@ export class CovenantsAlertsComponent extends Component {
                             .setStriped(true)
                             .setTotalRecords(total)
                             .setOnPageChange(this.handleOnPageChange)
+                            .setOnClick(this.handleOnClick)
                             .build()
                     }
                 />
-                <Button
-                    fluid
-                    style={{ background: 'transparent' }}
-                    onClick={() => redirectUrl("/dashboard/alertCovenants")}
-                >
-                    Ver detalle
-                </Button>
             </div>
         );
     }
