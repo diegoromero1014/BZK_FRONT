@@ -59,6 +59,12 @@ const itemTransactional = {
     link: "/dashboard/transactional"
 };
 
+const itemMyTasks = {
+    text: "Tareas",
+    icon: "tasks",
+    link: "/dashboard/myTask"
+};
+
 const childrenContactsGroupFavorito = { text: "Favoritos", link: "/dashboard/contact/favoriteGroup" };
 const childrenMyPendingsAEC = { text: "AEC", link: "/dashboard/myPendings/AEC" };
 const childrenMyPendingsMyTaks = { text: "Mis tareas", link: "/dashboard/myPendings/myTasks" };
@@ -139,6 +145,7 @@ class MenuComponent extends Component {
             itemMyPendings.children.push(childrenMyPendingsAEC);
         }
         menuItems.push(itemMyPendings);
+        menuItems.push(itemMyTasks);
         initialMenuPermissions(menuItems);
     }
 
