@@ -358,8 +358,18 @@ export class PrevisitPage extends Component {
             errors.push("Debilidades (internas del cliente)");
          }
 
-         if (getLinkedClientDetails(fieldListReducer[listName].elements).length === 0) {
+         const objectives = getLinkedClientDetails(fieldListReducer[listName].elements);
+
+         if (objectives.length === 0) {
             errors.push("Objetivos del cliente")
+         }
+
+         const objectivesWithoutStrategies = objectives.filter(
+            objective => getLinkedClientDetails(objective.strategies).length === 0
+         )
+
+         if (objectives.length > 0 && objectivesWithoutStrategies.length > 0) {
+            errors.push("Objetivos del cliente: asociar al menos una estrategia a cada objetivo")
          }
       }
       return errors;

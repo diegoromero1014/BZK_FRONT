@@ -23,7 +23,13 @@ class TabComponent extends Component {
     const { tabs, classNameColor = 'blue' } = this.props;
     return (
       <div className="tabGenericComponent">
-        <Menu pointing secondary>
+        <Menu pointing secondary style={{
+          display: 'flex', 
+          flexDirection: 'row', 
+          flexWrap: 'initial', 
+          width: '100%',
+          overflowX: 'auto'
+        }}>
           {tabs.map(({ name, number, disable }) => (
             <Menu.Item
               name={name}
