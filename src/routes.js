@@ -92,7 +92,7 @@ import {
     DEFAULT, MyTasksPageUrl, MyTasksPage
 } from "./constantsAnalytics";
 import TaskPage from "./components/pendingTask/taskPage";
-import MyTaskPage from "./components/myPendings/myTaskPage";
+import MyTaskPage from "./components/myTasks/myTaskPage";
 
 
 const  AssociateObjectives =  makeAssociateList("Objetivos");
