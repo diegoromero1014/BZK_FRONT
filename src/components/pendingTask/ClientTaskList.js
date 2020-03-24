@@ -86,10 +86,10 @@ export class ClientTaskList extends Component {
         dispatchCleanPagAndOrderColumnFinalizedUserTask,
         dispatchCleanPagAndOrderColumnPendingUserTask
       } = this.props;
-      dispatchCleanPagAndOrderColumnPendingUserTask(1);
-      dispatchCleanPagAndOrderColumnFinalizedUserTask(1);
-      this.dispatchPendingTasks(0, 1, null);
-      this.dispatchFinalizedTask(0, 1, null);
+      dispatchCleanPagAndOrderColumnPendingUserTask(0);
+      dispatchCleanPagAndOrderColumnFinalizedUserTask(0);
+      this.dispatchPendingTasks(0, 0, null);
+      this.dispatchFinalizedTask(0, 0, null);
       dispatchValidatePermissionsByModule(MODULE_TASKS).then(data => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
@@ -165,10 +165,10 @@ export class ClientTaskList extends Component {
     } = this.props;
     switch (mode) {
       case PENDING:
-        dispatchCleanPagAndOrderColumnPendingUserTask(1);
+        dispatchCleanPagAndOrderColumnPendingUserTask(0);
         break;
       case FINISHED:
-        dispatchCleanPagAndOrderColumnFinalizedUserTask(1);
+        dispatchCleanPagAndOrderColumnFinalizedUserTask(0);
         break;
     }
     dispatchSetTextToSearch(null);
