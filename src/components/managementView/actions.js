@@ -70,7 +70,3 @@ export function getPipelineXls(initialDate, finalDate, changeStateSaveData) {
 
   downloadReport(payload, "/getPipelineXls", name, changeStateSaveData);
 }
-
-export function getUsername() {
-    return window.sessionStorage.getItem('name');
-}
