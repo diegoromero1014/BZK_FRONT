@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import TabComponent from "../../../../ui/Tab";
 import AlertPortfolioExpiration from './alertPortfolioExpiration';
 import BlackListAlerts from './blackListAlerts';
+import CovenantsAlertsComponent from './covenantsAlerts';
 
 import {
   PORTFOLIO_EXPIRATION_TAB,
@@ -15,18 +16,20 @@ import {
 
 import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExpirtation/actions';
 import { blackListAlerts } from '../../../alertBlackList/actions';
+import { covenantsAlerts } from '../../../alertCovenants/actions';
 import { MAX_ROWS } from './constants';
 
 export class AlertSection extends Component {
 
   async componentDidMount() {
-    const { dispatchGetAlertPortfolioExpirationDashboard, dispatchBlackListAlerts } = this.props;
+    const { dispatchGetAlertPortfolioExpirationDashboard, dispatchBlackListAlerts, dispatchCovenantsAlerts } = this.props;
 
     await Promise.all([dispatchBlackListAlerts(0, MAX_ROWS), dispatchGetAlertPortfolioExpirationDashboard(1)]);
+    await Promise.all([dispatchCovenantsAlerts(0, MAX_ROWS), dispatchGetAlertPortfolioExpirationDashboard(1)]);
   }
 
   countAlerts = (total) => {
-    const { totalBlackList } = this.props;
+    const { totalBlackList, totalCovenant } = this.props;
 
     const tabs = [
       {
@@ -36,12 +39,13 @@ export class AlertSection extends Component {
             <AlertPortfolioExpiration total={total} />
           </div>
         ),
-        number: total
+        number: total || 0
       },
       {
         name: COVENANTS_TAB,
-        content: <div>Tab 3 Content</div>,
-        disable: true
+        content: <CovenantsAlertsComponent />,
+        disable: false,
+        number: totalCovenant || 0
       },
       {
         name: DEACTIVATED_CONTACTS_TABS,
@@ -74,13 +78,15 @@ export class AlertSection extends Component {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard,
-    dispatchBlackListAlerts: blackListAlerts
+    dispatchBlackListAlerts: blackListAlerts,
+    dispatchCovenantsAlerts: covenantsAlerts
   }, dispatch)
 };
 
-const mapStateToProps = ({ alertPortfolioExpiration, alertBlackList }) => ({
+const mapStateToProps = ({ alertPortfolioExpiration, alertBlackList, covenantsAlerts }) => ({
   alertPortfolioExpiration,
-  totalBlackList: alertBlackList.get('totalBlackListFiltered')
+  totalBlackList: alertBlackList.get('totalBlackListFiltered'),
+  totalCovenant: covenantsAlerts.get('totalCovenantsByFiltered')
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlertSection);

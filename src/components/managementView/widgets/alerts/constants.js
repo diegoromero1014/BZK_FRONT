@@ -70,3 +70,41 @@ export const COLUMNS_BLACK_LIST_ALERTS = [
         width: 1
     },
 ]
+
+export const COLUMNS_COVENANTS_ALERTS = [
+    {
+        header: 'Id covenant',
+        prop: 'idCovenant',
+        width: 1
+    },
+
+    {
+        header: 'Número documento',
+        prop: 'documentClient',
+        width: 1
+    },
+
+    {
+        header: 'Razón social',
+        prop: 'nameClient',
+        width: 3
+    },
+
+    {
+        header: 'Acta o contrato',
+        prop: 'agreement',
+        width: 1
+    },
+
+    {
+        header: 'Línea de negocio',
+        prop: 'lineOfBusiness',
+        width: 1
+    },
+
+    {
+        header: 'Fecha Proximo seguimiento',
+        prop: 'nextExpirationTimestamp',
+        width: 1
+    },
+]
