@@ -10,49 +10,49 @@ class SectionSearchClient extends Component {
         super(props);
         this.state = {
             data: [
-                {
-                    prospect : true ,
-                    tipoDocumento : 'Cedula',
-                    numeroCedula : 1037628960,
-                    razonSocial : 'Hola',
-                    grupoEconomic : 'Hola dos'
+                // {
+                //     prospect : 'Icon' ,
+                //     tipoDocumento : 'Cedula',
+                //     numeroCedula : 1037628960,
+                //     razonSocial : 'Hola',
+                //     grupoEconomic : 'Hola dos'
 
-                },
-                {
-                    prospect : true ,
-                    tipoDocumento : 'Cedula',
-                    numeroCedula : 1037628960,
-                    razonSocial : 'Hola',
-                    grupoEconomic : 'Hola dos'
-                },
-                {
-                    prospect : true ,
-                    tipoDocumento : 'Cedula',
-                    numeroCedula : 1037628960,
-                    razonSocial : 'Hola',
-                    grupoEconomic : 'Hola dos'
-                },
-                {
-                    prospect : true ,
-                    tipoDocumento : 'Cedula',
-                    numeroCedula : 1037628960,
-                    razonSocial : 'Hola',
-                    grupoEconomic : 'Hola dos'
-                },
-                {
-                    prospect : true ,
-                    tipoDocumento : 'Cedula',
-                    numeroCedula : 1037628960,
-                    razonSocial : 'Hola',
-                    grupoEconomic : 'Hola dos'
-                },
-                {
-                    prospect : true ,
-                    tipoDocumento : 'Cedula',
-                    numeroCedula : 1037628960,
-                    razonSocial : 'Hola',
-                    grupoEconomic : 'Hola dos'
-                },
+                // },
+                // {
+                //     prospect : '' ,
+                //     tipoDocumento : 'Cedula',
+                //     numeroCedula : 1037628960,
+                //     razonSocial : 'Hola',
+                //     grupoEconomic : 'Hola dos'
+                // },
+                // {
+                //     prospect : 'icon' ,
+                //     tipoDocumento : 'Cedula',
+                //     numeroCedula : 1037628960,
+                //     razonSocial : 'Hola',
+                //     grupoEconomic : 'Hola dos'
+                // },
+                // {
+                //     prospect : true ,
+                //     tipoDocumento : 'Cedula',
+                //     numeroCedula : 1037628960,
+                //     razonSocial : 'Hola',
+                //     grupoEconomic : 'Hola dos'
+                // },
+                // {
+                //     prospect : '' ,
+                //     tipoDocumento : 'Cedula',
+                //     numeroCedula : 1037628960,
+                //     razonSocial : 'Hola',
+                //     grupoEconomic : 'Hola dos'
+                // },
+                // {
+                //     prospect : 'icon' ,
+                //     tipoDocumento : 'Cedula',
+                //     numeroCedula : 1037628960,
+                //     razonSocial : 'Hola',
+                //     grupoEconomic : 'Hola dos'
+                // },
             ],
             messageError: false
         }

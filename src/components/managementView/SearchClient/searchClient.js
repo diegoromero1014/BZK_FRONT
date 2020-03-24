@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import Tooltip from '../../toolTip/toolTipComponent';
 import SweetAlert from "../../sweetalertFocus";
 import { redirectCreatePropspect } from './utils';
-import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP } from './constants';
+import { clientsFindServer } from '../../clients/actions';
+import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT } from './constants';
 
-class searchClient extends Componet {
+class searchClient extends Component {
     state = {
         keyword: '',
-        swError: false
+        swError: false,
+
     }
 
     handelInput = event => {
@@ -18,35 +20,55 @@ class searchClient extends Componet {
     }
 
     handelKeyword = event => {
-        const { keyCode } = event ;
-        if (keyCode === 13) {
-            console.log('hola')
-            console.log(event)
+        if (event.keyCode === 13 || event.which === 13) {
+            this.handelSearchClient();
         }
     }
 
-    closeError = () => {
-        this.setState({
-            swError : false
-        })
+    handelSearchClient = () => {
+        const { keyword } = this.state;
+        if (!keyword){
+            this.setState({
+                swError : true
+            })
+        }
+        clientsFindServer(keyword);
     }
+
 
     render() {
         const { swError } = this.state;
 
         return (
-            <div style={{ width: "100%", display: 'flex' }}>
+            <div style={{ width: "100%", display: 'flex', justifyContent: 'space-between'}}>
                 <div style={{ width: "70%" }}>
-                    <input name="keyword" type="text" style={{ padding: '0px 11px !important', width: "80%" }} placeholder={PLACEHOLDER_SEARCH_CLIENT} onChange={event => this.handelInput(event)}
-                        onKeyPress={event => this.handelKeyword(event)} className="input-lg input InputAddOn-field" />
-                    <button id="searchClients" className="btn" title="Buscar clientes" type="button"
-                        style={{ backgroundColor: "#E0E2E2" }}>
+                    <input 
+                        className="input-lg input InputAddOn-field" 
+                        name="keyword" 
+                        type="text" 
+                        style={{ padding: '0px 11px !important', width: "80%" }} 
+                        placeholder={PLACEHOLDER_SEARCH_CLIENT} 
+                        onChange={event => this.handelInput(event)}
+                        onKeyPress={this.handelKeyword}
+                    />
+                    <button 
+                        id="searchClients" 
+                        className="btn" 
+                        style={{ backgroundColor: "#E0E2E2" }}
+                        title={TITLE_SEARCH_CLIENT} 
+                        type="button"
+                        onClick={this.handelSearchClient}
+                    >
                         <i className="search icon" style={{ margin: '0em', fontSize: '1.2em' }} />
                     </button>
                 </div>
                 <Tooltip text={MESSAGE_TOOLTIP}>
-                    <button className="btn btn-primary" onClick={redirectCreatePropspect} type="button"
-                        style={{ marginLeft: "60px" }}>
+                    <button 
+                        type="button"
+                        className="btn btn-primary" 
+                        style={{ marginLeft: "60px" }}
+                        onClick={redirectCreatePropspect} 
+                    >
                         <i className="add user icon"
                             style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
                     </button>
@@ -56,7 +78,7 @@ class searchClient extends Componet {
                     show={swError}
                     title="Error de búsqueda"
                     text="Señor usuario, por favor ingrese un criterio de búsqueda."
-                    onConfirm={() => this._closeError()}
+                    onConfirm={() => this.setState({ swError : false})}
                 />
             </div>
         )
