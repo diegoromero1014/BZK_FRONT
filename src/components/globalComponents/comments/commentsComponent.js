@@ -107,7 +107,7 @@ export class CommentsComponent extends Component {
     };
 
     validateCommentContent = (content, source) => {
-        if(!content.length){
+        if(!content.trim().length){
             this.showContentError(content, source, ERROR_COMMENT_LENGTH);
             return false;
         }else {
