@@ -24,8 +24,12 @@ export class AlertSection extends Component {
   async componentDidMount() {
     const { dispatchGetAlertPortfolioExpirationDashboard, dispatchBlackListAlerts, dispatchCovenantsAlerts } = this.props;
 
-    await Promise.all([dispatchBlackListAlerts(0, MAX_ROWS), dispatchGetAlertPortfolioExpirationDashboard(1)]);
-    await Promise.all([dispatchCovenantsAlerts(0, MAX_ROWS), dispatchGetAlertPortfolioExpirationDashboard(1)]);
+    await Promise.all([
+      dispatchBlackListAlerts(0, MAX_ROWS), 
+      dispatchGetAlertPortfolioExpirationDashboard(1),
+      dispatchCovenantsAlerts(0, MAX_ROWS)
+    ]);
+    
   }
 
   countAlerts = (total) => {
@@ -83,10 +87,10 @@ const mapDispatchToProps = dispatch => {
   }, dispatch)
 };
 
-const mapStateToProps = ({ alertPortfolioExpiration, alertBlackList, covenantsAlerts }) => ({
+const mapStateToProps = ({ alertPortfolioExpiration, alertBlackList, alertCovenant }) => ({
   alertPortfolioExpiration,
   totalBlackList: alertBlackList.get('totalBlackListFiltered'),
-  totalCovenant: covenantsAlerts.get('totalCovenantsByFiltered')
+  totalCovenant: alertCovenant.get('totalCovenantsByFiltered')
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlertSection);

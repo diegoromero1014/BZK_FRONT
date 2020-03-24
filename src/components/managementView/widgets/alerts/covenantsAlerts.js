@@ -13,7 +13,7 @@ export class CovenantsAlertsComponent extends Component {
     handleOnPageChange = page => {
         const { dispatchCovenantsAlerts } = this.props;
         
-        dispatchCovenantsAlerts((page - 1), MAX_ROWS);
+        dispatchCovenantsAlerts(page, MAX_ROWS);
     }
 
     render() {
@@ -44,10 +44,10 @@ export class CovenantsAlertsComponent extends Component {
     }
 }
 
-const mapStateToProps = ({ alertCovenants }) => ({
-    alertCovenants,
-    data: alertCovenants.get('responseCovenants'),
-    total: alertCovenants.get('totalCovenantsByFiltered')
+const mapStateToProps = ({ alertCovenant }) => ({
+    alertCovenant,
+    data: alertCovenant.get('responseCovenants'),
+    total: alertCovenant.get('totalCovenantsByFiltered')
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
