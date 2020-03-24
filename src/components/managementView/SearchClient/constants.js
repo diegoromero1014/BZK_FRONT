@@ -8,18 +8,18 @@ export const COLUMNS_SEARCH_CLIENT = [
     },
     {
         header: 'Tipo documuento',
-        prop: 'tipoDocumento'
+        prop: 'documentType'
     },
     {
         header: 'Número de documento',
-        prop: 'numeroCedula'
+        prop: 'document'
     },
     {
         header: 'Razón social',
-        prop: 'razonSocial'
+        prop: 'accountManager'
     },
     {
         header: 'Grupo economico',
-        prop: 'grupoEconomic'
+        prop: 'economicGroup'
     }
 ]
