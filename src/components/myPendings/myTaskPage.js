@@ -16,7 +16,6 @@ export class MyTaskPage extends Component {
     render() {
         return (
             <div>
-                <p>Hola mundo</p>
             </div>
         );
     }
