@@ -27,7 +27,7 @@ export class AlertSection extends Component {
     await Promise.all([
       dispatchBlackListAlerts(0, MAX_ROWS), 
       dispatchGetAlertPortfolioExpirationDashboard(1),
-      dispatchCovenantsAlerts(0, MAX_ROWS)
+      dispatchCovenantsAlerts(1, MAX_ROWS)
     ]);
     
   }
