@@ -1,41 +1,84 @@
 import React, { Component } from 'react';
-import Tooltip from '../../toolTip/toolTipComponent';
-import { TITLE_SEARCH_CLIENT, PLACEHOLDER_SEARCH_CLIENT } from './constants';
+import SearchClient from './searchClient';
+import TableBuilder from '../../table/TableBuilder';
+import TableComponent from '../../table';
 
-class SearchClient extends Component {
+import { TITLE_SEARCH_CLIENT, COLUMNS_SEARCH_CLIENT } from './constants';
+
+class SectionSearchClient extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
-            
+            data: [
+                {
+                    prospect : true ,
+                    tipoDocumento : 'Cedula',
+                    numeroCedula : 1037628960,
+                    razonSocial : 'Hola',
+                    grupoEconomic : 'Hola dos'
+
+                },
+                {
+                    prospect : true ,
+                    tipoDocumento : 'Cedula',
+                    numeroCedula : 1037628960,
+                    razonSocial : 'Hola',
+                    grupoEconomic : 'Hola dos'
+                },
+                {
+                    prospect : true ,
+                    tipoDocumento : 'Cedula',
+                    numeroCedula : 1037628960,
+                    razonSocial : 'Hola',
+                    grupoEconomic : 'Hola dos'
+                },
+                {
+                    prospect : true ,
+                    tipoDocumento : 'Cedula',
+                    numeroCedula : 1037628960,
+                    razonSocial : 'Hola',
+                    grupoEconomic : 'Hola dos'
+                },
+                {
+                    prospect : true ,
+                    tipoDocumento : 'Cedula',
+                    numeroCedula : 1037628960,
+                    razonSocial : 'Hola',
+                    grupoEconomic : 'Hola dos'
+                },
+                {
+                    prospect : true ,
+                    tipoDocumento : 'Cedula',
+                    numeroCedula : 1037628960,
+                    razonSocial : 'Hola',
+                    grupoEconomic : 'Hola dos'
+                },
+            ],
+            messageError: false
         }
     }
 
-
     render() {
+        const { data } = this.state;
+        const tableSettings = new TableBuilder(data, COLUMNS_SEARCH_CLIENT)
+            .setNoRowMessage("Aún no se han creado registros.")
+            .setRecordsPerPage(5)
+            .setStriped(true)
+            .setTotalRecords(40)
+            // .setOnPageChange(async page => await dispatchGetAlertPortfolioExpirationDashboard(page))
+            .build();
+
         return (
             <div style={{ margin: "30px 0px" }}>
                 <h3>{TITLE_SEARCH_CLIENT}</h3>
-                <div style={{ width: "100%" , display: 'flex'}}>
-                    <div style={{width: "80%"}}>
-                        <input type="text" style={{ padding: '0px 11px !important', width: "80%" }} placeholder={PLACEHOLDER_SEARCH_CLIENT}
-                            className="input-lg input InputAddOn-field" />
-                        <button id="searchClients" className="btn" title="Buscar clientes" type="button"
-                            style={{ backgroundColor: "#E0E2E2" }}>
-                            <i className="search icon" style={{ margin: '0em', fontSize: '1.2em' }} />
-                        </button>
-                    </div>
-                    <Tooltip text="Crear prospecto">
-                        <button className="btn btn-primary" onClick={this._clickButtonCreateProps} type="button"
-                            style={{ marginLeft: "60px" }}>
-                            <i className="add user icon"
-                                style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
-                        </button>
-                    </Tooltip>
-                </div>
+                <SearchClient />
+                {
+                    data.length !== 0 ?
+                        <TableComponent tableSettings={tableSettings} /> :  null
+                }
             </div>
         )
     }
 }
 
-export default SearchClient;
+export default SectionSearchClient;

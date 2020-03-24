@@ -1,24 +1,25 @@
 export const TITLE_SEARCH_CLIENT = 'Buscar clientes';
 export const PLACEHOLDER_SEARCH_CLIENT = 'Buscar por nombre, NIT o grupo económico';
-export const HEADERS_CLIENT = [
+export const MESSAGE_TOOLTIP = 'Crear prospecto';
+export const COLUMNS_SEARCH_CLIENT = [
     {
-        name: 'Prospecto',
-        prop: ''
+        header: 'Prospecto',
+        prop: 'prospect'
     },
     {
-        name: 'Tipo documuento',
-        prop: ''
+        header: 'Tipo documuento',
+        prop: 'tipoDocumento'
     },
     {
-        name: 'Número de documento',
-        prop: ''
+        header: 'Número de documento',
+        prop: 'numeroCedula'
     },
     {
-        name: 'Razón social',
-        prop: ''
+        header: 'Razón social',
+        prop: 'razonSocial'
     },
     {
-        name: 'Grupo economico',
-        prop: ''
+        header: 'Grupo economico',
+        prop: 'grupoEconomic'
     }
 ]
