@@ -15,7 +15,7 @@ class Pagination extends Component {
     }
 
     async componentWillMount() {
-        const { totalRecords, recordsPerPage } = this.props;
+        const { totalRecords, recordsPerPage, initialPage } = this.props;
 
         const pages = [];
         const totalPage = Math.ceil(totalRecords / recordsPerPage);
@@ -24,11 +24,11 @@ class Pagination extends Component {
             pages.push(i + 1);
         }
 
-        await this.setState({ totalPage, pages });
+        await this.setState({ totalPage, pages, page: initialPage });
     }
 
     async componentWillUpdate(nextProps) {
-        const { totalRecords } = this.props;
+        const { totalRecords, initialPage } = this.props;
 
         if (nextProps.totalRecords != totalRecords) {
             const totalPage = Math.ceil(nextProps.totalRecords / nextProps.recordsPerPage);
@@ -41,8 +41,11 @@ class Pagination extends Component {
 
             await this.setState({ totalPage, pages });
         }
-    }
 
+        if(initialPage !== nextProps.initialPage) {
+            await this.setState({ page: nextProps.initialPage });
+        }
+    }
 
     renderItem = (totalRecords, recordsPerPage, current) => this.getPages(totalRecords, recordsPerPage, current).map((page, index) =>
         <Menu.Item

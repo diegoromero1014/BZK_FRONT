@@ -1,3 +1,6 @@
+import ProspectIcon from './prospectIcon';
+
+
 export const TITLE_SEARCH_CLIENT = 'Buscar clientes';
 export const PLACEHOLDER_SEARCH_CLIENT = 'Buscar por nombre, NIT o grupo económico';
 export const MESSAGE_TOOLTIP = 'Crear prospecto';
@@ -12,21 +15,24 @@ export const STYLE_NO_RESULTS = {
     borderRadius: "4px"
 }
 export const STYLE_ICON_PROSPECT = {
-    marginLeft : "10px",
-    borderRadius: "13px", 
-    background : "#EB984F", 
-    fontSize : "15px",
-    fontWeight : 'bold',
-    color: "white",  
-    width : "22px", 
-    height : "22px" , 
+    marginLeft: "10px",
+    borderRadius: "13px",
+    background: "#EB984F",
+    fontSize: "15px",
+    fontWeight: 'bold',
+    color: "white",
+    width: "22px",
+    height: "22px",
     textAlign: "center",
 }
 export const COLUMNS_SEARCH_CLIENT = [
     {
         header: 'Prospecto',
         prop: 'prospect',
-        width : 1
+        component: {
+            Component: ProspectIcon
+        },
+        width: 1
     },
     {
         header: 'Tipo documuento',
