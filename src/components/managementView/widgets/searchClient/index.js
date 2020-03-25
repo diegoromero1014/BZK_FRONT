@@ -10,7 +10,7 @@ import { bindActionCreators } from "redux";
 import { redirectUrl } from "../../../globalComponents/actions";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 
-class SectionSearchClient extends Component {
+export class SectionSearchClient extends Component {
     constructor(props) {
         super(props);
         this.state = {

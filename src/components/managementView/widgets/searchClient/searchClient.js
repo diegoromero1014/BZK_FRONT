@@ -86,7 +86,6 @@ class searchClient extends Component {
 					<button
 						type="button"
 						className="btn btn-primary"
-						style={{ marginRight: "30px" }}
 						onClick={redirectCreatePropspect}
 					>
 						<i
