@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import noop from "lodash";
 import SearchClient from "./searchClient";
-import TableBuilder from "../../table/TableBuilder";
-import TableComponent from "../../table";
-import SweetAlert from '../../sweetalertFocus';
+import TableBuilder from "../../../table/TableBuilder";
+import TableComponent from "../../../table";
+import SweetAlert from '../../../sweetalertFocus';
 
-import { clientsFindServer } from "../../clients/actions";
+import { clientsFindServer } from "../../../clients/actions";
 import { TITLE_SEARCH_CLIENT, COLUMNS_SEARCH_CLIENT, MESSAGE_NO_RESULTS, MESSAGE_NO_ACCESS, STYLE_NO_RESULTS } from "./constants";
 import { bindActionCreators } from "redux";
-import { redirectUrl } from "../../globalComponents/actions";
+import { redirectUrl } from "../../../globalComponents/actions";
 
 class SectionSearchClient extends Component {
     constructor(props) {
@@ -28,20 +28,29 @@ class SectionSearchClient extends Component {
     }
 
     saveData = data => {
-        const { clients, rowCount, keyword } = data;
+        const { clients, rowCount, keyword, page } = data;
         this.setState({
             keyword,
             data: clients,
-            rowCount
+            rowCount,
+            page
         });
     };
 
-    actualPage = async page => {
+    currentPage = async page => {
         const { dispatchClientsFindServer } = this.props;
         const { keyword } = this.state;
         const { payload: { data: { data: { rows } } } } = await dispatchClientsFindServer(keyword, (page - 1) * 10, 10);
+        const newRows = rows.map(element => {
+            if(element.prospect){
+                element.prospect =  <div className="prospect" style={STYLE_ICON_PROSPECT}>P</div> 
+            }else{
+                element.prospect = " "
+            }
+            return element
+        })
         this.setState({
-            data: rows
+            data: newRows
         });
     };
 
@@ -64,7 +73,7 @@ class SectionSearchClient extends Component {
             .setStriped(true)
             .setOnClick(element => this.handelClickClient(element))
             .setTotalRecords(rowCount)
-            .setOnPageChange(page => this.actualPage(page))
+            .setOnPageChange(page => this.currentPage(page))
             .build();
 
         return (

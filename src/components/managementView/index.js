@@ -9,7 +9,7 @@ import Header from './header';
 
 import { updateTitleNavBar } from '../navBar/actions';
 import AlertSection from './widgets/alerts';
-import SectionSearchClient from './SearchClient';
+import SectionSearchClient from './widgets/searchClient';
 
 export class ManagementView extends Component {
 

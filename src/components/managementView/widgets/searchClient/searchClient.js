@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import noop from "lodash";
-import Tooltip from "../../toolTip/toolTipComponent";
-import SweetAlert from "../../sweetalertFocus";
+import Tooltip from "../../../toolTip/toolTipComponent";
+import SweetAlert from "../../../sweetalertFocus";
 import { redirectCreatePropspect } from "./utils";
-import { clientsFindServer } from "../../clients/actions";
-import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT } from "./constants";
+import { clientsFindServer } from "../../../clients/actions";
+import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_ICON_PROSPECT } from "./constants";
 import { bindActionCreators } from "redux";
 
 class searchClient extends Component {
@@ -13,23 +13,24 @@ class searchClient extends Component {
     keyword: "",
     swError: false,
     clients: [],
-    rowCount: 0
+    rowCount: 0,
+    page : 0
   };
 
-  handelInput = event => {
+  handleInput = event => {
     const { name, value } = event.target;
     this.setState({
       [name]: value
     });
   };
 
-  handelKeyword = event => {
+  handleKeyword = event => {
     if (event.keyCode === 13 || event.which === 13) {
       this.handelSearchClient();
     }
   };
 
-  handelSearchClient = async () => {
+  handleSearchClient = async () => {
     const { keyword } = this.state;
     const {  dispatchClientsFindServer, saveData } = this.props;
 
@@ -40,9 +41,18 @@ class searchClient extends Component {
     } else {
       const { payload } = await dispatchClientsFindServer(keyword, 0, 10);
       const { rows, rowCount } = payload.data.data;
+      const newRows = rows.map(element => {
+          if(element.prospect){
+              element.prospect =  <div className="prospect" style={STYLE_ICON_PROSPECT}>P</div> 
+          }else{
+              element.prospect = " "
+          }
+          return element
+      })
       this.setState({
-        clients: rows,
-        rowCount
+        clients: newRows,
+        rowCount,
+        page : 0
       });
       saveData(this.state);
     }
@@ -71,8 +81,8 @@ class searchClient extends Component {
             autoComplete="off"
             style={{ padding: "0px 11px !important", width: "80%" }}
             placeholder={PLACEHOLDER_SEARCH_CLIENT}
-            onChange={event => this.handelInput(event)}
-            onKeyPress={this.handelKeyword}
+            onChange={event => this.handleInput(event)}
+            onKeyPress={this.handleKeyword}
             value={keyword}
           />
           <Tooltip text={TITLE_SEARCH_CLIENT}>
@@ -82,7 +92,7 @@ class searchClient extends Component {
                 style={{ backgroundColor: "#E0E2E2" }}
                 title={TITLE_SEARCH_CLIENT}
                 type="button"
-                onClick={this.handelSearchClient}
+                onClick={this.handleSearchClient}
             >
                 <i
                 className="search icon"

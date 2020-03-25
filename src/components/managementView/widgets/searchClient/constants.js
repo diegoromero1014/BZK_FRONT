@@ -11,10 +11,22 @@ export const STYLE_NO_RESULTS = {
     background: "#ECECEC",
     borderRadius: "4px"
 }
+export const STYLE_ICON_PROSPECT = {
+    marginLeft : "10px",
+    borderRadius: "13px", 
+    background : "#EB984F", 
+    fontSize : "15px",
+    fontWeight : 'bold',
+    color: "white",  
+    width : "22px", 
+    height : "22px" , 
+    textAlign: "center",
+}
 export const COLUMNS_SEARCH_CLIENT = [
     {
         header: 'Prospecto',
-        prop: 'prospect'
+        prop: 'prospect',
+        width : 1
     },
     {
         header: 'Tipo documuento',
@@ -26,7 +38,7 @@ export const COLUMNS_SEARCH_CLIENT = [
     },
     {
         header: 'Razón social',
-        prop: 'accountManager'
+        prop: 'name'
     },
     {
         header: 'Grupo economico',
