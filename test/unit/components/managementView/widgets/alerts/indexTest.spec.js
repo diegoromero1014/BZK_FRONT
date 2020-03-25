@@ -20,6 +20,7 @@ describe('AlertSection Test', () => {
         
         const initialStore = {
             alertBlackList: Immutable.Map({ totalBlackListFiltered: null }),
+            outdatedContacts: { rowCount: null }
         }
 
         store = mockStore(initialStore);

@@ -1,6 +1,6 @@
 export const PORTFOLIO_EXPIRATION_TAB = "Vencimiento de cartera";
 export const COVENANTS_TAB = "Covenants";
-export const DEACTIVATED_CONTACTS_TABS = "Contáctos desactualizados";
+export const OUTDATED_CONTACTS = "Contactos desactualizados";
 export const CONTROL_LISTS_TAB = "Listas de control";
 export const MAX_ROWS = 5;
 
@@ -24,6 +24,44 @@ export const COLUMNS_VENCIMIENTO_CARTERA = [
     {
         header : 'Línea de negocio',
         prop : 'entity',
+    },
+]
+
+export const COLUMNS_COVENANTS_ALERTS = [
+    {
+        header: 'Id covenant',
+        prop: 'idCovenant',
+        width: 1
+    },
+
+    {
+        header: 'Número documento',
+        prop: 'documentClient',
+        width: 1
+    },
+
+    {
+        header: 'Razón social',
+        prop: 'nameClient',
+        width: 3
+    },
+
+    {
+        header: 'Acta o contrato',
+        prop: 'agreement',
+        width: 1
+    },
+
+    {
+        header: 'Línea de negocio',
+        prop: 'lineOfBusiness',
+        width: 1
+    },
+
+    {
+        header: 'Fecha Proximo seguimiento',
+        prop: 'nextExpirationTimestamp',
+        width: 1
     },
 ]
 
@@ -71,40 +109,34 @@ export const COLUMNS_BLACK_LIST_ALERTS = [
     },
 ]
 
-export const COLUMNS_COVENANTS_ALERTS = [
+export const COLUMNS_OUTDATED_CONTACTS = [
     {
-        header: 'Id covenant',
-        prop: 'idCovenant',
+        header: 'Tipo de documento',
+        prop: 'documentType',
         width: 1
     },
 
     {
-        header: 'Número documento',
-        prop: 'documentClient',
+        header: 'Número de documento',
+        prop: 'documentNumber',
         width: 1
     },
 
     {
-        header: 'Razón social',
-        prop: 'nameClient',
+        header: 'Nombre de contacto',
+        prop: 'contactName',
+        width: 2
+    },
+
+    {
+        header: 'Observación',
+        prop: 'observation',
         width: 3
     },
 
     {
-        header: 'Acta o contrato',
-        prop: 'agreement',
-        width: 1
-    },
-
-    {
-        header: 'Línea de negocio',
-        prop: 'lineOfBusiness',
-        width: 1
-    },
-
-    {
-        header: 'Fecha Proximo seguimiento',
-        prop: 'nextExpirationTimestamp',
+        header: 'Posición',
+        prop: 'position',
         width: 1
     },
 ]
