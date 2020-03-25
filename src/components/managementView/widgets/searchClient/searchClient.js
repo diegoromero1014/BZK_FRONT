@@ -43,7 +43,7 @@ class searchClient extends Component {
 		const { keyword } = this.state;
 
 		return (
-			<div style={{ width: "100%", display: "flex", justifyContent: "space-between" }} >
+			<div style={{ width: "100%", display: "flex", justifyContent: "space-between" , marginBottom: "40px"}} >
 				<div style={{ width: "70%" }}>
 					<input
 						className="input-lg input InputAddOn-field"
@@ -73,7 +73,6 @@ class searchClient extends Component {
 					<button
 						type="button"
 						className="btn btn-primary"
-						style={{ marginRight: "30px" }}
 						onClick={redirectCreatePropspect}
 					>
 						<i
