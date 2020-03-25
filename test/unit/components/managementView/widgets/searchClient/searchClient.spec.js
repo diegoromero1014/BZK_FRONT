@@ -51,6 +51,8 @@ describe('Test searchClient component', () => {
 
     describe('test functions of searchClient component', () => {
         
+        
+
     })
     
 
