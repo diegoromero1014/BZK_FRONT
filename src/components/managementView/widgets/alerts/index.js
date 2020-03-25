@@ -6,6 +6,7 @@ import { bindActionCreators } from "redux";
 import TabComponent from "../../../../ui/Tab";
 import AlertPortfolioExpiration from './alertPortfolioExpiration';
 import BlackListAlerts from './blackListAlerts';
+import CovenantsAlertsComponent from './covenantsAlerts';
 import OutdatedContactsComponent from './outdatedContacts';
 
 import {
@@ -18,14 +19,21 @@ import {
 import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExpirtation/actions';
 import { getOutdatedContacts } from '../../actions';
 import { blackListAlerts } from '../../../alertBlackList/actions';
+import { covenantsAlerts } from '../../../alertCovenants/actions';
 import { MAX_ROWS } from './constants';
 
 export class AlertSection extends Component {
 
   async componentDidMount() {
-    const { dispatchGetAlertPortfolioExpirationDashboard, dispatchBlackListAlerts, dispatchGetOutdatedContacts } = this.props;
-
+    const { 
+      dispatchGetAlertPortfolioExpirationDashboard, 
+      dispatchBlackListAlerts,
+      dispatchGetOutdatedContacts, 
+      dispatchCovenantsAlerts 
+    } = this.props;
+    
     await Promise.all([
+      dispatchCovenantsAlerts(1, MAX_ROWS),
       dispatchBlackListAlerts(0, MAX_ROWS), 
       dispatchGetAlertPortfolioExpirationDashboard(1), 
       dispatchGetOutdatedContacts(0, MAX_ROWS)
@@ -33,7 +41,7 @@ export class AlertSection extends Component {
   }
 
   countAlerts = (total) => {
-    const { totalBlackList, totalOutdatedContacts } = this.props;
+    const { totalBlackList, totalOutdatedContacts, totalCovenant } = this.props;
 
     const tabs = [
       {
@@ -43,12 +51,13 @@ export class AlertSection extends Component {
             <AlertPortfolioExpiration total={total} />
           </div>
         ),
-        number: total
+        number: total || 0
       },
       {
         name: COVENANTS_TAB,
-        content: <div>Tab 3 Content</div>,
-        disable: true
+        content: <CovenantsAlertsComponent />,
+        disable: false,
+        number: totalCovenant || 0
       },
       {
         name: OUTDATED_CONTACTS,
@@ -84,14 +93,16 @@ const mapDispatchToProps = dispatch => {
     dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard,
     dispatchBlackListAlerts: blackListAlerts,
     dispatchGetOutdatedContacts: getOutdatedContacts,
+    dispatchCovenantsAlerts: covenantsAlerts
   }, dispatch)
 };
 
-const mapStateToProps = ({ alertPortfolioExpiration, alertBlackList, outdatedContacts }) => ({
+const mapStateToProps = ({ alertPortfolioExpiration, alertBlackList, alertCovenant, outdatedContacts }) => ({
   alertPortfolioExpiration,
   totalBlackList: alertBlackList.get('totalBlackListFiltered'),
+  totalCovenant: alertCovenant.get('totalCovenantsByFiltered'),
   totalOutdatedContacts: outdatedContacts.rowCount
-});
+  });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlertSection);
 
