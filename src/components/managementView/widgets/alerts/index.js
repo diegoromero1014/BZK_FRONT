@@ -92,6 +92,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({
     dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard,
     dispatchBlackListAlerts: blackListAlerts,
+    dispatchGetOutdatedContacts: getOutdatedContacts,
     dispatchCovenantsAlerts: covenantsAlerts
   }, dispatch)
 };
@@ -100,7 +101,6 @@ const mapStateToProps = ({ alertPortfolioExpiration, alertBlackList, alertCovena
   alertPortfolioExpiration,
   totalBlackList: alertBlackList.get('totalBlackListFiltered'),
   totalCovenant: alertCovenant.get('totalCovenantsByFiltered'),
-  dispatchGetOutdatedContacts: getOutdatedContacts,
   totalOutdatedContacts: outdatedContacts.rowCount
   });
 
