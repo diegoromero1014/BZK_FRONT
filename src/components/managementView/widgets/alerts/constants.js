@@ -1,6 +1,6 @@
 export const PORTFOLIO_EXPIRATION_TAB = "Vencimiento de cartera";
 export const COVENANTS_TAB = "Covenants";
-export const DEACTIVATED_CONTACTS_TABS = "Contactos desactualizados";
+export const OUTDATED_CONTACTS = "Contactos desactualizados";
 export const CONTROL_LISTS_TAB = "Listas de control";
 export const MAX_ROWS = 5;
 
@@ -67,6 +67,38 @@ export const COLUMNS_BLACK_LIST_ALERTS = [
     {
         header: 'Nivel',
         prop: 'levelBlackList',
+        width: 1
+    },
+]
+
+export const COLUMNS_OUTDATED_CONTACTS = [
+    {
+        header: 'Tipo de documento',
+        prop: 'documentType',
+        width: 1
+    },
+
+    {
+        header: 'Número de documento',
+        prop: 'documentNumber',
+        width: 1
+    },
+
+    {
+        header: 'Nombre de contacto',
+        prop: 'contactName',
+        width: 2
+    },
+
+    {
+        header: 'Observación',
+        prop: 'observation',
+        width: 3
+    },
+
+    {
+        header: 'Posición',
+        prop: 'position',
         width: 1
     },
 ]
