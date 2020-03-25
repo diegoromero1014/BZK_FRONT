@@ -9,14 +9,13 @@ import {Mention, MentionsInput} from 'react-mentions';
 import {bindActionCreators} from "redux";
 import {filterUsersBanco} from "../../participantsVisitPre/actions";
 import {Subject} from "rxjs";
-import {addCommentToList, clearComments, createComment} from "./actions";
+import {addCommentToList, clearComments} from "./actions";
 import _ from "lodash";
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import {getUsernameInitials} from "../../../functions";
-import TextArea from "../../../ui/textarea/textareaComponent";
 import {ERROR_COMMENT_LENGTH, NO_NOTES_MESSAGE} from "./constants";
 import {
-    patternOfForbiddenCharacter2,
+    patternOfForbiddenCharacterComments, patternOfTaskComments,
     patternOfTaskObservation
 } from "../../../validationsFields/patternsToValidateField";
 import {
@@ -111,10 +110,10 @@ export class CommentsComponent extends Component {
             this.showContentError(content, source, ERROR_COMMENT_LENGTH);
             return false;
         }else {
-            if (!content.match(patternOfTaskObservation)) {
+            if (!content.match(patternOfTaskComments)) {
                 this.showContentError(content, source, MESSAGE_WARNING_TASK_OBSERVATIONS);
                 return false;
-            } else if (!content.match(patternOfForbiddenCharacter2)) {
+            } else if (!content.match(patternOfForbiddenCharacterComments)) {
                 this.showContentError(content, source, MESSAGE_WARNING_FORBIDDEN_CHARACTER);
                 return false;
             }else if(!validateHtmlInjection(content)){
@@ -171,7 +170,7 @@ export class CommentsComponent extends Component {
 
     renderCommentContent = (content) => {
         const regexInitialTag = new RegExp('@\\[', 'g');
-        const regexEndTag = new RegExp('\\]\\([\\d]*\\)', 'g');
+        const regexEndTag = new RegExp('\\|\\d+\\]', 'g');
         content = _.replace(content, regexInitialTag, '<b>');
         content = _.replace(content, regexEndTag, '</b>');
         return (
@@ -199,21 +198,20 @@ export class CommentsComponent extends Component {
                     <Form reply style={{ display: id && this.state.commentBeingReplied === id ? 'block' : 'none', paddingLeft: 60 }}>
                         <Row>
                             <Col xs={12} md={12} ld={12} className="commentTextArea">
-                                {/*<MentionsInput value={this.state.commentReply} onChange={event => this.handleChange(event, 'reply')} className="mentions">
+                                <MentionsInput
+                                    value={this.state.commentReply}
+                                    onChange={event => this.handleChange(event, 'reply')}
+                                    className="mentions"
+                                    disabled={disabled && 'disabled'}
+                                    style={{backgroundColor: disabled ? '#f3f3f3' : 'transparent'}}
+                                    placeholder="Escribe aquí tu respuesta">
                                     <Mention
                                         trigger="@"
                                         data={this.fetchUsers}
                                         className="mentions__mention"
+                                        markup="@[__display__|__id__]"
                                     />
-                                </MentionsInput>*/}
-                                <TextArea
-                                    onChangeEvent={event => this.handleChange(event, 'reply')}
-                                    nameInput="commentReply"
-                                    value={this.state.commentReply}
-                                    placeholder="Escribe tú respuesta"
-                                    rows={7}
-                                    max="340"
-                                />
+                                </MentionsInput>
                                 {showReplyCommentError &&
                                 <div>
                                     <div className="ui pointing red basic label">
@@ -259,22 +257,20 @@ export class CommentsComponent extends Component {
                     <Form reply>
                         <Row>
                             <Col xs={12} md={12} lg={12}>
-                                {/*<MentionsInput value={this.state.comment} onChange={event => this.handleChange(event, 'new')} className="mentions" placeholder="Escribe aquí tu nota">
+                                <MentionsInput
+                                    value={this.state.comment}
+                                    onChange={event => this.handleChange(event, 'new')}
+                                    className="mentions"
+                                    placeholder="Escribe aquí tu nota"
+                                    disabled={disabled && 'disabled'}
+                                    style={{backgroundColor: disabled ? '#f3f3f3' : 'transparent'}}>
                                     <Mention
                                         trigger="@"
                                         data={this.fetchUsers}
                                         className="mentions__mention"
+                                        markup="@[__display__|__id__]"
                                     />
-                                </MentionsInput>*/}
-                                <TextArea
-                                    disabled={disabled && 'disabled'}
-                                    onChangeEvent={event => this.handleChange(event, 'new')}
-                                    nameInput="comment"
-                                    value={this.state.comment}
-                                    placeholder="Escribe tú nota"
-                                    rows={7}
-                                    max="340"
-                                />
+                                </MentionsInput>
                                 {showNewCommentError &&
                                 <div>
                                     <div className="ui pointing red basic label">
