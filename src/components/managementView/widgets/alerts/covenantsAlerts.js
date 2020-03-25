@@ -28,7 +28,7 @@ export class CovenantsAlertsComponent extends Component {
     handleOnClick = async ({ idCovenant }) => await this.setState({ open: true, idCovenant });
 
 
-    handleOnCloseModal = () => this.setState({ open: false, covenantId: null });
+    handleOnCloseModal = () => this.setState({ open: false, idCovenant: null });
 
     render() {
         const { data, total } = this.props;
