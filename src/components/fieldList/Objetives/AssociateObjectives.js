@@ -153,7 +153,7 @@ export default class AssociateObjectives extends React.Component {
         const { draftElements, swtShowMessage, changeListState } = this.props;
 
         if (draftElements.filter(element => element.status !== -1).length == 3) {
-            swtShowMessage("warning", "Alerta", "Señor usuario, Señor usuario, el número máximo de Objetivos del cliente permitidos son 3");
+            swtShowMessage("warning", "Alerta", "Señor usuario, el número máximo de Objetivos del cliente permitidos son 3");
             return;
         }
 
