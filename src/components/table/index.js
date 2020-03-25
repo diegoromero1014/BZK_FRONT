@@ -31,7 +31,6 @@ class TableComponent extends Component {
 
             onSort(this.state.orderedColumn, this.state.direction);
         }
-
     }
 
     render() {
