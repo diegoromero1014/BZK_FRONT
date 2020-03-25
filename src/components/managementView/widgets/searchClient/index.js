@@ -5,7 +5,7 @@ import TableBuilder from "../../../table/TableBuilder";
 import TableComponent from "../../../table";
 
 import { clientsFindServer, clearClients } from "../../../clients/actions";
-import { TITLE_SEARCH_CLIENT, COLUMNS_SEARCH_CLIENT, MESSAGE_NO_RESULTS, MESSAGE_NO_ACCESS, STYLE_NO_RESULTS } from "./constants";
+import { TITLE_SEARCH_CLIENT, COLUMNS_SEARCH_CLIENT, MESSAGE_NO_RESULTS, MESSAGE_NO_ACCESS } from "./constants";
 import { bindActionCreators } from "redux";
 import { redirectUrl } from "../../../globalComponents/actions";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';

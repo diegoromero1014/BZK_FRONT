@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Tooltip from "../../../toolTip/toolTipComponent";
 import { redirectCreatePropspect } from "./utils";
 import { clientsFindServer } from "../../../clients/actions";
-import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT } from "./constants";
+import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_BUTTON_SEARCH } from "./constants";
 import { bindActionCreators } from "redux";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 
@@ -12,7 +12,8 @@ class searchClient extends Component {
 		super(props);
 
 		this.state = {
-			keyword: "",
+            keyword: "",
+            closeIcon : false
 		};
 	}
 
@@ -32,15 +33,28 @@ class searchClient extends Component {
 			dispatchSwtShowMessage("error", "Error en la búsqueda", `Señor usuario, por favor ingrese un criterio de búsqueda.`);
 		} else {
 			await dispatchClientsFindServer(keyword, 0, 10);
-			setKeyword(keyword);
+            setKeyword(keyword);
+            this.setState({
+                closeIcon : true
+            })
 		}
 
 		restartPage();
 		handleSetSearched(true);
 	};
 
+    handleCloseButton = () => {
+        const { handleSetSearched } = this.props;
+        handleSetSearched(false)
+        this.setState({
+            keyword : "",
+            closeIcon : false,
+        })
+    }
+
 	render() {
-		const { keyword } = this.state;
+        const { keyword, closeIcon } = this.state;
+        const functionButton = closeIcon === true ? this.handleCloseButton : this.handleSearchClient ;
 
 		return (
 			<div style={{ width: "100%", display: "flex", justifyContent: "space-between" , marginBottom: "40px"}} >
@@ -50,7 +64,7 @@ class searchClient extends Component {
 						name="keyword"
 						type="text"
 						autoComplete="off"
-						style={{ padding: "0px 11px !important", width: "80%" }}
+						style={{ padding: "0px 11px !important", width: "80%"}}
 						placeholder={PLACEHOLDER_SEARCH_CLIENT}
 						onChange={this.handleInput}
 						onKeyPress={this.handleKeyword}
@@ -60,12 +74,11 @@ class searchClient extends Component {
 						<button
 							id="searchClients"
 							className="btn"
-							style={{ backgroundColor: "#E0E2E2" }}
-							title={TITLE_SEARCH_CLIENT}
+							style={STYLE_BUTTON_SEARCH}
 							type="button"
-							onClick={this.handleSearchClient}
+							onClick={functionButton}
 						>
-							<i className="search icon" style={{ margin: "0em", fontSize: "1.2em" }} />
+							<i className={`${closeIcon ? 'times': 'search'} icon`} style={{ margin: "0em", fontSize: "1.5em" }} />
 						</button>
 					</Tooltip>
 				</div>
@@ -73,6 +86,7 @@ class searchClient extends Component {
 					<button
 						type="button"
 						className="btn btn-primary"
+						style={{ marginRight: "30px" }}
 						onClick={redirectCreatePropspect}
 					>
 						<i
