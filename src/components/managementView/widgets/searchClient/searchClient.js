@@ -7,7 +7,7 @@ import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_
 import { bindActionCreators } from "redux";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 
-class searchClient extends Component {
+export class searchClient extends Component {
 	constructor(props) {
 		super(props);
 

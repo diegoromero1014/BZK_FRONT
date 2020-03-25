@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "nyc --reporter=lcov --reporter=text-lcov mocha --exit --require babel-core/register --require ./test/setup.js --require ignore-styles ./test/**/*.spec.js",
-    "testdev": "mocha --watch --recursive --require babel-core/register --require ./test/setup.js --require ignore-styles ./test/**/*.spec.js",
+    "testdev": "mocha --watch --recursive --require babel-core/register --require ./test/setup.js --require ignore-styles ./test/**/searchClient.spec.js",
     "build": "better-npm-run develop",
     "start": "node server.js",
     "develop": "better-npm-run develop",
