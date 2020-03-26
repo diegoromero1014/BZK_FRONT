@@ -7,6 +7,7 @@ import TableBuilder from "../../../table/TableBuilder";
 import { COLUMNS_COVENANTS_ALERTS, MAX_ROWS } from './constants';
 import Modal from 'react-modal';
 import ModaltrackingCovenant  from '../../../risksManagement/covenants/createTracking/modalTrackingCovenant';
+import {mapDataGrid} from '../../../alertCovenants/alertCovenantsUtilities';
 
 export class CovenantsAlertsComponent extends Component {
 
@@ -33,12 +34,12 @@ export class CovenantsAlertsComponent extends Component {
     render() {
         const { data, total } = this.props;
         const { open, idCovenant } = this.state;
-
+       
         return (
             <div>
                 <Table
                     tableSettings={
-                        new TableBuilder(data, COLUMNS_COVENANTS_ALERTS)
+                        new TableBuilder(mapDataGrid(data), COLUMNS_COVENANTS_ALERTS)
                             .setNoRowMessage("Aún no se han creado registros.")
                             .setRecordsPerPage(MAX_ROWS)
                             .setStriped(true)
