@@ -89,6 +89,7 @@ export class SearchClient extends Component {
 				<Tooltip text={MESSAGE_TOOLTIP}>
 					<button
 						type="button"
+						style={{background: "#00448C"}}
 						className="btn btn-primary"
 						onClick={redirectCreatePropspect}
 					>
