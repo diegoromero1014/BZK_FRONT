@@ -13,14 +13,15 @@ import {addCommentToList, clearComments} from "./actions";
 import _ from "lodash";
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import {getUsernameInitials} from "../../../functions";
-import {ERROR_COMMENT_LENGTH, NO_NOTES_MESSAGE, TASK_COMMENT_HELP_MESSAGE} from "./constants";
+import TextArea from "../../../ui/textarea/textareaComponent";
+import {ERROR_COMMENT_LENGTH, MAX_LENGTH_USER_TASK_COMMENT, TASK_COMMENT_HELP_MESSAGE, NO_NOTES_MESSAGE} from "./constants";
 import {
     patternOfForbiddenCharacterComments,
     patternOfTaskComments
 } from "../../../validationsFields/patternsToValidateField";
 import {
     MESSAGE_ERROR_INJECTION_HTML,
-    MESSAGE_WARNING_FORBIDDEN_CHARACTER,
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER, MESSAGE_WARNING_MAX_LENGTH,
     MESSAGE_WARNING_TASK_OBSERVATIONS
 } from "../../../validationsFields/validationsMessages";
 import {validateHtmlInjection} from "../../../validationsFields/rulesField";
@@ -111,7 +112,10 @@ export class CommentsComponent extends Component {
             this.showContentError(content, source, ERROR_COMMENT_LENGTH);
             return false;
         }else {
-            if (!content.match(patternOfTaskComments)) {
+            if(content.length > MAX_LENGTH_USER_TASK_COMMENT){
+                this.showContentError(content, source, MESSAGE_WARNING_MAX_LENGTH(MAX_LENGTH_USER_TASK_COMMENT));
+                return false;
+            } else if (!content.match(patternOfTaskComments)) {
                 this.showContentError(content, source, MESSAGE_WARNING_TASK_OBSERVATIONS);
                 return false;
             } else if (!content.match(patternOfForbiddenCharacterComments)) {
