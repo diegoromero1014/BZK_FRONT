@@ -34,23 +34,23 @@ export class SearchClient extends Component {
 			dispatchSwtShowMessage("error", "Error en la búsqueda", `Señor usuario, por favor ingrese un criterio de búsqueda.`);
 		} else {
 			await dispatchClientsFindServer(keyword, 0, 10);
-            setKeyword(keyword);
+			setKeyword(keyword);
+			handleSetSearched(true);
             this.setState({
                 closeIcon : true
             })
 		}
 
 		restartPage();
-		handleSetSearched(true);
 	};
 
     handleCloseButton = () => {
-        const { handleSetSearched } = this.props;
-        handleSetSearched(false)
-        this.setState({
-            keyword : "",
+		const { handleSetSearched } = this.props;
+		handleSetSearched(false)
+		this.setState({
+			keyword : "",
             closeIcon : false,
-        })
+		})
     }
 
 	render() {
