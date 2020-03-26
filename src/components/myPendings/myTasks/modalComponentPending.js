@@ -660,4 +660,4 @@ function mapStateToProps({ myPendingsReducer, reducerGlobal, navBar, selectsRedu
     };
 }
 
-export default reduxForm({ form: 'simple', fields }, mapStateToProps, mapDispatchToProps)(ModalComponentPending);
+(ModalComponentPending);export default reduxForm({ form: 'simple', fields }, mapStateToProps, mapDispatchToProps)
