@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Tooltip from "../../../toolTip/toolTipComponent";
 import { redirectCreatePropspect } from "./utils";
 import { clientsFindServer } from "../../../clients/actions";
-import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_BUTTON_SEARCH, CLOSE_BUSQUEDA, STYLE_BUTTON_SEARCH_FOCUS} from "./constants";
+import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_BUTTON_SEARCH, CLOSE_BUSQUEDA, STYLE_BUTTON_SEARCH_FOCUS, STYLE_BUTTON_PROSPECT} from "./constants";
 import { bindActionCreators } from "redux";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 
@@ -66,7 +66,7 @@ export class SearchClient extends Component {
 						name="keyword"
 						type="text"
 						autoComplete="off"
-						style={{ padding: "0px 11px !important", width: "80%"}}
+						style={{ padding: "0px 11px !important", width: "90%"}}
 						placeholder={PLACEHOLDER_SEARCH_CLIENT}
 						onChange={this.handleInput}
 						onKeyPress={this.handleKeyword}
@@ -89,7 +89,7 @@ export class SearchClient extends Component {
 				<Tooltip text={MESSAGE_TOOLTIP}>
 					<button
 						type="button"
-						style={{background: "#00448C"}}
+						style={STYLE_BUTTON_PROSPECT}
 						className="btn btn-primary"
 						onClick={redirectCreatePropspect}
 					>

@@ -54,7 +54,7 @@ export class SectionSearchClient extends Component {
         const { searched } = this.state;
 
         return (
-            <div style={{ margin: "45px 0px 10px 0px" }}>
+            <div style={{ margin: "45px 30px 10px 0px" }}>
                 <h4 style={{ fontSize: 16 }}>{TITLE_SEARCH_CLIENT}</h4>
                 <SearchClient setKeyword={this.setKeyword} restartPage={this.restartPage} handleSetSearched={this.handleSetSearched} />
 

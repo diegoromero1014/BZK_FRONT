@@ -39,6 +39,16 @@ export const STYLE_ICON_PROSPECT = {
     textAlign: "center",
 }
 
+export const STYLE_BUTTON_PROSPECT = {
+    background: "#00448C",
+    padding : "0px",
+    fontSize: "15px",
+    fontWeight: 'bold',
+    color: "white",
+    width: "36px",
+    height: "36px",
+}
+
 export const COLUMNS_SEARCH_CLIENT = [
     {
         header: 'Prospecto',
