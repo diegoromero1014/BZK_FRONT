@@ -1,6 +1,6 @@
 import React from 'react';
-// import searchClientRedux from '../../../../../../src/components/managementView/widgets/searchClient/searchClient';
-// import { searchClient } from '../../../../../../src/components/managementView/widgets/searchClient/searchClient';
+import SearchClientRedux from '../../../../../../src/components/managementView/widgets/searchClient/searchClient';
+import { SearchClient } from '../../../../../../src/components/managementView/widgets/searchClient/searchClient';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 
@@ -40,20 +40,64 @@ describe('Test searchClient component', () => {
     describe('Rendering test', () => {
         
         it('Rendering searchClient component with Redux', () => {
-            itRenders(<searchClientRedux store={store}/>)
+            itRenders(<SearchClientRedux store={store}/>)
         })
 
         it('Rendering searchClient component', () => {
-            itRenders(<searchClient {...defaultProps}/>)
+            itRenders(<SearchClient {...defaultProps}/>)
         })
 
     })
 
     describe('test functions of searchClient component', () => {
         
-        
+        it('Test handleInput function', () => {
+            let evento = {
+                target : {
+                    name : "keyword",
+                    value : "busqueda"
+                }
+            }
+            const wrapper = shallow(<SearchClient {...defaultProps}/>);
+            wrapper.setState({
+                keyword: "",
+                closeIcon : false
+            })
+            wrapper.instance().handleInput(evento);
+            expect(wrapper.state().keyword).to.equal("busqueda"); 
+        }); 
+
+        it('Test handleSearchClient function (with false)', () => {
+            const wrapper = shallow(<SearchClient {...defaultProps}/>);
+            wrapper.setState({
+                keyword: "",
+                closeIcon : false
+            })
+            wrapper.instance().handleSearchClient();
+            sinon.assert.calledOnce(dispatchSwtShowMessage);
+        })
+
+        it('Test handleSearchClient function (with true) execute dispatchClientsFindServer()', () => {
+            const wrapper = shallow(<SearchClient {...defaultProps}/>);
+            wrapper.setState({
+                keyword: "Busqueda",
+                closeIcon : false
+            })
+            wrapper.instance().handleSearchClient();
+            sinon.assert.calledOnce(dispatchClientsFindServer);
+        })
+
+        it('Test handleCloseButton function', () => {
+            const wrapper = shallow(<SearchClient {...defaultProps}/>);
+            wrapper.setState({
+                keyword: "Busqueda",
+                closeIcon : true
+            })
+            wrapper.instance().handleCloseButton ();
+            expect(wrapper.state().closeIcon).to.equal(false);
+            expect(wrapper.state().keyword).to.equal("");
+        })
 
     })
     
-
 })

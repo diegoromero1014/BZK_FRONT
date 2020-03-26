@@ -7,7 +7,7 @@ import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_
 import { bindActionCreators } from "redux";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 
-export class searchClient extends Component {
+export class SearchClient extends Component {
 	constructor(props) {
 		super(props);
 
@@ -104,4 +104,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 	dispatchSwtShowMessage: swtShowMessage
 }, dispatch);
 
-export default connect(null, mapDispatchToProps)(searchClient);
+export default connect(null, mapDispatchToProps)(SearchClient);

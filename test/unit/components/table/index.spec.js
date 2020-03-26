@@ -36,20 +36,4 @@ describe('Tests tableComponent', () => {
             itRenders(<TableComponent {...defaultProps} /> )
         })
     })
-    
-    describe('Test function in tableComponet', () => {
-
-        it('test function handelSort', () => {
-            let clickedColumn;
-            const wrapper = shallow(<TableComponent {...defaultProps}/>)
-            wrapper.setState({
-                orderedColumn: null,
-                direction: null
-            })
-            wrapper.instance().handleSort();
-            expect(wrapper.state().orderedColumn).to.equal(clickedColumn);
-            expect(wrapper.state().direction).to.equal('ascending')
-        })
-    })
-
 })
