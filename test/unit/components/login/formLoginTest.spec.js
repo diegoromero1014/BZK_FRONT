@@ -1,11 +1,13 @@
 import React from 'react';
 import { FormLogin } from '../../../../src/components/login/formLogin';
 import FormLoginRedux from '../../../../src/components/login/formLogin';
+import * as globalActions from '../../../../src/components/globalComponents/actions';
 import Immutable from 'immutable';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 
 let defaultProps;
+let redirectUrl;
 
 let store;
 const middlewares = [thunk];
@@ -14,13 +16,13 @@ const mockStore = configureStore(middlewares);
 describe('FormLogin Test', () => {
 
     beforeEach(() => {
+        redirectUrl = sinon.stub(globalActions, "redirectUrl");
         defaultProps = {
             mainReducer: Immutable.Map({ validToken: false}),
             dispatchShowLoading: sinon.fake(),
             dispatchStopObservablesLeftTimer: sinon.fake(),
             dispatchClearStateLogin: sinon.fake(),
             login: Immutable.Map({ validateLogin: false}),
-            dispatchRedirectUrl: sinon.fake(),
             dispatchChangeTokenStatus: sinon.fake(),
             dispatchValidateLogin: sinon.stub().resolves({}),
         };
@@ -28,6 +30,10 @@ describe('FormLogin Test', () => {
         store = mockStore({
             defaultProps
         })
+    })
+
+    afterEach(() => {
+        redirectUrl.restore();
     })
 
     it('Should render component', () => {
@@ -55,7 +61,7 @@ describe('FormLogin Test', () => {
     it('when instanced redirectLogin', () => {
         const wrapper = shallow(<FormLogin {...defaultProps}/>);
         wrapper.instance().redirectLogin();
-        expect(defaultProps.dispatchRedirectUrl.called).to.equal(true);
+        sinon.assert.calledOnce(redirectUrl);
     })
 
     it('when instanced getValueRecaptcha', () => {
