@@ -12,40 +12,40 @@ import AlertSection from './widgets/alerts';
 
 export class ManagementView extends Component {
 
-  componentWillMount() {
+    componentWillMount() {
 
-    if (window.localStorage.getItem('sessionTokenFront') === "") {
-      redirectUrl("/login");
-    } else {
-      const { dispatchUpdateTitleNavBar } = this.props;
-      dispatchUpdateTitleNavBar("Vista gerencial");
+        if (window.localStorage.getItem('sessionTokenFront') === "") {
+            redirectUrl("/login");
+        } else {
+            const { dispatchUpdateTitleNavBar } = this.props;
+            dispatchUpdateTitleNavBar("Vista gerencial");
+        }
     }
-  }
 
-  render() {
-    return (
-      <div className="ui segment" style={{ paddingLeft: 50, paddingRigth: 50, height: 'auto' }}>
-        <SecurityMessageComponent />
-        <Header />
-        <Row>
-          <Col md={12} style={{ marginTop: 50 }}>
-            <Reports />
-          </Col>
-        </Row>
-        <Row style={{ marginTop: 170 }}>
-          <Col md={12}>
-            <AlertSection />
-          </Col>
-        </Row>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div className="ui segment" style={{ paddingLeft: 50, paddingRigth: 50, height: 'auto' }}>
+                <SecurityMessageComponent />
+                <Header />
+
+                <div style={{ marginTop: 50 }}>
+                    <Reports />
+                </div>
+
+                <Row style={{ marginTop: 170 }}>
+                    <Col md={12}>
+                        <AlertSection />
+                    </Col>
+                </Row>
+            </div>
+        );
+    }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({
-    dispatchUpdateTitleNavBar: updateTitleNavBar,
-  }, dispatch);
+    return bindActionCreators({
+        dispatchUpdateTitleNavBar: updateTitleNavBar,
+    }, dispatch);
 }
 
 export default connect(null, mapDispatchToProps)(ManagementView);
