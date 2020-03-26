@@ -1,12 +1,13 @@
 import React from 'react';
 import { MainComponent } from '../../../../src/components/main/mainComponent';
 import MainComponentRedux from '../../../../src/components/main/mainComponent';
+import * as globalActions from '../../../../src/components/globalComponents/actions';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Immutable from 'immutable';
 
 let defaultProps;
-let dispatchRedirectUrl;
+let redirectUrl;
 let dispatchConsultParameterServer;
 
 let store;
@@ -15,10 +16,10 @@ const mockStore = configureStore(middlewares);
 
 describe('MainComponent Test', () => {
     beforeEach(() => {
-        dispatchRedirectUrl = sinon.fake();
+        redirectUrl = sinon.stub(globalActions, "redirectUrl");
         dispatchConsultParameterServer = sinon.stub().resolves({})
         defaultProps = {
-            dispatchRedirectUrl,
+            redirectUrl,
             mainReducer: Immutable.Map({ validToken: null }),
             dispatchConsultParameterServer
         };
@@ -26,6 +27,10 @@ describe('MainComponent Test', () => {
         store = mockStore({
             defaultProps
         });
+    })
+
+    afterEach(() => {
+        redirectUrl.restore();
     })
 
     it('Should render component with Redux', () => {
@@ -39,14 +44,14 @@ describe('MainComponent Test', () => {
     it('when componentDidUpdate is instanced', () => {
         const wrapper = shallow(<MainComponent {...defaultProps}/>);
         wrapper.instance().componentDidUpdate();
-        sinon.assert.calledTwice(dispatchRedirectUrl);
+        sinon.assert.calledTwice(redirectUrl);
     })
 
     it('when componentDidUpdate is instanced and validToken is true', () => {
         defaultProps.mainReducer = Immutable.Map({ validToken: true })
         const wrapper = shallow(<MainComponent {...defaultProps}/>);
         wrapper.instance().componentDidUpdate();
-        sinon.assert.calledOnce(dispatchRedirectUrl);
+        sinon.assert.calledOnce(redirectUrl);
     })
 
     it('when startBlocking is instanced and resolve.payload is null', () => {
