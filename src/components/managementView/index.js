@@ -24,12 +24,19 @@ export class ManagementView extends Component {
 
     render() {
         return (
-            <div className="ui segment" style={{ paddingLeft: 50, paddingRigth: 50, height: 'auto' }}>
+            <div
+                style={{
+                    padding: '0px 50px',
+                    height: 'auto',
+                    background: '#fff',
+                    width: '100%'
+                }}
+            >
                 <SecurityMessageComponent />
                 <Header />
                 <SectionSearchClient />
 
-                <div style={{ marginTop: 50 }}>
+                <div style={{ marginTop: 100 }}>
                     <Reports />
                 </div>
 
