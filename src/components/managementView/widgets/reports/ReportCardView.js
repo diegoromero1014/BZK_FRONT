@@ -21,25 +21,28 @@ class ReportCardView extends Component {
         return (
             <div className={`report-card-view ${editable ? '' : 'disabled'} `} onClick={() => editable && this.setState({ open: true })}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: -1, width: '100%', height: '100%' }}>
-                    <img src={background} />
+                    <img src={background}  className='report-card-background'/>
                 </div>
                 <div style={{ textAlign: 'center', zIndex: 1, position: 'absolute', width: '100%', top: 0 }}>
                     <h3 className="title-report" style={{ zIndex: 1 }}>{title}</h3>
                 </div>
 
                 {editable &&
-                    <div style={{
-                        textAlign: 'center',
-                        zIndex: 1,
-                        position: 'absolute',
-                        width: '100%',
-                        bottom: 0,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginBottom: 6
-                    }}>
-                        <img src={download} alt="download" />
+                    <div
+                        style={{
+                            textAlign: 'center',
+                            zIndex: 1,
+                            position: 'absolute',
+                            width: '100%',
+                            bottom: 0,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginBottom: 6
+                        }}
+                        className='report-card-icon-download-container'
+                    >
+                        <img src={download} alt="download" className="report-card-icon-download" />
                     </div>
                 }
                 <Modal
