@@ -8,6 +8,7 @@ import configureStore from 'redux-mock-store';
 let dispatchClientsFindServer ;
 let dispatchSwtShowMessage ; 
 let handleSetSearched ;
+let handleSearchClient ;
 let setKeyword ;
 let restartPage ;
 
@@ -24,6 +25,7 @@ describe('Test searchClient component', () => {
         dispatchClientsFindServer = sinon.fake();
         dispatchSwtShowMessage = sinon.fake();
         handleSetSearched = sinon.fake();
+        handleSearchClient = spy(sinon.fake());
         setKeyword = sinon.fake();
         restartPage = sinon.fake();
 
@@ -31,6 +33,7 @@ describe('Test searchClient component', () => {
             dispatchClientsFindServer,
             dispatchSwtShowMessage,
             handleSetSearched,
+            handleSearchClient,
             setKeyword,
             restartPage
         }
@@ -66,6 +69,17 @@ describe('Test searchClient component', () => {
             wrapper.instance().handleInput(evento);
             expect(wrapper.state().keyword).to.equal("busqueda"); 
         }); 
+
+        it('Test handleKeyword function', () => {
+            let event = {
+                keyCode : 13,
+                which : 13
+            }
+            const wrapper = shallow(<SearchClient {...defaultProps}/>);
+            wrapper.instance().handleKeyword(event)
+            expect(handleSearchClient).to.been.called;
+
+        })
 
         it('Test handleSearchClient function (with false)', () => {
             const wrapper = shallow(<SearchClient {...defaultProps}/>);
