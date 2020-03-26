@@ -9,6 +9,7 @@ import Header from './header';
 
 import { updateTitleNavBar } from '../navBar/actions';
 import AlertSection from './widgets/alerts';
+import SectionSearchClient from './widgets/searchClient';
 
 export class ManagementView extends Component {
 
@@ -27,6 +28,7 @@ export class ManagementView extends Component {
       <div className="ui segment" style={{ paddingLeft: 50, paddingRigth: 50, height: 'auto' }}>
         <SecurityMessageComponent />
         <Header />
+        <SectionSearchClient />
         <Row>
           <Col md={12} style={{ marginTop: 50 }}>
             <Reports />
