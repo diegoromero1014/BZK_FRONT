@@ -42,7 +42,7 @@ export class MainComponent extends Component {
   }
 
   startBlocking = () => {
-    const { dispatchConsultParameterServer, dispatchRedirectUrl } = this.props;
+    const { dispatchConsultParameterServer } = this.props;
 
     dispatchConsultParameterServer(RANGO_PASO_PRODUCCION).then(resolve => {
       if (resolve && resolve.payload && resolve.payload.data) {
@@ -53,7 +53,7 @@ export class MainComponent extends Component {
             showMessageNotification: false
           });
 
-          dispatchRedirectUrl('/pageUnderConstruction');
+          redirectUrl('/pageUnderConstruction');
         }
       }
     });
@@ -76,14 +76,14 @@ export class MainComponent extends Component {
   }
 
   componentWillMount() {
-    const { dispatchNotifiedProductionUpgrade, dispatchValidateUpgrateProductionActive, dispatchRedirectUrl } = this.props;
+    const { dispatchNotifiedProductionUpgrade, dispatchValidateUpgrateProductionActive } = this.props;
 
     let token = window.localStorage.getItem('sessionTokenFront');
 
     if (token == null || token === "" || document.cookie.indexOf('estadoconexion=') == -1) {
       window.localStorage.setItem('sessionTokenFront', '');
       document.cookie = 'estadoconexion=activa;path=/';
-      dispatchRedirectUrl("/login");
+      redirectUrl("/login");
     } else {
       const { dispatchLoadObservablesLeftTimer, mainReducer } = this.props;
 
@@ -113,12 +113,12 @@ export class MainComponent extends Component {
 
   componentDidUpdate() {
 
-    const { mainReducer, dispatchRedirectUrl } = this.props;
+    const { mainReducer } = this.props;
 
     const validToken = mainReducer.get("validToken");
 
     if(!validToken) {
-      dispatchRedirectUrl('/login');
+      redirectUrl('/login');
     }
 
   }
@@ -164,8 +164,7 @@ const mapDispatchToProps = (dispatch) => {
     dispatchLoadObservablesLeftTimer: loadObservablesLeftTimer,
     dispatchNotifiedProductionUpgrade: notifiedProductionUpgrade,
     dispatchValidateUpgrateProductionActive: validateUpgrateProductionActive,
-    dispatchConsultParameterServer: consultParameterServer,
-    dispatchRedirectUrl: redirectUrl
+    dispatchConsultParameterServer: consultParameterServer
   }, dispatch);
 }
 

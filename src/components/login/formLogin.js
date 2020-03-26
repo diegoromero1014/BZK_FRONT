@@ -58,9 +58,8 @@ export class FormLogin extends Component {
     }
 
     redirectLogin = () => {
-        const { dispatchRedirectUrl } = this.props;
         this.setState({ showMessageNotification: false });
-        dispatchRedirectUrl("/dashboard/clients");
+        redirectUrl("/dashboard/clients");
     }
 
     getValueRecaptcha = (value) => {
@@ -83,7 +82,7 @@ export class FormLogin extends Component {
                             message: (_.get(response, 'payload.data.data.message'))
                         });
                     } else {
-                        const { dispatchSaveSessionToken, dispatchRedirectUrl } = this.props;
+                        const { dispatchSaveSessionToken } = this.props;
                         dispatchSaveSessionToken(_.get(response, 'payload.data.data.sessionToken'));
                         saveSessionUserName(usuario, _.get(response, 'payload.data.data.username'));
                         dispatchChangeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
@@ -91,7 +90,7 @@ export class FormLogin extends Component {
                         // Activar cookie
                         document.cookie = 'estadoconexion=activa;path=/';                        
 
-                        dispatchRedirectUrl("/dashboard/clients");
+                        redirectUrl("/dashboard/clients");
                     }
                 } else {
                     let res = JSON.parse(response.payload.data.data);
@@ -204,7 +203,6 @@ const mapDispatchToProps = (dispatch) => {
         dispatchValidateLogin: validateLogin,
         dispatchSaveSessionToken: saveSessionToken,
         dispatchClearStateLogin: clearStateLogin,
-        dispatchRedirectUrl: redirectUrl,
         dispatchShowLoading: showLoading,
         dispatchChangeActiveItemMenu: changeActiveItemMenu,
         dispatchChangeTokenStatus: changeTokenStatus,
