@@ -7,3 +7,4 @@ export const GET_COMMENTS_BY_REPORT_ID = 'GET_COMMENTS_BY_REPORT_ID';
 
 export const ERROR_COMMENT_LENGTH = 'El comentario no tiene ningún contenido.';
 export const NO_NOTES_MESSAGE = 'Sin notas asociadas';
+export const MAX_LENGTH_USER_TASK_COMMENT = 1000;
