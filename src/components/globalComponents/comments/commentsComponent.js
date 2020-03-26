@@ -13,10 +13,10 @@ import {addCommentToList, clearComments} from "./actions";
 import _ from "lodash";
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import {getUsernameInitials} from "../../../functions";
-import {ERROR_COMMENT_LENGTH, NO_NOTES_MESSAGE} from "./constants";
+import {ERROR_COMMENT_LENGTH, NO_NOTES_MESSAGE, TASK_COMMENT_HELP_MESSAGE} from "./constants";
 import {
-    patternOfForbiddenCharacterComments, patternOfTaskComments,
-    patternOfTaskObservation
+    patternOfForbiddenCharacterComments,
+    patternOfTaskComments
 } from "../../../validationsFields/patternsToValidateField";
 import {
     MESSAGE_ERROR_INJECTION_HTML,
@@ -24,6 +24,7 @@ import {
     MESSAGE_WARNING_TASK_OBSERVATIONS
 } from "../../../validationsFields/validationsMessages";
 import {validateHtmlInjection} from "../../../validationsFields/rulesField";
+import Tooltip from "../../toolTip/toolTipComponent";
 
 export class CommentsComponent extends Component {
 
@@ -243,11 +244,20 @@ export class CommentsComponent extends Component {
         return (
             <div style={{maxWidth: '100%'}}>
                 <Comment.Group style={{ width: '100%', margin: 0, maxWidth: '100%' }}>
-                    {header &&
-                    <Header as='p' dividing style={{ minHeight: 30 }}>
-                        {header}
-                    </Header>
-                    }
+                    <div style={{position: 'relative'}}>
+                        <div style={{position: 'absolute', top: '0.2em', left: '3.2em'}}>
+                            <Tooltip text={TASK_COMMENT_HELP_MESSAGE}>
+                                <i className="help circle icon blue" style={{fontSize: "16px", cursor: "pointer", marginLeft: "10px"}}/>
+                            </Tooltip>
+                        </div>
+                        <div>
+                            {header &&
+                            <Header as='p' dividing style={{ minHeight: 30 }}>
+                                {header}
+                            </Header>
+                            }
+                        </div>
+                    </div>
                     <br></br>
                     {comments && comments.length ? this.renderComments(comments) :
                         <p style={{fontStyle: 'italic',
