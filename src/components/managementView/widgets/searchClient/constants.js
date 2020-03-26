@@ -1,11 +1,11 @@
 import ProspectIcon from './prospectIcon';
 
-
 export const TITLE_SEARCH_CLIENT = 'Buscar clientes';
 export const PLACEHOLDER_SEARCH_CLIENT = 'Buscar por nombre, NIT o grupo económico';
 export const MESSAGE_TOOLTIP = 'Crear prospecto';
 export const MESSAGE_NO_RESULTS = 'Señor usuario, no se encontraron clientes que cumplan el criterio de búsqueda.';
 export const MESSAGE_NO_ACCESS = 'Señor usuario, usted no cuenta con los permisos para visualizar este cliente.';
+
 export const STYLE_BUTTON_SEARCH = {
     backgroundColor: "#E0E2E2",
     borderRadius : "0px 1px 1px 0px", 
@@ -14,6 +14,7 @@ export const STYLE_BUTTON_SEARCH = {
     borderRight: "1px solid #e5e9ec", 
     borderBottom: "1px solid #e5e9ec"
 }
+
 export const STYLE_ICON_PROSPECT = {
     marginLeft: "10px",
     borderRadius: "13px",
@@ -25,6 +26,7 @@ export const STYLE_ICON_PROSPECT = {
     height: "22px",
     textAlign: "center",
 }
+
 export const COLUMNS_SEARCH_CLIENT = [
     {
         header: 'Prospecto',
@@ -47,7 +49,7 @@ export const COLUMNS_SEARCH_CLIENT = [
         prop: 'name'
     },
     {
-        header: 'Grupo economico',
+        header: 'Grupo económico',
         prop: 'economicGroup'
     }
 ]
