@@ -14,7 +14,7 @@ export class SearchClient extends Component {
 		this.state = {
             keyword: "",
 			closeIcon : false,
-			background : false 
+			background : true 
 		};
 	}
 
