@@ -25,7 +25,7 @@ export class ModalContentComponent extends Component {
     }
 
     handleOnClick = () => {
-        const { dispatchSwtShowMessage, element: { elements , open }, singularTitle, title } = this.props;
+        const { dispatchSwtShowMessage, element: { elements , open }, title } = this.props;
         
         if (open) {
             dispatchSwtShowMessage(
@@ -34,13 +34,7 @@ export class ModalContentComponent extends Component {
                 `Señor usuario, esta creando o editando un registro en la sección Oportunidades y Debilidades, debe terminarlo o cancelarlo para poder guardar.`
             )
         } else {
-            if (elements.filter(item => item.associated).length === 0) {
-                dispatchSwtShowMessage(
-                    "warning",
-                    "Alerta",
-                    `Señor usuario debe seleccionar al menos una ${singularTitle} para guardar`
-                )
-            } else if (elements.filter(item => item.associated).length > 5) {
+            if (elements.filter(item => item.associated).length > 5) {
                 dispatchSwtShowMessage(
                     "warning",
                     "Alerta",

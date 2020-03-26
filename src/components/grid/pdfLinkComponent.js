@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import {connect} from 'react-redux';
 import { generatePDF } from '../../components/reports/pdf/actions';
-import { changeStateSaveData } from '../../components/dashboard/actions';
+import { changeStateSaveData } from '../../components/main/actions';
 import {bindActionCreators } from 'redux';
 
 export class PdfLinkComponent extends Component {

@@ -20,7 +20,7 @@ import InfoFinanciera from './components/InfoFinanciera';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
 import { goBack, redirectUrl } from "../globalComponents/actions";
 import { swtShowMessage } from "../sweetAlertMessages/actions";
-import { changeStateSaveData } from "../dashboard/actions";
+import { changeStateSaveData } from "../main/actions";
 import { createProspect } from "../propspect/actions";
 import { updateTitleNavBar } from "../navBar/actions";
 import { clearNotes, deleteNote, setNotes } from "../clientEdit/notes/actions";

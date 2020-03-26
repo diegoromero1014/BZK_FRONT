@@ -1,0 +1,95 @@
+.title-report {
+    text-align: center;
+    padding: 20px 13px;
+    font-size: 1em !important;
+    font-weight: bolder;
+    text-transform: uppercase;
+    color: rgb(0, 68, 140);
+    @media screen and (max-width: 1164px) {
+        font-size: 0.9em !important;
+    }
+    @media screen and (max-width: 965px) {
+        display: none;
+    }
+}
+
+.slick-prev::before, .slick-next::before {
+    font-family: "slick";
+    font-size: 20px;
+    line-height: 1;
+    color: #00448c !important;
+    opacity: 0.75;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
+
+.report-card-icon-download {
+    @media screen and (max-width: 965px) {
+        display: none !important;
+    }
+}
+
+.report-card-icon-download-container {
+    @media screen and (max-width: 965px) {
+        display: none !important;
+    }
+}
+
+.report-card-background {
+    @media screen and (max-width: 770px) {
+        width: 60px !important;
+        height: 60px !important;
+    }
+
+    @media screen and (max-width: 720px) {
+        width: 50px !important;
+        height: 50px !important;
+    }
+}
+
+.report-card-view {
+    border: 1px solid #ececec;
+    background-color: #fff;
+    width: 240px; 
+    height: 240px; 
+    cursor: pointer; 
+    position: relative;
+    box-shadow: 10px 10px 5px -9px rgba(0,0,0,0.75);
+    margin-bottom: 10px;
+    border-radius: 7px;
+    overflow: hidden;
+
+    @media screen and (max-width: 1326px) {
+        width: 200px !important;
+        height: 200px !important;
+        margin: 10px;
+    }
+
+    @media screen and (max-width: 1164px) {
+        width: 150px !important;
+        height: 150px !important;
+        margin: 10px;
+    }
+
+    @media screen and (max-width: 965px) {
+        width: 100px !important;
+        height: 100px !important;
+        margin: 10px;
+    }
+
+    @media screen and (max-width: 800px) {
+        width: 90px !important;
+        height: 90px !important;
+        margin: 10px;
+    }
+
+    @media screen and (max-width: 720px) {
+        width: 80px !important;
+        height: 80px !important;
+        margin: 10px;
+    }
+
+    &.disabled {
+        background-color: gray;
+    }
+}

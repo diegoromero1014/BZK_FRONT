@@ -69,5 +69,3 @@ export function stopObservablesLeftTimer() {
         type: STOP_INPUT_EVENTS
     }
 }
-
-

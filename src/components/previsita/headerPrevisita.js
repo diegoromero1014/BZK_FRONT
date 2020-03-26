@@ -5,15 +5,13 @@ import _ from 'lodash';
 
 import RaitingInternal from '../clientInformation/ratingInternal';
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
-import Message from '../message';
 
 import { AEC_NO_APLIED } from '../../constantsGlobal';
-import { MESSAGE_NEW_COMPONENTS } from './constants';
 
 class CreatePrevisita extends Component {
 
   render() {
-    const { clientInformacion } = this.props;    
+    const { clientInformacion } = this.props;
     const infoClient = clientInformacion.get('responseClientInfo');
     const { aecStatus } = infoClient;
     var showAECNoAplica = false;
@@ -24,7 +22,6 @@ class CreatePrevisita extends Component {
     }
     return (
       <div style={{ backgroundColor: "#FFFFFF", width: "100%" }}>
-        <Message message={MESSAGE_NEW_COMPONENTS} show={true} icon={'newspaper outline'}/>
         <SecurityMessageComponent />
         <header className="header-client-detail" style={{ paddingTop: '10px' }}>
           <div className="company-detail" style={{ marginLeft: "20px", marginRight: "20px" }}>

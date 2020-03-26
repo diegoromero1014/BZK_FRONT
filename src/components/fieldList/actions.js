@@ -43,19 +43,20 @@ export const changeListState = list => (newState) => {
     }
 }
 
-export const updateElementFromList = list => (element) => {
+export const updateElementFromList = list => (key) => {
     return {
         type: UPDATE_ELEMENT_FROM_LIST,
         list,
-        element
+        key
     }
 }
 
-export const removeElementFromList = list => (elementToDelete) => {
+export const removeElementFromList = list => (elementToDelete, key) => {
     return {
         type: REMOVE_ELEMENT_FROM_LIST,
         list,
-        elementToDelete
+        elementToDelete,
+        key
     }
 }
 

@@ -15,7 +15,7 @@ import ElementsComponent from '../../../elements';
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 
 import { getContactDetails } from '../../../contact/contactDetail/actions';
-import { changeStateSaveData } from '../../../dashboard/actions';
+import { changeStateSaveData } from '../../../main/actions';
 import { clientsByEconomicGroup, modifyClientRelationship, updateRelationshipClientcontact } from '../../actions';
 import { redirectUrl } from '../../../globalComponents/actions';
 import { economicGroupsByKeyword } from '../../../selectsComponent/actions';
