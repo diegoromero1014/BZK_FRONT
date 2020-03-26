@@ -9,6 +9,7 @@ import { TITLE_SEARCH_CLIENT, COLUMNS_SEARCH_CLIENT, MESSAGE_NO_RESULTS, MESSAGE
 import { bindActionCreators } from "redux";
 import { redirectUrl } from "../../../globalComponents/actions";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
+import { changeActiveItemMenu } from '../../../menu/actions';
 
 export class SectionSearchClient extends Component {
     constructor(props) {
@@ -35,10 +36,11 @@ export class SectionSearchClient extends Component {
     };
 
     handelClickClient = ({ id, access }) => {
-        const { dispatchSwtShowMessage } = this.props;
+        const { dispatchSwtShowMessage, dispatchChangeActiveItemMenu } = this.props;
 
         if (access) {
             window.sessionStorage.setItem('idClientSelected', id);
+            dispatchChangeActiveItemMenu("Mis clientes");
             redirectUrl('/dashboard/clientInformation');
         } else {
             dispatchSwtShowMessage("warning", "Acceso denegado", MESSAGE_NO_ACCESS);
@@ -86,7 +88,8 @@ const mapStateToProps = ({ clientR }) => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
     dispatchClientsFindServer: clientsFindServer,
     dispatchSwtShowMessage: swtShowMessage,
-    dispatchClearClients: clearClients
+    dispatchClearClients: clearClients,
+    dispatchChangeActiveItemMenu : changeActiveItemMenu
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SectionSearchClient);

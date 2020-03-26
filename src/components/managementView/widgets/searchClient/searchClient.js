@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Tooltip from "../../../toolTip/toolTipComponent";
-import { redirectCreatePropspect } from "./utils";
 import { clientsFindServer } from "../../../clients/actions";
 import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_BUTTON_SEARCH, CLOSE_BUSQUEDA, STYLE_BUTTON_SEARCH_FOCUS, STYLE_BUTTON_PROSPECT} from "./constants";
 import { bindActionCreators } from "redux";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
+import { redirectUrl } from "../../../globalComponents/actions";
+import { changeActiveItemMenu } from '../../../menu/actions';
 
 export class SearchClient extends Component {
 	constructor(props) {
@@ -16,6 +17,12 @@ export class SearchClient extends Component {
 			closeIcon : false,
 			background : true 
 		};
+	}
+
+	redirectCreatePropspect = () => {
+		const { dispatchChangeActiveItemMenu } = this.props;
+		dispatchChangeActiveItemMenu("Mis clientes");
+		redirectUrl("/dashboard/createPropspect");
 	}
 
 	handleInput = ({ target: { name, value } }) => this.setState({ [name]: value });
@@ -91,7 +98,7 @@ export class SearchClient extends Component {
 						type="button"
 						style={STYLE_BUTTON_PROSPECT}
 						className="btn btn-primary"
-						onClick={redirectCreatePropspect}
+						onClick={this.redirectCreatePropspect}
 					>
 						<i
 							className="add user icon"
@@ -106,7 +113,8 @@ export class SearchClient extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
 	dispatchClientsFindServer: clientsFindServer,
-	dispatchSwtShowMessage: swtShowMessage
+	dispatchSwtShowMessage: swtShowMessage,
+	dispatchChangeActiveItemMenu : changeActiveItemMenu
 }, dispatch);
 
 export default connect(null, mapDispatchToProps)(SearchClient);
