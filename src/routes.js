@@ -41,14 +41,15 @@ import PrevisitPage from "./components/previsita/previsitPage";
 
 import makeAssociateList from './components/fieldList/makeAssociateList';
 
-import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
-    CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST, 
-    LINKINGREQUESTS, MODALDRAFTDOCUMENTS, MODALCOMPONENTPENDING, ALERTCOVENANTS, 
-    ADMINALERTCLIENTSPORTFOLIOEXPIRATION, EDITBUSINESSPLAN, BUSINESSPLAN, 
-    EDITFORMPIPELINE, CREATEFORMPIPELINE, VISITEDIT, VISIT, EDITPREVISITA, 
-    PREVISITA, CLIENTCERTIFY, CLIENTSFIND, CLIENTEDIT, CREATEPROPSPECT, STUDYCREDIT, 
-    COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, VIEWMANAGEMENT, DASHBOARDCOMPONENT, 
-    LOGINCOMPONENT,     
+import {
+    BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP,
+    CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST,
+    LINKINGREQUESTS, MODALDRAFTDOCUMENTS, MODALCOMPONENTPENDING, ALERTCOVENANTS,
+    ADMINALERTCLIENTSPORTFOLIOEXPIRATION, EDITBUSINESSPLAN, BUSINESSPLAN,
+    EDITFORMPIPELINE, CREATEFORMPIPELINE, VISITEDIT, VISIT, EDITPREVISITA,
+    PREVISITA, CLIENTCERTIFY, CLIENTSFIND, CLIENTEDIT, CREATEPROPSPECT, STUDYCREDIT,
+    COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, VIEWMANAGEMENT, DASHBOARDCOMPONENT,
+    LOGINCOMPONENT,
     LoginComponentURL,
     DashboardComponentURL,
     ViewManagementURL,
@@ -88,8 +89,10 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     VIEWALERT,
     ADMINALERTCLIENTSPENDINGUPDATE,
     SHEDULER,
-    DEFAULT} from "./constantsAnalytics";
+    DEFAULT, MyTasksPageUrl, MyTasksPage
+} from "./constantsAnalytics";
 import TaskPage from "./components/pendingTask/taskPage";
+import MyTaskPage from "./components/myTasks/myTaskPage";
 
 
 const  AssociateObjectives =  makeAssociateList("Objetivos");
@@ -191,6 +194,8 @@ class App extends Component {
                 return CONTROLDASHBOARD;
             case ShedulerURL:
                 return SHEDULER;
+            case MyTasksPageUrl:
+                return MyTasksPage;
             default:
                 return DEFAULT;
         }
@@ -236,6 +241,7 @@ export default (
                 <Route path="alertClientPendingUpdate" component={AdminAlertClientsPendingUpdate}></Route>
                 <Route path="alertClientsPortfolioExpiration" component={AdminAlertClientsPortfolioExpiration}></Route>
                 <Route path="alertCovenants" component={AlertCovenants}></Route>
+                <Route path="myTask" component={MyTaskPage}/>
                 <Route path="myPendings">
                     <Route path="myTasks" component={ModalComponentPending}></Route>
                     <Route path="draftDocuments" component={ModalDraftDocuments}></Route>

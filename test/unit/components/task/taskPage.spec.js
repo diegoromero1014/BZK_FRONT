@@ -66,6 +66,7 @@ let stubLocalStorage;
 let store;
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
+let dispatchShowBrandConfidential;
 
 describe('Test taskPage', () => {
     beforeEach(() => {
@@ -154,10 +155,12 @@ describe('Test taskPage', () => {
             dispatchGetTaskNotesByUserTaskId,
             fromModal: false,
             closeModal,
+            dispatchShowBrandConfidential
         };
         store = mockStore({
             defaultProps
         });
+        dispatchShowBrandConfidential = spy(sinon.fake());
     });
 
     afterEach(() => {

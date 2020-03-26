@@ -45,6 +45,7 @@ import {detailBusiness} from "../businessPlan/actions";
 import {detailVisit} from "../visit/actions";
 import {validatePermissionsByModule} from "../../actionsGlobal";
 import {getTaskNotesByUserTaskId, saveTaskNote} from "./createPendingTask/actions";
+import {showBrandConfidential} from "../navBar/actions";
 
 let nameEntity;
 
@@ -86,25 +87,24 @@ export class TaskPage extends React.Component {
             let userName = window.localStorage.getItem("userNameFront");
             const filterUserResponse = await filterUsersBancoDispatch(userName);
             const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
-            if(taskDetail) {
-                dispatchFillComments(taskDetail.notes);
-                this.setState({
-                    nameUsuario: taskDetail.assignedBy
-                });
-            }else{
+            if (!id) {
                 await this.setState({
                     nameUsuario: _.get(filterUserResponse, 'payload.data.data[0].title')
                 });
+            }
+            if (taskDetail) {
+                dispatchFillComments(taskDetail.notes);
             }
         });
     }
 
     componentWillUnmount() {
-        const {dispatchClearUserTask} = this.props;
+        const {dispatchClearUserTask, dispatchShowBrandConfidential} = this.props;
         this.setState({
             isMounted: false
         });
         dispatchClearUserTask();
+        dispatchShowBrandConfidential(false);
     }
 
     validateClientSelected = () => {
@@ -208,11 +208,17 @@ export class TaskPage extends React.Component {
     };
 
     getInfoTask = async (id) => {
-        const { dispatchGetInfoTaskUser, dispatchFillComments, dispatchDetailBusiness, dispatchDetailVisit, dispatchValidatePermissionsByModule } = this.props;
+        const { dispatchGetInfoTaskUser, dispatchFillComments, dispatchDetailBusiness, dispatchDetailVisit, dispatchValidatePermissionsByModule, dispatchShowBrandConfidential, fromModal } = this.props;
         if (id) {
             const response = await dispatchGetInfoTaskUser(id);
             const taskInfo = _.get(response, 'payload.data.data');
             dispatchFillComments(taskInfo.notes);
+            if (_.isEqual(taskInfo.confidentiality, 1)) {
+                dispatchShowBrandConfidential(true);
+            }
+            if (!_.isNil(fromModal)) {
+                dispatchShowBrandConfidential(false);
+            }
             nameEntity = taskInfo.nameEntity;
             this.entityId = taskInfo.entityId;
             if (taskInfo.nameEntity === 'Plan de negocio') {
@@ -339,7 +345,7 @@ export class TaskPage extends React.Component {
                 {
                     this.state.renderForm ? this.renderForm() : null
                 }
-                {nameEntity &&
+                {nameEntity && fromModal &&
                 <div className="modalBt4-footer modal-footer" style={{zIndex: 2}}>
 
                         <Row xs={12} md={12} lg={12}>
@@ -393,7 +399,8 @@ function mapDispatchToProps(dispatch) {
         dispatchGetTaskNotesByUserTaskId: getTaskNotesByUserTaskId,
         dispatchDetailBusiness: detailBusiness,
         dispatchDetailVisit: detailVisit,
-        dispatchValidatePermissionsByModule: validatePermissionsByModule
+        dispatchValidatePermissionsByModule: validatePermissionsByModule,
+        dispatchShowBrandConfidential: showBrandConfidential
     }, dispatch);
 }
 

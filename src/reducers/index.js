@@ -75,6 +75,7 @@ import objectListReducer from "../components/listaObjetos/reducer";
 import elementsReducer from "../components/elements/reducer";
 import commentsReducer from '../components/globalComponents/comments/reducer';
 import searchEmployeeInputReducer from '../components/globalComponents/searchEmployeeInput/reducer';
+import myTasksReducer from '../components/myTasks/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -152,5 +153,6 @@ export default combineReducers({
     objectListReducer,
     elementsReducer,
     commentsReducer,
-    searchEmployeeInputReducer
+    searchEmployeeInputReducer,
+    myTasks: myTasksReducer
 });

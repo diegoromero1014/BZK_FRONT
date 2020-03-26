@@ -14,6 +14,8 @@ import BusinessPlanInfo from '../businessPlan/component';
 import ClientTaskList from '../pendingTask/ClientTaskList';
 import RisksManagements from '../risksManagement/componentRisksManagement';
 import ComponentCustomerStory from '../customerStory/componentCustomerStory';
+import ToolTip from './../toolTip/toolTipComponent'
+
 
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import { pendingTasksByClientPromise } from "./../pendingTask/actions";
@@ -33,6 +35,7 @@ import {
     _RISKS_MANAGEMENT
 } from '../../constantsAnalytics';
 import { NUMBER_RECORDS } from '../pendingTask/constants';
+import { TOOLTIP_PENDING_TASK } from "./constants";
 
 export class TabClientInfo extends Component {
     constructor(props) {
@@ -421,13 +424,21 @@ export class TabClientInfo extends Component {
                         }
                         {_.get(navBar.get('mapModulesAccess'), MODULE_TASKS) &&
                             <li style={backgroundPending} onClick={this._handleClickTabItem.bind(this, TAB_PENDING_TASK)}>
-                                <Label
-                                  circular
-                                  floating
-                                  color={'red'}
-                                  key={'counter'} content={this.state.counterTabPending > 99 ? '99+' : this.state.counterTabPending}
-                                  className="notificationTabTask"
-                                />
+                                {
+                                    this.state.counterTabPending > 0 &&
+                                    <ToolTip
+                                      text={TOOLTIP_PENDING_TASK(this.state.counterTabPending)}
+                                      rendertooltip={TOOLTIP_PENDING_TASK(this.state.counterTabPending)}>
+                                        <Label
+                                          circular
+                                          floating
+                                          color={'blue'}
+                                          key={'counter'} content={this.state.counterTabPending > 99 ? '99+' : this.state.counterTabPending}
+                                          className="notificationTabTask"
+                                          size={'tiny'}
+                                        />
+                                    </ToolTip>
+                                }
                                 <a className="button-link-url" style={{ marginLeft: "-20px"}}>Tareas</a>
                             </li>
                         }

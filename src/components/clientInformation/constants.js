@@ -10,4 +10,7 @@ export const CLAER_CLIENT_INFO = 'CLAER_CLIENT_INFO';
 export const UPDATE_FIELD_INFO_CLIENT = 'UPDATE_FIELD_INFO_CLIENT';
 export const CHANGE_VALUE_LIST_CLIENT = 'CHANGE_VALUE_LIST_CLIENT';
 export const CHANGE_INFO_CLIENT = 'CHANGE_INFO_CLIENT';
+export const TOOLTIP_PENDING_TASK = counter => {
+  return `Tienes ${counter} tareas por cerrar`;
+};
 

@@ -248,15 +248,7 @@ describe('Test commentsComponent', () => {
 
         it('addComment when has a parentComment', async () => {
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
-            await wrapper.instance().addComment({ preventDefault: sinon.fake() }, 4342, {
-                id: null,
-                initials: 'KM',
-                author: 'Katherine Mancera',
-                parentCommentId: null,
-                createdTimestamp: new Date(),
-                content: 'Esta es la respuesta al comentario de respuesta',
-                replies: []
-            }, 'reply');
+            await wrapper.instance().addComment({ preventDefault: sinon.fake() }, 4342, 'Esta es la respuesta al comentario de respuesta', 'reply');
             expect(wrapper.state().commentReply).to.equal('');
         });
     });

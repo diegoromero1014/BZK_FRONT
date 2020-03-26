@@ -107,7 +107,7 @@ export class CommentsComponent extends Component {
     };
 
     validateCommentContent = (content, source) => {
-        if(!content.length){
+        if(!content.trim().length){
             this.showContentError(content, source, ERROR_COMMENT_LENGTH);
             return false;
         }else {
@@ -243,8 +243,8 @@ export class CommentsComponent extends Component {
         const { header, commentsReducer: { comments }, disabled } = this.props;
         const { showNewCommentError } = this.state;
         return (
-            <div>
-                <Comment.Group style={{ width: '100%', margin: 0, maxWidth: 'initial' }}>
+            <div style={{maxWidth: '100%'}}>
+                <Comment.Group style={{ width: '100%', margin: 0, maxWidth: '100%' }}>
                     {header &&
                     <Header as='p' dividing style={{ minHeight: 30 }}>
                         {header}

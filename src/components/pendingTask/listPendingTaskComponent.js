@@ -12,17 +12,13 @@ class ListPendingTaskComponent extends Component {
     this.state = {
       column: "",
       order: "",
-      orderA: "none",
-      orderD: "inline-block",
+      orderA: "inline-block",
+      orderD: "none"
     };
   }
 
   componentDidMount() {
     const { handleTaskByClientsFind, mode } = this.props;
-    this.state = {
-      orderA: 'none',
-      orderD: 'inline-block',
-    }
     handleTaskByClientsFind(0, mode);
   }
 
@@ -99,7 +95,7 @@ class ListPendingTaskComponent extends Component {
   render() {
     const { tasks } = this.props;
     return (
-      <div className="horizontal-scroll-wrapper" style={{ overflow: 'scroll' }}>
+      <div >
         <GridComponent headers={this._renderHeaders} data={this._renderCellView(tasks)} modalTitle={MODAL_TITLE} />
       </div>
     );

@@ -23,13 +23,13 @@ const initialState = Immutable.Map({
     page: 0,
     order: 0,
     rowCount: 0,
-    data: {}
+    data: []
   },
   tabFinished: {
     page: 0,
     order: 0,
     rowCount: 0,
-    data: {}
+    data: []
   },
   status: "processed",
   keywordUserTask: "",
@@ -78,7 +78,7 @@ export default (state = initialState, action) => {
           page: action.currentPage,
           order: action.orderTask,
           rowCount: 0,
-          data: {}
+          data: []
         };
         return state.withMutations(map => { map.set("tabPending", changePagePending)});
     case CHANGE_PAGE_FINALIZED:
@@ -86,7 +86,7 @@ export default (state = initialState, action) => {
           page: action.currentPage,
           order: action.orderTask,
           rowCount: 0,
-          data: {}
+          data: []
         };
         return state.withMutations(map => { map.set("tabFinished", changePageFinalized)});
     case CLEAR_USER_TASK:
@@ -122,7 +122,7 @@ export default (state = initialState, action) => {
           page: 1,
           order: action.orderTask,
           rowCount: 0,
-          data: {}
+          data: []
         };
       return state.withMutations(map => {
         map.set("tabPending", cleanPagAndOrderPending);
@@ -132,7 +132,7 @@ export default (state = initialState, action) => {
         page: 1,
         order: action.orderTask,
         rowCount: 0,
-        data: {}
+        data: []
       };
       return state.withMutations(map => {
         map.set("tabFinished", cleanPagAndOrderFinished);
