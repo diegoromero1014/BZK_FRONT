@@ -1,13 +1,25 @@
 import ProspectIcon from './prospectIcon';
 
 export const TITLE_SEARCH_CLIENT = 'Buscar clientes';
+export const CLOSE_BUSQUEDA = 'Limpiar busqueda';
 export const PLACEHOLDER_SEARCH_CLIENT = 'Buscar por nombre, NIT o grupo económico';
 export const MESSAGE_TOOLTIP = 'Crear prospecto';
 export const MESSAGE_NO_RESULTS = 'Señor usuario, no se encontraron clientes que cumplan el criterio de búsqueda.';
 export const MESSAGE_NO_ACCESS = 'Señor usuario, usted no cuenta con los permisos para visualizar este cliente.';
 
 export const STYLE_BUTTON_SEARCH = {
-    backgroundColor: "#E0E2E2",
+    backgroundColor: "transparent",
+    color : "#00448C",
+    borderRadius : "0px 1px 1px 0px", 
+    height : "37px", 
+    borderTop: "1px solid #e5e9ec", 
+    borderRight: "1px solid #e5e9ec", 
+    borderBottom: "1px solid #e5e9ec"
+}
+
+export const STYLE_BUTTON_SEARCH_FOCUS = {
+    backgroundColor: "#F4F5F7",
+    color : "#00448C",
     borderRadius : "0px 1px 1px 0px", 
     height : "37px", 
     borderTop: "1px solid #e5e9ec", 

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Tooltip from "../../../toolTip/toolTipComponent";
 import { redirectCreatePropspect } from "./utils";
 import { clientsFindServer } from "../../../clients/actions";
-import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_BUTTON_SEARCH } from "./constants";
+import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_BUTTON_SEARCH, CLOSE_BUSQUEDA, STYLE_BUTTON_SEARCH_FOCUS} from "./constants";
 import { bindActionCreators } from "redux";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 
@@ -13,7 +13,8 @@ export class SearchClient extends Component {
 
 		this.state = {
             keyword: "",
-            closeIcon : false
+			closeIcon : false,
+			background : false 
 		};
 	}
 
@@ -53,8 +54,9 @@ export class SearchClient extends Component {
     }
 
 	render() {
-        const { keyword, closeIcon } = this.state;
-        const functionButton = closeIcon === true ? this.handleCloseButton : this.handleSearchClient ;
+        const { keyword, closeIcon, background} = this.state;
+		const functionButton = closeIcon ? this.handleCloseButton : this.handleSearchClient ;
+		const styleButton = !background ? STYLE_BUTTON_SEARCH_FOCUS : STYLE_BUTTON_SEARCH ;
 
 		return (
 			<div style={{ width: "100%", display: "flex", justifyContent: "space-between" , marginBottom: "40px"}} >
@@ -68,13 +70,15 @@ export class SearchClient extends Component {
 						placeholder={PLACEHOLDER_SEARCH_CLIENT}
 						onChange={this.handleInput}
 						onKeyPress={this.handleKeyword}
+						onFocus={() => this.setState({background : false})}
+						onBlur={() => this.setState({background : true})}
 						value={keyword}
 					/>
-					<Tooltip text={TITLE_SEARCH_CLIENT}>
+					<Tooltip text={`${ closeIcon ? CLOSE_BUSQUEDA : TITLE_SEARCH_CLIENT }`}>
 						<button
 							id="searchClients"
 							className="btn"
-							style={STYLE_BUTTON_SEARCH}
+							style={styleButton}
 							type="button"
 							onClick={functionButton}
 						>
