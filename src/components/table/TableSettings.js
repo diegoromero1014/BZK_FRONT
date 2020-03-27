@@ -13,7 +13,8 @@ export default class TableSettings {
         onSort = noop,
         striped = false,
         maximumVisiblePages = 5,
-        initialPage = 1
+        initialPage = 1,
+        loading = false
     }) {
         this.data = data
         this.columns = columns;
@@ -27,5 +28,6 @@ export default class TableSettings {
         this.striped = striped;
         this.maximumVisiblePages = maximumVisiblePages;
         this.initialPage = initialPage;
+        this.loading = loading;
     }
 }

@@ -12,10 +12,20 @@ import { MODULE_ALERTS } from '../../../../constantsGlobal';
 
 export class BlackListAlertsComponent extends Component {
 
-    handleOnPageChange = page => {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            loading: false
+        }
+    }
+
+    handleOnPageChange = async page => {
         const { dispatchBlackListAlerts } = this.props;
-        
-        dispatchBlackListAlerts((page - 1), MAX_ROWS);
+
+        await this.setState({ loading: true });
+        await dispatchBlackListAlerts((page - 1), MAX_ROWS);
+        await this.setState({ loading: false });
     }
 
     reditectToBlackListAlerts = () => {
@@ -26,6 +36,7 @@ export class BlackListAlertsComponent extends Component {
 
     render() {
         const { data, total } = this.props;
+        const { loading } = this.state;
 
         return (
             <div>
@@ -37,6 +48,7 @@ export class BlackListAlertsComponent extends Component {
                             .setStriped(true)
                             .setTotalRecords(total)
                             .setOnPageChange(this.handleOnPageChange)
+                            .setLoading(loading)
                             .build()
                     }
                 />

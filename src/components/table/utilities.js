@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, Icon } from 'semantic-ui-react';
 import { get } from 'lodash';
 import { PROPERTY, ALL_OBJECT, ASCENDING } from './constants';
+import { Progress } from 'semantic-ui-react';
 
 export const buildHeaders = (columns, orderedColumn, direction, handleSort) => columns.map(({ header, prop, width }, index) => (
     <Table.HeaderCell
@@ -32,7 +33,15 @@ const renderSortedIcon = (prop, orderedColumn, direction) => {
 }
 
 export const buildRows = tableSettings => {
-    const { data, colSpan, message } = tableSettings;
+    const { data, colSpan, message, loading } = tableSettings;
+
+    if (loading) {
+        return (
+            <Table.HeaderCell colSpan={colSpan} textAlign='center' style={{ cursor: 'pointer' }}>
+                <Progress percent={100} active attached='top' />
+            </Table.HeaderCell>
+        )
+    }
 
     if (validateData(data)) {
         return data.map((element, index) => buildRow(element, index, tableSettings));

@@ -51,5 +51,10 @@ export default class TableBuilder {
         return this;
     }
 
+    setLoading = loading => {
+        this.loading = loading;
+        return this;
+    }
+
     build = () => new TableSettings(this);
 }
