@@ -91,16 +91,6 @@ describe('Test searchClient component', () => {
             sinon.assert.calledOnce(dispatchSwtShowMessage);
         })
 
-        it('Test handleSearchClient function (with true) execute dispatchClientsFindServer()', () => {
-            const wrapper = shallow(<SearchClient {...defaultProps}/>);
-            wrapper.setState({
-                keyword: "Busqueda",
-                closeIcon : false
-            })
-            wrapper.instance().handleSearchClient();
-            sinon.assert.calledOnce(dispatchClientsFindServer);
-        })
-
         it('Test handleCloseButton function', () => {
             const wrapper = shallow(<SearchClient {...defaultProps}/>);
             wrapper.setState({

@@ -17,7 +17,8 @@ export class SectionSearchClient extends Component {
         this.state = {
             keyword: "",
             page: 1,
-            searched: false
+            searched: false,
+            loading : false
         };
     }
 
@@ -26,13 +27,15 @@ export class SectionSearchClient extends Component {
         dispatchClearClients();
     }
 
-
+    setLoading = loading => this.setState({ loading})
     setKeyword = keyword => this.setState({ keyword });
 
     currentPage = async page => {
         const { dispatchClientsFindServer } = this.props;
+        await this.setLoading(true);
         await dispatchClientsFindServer(this.state.keyword, (page - 1) * 10, 10);
         await this.setState({ page });
+        await this.setLoading(false);
     };
 
     handelClickClient = ({ id, access }) => {
@@ -58,7 +61,7 @@ export class SectionSearchClient extends Component {
         return (
             <div style={{ margin: "45px 30px 10px 0px" }}>
                 <h4 style={{ fontSize: 16 }}>{TITLE_SEARCH_CLIENT}</h4>
-                <SearchClient setKeyword={this.setKeyword} restartPage={this.restartPage} handleSetSearched={this.handleSetSearched} />
+                <SearchClient setKeyword={this.setKeyword} restartPage={this.restartPage} handleSetSearched={this.handleSetSearched} setLoading={this.setLoading}/>
 
                 {searched &&
                     <TableComponent
@@ -71,6 +74,7 @@ export class SectionSearchClient extends Component {
                                 .setTotalRecords(rowCount)
                                 .setOnPageChange(this.currentPage)
                                 .setInitialPage(this.state.page)
+                                .setLoading(this.state.loading)
                                 .build()
                         }
                     />

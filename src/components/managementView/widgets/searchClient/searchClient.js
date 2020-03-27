@@ -35,14 +35,16 @@ export class SearchClient extends Component {
 
 	handleSearchClient = async () => {
 		const { keyword } = this.state;
-		const { dispatchClientsFindServer, dispatchSwtShowMessage, setKeyword, restartPage, handleSetSearched } = this.props;
+		const { dispatchClientsFindServer, dispatchSwtShowMessage, setKeyword, restartPage, handleSetSearched , setLoading} = this.props;
 
 		if (!keyword) {
 			dispatchSwtShowMessage("error", "Error en la búsqueda", `Señor usuario, por favor ingrese un criterio de búsqueda.`);
 		} else {
+			await setLoading(true);
+			handleSetSearched(true);
 			await dispatchClientsFindServer(keyword, 0, 10);
 			setKeyword(keyword);
-			handleSetSearched(true);
+			await setLoading(false);
             this.setState({
                 closeIcon : true
             })
