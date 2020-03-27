@@ -11,10 +11,19 @@ import { MODULE_CONTACTS } from '../../../../constantsGlobal';
 
 export class OutdatedContactsComponent extends Component {
 
-    handleOnPageChange = page => {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            loading: false
+        }
+    }
+
+    handleOnPageChange = async page => {
         const { dispatchGetOutdatedContacts } = this.props;
-        
-        dispatchGetOutdatedContacts((page - 1), MAX_ROWS);
+        await this.setState({ loading: true});
+        await dispatchGetOutdatedContacts((page - 1), MAX_ROWS);
+        await this.setState({ loading: false });
     }
 
     handleOnClick = data => {
@@ -38,6 +47,7 @@ export class OutdatedContactsComponent extends Component {
                             .setTotalRecords(total)
                             .setOnPageChange(this.handleOnPageChange)
                             .setOnClick(this.handleOnClick)
+                            .setLoading(this.state.loading)
                             .build()
                     }
                 />

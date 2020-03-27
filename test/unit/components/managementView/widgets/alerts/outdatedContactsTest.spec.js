@@ -48,10 +48,11 @@ describe("OutdatedContactsComponent Test", () => {
         itRenders(<OutdatedContactsComponentRedux {...defaultProps} store={store}/>)
     })
 
-    it("When handleOnPageChange is instanced", () => {
+    it("When handleOnPageChange is instanced", async () => {
         const wrapper = shallow(<OutdatedContactsComponent {...defaultProps} />);
-        wrapper.instance().handleOnPageChange(1);
-        sinon.assert.calledOnce(dispatchGetOutdatedContacts);
+        wrapper.setState({ loading: null });
+        await wrapper.instance().handleOnPageChange(1);
+        expect(wrapper.state().loading).to.equal(false);
     })
 
     it("When handleOnClick is instanced", () => {
