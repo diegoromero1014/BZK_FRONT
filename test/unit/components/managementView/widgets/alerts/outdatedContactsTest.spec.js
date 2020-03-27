@@ -8,6 +8,7 @@ import * as globalActions from '../../../../../../src/components/globalComponent
 
 let defaultProps;
 let dispatchGetOutdatedContacts;
+let dispatchChangeActiveItemMenu;
 
 let redirectUrl;
 
@@ -19,10 +20,12 @@ describe("OutdatedContactsComponent Test", () => {
 
     beforeEach(() => {
         dispatchGetOutdatedContacts = sinon.stub().resolves({})
+        dispatchChangeActiveItemMenu = sinon.fake();
         defaultProps = {
             data: null,
             total: null,
-            dispatchGetOutdatedContacts
+            dispatchGetOutdatedContacts,
+            dispatchChangeActiveItemMenu
         }
         redirectUrl = sinon.stub(globalActions, "redirectUrl");
         store = mockStore({
@@ -55,5 +58,6 @@ describe("OutdatedContactsComponent Test", () => {
         const wrapper = shallow(<OutdatedContactsComponent {...defaultProps} />);
         wrapper.instance().handleOnClick(1);
         sinon.assert.calledOnce(redirectUrl);
+        sinon.assert.calledOnce(dispatchChangeActiveItemMenu);
     })
 })

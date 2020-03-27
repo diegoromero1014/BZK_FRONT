@@ -7,6 +7,7 @@ import { bindActionCreators } from "redux";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 import { redirectUrl } from "../../../globalComponents/actions";
 import { changeActiveItemMenu } from '../../../menu/actions';
+import { MODULE_MY_CLIENTS } from "../../../../constantsGlobal";
 
 export class SearchClient extends Component {
 	constructor(props) {
@@ -21,7 +22,7 @@ export class SearchClient extends Component {
 
 	redirectCreatePropspect = () => {
 		const { dispatchChangeActiveItemMenu } = this.props;
-		dispatchChangeActiveItemMenu("Mis clientes");
+		dispatchChangeActiveItemMenu(MODULE_MY_CLIENTS);
 		redirectUrl("/dashboard/createPropspect");
 	}
 

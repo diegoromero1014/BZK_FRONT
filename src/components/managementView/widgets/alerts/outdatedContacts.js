@@ -6,6 +6,8 @@ import TableBuilder from "../../../table/TableBuilder";
 import { COLUMNS_OUTDATED_CONTACTS, MAX_ROWS } from './constants';
 import { redirectUrl } from "../../../globalComponents/actions";
 import { getOutdatedContacts } from '../../actions';
+import { changeActiveItemMenu } from '../../../menu/actions';
+import { MODULE_CONTACTS } from '../../../../constantsGlobal';
 
 export class OutdatedContactsComponent extends Component {
 
@@ -16,7 +18,9 @@ export class OutdatedContactsComponent extends Component {
     }
 
     handleOnClick = data => {
+        const { dispatchChangeActiveItemMenu } = this.props;
         window.sessionStorage.setItem('idContactSelected', data.id);
+        dispatchChangeActiveItemMenu(MODULE_CONTACTS);
         redirectUrl("/dashboard/clientsContacts");
     }
 
@@ -48,7 +52,8 @@ const mapStateToProps = ({ outdatedContacts: { rows, rowCount } }) => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    dispatchGetOutdatedContacts: getOutdatedContacts
+    dispatchGetOutdatedContacts: getOutdatedContacts,
+    dispatchChangeActiveItemMenu: changeActiveItemMenu
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(OutdatedContactsComponent);
