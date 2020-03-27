@@ -10,3 +10,31 @@
 .ui.table tfoot th {
     background: transparent !important;
 }
+
+
+.ui.active.progress .bar::after {
+    content: '';
+    opacity: 0;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: #00448c !important;
+    border-radius: 0.28571429rem;
+    -webkit-animation: progress-active 2s ease infinite;
+    animation: progress-active 1.5s ease infinite;
+}
+
+.ui.progress .bar {
+    display: block;
+    line-height: 1;
+    position: relative;
+    width: 0%;
+    min-width: 2em;
+    background: #fff !important;
+    border-radius: 0.28571429rem;
+    -webkit-transition: width 0.0s ease, background-color 0.0s ease;
+    transition: width 0.01s ease, background-color 0.01s ease;
+}
+

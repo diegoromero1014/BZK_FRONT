@@ -38,7 +38,7 @@ class TableComponent extends Component {
         const { orderedColumn, direction } = this.state;
 
         return (
-            <Table striped={tableSettings.striped}>
+            <Table striped={tableSettings.striped} fixed>
                 <Table.Header>
                     <Table.Row>
                         {buildHeaders(tableSettings.columns, orderedColumn, direction, this.handleSort)}
