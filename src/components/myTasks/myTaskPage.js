@@ -13,6 +13,7 @@ import{
     cleanPageAndSetOrderPending,
     cleanPageAndSetOrderFinalized
 } from './actions';
+import ProgressBarComponent from "../../ui/ProgressBar";
 
 export class MyTaskPage extends Component {
          constructor(props) {

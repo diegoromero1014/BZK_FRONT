@@ -205,6 +205,7 @@ export class CommentsComponent extends Component {
                             <Col xs={12} md={12} ld={12} className="commentTextArea">
                                 <MentionsInput
                                     value={this.state.commentReply}
+                                    nameInput="commentReply"
                                     onChange={event => this.handleChange(event, 'reply')}
                                     className="mentions"
                                     disabled={disabled && 'disabled'}
@@ -273,6 +274,7 @@ export class CommentsComponent extends Component {
                             <Col xs={12} md={12} lg={12}>
                                 <MentionsInput
                                     value={this.state.comment}
+                                    nameInput="comment"
                                     onChange={event => this.handleChange(event, 'new')}
                                     className="mentions"
                                     placeholder="Escribe aquí tu nota"

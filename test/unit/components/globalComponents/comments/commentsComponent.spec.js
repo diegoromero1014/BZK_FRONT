@@ -12,6 +12,7 @@ import {
     ERROR_COMMENT_LENGTH, MAX_LENGTH_USER_TASK_COMMENT,
     NO_NOTES_MESSAGE
 } from "../../../../../src/components/globalComponents/comments/constants";
+import {MentionsInput} from "react-mentions";
 
 let dispatchClearComments;
 let dispatchFilterUsers;
@@ -104,7 +105,7 @@ describe('Test commentsComponent', () => {
         it('should render comment textarea disabled', () => {
             defaultProps.disabled = true;
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
-            const commentTextArea = wrapper.find(TextArea).find({nameInput: 'comment', disabled: 'disabled'});
+            const commentTextArea = wrapper.find(MentionsInput).find({nameInput: 'comment', disabled: 'disabled'});
             expect(commentTextArea).to.have.lengthOf(1);
         });
 
@@ -117,20 +118,20 @@ describe('Test commentsComponent', () => {
     });
 
     describe('Actions tests', () => {
-        it('should call handleChange function on commentTextArea change', () => {
+        it('should call handleChange function on commentTextArea change', async () => {
             defaultProps.disabled = true;
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
-            const commentTextArea = wrapper.find(TextArea).find({nameInput: 'comment', disabled: 'disabled'});
-            commentTextArea.simulate('changeEvent', { target: { value: 'Daniel' } });
+            const commentTextArea = wrapper.find(MentionsInput).find({nameInput: 'comment', disabled: 'disabled'});
+            commentTextArea.simulate('change', { target: { value: 'Daniel' } });
             expect(wrapper.state().comment).to.equal('Daniel');
         });
 
         it('should render showNewCommentError when value contains more than 1000 characters', () => {
             defaultProps.disabled = true;
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
-            const commentTextArea = wrapper.find(TextArea).find({nameInput: 'comment', disabled: 'disabled'});
+            const commentTextArea = wrapper.find(MentionsInput).find({nameInput: 'comment', disabled: 'disabled'});
             const buttonAddComment = wrapper.find('button').find({id: 'addCommentButton'});
-            commentTextArea.simulate('changeEvent', { target: { value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a fringilla tortor. Nunc faucibus nibh tristique velit ullamcorper, ut gravida ipsum faucibus. Nulla lacinia fringilla volutpat. Duis pulvinar ac ante vitae elementum. Pellentesque et ex non massa mollis lacinia quis vitae tellus. Aliquam vehicula turpis quis ex viverra cursus. Duis ut finibus nunc. Proin posuere rhoncus neque sed pellentesque. Donec cursus est non fermentum molestie. Mauris viverra vitae diam egestas consectetur. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.Morbi augue dui, facilisis at nisi sed, blandit finibus eros. Morbi magna libero, vulputate at pulvinar vitae, dictum id velit. Aenean vel sapien interdum, ullamcorper lectus dapibus, sodales quam. Nulla id sapien efficitur, fermentum nunc porttitor, feugiat enim. Vivam  efficitur, fermentum nunc porttitor, feugiat enim. Vivam' } });
+            commentTextArea.simulate('change', { target: { value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a fringilla tortor. Nunc faucibus nibh tristique velit ullamcorper, ut gravida ipsum faucibus. Nulla lacinia fringilla volutpat. Duis pulvinar ac ante vitae elementum. Pellentesque et ex non massa mollis lacinia quis vitae tellus. Aliquam vehicula turpis quis ex viverra cursus. Duis ut finibus nunc. Proin posuere rhoncus neque sed pellentesque. Donec cursus est non fermentum molestie. Mauris viverra vitae diam egestas consectetur. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.Morbi augue dui, facilisis at nisi sed, blandit finibus eros. Morbi magna libero, vulputate at pulvinar vitae, dictum id velit. Aenean vel sapien interdum, ullamcorper lectus dapibus, sodales quam. Nulla id sapien efficitur, fermentum nunc porttitor, feugiat enim. Vivam  efficitur, fermentum nunc porttitor, feugiat enim. Vivam' } });
             buttonAddComment.simulate('click', { preventDefault: sinon.fake()});
             expect(wrapper.state().showNewCommentError).to.equal(MESSAGE_WARNING_MAX_LENGTH(MAX_LENGTH_USER_TASK_COMMENT));
         });
@@ -138,31 +139,31 @@ describe('Test commentsComponent', () => {
         it('should render showNewCommentError when value contains forbidden characters', () => {
             defaultProps.disabled = true;
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
-            const commentTextArea = wrapper.find(TextArea).find({nameInput: 'comment', disabled: 'disabled'});
+            const commentTextArea = wrapper.find(MentionsInput).find({nameInput: 'comment', disabled: 'disabled'});
             const buttonAddComment = wrapper.find('button').find({id: 'addCommentButton'});
-            commentTextArea.simulate('changeEvent', { target: { value: '@Daniel' } });
+            commentTextArea.simulate('change', { target: { value: '-Daniel' } });
             buttonAddComment.simulate('click', { preventDefault: sinon.fake()});
-            expect(wrapper.state().comment).to.equal('@Daniel');
+            expect(wrapper.state().comment).to.equal('-Daniel');
             expect(wrapper.state().showNewCommentError).to.equal(MESSAGE_WARNING_FORBIDDEN_CHARACTER);
         });
 
         it('should render showReplyCommentError when value contains forbidden characters', () => {
             defaultProps.disabled = true;
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
-            const commentTextArea = wrapper.find(TextArea).find({nameInput: 'commentReply'}).at(0);
+            const commentTextArea = wrapper.find(MentionsInput).find({nameInput: 'commentReply'}).at(0);
             const buttonAddComment = wrapper.find('button').find({id: 'replyCommentButton4342'}).at(0);
-            commentTextArea.simulate('changeEvent', { target: { value: '@Daniel' } });
+            commentTextArea.simulate('change', { target: { value: '=Daniel' } });
             buttonAddComment.simulate('click', { preventDefault: sinon.fake()});
-            expect(wrapper.state().commentReply).to.equal('@Daniel');
+            expect(wrapper.state().commentReply).to.equal('=Daniel');
             expect(wrapper.state().showReplyCommentError).to.equal(MESSAGE_WARNING_FORBIDDEN_CHARACTER);
         });
 
         it('should render showReplyCommentError when value contains html injection', () => {
             defaultProps.disabled = true;
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
-            const commentTextArea = wrapper.find(TextArea).find({nameInput: 'commentReply'}).at(0);
+            const commentTextArea = wrapper.find(MentionsInput).find({nameInput: 'commentReply'}).at(0);
             const buttonAddComment = wrapper.find('button').find({id: 'replyCommentButton4342'}).at(0);
-            commentTextArea.simulate('changeEvent', { target: { value: '<script>Daniel</script>' } });
+            commentTextArea.simulate('change', { target: { value: '<script>Daniel</script>' } });
             buttonAddComment.simulate('click', { preventDefault: sinon.fake()});
             expect(wrapper.state().commentReply).to.equal('<script>Daniel</script>');
             expect(wrapper.state().showReplyCommentError).to.equal(MESSAGE_ERROR_INJECTION_HTML);
@@ -171,9 +172,9 @@ describe('Test commentsComponent', () => {
         it('should render showReplyCommentError when value contains observations pattern', () => {
             defaultProps.disabled = true;
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
-            const commentTextArea = wrapper.find(TextArea).find({nameInput: 'commentReply'}).at(0);
+            const commentTextArea = wrapper.find(MentionsInput).find({nameInput: 'commentReply'}).at(0);
             const buttonAddComment = wrapper.find('button').find({id: 'replyCommentButton4342'}).at(0);
-            commentTextArea.simulate('changeEvent', { target: { value: 'Daniel{}' } });
+            commentTextArea.simulate('change', { target: { value: 'Daniel{}' } });
             buttonAddComment.simulate('click', { preventDefault: sinon.fake()});
             expect(wrapper.state().commentReply).to.equal('Daniel{}');
             expect(wrapper.state().showReplyCommentError).to.equal(MESSAGE_WARNING_TASK_OBSERVATIONS);
@@ -182,9 +183,9 @@ describe('Test commentsComponent', () => {
         it('should render showReplyCommentError when value is empty', () => {
             defaultProps.disabled = true;
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
-            const commentTextArea = wrapper.find(TextArea).find({nameInput: 'commentReply'}).at(0);
+            const commentTextArea = wrapper.find(MentionsInput).find({nameInput: 'commentReply'}).at(0);
             const buttonAddComment = wrapper.find('button').find({id: 'replyCommentButton4342'}).at(0);
-            commentTextArea.simulate('changeEvent', { target: { value: '' } });
+            commentTextArea.simulate('change', { target: { value: '' } });
             buttonAddComment.simulate('click', { preventDefault: sinon.fake()});
             expect(wrapper.state().commentReply).to.equal('');
             expect(wrapper.state().showReplyCommentError).to.equal(ERROR_COMMENT_LENGTH);
@@ -193,9 +194,9 @@ describe('Test commentsComponent', () => {
         it('should render showNewCommentError when value is ok', () => {
             defaultProps.disabled = true;
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
-            const commentTextArea = wrapper.find(TextArea).find({nameInput: 'comment', disabled: 'disabled'});
+            const commentTextArea = wrapper.find(MentionsInput).find({nameInput: 'comment', disabled: 'disabled'});
             const buttonAddComment = wrapper.find('button').find({id: 'addCommentButton'});
-            commentTextArea.simulate('changeEvent', { target: { value: 'Daniel' } });
+            commentTextArea.simulate('change', { target: { value: 'Daniel' } });
             buttonAddComment.simulate('click', { preventDefault: sinon.fake()});
             expect(wrapper.state().comment).to.equal('');
             expect(wrapper.state().showNewCommentError).to.equal(null);

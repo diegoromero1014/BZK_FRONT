@@ -1,5 +1,5 @@
 import React from 'react';
-import ProgressBarComponent from '../../../../src/ui/ProgressBar';
+import ProgressBarComponent from '../../../src/ui/ProgressBar';
 const defaultProps = {
     pending:30,
     finalized:70
