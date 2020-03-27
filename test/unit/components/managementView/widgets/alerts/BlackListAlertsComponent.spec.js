@@ -5,6 +5,8 @@ import BlackListAlertsRedux from "../../../../../../src/components/managementVie
 import { BlackListAlertsComponent } from "../../../../../../src/components/managementView/widgets/alerts/blackListAlerts";
 import * as actions from '../../../../../../src/components/globalComponents/actions'
 
+let dispatchChangeActiveItemMenu ; 
+
 let store;
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -14,12 +16,15 @@ let redirect;
 describe('Test widget BLackListAlerts Tab', () => {
 
     beforeEach(() => {
+        dispatchChangeActiveItemMenu = sinon.fake();
+
         defaultProps = {
             alertBlackList: Immutable.Map({
                 responseBlackList: [],
                 totalBlackListFiltered: 0
             }),
-            dispatchBlackListAlerts: sinon.stub()
+            dispatchBlackListAlerts: sinon.stub(),
+            dispatchChangeActiveItemMenu
         }
 
         redirect = sinon.stub(actions, 'redirectUrl');

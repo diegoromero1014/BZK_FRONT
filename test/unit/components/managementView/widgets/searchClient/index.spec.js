@@ -10,6 +10,7 @@ let defaultProps;
 let dispatchClearClients;
 let dispatchClientsFindServer;
 let dispatchSwtShowMessage;
+let dispatchChangeActiveItemMenu; 
 let redirectUrl;
 
 let store;
@@ -28,6 +29,7 @@ describe('Test for SectionSearchClient Component', () => {
         dispatchClearClients = sinon.fake();
         dispatchClientsFindServer = sinon.fake();
         dispatchSwtShowMessage = sinon.fake();
+        dispatchChangeActiveItemMenu = sinon.fake();
         redirectUrl = sinon.stub(globalActions, "redirectUrl");
 
         defaultProps = {
@@ -36,7 +38,8 @@ describe('Test for SectionSearchClient Component', () => {
 
             dispatchClearClients,
             dispatchClientsFindServer,
-            dispatchSwtShowMessage
+            dispatchSwtShowMessage,
+            dispatchChangeActiveItemMenu
         }
     });
 

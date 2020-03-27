@@ -6,6 +6,7 @@ import Table from "../../../table";
 import TableBuilder from "../../../table/TableBuilder";
 import { COLUMNS_BLACK_LIST_ALERTS, MAX_ROWS } from './constants';
 import { redirectUrl } from "../../../globalComponents/actions";
+import { changeActiveItemMenu } from '../../../menu/actions';
 import { Button } from 'semantic-ui-react';
 
 export class BlackListAlertsComponent extends Component {
@@ -24,6 +25,12 @@ export class BlackListAlertsComponent extends Component {
         await this.setState({ loading: true });
         await dispatchBlackListAlerts((page - 1), MAX_ROWS);
         await this.setState({ loading: false });
+    }
+
+    reditectToBlackListAlerts = () => {
+        const { dispatchChangeActiveItemMenu } = this.props;
+        dispatchChangeActiveItemMenu("Alertas");
+        redirectUrl("/dashboard/alertBlackList");
     }
 
     render() {
@@ -47,7 +54,7 @@ export class BlackListAlertsComponent extends Component {
                 <Button
                     fluid
                     style={{ background: 'transparent' }}
-                    onClick={() => redirectUrl("/dashboard/alertBlackList")}
+                    onClick={this.reditectToBlackListAlerts}
                 >
                     Ver detalle
                 </Button>
@@ -63,7 +70,9 @@ const mapStateToProps = ({ alertBlackList }) => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    dispatchBlackListAlerts: blackListAlerts
+    dispatchBlackListAlerts: blackListAlerts,
+    dispatchChangeActiveItemMenu : changeActiveItemMenu
+    
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(BlackListAlertsComponent);

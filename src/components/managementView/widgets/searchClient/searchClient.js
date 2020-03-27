@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Tooltip from "../../../toolTip/toolTipComponent";
-import { redirectCreatePropspect } from "./utils";
 import { clientsFindServer } from "../../../clients/actions";
-import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_BUTTON_SEARCH, CLOSE_BUSQUEDA, STYLE_BUTTON_SEARCH_FOCUS} from "./constants";
+import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_BUTTON_SEARCH, CLOSE_BUSQUEDA, STYLE_BUTTON_SEARCH_FOCUS, STYLE_BUTTON_PROSPECT} from "./constants";
 import { bindActionCreators } from "redux";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
+import { redirectUrl } from "../../../globalComponents/actions";
+import { changeActiveItemMenu } from '../../../menu/actions';
 
 export class SearchClient extends Component {
 	constructor(props) {
@@ -16,6 +17,12 @@ export class SearchClient extends Component {
 			closeIcon : false,
 			background : true 
 		};
+	}
+
+	redirectCreatePropspect = () => {
+		const { dispatchChangeActiveItemMenu } = this.props;
+		dispatchChangeActiveItemMenu("Mis clientes");
+		redirectUrl("/dashboard/createPropspect");
 	}
 
 	handleInput = ({ target: { name, value } }) => this.setState({ [name]: value });
@@ -34,23 +41,23 @@ export class SearchClient extends Component {
 			dispatchSwtShowMessage("error", "Error en la búsqueda", `Señor usuario, por favor ingrese un criterio de búsqueda.`);
 		} else {
 			await dispatchClientsFindServer(keyword, 0, 10);
-            setKeyword(keyword);
+			setKeyword(keyword);
+			handleSetSearched(true);
             this.setState({
                 closeIcon : true
             })
 		}
 
 		restartPage();
-		handleSetSearched(true);
 	};
 
     handleCloseButton = () => {
-        const { handleSetSearched } = this.props;
-        handleSetSearched(false)
-        this.setState({
-            keyword : "",
+		const { handleSetSearched } = this.props;
+		handleSetSearched(false)
+		this.setState({
+			keyword : "",
             closeIcon : false,
-        })
+		})
     }
 
 	render() {
@@ -66,7 +73,7 @@ export class SearchClient extends Component {
 						name="keyword"
 						type="text"
 						autoComplete="off"
-						style={{ padding: "0px 11px !important", width: "80%"}}
+						style={{ padding: "0px 11px !important", width: "90%"}}
 						placeholder={PLACEHOLDER_SEARCH_CLIENT}
 						onChange={this.handleInput}
 						onKeyPress={this.handleKeyword}
@@ -89,9 +96,9 @@ export class SearchClient extends Component {
 				<Tooltip text={MESSAGE_TOOLTIP}>
 					<button
 						type="button"
-						style={{background: "#00448C"}}
+						style={STYLE_BUTTON_PROSPECT}
 						className="btn btn-primary"
-						onClick={redirectCreatePropspect}
+						onClick={this.redirectCreatePropspect}
 					>
 						<i
 							className="add user icon"
@@ -106,7 +113,8 @@ export class SearchClient extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
 	dispatchClientsFindServer: clientsFindServer,
-	dispatchSwtShowMessage: swtShowMessage
+	dispatchSwtShowMessage: swtShowMessage,
+	dispatchChangeActiveItemMenu : changeActiveItemMenu
 }, dispatch);
 
 export default connect(null, mapDispatchToProps)(SearchClient);
