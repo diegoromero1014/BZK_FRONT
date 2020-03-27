@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import Highlighter from "react-highlight-words";
 import _ from 'lodash';
 
 import HeaderComponent from './headerComponent';
@@ -18,6 +19,8 @@ import TdParticularityComponent from './tdParticularityComponent';
 import TdUpdatedInfoComponent from './tdUpdatedInfoComponent';
 import {mapDateValueFromTask} from '../../actionsGlobal';
 import TrafficLightIndicator from './../../ui/TrafficLightIndicator';
+
+import {htmlToTextRegex} from './../../actionsGlobal';
 
 import { ACTION_CHECK, DATE_CELL } from './constants';
 
@@ -102,21 +105,51 @@ class GridComponent extends Component {
     });
   }
 
-  _renderRow(data, headers, modalTitle, origin) {
+  renderRowExpanded = value => {
+    const { headers } = this.props;
+    if(_.has(value, 'text')) {
+      const details = value.text;
+      if(details){
+        return (
+          <tr>
+            <td colSpan={headers().length}>
+              {this.renderRowExpandedData(details)}
+            </td>
+          </tr>
+        )
+      }
+    }
+    return null;
+  }
+
+  renderRowExpandedData = details => {
+    const {textToHighlight} = this.props;
+    return (
+      <div style={{padding: '5px 0px 0px 45px'}}>
+        <Highlighter
+          searchWords={[textToHighlight]}
+          autoEscape={true}
+          textToHighlight={htmlToTextRegex(details)}
+          highlightClassName={'highlightClass'}
+        />
+      </div>
+    )
+  }
+
+  _renderRow() {
+    const {headers, data, modalTitle, origin, expandRow } = this.props;
     return data.map((value, idx) => {
-      return (
+      return [
         <tr role="row" key={idx}>
-          {this._renderCell(value, headers, modalTitle, origin)}
-        </tr>
-      );
+          {this._renderCell(value, headers(), modalTitle, origin)}
+        </tr>,
+        expandRow && this.renderRowExpanded(value)
+      ];
     });
   }
 
   render() {
-    const headers = this.props.headers;
-    const data = this.props.data;
-    const modalTitle = this.props.modalTitle;
-    const origin = this.props.origin;    
+    const {headers} = this.props;
     return (
       <table width="100%" className="tableBt4 tableBt4-striped has-column-selection dataTable no-footer" id="datagrid-container" role="grid" aria-describedby="datagrid-container_info">
         <thead style={{ color: '#4c5360' }}>
@@ -125,7 +158,7 @@ class GridComponent extends Component {
           </tr>
         </thead>
         <tbody>
-          {this._renderRow(data, headers(), modalTitle, origin)}
+          {this._renderRow()}
         </tbody>
       </table>
     );
