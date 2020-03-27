@@ -6,11 +6,10 @@ const initialState = {
     rowCount: 0
 }
 
-export default (state = initialState, { type, payload }) => {
-  switch (type) {
-  case OUTDATED_CONTACTS:
+export default (state = initialState, { type = null, payload = {} }) => {
+  if(type == OUTDATED_CONTACTS) {
     return Object.assign({}, state, {rows: get(payload, 'data.data.rows', []), rowCount: get(payload, 'data.data.rowCount', 0)});
-  default:
-    return state
+  } else {
+    return state;
   }
 }
