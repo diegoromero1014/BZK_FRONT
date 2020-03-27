@@ -11,58 +11,77 @@ import { changeActiveItemMenu } from '../../../menu/actions';
 
 export class AlertPortfolioExpiration extends Component {
 
-  componentDidMount() {
-    this.forceUpdate();
-  }
+    constructor(props) {
+        super(props);
 
-  redirectToAlertPortfolioExpiration = () => {
-    const { dispatchChangeActiveItemMenu } = this.props;
-    dispatchChangeActiveItemMenu("Alertas");
-    redirectUrl("/dashboard/alertClientsPortfolioExpiration");
-  }
+        this.state = {
+            loading: false
+        }
+    }
 
-  render() {
-    const { alertPortfolioExpiration, dispatchGetAlertPortfolioExpirationDashboard, total } = this.props;
+    componentDidMount() {
+        this.forceUpdate();
+    }
 
-    const data = alertPortfolioExpiration.get("responseClients");
+    redirectToAlertPortfolioExpiration = () => {
+        const { dispatchChangeActiveItemMenu } = this.props;
+        dispatchChangeActiveItemMenu("Alertas");
+        redirectUrl("/dashboard/alertClientsPortfolioExpiration");
+    }
 
-    const tableSettings = new TableBuilder(data, COLUMNS_VENCIMIENTO_CARTERA)
-      .setNoRowMessage("Aún no se han creado registros.")
-      .setRecordsPerPage(5)
-      .setStriped(true)
-      .setTotalRecords(total)
-      .setOnPageChange(async page => await dispatchGetAlertPortfolioExpirationDashboard(page))
-      .build();
+    handleOnPageChange = async page => {
+        const { dispatchGetAlertPortfolioExpirationDashboard } = this.props;
 
-    return (
-      <div>
-        <Table tableSettings={tableSettings} />
-        <Button
-          fluid
-          style={{ background: 'transparent' }}
-          onClick={this.redirectToAlertPortfolioExpiration}
-        >
-          Ver detalle
+        this.setLoading(true);
+        await dispatchGetAlertPortfolioExpirationDashboard(page);
+        this.setLoading(false);
+    }
+
+    setLoading = async loading => await this.setState({ loading });
+
+    render() {
+        const { alertPortfolioExpiration, total } = this.props;
+
+        const data = alertPortfolioExpiration.get("responseClients");
+
+        const tableSettings = new TableBuilder(data, COLUMNS_VENCIMIENTO_CARTERA)
+            .setNoRowMessage("Aún no se han creado registros.")
+            .setRecordsPerPage(5)
+            .setStriped(true)
+            .setTotalRecords(total)
+            .setOnPageChange(this.handleOnPageChange)
+            .setLoading(this.state.loading)
+            .build();
+
+        return (
+            <div>
+                <Table tableSettings={tableSettings} />
+                <Button
+                    fluid
+                    style={{ background: 'transparent' }}
+                    onClick={this.redirectToAlertPortfolioExpiration}
+                >
+                    Ver detalle
         </Button>
-      </div>
-    );
-  }
+            </div>
+        );
+    }
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({
-    dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard,
-    dispatchChangeActiveItemMenu : changeActiveItemMenu
-  }, dispatch)
+    return bindActionCreators({
+        dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard,
+        dispatchChangeActiveItemMenu: changeActiveItemMenu
+    }, dispatch)
 };
 
 const mapStateToProps = ({ alertPortfolioExpiration }) => {
-  return {
-    alertPortfolioExpiration
-  };
+    return {
+        alertPortfolioExpiration
+    };
 }
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(AlertPortfolioExpiration);
