@@ -3,6 +3,7 @@ import axios from 'axios';
 import { TAB_SELETED_ACTIVE, GET_CSV, CHANGE_ERROR_YEAR } from './constants';
 import { downloadReport } from "../../utils";
 import moment from "moment";
+import { OUTDATED_CONTACTS } from './widgets/alerts/constants';
 
 export function changeTabSeletedChartView(tabSeleted) {
     return {
@@ -70,3 +71,16 @@ export function getPipelineXls(initialDate, finalDate, changeStateSaveData) {
 
   downloadReport(payload, "/getPipelineXls", name, changeStateSaveData);
 }
+
+export const getOutdatedContacts = (first, max) => ({  
+  type: OUTDATED_CONTACTS,
+  payload: axios.post(APP_URL + "/outdatedContacts", {
+      "messageHeader": {
+          "sessionToken": window.localStorage.getItem('sessionTokenFront')
+      },
+      "messageBody": {
+          first,
+          max
+      }
+  })
+});

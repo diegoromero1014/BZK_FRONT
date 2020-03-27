@@ -12,11 +12,11 @@ const middleWares = [thunk];
 const mockStore = configureStore(middleWares);
 
 describe('AlertPortfolioExpiration Test', () => {
-    defaultProps = {
-        alertPortfolioExpiration: Immutable.Map({ responseClients: {} })
-    }
-
+    
     beforeEach(() => {
+        defaultProps = {
+            alertPortfolioExpiration: Immutable.Map({ responseClients: {} })
+        }
         store = mockStore({});
     })
 

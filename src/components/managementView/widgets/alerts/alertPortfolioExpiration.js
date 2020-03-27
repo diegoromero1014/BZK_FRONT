@@ -7,11 +7,18 @@ import { bindActionCreators } from 'redux';
 import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExpirtation/actions';
 import { Button } from 'semantic-ui-react'
 import { redirectUrl } from "../../../globalComponents/actions";
+import { changeActiveItemMenu } from '../../../menu/actions';
 
 export class AlertPortfolioExpiration extends Component {
 
   componentDidMount() {
     this.forceUpdate();
+  }
+
+  redirectToAlertPortfolioExpiration = () => {
+    const { dispatchChangeActiveItemMenu } = this.props;
+    dispatchChangeActiveItemMenu("Alertas");
+    redirectUrl("/dashboard/alertClientsPortfolioExpiration");
   }
 
   render() {
@@ -33,7 +40,7 @@ export class AlertPortfolioExpiration extends Component {
         <Button
           fluid
           style={{ background: 'transparent' }}
-          onClick={() => redirectUrl("/dashboard/alertClientsPortfolioExpiration")}
+          onClick={this.redirectToAlertPortfolioExpiration}
         >
           Ver detalle
         </Button>
@@ -44,7 +51,8 @@ export class AlertPortfolioExpiration extends Component {
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
-    dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard
+    dispatchGetAlertPortfolioExpirationDashboard: getAlertPortfolioExpirationDashboard,
+    dispatchChangeActiveItemMenu : changeActiveItemMenu
   }, dispatch)
 };
 

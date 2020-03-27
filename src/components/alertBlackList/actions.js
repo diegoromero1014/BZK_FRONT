@@ -34,6 +34,19 @@ export function blackListFindServer(keyWordNameNit, keyWordNameNitClient, typeEn
     }
 }
 
+export const blackListAlerts = (pageNum, maxRows) => ({
+    type: constant.FIND_ALERT_BLACK_LIST,
+    payload: axios.post(APP_URL + "/blackListAlerts", {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionTokenFront')
+        },
+        "messageBody": {
+            "pageNum": pageNum,
+            "maxRows": maxRows,
+        }
+    })
+});
+
 export function changePage(page) {
     return {
         type: constant.CHANGE_PAGE_FOR_BLACK_LIST,
