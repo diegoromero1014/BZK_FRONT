@@ -35,9 +35,11 @@ describe('CovenantAlert Test', () => {
         itRenders(<CovenantsAlertsComponent {...defaultProps}/>);
     })
 
-    it('When handleOnPageChange is instanced', () => {
+    it('When handleOnPageChange is instanced', async () => {
         const wrapper = shallow(<CovenantsAlertsComponent {...defaultProps} />);
-        wrapper.instance().handleOnPageChange();
+        wrapper.setState({ loading: null });
+        await wrapper.instance().handleOnPageChange(1);
+        expect(wrapper.state().loading).to.equal(false);
         sinon.assert.calledOnce(dispatchCovenantsAlerts);
     })
 
