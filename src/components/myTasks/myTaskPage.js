@@ -1,70 +1,267 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from "redux";
 import { connect } from 'react-redux';
+import { Loader } from 'semantic-ui-react';
 import { redirectUrl } from "../globalComponents/actions";
 import {updateTitleNavBar} from "../navBar/actions";
-import { NUMBER_RECORDS } from './constants';
+import {
+  NUMBER_RECORDS,
+  FINISHED,
+  PENDING,
+  PENDING_TASKS,
+  FINALIZED_TASKS,
+  MODAL_TITLE
+} from "./constants";
 import { REQUEST_SUCCESS } from "../../constantsGlobal";
+import { TASK_STATUS } from "../selectsComponent/constants";
 import{
     getPendingTaskPromise,
     getFinalizedTaskPromise,
     pendingTasks,
     finalizedTasks,
     cleanPageAndSetOrderPending,
-    cleanPageAndSetOrderFinalized
+    cleanPageAndSetOrderFinalized,
+    cleanFinalizedTasks,
+    cleanPendingTasks,
+    setPagePending,
+    setPageFinalized
 } from './actions';
+import ProgressBarComponent from './../../ui/ProgressBar';
+import TabComponent from '../../ui/Tab';
+import PendingTasksHelp from './../pendingTask/pendingTasksHelp';
+import PaginationPendingTaskComponent from './../pendingTask/paginationPendingTaskComponent';
+import ListMyTasksComponent from './listMyTasksComponent';
+import { getMasterDataFields } from '../selectsComponent/actions';
 
 export class MyTaskPage extends Component {
          constructor(props) {
            super(props);
+           this.state = {
+             loading: false
+           };
          }
          componentDidMount() {
-            if (window.localStorage.getItem('sessionTokenFront') === "") {
-                redirectUrl("/login");
-            } else {
-                const { dispatchUpdateTitleNavBar, dispatchCleanPageAndSetOrderPending, dispatchCleanPageAndSetOrderFinalized } = this.props;
-                dispatchUpdateTitleNavBar("Tareas");
-                dispatchCleanPageAndSetOrderPending(0);
-                dispatchCleanPageAndSetOrderFinalized(0);
-                this.fetchAndDispatchPendingTasks(0,0, null);
-                this.fetchAndDispatchFinalizedTasks(0,0,null);
-            }
+           if (window.localStorage.getItem("sessionTokenFront") === "") {
+             redirectUrl("/login");
+           } else {
+             const {
+               dispatchUpdateTitleNavBar,
+               dispatchGetMasterDataFields
+             } = this.props;
+             dispatchGetMasterDataFields([TASK_STATUS]);
+             dispatchUpdateTitleNavBar(MODAL_TITLE);
+             this.fetchAndDispatchPendingTasks(0, 0, null);
+             this.fetchAndDispatchFinalizedTasks(0, 0, null);
+           }
+         }
+         componentWillUnmount() {
+           const {
+             dispatchCleanFinalizedTasks,
+             dispatchCleanPendingTasks
+           } = this.props;
+           dispatchCleanPendingTasks();
+           dispatchCleanFinalizedTasks();
          }
          fetchAndDispatchPendingTasks = async (page, order, textToSearch) => {
-            const { dispatchPendingTasks } = this.props;
-            let response = await getPendingTaskPromise(
-              page,
-              order,
-              NUMBER_RECORDS,
-              textToSearch
-            );
-            if(response.data.status == REQUEST_SUCCESS){
-               dispatchPendingTasks(response.data.data, page, order);
-            }
+           this.setState({ loading: true });
+           const { dispatchPendingTasks } = this.props;
+           let response = await getPendingTaskPromise(
+             page,
+             order,
+             NUMBER_RECORDS,
+             textToSearch
+           );
+           if (response.data.status == REQUEST_SUCCESS) {
+             dispatchPendingTasks(response.data.data, page, order);
+           }
+           this.setState({ loading: false });
          };
          fetchAndDispatchFinalizedTasks = async (page, order, textToSearch) => {
-            const { dispatchFinalizedTasks } = this.props;
-            let response = await getFinalizedTaskPromise(
-              page,
-              order,
-              NUMBER_RECORDS,
-              textToSearch
-            );
-            if (response.data.status == REQUEST_SUCCESS) {
-                dispatchFinalizedTasks(response.data.data, page, order);
-            }
+           this.setState({ loading: true });
+           const { dispatchFinalizedTasks } = this.props;
+           let response = await getFinalizedTaskPromise(
+             page,
+             order,
+             NUMBER_RECORDS,
+             textToSearch
+           );
+           if (response.data.status == REQUEST_SUCCESS) {
+             dispatchFinalizedTasks(response.data.data, page, order);
+           }
+           this.setState({ loading: false });
          };
+         updateBothTabs = async () =>{
+           const { myTasks } = this.props;
+           const tabPending = myTasks.get("tabPending");
+           const tabFinished = myTasks.get("tabFinished");
+           await this.fetchAndDispatchPendingTasks(tabPending.page, tabPending.order, null);
+           await this.fetchAndDispatchFinalizedTasks(tabFinished.page, tabFinished.order, null);
+         }
 
+         handleFetchAndDispatchPendingTasks = (page, mode) => {
+           const { myTasks } = this.props;
+           switch (mode) {
+             case PENDING:
+               this.fetchAndDispatchPendingTasks(
+                 page,
+                 myTasks.get("tabPending").order,
+                 null
+               );
+               break;
+             case FINISHED:
+               this.fetchAndDispatchFinalizedTasks(
+                 page,
+                 myTasks.get("tabFinished").order,
+                 null
+               );
+               break;
+           }
+         };
+         handlePaginar = async (page, mode) => {
+           const {
+             dispatchSetPagePending,
+             dispatchSetPageFinalized,
+             myTasks
+           } = this.props;
+           switch (mode) {
+             case PENDING:
+               await dispatchSetPagePending(page, myTasks.get("tabPending").order, myTasks.get("tabPending").rowCount || 0);
+               break;
+             case FINISHED:
+               await dispatchSetPageFinalized(page, myTasks.get("tabFinished").order, myTasks.get("tabFinished").rowCount || 0);
+               break;
+           }
+           this.handleFetchAndDispatchPendingTasks(page, mode);
+         };
+         orderColumn = async (order, mode) => {
+           const {
+             dispatchCleanPageAndSetOrderPending,
+             dispatchCleanPageAndSetOrderFinalized,
+             myTasks
+           } = this.props;
+           switch (mode) {
+             case PENDING:
+               await dispatchCleanPageAndSetOrderPending(order, myTasks.get("tabPending").rowCount || 0);
+               break;
+             case FINISHED:
+               await dispatchCleanPageAndSetOrderFinalized(order, myTasks.get("tabFinished").rowCount || 0);
+               break;
+           }
+           this.handleFetchAndDispatchPendingTasks(0, mode);
+         };
+         clearUserTask = (mode) =>{
+          const {
+            dispatchCleanPageAndSetOrderPending,
+            dispatchCleanPageAndSetOrderFinalized,
+            myTasks
+          } = this.props;
+          
+          switch (mode) {
+            case PENDING:
+              dispatchCleanPageAndSetOrderPending(0, myTasks.get("tabPending").rowCount || 0);
+              break;
+            case FINISHED:
+              dispatchCleanPageAndSetOrderFinalized(0, myTasks.get("tabFinished").rowCount || 0);
+              break;
+          }
+         }
          render() {
-            const { myTasks } = this.props;
-            let tabPending = myTasks.get("tabPending");
-            let tabFinished = myTasks.get("tabFinished");
-            return(  
-            <div className="tab-pane quickZoomIn animated" style={{ width: "100%", marginTop: "10px", marginBottom: "20px" }}>
-                <div style={{ padding: '10px', overflow: 'initial' }}>
-                    <ProgressBarComponent pending={tabPending.rowCount} finalized={tabFinished.rowCount}/>
-                </div>
-            </div>);
+           const { myTasks } = this.props;
+           const { loading } = this.state;
+           let tabPending = myTasks.get("tabPending");
+           let tabFinished = myTasks.get("tabFinished");
+           return (
+             <div
+               className="tab-pane quickZoomIn animated"
+               style={{
+                 width: "100%",
+                 marginTop: "10px",
+                 marginBottom: "20px"
+               }}
+             >
+               <div
+                 style={{
+                   padding: "10px",
+                   overflow: "initial",
+                   backgroundColor: "white",
+                   margin: "10px",
+                   borderRadius: "5px",
+                   boxShadow: "0px 0px 10px -7px rgba(0,0,0,0.75)"
+                 }}
+               >
+                 {/**TODO: Sugiero este div para poner filtros y demás info**/}
+                 <ProgressBarComponent
+                   pending={tabPending.rowCount}
+                   finalized={tabFinished.rowCount}
+                 />
+               </div>
+               <div style={{ backgroundColor: "white", width: "100%" }}>
+                 <div style={{ display: "flex" }}>
+                   <PendingTasksHelp />
+                   <div style={{ display: "flex" }}>
+                     {loading === true && (
+                       <div style={{ padding: "10px" }}>
+                         <Loader active inline></Loader>
+                         <span style={{ marginLeft: "10px" }}>Cargando...</span>
+                       </div>
+                     )}
+                   </div>
+                 </div>
+                 <TabComponent
+                   tabs={[
+                     {
+                       name: PENDING_TASKS,
+                       number: tabPending.rowCount,
+                       content: (
+                         <div>
+                           <ListMyTasksComponent
+                             orderColumn={this.orderColumn}
+                             tasks={tabPending.data}
+                             handleTaskByClientsFind={
+                               this.handleFetchAndDispatchPendingTasks
+                             }
+                             updateBothTabs={this.updateBothTabs}
+                             actualPage={tabPending.page}
+                             mode={PENDING}
+                           />
+                           <PaginationPendingTaskComponent
+                             tab={tabPending}
+                             clearUserTask={this.clearUserTask}
+                             handlePaginar={this.handlePaginar}
+                             mode={PENDING}
+                           />
+                         </div>
+                       )
+                     },
+                     {
+                       name: FINALIZED_TASKS,
+                       number: tabFinished.rowCount,
+                       content: (
+                         <div>
+                           <ListMyTasksComponent
+                             orderColumn={this.orderColumn}
+                             tasks={tabFinished.data}
+                             handleTaskByClientsFind={
+                               this.handleFetchAndDispatchPendingTasks
+                             }
+                             updateBothTabs={this.updateBothTabs}
+                             actualPage={tabPending.page}
+                             mode={FINISHED}
+                           />
+                           <PaginationPendingTaskComponent
+                             tab={tabFinished}
+                             clearUserTask={this.clearUserTask}
+                             handlePaginar={this.handlePaginar}
+                             mode={FINISHED}
+                           />
+                         </div>
+                       )
+                     }
+                   ]}
+                 />
+               </div>
+             </div>
+           );
          }
        }
 
@@ -75,7 +272,12 @@ function mapDispatchToProps(dispatch) {
         dispatchPendingTasks: pendingTasks,
         dispatchFinalizedTasks: finalizedTasks,
         dispatchCleanPageAndSetOrderPending: cleanPageAndSetOrderPending,
-        dispatchCleanPageAndSetOrderFinalized: cleanPageAndSetOrderFinalized
+        dispatchCleanPageAndSetOrderFinalized: cleanPageAndSetOrderFinalized,
+        dispatchCleanFinalizedTasks: cleanFinalizedTasks,
+        dispatchCleanPendingTasks: cleanPendingTasks,
+        dispatchSetPagePending: setPagePending,
+        dispatchSetPageFinalized: setPageFinalized,
+        dispatchGetMasterDataFields: getMasterDataFields
       },
       dispatch
     );

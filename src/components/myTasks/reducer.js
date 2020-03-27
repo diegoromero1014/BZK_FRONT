@@ -5,7 +5,9 @@ import {
   CLEAN_PAG_SET_ORDER_PENDING,
   CLEAN_PAG_SET_ORDER_FINALIZED,
   CHANGE_PAG_PENDING,
-  CHANGE_PAG_FINISHED
+  CHANGE_PAG_FINISHED,
+  CLEAN_PENDING_TASKS,
+  CLEAN_FINALIZED_TASKS
 } from "./constants";
 
 const initialState = Immutable.Map({
@@ -31,37 +33,36 @@ export default (state = initialState, action) => {
         page: action.page,
         order: action.order,
         rowCount: action.data.rowCount,
-        data: action.data
+        data: action.data.rows
       };
       return state.withMutations(map => {
         map.set("tabPending", statePending);
       });
     case GET_FINALIZED_TASKS:
-    case GET_PENDING_TASKS:
       let stateFinalized = {
         page: action.page,
         order: action.order,
         rowCount: action.data.rowCount,
-        data: action.data
+        data: action.data.rows
       };
       return state.withMutations(map => {
         map.set("tabFinished", stateFinalized);
       });
     case CLEAN_PAG_SET_ORDER_PENDING:
-      let stateCleanPending = {
+      let stateP = {
         page: 0,
-        order: action.order,
-        rowCount: 0,
+        order: action.orderTask,
+        rowCount: action.rowCount,
         data: []
       };
-      return state.withMutations(map => {
-        map.set("tabPending", stateCleanPending);
+      return state.withMutations(item => {
+        item.set("tabPending", stateP);
       });
     case CLEAN_PAG_SET_ORDER_FINALIZED:
       let stateCleaFinalized = {
         page: 0,
-        order: action.order,
-        rowCount: 0,
+        order: action.orderTask,
+        rowCount: action.rowCount,
         data: []
       };
       return state.withMutations(map => {
@@ -69,9 +70,9 @@ export default (state = initialState, action) => {
       });
     case CHANGE_PAG_PENDING:
       let changePagePending = {
-        page: action.currentPage,
-        order: action.orderTask,
-        rowCount: 0,
+        page: action.page,
+        order: action.order,
+        rowCount: action.rowCount,
         data: []
       };
       return state.withMutations(map => {
@@ -79,15 +80,31 @@ export default (state = initialState, action) => {
       });
     case CHANGE_PAG_FINISHED:
       let changePageFinalized = {
-        page: action.currentPage,
-        order: action.orderTask,
-        rowCount: 0,
+        page: action.page,
+        order: action.order,
+        rowCount: action.rowCount,
         data: []
       };
       return state.withMutations(map => {
         map.set("tabFinished", changePageFinalized);
       });
-      default:
+    case CLEAN_PENDING_TASKS:
+        let cleanedPendingTasks = {
+          page: 0,
+          order: 0,
+          rowCount: 0,
+          data: []
+        };
+        return state.withMutations(map => { map.set("tabPending", cleanedPendingTasks) });
+    case CLEAN_FINALIZED_TASKS:
+        let cleanedFinalizedTasks = {
+          page: 0,
+          order: 0,
+          rowCount: 0,
+          data: []
+        };
+        return state.withMutations(map => { map.set("tabFinished", cleanedFinalizedTasks) });
+        default:
           return state;
   }
 };

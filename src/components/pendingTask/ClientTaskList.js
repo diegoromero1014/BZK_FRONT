@@ -215,20 +215,18 @@ export class ClientTaskList extends Component {
             </Row>
           </Grid>
         </div>
-        <Row>
-          <Col xs={8} sm={8} md={10} lg={11}>
-            <PendingTasksHelp></PendingTasksHelp>
-          </Col>
-        </Row>
         <div>
           <Grid style={{ width: "100%" }}>
             <div style={{ display: "flex" }}>
-              {loading === true && (
-                <div style={{ padding: "10px" }}>
-                  <Loader active inline></Loader>
-                  <span style={{ marginLeft: "10px" }}>Cargando...</span>
-                </div>
-              )}
+              <PendingTasksHelp></PendingTasksHelp>
+              <div style={{ display: "flex" }}>
+                {loading === true && (
+                  <div style={{ padding: "10px" }}>
+                    <Loader active inline></Loader>
+                    <span style={{ marginLeft: "10px" }}>Cargando...</span>
+                  </div>
+                )}
+              </div>
             </div>
             <Row style={{ position: "relative" }}>
               <Col
