@@ -8,6 +8,7 @@ import { COLUMNS_BLACK_LIST_ALERTS, MAX_ROWS } from './constants';
 import { redirectUrl } from "../../../globalComponents/actions";
 import { changeActiveItemMenu } from '../../../menu/actions';
 import { Button } from 'semantic-ui-react';
+import { MODULE_ALERTS } from '../../../../constantsGlobal';
 
 export class BlackListAlertsComponent extends Component {
 
@@ -29,7 +30,7 @@ export class BlackListAlertsComponent extends Component {
 
     reditectToBlackListAlerts = () => {
         const { dispatchChangeActiveItemMenu } = this.props;
-        dispatchChangeActiveItemMenu("Alertas");
+        dispatchChangeActiveItemMenu(MODULE_ALERTS);
         redirectUrl("/dashboard/alertBlackList");
     }
 

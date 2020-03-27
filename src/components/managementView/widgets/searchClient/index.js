@@ -10,6 +10,7 @@ import { bindActionCreators } from "redux";
 import { redirectUrl } from "../../../globalComponents/actions";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 import { changeActiveItemMenu } from '../../../menu/actions';
+import { MODULE_MY_CLIENTS } from "../../../../constantsGlobal";
 
 export class SectionSearchClient extends Component {
     constructor(props) {
@@ -43,7 +44,7 @@ export class SectionSearchClient extends Component {
 
         if (access) {
             window.sessionStorage.setItem('idClientSelected', id);
-            dispatchChangeActiveItemMenu("Mis clientes");
+            dispatchChangeActiveItemMenu(MODULE_MY_CLIENTS);
             redirectUrl('/dashboard/clientInformation');
         } else {
             dispatchSwtShowMessage("warning", "Acceso denegado", MESSAGE_NO_ACCESS);

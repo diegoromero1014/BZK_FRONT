@@ -6,17 +6,30 @@ import TableBuilder from "../../../table/TableBuilder";
 import { COLUMNS_OUTDATED_CONTACTS, MAX_ROWS } from './constants';
 import { redirectUrl } from "../../../globalComponents/actions";
 import { getOutdatedContacts } from '../../actions';
+import { changeActiveItemMenu } from '../../../menu/actions';
+import { MODULE_CONTACTS } from '../../../../constantsGlobal';
 
 export class OutdatedContactsComponent extends Component {
 
-    handleOnPageChange = page => {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            loading: false
+        }
+    }
+
+    handleOnPageChange = async page => {
         const { dispatchGetOutdatedContacts } = this.props;
-        
-        dispatchGetOutdatedContacts((page - 1), MAX_ROWS);
+        await this.setState({ loading: true});
+        await dispatchGetOutdatedContacts((page - 1), MAX_ROWS);
+        await this.setState({ loading: false });
     }
 
     handleOnClick = data => {
+        const { dispatchChangeActiveItemMenu } = this.props;
         window.sessionStorage.setItem('idContactSelected', data.id);
+        dispatchChangeActiveItemMenu(MODULE_CONTACTS);
         redirectUrl("/dashboard/clientsContacts");
     }
 
@@ -34,6 +47,7 @@ export class OutdatedContactsComponent extends Component {
                             .setTotalRecords(total)
                             .setOnPageChange(this.handleOnPageChange)
                             .setOnClick(this.handleOnClick)
+                            .setLoading(this.state.loading)
                             .build()
                     }
                 />
@@ -48,7 +62,8 @@ const mapStateToProps = ({ outdatedContacts: { rows, rowCount } }) => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    dispatchGetOutdatedContacts: getOutdatedContacts
+    dispatchGetOutdatedContacts: getOutdatedContacts,
+    dispatchChangeActiveItemMenu: changeActiveItemMenu
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(OutdatedContactsComponent);
