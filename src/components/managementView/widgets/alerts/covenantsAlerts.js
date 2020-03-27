@@ -16,14 +16,17 @@ export class CovenantsAlertsComponent extends Component {
 
         this.state = {
             open: false,
-            idCovenant: null
+            idCovenant: null,
+            loading: false
         }
     }
 
-    handleOnPageChange = page => {
+    handleOnPageChange = async page => {
         const { dispatchCovenantsAlerts } = this.props;
 
-        dispatchCovenantsAlerts(page, MAX_ROWS);
+        await this.setState({ loading: true });
+        await dispatchCovenantsAlerts(page, MAX_ROWS);
+        await this.setState({ loading: false });
     }
 
     handleOnClick = async ({ idCovenant }) => await this.setState({ open: true, idCovenant });
@@ -33,7 +36,7 @@ export class CovenantsAlertsComponent extends Component {
 
     render() {
         const { data, total } = this.props;
-        const { open, idCovenant } = this.state;
+        const { open, idCovenant, loading } = this.state;
        
         return (
             <div>
@@ -45,6 +48,7 @@ export class CovenantsAlertsComponent extends Component {
                             .setStriped(true)
                             .setTotalRecords(total)
                             .setOnPageChange(this.handleOnPageChange)
+                            .setLoading(loading)
                             .setOnClick(this.handleOnClick)
                             .build()
                     }
