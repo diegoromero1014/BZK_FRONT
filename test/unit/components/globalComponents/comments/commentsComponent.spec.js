@@ -2,14 +2,15 @@ import CommentsComponentRedux, {CommentsComponent} from "../../../../../src/comp
 import React from 'react';
 import thunk from "redux-thunk";
 import configureStore from "redux-mock-store";
-import TextArea from "../../../../../src/ui/textarea/textareaComponent";
 import {
     MESSAGE_ERROR_INJECTION_HTML,
-    MESSAGE_WARNING_FORBIDDEN_CHARACTER, MESSAGE_WARNING_MAX_LENGTH,
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER,
+    MESSAGE_WARNING_MAX_LENGTH,
     MESSAGE_WARNING_TASK_OBSERVATIONS
 } from "../../../../../src/validationsFields/validationsMessages";
 import {
-    ERROR_COMMENT_LENGTH, MAX_LENGTH_USER_TASK_COMMENT,
+    ERROR_COMMENT_LENGTH,
+    MAX_LENGTH_USER_TASK_COMMENT,
     NO_NOTES_MESSAGE
 } from "../../../../../src/components/globalComponents/comments/constants";
 import {MentionsInput} from "react-mentions";
@@ -18,6 +19,7 @@ let dispatchClearComments;
 let dispatchFilterUsers;
 let dispatchAddCommentList;
 let dispatchSwtShowMessage;
+let saveCommentAction;
 
 let commentsReducer;
 
@@ -45,6 +47,7 @@ describe('Test commentsComponent', () => {
         });
         dispatchSwtShowMessage = sinon.fake();
         dispatchAddCommentList = sinon.fake();
+        saveCommentAction = sinon.stub();
         localStorage = sinon.stub(window.localStorage, 'getItem').returns('Daniel Gallego');
         commentsReducer = {
             comments: [
@@ -75,6 +78,7 @@ describe('Test commentsComponent', () => {
             dispatchSwtShowMessage,
             dispatchAddCommentList,
             commentsReducer,
+            saveCommentAction,
             header: 'Notas',
             disabled: false
         };
@@ -261,6 +265,18 @@ describe('Test commentsComponent', () => {
             const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
             await wrapper.instance().addComment({ preventDefault: sinon.fake() }, 4342, 'Esta es la respuesta al comentario de respuesta', 'reply');
             expect(wrapper.state().commentReply).to.equal('');
+        });
+
+        it('addComent when reportId is not null', async () => {
+            defaultProps.reportId = 1234;
+            const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
+            await wrapper.instance().addComment({ preventDefault: sinon.fake() }, 4342, 'Esta es la respuesta al comentario de respuesta', 'reply');
+        });
+
+        it('addComent when reportId is not null and is a new comment', async () => {
+            defaultProps.reportId = 1234;
+            const wrapper = itRenders(<CommentsComponent {...defaultProps}/>);
+            await wrapper.instance().addComment({ preventDefault: sinon.fake() }, null, 'Esta es la respuesta al comentario de respuesta', 'new');
         });
 
     });

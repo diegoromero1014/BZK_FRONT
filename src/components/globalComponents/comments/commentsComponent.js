@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
-import {Comment, Form, Header} from 'semantic-ui-react'
+import {Comment, Form, Header, Loader} from 'semantic-ui-react'
 import {Row} from 'react-flexbox-grid';
 import Col from 'react-flexbox-grid/lib/components/Col';
 import CommentsAvatar from './commentsAvatar';
@@ -13,15 +13,20 @@ import {addCommentToList, clearComments} from "./actions";
 import _ from "lodash";
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import {getUsernameInitials} from "../../../functions";
-import TextArea from "../../../ui/textarea/textareaComponent";
-import {ERROR_COMMENT_LENGTH, MAX_LENGTH_USER_TASK_COMMENT, TASK_COMMENT_HELP_MESSAGE, NO_NOTES_MESSAGE} from "./constants";
+import {
+    ERROR_COMMENT_LENGTH,
+    MAX_LENGTH_USER_TASK_COMMENT,
+    NO_NOTES_MESSAGE,
+    TASK_COMMENT_HELP_MESSAGE
+} from "./constants";
 import {
     patternOfForbiddenCharacterComments,
     patternOfTaskComments
 } from "../../../validationsFields/patternsToValidateField";
 import {
     MESSAGE_ERROR_INJECTION_HTML,
-    MESSAGE_WARNING_FORBIDDEN_CHARACTER, MESSAGE_WARNING_MAX_LENGTH,
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER,
+    MESSAGE_WARNING_MAX_LENGTH,
     MESSAGE_WARNING_TASK_OBSERVATIONS
 } from "../../../validationsFields/validationsMessages";
 import {validateHtmlInjection} from "../../../validationsFields/rulesField";
@@ -38,7 +43,9 @@ export class CommentsComponent extends Component {
             commentReply: '',
             comment: '',
             showNewCommentError: null,
-            showReplyCommentError: null
+            showReplyCommentError: null,
+            showNewCommentLoader: false,
+            showReplyCommentLoader: false
         }
     }
 
@@ -138,6 +145,13 @@ export class CommentsComponent extends Component {
             this.setState({ showReplyCommentError: error });
     };
 
+    showHideLoadingAddComment = (show, source) => {
+        if(source === 'new')
+            this.setState({ showNewCommentLoader: show });
+        else
+            this.setState({ showReplyCommentLoader: show });
+    };
+
     addComment = async (e, parentCommentId, content, source) => {
         const { reportId, commentsReducer: { comments }, dispatchAddCommentList, saveCommentAction } = this.props;
         const author = window.localStorage.getItem('name');
@@ -160,7 +174,9 @@ export class CommentsComponent extends Component {
         e.preventDefault();
         if(this.validateCommentContent(content, source)){
             if(reportId != null){
+                this.showHideLoadingAddComment(true, source);
                 await saveCommentAction(comment);
+                this.showHideLoadingAddComment(false, source);
             }else{
                 dispatchAddCommentList(comment);
             }
@@ -184,7 +200,7 @@ export class CommentsComponent extends Component {
     };
 
     renderComments = (comments) => {
-        const { showReplyCommentError } = this.state;
+        const { showReplyCommentError, showReplyCommentLoader } = this.state;
         const { disabled } = this.props;
         return comments.map(({ id, initials, author, createdTimestamp, content, replies }) =>
             <Comment key={id}>
@@ -229,7 +245,10 @@ export class CommentsComponent extends Component {
                         </Row>
                         <Row style={{ marginTop: 10 }}>
                             <Col xs={12} md={12} ld={12}>
-                                <button id={`replyCommentButton${id}`} className="btn btn-primary" style={{ float: 'right' }} onClick={e => this.addComment(e, id, this.state.commentReply, 'reply')}>Responder</button>
+                                <div style={{ float: 'right' }}>
+                                    {showReplyCommentLoader && <Loader active inline style={{marginRight: 15}}></Loader>}
+                                    <button id={`replyCommentButton${id}`} className="btn btn-primary" onClick={e => this.addComment(e, id, this.state.commentReply, 'reply')}>Responder</button>
+                                </div>
                             </Col>
                         </Row>
                     </Form>
@@ -245,7 +264,7 @@ export class CommentsComponent extends Component {
 
     render() {
         const { header, commentsReducer: { comments }, disabled } = this.props;
-        const { showNewCommentError } = this.state;
+        const { showNewCommentError, showNewCommentLoader } = this.state;
         return (
             <div style={{maxWidth: '100%'}}>
                 <Comment.Group style={{ width: '100%', margin: 0, maxWidth: '100%' }}>
@@ -298,8 +317,11 @@ export class CommentsComponent extends Component {
                         </Row>
                         <Row style={{ margin: '10px 0 0 0' }}>
                             <Col xs={12} md={12} lg={12}>
-                                <button id="addCommentButton" className="btn btn-primary" style={{ float: 'right' }} onClick={e => this.addComment(e,null, this.state.comment, 'new')}
-                                        disabled={disabled && 'disabled'}>Agregar nota</button>
+                                <div style={{ float: 'right' }}>
+                                    {showNewCommentLoader && <Loader active inline style={{marginRight: 15}}></Loader> }
+                                    <button id="addCommentButton" className="btn btn-primary" onClick={e => this.addComment(e,null, this.state.comment, 'new')}
+                                            disabled={disabled && 'disabled'}>Agregar nota</button>
+                                </div>
                             </Col>
                         </Row>
                     </Form>
