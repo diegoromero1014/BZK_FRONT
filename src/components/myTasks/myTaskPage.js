@@ -29,8 +29,8 @@ export class MyTaskPage extends Component {
             dispatchUpdateTitleNavBar("Tareas");
             dispatchCleanPageAndSetOrderPending(0);
             dispatchCleanPageAndSetOrderFinalized(0);
-            await this.dispatchFilters(myTasks.get("initialFilter"));
-            /*let filters = myTasks.get("initialFilter");
+            /*await this.dispatchFilters(myTasks.get("initialFilter"));
+            let filters = myTasks.get("initialFilter");
             await this.fetchAndDispatchPendingTasks(0, 0, null, filters);
             await this.fetchAndDispatchFinalizedTasks(0, 0, null, filters);*/
         }

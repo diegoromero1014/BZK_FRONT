@@ -15,7 +15,7 @@ const ProgressBarComponent = ({finalized, pending}) => {
               active
               label={finalized}
               style={{ height: "25px" }}
-            ></Progress>
+            />
           </Col>
         </Row>
         <Row>

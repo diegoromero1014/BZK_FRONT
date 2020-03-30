@@ -16,13 +16,6 @@ const rolFilter = [
     {'id': 'ASSIGNED', 'value': "Asignador"}
 ];
 
-let filters = {
-    users: [],
-    rol: null,
-    initialDate: null,
-    finalDate: null
-};
-
 export class HeaderFilters extends Component {
     constructor(props) {
         super(props);
@@ -54,38 +47,25 @@ export class HeaderFilters extends Component {
         });
 
         rol.onChange("RESPONSIBLE");
-        await users.onChange(value.id);
-
-        await this.searchByFilters();
+        users.onChange(value.id);
     }
 
     validateFilter = async () => {
-        const {fields: {users, rol, initialDate, finalDate}, dispatchShowMessage} = this.props;
+        const {fields: {users, rol}, dispatchShowMessage} = this.props;
         let errorField = "";
         if (await _.isEmpty(users.value)) {
-            errorField = 'Señor usuario, el campo Usuario es obligatorio';
-            dispatchShowMessage(MESSAGE_ERROR, "Campos obligatorios", errorField);
             users.onChange(this.state.user);
         }
         if (_.isEmpty(rol.value)) {
             errorField = 'Señor usuario, el campo Rol es obligatorio';
             dispatchShowMessage(MESSAGE_ERROR, "Campos obligatorios", errorField);
         }
-        if (_.isEmpty(initialDate.value)) {
-            errorField = 'Señor usuario, el campo Desde es obligatorio';
-            dispatchShowMessage(MESSAGE_ERROR, "Campos obligatorios", errorField);
-        }
-        if (_.isEmpty(finalDate.value)) {
-            errorField = 'Señor usuario, el campo Hasta es obligatorio';
-            dispatchShowMessage(MESSAGE_ERROR, "Campos obligatorios", errorField);
-        }
-
     };
 
     searchByFilters = async () => {
-        const {fields: {users, rol, initialDate, finalDate}, dispatchSetRolToSearch, dispatchFilters} = this.props;
+        const {fields: {users, rol, initialDate, finalDate}, dispatchFilters} = this.props;
 
-        filters = {
+        let filters = {
             users: JSON.parse('[' + ((_.isNull(users) || _.isUndefined(users)) ? "" : users.value) + ']'),
             rol: rol.value,
             initialDate: moment(initialDate.value, "DD/MM/YYYY").toDate().getTime(),
@@ -95,14 +75,8 @@ export class HeaderFilters extends Component {
         setTimeout(() => {
             this.validateFilter();
         }, 300);
-        if (_.isNil(initialDate.value) || _.isNil(finalDate.value)) {
-            debugger;
-            filters.initialDate = this.state.initialDate;
-            filters.initialDate = this.state.finalDate;
-            await dispatchSetRolToSearch(filters);
-        } else {
-            await dispatchFilters(filters);
-        }
+
+        await dispatchFilters(filters);
     };
 
     onClickDate = async (type, val) => {
@@ -115,7 +89,17 @@ export class HeaderFilters extends Component {
             finalDate.onChange(val);
         }
 
-        this.searchByFilters();
+        await this.searchByFilters();
+    };
+
+    fillDateEmpty = (type, val) => {
+        const {fields: {initialDate, finalDate}} = this.props;
+        if (_.isEqual(type, "initial") && _.isEmpty(val.target.value)) {
+            initialDate.onChange(this.state.initialDate);
+        }
+        if (_.isEqual(type, "final") && _.isEmpty(val.target.value)) {
+            finalDate.onChange(this.state.finalDate);
+        }
     };
 
     render() {
@@ -159,8 +143,8 @@ export class HeaderFilters extends Component {
                             placeholder='DD/MM/YYYY'
                             className='field-input'
                             name="initialDate"
-                            onSelect={val => this.onClickDate("initial", moment(val).format(DATETIME_FORMAT))}
-                            onBlur={this.validateFilter()}
+                            onSelect={val => this.onClickDate("initial", val)}
+                            onBlur={val => this.fillDateEmpty("initial", val)}
                         />
                     </Col>
                     <Col xs={3} sm={3} md={3} lg={3}>
@@ -173,7 +157,8 @@ export class HeaderFilters extends Component {
                             placeholder='DD/MM/YYYY'
                             className='field-input'
                             name="finalDate"
-                            onSelect={val => this.onClickDate("final", moment(val).format(DATETIME_FORMAT))}
+                            onSelect={val => this.onClickDate("final", val)}
+                            onBlur={val => this.fillDateEmpty("final", val)}
                         />
                     </Col>
                 </Row>
