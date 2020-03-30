@@ -17,7 +17,6 @@ import BusinessPlan from "./components/businessPlan/createBusinessPlan/createBus
 import EditBusinessPlan from "./components/businessPlan/editBusinessPlan/editBusinessPlan";
 import AdminAlertClientsPendingUpdate from "./components/alertPendingUpdateClient/pendingUpdateClientComponent";
 import AdminAlertClientsPortfolioExpiration from "./components/alertPortfolioExpirtation/portfolioExpirationAlertComponent";
-import ModalComponentPending from "./components/myPendings/myTasks/modalComponentPending";
 import ModalDraftDocuments from "./components/myPendings/draftDocuments/modalDraftDocuments";
 import ViewAlerts from "./components/alerts/alertsComponent";
 import AlertCovenants from "./components/alertCovenants/alertCovenantComponent";
@@ -39,6 +38,7 @@ import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderCo
 import PageNotFound from "./components/notFoundPage/PageNotFound";
 import PrevisitPage from "./components/previsita/previsitPage";
 import makeAssociateList from './components/fieldList/makeAssociateList';
+
 
 import {
     BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP,
@@ -242,7 +242,6 @@ export default (
                 <Route path="alertCovenants" component={AlertCovenants}></Route>
                 <Route path="myTask" component={MyTaskPage}/>
                 <Route path="myPendings">
-                    <Route path="myTasks" component={ModalComponentPending}></Route>
                     <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
                     <Route path="AEC" component={AEC} key="AEC"></Route>
                     <Route path="linkingRequests" component={LinkingRequests}></Route>
