@@ -17,7 +17,13 @@ class TabComponent extends Component {
         this.setState({ tabActive: name });
     }
 
-    handleItemClick = name => this.setState({ tabActive: name });
+    handleItemClick = (name, callback) => {
+        this.setState({ tabActive: name });
+
+        if (callback) {
+            callback(name);
+        }
+    };
 
     getMenu = tabActive => {
         const { tabs, classNameColor = 'blue' } = this.props;
@@ -25,7 +31,7 @@ class TabComponent extends Component {
             <div className="tabGenericComponent">
                 <div style={{ overflowX: 'auto' }}>
                     <Menu pointing secondary>
-                        {tabs.map(({ name, number, disable }) => (
+                        {tabs.map(({ name, number, disable, callback }) => (
                             <Menu.Item
                                 name={name}
                                 className="tabItem"
@@ -35,7 +41,7 @@ class TabComponent extends Component {
                                         : { backgroundColor: "rgba(0, 0, 0, 0.09)", width: "250px" }
                                 }
                                 onClick={() => {
-                                    !disable ? this.handleItemClick(name) : null;
+                                    !disable ? this.handleItemClick(name, callback) : null;
                                 }}
                                 active={tabActive === name}
                             >
@@ -59,7 +65,7 @@ class TabComponent extends Component {
 
         return tabs.filter(({ name }) => name === tabActive).map(({ content }) => <Segment className={'generic-tab-segment'}>{content}</Segment>);
     };
-    
+
     render() {
         return <div>{this.getMenu(this.state.tabActive)}</div>;
     }
