@@ -12,7 +12,7 @@ const styles = {
 
 const helpText = "¿Que estrategias esta implementando el cliente para cumplir sus objetivos?"
 
-export function renderFields({fields, onChange, onAddElement, onCancel, isEditing, errors}) {
+export function renderFields({ fields, onChange, onAddElement, onCancel, isEditing, errors }) {
     return (
         <div>
             <Row>
@@ -54,35 +54,33 @@ export function renderElements(elements, removeElement, editElement) {
     return (
         <div>
             <Row>
-            {elements.map((element) => (
-                
-                <Col md={12} >
-                    <div className="section-list-divider" style={{padding: "10px"}}>
-                    <Row>
-                        <Col md={1}>
-                            <i
-                                className="edit icon"
-                                title="Editar Objetivo"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => editElement(element)}
-                            />
-                        </Col>
-                        <Col md={10} className="add-line-break">
-                            {element.value}
-                        </Col>
-                        <Col md={1}>
-                            <i
-                                className="trash icon"
-                                title="Eliminar Objetivo"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => removeElement(element)}
-                            />
-                        </Col>
-                    </Row>
-                    </div>
-                </Col>
-                
-            ))}
+                {elements.map((element) => (
+                    <Col md={12} >
+                        <div className="section-list-divider" style={{ padding: "10px" }}>
+                            <Row>
+                                <Col md={1}>
+                                    {element.status !== -1 && <i
+                                        className="edit icon"
+                                        title="Editar Objetivo"
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => editElement(element)}
+                                    />}
+                                </Col>
+                                <Col md={10} className="add-line-break">
+                                    {element.value}
+                                </Col>
+                                <Col md={1}>
+                                    {element.status !== -1 && <i
+                                        className="trash icon"
+                                        title="Eliminar Objetivo"
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => removeElement(element)}
+                                    />}
+                                </Col>
+                            </Row>
+                        </div>
+                    </Col>
+                ))}
             </Row>
         </div >
     )

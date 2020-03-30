@@ -11,6 +11,14 @@ import { changeActiveItemMenu } from '../../../menu/actions';
 
 export class AlertPortfolioExpiration extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            loading: false
+        }
+    }
+
     componentDidMount() {
         this.forceUpdate();
     }
@@ -21,17 +29,28 @@ export class AlertPortfolioExpiration extends Component {
         redirectUrl("/dashboard/alertClientsPortfolioExpiration");
     }
 
+    handleOnPageChange = async page => {
+        const { dispatchGetAlertPortfolioExpirationDashboard } = this.props;
+
+        this.setLoading(true);
+        await dispatchGetAlertPortfolioExpirationDashboard(page);
+        this.setLoading(false);
+    }
+
+    setLoading = async loading => await this.setState({ loading });
+
     render() {
-        const { alertPortfolioExpiration, dispatchGetAlertPortfolioExpirationDashboard, total } = this.props;
+        const { alertPortfolioExpiration, total } = this.props;
 
         const data = alertPortfolioExpiration.get("responseClients");
 
         const tableSettings = new TableBuilder(data, COLUMNS_VENCIMIENTO_CARTERA)
-            .setNoRowMessage("Aún no se han creado registros.")
+            .setNoRowMessage("No existen registros.")
             .setRecordsPerPage(5)
             .setStriped(true)
             .setTotalRecords(total)
-            .setOnPageChange(async page => await dispatchGetAlertPortfolioExpirationDashboard(page))
+            .setOnPageChange(this.handleOnPageChange)
+            .setLoading(this.state.loading)
             .setMaximumVisiblePages(7)
             .build();
 
@@ -44,7 +63,7 @@ export class AlertPortfolioExpiration extends Component {
                     onClick={this.redirectToAlertPortfolioExpiration}
                 >
                     Ver detalle
-        </Button>
+                </Button>
             </div>
         );
     }
