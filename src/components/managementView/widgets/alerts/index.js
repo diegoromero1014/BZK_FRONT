@@ -25,19 +25,33 @@ import { MAX_ROWS } from './constants';
 export class AlertSection extends Component {
 
     async componentDidMount() {
-        const {
-            dispatchGetAlertPortfolioExpirationDashboard,
-            dispatchBlackListAlerts,
-            dispatchGetOutdatedContacts,
-            dispatchCovenantsAlerts
-        } = this.props;
-
         await Promise.all([
-            dispatchCovenantsAlerts(1, MAX_ROWS),
-            dispatchBlackListAlerts(0, MAX_ROWS),
-            dispatchGetAlertPortfolioExpirationDashboard(1),
-            dispatchGetOutdatedContacts(0, MAX_ROWS)
+            this.handleDispatchCovenantsAlerts(),
+            this.handleDispatchBlackList(),
+            this.handleDispatchGetAlertPortfolioExpirationDashboard(),
+            this.handleDispatchGetOutdatedContacts()
         ]);
+    }
+
+
+    handleDispatchBlackList = async () => {
+        const { dispatchBlackListAlerts } = this.props;
+        return await dispatchBlackListAlerts(0, MAX_ROWS);
+    }
+
+    handleDispatchCovenantsAlerts = async () => {
+        const { dispatchCovenantsAlerts } = this.props;
+        return await dispatchCovenantsAlerts(1, MAX_ROWS);
+    }
+
+    handleDispatchGetAlertPortfolioExpirationDashboard = async () => {
+        const { dispatchGetAlertPortfolioExpirationDashboard } = this.props;
+        return await dispatchGetAlertPortfolioExpirationDashboard(1);
+    }
+
+    handleDispatchGetOutdatedContacts = async () => {
+        const { dispatchGetOutdatedContacts } = this.props;
+        return await dispatchGetOutdatedContacts(0, MAX_ROWS);
     }
 
     countAlerts = (total) => {
@@ -51,25 +65,29 @@ export class AlertSection extends Component {
                         <AlertPortfolioExpiration total={total} />
                     </div>
                 ),
-                number: total || 0
+                number: total || 0,
+                callback: this.handleDispatchGetAlertPortfolioExpirationDashboard
             },
             {
                 name: COVENANTS_TAB,
                 content: <CovenantsAlertsComponent />,
                 disable: false,
-                number: totalCovenant || 0
+                number: totalCovenant || 0,
+                callback: this.handleDispatchCovenantsAlerts
             },
             {
                 name: OUTDATED_CONTACTS,
                 content: <OutdatedContactsComponent />,
                 disable: false,
-                number: totalOutdatedContacts || 0
+                number: totalOutdatedContacts || 0,
+                callback: this.handleDispatchGetOutdatedContacts
             },
             {
                 name: CONTROL_LISTS_TAB,
                 content: <BlackListAlerts />,
                 disable: false,
-                number: totalBlackList || 0
+                number: totalBlackList || 0,
+                callback: this.handleDispatchBlackList
             }
         ];
         return (
