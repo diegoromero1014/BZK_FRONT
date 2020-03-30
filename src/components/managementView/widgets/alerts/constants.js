@@ -11,7 +11,7 @@ export const COLUMNS_VENCIMIENTO_CARTERA = [
     },
     {
         header : 'Nombre / Razón social',
-        prop : 'clientName',
+        prop : 'clientNameLink.value',
     },
     {
         header : 'Saldo vencido',

@@ -15,9 +15,11 @@ describe('AlertPortfolioExpiration Test', () => {
     
     beforeEach(() => {
         defaultProps = {
-            alertPortfolioExpiration: Immutable.Map({ responseClients: {} })
+            data: []
         }
-        store = mockStore({});
+        store = mockStore({
+            alertPortfolioExpiration: Immutable.Map({ responseClients: {} }),
+        });
     })
 
     it('Should render component with Redux', () => {
