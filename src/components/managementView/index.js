@@ -26,7 +26,7 @@ export class ManagementView extends Component {
         return (
             <div
                 style={{
-                    padding: '0px 50px',
+                    padding: '0px 50px 100px',
                     height: 'auto',
                     background: '#fff',
                     width: '100%'
@@ -39,12 +39,9 @@ export class ManagementView extends Component {
                 <div style={{ marginTop: 100 }}>
                     <Reports />
                 </div>
-
-                <Row style={{ marginTop: 170 }}>
-                    <Col md={12}>
-                        <AlertSection />
-                    </Col>
-                </Row>
+                <div style={{ width: '100%', marginTop: 170 }}>
+                    <AlertSection />
+                </div>
             </div>
         );
     }
