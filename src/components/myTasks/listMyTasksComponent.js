@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import moment from "moment";
 import GridComponent from "../grid/component";
 import { MODAL_TITLE } from "./constants";
-import { MODULE_TASKS } from "../../constantsGlobal";
 import _ from "lodash";
 import { VIEW_TASK_ADMIN } from "../modal/constants";
 
