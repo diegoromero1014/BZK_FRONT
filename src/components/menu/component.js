@@ -67,13 +67,12 @@ const itemMyTasks = {
 
 const childrenContactsGroupFavorito = { text: "Favoritos", link: "/dashboard/contact/favoriteGroup" };
 const childrenMyPendingsAEC = { text: "AEC", link: "/dashboard/myPendings/AEC" };
-const childrenMyPendingsMyTaks = { text: "Mis tareas", link: "/dashboard/myPendings/myTasks" };
+
 const childrenMyPendingsLinkingRequests = { text: "Solicitudes de vinculación", link: "/dashboard/myPendings/linkingRequests" };
 const childrenMyPendingsMyDraftDocuments = {
     text: "Documentos en borrador",
     link: "/dashboard/myPendings/draftDocuments"
 };
-const childrenMyPendingsAssigned = { text: "Asignadas", link: "/dashboard/myPendings/assigned" };
 
 const itemAlerts = {
     text: "Alertas",
