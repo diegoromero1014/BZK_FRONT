@@ -12,3 +12,5 @@ export const NUMBER_RECORDS = 10;
 export const PENDING_TASKS = "Tareas Pendientes";
 export const FINALIZED_TASKS = "Tareas Finalizadas";
 export const MODAL_TITLE = "Tareas";
+export const ASSIGNED = "ASSIGNED";
+export const RESPONSIBLE = "RESPONSIBLE";

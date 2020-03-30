@@ -10,7 +10,9 @@ import {
   PENDING,
   PENDING_TASKS,
   FINALIZED_TASKS,
-  MODAL_TITLE
+  MODAL_TITLE,
+  ASSIGNED,
+  RESPONSIBLE
 } from "./constants";
 import { REQUEST_SUCCESS } from "../../constantsGlobal";
 import { TASK_STATUS } from "../selectsComponent/constants";
@@ -50,8 +52,12 @@ export class MyTaskPage extends Component {
              } = this.props;
              dispatchGetMasterDataFields([TASK_STATUS]);
              dispatchUpdateTitleNavBar(MODAL_TITLE);
-             this.fetchAndDispatchPendingTasks(0, 0, null);
-             this.fetchAndDispatchFinalizedTasks(0, 0, null);
+             this.fetchAndDispatchPendingTasks(0, 0, null, ASSIGNED, [
+               120
+             ]);
+             this.fetchAndDispatchFinalizedTasks(0, 0, null, ASSIGNED, [
+               120
+             ]);
            }
          }
          componentWillUnmount() {
@@ -62,28 +68,32 @@ export class MyTaskPage extends Component {
            dispatchCleanPendingTasks();
            dispatchCleanFinalizedTasks();
          }
-         fetchAndDispatchPendingTasks = async (page, order, textToSearch) => {
+         fetchAndDispatchPendingTasks = async (page, order, textToSearch, modeQuery, users) => {
            this.setState({ loading: true });
            const { dispatchPendingTasks } = this.props;
            let response = await getPendingTaskPromise(
              page,
              order,
              NUMBER_RECORDS,
-             textToSearch
+             textToSearch,
+             modeQuery,
+             users
            );
            if (response.data.status == REQUEST_SUCCESS) {
              dispatchPendingTasks(response.data.data, page, order);
            }
            this.setState({ loading: false });
          };
-         fetchAndDispatchFinalizedTasks = async (page, order, textToSearch) => {
+         fetchAndDispatchFinalizedTasks = async (page, order, textToSearch, modeQuery, users) => {
            this.setState({ loading: true });
            const { dispatchFinalizedTasks } = this.props;
            let response = await getFinalizedTaskPromise(
              page,
              order,
              NUMBER_RECORDS,
-             textToSearch
+             textToSearch,
+             modeQuery,
+             users
            );
            if (response.data.status == REQUEST_SUCCESS) {
              dispatchFinalizedTasks(response.data.data, page, order);
@@ -94,8 +104,20 @@ export class MyTaskPage extends Component {
            const { myTasks } = this.props;
            const tabPending = myTasks.get("tabPending");
            const tabFinished = myTasks.get("tabFinished");
-           await this.fetchAndDispatchPendingTasks(tabPending.page, tabPending.order, null);
-           await this.fetchAndDispatchFinalizedTasks(tabFinished.page, tabFinished.order, null);
+           await this.fetchAndDispatchPendingTasks(
+             tabPending.page,
+             tabPending.order,
+             null,
+             ASSIGNED,
+             [120]
+           );
+           await this.fetchAndDispatchFinalizedTasks(
+             tabFinished.page,
+             tabFinished.order,
+             null,
+             ASSIGNED,
+             [120]
+           );
          }
 
          handleFetchAndDispatchPendingTasks = (page, mode) => {
@@ -105,14 +127,18 @@ export class MyTaskPage extends Component {
                this.fetchAndDispatchPendingTasks(
                  page,
                  myTasks.get("tabPending").order,
-                 null
+                 null,
+                 ASSIGNED,
+                 [120]
                );
                break;
              case FINISHED:
                this.fetchAndDispatchFinalizedTasks(
                  page,
                  myTasks.get("tabFinished").order,
-                 null
+                 null,
+                 ASSIGNED,
+                 [120]
                );
                break;
            }

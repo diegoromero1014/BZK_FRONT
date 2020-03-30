@@ -4,6 +4,7 @@ import GridComponent from "../grid/component";
 import { MODAL_TITLE } from "./constants";
 import { MODULE_TASKS } from "../../constantsGlobal";
 import _ from "lodash";
+import { VIEW_TASK_ADMIN } from "../modal/constants";
 
 class ListMyTasksComponent extends Component {
   constructor(props) {
@@ -32,15 +33,18 @@ class ListMyTasksComponent extends Component {
   }
 
   _renderCellView = data => {
-    const { updateBothTabs, mode } = this.props;
+    const { updateBothTabs } = this.props;
     return _.forOwn(data, function(value) {
-      _.set(mode, "key", mode);
-      _.set(value, "actionsRedirect", {
+      _.set(value, "idTypeClient", value.clientIdentification);
+      _.set(value, "idNumberClient", value.clientTypeIdentification);
+      _.set(value, "actions", {
         actionView: true,
-        id: value.id,
-        typeClickDetail: MODULE_TASKS,
-        urlRedirect: "/dashboard/task",
-        component: "VIEW_TASK_ADMIN"
+        id: value,
+        object: {commercialReport:{isConfidential:value.confidentiality}},
+        idClient: value.idClient,
+        urlServer: "./component",
+        component: VIEW_TASK_ADMIN,
+        actionEdit: true
       });
       let dateTaskFormat = moment(value.finalDate).locale("es");
       _.set(
@@ -74,15 +78,18 @@ class ListMyTasksComponent extends Component {
     return [
       {
         title: "Tipo de documento",
-        key: "idTypeClient"
+        key: "idTypeClient",
+        style: { width: "230px" }
       },
       {
         title: "Número documento",
-        key: "idNumberClient"
+        key: "idNumberClient",
+        style: { width: "200px" }
       },
       {
         title: "Nombre/Razón social",
-        key: "clientName"
+        key: "clientName",
+        style: { width: "300px" }
       },
       {
         title: "Asignada por",
@@ -128,7 +135,7 @@ class ListMyTasksComponent extends Component {
       {
         title: "Ver",
         style: { width: "50px" },
-        key: "actionsRedirect"
+        key: "actions"
       }
     ];
   };

@@ -137,7 +137,6 @@ export class ModalComponentDialog extends Component {
 
     renderConfidentialBrand() {
         const actions = this.props.actions;
-
         if (typeof actions.id == 'number') {
             if (actions.object.commercialReport && actions.object.commercialReport.isConfidential) {
                 return <ConfidentialBrandComponent /> 

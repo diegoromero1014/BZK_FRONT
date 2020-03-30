@@ -13,7 +13,7 @@ import {
   CLEAN_FINALIZED_TASKS
 } from "./constants";
 
-export function getPendingTaskPromise (pageNum, order, maxRows, textToSearch){
+export function getPendingTaskPromise (pageNum, order, maxRows, textToSearch, modeQuery, users){
     const json = {
       messageHeader: {
         sessionToken: window.localStorage.getItem("sessionTokenFront"),
@@ -32,11 +32,11 @@ export function getPendingTaskPromise (pageNum, order, maxRows, textToSearch){
         pageNum,
         maxRows,
         section: PENDING,
-        mode: "CLIENT",
+        mode: modeQuery,
         filter: {
-          clientId: 5261530,
           order,
-          textToSearch
+          textToSearch,
+          users
         }
       }
     };
@@ -52,7 +52,7 @@ export function pendingTasks(data, page, order) {
   };
 }
 
-export function getFinalizedTaskPromise (pageNum, order, maxRows, textToSearch){
+export function getFinalizedTaskPromise (pageNum, order, maxRows, textToSearch, modeQuery, users){
     const json = {
       messageHeader: {
         sessionToken: window.localStorage.getItem("sessionTokenFront"),
@@ -71,11 +71,11 @@ export function getFinalizedTaskPromise (pageNum, order, maxRows, textToSearch){
         pageNum,
         maxRows,
         section: FINISHED,
-        mode: "CLIENT",
+        mode: modeQuery,
         filter: {
-          clientId: 5261530,
           order,
-          textToSearch
+          textToSearch,
+          users
         }
       }
     };
