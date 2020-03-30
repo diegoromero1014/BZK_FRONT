@@ -224,12 +224,13 @@ export class MyTaskPage extends Component {
                         boxShadow: "0px 0px 10px -7px rgba(0,0,0,0.75)"
                     }}
                 >
-                    <HeaderFilters dispatchFilters={this.dispatchFilters}/>
-                    <ProgressBarComponent
-                        pending={tabPending.rowCount}
-                        finalized={tabFinished.rowCount}
-                    />
-                </div>
+              <HeaderFilters dispatchFilters={this.dispatchFilters} />
+              <ProgressBarComponent
+                pending={tabPending.rowCount}
+                finalized={tabFinished.rowCount}
+                role={myTasks.get("initialFilter").rol}
+              />
+            </div>
                 <div style={{backgroundColor: "white", width: "100%"}}>
                     <div style={{display: "flex"}}>
                         <PendingTasksHelp/>
