@@ -8,6 +8,8 @@ import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExp
 import { Button } from 'semantic-ui-react'
 import { redirectUrl } from "../../../globalComponents/actions";
 import { changeActiveItemMenu } from '../../../menu/actions';
+import { mapDataGrid } from "../../../alertPortfolioExpirtation/clientPortfolioExpirationUtilities";
+
 
 export class AlertPortfolioExpiration extends Component {
 
@@ -44,7 +46,7 @@ export class AlertPortfolioExpiration extends Component {
 
         const data = alertPortfolioExpiration.get("responseClients");
 
-        const tableSettings = new TableBuilder(data, COLUMNS_VENCIMIENTO_CARTERA)
+        const tableSettings = new TableBuilder(mapDataGrid(data), COLUMNS_VENCIMIENTO_CARTERA)
             .setNoRowMessage("No existen registros.")
             .setRecordsPerPage(5)
             .setStriped(true)
