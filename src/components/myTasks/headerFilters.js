@@ -63,7 +63,7 @@ export class HeaderFilters extends Component {
     };
 
     searchByFilters = async () => {
-        const {fields: {users, rol, initialDate, finalDate}, dispatchFilters} = this.props;
+        const {fields: {users, rol, initialDate, finalDate}, dispatchFilters, dispatchSetRolToSearch} = this.props;
 
         let filters = {
             users: JSON.parse('[' + ((_.isNull(users) || _.isUndefined(users)) ? "" : users.value) + ']'),
@@ -77,6 +77,7 @@ export class HeaderFilters extends Component {
         }, 300);
 
         await dispatchFilters(filters);
+        dispatchSetRolToSearch(filters);
     };
 
     onClickDate = async (type, val) => {
