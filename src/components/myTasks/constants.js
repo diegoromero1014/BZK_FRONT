@@ -8,3 +8,4 @@ export const PENDING = "PENDING";
 export const FINISHED = "FINISHED";
 export const NUMBER_RECORDS = 10;
 export const GET_ASSISTANTS_USER = 'GET_ASSISTANTS_USER';
+export const SET_ROL = 'SET_ROL';

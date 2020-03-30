@@ -4,10 +4,10 @@ import {Col, Row} from "react-flexbox-grid";
 import {bindActionCreators} from "redux";
 import {reduxForm} from "redux-form";
 import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
-import {getUserAssistantsById} from "./actions";
+import {getUserAssistantsById, setRolToSearch} from "./actions";
 import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
 import moment from "moment";
-import {MESSAGE_ERROR} from "../../constantsGlobal";
+import {DATETIME_FORMAT, MESSAGE_ERROR} from "../../constantsGlobal";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 
 const fields = ["users", "rol", "initialDate", "finalDate"];
@@ -15,6 +15,13 @@ const rolFilter = [
     {'id': 'RESPONSIBLE', 'value': "Responsable"},
     {'id': 'ASSIGNED', 'value': "Asignador"}
 ];
+
+let filters = {
+    users: [],
+    rol: null,
+    initialDate: null,
+    finalDate: null
+};
 
 export class HeaderFilters extends Component {
     constructor(props) {
@@ -31,31 +38,34 @@ export class HeaderFilters extends Component {
     async componentDidMount() {
         const {fields: {users, rol, initialDate, finalDate}, dispatchGetUserAssistantsById} = this.props;
         let userName = window.localStorage.getItem("name");
-        const getAssistant = await dispatchGetUserAssistantsById();
-        await this.setState({
-            subordinates: _.get(getAssistant, 'payload.data.data')
-        });
-
-        let value = _.find(_.get(getAssistant, 'payload.data.data'), prop => prop.name === userName);
-
-        rol.onChange("RESPONSIBLE");
-        users.onChange(JSON.stringify(value.id));
-
-        const dateInitial = moment();
-        dateInitial.subtract(3, 'months');
+        let dateInitial = await moment().subtract(3, 'months');
         initialDate.onChange(dateInitial);
 
-        const dateFinal = moment();
+        let dateFinal = await moment();
         finalDate.onChange(dateFinal);
+
+        const getAssistant = await dispatchGetUserAssistantsById();
+        let value = _.find(_.get(getAssistant, 'payload.data.data'), prop => prop.name === userName);
+        await this.setState({
+            subordinates: _.get(getAssistant, 'payload.data.data'),
+            initialDate: dateInitial,
+            finalDate: dateFinal,
+            user: value.id
+        });
+
+        rol.onChange("RESPONSIBLE");
+        await users.onChange(value.id);
+
+        await this.searchByFilters();
     }
 
-    validateFilter = () => {
+    validateFilter = async () => {
         const {fields: {users, rol, initialDate, finalDate}, dispatchShowMessage} = this.props;
-
         let errorField = "";
-        if (_.isEmpty(users.value)) {
+        if (await _.isEmpty(users.value)) {
             errorField = 'Señor usuario, el campo Usuario es obligatorio';
             dispatchShowMessage(MESSAGE_ERROR, "Campos obligatorios", errorField);
+            users.onChange(this.state.user);
         }
         if (_.isEmpty(rol.value)) {
             errorField = 'Señor usuario, el campo Rol es obligatorio';
@@ -72,8 +82,40 @@ export class HeaderFilters extends Component {
 
     };
 
-    searchByFilters = () => {
-        this.validateFilter();
+    searchByFilters = async () => {
+        const {fields: {users, rol, initialDate, finalDate}, dispatchSetRolToSearch, dispatchFilters} = this.props;
+
+        filters = {
+            users: JSON.parse('[' + ((_.isNull(users) || _.isUndefined(users)) ? "" : users.value) + ']'),
+            rol: rol.value,
+            initialDate: moment(initialDate.value, "DD/MM/YYYY").toDate().getTime(),
+            finalDate: moment(finalDate.value, "DD/MM/YYYY").toDate().getTime()
+        };
+
+        setTimeout(() => {
+            this.validateFilter();
+        }, 300);
+        if (_.isNil(initialDate.value) || _.isNil(finalDate.value)) {
+            debugger;
+            filters.initialDate = this.state.initialDate;
+            filters.initialDate = this.state.finalDate;
+            await dispatchSetRolToSearch(filters);
+        } else {
+            await dispatchFilters(filters);
+        }
+    };
+
+    onClickDate = async (type, val) => {
+        const {fields: {initialDate, finalDate}} = this.props;
+        if (_.isEqual(type, "initial")) {
+            initialDate.onChange(val);
+        }
+
+        if (_.isEqual(type, "final")) {
+            finalDate.onChange(val);
+        }
+
+        this.searchByFilters();
     };
 
     render() {
@@ -92,7 +134,7 @@ export class HeaderFilters extends Component {
                             touched={true}
                             data={this.state.subordinates}
                             maxSelections={15}
-                            onChange={(val) => this.searchByFilters(initialDate.value, finalDate.value)}
+                            onChange={this.searchByFilters}
                         />
                     </Col>
                     <Col xs={3} sm={3} md={3} lg={3}>
@@ -104,6 +146,7 @@ export class HeaderFilters extends Component {
                             valueProp={'id'}
                             textProp={'value'}
                             data={rolFilter}
+                            onChange={this.searchByFilters}
                         />
                     </Col>
                     <Col xs={3} sm={3} md={3} lg={3}>
@@ -116,6 +159,8 @@ export class HeaderFilters extends Component {
                             placeholder='DD/MM/YYYY'
                             className='field-input'
                             name="initialDate"
+                            onSelect={val => this.onClickDate("initial", moment(val).format(DATETIME_FORMAT))}
+                            onBlur={this.validateFilter()}
                         />
                     </Col>
                     <Col xs={3} sm={3} md={3} lg={3}>
@@ -128,6 +173,7 @@ export class HeaderFilters extends Component {
                             placeholder='DD/MM/YYYY'
                             className='field-input'
                             name="finalDate"
+                            onSelect={val => this.onClickDate("final", moment(val).format(DATETIME_FORMAT))}
                         />
                     </Col>
                 </Row>
@@ -139,7 +185,8 @@ export class HeaderFilters extends Component {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         dispatchGetUserAssistantsById: getUserAssistantsById,
-        dispatchShowMessage: swtShowMessage
+        dispatchShowMessage: swtShowMessage,
+        dispatchSetRolToSearch: setRolToSearch
     }, dispatch);
 }
 
