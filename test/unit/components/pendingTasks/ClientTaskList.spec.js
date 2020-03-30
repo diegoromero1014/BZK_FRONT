@@ -53,7 +53,6 @@ describe("Test ClientTaskList", () =>{
         const wrapper = shallow(<ClientTaskList {...defaultProps}/>);
         expect(wrapper).to.have.length(1);
     });
-    //TODO: como hacer stub resolve en el action importado
     it("test dispatchPendingTasks", () => {
         let wrapper = shallow(<ClientTaskList {...defaultProps} />);
         wrapper.instance().dispatchPendingTasks(0, 0);
@@ -61,7 +60,6 @@ describe("Test ClientTaskList", () =>{
         expect(dispatchPendingTasksByClientFindServer).to.have.been.called.exactly(1);
         expect(dispatchSetTextToSearch).to.have.been.called.exactly(2);
     });
-    //TODO: como hacer stub resolve en el action importado
     it("test dispatchFinalizedTask", () => {
         let wrapper = shallow(<ClientTaskList {...defaultProps}/>);
         wrapper.instance().dispatchFinalizedTask(0, 0);
@@ -78,7 +76,6 @@ describe("Test ClientTaskList", () =>{
         }
         let wrapper = shallow(<ClientTaskList {...defaultProps} {...otherProps}></ClientTaskList>);
         wrapper.instance().orderColumn(0, PENDING);
-        //Se llama dos veces por la funcion y por el componentDidMount
         expect(dispatchCleanPagAndOrderColumnPendingUserTask).to.have.been.called.exactly(2);
     });
     it("test orderColumn when mode is FINISHED", ()=>{
@@ -90,7 +87,6 @@ describe("Test ClientTaskList", () =>{
         }
         let wrapper = shallow(<ClientTaskList {...defaultProps} {...otherProps}></ClientTaskList>);
         wrapper.instance().orderColumn(0, FINISHED);
-        //Se llama dos veces por la funcion y por el componentDidMount
         expect(dispatchCleanPagAndOrderColumnFinalizedUserTask).to.have.been.called.exactly(2);
     });
     it("test handleTaskByClientsFind when mode is PENDING", () => {
