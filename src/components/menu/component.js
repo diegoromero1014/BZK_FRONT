@@ -73,7 +73,6 @@ const childrenMyPendingsMyDraftDocuments = {
     text: "Documentos en borrador",
     link: "/dashboard/myPendings/draftDocuments"
 };
-const childrenMyPendingsAssigned = { text: "Asignadas", link: "/dashboard/myPendings/assigned" };
 
 const itemAlerts = {
     text: "Alertas",

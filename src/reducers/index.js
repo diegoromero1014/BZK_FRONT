@@ -59,7 +59,6 @@ import groupsFavoriteContactsReducer from '../components/contact/favoritesGroup/
 import customerStory from '../components/customerStory/reducer';
 import structuredDeliveryEvents from '../components/customerStory/structuredDelivery/events/reducer';
 import structuredDelivery from '../components/customerStory/structuredDelivery/reducer';
-import assignedReducer from '../components/myPendings/assigned/reducer'
 import studyCreditReducer from '../components/clients/creditStudy/reducer';
 import qualitativeVariableReducer from '../components/risksManagement/qualitativeVariable/reducer';
 import boardMembersReducer from '../components/clients/partners/boardMembers/reducer';
@@ -137,7 +136,6 @@ export default combineReducers({
     customerStory,
     structuredDeliveryEvents,
     structuredDelivery,
-    assignedReducer,
     studyCreditReducer,
     qualitativeVariableReducer,
     boardMembersReducer,

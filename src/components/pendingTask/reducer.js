@@ -1,21 +1,16 @@
 import Immutable from 'immutable';
 import {
   CHANGE_PAGE,
+  CHANGE_PAGE_FINALIZED,
+  CHANGE_PAGE_PENDING,
+  CLEAN_PAG_ORDER_COLUMN_FINALIZED_TASK,
+  CLEAN_PAG_ORDER_COLUMN_PENDING_TASK,
+  CLEAN_TEXT_TO_SEARCH,
   CLEAR_USER_TASK,
-  CLEAR_USER_TASK_ORDER,
-  CLEAR_USER_TASK_PAGINATOR,
-  GET_USER_TASK_LIST_CLIENT,
-  LIMITE_INF,
-  LOAD_PENDING,
-  ORDER_COLUMN_TASK,
   GET_FINALIZED_TASKS_CLIENT,
   GET_PENDING_TASKS_CLIENT,
-  CLEAN_PAG_ORDER_COLUMN_PENDING_TASK,
-  CLEAN_PAG_ORDER_COLUMN_FINALIZED_TASK,
-  CHANGE_PAGE_PENDING,
-  CHANGE_PAGE_FINALIZED,
-  SET_TEXT_TO_SEARCH,
-  CLEAN_TEXT_TO_SEARCH
+  LIMITE_INF,
+  SET_TEXT_TO_SEARCH
 } from "./constants";
 
 const initialState = Immutable.Map({
@@ -39,19 +34,11 @@ const initialState = Immutable.Map({
   orderTask: 0,
   columnTask: "finalDate",
   rowCount: 0,
-  textToSearch:null
+  textToSearch: null
 });
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case GET_USER_TASK_LIST_CLIENT:
-      const response = action.payload.data;
-      return state.withMutations(map => {
-        map
-        .set('status', response.data.status)
-        .set('rowCount', response.data.rowCount)
-        .set('userTasksByClient', response.data.rows)
-      });
     case GET_PENDING_TASKS_CLIENT:
       let resultPending = {
         page: action.page,
@@ -59,7 +46,9 @@ export default (state = initialState, action) => {
         rowCount: action.data.rowCount,
         data: action.data.rows
       };
-      return state.withMutations(map => { map.set("tabPending", resultPending)});
+      return state.withMutations(map => {
+        map.set("tabPending", resultPending)
+      });
     case GET_FINALIZED_TASKS_CLIENT:
       let resultFinalized = {
         page: action.page,
@@ -67,28 +56,34 @@ export default (state = initialState, action) => {
         rowCount: action.data.rowCount,
         data: action.data.rows
       };
-      return state.withMutations(map => { map.set("tabFinished", resultFinalized)});
+      return state.withMutations(map => {
+        map.set("tabFinished", resultFinalized)
+      });
     case CHANGE_PAGE:
       return state.set('page', action.currentPage);
     case LIMITE_INF:
       return state.set('limInf', action.limInfe);
 
     case CHANGE_PAGE_PENDING:
-        let changePagePending = {
-          page: action.currentPage,
-          order: action.orderTask,
-          rowCount: 0,
-          data: []
-        };
-        return state.withMutations(map => { map.set("tabPending", changePagePending)});
+      let changePagePending = {
+        page: action.currentPage,
+        order: action.orderTask,
+        rowCount: 0,
+        data: []
+      };
+      return state.withMutations(map => {
+        map.set("tabPending", changePagePending)
+      });
     case CHANGE_PAGE_FINALIZED:
-        let changePageFinalized = {
-          page: action.currentPage,
-          order: action.orderTask,
-          rowCount: 0,
-          data: []
-        };
-        return state.withMutations(map => { map.set("tabFinished", changePageFinalized)});
+      let changePageFinalized = {
+        page: action.currentPage,
+        order: action.orderTask,
+        rowCount: 0,
+        data: []
+      };
+      return state.withMutations(map => {
+        map.set("tabFinished", changePageFinalized)
+      });
     case CLEAR_USER_TASK:
       return state.withMutations(map => {
         map
@@ -99,31 +94,13 @@ export default (state = initialState, action) => {
         .set('orderTask', 0)
         .set('columnTask', "finalDate");
       });
-    case CLEAR_USER_TASK_PAGINATOR:
-      return state.withMutations(map => {
-        map
-        .set('page', 1)
-        .set('limInf', 0)
-      });
-    case CLEAR_USER_TASK_ORDER:
-      return state.withMutations(map => {
-        map
-        .set('orderTask', 0)
-        .set('columnTask', "finalDate")
-      });
-    case ORDER_COLUMN_TASK:
-      return state.withMutations(map => {
-        map
-        .set('orderTask', action.orderTask)
-        .set('columnTask', action.columnTask)
-      });
     case CLEAN_PAG_ORDER_COLUMN_PENDING_TASK:
-        let cleanPagAndOrderPending = {
-          page: 1,
-          order: action.orderTask,
-          rowCount: 0,
-          data: []
-        };
+      let cleanPagAndOrderPending = {
+        page: 1,
+        order: action.orderTask,
+        rowCount: 0,
+        data: []
+      };
       return state.withMutations(map => {
         map.set("tabPending", cleanPagAndOrderPending);
       });
@@ -137,26 +114,14 @@ export default (state = initialState, action) => {
       return state.withMutations(map => {
         map.set("tabFinished", cleanPagAndOrderFinished);
       });
-    case LOAD_PENDING:
-      const result = {
-        page: 0,
-        order: 0,
-        rowCount: action.data.rowCount,
-        data: action.data.rows
-      };
-
+    case SET_TEXT_TO_SEARCH:
       return state.withMutations(map => {
-        map
-        .set('tabPending', result)
+        map.set("textToSearch", action.textToSearch);
       });
-      case SET_TEXT_TO_SEARCH:
-        return state.withMutations(map => {
-            map.set("textToSearch", action.textToSearch);
-        });
-      case CLEAN_TEXT_TO_SEARCH:
-        return state.withMutations(map => {
-          map.set("textToSearch", null);
-        });
+    case CLEAN_TEXT_TO_SEARCH:
+      return state.withMutations(map => {
+        map.set("textToSearch", null);
+      });
     default:
       return state;
   }
