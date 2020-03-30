@@ -181,7 +181,7 @@ export class MyTaskPage extends Component {
             dispatchCleanPageAndSetOrderFinalized,
             myTasks
           } = this.props;
-          
+
           switch (mode) {
             case PENDING:
               dispatchCleanPageAndSetOrderPending(0, myTasks.get("tabPending").rowCount || 0);
