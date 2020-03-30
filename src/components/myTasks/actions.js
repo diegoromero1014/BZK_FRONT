@@ -1,18 +1,17 @@
 import {APP_URL} from "../../constantsGlobal";
 import axios from "axios";
 import {
-    CHANGE_PAG_FINISHED,
-    CHANGE_PAG_PENDING,
-    CLEAN_PAG_SET_ORDER_FINALIZED,
-    CLEAN_PAG_SET_ORDER_PENDING,
-    FINISHED,
-    GET_ASSISTANTS_USER,
-    GET_FINALIZED_TASKS,
-    GET_PENDING_TASKS,
-    PENDING,
-    SET_ROL
+  GET_PENDING_TASKS,
+  GET_FINALIZED_TASKS,
+  CLEAN_PAG_SET_ORDER_PENDING,
+  CLEAN_PAG_SET_ORDER_FINALIZED,
+  CHANGE_PAG_PENDING,
+  CHANGE_PAG_FINISHED,
+  PENDING,
+  FINISHED,
+  CLEAN_PENDING_TASKS,
+  CLEAN_FINALIZED_TASKS, SET_ROL, GET_ASSISTANTS_USER
 } from "./constants";
-
 
 export function getPendingTaskPromise(pageNum, order, maxRows, textToSearch, filters) {
     const json = {
@@ -96,32 +95,48 @@ export function finalizedTasks(data, page, order) {
     };
 }
 
-export function cleanPageAndSetOrderPending(order) {
-    return {
-        type: CLEAN_PAG_SET_ORDER_PENDING,
-        order
+export function cleanPageAndSetOrderPending (order, rowCount) {
+   return{
+       type: CLEAN_PAG_SET_ORDER_PENDING,
+       orderTask: order,
+       rowCount
     };
 }
 
-export function cleanPageAndSetOrderFinalized(order) {
+export function cleanPageAndSetOrderFinalized(order, rowCount) {
     return {
         type: CLEAN_PAG_SET_ORDER_FINALIZED,
-        order
+        orderTask: order,
+      rowCount
     };
 }
 
-export function setPagePending(page) {
+export function setPagePending(page, order, rowCount) {
     return {
         type: CHANGE_PAG_PENDING,
-        page
+        page,
+      order,
+      rowCount
     };
 }
 
-export function setPageFinalized(page) {
+export function setPageFinalized(page, order, rowCount) {
     return {
         type: CHANGE_PAG_FINISHED,
-        page
+        page,
+      order,
+      rowCount
     };
+}
+export function cleanPendingTasks() {
+  return {
+    type: CLEAN_PENDING_TASKS
+  };
+}
+export function cleanFinalizedTasks() {
+  return {
+    type: CLEAN_FINALIZED_TASKS
+  };
 }
 
 export function getUserAssistantsById() {

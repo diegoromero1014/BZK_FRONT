@@ -25,6 +25,7 @@ class TabComponent extends Component {
         <Menu pointing secondary>
           {tabs.map(({ name, number, disable }) => (
             <Menu.Item
+              key={name}
               name={name}
               className="tabItem"
               style={
@@ -40,7 +41,7 @@ class TabComponent extends Component {
               <div className="tabTextItem">{name}</div>
               {number && number > 0 ? (
                 <Label circular color="red">
-                  {number}
+                  {number >= 100 ? "+99":number}
                 </Label>
               ):""}
             </Menu.Item>
@@ -53,8 +54,7 @@ class TabComponent extends Component {
 
   getSegment = tabActive => {
     const { tabs } = this.props;
-
-    return tabs.filter(({ name }) => name === tabActive).map(({ content }) => <Segment>{content}</Segment>);
+    return tabs.filter(({ name }) => name === tabActive).map(({ content }) => <Segment key={name}>{content}</Segment>);
   };
   render() {
     return <div>{this.getMenu(this.state.tabActive)}</div>

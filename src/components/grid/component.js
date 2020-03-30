@@ -56,7 +56,7 @@ class GridComponent extends Component {
       } else if (value.key === 'trafficLight') {
         cell = <TrafficLightComponent key={idx} colorTraffict={_.get(row, value.key)} />
       } else if (value.key === 'trafficLightIndicator') {
-        cell = <TrafficLightIndicator days={_.get(row, value.key).days} isFinalized={_.get(row, value.key).isFinalized} style={value.style} />
+        cell = <TrafficLightIndicator key={idx} days={_.get(row, value.key).days} isFinalized={_.get(row, value.key).isFinalized} style={value.style} />
       } else if (value.key === 'delete' && _.get(row, value.key)) {
         if (_.get(row, value.key).permissionsDelete !== undefined && !_.get(row, value.key).permissionsDelete) {
           cell = <TdComponent key={idx} columnRow={""} styles={value.style} />
@@ -82,8 +82,7 @@ class GridComponent extends Component {
       } else if (value.key === 'actionsPdf' && _.get(row, value.key)) {
         cell = <PdfLinkComponent key={idx} actionsPdf={_.get(row, value.key)} />
       } else if (value.key === 'changeStateTask' && _.get(row, value.key)) {
-        cell = <SelectTaskComponent key={idx} valueStatus={_.get(row, value.key)} isEditable={_.get(_.get(row, value.key), 'permissionEdit')}
-          styles={_.get(_.get(row, value.key), 'styles')} />
+        cell = <SelectTaskComponent key={_.get(row, value.key).idTask} {..._.get(row, value.key)}/>
       } else if (value.key === 'clientNameLink') {
         cell = <LinkComponent key={idx} text={_.get(row, 'clientNameLink.value')} url={_.get(row, 'clientNameLink.link')} isRedirect={_.get(value, 'showLink')} idClient={_.get(row, 'clientNameLink.id')} hasAccess={_.get(row, 'clientNameLink.hasAccess')} />
       } else if (value.key === 'modalNameLink') {
