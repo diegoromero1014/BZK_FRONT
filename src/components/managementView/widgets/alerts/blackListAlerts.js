@@ -43,7 +43,7 @@ export class BlackListAlertsComponent extends Component {
                 <Table
                     tableSettings={
                         new TableBuilder(data, COLUMNS_BLACK_LIST_ALERTS)
-                            .setNoRowMessage("Aún no se han creado registros.")
+                            .setNoRowMessage("No existen registros.")
                             .setRecordsPerPage(MAX_ROWS)
                             .setStriped(true)
                             .setTotalRecords(total)
