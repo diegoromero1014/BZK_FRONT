@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Loader} from 'semantic-ui-react';
 import {redirectUrl} from "../globalComponents/actions";
 import {updateTitleNavBar} from "../navBar/actions";
-import {ASSIGNED, FINALIZED_TASKS, FINISHED, MODAL_TITLE, NUMBER_RECORDS, PENDING, PENDING_TASKS} from "./constants";
+import {FINALIZED_TASKS, FINISHED, MODAL_TITLE, NUMBER_RECORDS, PENDING, PENDING_TASKS} from "./constants";
 import {REQUEST_SUCCESS} from "../../constantsGlobal";
 import {TASK_STATUS} from "../selectsComponent/constants";
 import {
@@ -216,7 +216,6 @@ export class MyTaskPage extends Component {
                         boxShadow: "0px 0px 10px -7px rgba(0,0,0,0.75)"
                     }}
                 >
-                    {/**TODO: Sugiero este div para poner filtros y demás info**/}
                     <HeaderFilters dispatchFilters={this.dispatchFilters}/>
                     <ProgressBarComponent
                         pending={tabPending.rowCount}
