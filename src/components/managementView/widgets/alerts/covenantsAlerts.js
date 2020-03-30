@@ -43,7 +43,7 @@ export class CovenantsAlertsComponent extends Component {
                 <Table
                     tableSettings={
                         new TableBuilder(mapDataGrid(data), COLUMNS_COVENANTS_ALERTS)
-                            .setNoRowMessage("Aún no se han creado registros.")
+                            .setNoRowMessage("No existen registros.")
                             .setRecordsPerPage(MAX_ROWS)
                             .setStriped(true)
                             .setTotalRecords(total)

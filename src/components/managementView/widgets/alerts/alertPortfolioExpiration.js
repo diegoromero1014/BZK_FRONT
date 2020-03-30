@@ -27,7 +27,7 @@ export class AlertPortfolioExpiration extends Component {
     const data = alertPortfolioExpiration.get("responseClients");
 
     const tableSettings = new TableBuilder(data, COLUMNS_VENCIMIENTO_CARTERA)
-      .setNoRowMessage("Aún no se han creado registros.")
+      .setNoRowMessage("No existen registros.")
       .setRecordsPerPage(5)
       .setStriped(true)
       .setTotalRecords(total)
