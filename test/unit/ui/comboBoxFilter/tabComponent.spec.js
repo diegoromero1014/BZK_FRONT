@@ -1,7 +1,6 @@
 import React from 'react';
 import TabComponent from './../../../../src/ui/Tab';
 import MenuItem from 'semantic-ui-react/dist/commonjs/collections/Menu/MenuItem';
-import Segment from 'semantic-ui-react/dist/commonjs/elements/Segment';
 describe("Test TabComponent", () => {
     it("should render two tabs", ()=>{
         const props = {
