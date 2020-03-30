@@ -54,7 +54,7 @@ class TabComponent extends Component {
 
   getSegment = tabActive => {
     const { tabs } = this.props;
-    return tabs.filter(({ name }) => name === tabActive).map(({ content }) => <Segment key={name}>{content}</Segment>);
+    return tabs.filter(({ name }) => name === tabActive).map(({ content, name }) => <Segment key={name}>{content}</Segment>);
   };
   render() {
     return <div>{this.getMenu(this.state.tabActive)}</div>
