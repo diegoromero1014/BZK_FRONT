@@ -42,9 +42,7 @@ export class AlertPortfolioExpiration extends Component {
     setLoading = async loading => await this.setState({ loading });
 
     render() {
-        const { alertPortfolioExpiration, total } = this.props;
-
-        const data = alertPortfolioExpiration.get("responseClients");
+        const { total, data } = this.props;
 
         const tableSettings = new TableBuilder(mapDataGrid(data), COLUMNS_VENCIMIENTO_CARTERA)
             .setNoRowMessage("No existen registros.")
@@ -80,7 +78,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = ({ alertPortfolioExpiration }) => {
     return {
-        alertPortfolioExpiration
+        alertPortfolioExpiration,
+        data: alertPortfolioExpiration.get('responseClients')
     };
 }
 
