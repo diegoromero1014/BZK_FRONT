@@ -45,6 +45,11 @@
         width: 50px !important;
         height: 50px !important;
     }
+
+    @media screen and (max-width: 575px) {
+        width: 20px !important;
+        height: 20px !important;
+    }
 }
 
 .report-card-view {
