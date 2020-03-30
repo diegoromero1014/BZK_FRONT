@@ -41,13 +41,14 @@ export class OutdatedContactsComponent extends Component {
                 <Table
                     tableSettings={
                         new TableBuilder(data, COLUMNS_OUTDATED_CONTACTS)
-                            .setNoRowMessage("Aún no se han creado registros.")
+                            .setNoRowMessage("No existen registros.")
                             .setRecordsPerPage(MAX_ROWS)
                             .setStriped(true)
                             .setTotalRecords(total)
                             .setOnPageChange(this.handleOnPageChange)
                             .setOnClick(this.handleOnClick)
                             .setLoading(this.state.loading)
+                            .setMaximumVisiblePages(7)
                             .build()
                     }
                 />

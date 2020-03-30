@@ -70,13 +70,13 @@ export class SearchClient extends Component {
 
 		return (
 			<div style={{ width: "100%", display: "flex", justifyContent: "space-between" , marginBottom: "40px"}} >
-				<div style={{ width: "70%" }}>
+				<div style={{ width: "90%" }}>
 					<input
 						className="input-lg input InputAddOn-field"
 						name="keyword"
 						type="text"
 						autoComplete="off"
-						style={{ padding: "0px 11px !important", width: "90%"}}
+						style={{ padding: "0px 11px !important", width: "60%"}}
 						placeholder={PLACEHOLDER_SEARCH_CLIENT}
 						onChange={this.handleInput}
 						onKeyPress={this.handleKeyword}
