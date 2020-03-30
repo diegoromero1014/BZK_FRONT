@@ -93,10 +93,16 @@ class ListPendingTaskComponent extends Component {
   };
 
   render() {
-    const { tasks } = this.props;
+    const { tasks, expandRow, textToHighlight } = this.props;
     return (
       <div >
-        <GridComponent headers={this._renderHeaders} data={this._renderCellView(tasks)} modalTitle={MODAL_TITLE} />
+        <GridComponent
+          headers={this._renderHeaders}
+          data={this._renderCellView(tasks)}
+          modalTitle={MODAL_TITLE}
+          expandRow={expandRow}
+          textToHighlight={textToHighlight}
+        />
       </div>
     );
   }

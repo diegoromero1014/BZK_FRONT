@@ -61,7 +61,7 @@ const itemTransactional = {
 
 const itemMyTasks = {
     text: "Tareas",
-    icon: "tasks",
+    icon: "clipboard",
     link: "/dashboard/myTask"
 };
 
@@ -103,9 +103,8 @@ class MenuComponent extends Component {
 
         let menuItems = [];
         itemMyPendings.children = [];
-        itemMyPendings.children.push(childrenMyPendingsMyTaks);
         itemMyPendings.children.push(childrenMyPendingsMyDraftDocuments);
-        itemMyPendings.children.push(childrenMyPendingsAssigned);
+        
         if (_.get(permissions, MODULE_LINKING_REQUESTS)) {
             itemMyPendings.children.push(childrenMyPendingsLinkingRequests);
         }
@@ -144,8 +143,9 @@ class MenuComponent extends Component {
         if (_.get(permissions, MODULE_AEC)) {
             itemMyPendings.children.push(childrenMyPendingsAEC);
         }
-        menuItems.push(itemMyPendings);
         menuItems.push(itemMyTasks);
+        menuItems.push(itemMyPendings);
+        
         initialMenuPermissions(menuItems);
     }
 

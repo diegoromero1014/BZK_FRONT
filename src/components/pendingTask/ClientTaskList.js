@@ -2,42 +2,49 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Grid, Col } from 'react-flexbox-grid';
-import {
-  pendingTasksByClientPromise,
-  pendingTasksByClientFindServer,
-  finalizedTasksByClientPromise,
-  finalizedTasksByClientFindServer,
-  cleanPagAndOrderColumnPendingUserTask,
-  cleanPagAndOrderColumnFinalizedUserTask,
-  changePagePending,
-  changePageFinalized,
-  setTextToSearch,
-  cleanTextToSearch
-} from "./actions";
-import { PENDING_TASKS, FINALIZED_TASKS, NUMBER_RECORDS, PENDING, FINISHED } from './constants';
+import { Col, Grid, Row } from 'react-flexbox-grid';
+import { Loader } from 'semantic-ui-react';
+
 import PaginationPendingTaskComponent from './paginationPendingTaskComponent';
 import ListPendingTaskComponent from './listPendingTaskComponent';
-import { MODULE_TASKS, CREAR, REQUEST_SUCCESS } from "../../constantsGlobal";
-import { validatePermissionsByModule } from '../../actionsGlobal';
 import AlertWithoutPermissions from '../globalComponents/alertWithoutPermissions';
-import { redirectUrl } from '../globalComponents/actions';
-import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _TASK } from '../../constantsAnalytics';
-import TabComponent from './../../ui/Tab';
-import PendingTasksHelp from "./pendingTasksHelp";
 import SearchInputComponent from "../../ui/searchInput/SearchInputComponent";
-import { Loader } from 'semantic-ui-react';
+import PendingTasksHelp from "./pendingTasksHelp";
+import TabComponent from './../../ui/Tab';
+
+import {
+  changePageFinalized,
+  changePagePending,
+  cleanPagAndOrderColumnFinalizedUserTask,
+  cleanPagAndOrderColumnPendingUserTask,
+  cleanTextToSearch,
+  finalizedTasksByClientFindServer,
+  finalizedTasksByClientPromise,
+  pendingTasksByClientFindServer,
+  pendingTasksByClientPromise,
+  setTextToSearch
+} from "./actions";
+import { validatePermissionsByModule } from '../../actionsGlobal';
+import { redirectUrl } from '../globalComponents/actions';
 import { updateTitleNavBar } from '../navBar/actions';
+
+import { FINALIZED_TASKS, FINISHED, NUMBER_RECORDS, PENDING, PENDING_TASKS } from './constants';
+import { CREAR, MODULE_TASKS, REQUEST_SUCCESS } from "../../constantsGlobal";
+import { _TASK, BIZTRACK_MY_CLIENTS, nombreflujoAnalytics } from '../../constantsAnalytics';
+
 export class ClientTaskList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       openMessagePermissions: false,
-      loading: false    
+      loading: false,
+      searchByText: false,
+      textToSearch: ""
     };
   }
+
   dispatchPendingTasks = async (pageNum, order, textToSearch) => {
-    const {dispatchPendingTasksByClientFindServer, dispatchSetTextToSearch } = this.props;
+    const {dispatchPendingTasksByClientFindServer, dispatchSetTextToSearch} = this.props;
     this.setState({loading: true});
 
     const result = await pendingTasksByClientPromise(
@@ -52,11 +59,12 @@ export class ClientTaskList extends Component {
       dispatchPendingTasksByClientFindServer(dataPending, pageNum, order);
       dispatchSetTextToSearch(textToSearch);
     }
-    this.setState({ loading: false });
+    this.setState({loading: false});
   }
+
   dispatchFinalizedTask = async (pageNum, order, textToSearch) => {
-    const { dispatchFinalizedTasksByClientFindServer, dispatchSetTextToSearch } = this.props;
-    this.setState({ loading: true });
+    const {dispatchFinalizedTasksByClientFindServer, dispatchSetTextToSearch} = this.props;
+    this.setState({loading: true});
     const result = await finalizedTasksByClientPromise(
       pageNum,
       window.sessionStorage.getItem("idClientSelected"),
@@ -69,8 +77,9 @@ export class ClientTaskList extends Component {
       dispatchFinalizedTasksByClientFindServer(data, pageNum, order);
       dispatchSetTextToSearch(textToSearch);
     }
-    this.setState({ loading: false });
+    this.setState({loading: false});
   }
+
   componentDidMount() {
     window.dataLayer.push({
       'nombreflujo': nombreflujoAnalytics,
@@ -78,6 +87,7 @@ export class ClientTaskList extends Component {
       'pagina': _TASK
 
     });
+
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
@@ -86,10 +96,13 @@ export class ClientTaskList extends Component {
         dispatchCleanPagAndOrderColumnFinalizedUserTask,
         dispatchCleanPagAndOrderColumnPendingUserTask
       } = this.props;
+
       dispatchCleanPagAndOrderColumnPendingUserTask(0);
       dispatchCleanPagAndOrderColumnFinalizedUserTask(0);
+
       this.dispatchPendingTasks(0, 0, null);
       this.dispatchFinalizedTask(0, 0, null);
+
       dispatchValidatePermissionsByModule(MODULE_TASKS).then(data => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
@@ -101,8 +114,9 @@ export class ClientTaskList extends Component {
       });
     }
   }
-  componentWillUnmount(){
-    const {dispatchCleanTextToSearch}= this.props;
+
+  componentWillUnmount() {
+    const {dispatchCleanTextToSearch} = this.props;
     dispatchCleanTextToSearch();
   }
 
@@ -112,6 +126,7 @@ export class ClientTaskList extends Component {
       dispatchCleanPagAndOrderColumnFinalizedUserTask,
       tasksByClient
     } = this.props;
+
     switch (mode) {
       case PENDING:
         dispatchCleanPagAndOrderColumnPendingUserTask(orderTask);
@@ -125,27 +140,33 @@ export class ClientTaskList extends Component {
   };
 
 
-    _onChangeSearch(value){
-      const {tasksByClient} = this.props;
-      this.dispatchPendingTasks(0, tasksByClient.get("tabPending").order, value === "" ? null : value);
-      this.dispatchFinalizedTask(0, tasksByClient.get("tabFinished").order, value === "" ? null : value);
-    }
+  _onChangeSearch(value) {
+    const {tasksByClient} = this.props;
 
-  handleTaskByClientsFind = (limInf, mode )=> {
-    const { tasksByClient } = this.props;
+    this.setState({
+      searchByText: true,
+      textToSearch: value
+    });
+
+    this.dispatchPendingTasks(0, tasksByClient.get("tabPending").order, value === "" ? null : value);
+    this.dispatchFinalizedTask(0, tasksByClient.get("tabFinished").order, value === "" ? null : value);
+  }
+
+  handleTaskByClientsFind = (limInf, mode) => {
+    const {tasksByClient} = this.props;
     switch (mode) {
-      case PENDING:   
+      case PENDING:
         this.dispatchPendingTasks(limInf, tasksByClient.get("tabPending").order, tasksByClient.get("textToSearch"));
         break;
       case FINISHED:
         this.dispatchFinalizedTask(limInf, tasksByClient.get("tabFinished").order, tasksByClient.get("textToSearch"));
         break;
     }
-    
+
   };
 
   handlePaginar = (page, mode) => {
-    const { dispatchChangePagePending, dispatchChangePageFinalized, tasksByClient } = this.props;
+    const {dispatchChangePagePending, dispatchChangePageFinalized, tasksByClient} = this.props;
     switch (mode) {
       case PENDING:
         dispatchChangePagePending(page, tasksByClient.get("tabPending").order);
@@ -157,7 +178,7 @@ export class ClientTaskList extends Component {
     this.handleTaskByClientsFind(page, mode);
   };
 
-  clearUserTask = mode =>{
+  clearUserTask = mode => {
     const {
       dispatchCleanPagAndOrderColumnPendingUserTask,
       dispatchCleanPagAndOrderColumnFinalizedUserTask,
@@ -175,14 +196,14 @@ export class ClientTaskList extends Component {
   };
 
   createTask = () => {
-    const { dispatchUpdateTitleNavBar } = this.props;
+    const {dispatchUpdateTitleNavBar} = this.props;
     dispatchUpdateTitleNavBar("Tareas");
     redirectUrl("/dashboard/task");
   };
 
   render() {
-    const { tasksByClient, reducerGlobal } = this.props;
-    const { loading } = this.state;
+    const {tasksByClient, reducerGlobal} = this.props;
+    const {loading} = this.state;
     let tabPending = tasksByClient.get("tabPending");
     let tabFinished = tasksByClient.get("tabFinished");
     return (
@@ -205,7 +226,7 @@ export class ClientTaskList extends Component {
             overflow: "visible"
           }}
         >
-          <Grid style={{ width: "100%" }}>
+          <Grid style={{width: "100%"}}>
             <Row>
               <Col xs={12} sm={8} md={6} lg={6}>
                 <SearchInputComponent
@@ -221,16 +242,16 @@ export class ClientTaskList extends Component {
           </Col>
         </Row>
         <div>
-          <Grid style={{ width: "100%" }}>
-            <div style={{ display: "flex" }}>
+          <Grid style={{width: "100%"}}>
+            <div style={{display: "flex"}}>
               {loading === true && (
-                <div style={{ padding: "10px" }}>
+                <div style={{padding: "10px"}}>
                   <Loader active inline></Loader>
-                  <span style={{ marginLeft: "10px" }}>Cargando...</span>
+                  <span style={{marginLeft: "10px"}}>Cargando...</span>
                 </div>
               )}
             </div>
-            <Row style={{ position: "relative" }}>
+            <Row style={{position: "relative"}}>
               <Col
                 style={{
                   position: "absolute",
@@ -255,6 +276,8 @@ export class ClientTaskList extends Component {
                               this.handleTaskByClientsFind
                             }
                             mode={PENDING}
+                            expandRow={this.state.searchByText}
+                            textToHighlight={this.state.textToSearch}
                           />
                           <PaginationPendingTaskComponent
                             tab={tabPending}
@@ -277,6 +300,8 @@ export class ClientTaskList extends Component {
                               this.handleTaskByClientsFind
                             }
                             mode={FINISHED}
+                            expandRow={this.state.searchByText}
+                            textToHighlight={this.state.textToSearch}
                           />
                           <PaginationPendingTaskComponent
                             tab={tabFinished}
@@ -291,7 +316,7 @@ export class ClientTaskList extends Component {
                   ]}
                 />
               </Col>
-              <Col style={{ position: "absolute", right: "15px", top: "5px" }}>
+              <Col style={{position: "absolute", right: "15px", top: "5px"}}>
                 {_.get(
                   reducerGlobal.get("permissionsTasks"),
                   _.indexOf(reducerGlobal.get("permissionsTasks"), CREAR),
@@ -301,7 +326,7 @@ export class ClientTaskList extends Component {
                     className="btn btn-primary"
                     type="button"
                     title="Crear Tarea"
-                    style={{ marginTop: "18px" }}
+                    style={{marginTop: "18px"}}
                     onClick={this.createTask}
                   >
                     <i
@@ -345,7 +370,7 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-function mapStateToProps({ tasksByClient, reducerGlobal }) {
+function mapStateToProps({tasksByClient, reducerGlobal}) {
   return {
     tasksByClient,
     reducerGlobal

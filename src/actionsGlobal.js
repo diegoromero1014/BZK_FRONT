@@ -169,11 +169,6 @@ export function formatLongDateToDateWithNameMonthAndHour(date) {
     }
 }
 
-export function getStrDateByDateFormat(date, format) {
-    const formatDefault = _.isEmpty(format) ? constants.DATE_FORMAT : format;
-    return moment(date, formatDefault).locale('es').format(constants.REVIEWED_DATE_FORMAT);
-}
-
 export function stringToDate(dateString) {
     if (!dateString) return new Date();
 
@@ -341,14 +336,6 @@ export function htmlToTextRegex(html) {
     return html.replace(regex, "");
 }
 
-export function clearPrevisitPermissions() {
-
-    return {
-        type: constants.CLEAR_PERMISSIONS_MODULE_PREVISITS
-    }
-
-}
-
 export function getUserBlockingReport(idEntity, reportType) {
     const json = {
         "messageHeader": {
@@ -447,33 +434,6 @@ export function replaceCommaInNumber(value) {
     return value;
 }
 
-export function validateFields(values, validations, errors) {
-    validations.forEach(row => {
-        row.fields.forEach(field => {
-            if (!errors[field]) {
-                switch (row.validation) {
-                    case 'option-required':
-                        if (!values[field]) {
-                            errors[field] = constants.OPTION_REQUIRED;
-                        }
-                        break;
-                    case 'required':
-                        if (!values[field]) {
-                            errors[field] = constants.VALUE_REQUIERED;
-                        }
-                        break;
-                    case 'xss':
-                        if (xssValidation(values[field])) {
-                            errors[field] = constants.VALUE_XSS_INVALID;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-    })
-}
 /**
  * Ejecuta las funciones que se pasan como parametro
  * @param {[function]} rules 
