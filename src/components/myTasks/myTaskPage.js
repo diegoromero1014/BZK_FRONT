@@ -2,10 +2,12 @@ import React, {Component} from 'react';
 import {bindActionCreators} from "redux";
 import {connect} from 'react-redux';
 import {Loader} from 'semantic-ui-react';
+import { get, indexOf } from "lodash";
 import {redirectUrl} from "../globalComponents/actions";
 import {updateTitleNavBar} from "../navBar/actions";
-import {ASSIGNED, FINALIZED_TASKS, FINISHED, MODAL_TITLE, NUMBER_RECORDS, PENDING, PENDING_TASKS} from "./constants";
-import {REQUEST_SUCCESS} from "../../constantsGlobal";
+import {FINALIZED_TASKS, FINISHED, MODAL_TITLE, NUMBER_RECORDS, PENDING, PENDING_TASKS} from "./constants";
+import {validatePermissionsByModule} from '../../actionsGlobal';
+import { REQUEST_SUCCESS, EDITAR, MODULE_TASKS } from "../../constantsGlobal";
 import {TASK_STATUS} from "../selectsComponent/constants";
 import {
     cleanFinalizedTasks,
@@ -41,8 +43,10 @@ export class MyTaskPage extends Component {
         } else {
             const {
                 dispatchUpdateTitleNavBar,
-                dispatchGetMasterDataFields
+                dispatchGetMasterDataFields,
+                dispatchValidatePermissionsByModule
             } = this.props;
+            dispatchValidatePermissionsByModule(MODULE_TASKS);
             dispatchGetMasterDataFields([TASK_STATUS]);
             dispatchUpdateTitleNavBar(MODAL_TITLE);
         }
@@ -182,8 +186,7 @@ export class MyTaskPage extends Component {
     };
 
     dispatchFilters = async (filters) => {
-        const {myTasks, dispatchSetRolToSearch} = this.props;
-        await dispatchSetRolToSearch(filters);
+        const {myTasks} = this.props;
         await this.fetchAndDispatchPendingTasks(
             0, myTasks.get("tabPending").order, null, filters
         );
@@ -191,6 +194,11 @@ export class MyTaskPage extends Component {
             0, myTasks.get("tabFinished").order, null, filters
         );
     };
+    permissionToEditTask = () => {
+        const {reducerGlobal}= this.props;
+        let editPendings = get(reducerGlobal.get("permissionsTasks"), indexOf(reducerGlobal.get("permissionsTasks"), EDITAR), false);
+        return (editPendings === EDITAR);
+    }
 
     render() {
         const {myTasks} = this.props;
@@ -216,7 +224,6 @@ export class MyTaskPage extends Component {
                         boxShadow: "0px 0px 10px -7px rgba(0,0,0,0.75)"
                     }}
                 >
-                    {/**TODO: Sugiero este div para poner filtros y demás info**/}
                     <HeaderFilters dispatchFilters={this.dispatchFilters}/>
                     <ProgressBarComponent
                         pending={tabPending.rowCount}
@@ -248,6 +255,7 @@ export class MyTaskPage extends Component {
                                             handleTaskByClientsFind={
                                                 this.handleFetchAndDispatchPendingTasks
                                             }
+                                            permissionToEditTask={this.permissionToEditTask}
                                             updateBothTabs={this.updateBothTabs}
                                             actualPage={tabPending.page}
                                             mode={PENDING}
@@ -272,6 +280,7 @@ export class MyTaskPage extends Component {
                                             handleTaskByClientsFind={
                                                 this.handleFetchAndDispatchPendingTasks
                                             }
+                                            permissionToEditTask={this.permissionToEditTask}
                                             updateBothTabs={this.updateBothTabs}
                                             actualPage={tabPending.page}
                                             mode={FINISHED}
@@ -306,7 +315,8 @@ function mapDispatchToProps(dispatch) {
             dispatchSetPagePending: setPagePending,
             dispatchSetPageFinalized: setPageFinalized,
             dispatchGetMasterDataFields: getMasterDataFields,
-            dispatchSetRolToSearch: setRolToSearch
+            dispatchSetRolToSearch: setRolToSearch,
+            dispatchValidatePermissionsByModule: validatePermissionsByModule,
         },
         dispatch
     );

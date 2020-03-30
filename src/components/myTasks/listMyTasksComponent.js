@@ -33,15 +33,20 @@ class ListMyTasksComponent extends Component {
   }
 
   _renderCellView = data => {
-    const { updateBothTabs } = this.props;
+    const {
+      updateBothTabs,
+      permissionToEditTask
+    } = this.props;
     return _.forOwn(data, function(value) {
+      const editStateTask = value.assignedBy.toLowerCase() === localStorage.getItem('name').toLowerCase() || 
+       value.responsible.toLowerCase() === localStorage.getItem('name').toLowerCase() ;
       _.set(value, "idTypeClient", value.clientIdentification);
       _.set(value, "idNumberClient", value.clientTypeIdentification);
       _.set(value, "actions", {
         actionView: true,
         id: value,
-        object: {commercialReport:{isConfidential:value.confidentiality}},
-        idClient: value.idClient,
+        idClient: value.clientId,
+        object: { commercialReport: { isConfidential: value.confidentiality } },
         urlServer: "./component",
         component: VIEW_TASK_ADMIN,
         actionEdit: true
@@ -61,7 +66,7 @@ class ListMyTasksComponent extends Component {
       _.set(value, "changeStateTask", {
         idTask: value.id,
         idStatus: value.statusId,
-        permissionEdit: true,
+        permissionEdit: editStateTask ? permissionToEditTask(): false,
         updateBothTabs: updateBothTabs
       });
       let isFinalized =

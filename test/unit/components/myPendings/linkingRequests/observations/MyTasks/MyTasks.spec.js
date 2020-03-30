@@ -43,23 +43,24 @@ describe("Test MyTasks component", () => {
         let wrapper = shallow(<MyTaskPage {...defaultProps} />);
         expect(wrapper).to.have.length(1);
     });
-    it("test fetchAndDispatchPendingTasks", () => {
+    it("test fetchAndDispatchPendingTasks", async () => {
         let wrapper = shallow(<MyTaskPage {...defaultProps}/>);
-        wrapper.instance().fetchAndDispatchPendingTasks(0, 0, null, ASSIGNED, 120);
-        sinon.assert.called(getPendingTaskPromise);
+        let filters = {users:[120], rol:{ASSIGNED}};
+        await wrapper.instance().fetchAndDispatchPendingTasks(0, 0, null, filters);
         expect(dispatchPendingTasks).to.have.been.called.exactly(1);
+        sinon.assert.called(getPendingTaskPromise);
     });
-    it("test fetchAndDispatchFinalizedTasks", () => {
+    it("test fetchAndDispatchFinalizedTasks", async () => {
         let wrapper = shallow(<MyTaskPage {...defaultProps}/>);
-        wrapper.instance().fetchAndDispatchFinalizedTasks(0, 0, null, ASSIGNED, 120);
+        let filters = { users: [120], rol: {ASSIGNED} };
+        await wrapper.instance().fetchAndDispatchFinalizedTasks(0, 0, null, filters);
+        expect(dispatchFinalizedTasks).to.have.been.called.exactly(1);
         sinon.assert.called(getFinalizedTaskPromise);
-        expect(dispatchFinalizedTasks).to.have.been.called.exactly(2);
     });
-    it("test updateBothTabs", () => {
+    it("test updateBothTabs", async () => {
         let wrapper = shallow(<MyTaskPage {...defaultProps} />);
-        wrapper.instance().updateBothTabs();
+        await wrapper.instance().updateBothTabs();
 
-        //Pruebo que los spies dentro de la funcion que quiero probar se llamen
         sinon.assert.called(getPendingTaskPromise);
         sinon.assert.called(getFinalizedTaskPromise);
    });
