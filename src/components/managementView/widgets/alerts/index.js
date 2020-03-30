@@ -73,12 +73,22 @@ export class AlertSection extends Component {
             }
         ];
         return (
-            <div class="ui segment" style={{ padding: '0px !important' }}>
+            <div class="ui segment alert-content" style={{ padding: '0px !important' }}>
                 <h3>ALERTAS</h3>
-                <Segment style={{ padding: '0px !important' }}>
+                <div style={{
+                    position: 'relative',
+                    background: '#FFFFFF',
+
+                    boxShadow: '0px 1px 2px 0 rgba(34, 36, 38, 0.15)',
+                    margin: '1rem 0em',
+                    padding: '0px !important',
+                    borderRadius: '0.28571429rem',
+                    border: '1px solid rgba(34, 36, 38, 0.15)'
+                }}>
                     <TabComponent tabs={tabs} />
-                </Segment>
-            </div>
+                </div>
+
+            </div >
         );
     }
 
