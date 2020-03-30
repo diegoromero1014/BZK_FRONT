@@ -73,9 +73,9 @@ export class AlertSection extends Component {
             }
         ];
         return (
-            <div class="ui segment">
+            <div class="ui segment" style={{ padding: '0px !important' }}>
                 <h3>ALERTAS</h3>
-                <Segment>
+                <Segment style={{ padding: '0px !important' }}>
                     <TabComponent tabs={tabs} />
                 </Segment>
             </div>
