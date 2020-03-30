@@ -7,7 +7,7 @@ import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import {getUserAssistantsById, setRolToSearch} from "./actions";
 import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
 import moment from "moment";
-import {DATETIME_FORMAT, MESSAGE_ERROR} from "../../constantsGlobal";
+import {MESSAGE_ERROR} from "../../constantsGlobal";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 
 const fields = ["users", "rol", "initialDate", "finalDate"];
@@ -74,10 +74,10 @@ export class HeaderFilters extends Component {
 
         setTimeout(() => {
             this.validateFilter();
+            dispatchSetRolToSearch(filters);
         }, 300);
 
         await dispatchFilters(filters);
-        dispatchSetRolToSearch(filters);
     };
 
     onClickDate = async (type, val) => {

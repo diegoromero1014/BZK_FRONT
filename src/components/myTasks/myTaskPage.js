@@ -182,8 +182,7 @@ export class MyTaskPage extends Component {
     };
 
     dispatchFilters = async (filters) => {
-        const {myTasks, dispatchSetRolToSearch} = this.props;
-        await dispatchSetRolToSearch(filters);
+        const {myTasks} = this.props;
         await this.fetchAndDispatchPendingTasks(
             0, myTasks.get("tabPending").order, null, filters
         );
