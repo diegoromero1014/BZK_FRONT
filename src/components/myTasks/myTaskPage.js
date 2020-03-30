@@ -247,6 +247,7 @@ export class MyTaskPage extends Component {
                             {
                                 name: PENDING_TASKS,
                                 number: tabPending.rowCount,
+                                tooltip:"Tareas Pendiente y en gestión",
                                 content: (
                                     <div>
                                         <ListMyTasksComponent
@@ -272,6 +273,7 @@ export class MyTaskPage extends Component {
                             {
                                 name: FINALIZED_TASKS,
                                 number: tabFinished.rowCount,
+                                tooltip:"Tareas Cerradas y Canceladas",
                                 content: (
                                     <div>
                                         <ListMyTasksComponent
