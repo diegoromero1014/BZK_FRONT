@@ -48,6 +48,7 @@ export class OutdatedContactsComponent extends Component {
                             .setOnPageChange(this.handleOnPageChange)
                             .setOnClick(this.handleOnClick)
                             .setLoading(this.state.loading)
+                            .setMaximumVisiblePages(7)
                             .build()
                     }
                 />

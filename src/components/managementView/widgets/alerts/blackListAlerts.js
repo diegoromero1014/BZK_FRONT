@@ -49,6 +49,7 @@ export class BlackListAlertsComponent extends Component {
                             .setTotalRecords(total)
                             .setOnPageChange(this.handleOnPageChange)
                             .setLoading(loading)
+                            .setMaximumVisiblePages(7)
                             .build()
                     }
                 />

@@ -50,6 +50,7 @@ export class CovenantsAlertsComponent extends Component {
                             .setOnPageChange(this.handleOnPageChange)
                             .setLoading(loading)
                             .setOnClick(this.handleOnClick)
+                            .setMaximumVisiblePages(7)
                             .build()
                     }
                 />
