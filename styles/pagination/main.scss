@@ -1,4 +1,5 @@
 .item-page {
+    overflow-x: auto;
     &.active {
         background-color: #00448c !important;
         color: #fff !important;

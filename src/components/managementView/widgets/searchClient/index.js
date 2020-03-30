@@ -76,6 +76,7 @@ export class SectionSearchClient extends Component {
                                 .setOnPageChange(this.currentPage)
                                 .setInitialPage(this.state.page)
                                 .setLoading(this.state.loading)
+                                .setMaximumVisiblePages(7)
                                 .build()
                         }
                     />

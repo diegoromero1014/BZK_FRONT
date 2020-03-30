@@ -1,7 +1,7 @@
 import ProspectIcon from './prospectIcon';
 
 export const TITLE_SEARCH_CLIENT = 'Buscar clientes';
-export const CLOSE_BUSQUEDA = 'Limpiar busqueda';
+export const CLOSE_BUSQUEDA = 'Limpiar búsqueda';
 export const PLACEHOLDER_SEARCH_CLIENT = 'Buscar por nombre, NIT o grupo económico';
 export const MESSAGE_TOOLTIP = 'Crear prospecto';
 export const MESSAGE_NO_RESULTS = 'Señor usuario, no se encontraron clientes que cumplan el criterio de búsqueda.';
@@ -56,7 +56,7 @@ export const COLUMNS_SEARCH_CLIENT = [
         component: {
             Component: ProspectIcon
         },
-        width: 1
+        width: 2
     },
     {
         header: 'Tipo documuento',

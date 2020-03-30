@@ -59,6 +59,7 @@ class TabComponent extends Component {
 
         return tabs.filter(({ name }) => name === tabActive).map(({ content }) => <Segment className={'generic-tab-segment'}>{content}</Segment>);
     };
+    
     render() {
         return <div>{this.getMenu(this.state.tabActive)}</div>;
     }
