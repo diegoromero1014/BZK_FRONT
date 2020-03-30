@@ -14,3 +14,5 @@ export const FINALIZED_TASKS = "Tareas Finalizadas";
 export const MODAL_TITLE = "Tareas";
 export const ASSIGNED = "ASSIGNED";
 export const RESPONSIBLE = "RESPONSIBLE";
+export const GET_ASSISTANTS_USER = 'GET_ASSISTANTS_USER';
+export const SET_ROL = 'SET_ROL';
