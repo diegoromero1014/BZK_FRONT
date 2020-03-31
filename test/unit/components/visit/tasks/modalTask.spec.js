@@ -2,6 +2,7 @@ import React from 'react';
 import {ModalTask} from "../../../../../src/components/visit/tasks/modalTask";
 import * as actionsGlobal from "../../../../../src/actionsGlobal";
 import {REQUEST_ERROR, REQUEST_SUCCESS} from "../../../../../src/constantsGlobal";
+import Immutable from 'immutable';
 
 let defaultProps = {};
 
@@ -10,6 +11,7 @@ let preventDefault;
 let filterUsersBancoDispatch;
 let dispatchGetTaskNotesByUserTaskId;
 let dispatchSaveTaskNote;
+let visitReducer;
 let consultclick;
 
 describe('Test ModalTask component', () => {
@@ -44,6 +46,13 @@ describe('Test ModalTask component', () => {
             }
         });
         dispatchSaveTaskNote = sinon.stub();
+        visitReducer = Immutable.Map({
+            detailVisit: {
+                data: {
+                    documentStatus: 1
+                }
+            }
+        });
         defaultProps = {
             fields: {
                 id: {
@@ -81,7 +90,8 @@ describe('Test ModalTask component', () => {
             swtShowMessage: sinon.fake(),
             dispatchGetTaskNotesByUserTaskId,
             dispatchSaveTaskNote,
-            filterUsersBancoDispatch
+            filterUsersBancoDispatch,
+            visitReducer
         };
     });
 
