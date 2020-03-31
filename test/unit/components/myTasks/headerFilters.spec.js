@@ -1,25 +1,11 @@
 import React from 'react';
 import Immutable from "immutable";
-import * as globalActions from "../../../../src/components/globalComponents/actions";
 import * as actions from "../../../../src/components/myTasks/actions";
-import {getUserAssistantsById, setRolToSearch} from "../../../../src/components/myTasks/actions";
-import {swtShowMessage} from "../../../../src/components/sweetAlertMessages/actions";
-import {ClientTaskList} from "../../../../src/components/pendingTask/ClientTaskList";
 import HeaderFiltersRedux, {HeaderFilters} from "../../../../src/components/myTasks/headerFilters";
-import TaskPageRedux, {TaskPage} from "../../../../src/components/pendingTask/taskPage";
 import thunk from "redux-thunk";
 import configureStore from 'redux-mock-store';
 import {createFieldsFromArray} from "../../../helpers/ReduxFormField";
 
-const dispatchValidatePermissionsByModule = sinon
-    .stub()
-    .resolves({
-        payload: {
-            data: {
-                validateLogin: true
-            }
-        }
-    });
 const reducerGlobal = Immutable.Map({"permissionsTasks": {} });
 const fields = createFieldsFromArray(["users", "rol", "initialDate", "finalDate"]);
 let dispatchGetUserAssistantsById;
@@ -27,7 +13,6 @@ const dispatchShowMessage = spy(sinon.fake());
 const dispatchSetRolToSearch = sinon.fake();
 const dispatchFilters = sinon.fake();
 const defaultProps = {
-    dispatchGetUserAssistantsById,
     dispatchShowMessage,
     dispatchSetRolToSearch,
     fields,
