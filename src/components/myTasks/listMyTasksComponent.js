@@ -48,7 +48,8 @@ class ListMyTasksComponent extends Component {
         object: { commercialReport: { isConfidential: value.confidentiality } },
         urlServer: "./component",
         component: VIEW_TASK_ADMIN,
-        actionEdit: true
+        actionEdit: true,
+        updateTasksTables: updateBothTabs
       });
       let dateTaskFormat = moment(value.finalDate).locale("es");
       _.set(

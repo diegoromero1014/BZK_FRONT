@@ -5,7 +5,7 @@ import {Loader} from 'semantic-ui-react';
 import { get, indexOf } from "lodash";
 import {redirectUrl} from "../globalComponents/actions";
 import {updateTitleNavBar} from "../navBar/actions";
-import {FINALIZED_TASKS, FINISHED, MODAL_TITLE, NUMBER_RECORDS, PENDING, PENDING_TASKS} from "./constants";
+import {FINALIZED_TASKS, FINISHED, MODAL_TITLE, NUMBER_RECORDS, PENDING, PENDING_TASKS, TOOLTIP_PENDING, TOOLTIP_FINISHED} from "./constants";
 import {validatePermissionsByModule} from '../../actionsGlobal';
 import { REQUEST_SUCCESS, EDITAR, MODULE_TASKS } from "../../constantsGlobal";
 import {TASK_STATUS} from "../selectsComponent/constants";
@@ -224,12 +224,13 @@ export class MyTaskPage extends Component {
                         boxShadow: "0px 0px 10px -7px rgba(0,0,0,0.75)"
                     }}
                 >
-                    <HeaderFilters dispatchFilters={this.dispatchFilters}/>
-                    <ProgressBarComponent
-                        pending={tabPending.rowCount}
-                        finalized={tabFinished.rowCount}
-                    />
-                </div>
+              <HeaderFilters dispatchFilters={this.dispatchFilters} />
+              <ProgressBarComponent
+                pending={tabPending.rowCount}
+                finalized={tabFinished.rowCount}
+                role={myTasks.get("initialFilter").rol}
+              />
+            </div>
                 <div style={{backgroundColor: "white", width: "100%"}}>
                     <div style={{display: "flex"}}>
                         <PendingTasksHelp/>
@@ -247,6 +248,7 @@ export class MyTaskPage extends Component {
                             {
                                 name: PENDING_TASKS,
                                 number: tabPending.rowCount,
+                                tooltip:TOOLTIP_PENDING,
                                 content: (
                                     <div>
                                         <ListMyTasksComponent
@@ -272,6 +274,7 @@ export class MyTaskPage extends Component {
                             {
                                 name: FINALIZED_TASKS,
                                 number: tabFinished.rowCount,
+                                tooltip:TOOLTIP_FINISHED,
                                 content: (
                                     <div>
                                         <ListMyTasksComponent

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Segment, Label, Menu } from "semantic-ui-react";
+import { Segment, Label, Menu, Popup } from "semantic-ui-react";
 import PropTypes from "prop-types";
 
 class TabComponent extends Component {
@@ -23,29 +23,67 @@ class TabComponent extends Component {
     return (
       <div className="tabGenericComponent">
         <Menu pointing secondary>
-          {tabs.map(({ name, number, disable }) => (
-            <Menu.Item
-              key={name}
-              name={name}
-              className="tabItem"
-              style={
-                !disable
-                  ? { width: "250px" }
-                  : { backgroundColor: "rgba(0, 0, 0, 0.09)", width: "250px" }
-              }
-              onClick={() => {
-                !disable ? this.handleItemClick(name) : null;
-              }}
-              active={tabActive === name}
-            >
-              <div className="tabTextItem">{name}</div>
-              {number && number > 0 ? (
-                <Label circular color="red">
-                  {number >= 100 ? "+99":number}
-                </Label>
-              ):""}
-            </Menu.Item>
-          ))}
+          {tabs.map(({ name, number, disable, tooltip }) =>
+            tooltip ? (
+              <Popup
+                inverted
+                style={{ padding: "5px", opacity: 0.8 }}
+                content={tooltip}
+                trigger={
+                  <Menu.Item
+                    key={name}
+                    name={name}
+                    className="tabItem"
+                    style={
+                      !disable
+                        ? { width: "250px" }
+                        : {
+                            backgroundColor: "rgba(0, 0, 0, 0.09)",
+                            width: "250px"
+                          }
+                    }
+                    onClick={() => {
+                      !disable ? this.handleItemClick(name) : null;
+                    }}
+                    active={tabActive === name}
+                  >
+                    <div className="tabTextItem">{name}</div>
+                    {number && number > 0 ? (
+                      <Label circular color="red">
+                        {number >= 100 ? "+99" : number}
+                      </Label>
+                    ) : (
+                      ""
+                    )}
+                  </Menu.Item>
+                }
+              ></Popup>
+            ) : (
+              <Menu.Item
+                key={name}
+                name={name}
+                className="tabItem"
+                style={
+                  !disable
+                    ? { width: "250px" }
+                    : { backgroundColor: "rgba(0, 0, 0, 0.09)", width: "250px" }
+                }
+                onClick={() => {
+                  !disable ? this.handleItemClick(name) : null;
+                }}
+                active={tabActive === name}
+              >
+                <div className="tabTextItem">{name}</div>
+                {number && number > 0 ? (
+                  <Label circular color="red">
+                    {number >= 100 ? "+99" : number}
+                  </Label>
+                ) : (
+                  ""
+                )}
+              </Menu.Item>
+            )
+          )}
         </Menu>
         {this.getSegment(tabActive)}
       </div>

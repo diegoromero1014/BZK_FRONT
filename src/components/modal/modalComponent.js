@@ -81,7 +81,7 @@ export class ModalComponentDialog extends Component {
                 cell = <ModalTask taskEdit={actions.task} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_TASK_ADMIN:
-                cell = <TaskPage params={{ id: actions.id.id ? actions.id.id : actions.id }} idClient={actions.idClient} fromModal={true} closeModal={this.closeModal}/>;
+                cell = <TaskPage params={{ id: actions.id.id ? actions.id.id : actions.id }} idClient={actions.idClient} fromModal={true} closeModal={this.closeModal} updateTasksTables={actions.updateTasksTables}/>;
                 break;
             case views.VIEW_TRACKING_COVENANT:
                 cell = <ModalTrackingCovenant covenantId={actions.id} isOpen={this.closeModal} />;
