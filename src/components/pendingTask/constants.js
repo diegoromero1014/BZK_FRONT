@@ -3,7 +3,6 @@ export const CHANGE_PAGE = "CHANGE_PAGE";
 export const LIMITE_INF = "LIMITE_INF";
 export const CLEAR_USER_TASK = "CLEAR_USER_TASK";
 export const CLEAR_TASK = "CLEAR_TASK";
-export const TASK_STATUS = "taskStatus";
 export const GET_XLS_TASK = 'GET_XLS_TASK';
 export const TITLE_TASK_CREATE = "Creación tarea";
 export const TITLE_TASK_EDIT = "Edición tarea";

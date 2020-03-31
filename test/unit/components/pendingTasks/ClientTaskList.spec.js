@@ -156,4 +156,28 @@ describe("Test ClientTaskList", () =>{
         expect(dispatchUpdateTitleNavBar).to.have.been.called.exactly(1);
         sinon.assert.called(redirectUrl);
     });
+
+    it("test _onChangeSearch when has value ", () => {
+        let wrapper = shallow(<ClientTaskList {...defaultProps}/>);
+        let dispatchPendingTasks = spy(sinon.stub());
+        let dispatchFinalizedTask = spy(sinon.stub());
+        wrapper.instance().dispatchPendingTasks = dispatchPendingTasks;
+        wrapper.instance()._onChangeSearch('Test To Search');
+        expect(dispatchPendingTasks).to.have.been.called.exactly(1);
+        wrapper.instance().dispatchFinalizedTask = dispatchFinalizedTask;
+        wrapper.instance()._onChangeSearch('Test To Search');
+        expect(dispatchFinalizedTask).to.have.been.called.exactly(1);
+    });
+
+    it("test _onChangeSearch when has not value ", () => {
+        let wrapper = shallow(<ClientTaskList {...defaultProps}/>);
+        let dispatchPendingTasks = spy(sinon.stub());
+        let dispatchFinalizedTask = spy(sinon.stub());
+        wrapper.instance().dispatchPendingTasks = dispatchPendingTasks;
+        wrapper.instance()._onChangeSearch('');
+        expect(dispatchPendingTasks).to.have.been.called.exactly(1);
+        wrapper.instance().dispatchFinalizedTask = dispatchFinalizedTask;
+        wrapper.instance()._onChangeSearch('');
+        expect(dispatchFinalizedTask).to.have.been.called.exactly(1);
+    });
 });

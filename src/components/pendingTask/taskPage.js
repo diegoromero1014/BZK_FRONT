@@ -58,7 +58,8 @@ export class TaskPage extends React.Component {
             showConfirmationCancelTask: false,
             shouldRedirect: false,
             renderForm: false,
-            nameUsuario: ''
+            nameUsuario: '',
+            canOnlyAddNotes: false
         };
         this.entityId = null;
     }
@@ -176,11 +177,14 @@ export class TaskPage extends React.Component {
     };
 
     canUserEditTask = () => {
+        const { myPendingsReducer } = this.props;
+        const taskDetail = myPendingsReducer.get('task') ? myPendingsReducer.get('task').data : null;
         if (this.state.isEditable) {
             this.setState({
                 showMessage: false,
-                isEditable: false
-            })
+                isEditable: false,
+                canOnlyAddNotes: taskDetail.canOnlyAddNotes
+            });
         }
     };
 
@@ -234,15 +238,17 @@ export class TaskPage extends React.Component {
             this.setState({
                 isEditable: true,
                 formValid: true,
-                nameUsuario: taskInfo.assignedBy
+                nameUsuario: taskInfo.assignedBy,
+                canOnlyAddNotes: taskInfo.canOnlyAddNotes
             });
         } else {
-            this.setState({ isEditable: false });
+            this.setState({ isEditable: false, canOnlyAddNotes: false });
         }
     };
 
     saveTaskComment = async (comment) => {
         const { dispatchSaveTaskNote } = this.props;
+        comment.shouldNotifyMentions = true;
         await dispatchSaveTaskNote(comment);
         await this.getTaskNotesByUserTaskId();
     };
@@ -295,7 +301,7 @@ export class TaskPage extends React.Component {
                 taskData={taskDetail}
                 stateTask={selectsReducer.get(TASK_STATUS)}
                 onSubmit={this.submitForm}
-                isEditable={this.state.isEditable}
+                isEditable={this.state.isEditable || this.state.canOnlyAddNotes}
                 creatingReport={id}
                 commercialReportButtons={() => (
                     <CommercialReportButtonsComponent
@@ -308,14 +314,14 @@ export class TaskPage extends React.Component {
                 <CommentsComponent
                     header="Notas"
                     reportId={id}
-                    disabled={this.state.isEditable}
+                    disabled={this.state.isEditable && !this.state.canOnlyAddNotes}
                     saveCommentAction={this.saveTaskComment}/>
             </TaskFormComponent>
         );
     };
 
     render() {
-        const {isEditable} = this.state;
+        const {isEditable, canOnlyAddNotes} = this.state;
         const {fromModal} = this.props;
         return (
             <div style={{marginBottom: '5em'}}>
@@ -329,7 +335,7 @@ export class TaskPage extends React.Component {
                         </Col>
                         <Col xs={2} sm={2} md={2} lg={2}>
                             {
-                                this.validatePermissionsTask() && isEditable &&
+                                this.validatePermissionsTask() && isEditable && !canOnlyAddNotes &&
                                 <button type="button" onClick={this.editTask}
                                         className={'btn btn-primary modal-button-edit'}
                                         style={{marginRight: '15px', float: 'right', marginTop: '-15px'}}>
