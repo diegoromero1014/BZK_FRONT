@@ -20,7 +20,7 @@ import TdUpdatedInfoComponent from './tdUpdatedInfoComponent';
 import {mapDateValueFromTask} from '../../actionsGlobal';
 import TrafficLightIndicator from './../../ui/TrafficLightIndicator';
 
-import {htmlToTextRegex} from './../../actionsGlobal';
+import {htmlToTextRegex, cleanTaggedUser} from './../../actionsGlobal';
 
 import { ACTION_CHECK, DATE_CELL } from './constants';
 
@@ -128,7 +128,7 @@ class GridComponent extends Component {
         <Highlighter
           searchWords={[textToHighlight]}
           autoEscape={true}
-          textToHighlight={htmlToTextRegex(details)}
+          textToHighlight={cleanTaggedUser(htmlToTextRegex(details), '@')}
           highlightClassName={'highlightClass'}
         />
       </div>
