@@ -451,3 +451,11 @@ export function checkRules(rules, value) {
 
     return errorMessage;
 }
+
+export function cleanTaggedUser(textWithTaggedUser, replaceInitial = '', replaceEnd = '') {
+    const regexInitialTag = new RegExp('@\\[', 'g');
+    const regexEndTag = new RegExp('\\|\\d+\\]', 'g');
+
+    textWithTaggedUser = _.replace(textWithTaggedUser, regexInitialTag, replaceInitial);
+    return _.replace(textWithTaggedUser, regexEndTag, replaceEnd);
+}

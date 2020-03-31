@@ -2,17 +2,21 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux';
 import {Comment, Form, Header, Loader} from 'semantic-ui-react'
 import {Row} from 'react-flexbox-grid';
-import Col from 'react-flexbox-grid/lib/components/Col';
-import CommentsAvatar from './commentsAvatar';
 import moment from 'moment';
+import Col from 'react-flexbox-grid/lib/components/Col';
 import {Mention, MentionsInput} from 'react-mentions';
 import {bindActionCreators} from "redux";
-import {filterUsersBanco} from "../../participantsVisitPre/actions";
 import {Subject} from "rxjs";
-import {addCommentToList, clearComments} from "./actions";
 import _ from "lodash";
+
+import CommentsAvatar from './commentsAvatar';
+import Tooltip from "../../toolTip/toolTipComponent";
+
+import {filterUsersBanco} from "../../participantsVisitPre/actions";
+import {addCommentToList, clearComments} from "./actions";
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import {getUsernameInitials} from "../../../functions";
+
 import {
     ERROR_COMMENT_LENGTH,
     MAX_LENGTH_USER_TASK_COMMENT,
@@ -25,12 +29,11 @@ import {
 } from "../../../validationsFields/patternsToValidateField";
 import {
     MESSAGE_ERROR_INJECTION_HTML,
-    MESSAGE_WARNING_FORBIDDEN_CHARACTER,
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER, MESSAGE_WARNING_FORBIDDEN_CHARACTER_COMMENT,
     MESSAGE_WARNING_MAX_LENGTH,
     MESSAGE_WARNING_TASK_OBSERVATIONS
 } from "../../../validationsFields/validationsMessages";
 import {validateHtmlInjection} from "../../../validationsFields/rulesField";
-import Tooltip from "../../toolTip/toolTipComponent";
 
 export class CommentsComponent extends Component {
 
@@ -126,7 +129,7 @@ export class CommentsComponent extends Component {
                 this.showContentError(content, source, MESSAGE_WARNING_TASK_OBSERVATIONS);
                 return false;
             } else if (!content.match(patternOfForbiddenCharacterComments)) {
-                this.showContentError(content, source, MESSAGE_WARNING_FORBIDDEN_CHARACTER);
+                this.showContentError(content, source, MESSAGE_WARNING_FORBIDDEN_CHARACTER_COMMENT);
                 return false;
             }else if(!validateHtmlInjection(content)){
                 this.showContentError(content, source, MESSAGE_ERROR_INJECTION_HTML);
@@ -192,8 +195,10 @@ export class CommentsComponent extends Component {
     renderCommentContent = (content) => {
         const regexInitialTag = new RegExp('@\\[', 'g');
         const regexEndTag = new RegExp('\\|\\d+\\]', 'g');
+        const regexLineBreaks = new RegExp('(?:\\r\\n|\\r|\\n|\\↵)', 'g');
         content = _.replace(content, regexInitialTag, '<b>');
         content = _.replace(content, regexEndTag, '</b>');
+        content = _.replace(content, regexLineBreaks, '<br>');
         return (
             <div dangerouslySetInnerHTML={{__html: content}}/>
         )

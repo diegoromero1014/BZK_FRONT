@@ -18,7 +18,7 @@ import {swtShowMessage} from "../../sweetAlertMessages/actions";
 
 import {fields, validations as validate} from './rulesAndFieldsTaskVisit';
 import CommentsComponent from "../../globalComponents/comments/commentsComponent";
-import {fillComments, getCurrentComments} from "../../globalComponents/comments/actions";
+import {fillComments} from "../../globalComponents/comments/actions";
 import {REQUEST_SUCCESS} from "../../../constantsGlobal";
 import {getTaskNotesByUserTaskId, saveTaskNote} from "../../pendingTask/createPendingTask/actions";
 
