@@ -7,8 +7,9 @@ import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import {getUserAssistantsById, setRolToSearch} from "./actions";
 import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
 import moment from "moment";
-import {DATETIME_FORMAT, MESSAGE_ERROR} from "../../constantsGlobal";
+import {MESSAGE_ERROR} from "../../constantsGlobal";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
+import _ from 'lodash';
 
 const fields = ["users", "rol", "initialDate", "finalDate"];
 const rolFilter = [
@@ -51,14 +52,9 @@ export class HeaderFilters extends Component {
     }
 
     validateFilter = async () => {
-        const {fields: {users, rol}, dispatchShowMessage} = this.props;
-        let errorField = "";
+        const {fields: {users}} = this.props;
         if (await _.isEmpty(users.value)) {
             users.onChange(this.state.user);
-        }
-        if (_.isEmpty(rol.value)) {
-            errorField = 'Señor usuario, el campo Rol es obligatorio';
-            dispatchShowMessage(MESSAGE_ERROR, "Campos obligatorios", errorField);
         }
     };
 
@@ -74,10 +70,10 @@ export class HeaderFilters extends Component {
 
         setTimeout(() => {
             this.validateFilter();
+            dispatchSetRolToSearch(filters);
         }, 300);
 
         await dispatchFilters(filters);
-        dispatchSetRolToSearch(filters);
     };
 
     onClickDate = async (type, val) => {

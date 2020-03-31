@@ -1,13 +1,15 @@
 import Immutable from 'immutable';
 import {
-    GET_PENDING_TASKS,
-    GET_FINALIZED_TASKS,
-    CLEAN_PAG_SET_ORDER_PENDING,
-    CLEAN_PAG_SET_ORDER_FINALIZED,
-    CHANGE_PAG_PENDING,
     CHANGE_PAG_FINISHED,
+    CHANGE_PAG_PENDING,
+    CLEAN_FINALIZED_TASKS,
+    CLEAN_PAG_SET_ORDER_FINALIZED,
+    CLEAN_PAG_SET_ORDER_PENDING,
     CLEAN_PENDING_TASKS,
-    CLEAN_FINALIZED_TASKS, SET_ROL, GET_ASSISTANTS_USER
+    GET_ASSISTANTS_USER,
+    GET_FINALIZED_TASKS,
+    GET_PENDING_TASKS,
+    SET_FILTERS
 } from "./constants";
 
 const initialState = Immutable.Map({
@@ -120,12 +122,12 @@ export default (state = initialState, action) => {
             return state.withMutations(map => {
                 map.set('userAssistants', response)
             });
-        case SET_ROL:
+        case SET_FILTERS:
             let initialFilters = {
-                users: action.users,
-                rol: action.rol,
-                initialDate: action.initialDate,
-                finalDate: action.finalDate
+                users: action.rolFilter.users,
+                rol: action.rolFilter.rol,
+                initialDate: action.rolFilter.initialDate,
+                finalDate: action.rolFilter.finalDate
             };
             return state.withMutations(map => {
                 map.set("initialFilter", initialFilters);

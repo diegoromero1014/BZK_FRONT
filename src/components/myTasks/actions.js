@@ -1,16 +1,18 @@
 import {APP_URL} from "../../constantsGlobal";
 import axios from "axios";
 import {
-  GET_PENDING_TASKS,
-  GET_FINALIZED_TASKS,
-  CLEAN_PAG_SET_ORDER_PENDING,
-  CLEAN_PAG_SET_ORDER_FINALIZED,
-  CHANGE_PAG_PENDING,
-  CHANGE_PAG_FINISHED,
-  PENDING,
-  FINISHED,
-  CLEAN_PENDING_TASKS,
-  CLEAN_FINALIZED_TASKS, SET_ROL, GET_ASSISTANTS_USER
+    CHANGE_PAG_FINISHED,
+    CHANGE_PAG_PENDING,
+    CLEAN_FINALIZED_TASKS,
+    CLEAN_PAG_SET_ORDER_FINALIZED,
+    CLEAN_PAG_SET_ORDER_PENDING,
+    CLEAN_PENDING_TASKS,
+    FINISHED,
+    GET_ASSISTANTS_USER,
+    GET_FINALIZED_TASKS,
+    GET_PENDING_TASKS,
+    PENDING,
+    SET_FILTERS
 } from "./constants";
 
 export function getPendingTaskPromise(pageNum, order, maxRows, textToSearch, filters) {
@@ -155,7 +157,7 @@ export function getUserAssistantsById() {
 
 export function setRolToSearch(rolFiltered) {
     return {
-        type: SET_ROL,
+        type: SET_FILTERS,
         rolFilter: rolFiltered
     };
 }
