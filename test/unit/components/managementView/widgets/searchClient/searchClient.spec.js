@@ -6,6 +6,7 @@ import configureStore from 'redux-mock-store';
 
 
 let dispatchClientsFindServer ;
+let dispatchUpdateTitleNavBar ; 
 let dispatchSwtShowMessage ; 
 let handleSetSearched ;
 let handleSearchClient ;
@@ -23,6 +24,7 @@ describe('Test searchClient component', () => {
     beforeEach(() => {
         store = mockStore({});
         dispatchClientsFindServer = sinon.fake();
+        dispatchUpdateTitleNavBar = sinon.fake();
         dispatchSwtShowMessage = sinon.fake();
         handleSetSearched = sinon.fake();
         handleSearchClient = spy(sinon.fake());
@@ -33,6 +35,7 @@ describe('Test searchClient component', () => {
             dispatchClientsFindServer,
             dispatchSwtShowMessage,
             handleSetSearched,
+            dispatchUpdateTitleNavBar,
             handleSearchClient,
             setKeyword,
             restartPage
