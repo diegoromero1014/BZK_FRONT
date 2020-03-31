@@ -9,6 +9,7 @@ import { ASSIGNED, PENDING, FINISHED } from "../../../../../../../src/components
 const myTasks = Immutable.Map({
   tabPending: { order: 0, rowCount: 0, data: {}, page: 0 },
   tabFinished: { order: 0, rowCount: 0, data: {}, page: 0 },
+  initialFilter: { rol: "" },
   textToSearch: ""
 });
 let dispatchFinalizedTasks = spy(sinon.fake());
