@@ -5,7 +5,7 @@ import {Loader} from 'semantic-ui-react';
 import { get, indexOf } from "lodash";
 import {redirectUrl} from "../globalComponents/actions";
 import {updateTitleNavBar} from "../navBar/actions";
-import {FINALIZED_TASKS, FINISHED, MODAL_TITLE, NUMBER_RECORDS, PENDING, PENDING_TASKS} from "./constants";
+import {FINALIZED_TASKS, FINISHED, MODAL_TITLE, NUMBER_RECORDS, PENDING, PENDING_TASKS, TOOLTIP_PENDING, TOOLTIP_FINISHED} from "./constants";
 import {validatePermissionsByModule} from '../../actionsGlobal';
 import { REQUEST_SUCCESS, EDITAR, MODULE_TASKS } from "../../constantsGlobal";
 import {TASK_STATUS} from "../selectsComponent/constants";
@@ -248,7 +248,7 @@ export class MyTaskPage extends Component {
                             {
                                 name: PENDING_TASKS,
                                 number: tabPending.rowCount,
-                                tooltip:"Tareas Pendiente y en gestión",
+                                tooltip:TOOLTIP_PENDING,
                                 content: (
                                     <div>
                                         <ListMyTasksComponent
@@ -274,7 +274,7 @@ export class MyTaskPage extends Component {
                             {
                                 name: FINALIZED_TASKS,
                                 number: tabFinished.rowCount,
-                                tooltip:"Tareas Cerradas y Canceladas",
+                                tooltip:TOOLTIP_FINISHED,
                                 content: (
                                     <div>
                                         <ListMyTasksComponent

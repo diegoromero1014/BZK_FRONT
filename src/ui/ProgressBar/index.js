@@ -2,12 +2,13 @@ import React from 'react';
 import { Grid, Col, Row } from "react-flexbox-grid";
 import { Progress } from 'semantic-ui-react';
 import './style.scss';
+import { RESPONSIBLE, ASSIGNED } from '../../components/myTasks/constants';
 
 const returnTitle = (role, total) => {
   switch (role) {
-    case "RESPONSIBLE":
+    case RESPONSIBLE:
       return `Total tareas que me han asignado ${total}`;
-    case "ASSIGNED":
+    case ASSIGNED:
       return `Total tareas que he asignado ${total}`;
     default:
       return `Total tareas que me han asignado ${total}`;
@@ -18,7 +19,7 @@ const ProgressBarComponent = ({finalized, pending, role}) => {
     return (
       <Grid style={{ margin: "20px auto" }}>
         <div style={{ textAlign: "center", padding:"5px" }}>
-          <h3 style={{ textAlign: "center" }}>{returnTitle(role, total)}</h3>
+          <h2 style={{ textAlign: "center" }}>{returnTitle(role, total)}</h2>
         </div>
         <Row style={{ height: "50px" }}>
           <Col xs={12} sm={12} md={12} lg={12}>

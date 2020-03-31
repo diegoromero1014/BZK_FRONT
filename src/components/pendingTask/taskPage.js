@@ -125,7 +125,7 @@ export class TaskPage extends React.Component {
     };
 
     submitForm = async (task) => {
-        const {params: {id}, dispatchShowLoading, dispatchCreatePendingTaskNew, dispatchSwtShowMessage, dispatchGetCurrentComments, fromModal, closeModal, commentsReducer} = this.props;
+        const {params: {id}, dispatchShowLoading, dispatchCreatePendingTaskNew, dispatchSwtShowMessage, dispatchGetCurrentComments, fromModal, closeModal, commentsReducer, updateTasksTables} = this.props;
         if (moment(task.finalDate, 'DD/MM/YYYY').isValid()) {
             dispatchGetCurrentComments();
             const taskRequest = {
@@ -150,6 +150,9 @@ export class TaskPage extends React.Component {
                 }
             } else if (_.get(responseCreateTask, 'payload.data.status') === REQUEST_SUCCESS) {
                 this.redirectionAfterSubmit(id, ComponentClientInformationURL)
+                 if (updateTasksTables) {
+                   updateTasksTables();
+                 }
             } else if (_.get(responseCreateTask, 'payload.data.status') === REQUEST_INVALID_INPUT) {
                 dispatchSwtShowMessage('error', this.renderTitleSubmitAlert(id), MESSAGE_TASK_INVALID_INPUT);
             } else {
