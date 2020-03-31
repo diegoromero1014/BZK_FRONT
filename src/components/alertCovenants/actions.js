@@ -129,13 +129,6 @@ export function clearClientPagination() {
     };
 }
 
-export function updateNumberTotalCovenants(totalCovenants) {
-    return {
-        type: constant.UPDATE_NUMBER_TOTAL_COVENANTS,
-        totalCovenants
-    };
-}
-
 export function orderColumnCovenants(orderClients, columnClients) {
     return {
         type: constant.ORDER_COLUMN_CLIENT,

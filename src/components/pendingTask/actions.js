@@ -45,11 +45,6 @@ export function changePageFinalized(page, order) {
     order
   };
 }
-export function clearUserTask() {
-  return {
-    type: CLEAR_USER_TASK
-  };
-}
 
 export function clearTask() {
   return {
