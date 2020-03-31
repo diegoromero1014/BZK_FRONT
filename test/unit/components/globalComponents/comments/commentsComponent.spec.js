@@ -4,7 +4,7 @@ import thunk from "redux-thunk";
 import configureStore from "redux-mock-store";
 import {
     MESSAGE_ERROR_INJECTION_HTML,
-    MESSAGE_WARNING_FORBIDDEN_CHARACTER,
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER, MESSAGE_WARNING_FORBIDDEN_CHARACTER_COMMENT,
     MESSAGE_WARNING_MAX_LENGTH,
     MESSAGE_WARNING_TASK_OBSERVATIONS
 } from "../../../../../src/validationsFields/validationsMessages";
@@ -148,7 +148,7 @@ describe('Test commentsComponent', () => {
             commentTextArea.simulate('change', { target: { value: '-Daniel' } });
             buttonAddComment.simulate('click', { preventDefault: sinon.fake()});
             expect(wrapper.state().comment).to.equal('-Daniel');
-            expect(wrapper.state().showNewCommentError).to.equal(MESSAGE_WARNING_FORBIDDEN_CHARACTER);
+            expect(wrapper.state().showNewCommentError).to.equal(MESSAGE_WARNING_FORBIDDEN_CHARACTER_COMMENT);
         });
 
         it('should render showReplyCommentError when value contains forbidden characters', () => {
@@ -159,7 +159,7 @@ describe('Test commentsComponent', () => {
             commentTextArea.simulate('change', { target: { value: '=Daniel' } });
             buttonAddComment.simulate('click', { preventDefault: sinon.fake()});
             expect(wrapper.state().commentReply).to.equal('=Daniel');
-            expect(wrapper.state().showReplyCommentError).to.equal(MESSAGE_WARNING_FORBIDDEN_CHARACTER);
+            expect(wrapper.state().showReplyCommentError).to.equal(MESSAGE_WARNING_FORBIDDEN_CHARACTER_COMMENT);
         });
 
         it('should render showReplyCommentError when value contains html injection', () => {
