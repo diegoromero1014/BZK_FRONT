@@ -180,7 +180,7 @@ export class TaskPage extends React.Component {
             this.setState({
                 showMessage: false,
                 isEditable: false,
-                canOnlyAddNotes: taskDetail.canOnlyAddNotes
+                canOnlyAddNotes: taskDetail && taskDetail.canOnlyAddNotes
             });
         }
     };
