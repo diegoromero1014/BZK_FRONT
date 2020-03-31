@@ -11,13 +11,6 @@ export function changeTabSeletedChartView(tabSeleted) {
     }
 }
 
-export function changeLoadChart(loadChart) {
-    return {
-        type: LOAD_CHART,
-        loadChart: loadChart
-    }
-}
-
 export function changeErrorYearSeleted(value) {
     return {
         type: CHANGE_ERROR_YEAR,

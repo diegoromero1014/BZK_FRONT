@@ -2,7 +2,7 @@ import {APP_URL} from '../../constantsGlobal';
 import {
     FIND_CLIENTS_PORTFOLIO_EXPIRATION, CHANGE_PAGE_FOR_ALERT_PORTFOLIO_EXPIRATION,
     CLEAR_CLIENT_ORDER_PE, CLEAR_CLIENT_PAGINATION_PE, ORDER_COLUMN_CLIENT_PE,
-    CHANGE_KEYWORD_NAME_NIT_PE, CLEAR_FILTER_CLIENTS_PE, UPDATE_NUMBER_TOTAL_CLIENTS_PE, NUMBER_RECORDS,
+    CHANGE_KEYWORD_NAME_NIT_PE, CLEAR_FILTER_CLIENTS_PE, NUMBER_RECORDS,
     CHANGE_TEAM_PE, CHANGE_REGION_PE, CHANGE_ZONE_PE, SAVE_OBSERVATIONS, CHANGE_TYPE, CHANGE_LINE, NAME_ALERT
 } from './constants';
 import axios from 'axios';
@@ -134,13 +134,6 @@ export function clearClientOrder() {
 export function clearClientPagination() {
     return {
         type: CLEAR_CLIENT_PAGINATION_PE
-    };
-}
-
-export function updateNumberTotalClients(totalClients) {
-    return {
-        type: UPDATE_NUMBER_TOTAL_CLIENTS_PE,
-        totalClients
     };
 }
 

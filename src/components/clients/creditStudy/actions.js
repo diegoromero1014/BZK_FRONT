@@ -1,7 +1,7 @@
 import { APP_URL } from '../../../constantsGlobal';
 import {
     GET_CONTEXT_CLIENT, SAVE_CREDIT_STUDY, VALIDATE_INFO_CREDIT_STUDY,
-    UPDATE_NOT_APPLY_CREDIT_CONTACT, EXISTS_PDF_FOR_SAME_DAY, GENERATE_PDF
+    UPDATE_NOT_APPLY_CREDIT_CONTACT, EXISTS_PDF_FOR_SAME_DAY
 } from './constants';
 import axios from 'axios';
 import _ from 'lodash';

@@ -177,13 +177,6 @@ export function getCsvBusinessPlan(year, haveNeeds) {
   }
 }
 
-export function changeOwnerDraft(ownerDraft){
-  return {
-    type: constants.OWNER_DRAFT,
-    ownerDraft: ownerDraft
-  };
-}
-
 export function pdfDescarga(changeStateSaveData, businessPlanId) {
   const requestBody = {
     "name": "ReportBusinessPlan.pdf",
