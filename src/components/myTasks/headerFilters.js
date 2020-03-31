@@ -7,7 +7,7 @@ import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import {getUserAssistantsById, setRolToSearch} from "./actions";
 import MultipleSelect from "../../ui/multipleSelect/multipleSelectComponent";
 import moment from "moment";
-import {MESSAGE_ERROR} from "../../constantsGlobal";
+import {DATE_FORMAT, MESSAGE_ERROR} from "../../constantsGlobal";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import _ from 'lodash';
 
@@ -52,9 +52,13 @@ export class HeaderFilters extends Component {
     }
 
     validateFilter = async () => {
-        const {fields: {users}} = this.props;
+        const {fields: {users, initialDate, finalDate}, dispatchShowMessage} = this.props;
         if (await _.isEmpty(users.value)) {
             users.onChange(this.state.user);
+        }
+
+        if (moment(initialDate.value, DATE_FORMAT).isAfter(moment(finalDate.value, DATE_FORMAT))) {
+            dispatchShowMessage(MESSAGE_ERROR, 'Rango de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');
         }
     };
 
