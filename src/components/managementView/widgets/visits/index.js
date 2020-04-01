@@ -11,16 +11,10 @@ export class VisitComponent extends Component {
     countVistis = () =>{
         const tabs = [
             {
-                name: ECONOMIC_GROUP_TAB,
-                content,
-                number,
-                callback
+                name: ECONOMIC_GROUP_TAB
             },
             {
-                name: PENDING_VIEWS_TAB,
-                content,
-                number,
-                callback
+                name: PENDING_VIEWS_TAB
             }
         ];
         return (
