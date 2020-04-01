@@ -1,14 +1,32 @@
 .tabGenericComponent .ui.secondary.pointing.menu .active.item {
-    border-bottom-color: #3498db;
+    border-bottom-color: #00448c !important;
+    transition: all .3s ease;
     &:hover {
-        border-bottom-color: #69abd6;
-        color: #383838;
+        border-bottom-color: #69abd6 !important;
+        color: #383838 !important;
     }
 }
 .tabTextItem {
     margin: 0 auto;
     padding: 0.5em;
 }
-.tabItem{
+.tabItem {
     background-color: #383838;
+    min-width: 250px;
+    transition: all .3s ease;
+    &:hover {
+        border-bottom-color: #69abd6 !important;
+        color: #383838 !important;
+    }
+}
+
+.generic-tab-segment {
+    position: relative;
+    background: #FFFFFF;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    margin: 1rem 0em;
+    padding: 1em 1em;
+    border-radius: 0.28571429rem;
+    border: none !important;
 }

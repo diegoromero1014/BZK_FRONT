@@ -73,6 +73,7 @@ import fieldListReducer from '../components/fieldList/reducer';
 import questionsReducer from '../components/challenger/reducer';
 import objectListReducer from "../components/listaObjetos/reducer";
 import elementsReducer from "../components/elements/reducer";
+import outdatedContacts from "../components/managementView/widgets/alerts/reducer";
 
 export default combineReducers({
     routing: routerReducer,
@@ -148,5 +149,6 @@ export default combineReducers({
     fieldListReducer,
     questionsReducer,
     objectListReducer,
-    elementsReducer
+    elementsReducer,
+    outdatedContacts
 });

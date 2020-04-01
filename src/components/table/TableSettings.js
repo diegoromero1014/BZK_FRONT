@@ -10,9 +10,11 @@ export default class TableSettings {
         totalRecords = 0,
         recordsPerPage = 10,
         onPageChange = noop,
-        propsComponent = {},
-        Component,
-        onSort = noop
+        onSort = noop,
+        striped = false,
+        maximumVisiblePages = 5,
+        initialPage = 1,
+        loading = false
     }) {
         this.data = data
         this.columns = columns;
@@ -22,8 +24,10 @@ export default class TableSettings {
         this.totalRecords = totalRecords;
         this.recordsPerPage = recordsPerPage;
         this.onPageChange = onPageChange;
-        this.propsComponent = propsComponent;
         this.onSort = onSort;
-        this.Component = Component;
+        this.striped = striped;
+        this.maximumVisiblePages = maximumVisiblePages;
+        this.initialPage = initialPage;
+        this.loading = loading;
     }
 }

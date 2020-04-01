@@ -47,7 +47,7 @@ class MenuListFatherComponent extends Component {
         const { iconClassName, labelText, linkUrlFather, style, children, labelTextFather, menu} = this.props;
         const activeItem = _.isEqual(menu.get('activeItem'), labelText) ? 'active' : '';
         const iconAndText = (
-            <span style={{fontSize: "15px" , textTransform: "capitalize"}}>
+            <span style={{fontSize: "15px", textTransform: "capitalize"}}>
                 <Icon name={iconClassName} /> {labelText}
             </span>
         );

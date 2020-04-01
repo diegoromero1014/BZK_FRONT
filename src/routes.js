@@ -12,7 +12,6 @@ import ClientEdit from "./components/clientEdit/clientEdit";
 import ClientCertify from "./components/clientCertify/clientCertifyComponent";
 import Visit from "./components/visit/createVisit/createVisit";
 import VisitEdit from "./components/visit/editVisit/editVisit";
-import ViewManagement from "./components/viewManagement/viewManagement";
 import BusinessPlan from "./components/businessPlan/createBusinessPlan/createBusinessPlan";
 import EditBusinessPlan from "./components/businessPlan/editBusinessPlan/editBusinessPlan";
 import AdminAlertClientsPendingUpdate from "./components/alertPendingUpdateClient/pendingUpdateClientComponent";
@@ -40,7 +39,6 @@ import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderCo
 import PageNotFound from "./components/notFoundPage/PageNotFound";
 import PrevisitPage from "./components/previsita/previsitPage";
 
-import makeAssociateList from './components/fieldList/makeAssociateList';
 
 import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
     CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST, 
@@ -48,12 +46,11 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     ADMINALERTCLIENTSPORTFOLIOEXPIRATION, EDITBUSINESSPLAN, BUSINESSPLAN, 
     EDITFORMPIPELINE, CREATEFORMPIPELINE, VISITEDIT, VISIT, EDITPREVISITA, 
     PREVISITA, CLIENTCERTIFY, CLIENTSFIND, CLIENTEDIT, CREATEPROPSPECT, STUDYCREDIT, 
-    COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, VIEWMANAGEMENT, MANAGEMENTVIEW, 
+    COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, MANAGEMENTVIEW, 
     LOGINCOMPONENT,     
     LoginComponentURL,
     MainComponentURL,
     ManagementViewURL,
-    ViewManagementURL,
     ShareholderComponentURL,
     ComponentClientInformationURL,
     StudyCreditURL,
@@ -94,7 +91,6 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
 } from "./constantsAnalytics";
 
 
-const AssociateObjectives =  makeAssociateList("Objetivos");
 
 class App extends Component {
    
@@ -124,8 +120,6 @@ class App extends Component {
                 return MAINCOMPONENT;
             case ManagementViewURL:
                 return MANAGEMENTVIEW;
-            case ViewManagementURL:
-                return VIEWMANAGEMENT;                                
             case ShareholderComponentURL:
                 return SHAREHOLDERCOMPONENT;
             case ViewAlertsURL:
@@ -214,7 +208,6 @@ export default (
             <Route path="dashboard" component={MainComponent}>
                 <Route path="managementView" component={ManagementView}></Route>
                 <Route path="clients" component={ClientsFind}></Route>
-                <Route path="viewManagement" component={ViewManagement}></Route>
                 <Route path="shareholder" component={ShareholderComponent}></Route>
                 <Route path="clientInformation" component={ComponentClientInformation}></Route>
                 <Route path="creditStudy" component={StudyCredit}></Route>
@@ -250,7 +243,6 @@ export default (
                 <Route path="walletShare" component={WalletShare}></Route>
                 <Route path="controlDashboard" component={ControlDashboard}></Route>
                 <Route path="sheduler" component={Sheduler}></Route>
-                <Route path="prueba" component={AssociateObjectives} />
             </Route>
             
             <Route path="*" component={PageNotFound}/>

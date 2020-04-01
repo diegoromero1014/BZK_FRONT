@@ -1,6 +1,7 @@
 .item-page {
+    overflow-x: auto;
     &.active {
-        background-color: #6c96c2 !important;
+        background-color: #00448c !important;
         color: #fff !important;
     }
 }

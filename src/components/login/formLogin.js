@@ -15,8 +15,6 @@ import {
     clearStateLogin,
     saveSessionUserName,
     clearSessionUserName,
-    getUserDataFrontOfficeEmployee,
-    saveSessionName
 } from './actions';
 import { redirectUrl } from '../globalComponents/actions';
 import { showLoading } from '../loading/actions';
@@ -25,7 +23,6 @@ import { changeActiveItemMenu } from '../menu/actions';
 import { LOADING_LOGIN, ITEM_ACTIVE_MENU_DEFAULT } from './constants';
 import { MESSAGE_SERVER_ERROR, REQUEST_SUCCESS } from '../../constantsGlobal';
 import { changeTokenStatus } from '../main/actions';
-
 
 export class FormLogin extends Component {
     constructor(props) {
@@ -62,7 +59,7 @@ export class FormLogin extends Component {
 
     redirectLogin = () => {
         this.setState({ showMessageNotification: false });
-        dispatchRedirectUrl("/dashboard/clients");
+        redirectUrl("/dashboard/clients");
     }
 
     getValueRecaptcha = (value) => {
@@ -74,7 +71,7 @@ export class FormLogin extends Component {
         
         const { usuario, password } = this.state;
         const recaptcha = this.state.loginAttempts >= 2 ? this.state.valueRecaptcha : null;
-        const { dispatchValidateLogin, dispatchGetUserDataFrontOfficeEmployee, dispatchShowLoading, dispatchChangeActiveItemMenu, dispatchChangeTokenStatus } = this.props;
+        const { dispatchValidateLogin, dispatchShowLoading, dispatchChangeActiveItemMenu, dispatchChangeTokenStatus } = this.props;
         dispatchChangeTokenStatus(true);
         dispatchShowLoading(true, LOADING_LOGIN);        
         dispatchValidateLogin(usuario, password, recaptcha)
@@ -85,19 +82,15 @@ export class FormLogin extends Component {
                             message: (_.get(response, 'payload.data.data.message'))
                         });
                     } else {
-                        const { dispatchSaveSessionToken, dispatchRedirectUrl } = this.props;
+                        const { dispatchSaveSessionToken } = this.props;
                         dispatchSaveSessionToken(_.get(response, 'payload.data.data.sessionToken'));
-                        saveSessionUserName(usuario);
+                        saveSessionUserName(usuario, _.get(response, 'payload.data.data.username'));
                         dispatchChangeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
-
-                        dispatchGetUserDataFrontOfficeEmployee(usuario).then(data => {
-                            saveSessionName(_.get(data, 'payload.data.data.name'));
-                        })
 
                         // Activar cookie
                         document.cookie = 'estadoconexion=activa;path=/';                        
 
-                        dispatchRedirectUrl("/dashboard/clients");
+                        redirectUrl("/dashboard/clients");
                     }
                 } else {
                     let res = JSON.parse(response.payload.data.data);
@@ -204,21 +197,19 @@ export class FormLogin extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         dispatchStopObservablesLeftTimer: stopObservablesLeftTimer,
         dispatchValidateLogin: validateLogin,
         dispatchSaveSessionToken: saveSessionToken,
         dispatchClearStateLogin: clearStateLogin,
-        dispatchRedirectUrl: redirectUrl,
         dispatchShowLoading: showLoading,
         dispatchChangeActiveItemMenu: changeActiveItemMenu,
         dispatchChangeTokenStatus: changeTokenStatus,
-        dispatchGetUserDataFrontOfficeEmployee: getUserDataFrontOfficeEmployee
     }, dispatch);
 }
 
-function mapStateToProps({ login, mainReducer }, ownerProps) {
+const mapStateToProps = ({ login, mainReducer }) => {
     return {
         login,
         mainReducer

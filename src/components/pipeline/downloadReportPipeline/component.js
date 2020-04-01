@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Col, Row } from 'react-flexbox-grid';
-import { getPipelineXls } from '../actions';
+import { getPipelineXls } from '../../managementView/actions';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import moment from 'moment';
+import _ from 'lodash';
 
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
@@ -12,34 +13,17 @@ import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { changeStateSaveData } from '../../main/actions';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 
+import { TAB_PIPELINE } from '../../managementView/constants';
 import {
     MESSAGE_ERROR,
     DATE_FORMAT,
     DATETIME_FORMAT
 } from '../../../constantsGlobal';
-import { TAB_PIPELINE } from '../../viewManagement/constants';
-
 
 const fields = ["initialValidityDate", "finalValidityDate", "taskStatus"];
-let errors = {};
 let thisForm;
-const validate = (values) => {
 
-    if (!values.initialValidityDate) {
-        errors.OPTION_REQUIRED
-    } else {
-        errors.initialValidityDate = null;
-    }
-
-    if (!values.finalValidityDate) {
-        errors.OPTION_REQUIRED
-    } else {
-        errors.finalValidityDate = null;
-    }
-    return errors;
-};
-
-class DownloadPipeline extends Component {
+export class DownloadPipeline extends Component {
 
     constructor(props) {
         super(props);
@@ -54,8 +38,8 @@ class DownloadPipeline extends Component {
         thisForm = this;
     }
 
-    downloadPipeline() {
-        const {fields: {initialValidityDate, finalValidityDate}, changeStateSaveData, swtShowMessage, getPipelineXls, itemSelectedModal} = this.props;
+    downloadPipeline = () => {
+        const {fields: {initialValidityDate, finalValidityDate}, dispatchChangeStateSaveData, dispatchSwtShowMessage, dispatchGetPipelineXls, itemSelectedModal} = this.props;
         let errorInForm = false;
 
         if (_.isNil(initialValidityDate.value) || _.isEmpty(initialValidityDate.value) || !moment(initialValidityDate.value, 'DD/MM/YYYY').isValid()) {
@@ -72,15 +56,15 @@ class DownloadPipeline extends Component {
 
         if (!errorInForm) {
             if (TAB_PIPELINE === itemSelectedModal) {
-                getPipelineXls(initialValidityDate.value, finalValidityDate.value, changeStateSaveData);
+                dispatchGetPipelineXls(initialValidityDate.value, finalValidityDate.value, dispatchChangeStateSaveData);
             }
         } else {
-            swtShowMessage(MESSAGE_ERROR, 'Campos obligatorios', 'Señor usuario, para descargar las tareas debe ingresar los campos obligatorios.');
+            dispatchSwtShowMessage(MESSAGE_ERROR, 'Campos obligatorios', 'Señor usuario, para descargar los pipelines debe ingresar los campos obligatorios.');
         }
     }
 
-    onSelectFieldDate(valueInitialDate, valueFinalDate) {
-        const {swtShowMessage, fields: {finalValidityDate}} = this.props;
+    onSelectFieldDate = (valueInitialDate, valueFinalDate) => {
+        const {dispatchSwtShowMessage, fields: {finalValidityDate}} = this.props;
         const initialDate = _.isNil(valueInitialDate) || _.isEmpty(valueInitialDate) ? null : valueInitialDate;
         const finalDate = _.isNil(valueFinalDate) || _.isEmpty(valueFinalDate) ? null : valueFinalDate;
         if (!_.isNull(initialDate) && !_.isNull(finalDate)) {
@@ -89,7 +73,7 @@ class DownloadPipeline extends Component {
                 finalDateError: false,
             });
             if (moment(initialDate, DATE_FORMAT).isAfter(moment(finalDate, DATE_FORMAT))) {
-                swtShowMessage(MESSAGE_ERROR, 'Rango de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');
+                dispatchSwtShowMessage(MESSAGE_ERROR, 'Rango de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');
                 setTimeout(() => {
                     finalValidityDate.onChange('')
                 }, 1000);
@@ -224,29 +208,28 @@ class DownloadPipeline extends Component {
     }
 }
 
-function mapStateToProps({businessPlanReducer, selectsReducer}) {
+const mapStateToProps = ({businessPlanReducer, selectsReducer}) => {
     return {
         businessPlanReducer,
         selectsReducer
     };
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
-        getPipelineXls,
-        changeStateSaveData,
-        swtShowMessage,
-        getMasterDataFields
+        dispatchGetPipelineXls: getPipelineXls,
+        dispatchChangeStateSaveData: changeStateSaveData,
+        dispatchSwtShowMessage: swtShowMessage,
+        dispatchGetMasterDataFields: getMasterDataFields
     }, dispatch);
 }
 
 export default reduxForm({
     form: 'formBusinessPlanCreate',
     fields,
-    validate,
     onSubmitFail: () => {
         document.getElementById('modalComponentScroll').scrollTop = 0;
-        const {swtShowMessage} = thisForm.props;
-        swtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para descargar las tareas debe ingresar los campos obligatorios.");
+        const { dispatchSwtShowMessage } = thisForm.props;
+        dispatchSwtShowMessage(MESSAGE_ERROR, "Campos obligatorios", "Señor usuario, para descargar los pipelines debe ingresar los campos obligatorios.");
     }
 }, mapStateToProps, mapDispatchToProps)(DownloadPipeline);

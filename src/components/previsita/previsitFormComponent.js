@@ -18,10 +18,10 @@ import { TITLE_MESSAGE_TARGET, TITLE_CHALLENGER, HELP_VISIT_TYPE, TITLE_MESSAGE_
 import { checkRichTextRequiredBoolean } from '../../validationsFields/rulesField';
 import SelectOpportunitiesWeaknesses from '../opportunitiesWeaknesses/SelectOpportunitiesWeaknesses';
 import makeAssociateList from '../fieldList/makeAssociateList';
-import { listName } from '../fieldList/Objetives/utils';
-import '../../../styles/app/previsit.scss';
+import { listName, objectiveChildrenList, objectivesInitialValues } from '../fieldList/Objetives/utils';
+import  '../../../styles/app/previsit.scss';
 
-const Objectives = makeAssociateList(listName);
+const Objectives = makeAssociateList(listName, objectiveChildrenList);
 
 export class PrevisitFormComponent extends Component {
    constructor(props) {
@@ -229,7 +229,7 @@ export class PrevisitFormComponent extends Component {
 
                <Row style={{ padding: "20px 23px 20px 20px" }}>
                   <Col xs={12} md={12} lg={12}>
-                     <Objectives isEditable={!isEditable}/>
+                     <Objectives isEditable={!isEditable} initialValues={objectivesInitialValues} />
                   </Col>
                </Row>
 

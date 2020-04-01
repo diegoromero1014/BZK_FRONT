@@ -159,7 +159,7 @@ export class MainComponent extends Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     dispatchLoadObservablesLeftTimer: loadObservablesLeftTimer,
     dispatchNotifiedProductionUpgrade: notifiedProductionUpgrade,
@@ -168,7 +168,7 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mapStateToProps({ login, mainReducer }, ownerProps) {
+const mapStateToProps = ({ login, mainReducer }) => {
   return {
     login,
     mainReducer

@@ -1,5 +1,5 @@
 import { APP_URL } from '../../constantsGlobal';
-import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN, CLEAR_STATE, GET_DATA_USER } from './constants';
+import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN, CLEAR_STATE } from './constants';
 import { INIT_INPUT_EVENTS, STOP_INPUT_EVENTS, APP_NAME } from '../../constantsGlobal';
 import axios from 'axios';
 import momentTimeZone from 'moment-timezone';
@@ -43,12 +43,9 @@ export function saveSessionToken(sessionToken) {
     }
 }
 
-export function saveSessionUserName(userName) {
+export function saveSessionUserName(userName, name) {
     window.localStorage.setItem('userNameFront', userName);
-}
-
-export function saveSessionName(name) {
-    window.sessionStorage.setItem('name', name);
+    window.localStorage.setItem('name', name);
 }
 
 export function clearSessionUserName() {
@@ -70,19 +67,5 @@ export function loadObservablesLeftTimer() {
 export function stopObservablesLeftTimer() {
     return {
         type: STOP_INPUT_EVENTS
-    }
-}
-
-export function getUserDataFrontOfficeEmployee(username) {
-    const json = {
-        messageHeader: {
-            "sessionToken": window.localStorage.getItem('sessionTokenFront')
-        },
-        messageBody: null
-    };
-    
-    return { 
-        type: GET_DATA_USER, 
-        payload: axios.post(APP_URL + "/getDataUserFrontOfficeEmployee", json) 
     }
 }

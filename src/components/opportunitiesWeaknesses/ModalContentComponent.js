@@ -25,36 +25,38 @@ export class ModalContentComponent extends Component {
     }
 
     handleOnClick = () => {
-        const { dispatchSwtShowMessage, element: { elements }, singularTitle, title } = this.props;
-
-        if (elements.filter(item => item.associated).length === 0) {
+        const { dispatchSwtShowMessage, element: { elements , open }, title } = this.props;
+        
+        if (open) {
             dispatchSwtShowMessage(
-                "warning",
-                "Alerta",
-                `Señor usuario debe seleccionar al menos una ${singularTitle} para guardar`
-            )
-        } else if (elements.filter(item => item.associated).length > 5) {
-            dispatchSwtShowMessage(
-                "warning",
-                "Alerta",
-                `Señor usuario el maximo de ${title} son 5`
+                "error",
+                "Error",
+                `Señor usuario, esta creando o editando un registro en la sección Oportunidades y Debilidades, debe terminarlo o cancelarlo para poder guardar.`
             )
         } else {
-            dispatchSwtShowMessage(
-                'warning',
-                "Guardar información",
-                "Señor usuario, los cambios realizados se verán reflejados en la información del cliente.",
-                {
-                    onConfirmCallback: () => this.handleOnSave(),
-                    onCancelCallback: () => { }
-                },
-                {
-                    "confirmButtonColor": '#DD6B55',
-                    "confirmButtonText": 'Sí, estoy seguro!',
-                    "cancelButtonText": "Cancelar",
-                    "showCancelButton": true,
-                }
-            );
+            if (elements.filter(item => item.associated).length > 5) {
+                dispatchSwtShowMessage(
+                    "warning",
+                    "Alerta",
+                    `Señor usuario el maximo de ${title} son 5`
+                )
+            } else {
+                dispatchSwtShowMessage(
+                    'warning',
+                    "Guardar información",
+                    "Señor usuario, los cambios realizados se verán reflejados en la información del cliente.",
+                    {
+                        onConfirmCallback: () => this.handleOnSave(),
+                        onCancelCallback: () => { }
+                    },
+                    {
+                        "confirmButtonColor": '#DD6B55',
+                        "confirmButtonText": 'Sí, estoy seguro!',
+                        "cancelButtonText": "Cancelar",
+                        "showCancelButton": true,
+                    }
+                );
+            }
         }
     }
 
@@ -66,7 +68,12 @@ export class ModalContentComponent extends Component {
     }
 
     render() {
-        const { name, singularTitle, title, placeholder, isEditable, handleCancel } = this.props;
+        const { name, singularTitle, title, placeholder, isEditable, handleCancel, element } = this.props;
+
+        const { elements } = element;
+
+        let max = 5 ;
+        max += elements.filter(item => item.status === -1).length;
 
         this.handleBackup();
 
@@ -77,7 +84,7 @@ export class ModalContentComponent extends Component {
                     placeholder={placeholder}
                     messageButton={`Crear ${singularTitle}`}
                     name={name}
-                    max={5}
+                    max={max}
                     title={title}
                     isEditable={isEditable}
                     singularTitle={singularTitle}
@@ -100,7 +107,7 @@ export class ModalContentComponent extends Component {
 
 
 const mapStateToProps = ({ elementsReducer }, props) => ({
-    element: elementsReducer[props.name]
+    element: elementsReducer[props.name],
 });
 
 const mapDispatchToProps = dispatch => {

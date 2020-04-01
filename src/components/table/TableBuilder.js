@@ -31,18 +31,28 @@ export default class TableBuilder {
         return this;
     }
 
-    setComponent = Component => {
-        this.Component = Component;
-        return this;
-    }
-
-    setPropsComponent = propsComponent => {
-        this.propsComponent = propsComponent;
-        return this;
-    }
-
     setOnSort = onSort => {
         this.onSort = onSort;
+        return this;
+    }
+
+    setStriped = striped => {
+        this.striped = striped;
+        return this;
+    }
+
+    setMaximumVisiblePages = maximumVisiblePages => {
+        this.maximumVisiblePages = maximumVisiblePages;
+        return this;
+    }
+
+    setInitialPage = initialPage => {
+        this.initialPage = initialPage;
+        return this;
+    }
+
+    setLoading = loading => {
+        this.loading = loading;
         return this;
     }
 

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Table } from 'semantic-ui-react';
 import { buildHeaders, buildRows } from './utilities';
 import Pagination from './Pagination';
+import '../../../styles/table/main.scss';
+import { noop } from 'lodash';
 
 class TableComponent extends Component {
     constructor(props) {
@@ -17,16 +19,18 @@ class TableComponent extends Component {
         const { orderedColumn, direction } = this.state;
         const { tableSettings: { onSort } } = this.props;
 
-        if (orderedColumn !== clickedColumn) {
-            await this.setState({
-                orderedColumn: clickedColumn,
-                direction: 'ascending',
-            })
-        } else {
-            await this.setState({ direction: direction === 'ascending' ? 'descending' : 'ascending' });
-        }
+        if (onSort !== noop) {
+            if (orderedColumn !== clickedColumn) {
+                await this.setState({
+                    orderedColumn: clickedColumn,
+                    direction: 'ascending',
+                })
+            } else {
+                await this.setState({ direction: direction === 'ascending' ? 'descending' : 'ascending' });
+            }
 
-        onSort(this.state.orderedColumn, this.state.direction);
+            onSort(this.state.orderedColumn, this.state.direction);
+        }
     }
 
     render() {
@@ -34,7 +38,7 @@ class TableComponent extends Component {
         const { orderedColumn, direction } = this.state;
 
         return (
-            <Table>
+            <Table striped={tableSettings.striped} fixed>
                 <Table.Header>
                     <Table.Row>
                         {buildHeaders(tableSettings.columns, orderedColumn, direction, this.handleSort)}
