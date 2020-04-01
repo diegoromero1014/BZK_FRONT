@@ -187,11 +187,11 @@ export class MyTaskPage extends Component {
 
     dispatchFilters = async (filters) => {
         const {myTasks} = this.props;
-        await this.fetchAndDispatchPendingTasks(
-            0, myTasks.get("tabPending").order, null, filters
-        );
         await this.fetchAndDispatchFinalizedTasks(
             0, myTasks.get("tabFinished").order, null, filters
+        );
+        await this.fetchAndDispatchPendingTasks(
+            0, myTasks.get("tabPending").order, null, filters
         );
     };
 
@@ -207,101 +207,102 @@ export class MyTaskPage extends Component {
         let tabPending = myTasks.get("tabPending");
         let tabFinished = myTasks.get("tabFinished");
         return (
+          <div
+            className="tab-pane quickZoomIn animated"
+            style={{
+              width: "100%",
+              marginTop: "10px",
+              marginBottom: "20px"
+            }}
+          >
             <div
-                className="tab-pane quickZoomIn animated"
-                style={{
-                    width: "100%",
-                    marginTop: "10px",
-                    marginBottom: "20px"
-                }}
+              style={{
+                padding: "10px",
+                overflow: "initial",
+                backgroundColor: "white",
+                margin: "10px",
+                borderRadius: "5px",
+                boxShadow: "0px 0px 10px -7px rgba(0,0,0,0.75)"
+              }}
             >
-                <div
-                    style={{
-                        padding: "10px",
-                        overflow: "initial",
-                        backgroundColor: "white",
-                        margin: "10px",
-                        borderRadius: "5px",
-                        boxShadow: "0px 0px 10px -7px rgba(0,0,0,0.75)"
-                    }}
-                >
               <HeaderFilters dispatchFilters={this.dispatchFilters} />
               <ProgressBarComponent
                 pending={tabPending.rowCount}
                 finalized={tabFinished.rowCount}
                 role={myTasks.get("initialFilter").rol}
+                loading={loading==true}
               />
             </div>
-                <div style={{backgroundColor: "white", width: "100%"}}>
-                    <div style={{display: "flex"}}>
-                        <PendingTasksHelp/>
-                        <div style={{display: "flex"}}>
-                            {loading === true && (
-                                <div style={{padding: "10px"}}>
-                                    <Loader active inline></Loader>
-                                    <span style={{marginLeft: "10px"}}>Cargando...</span>
-                                </div>
-                            )}
-                        </div>
+            <div style={{ backgroundColor: "white", width: "100%" }}>
+              <div style={{ display: "flex" }}>
+                <PendingTasksHelp />
+                <div style={{ display: "flex" }}>
+                  {loading === true && (
+                    <div style={{ padding: "10px" }}>
+                      <Loader active inline></Loader>
+                      <span style={{ marginLeft: "10px" }}>Cargando...</span>
                     </div>
-                    <TabComponent
-                        tabs={[
-                            {
-                                name: PENDING_TASKS,
-                                number: tabPending.rowCount,
-                                tooltip:TOOLTIP_PENDING,
-                                content: (
-                                    <div>
-                                        <ListMyTasksComponent
-                                            orderColumn={this.orderColumn}
-                                            tasks={tabPending.data}
-                                            handleTaskByClientsFind={
-                                                this.handleFetchAndDispatchPendingTasks
-                                            }
-                                            permissionToEditTask={this.permissionToEditTask}
-                                            updateBothTabs={this.updateBothTabs}
-                                            actualPage={tabPending.page}
-                                            mode={PENDING}
-                                        />
-                                        <PaginationPendingTaskComponent
-                                            tab={tabPending}
-                                            clearUserTask={this.clearUserTask}
-                                            handlePaginar={this.handlePaginar}
-                                            mode={PENDING}
-                                        />
-                                    </div>
-                                )
-                            },
-                            {
-                                name: FINALIZED_TASKS,
-                                number: tabFinished.rowCount,
-                                tooltip:TOOLTIP_FINISHED,
-                                content: (
-                                    <div>
-                                        <ListMyTasksComponent
-                                            orderColumn={this.orderColumn}
-                                            tasks={tabFinished.data}
-                                            handleTaskByClientsFind={
-                                                this.handleFetchAndDispatchPendingTasks
-                                            }
-                                            permissionToEditTask={this.permissionToEditTask}
-                                            updateBothTabs={this.updateBothTabs}
-                                            actualPage={tabPending.page}
-                                            mode={FINISHED}
-                                        />
-                                        <PaginationPendingTaskComponent
-                                            tab={tabFinished}
-                                            clearUserTask={this.clearUserTask}
-                                            handlePaginar={this.handlePaginar}
-                                            mode={FINISHED}
-                                        />
-                                    </div>
-                                )
-                            }
-                        ]}
-                    />
+                  )}
                 </div>
+              </div>
+              <TabComponent
+                tabs={[
+                  {
+                    name: PENDING_TASKS,
+                    number: tabPending.rowCount,
+                    tooltip: TOOLTIP_PENDING,
+                    content: (
+                      <div>
+                        <ListMyTasksComponent
+                          orderColumn={this.orderColumn}
+                          tasks={tabPending.data}
+                          handleTaskByClientsFind={
+                            this.handleFetchAndDispatchPendingTasks
+                          }
+                          permissionToEditTask={this.permissionToEditTask}
+                          updateBothTabs={this.updateBothTabs}
+                          actualPage={tabPending.page}
+                          mode={PENDING}
+                        />
+                        <PaginationPendingTaskComponent
+                          tab={tabPending}
+                          clearUserTask={this.clearUserTask}
+                          handlePaginar={this.handlePaginar}
+                          mode={PENDING}
+                        />
+                      </div>
+                    )
+                  },
+                  {
+                    name: FINALIZED_TASKS,
+                    number: tabFinished.rowCount,
+                    tooltip: TOOLTIP_FINISHED,
+                    content: (
+                      <div>
+                        <ListMyTasksComponent
+                          orderColumn={this.orderColumn}
+                          tasks={tabFinished.data}
+                          handleTaskByClientsFind={
+                            this.handleFetchAndDispatchPendingTasks
+                          }
+                          permissionToEditTask={this.permissionToEditTask}
+                          updateBothTabs={this.updateBothTabs}
+                          actualPage={tabPending.page}
+                          mode={FINISHED}
+                        />
+                        <PaginationPendingTaskComponent
+                          tab={tabFinished}
+                          clearUserTask={this.clearUserTask}
+                          handlePaginar={this.handlePaginar}
+                          mode={FINISHED}
+                        />
+                      </div>
+                    )
+                  }
+                ]}
+              />
             </div>
+          </div>
         );
     }
 }

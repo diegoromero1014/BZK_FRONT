@@ -17,7 +17,36 @@ class TabComponent extends Component {
   }
 
   handleItemClick = name => this.setState({ tabActive: name });
-
+  getTabHeader = (name, number, disable, tabActive) => {
+    return (
+      <Menu.Item
+        key={name}
+        name={name}
+        className="tabItem"
+        style={
+          !disable
+            ? { width: "250px" }
+            : {
+                backgroundColor: "rgba(0, 0, 0, 0.09)",
+                width: "250px"
+              }
+        }
+        onClick={() => {
+          !disable ? this.handleItemClick(name) : null;
+        }}
+        active={tabActive === name}
+      >
+        <div className="tabTextItem">{name}</div>
+        {number && number > 0 ? (
+          <Label circular color="red">
+            {number >= 100 ? "+99" : number}
+          </Label>
+        ) : (
+          ""
+        )}
+      </Menu.Item>
+    );
+  };
   getMenu = tabActive => {
     const { tabs } = this.props;
     return (
@@ -29,59 +58,11 @@ class TabComponent extends Component {
                 inverted
                 style={{ padding: "5px", opacity: 0.8 }}
                 content={tooltip}
-                trigger={
-                  <Menu.Item
-                    key={name}
-                    name={name}
-                    className="tabItem"
-                    style={
-                      !disable
-                        ? { width: "250px" }
-                        : {
-                            backgroundColor: "rgba(0, 0, 0, 0.09)",
-                            width: "250px"
-                          }
-                    }
-                    onClick={() => {
-                      !disable ? this.handleItemClick(name) : null;
-                    }}
-                    active={tabActive === name}
-                  >
-                    <div className="tabTextItem">{name}</div>
-                    {number && number > 0 ? (
-                      <Label circular color="red">
-                        {number >= 100 ? "+99" : number}
-                      </Label>
-                    ) : (
-                      ""
-                    )}
-                  </Menu.Item>
-                }
+                trigger={this.getTabHeader(name, number, disable, tabActive)}
+                key={name}
               ></Popup>
             ) : (
-              <Menu.Item
-                key={name}
-                name={name}
-                className="tabItem"
-                style={
-                  !disable
-                    ? { width: "250px" }
-                    : { backgroundColor: "rgba(0, 0, 0, 0.09)", width: "250px" }
-                }
-                onClick={() => {
-                  !disable ? this.handleItemClick(name) : null;
-                }}
-                active={tabActive === name}
-              >
-                <div className="tabTextItem">{name}</div>
-                {number && number > 0 ? (
-                  <Label circular color="red">
-                    {number >= 100 ? "+99" : number}
-                  </Label>
-                ) : (
-                  ""
-                )}
-              </Menu.Item>
+              this.getTabHeader(name, number, disable, tabActive)
             )
           )}
         </Menu>
@@ -92,10 +73,12 @@ class TabComponent extends Component {
 
   getSegment = tabActive => {
     const { tabs } = this.props;
-    return tabs.filter(({ name }) => name === tabActive).map(({ content, name }) => <Segment key={name}>{content}</Segment>);
+    return tabs
+      .filter(({ name }) => name === tabActive)
+      .map(({ content, name }) => <Segment key={name}>{content}</Segment>);
   };
   render() {
-    return <div>{this.getMenu(this.state.tabActive)}</div>
+    return <div>{this.getMenu(this.state.tabActive)}</div>;
   }
 }
 
