@@ -8,6 +8,7 @@ import Immutable from 'immutable';
 
 let defaultProps;
 let dispatchClearClients;
+let dispatchUpdateTabSeleted ;
 let dispatchClientsFindServer;
 let dispatchSwtShowMessage;
 let dispatchChangeActiveItemMenu; 
@@ -29,6 +30,7 @@ describe('Test for SectionSearchClient Component', () => {
         dispatchClearClients = sinon.fake();
         dispatchClientsFindServer = sinon.fake();
         dispatchSwtShowMessage = sinon.fake();
+        dispatchUpdateTabSeleted = sinon.fake();
         dispatchChangeActiveItemMenu = sinon.fake();
         redirectUrl = sinon.stub(globalActions, "redirectUrl");
 
@@ -39,7 +41,8 @@ describe('Test for SectionSearchClient Component', () => {
             dispatchClearClients,
             dispatchClientsFindServer,
             dispatchSwtShowMessage,
-            dispatchChangeActiveItemMenu
+            dispatchChangeActiveItemMenu,
+            dispatchUpdateTabSeleted
         }
     });
 
