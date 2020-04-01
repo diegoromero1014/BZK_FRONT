@@ -1,16 +1,28 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
+import TabComponent from "../../../../ui/Tab";
 import {
-    ECONOMIC_GROUP,
-    PENDING_VIEWS
+    ECONOMIC_GROUP_TAB,
+    PENDING_VIEWS_TAB
 } from "./constants";
 
 export class VisitComponent extends Component {
-    constructor(props) {
-        super(props);
 
-    }
-
-    render() {
+    countVistis = () =>{
+        const tabs = [
+            {
+                name: ECONOMIC_GROUP_TAB,
+                content,
+                number,
+                callback
+            },
+            {
+                name: PENDING_VIEWS_TAB,
+                content,
+                number,
+                callback
+            }
+        ];
         return (
             <div class="ui segment alert-content" style={{ padding: '0px !important' }}>
                 <h3>VISITAS</h3>
@@ -29,7 +41,10 @@ export class VisitComponent extends Component {
 
             </div >
         );
+    } 
+    render() {
+        return this.countVistis();
     }
 }
 
-export default connect(VisitComponent);
+export default VisitComponent;

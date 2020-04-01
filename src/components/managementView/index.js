@@ -9,6 +9,7 @@ import Header from './header';
 
 import { updateTitleNavBar } from '../navBar/actions';
 import AlertSection from './widgets/alerts';
+import VisitComponent from './widgets/visits';
 import SectionSearchClient from './widgets/searchClient';
 
 export class ManagementView extends Component {
@@ -41,6 +42,9 @@ export class ManagementView extends Component {
                 </div>
                 <div style={{ width: '100%', marginTop: 170 }}>
                     <AlertSection />
+                </div>
+                <div style={{ width: '100%', marginTop: 170 }}>
+                    <VisitComponent />
                 </div>
             </div>
         );
