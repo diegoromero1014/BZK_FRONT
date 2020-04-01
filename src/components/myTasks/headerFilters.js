@@ -25,7 +25,9 @@ export class HeaderFilters extends Component {
             user: null,
             rol: null,
             initialDate: null,
-            finalDate: null
+            finalDate: null,
+            defaultInitialDate: null,
+            defaultFinalDate: null
         }
     }
 
@@ -42,6 +44,8 @@ export class HeaderFilters extends Component {
         let value = _.find(_.get(getAssistant, 'payload.data.data'), prop => prop.name === userName);
         await this.setState({
             subordinates: _.get(getAssistant, 'payload.data.data'),
+            defaultInitialDate: dateInitial,
+            defaultFinalDate: dateFinal,
             initialDate: dateInitial,
             finalDate: dateFinal,
             user: value.id
@@ -51,25 +55,24 @@ export class HeaderFilters extends Component {
         users.onChange(value.id);
     }
 
-    validateFilter = async () => {
-        const {fields: {users, initialDate, finalDate}, dispatchShowMessage} = this.props;
-        if (await _.isEmpty(users.value)) {
+    validateFilter = () => {
+        const {fields: {users}, dispatchShowMessage} = this.props;
+        if (_.isEmpty(users.value)) {
             users.onChange(this.state.user);
         }
 
-        if (moment(initialDate.value, DATE_FORMAT).isAfter(moment(finalDate.value, DATE_FORMAT))) {
+        if (moment(this.state.initialDate, DATE_FORMAT).isAfter(moment(this.state.finalDate, DATE_FORMAT))) {
             dispatchShowMessage(MESSAGE_ERROR, 'Rango de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');
         }
     };
 
-    searchByFilters = async () => {
-        const {fields: {users, rol, initialDate, finalDate}, dispatchFilters, dispatchSetRolToSearch} = this.props;
-
+    searchByFilters = () => {
+        const {fields: {users, rol}, dispatchFilters, dispatchSetRolToSearch} = this.props;
         let filters = {
             users: JSON.parse('[' + ((_.isNull(users) || _.isUndefined(users)) ? "" : users.value) + ']'),
             rol: rol.value,
-            initialDate: moment(initialDate.value, "DD/MM/YYYY").toDate().getTime(),
-            finalDate: moment(finalDate.value, "DD/MM/YYYY").toDate().getTime()
+            initialDate: moment(this.state.initialDate, "DD/MM/YYYY").toDate().getTime(),
+            finalDate: moment(this.state.finalDate, "DD/MM/YYYY").toDate().getTime()
         };
 
         setTimeout(() => {
@@ -77,29 +80,37 @@ export class HeaderFilters extends Component {
             dispatchSetRolToSearch(filters);
         }, 300);
 
-        await dispatchFilters(filters);
+        dispatchFilters(filters);
     };
 
     onClickDate = async (type, val) => {
-        const {fields: {initialDate, finalDate}} = this.props;
         if (_.isEqual(type, "initial")) {
-            initialDate.onChange(val);
+            await this.setState({
+                initialDate: val
+            });
         }
 
         if (_.isEqual(type, "final")) {
-            finalDate.onChange(val);
+            await this.setState({
+                finalDate: val
+            });
         }
 
-        await this.searchByFilters();
+        this.searchByFilters();
     };
 
-    fillDateEmpty = (type, val) => {
-        const {fields: {initialDate, finalDate}} = this.props;
+    fillDateEmpty = async (type, val) => {
         if (_.isEqual(type, "initial") && _.isEmpty(val.target.value)) {
-            initialDate.onChange(this.state.initialDate);
+            await this.setState({
+                initialDate: this.state.defaultInitialDate,
+            });
+            this.searchByFilters();
         }
         if (_.isEqual(type, "final") && _.isEmpty(val.target.value)) {
-            finalDate.onChange(this.state.finalDate);
+            await this.setState({
+                finalDate: this.state.defaultFinalDate,
+            });
+            this.searchByFilters();
         }
     };
 
@@ -119,7 +130,7 @@ export class HeaderFilters extends Component {
                             touched={true}
                             data={this.state.subordinates}
                             maxSelections={15}
-                            onChange={this.searchByFilters}
+                            onChange={() => this.searchByFilters()}
                         />
                     </Col>
                     <Col xs={3} sm={3} md={3} lg={3}>
@@ -131,7 +142,7 @@ export class HeaderFilters extends Component {
                             valueProp={'id'}
                             textProp={'value'}
                             data={rolFilter}
-                            onChange={this.searchByFilters}
+                            onChange={() => this.searchByFilters()}
                         />
                     </Col>
                     <Col xs={3} sm={3} md={3} lg={3}>
@@ -141,10 +152,12 @@ export class HeaderFilters extends Component {
                             culture='es'
                             format={"DD/MM/YYYY"}
                             time={false}
+                            touched={true}
                             placeholder='DD/MM/YYYY'
                             className='field-input'
                             name="initialDate"
-                            onSelect={val => this.onClickDate("initial", val)}
+                            value={this.state.initialDate}
+                            onChange={val => this.onClickDate("initial", val)}
                             onBlur={val => this.fillDateEmpty("initial", val)}
                         />
                     </Col>
@@ -158,7 +171,9 @@ export class HeaderFilters extends Component {
                             placeholder='DD/MM/YYYY'
                             className='field-input'
                             name="finalDate"
-                            onSelect={val => this.onClickDate("final", val)}
+                            touched={true}
+                            value={this.state.finalDate}
+                            onChange={val => this.onClickDate(val, finalDate)}
                             onBlur={val => this.fillDateEmpty("final", val)}
                         />
                     </Col>

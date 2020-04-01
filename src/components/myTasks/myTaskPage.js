@@ -194,11 +194,12 @@ export class MyTaskPage extends Component {
             0, myTasks.get("tabFinished").order, null, filters
         );
     };
+
     permissionToEditTask = () => {
         const {reducerGlobal}= this.props;
         let editPendings = get(reducerGlobal.get("permissionsTasks"), indexOf(reducerGlobal.get("permissionsTasks"), EDITAR), false);
         return (editPendings === EDITAR);
-    }
+    };
 
     render() {
         const {myTasks} = this.props;
