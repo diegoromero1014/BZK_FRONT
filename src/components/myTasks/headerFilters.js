@@ -56,7 +56,7 @@ export class HeaderFilters extends Component {
     }
 
     validateFilter = () => {
-        const {fields: {users}, dispatchShowMessage} = this.props;
+        const {fields: {users}} = this.props;
         if (_.isEmpty(users.value)) {
             users.onChange(this.state.user);
         }
