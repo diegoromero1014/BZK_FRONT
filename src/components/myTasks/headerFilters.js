@@ -60,10 +60,6 @@ export class HeaderFilters extends Component {
         if (_.isEmpty(users.value)) {
             users.onChange(this.state.user);
         }
-
-        if (moment(this.state.initialDate, DATE_FORMAT).isAfter(moment(this.state.finalDate, DATE_FORMAT))) {
-            dispatchShowMessage(MESSAGE_ERROR, 'Rango de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');
-        }
     };
 
     searchByFilters = () => {
@@ -84,6 +80,7 @@ export class HeaderFilters extends Component {
     };
 
     onClickDate = async (type, val) => {
+        const {dispatchShowMessage} = this.props;
         if (_.isEqual(type, "initial")) {
             await this.setState({
                 initialDate: val
@@ -93,6 +90,14 @@ export class HeaderFilters extends Component {
         if (_.isEqual(type, "final")) {
             await this.setState({
                 finalDate: val
+            });
+        }
+
+        if (moment(this.state.initialDate, DATE_FORMAT).isAfter(moment(this.state.finalDate, DATE_FORMAT))) {
+            dispatchShowMessage(MESSAGE_ERROR, 'Rango de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');
+            await this.setState({
+                initialDate: this.state.defaultInitialDate,
+                finalDate: this.state.defaultFinalDate,
             });
         }
 
@@ -173,7 +178,7 @@ export class HeaderFilters extends Component {
                             name="finalDate"
                             touched={true}
                             value={this.state.finalDate}
-                            onChange={val => this.onClickDate(val, finalDate)}
+                            onChange={val => this.onClickDate("final", val)}
                             onBlur={val => this.fillDateEmpty("final", val)}
                         />
                     </Col>
