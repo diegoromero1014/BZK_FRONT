@@ -33,7 +33,7 @@ describe('Test for TableComponent Utilities', () => {
             }
             prop = 'name'
             const result = extractValueByKey(object, prop);
-            console.log(result)
+            
         })
     })
 })

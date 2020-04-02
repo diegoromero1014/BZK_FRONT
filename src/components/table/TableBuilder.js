@@ -46,5 +46,15 @@ export default class TableBuilder {
         return this;
     }
 
+    setInitialPage = initialPage => {
+        this.initialPage = initialPage;
+        return this;
+    }
+
+    setLoading = loading => {
+        this.loading = loading;
+        return this;
+    }
+
     build = () => new TableSettings(this);
 }

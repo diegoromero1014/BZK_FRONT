@@ -12,12 +12,14 @@ const middleWares = [thunk];
 const mockStore = configureStore(middleWares);
 
 describe('AlertPortfolioExpiration Test', () => {
-    defaultProps = {
-        alertPortfolioExpiration: Immutable.Map({ responseClients: {} })
-    }
-
+    
     beforeEach(() => {
-        store = mockStore({});
+        defaultProps = {
+            data: []
+        }
+        store = mockStore({
+            alertPortfolioExpiration: Immutable.Map({ responseClients: {} }),
+        });
     })
 
     it('Should render component with Redux', () => {
