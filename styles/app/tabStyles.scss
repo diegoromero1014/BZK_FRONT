@@ -13,10 +13,14 @@
 .tabItem {
     background-color: #383838;
     min-width: 250px;
+    width: 250px;
     transition: all .3s ease;
     &:hover {
         border-bottom-color: #69abd6 !important;
         color: #383838 !important;
+    }
+    &.disable-tab {
+        background-color: rgba(0, 0, 0, 0.09) !important
     }
 }
 

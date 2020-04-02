@@ -31,15 +31,10 @@ class TabComponent extends Component {
             <div className="tabGenericComponent">
                 <div style={{ overflowX: 'auto' }}>
                     <Menu pointing secondary>
-                        {tabs.map(({ name, number, disable, callback }) => (
+                        {tabs.map(({ name, number, disable, callback, className }) => (
                             <Menu.Item
                                 name={name}
-                                className="tabItem"
-                                style={
-                                    !disable
-                                        ? { width: "250px" }
-                                        : { backgroundColor: "rgba(0, 0, 0, 0.09)", width: "250px" }
-                                }
+                                className={`tabItem ${className} ${disable ? 'disable-tab' : ''}`}
                                 onClick={() => {
                                     !disable ? this.handleItemClick(name, callback) : null;
                                 }}
