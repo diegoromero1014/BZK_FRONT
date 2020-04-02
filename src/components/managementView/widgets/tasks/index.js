@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import Tabs from "../../../../ui/Tab";
+import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
 import { MY_TASKS, ASSIGNED_TASKS } from './constants';
-import '../../../../../styles/board/widgets/tasks/main.scss';
 import MyTask from './MyTask';
 import AssignedTasks from './AssignedTasks';
+
+import '../../../../../styles/board/widgets/tasks/main.scss';
 
 class Task extends Component {
 
@@ -11,23 +14,31 @@ class Task extends Component {
         super(props);
 
         this.state = {
+            tabs: []
+        }
+    }
+
+    async componentWillMount() {
+        const { assignedTasks, myTask } = this.props;
+
+        await this.setState({
             tabs: [
                 {
                     name: MY_TASKS,
-                    content: <MyTask />,
-                    number: 100,
+                    content: <MyTask tasks={[myTask.finished, myTask.pending]} />,
+                    number: myTask.total,
                     className: 'tasks-tab',
                     callback: name => console.log(name)
                 },
                 {
                     name: ASSIGNED_TASKS,
-                    content: <AssignedTasks />,
-                    number: 50,
+                    content: <AssignedTasks tasks={[assignedTasks.finished, assignedTasks.pending]} />,
+                    number: assignedTasks.total,
                     className: 'tasks-tab',
                     callback: name => console.log(name)
-                },
+                }
             ]
-        }
+        });
     }
 
     render() {
@@ -42,4 +53,12 @@ class Task extends Component {
     }
 }
 
-export default Task;
+const mapStateToProps = ({ boardTaskReducer: { assignedTasks, myTask } }) => ({
+    assignedTasks,
+    myTask
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Task);

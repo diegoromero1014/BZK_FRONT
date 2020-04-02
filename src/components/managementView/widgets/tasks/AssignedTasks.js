@@ -1,34 +1,31 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Button } from 'semantic-ui-react';
 import Doughnut from '../../../chart/doughnut';
 import { buildDataStructure } from './utilities';
 
-class AssignedTasks extends Component {
+const AssignedTasks = ({ tasks }) => {
+    const { elements, data } = buildDataStructure(['Finalizadas', 'Pendientes'], tasks);
 
-    render() {
-        const { elements, data } = buildDataStructure(['Finalizadas', 'Pendientes'], [10, 40]);
-
-        return (
-            <div
-                style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                }}
+    return (
+        <div
+            style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+            }}
+        >
+            <Doughnut elements={elements} data={data} />
+            <Button
+                fluid
+                style={{ background: 'transparent', marginTop: 20 }}
+                onClick={() => { }}
             >
-                <Doughnut elements={elements} data={data} />
-                <Button
-                    fluid
-                    style={{ background: 'transparent', marginTop: 20 }}
-                    onClick={() => { }}
-                >
-                    Ver detalle
+                Ver detalle
                 </Button>
-            </div>
-        );
-    }
-}
+        </div>
+    );
+};
 
 export default AssignedTasks;
