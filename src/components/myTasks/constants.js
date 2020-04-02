@@ -16,5 +16,5 @@ export const ASSIGNED = "ASSIGNED";
 export const RESPONSIBLE = "RESPONSIBLE";
 export const GET_ASSISTANTS_USER = 'GET_ASSISTANTS_USER';
 export const SET_FILTERS = 'SET_FILTERS';
-export const TOOLTIP_PENDING = "Tareas Pendiente y en gestión";
+export const TOOLTIP_PENDING = "Tareas Pendientes";
 export const TOOLTIP_FINISHED = "Tareas Cerradas y Canceladas";

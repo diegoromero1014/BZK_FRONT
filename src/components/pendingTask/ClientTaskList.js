@@ -31,6 +31,7 @@ import { updateTitleNavBar } from '../navBar/actions';
 import { FINALIZED_TASKS, FINISHED, NUMBER_RECORDS, PENDING, PENDING_TASKS } from './constants';
 import { CREAR, MODULE_TASKS, REQUEST_SUCCESS } from "../../constantsGlobal";
 import { _TASK, BIZTRACK_MY_CLIENTS, nombreflujoAnalytics } from '../../constantsAnalytics';
+import { TOOLTIP_PENDING, TOOLTIP_FINISHED } from '../myTasks/constants';
 
 export class ClientTaskList extends Component {
   constructor(props) {
@@ -265,6 +266,7 @@ export class ClientTaskList extends Component {
                   tabs={[
                     {
                       name: PENDING_TASKS,
+                      tooltip: TOOLTIP_PENDING,
                       content: (
                         <div>
                           <ListPendingTaskComponent
@@ -289,6 +291,7 @@ export class ClientTaskList extends Component {
                     },
                     {
                       name: FINALIZED_TASKS,
+                      tooltip: TOOLTIP_FINISHED,
                       content: (
                         <div>
                           <ListPendingTaskComponent
