@@ -74,6 +74,8 @@ import questionsReducer from '../components/challenger/reducer';
 import objectListReducer from "../components/listaObjetos/reducer";
 import elementsReducer from "../components/elements/reducer";
 import outdatedContacts from "../components/managementView/widgets/alerts/reducer";
+import commentsReducer from '../components/globalComponents/comments/reducer';
+import searchEmployeeInputReducer from '../components/globalComponents/searchEmployeeInput/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -149,6 +151,8 @@ export default combineReducers({
     fieldListReducer,
     questionsReducer,
     objectListReducer,
+    outdatedContacts,
     elementsReducer,
-    outdatedContacts
+    commentsReducer,
+    searchEmployeeInputReducer
 });

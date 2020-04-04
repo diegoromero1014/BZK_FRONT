@@ -38,6 +38,7 @@ import Sheduler from "./components/sheduler/shedulerComponent";
 import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderConstruction";
 import PageNotFound from "./components/notFoundPage/PageNotFound";
 import PrevisitPage from "./components/previsita/previsitPage";
+import TaskPage from "./components/pendingTask/taskPage";
 
 
 import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
@@ -46,7 +47,7 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     ADMINALERTCLIENTSPORTFOLIOEXPIRATION, EDITBUSINESSPLAN, BUSINESSPLAN, 
     EDITFORMPIPELINE, CREATEFORMPIPELINE, VISITEDIT, VISIT, EDITPREVISITA, 
     PREVISITA, CLIENTCERTIFY, CLIENTSFIND, CLIENTEDIT, CREATEPROPSPECT, STUDYCREDIT, 
-    COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, MANAGEMENTVIEW, 
+    COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, MANAGEMENTVIEW,
     LOGINCOMPONENT,     
     LoginComponentURL,
     MainComponentURL,
@@ -89,7 +90,6 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     SHEDULER,
     DEFAULT
 } from "./constantsAnalytics";
-
 
 
 class App extends Component {
@@ -218,6 +218,9 @@ export default (
                     <Route path=":id" component={PrevisitPage}></Route>                    
                 </Route>                
                 <Route path="visita" component={Visit}></Route>
+                <Route path="task" component={TaskPage}>
+                    <Route path=":id" component={TaskPage}></Route>
+                </Route>
                 <Route path="visitaEditar/:id" component={VisitEdit}></Route>
                 <Route path="pipeline" component={createFormPipeline('pipelineCreate')}></Route>
                 <Route path="pipelineEdit/:id" component={editFormPipeline('pipelineEdit')}></Route>

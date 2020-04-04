@@ -1,151 +1,105 @@
-import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { tasksByClientFindServer, orderColumnUserTask, clearUserTaskOrder, clearUserTaskPaginator } from './actions';
-import GridComponent from '../grid/component';
-import { NUMBER_RECORDS } from './constants';
+import React, { Component } from 'react';
 import moment from 'moment';
-import { shorterStringValue } from '../../actionsGlobal';
+import GridComponent from '../grid/component';
+import { MODAL_TITLE } from './constants';
+import {MODULE_TASKS} from "../../constantsGlobal";
+import _ from 'lodash';
 
-let v1 = "";
 class ListPendingTaskComponent extends Component {
 
   constructor(props) {
     super(props);
-    this._renderCellView = this._renderCellView.bind(this);
-    this._renderHeaders = this._renderHeaders.bind(this);
     this.state = {
       column: "",
       order: "",
-      orderA: 'inline-block',
-      orderD: 'none'
-    }
+      orderA: "inline-block",
+      orderD: "none"
+    };
   }
 
-  componentWillMount() {
-    this.state = {
-      orderA: 'inline-block',
-      orderD: 'none'
-    }
+  componentDidMount() {
+    const { handleTaskByClientsFind, mode } = this.props;
+    handleTaskByClientsFind(0, mode);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { value1 } = nextProps;
-    if ((v1 !== nextProps.value1)) {
-      v1 = nextProps.value1;
-      const { clearUserTaskOrder } = this.props;
-      clearUserTaskOrder();
-      this._orderColumn(0, "finalDate");
-    }
-  }
-
-
-  _orderColumn(orderTask, columnTask) {
+  _orderColumn(orderTask) {
+    const { orderColumn, mode } = this.props;
     if (orderTask === 1) {
       this.setState({ orderA: 'none', orderD: 'inline-block' });
     } else {
       this.setState({ orderA: 'inline-block', orderD: 'none' });
     }
-    const { tasksByClientFindServer, orderColumnUserTask, clearUserTaskPaginator } = this.props;
-    clearUserTaskPaginator();
-    orderColumnUserTask(orderTask, columnTask);
-    tasksByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, columnTask, orderTask, v1);
+    orderColumn(orderTask, mode);
   }
 
 
-  _renderCellView(data) {
-    const mensaje = "Señor usuario ¿está seguro que desea eliminar la tarea ";
+  _renderCellView = (data) => {
     return _.forOwn(data, function (value, key) {
-      var json1 = {
-        "messageHeader": {
-          "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-          "timestamp": new Date().getTime(),
-          "service": "",
-          "status": "0",
-          "language": "es",
-          "displayErrorMessage": "",
-          "technicalErrorMessage": "",
-          "applicationVersion": "",
-          "debug": true,
-          "isSuccessful": true
-        },
-        "messageBody": {
-          "clientId": window.sessionStorage.getItem('idClientSelected'),
-          "contactId": value.id,
-          "clientContactId": value.idClientContact
-        }
-      };
-      _.set(value, 'taskText', shorterStringValue(value.taskText, 50));
-      _.set(value, 'actions', {
+      _.set(value, 'actionsRedirect', {
         actionView: true,
-        id: value,
-        urlServer: "./component",
-        component: "VIEW_TASK_ADMIN"
+        id: value.id,
+        typeClickDetail: MODULE_TASKS,
+        urlRedirect: '/dashboard/task',
+        component: 'VIEW_TASK_ADMIN'
       });
-      var dateTaskFormat = moment(value.finalDate).locale('es');
+      let dateTaskFormat = moment(value.finalDate).locale('es');
       _.set(value, 'dateTaskFormat', dateTaskFormat.format("DD") + " " + dateTaskFormat.format("MMM") + " " + dateTaskFormat.format("YYYY"));
-      _.set(value, 'delete', {
-        actionDelete: true,
-        urlServer: "/deleteContactForClient",
-        typeDelete: "",
-        mensaje: mensaje + value.task + "?",
-        json: json1
-      });
+      _.set(value, "responsable", value.responsible);
+      _.set(value, "assignedBy", value.assignedBy);
+      _.set(value, "status", value.statusTask);
+      let isFinalized = value.statusTask === 'Cancelada' || value.statusTask === 'Cerrada';
+      _.set(value, "trafficLightIndicator", {days:value.workDaysToClose, isFinalized:isFinalized});
+      _.set(value, "commercialReport.isConfidential", value.confidentiality);
     });
-  }
+  };
 
-  _renderHeaders() {
+  _renderHeaders = () => {
     return [
       {
-        title: "",
-        key: "actions"
+        title: "Asignado por",
+        key: "assignedBy"
       },
       {
         title: "Responsable",
         key: "responsable"
       },
       {
-        title: "Asignado por",
-        key: "assignedBy"
+        title: "",
+        style:{width:"1px"},
+        key: "trafficLightIndicator"
       },
       {
         title: "Fecha de cierre",
         key: "dateTaskFormat",
+        style:{ width:"200px" },
         orderColumn: <span><i className="caret down icon" style={{ cursor: 'pointer', display: this.state.orderD }} onClick={() => this._orderColumn(0, "finalDate")}></i><i className="caret up icon" style={{ cursor: 'pointer', display: this.state.orderA }} onClick={() => this._orderColumn(1, "finalDate")}></i></span>
       },
       {
         title: "Estado",
+        style:{ width: "50px" },
         key: "status"
       },
       {
         title: "",
+        style:{ width:"50px" },
         key: "commercialReport.isConfidential"
+      },
+      {
+        title: "Ver",
+        style:{ width:"50px" },
+        key: "actionsRedirect"
       }
     ]
-  }
+  };
 
   render() {
-    const { tasksByClient } = this.props;
-    const modalTitle = 'Tarea';
-    const data = tasksByClient.get('userTasksByClient');
+    const { tasks } = this.props;
     return (
-      <div className="horizontal-scroll-wrapper" style={{ overflow: 'scroll' }}>
-        <GridComponent headers={this._renderHeaders} data={this._renderCellView(data)} modalTitle={modalTitle} />
+      <div >
+        <GridComponent headers={this._renderHeaders} data={this._renderCellView(tasks)} modalTitle={MODAL_TITLE} />
       </div>
     );
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    tasksByClientFindServer, orderColumnUserTask, clearUserTaskOrder, clearUserTaskPaginator
-  }, dispatch);
-}
-
-function mapStateToProps({ tasksByClient }, ownerProps) {
-  return {
-    tasksByClient
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ListPendingTaskComponent);
+export default ListPendingTaskComponent;
