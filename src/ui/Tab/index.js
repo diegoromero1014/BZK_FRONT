@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Label, Menu, Segment } from "semantic-ui-react";
+import { Label, Menu, Popup, Segment } from "semantic-ui-react";
 import PropTypes from "prop-types";
 import '../../../styles/tabs/main.scss';
 
@@ -31,28 +31,19 @@ class TabComponent extends Component {
       <div className="tabGenericComponent">
         <div style={{overflowX: 'auto'}}>
           <Menu pointing secondary>
-            {tabs.map(({name, number, disable, callback}) => (
-              <Menu.Item
-                name={name}
-                className="tabItem"
-                style={
-                  !disable
-                    ? {width: "250px"}
-                    : {backgroundColor: "rgba(0, 0, 0, 0.09)", width: "250px"}
-                }
-                onClick={() => {
-                  !disable ? this.handleItemClick(name, callback) : null;
-                }}
-                active={tabActive === name}
-              >
-                <div className="tabTextItem">{name}</div>
-                {number && number > 0 ? (
-                  <Label circular className={classNameColor}>
-                    {number}
-                  </Label>
-                ) : ""}
-              </Menu.Item>
-            ))}
+            {tabs.map(({name, number, disable, callback, tooltip}) =>
+              tooltip ? (
+                <Popup
+                  inverted
+                  style={{padding: "5px", opacity: 0.8}}
+                  content={tooltip}
+                  trigger={this.getTabHeader(name, number, disable, tabActive)}
+                  key={name}
+                ></Popup>
+              ) : (
+                this.getTabHeader(name, number, disable, tabActive, classNameColor, callback)
+              )
+            )}
           </Menu>
         </div>
         {this.getSegment(tabActive)}
@@ -60,11 +51,41 @@ class TabComponent extends Component {
     );
   };
 
+  getTabHeader = (name, number, disable, tabActive, classNameColor, callback) => {
+    return (
+      <Menu.Item
+        key={name}
+        name={name}
+        className="tabItem"
+        style={
+          !disable
+            ? {width: "250px"}
+            : {
+              backgroundColor: "rgba(0, 0, 0, 0.09)",
+              width: "250px"
+            }
+        }
+        onClick={() => {
+          !disable ? this.handleItemClick(name, callback) : null;
+        }}
+        active={tabActive === name}
+      >
+        <div className="tabTextItem">{name}</div>
+        {number && number > 0 ? (
+          <Label circular className={classNameColor}>
+            {number >= 100 ? "+99" : number}
+          </Label>
+        ) : (
+          ""
+        )}
+      </Menu.Item>
+    );
+  };
+
   getSegment = tabActive => {
     const {tabs} = this.props;
-
-    return tabs.filter(({name}) => name === tabActive).map(({content}) => <Segment
-      className={'generic-tab-segment'}>{content}</Segment>);
+    return tabs.filter(({name}) => name === tabActive)
+    .map(({content, name}) => <Segment key={name} className={'generic-tab-segment'}>{content}</Segment>);
   };
 
   render() {

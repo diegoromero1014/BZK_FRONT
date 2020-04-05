@@ -1,0 +1,20 @@
+.ui.progress .bar>.progress {
+    background-color: #005dbf;
+}
+.ui.active.progress .bar {
+    background-color: #005dbf;
+}
+#finalized-label{
+    border-radius: 25%;
+    width: 20px;
+    height: 20px;
+    background-color: #005dbf;
+
+} 
+#pending-label{
+    border-radius: 25%;
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    background-color: #E5E5E5;
+}

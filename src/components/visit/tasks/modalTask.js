@@ -18,7 +18,7 @@ import {swtShowMessage} from "../../sweetAlertMessages/actions";
 
 import {fields, validations as validate} from './rulesAndFieldsTaskVisit';
 import CommentsComponent from "../../globalComponents/comments/commentsComponent";
-import {fillComments, getCurrentComments} from "../../globalComponents/comments/actions";
+import {fillComments} from "../../globalComponents/comments/actions";
 import {REQUEST_SUCCESS} from "../../../constantsGlobal";
 import {getTaskNotesByUserTaskId, saveTaskNote} from "../../pendingTask/createPendingTask/actions";
 
@@ -168,7 +168,8 @@ export class ModalTask extends Component {
     }
 
     saveTaskComment = async (comment) => {
-        const { dispatchSaveTaskNote } = this.props;
+        const { dispatchSaveTaskNote, visitReducer } = this.props;
+        comment.shouldNotifyMentions = visitReducer.get('detailVisit').data.documentStatus;
         await dispatchSaveTaskNote(comment);
         await this.getTaskNotesByUserTaskId();
     };
@@ -283,13 +284,14 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({tasks, selectsReducer, participants, commentsReducer}, {taskEdit}) {
+function mapStateToProps({tasks, selectsReducer, participants, commentsReducer, visitReducer}, {taskEdit}) {
     if (taskEdit !== undefined) {
         return {
             participants,
             tasks,
             selectsReducer,
             commentsReducer,
+            visitReducer,
             initialValues: {
                 idEmployee: taskEdit.idResponsable,
                 responsable: taskEdit.responsable,
@@ -304,6 +306,7 @@ function mapStateToProps({tasks, selectsReducer, participants, commentsReducer},
             tasks,
             selectsReducer,
             commentsReducer,
+            visitReducer,
             initialValues: {
                 idEmployee: '',
                 responsable: '',

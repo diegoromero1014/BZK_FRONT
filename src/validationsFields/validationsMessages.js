@@ -26,6 +26,7 @@ export const MESSAGE_WARNING_COMPANY_OTHER_PARTICIPANT = "Solo se permiten valor
 export const MESSAGE_WARNING_PLACE_OF_PREVISIT = "Solo se permiten valores alfanuméricos y & /\\,;.#\"\"";
 export const MESSAGE_WARNING_RANGE = (min, max) => "Solo se permiten valores entre " + min + " y " + max;
 export const MESSAGE_WARNING_FORBIDDEN_CHARACTER = "No se permiten textos que inicien con los siguientes caracteres: = + - @";
+export const MESSAGE_WARNING_FORBIDDEN_CHARACTER_COMMENT = "No se permiten textos que inicien con los siguientes caracteres: = + -";
 export const MESSAGE_WARNING_FORBIDDEN_CHARACTER_PREFIX = "Solo se permiten";
 export const MESSAGE_WARNING_NUMBER_LENGTH = length => "Solo se permiten números de maximo " + length + " digitos";
 export const MESSAGE_WARNING_OTHER_REASON = "Solo se permiten valores alfanuméricos y ;,.-\"\"!()$%&/¿?°#=¡':´+[]_";

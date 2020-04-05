@@ -1,27 +1,36 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
-import {Comment, Form, Header} from 'semantic-ui-react'
+import {Comment, Form, Header, Loader} from 'semantic-ui-react'
 import {Row} from 'react-flexbox-grid';
-import Col from 'react-flexbox-grid/lib/components/Col';
-import CommentsAvatar from './commentsAvatar';
 import moment from 'moment';
+import Col from 'react-flexbox-grid/lib/components/Col';
 import {Mention, MentionsInput} from 'react-mentions';
 import {bindActionCreators} from "redux";
-import {filterUsersBanco} from "../../participantsVisitPre/actions";
 import {Subject} from "rxjs";
-import {addCommentToList, clearComments, createComment} from "./actions";
 import _ from "lodash";
+
+import CommentsAvatar from './commentsAvatar';
+import Tooltip from "../../toolTip/toolTipComponent";
+
+import {filterUsersBanco} from "../../participantsVisitPre/actions";
+import {addCommentToList, clearComments} from "./actions";
 import {swtShowMessage} from "../../sweetAlertMessages/actions";
 import {getUsernameInitials} from "../../../functions";
-import TextArea from "../../../ui/textarea/textareaComponent";
-import {ERROR_COMMENT_LENGTH, MAX_LENGTH_USER_TASK_COMMENT, NO_NOTES_MESSAGE} from "./constants";
+
 import {
-    patternOfForbiddenCharacter2,
-    patternOfTaskObservation
+    ERROR_COMMENT_LENGTH,
+    MAX_LENGTH_USER_TASK_COMMENT,
+    NO_NOTES_MESSAGE,
+    TASK_COMMENT_HELP_MESSAGE
+} from "./constants";
+import {
+    patternOfForbiddenCharacterComments,
+    patternOfTaskComments
 } from "../../../validationsFields/patternsToValidateField";
 import {
     MESSAGE_ERROR_INJECTION_HTML,
-    MESSAGE_WARNING_FORBIDDEN_CHARACTER, MESSAGE_WARNING_MAX_LENGTH,
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER, MESSAGE_WARNING_FORBIDDEN_CHARACTER_COMMENT,
+    MESSAGE_WARNING_MAX_LENGTH,
     MESSAGE_WARNING_TASK_OBSERVATIONS
 } from "../../../validationsFields/validationsMessages";
 import {validateHtmlInjection} from "../../../validationsFields/rulesField";
@@ -37,7 +46,9 @@ export class CommentsComponent extends Component {
             commentReply: '',
             comment: '',
             showNewCommentError: null,
-            showReplyCommentError: null
+            showReplyCommentError: null,
+            showNewCommentLoader: false,
+            showReplyCommentLoader: false
         }
     }
 
@@ -114,11 +125,11 @@ export class CommentsComponent extends Component {
             if(content.length > MAX_LENGTH_USER_TASK_COMMENT){
                 this.showContentError(content, source, MESSAGE_WARNING_MAX_LENGTH(MAX_LENGTH_USER_TASK_COMMENT));
                 return false;
-            }else if (!content.match(patternOfTaskObservation)) {
+            } else if (!content.match(patternOfTaskComments)) {
                 this.showContentError(content, source, MESSAGE_WARNING_TASK_OBSERVATIONS);
                 return false;
-            } else if (!content.match(patternOfForbiddenCharacter2)) {
-                this.showContentError(content, source, MESSAGE_WARNING_FORBIDDEN_CHARACTER);
+            } else if (!content.match(patternOfForbiddenCharacterComments)) {
+                this.showContentError(content, source, MESSAGE_WARNING_FORBIDDEN_CHARACTER_COMMENT);
                 return false;
             }else if(!validateHtmlInjection(content)){
                 this.showContentError(content, source, MESSAGE_ERROR_INJECTION_HTML);
@@ -135,6 +146,13 @@ export class CommentsComponent extends Component {
             this.setState({ showNewCommentError: error });
         else
             this.setState({ showReplyCommentError: error });
+    };
+
+    showHideLoadingAddComment = (show, source) => {
+        if(source === 'new')
+            this.setState({ showNewCommentLoader: show });
+        else
+            this.setState({ showReplyCommentLoader: show });
     };
 
     addComment = async (e, parentCommentId, content, source) => {
@@ -159,7 +177,9 @@ export class CommentsComponent extends Component {
         e.preventDefault();
         if(this.validateCommentContent(content, source)){
             if(reportId != null){
+                this.showHideLoadingAddComment(true, source);
                 await saveCommentAction(comment);
+                this.showHideLoadingAddComment(false, source);
             }else{
                 dispatchAddCommentList(comment);
             }
@@ -174,16 +194,18 @@ export class CommentsComponent extends Component {
 
     renderCommentContent = (content) => {
         const regexInitialTag = new RegExp('@\\[', 'g');
-        const regexEndTag = new RegExp('\\]\\([\\d]*\\)', 'g');
+        const regexEndTag = new RegExp('\\|\\d+\\]', 'g');
+        const regexLineBreaks = new RegExp('(?:\\r\\n|\\r|\\n|\\↵)', 'g');
         content = _.replace(content, regexInitialTag, '<b>');
         content = _.replace(content, regexEndTag, '</b>');
+        content = _.replace(content, regexLineBreaks, '<br>');
         return (
             <div dangerouslySetInnerHTML={{__html: content}}/>
         )
     };
 
     renderComments = (comments) => {
-        const { showReplyCommentError } = this.state;
+        const { showReplyCommentError, showReplyCommentLoader } = this.state;
         const { disabled } = this.props;
         return comments.map(({ id, initials, author, createdTimestamp, content, replies }) =>
             <Comment key={id}>
@@ -202,21 +224,21 @@ export class CommentsComponent extends Component {
                     <Form reply style={{ display: id && this.state.commentBeingReplied === id ? 'block' : 'none', paddingLeft: 60 }}>
                         <Row>
                             <Col xs={12} md={12} ld={12} className="commentTextArea">
-                                {/*<MentionsInput value={this.state.commentReply} onChange={event => this.handleChange(event, 'reply')} className="mentions">
+                                <MentionsInput
+                                    value={this.state.commentReply}
+                                    nameInput="commentReply"
+                                    onChange={event => this.handleChange(event, 'reply')}
+                                    className="mentions"
+                                    disabled={disabled && 'disabled'}
+                                    style={{backgroundColor: disabled ? '#f3f3f3' : 'transparent'}}
+                                    placeholder="Escribe aquí tu respuesta">
                                     <Mention
                                         trigger="@"
                                         data={this.fetchUsers}
                                         className="mentions__mention"
+                                        markup="@[__display__|__id__]"
                                     />
-                                </MentionsInput>*/}
-                                <TextArea
-                                    onChangeEvent={event => this.handleChange(event, 'reply')}
-                                    nameInput="commentReply"
-                                    value={this.state.commentReply}
-                                    placeholder="Escribe tú respuesta"
-                                    rows={7}
-                                    max="340"
-                                />
+                                </MentionsInput>
                                 {showReplyCommentError &&
                                 <div>
                                     <div className="ui pointing red basic label">
@@ -228,7 +250,10 @@ export class CommentsComponent extends Component {
                         </Row>
                         <Row style={{ marginTop: 10 }}>
                             <Col xs={12} md={12} ld={12}>
-                                <button id={`replyCommentButton${id}`} className="btn btn-primary" style={{ float: 'right' }} onClick={e => this.addComment(e, id, this.state.commentReply, 'reply')}>Responder</button>
+                                <div style={{ float: 'right' }}>
+                                    {showReplyCommentLoader && <Loader active inline style={{marginRight: 15}}></Loader>}
+                                    <button id={`replyCommentButton${id}`} className="btn btn-primary" onClick={e => this.addComment(e, id, this.state.commentReply, 'reply')}>Responder</button>
+                                </div>
                             </Col>
                         </Row>
                     </Form>
@@ -244,15 +269,24 @@ export class CommentsComponent extends Component {
 
     render() {
         const { header, commentsReducer: { comments }, disabled } = this.props;
-        const { showNewCommentError } = this.state;
+        const { showNewCommentError, showNewCommentLoader } = this.state;
         return (
             <div style={{maxWidth: '100%'}}>
                 <Comment.Group style={{ width: '100%', margin: 0, maxWidth: '100%' }}>
-                    {header &&
-                    <Header as='p' dividing style={{ minHeight: 30 }}>
-                        {header}
-                    </Header>
-                    }
+                    <div style={{position: 'relative'}}>
+                        <div style={{position: 'absolute', top: '0.2em', left: '3.2em'}}>
+                            <Tooltip text={TASK_COMMENT_HELP_MESSAGE}>
+                                <i className="help circle icon blue" style={{fontSize: "16px", cursor: "pointer", marginLeft: "10px"}}/>
+                            </Tooltip>
+                        </div>
+                        <div>
+                            {header &&
+                            <Header as='p' dividing style={{ minHeight: 30 }}>
+                                {header}
+                            </Header>
+                            }
+                        </div>
+                    </div>
                     <br></br>
                     {comments && comments.length ? this.renderComments(comments) :
                         <p style={{fontStyle: 'italic',
@@ -262,22 +296,21 @@ export class CommentsComponent extends Component {
                     <Form reply>
                         <Row>
                             <Col xs={12} md={12} lg={12}>
-                                {/*<MentionsInput value={this.state.comment} onChange={event => this.handleChange(event, 'new')} className="mentions" placeholder="Escribe aquí tu nota">
+                                <MentionsInput
+                                    value={this.state.comment}
+                                    nameInput="comment"
+                                    onChange={event => this.handleChange(event, 'new')}
+                                    className="mentions"
+                                    placeholder="Escribe aquí tu nota"
+                                    disabled={disabled && 'disabled'}
+                                    style={{backgroundColor: disabled ? '#f3f3f3' : 'transparent'}}>
                                     <Mention
                                         trigger="@"
                                         data={this.fetchUsers}
                                         className="mentions__mention"
+                                        markup="@[__display__|__id__]"
                                     />
-                                </MentionsInput>*/}
-                                <TextArea
-                                    disabled={disabled && 'disabled'}
-                                    onChangeEvent={event => this.handleChange(event, 'new')}
-                                    nameInput="comment"
-                                    value={this.state.comment}
-                                    placeholder="Escribe tú nota"
-                                    rows={7}
-                                    max="340"
-                                />
+                                </MentionsInput>
                                 {showNewCommentError &&
                                 <div>
                                     <div className="ui pointing red basic label">
@@ -289,8 +322,11 @@ export class CommentsComponent extends Component {
                         </Row>
                         <Row style={{ margin: '10px 0 0 0' }}>
                             <Col xs={12} md={12} lg={12}>
-                                <button id="addCommentButton" className="btn btn-primary" style={{ float: 'right' }} onClick={e => this.addComment(e,null, this.state.comment, 'new')}
-                                        disabled={disabled && 'disabled'}>Agregar nota</button>
+                                <div style={{ float: 'right' }}>
+                                    {showNewCommentLoader && <Loader active inline style={{marginRight: 15}}></Loader> }
+                                    <button id="addCommentButton" className="btn btn-primary" onClick={e => this.addComment(e,null, this.state.comment, 'new')}
+                                            disabled={disabled && 'disabled'}>Agregar nota</button>
+                                </div>
                             </Col>
                         </Row>
                     </Form>

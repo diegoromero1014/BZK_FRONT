@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect, Route } from "react-router";
 import { Grid } from "react-flexbox-grid";
+
 import LoginComponent from "./components/login/component";
 import MainComponent from "./components/main/mainComponent";
 import ManagementView from "./components/managementView";
@@ -16,7 +17,6 @@ import BusinessPlan from "./components/businessPlan/createBusinessPlan/createBus
 import EditBusinessPlan from "./components/businessPlan/editBusinessPlan/editBusinessPlan";
 import AdminAlertClientsPendingUpdate from "./components/alertPendingUpdateClient/pendingUpdateClientComponent";
 import AdminAlertClientsPortfolioExpiration from "./components/alertPortfolioExpirtation/portfolioExpirationAlertComponent";
-import ModalComponentPending from "./components/myPendings/myTasks/modalComponentPending";
 import ModalDraftDocuments from "./components/myPendings/draftDocuments/modalDraftDocuments";
 import ViewAlerts from "./components/alerts/alertsComponent";
 import AlertCovenants from "./components/alertCovenants/alertCovenantComponent";
@@ -28,7 +28,6 @@ import ClientsContactsDetails from "./components/filterContact/detailsClientsCon
 import ContactByFunctionOrTypeComponent from "./components/contactByFunctionOrType/ContactByFunctionOrTypeComponent";
 import AEC from "./components/myPendings/AEC/componentAEC";
 import FavoritesGroup from "./components/contact/favoritesGroup/createEdit/favoritesGroupComponent";
-import Assigned from "./components/myPendings/assigned/componentAssigned";
 import StudyCredit from "./components/clients/creditStudy/componentCreditStudy";
 import Transactional from "./components/transactional/transactionalComponent";
 import WalletShare from "./components/transactional/walletShareComponent";
@@ -39,14 +38,16 @@ import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderCo
 import PageNotFound from "./components/notFoundPage/PageNotFound";
 import PrevisitPage from "./components/previsita/previsitPage";
 import TaskPage from "./components/pendingTask/taskPage";
+import MyTaskPage from "./components/myTasks/myTaskPage";
 
 
-import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP, 
-    CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST, 
-    LINKINGREQUESTS, MODALDRAFTDOCUMENTS, MODALCOMPONENTPENDING, ALERTCOVENANTS, 
-    ADMINALERTCLIENTSPORTFOLIOEXPIRATION, EDITBUSINESSPLAN, BUSINESSPLAN, 
-    EDITFORMPIPELINE, CREATEFORMPIPELINE, VISITEDIT, VISIT, EDITPREVISITA, 
-    PREVISITA, CLIENTCERTIFY, CLIENTSFIND, CLIENTEDIT, CREATEPROPSPECT, STUDYCREDIT, 
+import {
+    BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP,
+    CONTACTBYFUNCTIONORTYPECOMPONENT, CLIENTSCONTACTSDETAILS, FINDCONTACTS, ALERTBLACKLIST,
+    LINKINGREQUESTS, MODALDRAFTDOCUMENTS, MODALCOMPONENTPENDING, ALERTCOVENANTS,
+    ADMINALERTCLIENTSPORTFOLIOEXPIRATION, EDITBUSINESSPLAN, BUSINESSPLAN,
+    EDITFORMPIPELINE, CREATEFORMPIPELINE, VISITEDIT, VISIT, EDITPREVISITA,
+    PREVISITA, CLIENTCERTIFY, CLIENTSFIND, CLIENTEDIT, CREATEPROPSPECT, STUDYCREDIT,
     COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, MANAGEMENTVIEW,
     LOGINCOMPONENT,     
     LoginComponentURL,
@@ -88,7 +89,9 @@ import { BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP
     VIEWALERT,
     ADMINALERTCLIENTSPENDINGUPDATE,
     SHEDULER,
-    DEFAULT
+    DEFAULT,
+    MyTasksPageUrl,
+    MyTasksPage
 } from "./constantsAnalytics";
 
 
@@ -184,6 +187,8 @@ class App extends Component {
                 return CONTROLDASHBOARD;
             case ShedulerURL:
                 return SHEDULER;
+            case MyTasksPageUrl:
+                return MyTasksPage;
             default:
                 return DEFAULT;
         }
@@ -229,11 +234,10 @@ export default (
                 <Route path="alertClientPendingUpdate" component={AdminAlertClientsPendingUpdate}></Route>
                 <Route path="alertClientsPortfolioExpiration" component={AdminAlertClientsPortfolioExpiration}></Route>
                 <Route path="alertCovenants" component={AlertCovenants}></Route>
+                <Route path="myTask" component={MyTaskPage}/>
                 <Route path="myPendings">
-                    <Route path="myTasks" component={ModalComponentPending}></Route>
                     <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
                     <Route path="AEC" component={AEC} key="AEC"></Route>
-                    <Route path="assigned" component={Assigned}></Route>
                     <Route path="linkingRequests" component={LinkingRequests}></Route>
                 </Route>
                 <Route path="alerts" component={ViewAlerts}></Route>

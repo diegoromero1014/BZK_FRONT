@@ -68,6 +68,7 @@ class DownloadTask extends Component {
 	}
 
 	_downloadTask() {
+		debugger;
 		const { fields: { initialValidityDate, finalValidityDate, taskStatus }, changeStateSaveData, getXlsTask, swtShowMessage, itemSeletedModal } = this.props;
 		let errorInForm = false;
 
