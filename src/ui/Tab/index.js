@@ -13,8 +13,11 @@ class TabComponent extends Component {
     }
 
     componentDidMount() {
-        const { name } = this.props.tabs[0];
-        this.setState({ tabActive: name });
+        const { tabs } = this.props;
+
+        if(Array.isArray(tabs) && tabs.length) {
+            this.setState({ tabActive: tabs[0].name });
+        }
     }
 
     handleItemClick = (name, callback) => {
@@ -31,8 +34,9 @@ class TabComponent extends Component {
             <div className="tabGenericComponent">
                 <div style={{ overflowX: 'auto' }}>
                     <Menu pointing secondary>
-                        {tabs.map(({ name, number, disable, callback, className }) => (
+                        {tabs.map(({ name, number, disable, callback, className }, index) => (
                             <Menu.Item
+                                key={index}
                                 name={name}
                                 className={`tabItem ${className} ${disable ? 'disable-tab' : ''}`}
                                 onClick={() => {
@@ -58,7 +62,7 @@ class TabComponent extends Component {
     getSegment = tabActive => {
         const { tabs } = this.props;
 
-        return tabs.filter(({ name }) => name === tabActive).map(({ content }) => <Segment className={'generic-tab-segment'}>{content}</Segment>);
+        return tabs.filter(({ name }) => name === tabActive).map(({ content }, index) => <Segment key={index} className={'generic-tab-segment'}>{content}</Segment>);
     };
 
     render() {

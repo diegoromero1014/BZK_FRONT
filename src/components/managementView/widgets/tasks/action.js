@@ -1,18 +1,16 @@
 import axios from 'axios';
+import moment from "moment";
 import { TASK_BOARD_VALUES } from './constants';
 import { APP_URL } from '../../../../constantsGlobal';
 
 const getBody = () => ({
-    "messageHeader": {
-        "sessionToken": window.localStorage.getItem('sessionTokenFront')
+    messageHeader: {
+        sessionToken: window.localStorage.getItem('sessionTokenFront')
     },
-    "messageBody": {
-        "filter": {
-            "users": [
-                1
-            ],
-            "createDateFrom": 1577985328040,
-            "createDateTo": 1585847728188
+    messageBody: {
+        filter: {
+            createDateFrom: moment(moment().subtract(3, 'months'), "DD/MM/YYYY").toDate().getTime(),
+            createDateTo: moment(moment(), "DD/MM/YYYY").toDate().getTime()
         }
     }
 });

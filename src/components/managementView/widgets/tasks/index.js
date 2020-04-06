@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { MY_TASKS, ASSIGNED_TASKS } from './constants';
 import MyTask from './MyTask';
 import AssignedTasks from './AssignedTasks';
-
+import { getTaskBoardValues } from './action';
 import '../../../../../styles/board/widgets/tasks/main.scss';
 
 class Task extends Component {
@@ -14,51 +14,67 @@ class Task extends Component {
         super(props);
 
         this.state = {
-            tabs: []
+            tabs: [],
+            tabName: MY_TASKS
         }
     }
 
     async componentWillMount() {
-        const { assignedTasks, myTask } = this.props;
-
-        await this.setState({
-            tabs: [
-                {
-                    name: MY_TASKS,
-                    content: <MyTask tasks={[myTask.finished, myTask.pending]} />,
-                    number: myTask.total,
-                    className: 'tasks-tab',
-                    callback: name => console.log(name)
-                },
-                {
-                    name: ASSIGNED_TASKS,
-                    content: <AssignedTasks tasks={[assignedTasks.finished, assignedTasks.pending]} />,
-                    number: assignedTasks.total,
-                    className: 'tasks-tab',
-                    callback: name => console.log(name)
-                }
-            ]
-        });
+        await this.handleDispatchAction();
     }
 
-    render() {
+    handleDispatchAction = async () => {
+        const { dispatchGetTaskBoardValues } = this.props;
+        await dispatchGetTaskBoardValues();
+    }
+
+    handleChangeTab = tabName => {
+        this.setState({ tabName });
+        this.handleDispatchAction();
+    }
+
+    handleRenderTabs = () => {
+        const { assignedCounter, myTaskCounter } = this.props;
+
+        const tabs = [
+            {
+                name: MY_TASKS,
+                content: <MyTask tasks={[myTaskCounter.finished, myTaskCounter.pending]} />,
+                number: myTaskCounter.total,
+                className: 'tasks-tab',
+                callback: this.handleChangeTab
+            },
+            {
+                name: ASSIGNED_TASKS,
+                content: <AssignedTasks tasks={[assignedCounter.finished, assignedCounter.pending]} />,
+                number: assignedCounter.total,
+                className: 'tasks-tab',
+                callback: this.handleChangeTab
+            }
+        ];
+
         return (
             <div style={{ width: '45%', height: '100%' }}>
                 <h3>TAREAS</h3>
                 <div className={'dashboard-tasks-container'} >
-                    <Tabs tabs={this.state.tabs} />
+                    <Tabs tabs={tabs} />
                 </div>
             </div>
         );
     }
+
+    render() {
+        return this.handleRenderTabs();
+    }
 }
 
-const mapStateToProps = ({ boardTaskReducer: { assignedTasks, myTask } }) => ({
-    assignedTasks,
-    myTask
+const mapStateToProps = ({ boardTaskReducer: { assignedCounter, myTaskCounter } }) => ({
+    assignedCounter,
+    myTaskCounter
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
+    dispatchGetTaskBoardValues: getTaskBoardValues
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Task);
