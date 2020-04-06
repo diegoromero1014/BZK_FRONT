@@ -3,7 +3,7 @@ import configureStore from '../store/store';
 import { RANGO_PASO_PRODUCCION } from '../constantsParameters'
 import { redirectUrl } from '../components/globalComponents/actions';
 import { consultParameterServer } from '../actionsGlobal';
-import { validateUpgrateProductionActive } from '../components/dashboard/actions';
+import { validateUpgrateProductionActive } from '../components/main/actions';
 
 
 let interval;

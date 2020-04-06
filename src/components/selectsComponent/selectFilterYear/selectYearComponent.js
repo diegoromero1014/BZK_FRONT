@@ -30,7 +30,7 @@ class SelectYearComponent extends Component{
       }
       return(
           <Combobox
-              style = {{height: '30px',float: 'left',margin: '4px'}}
+              style = {{height: '30px',float: 'left',margin: '12px 0px', width: '100%'}}
               id="year"
               valueField='id'
               textField='value'

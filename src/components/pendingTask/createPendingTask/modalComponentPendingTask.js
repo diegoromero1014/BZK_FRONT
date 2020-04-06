@@ -10,7 +10,7 @@ import { clearUserTaskCreate, clearUserTaskOrder, tasksByClientFindServer } from
 import { getMasterDataFields } from "../../selectsComponent/actions";
 import Textarea from "../../../ui/textarea/textareaComponent";
 import DateTimePickerUi from "../../../ui/dateTimePicker/dateTimePickerComponent";
-import { changeStateSaveData } from "../../dashboard/actions";
+import { changeStateSaveData } from "../../main/actions";
 import { NUMBER_RECORDS } from "../constants";
 import { MESSAGE_SAVE_DATA, REQUEST_SUCCESS, REQUEST_INVALID_INPUT } from "../../../constantsGlobal";
 import { TASK_STATUS } from "../../selectsComponent/constants";

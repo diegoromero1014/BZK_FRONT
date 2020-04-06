@@ -29,11 +29,11 @@ import areaReducer from '../components/businessPlan/area/reducer';
 import tasksByClientReducer from '../components/pendingTask/reducer';
 import tabReducer from '../components/clientDetailsInfo/reducer';
 import taskReducerCreate from '../components/pendingTask/createPendingTask/reducer';
-import viewManagementReducer from '../components/viewManagement/reducer';
+import viewManagementReducer from '../components/managementView/reducer';
 import teamParticipantsReducer from '../components/clientTeam/reducer';
 import businessPlanReducer from '../components/businessPlan/reducer';
 import clientEconomicGroupReducer from '../components/clientEconomicGroup/reducer';
-import dashboardReducer from '../components/dashboard/reducer';
+import mainReducer from '../components/main/reducer';
 import clientProductReducer from '../components/clientEdit/products/reducer';
 import myPendingsReducer from '../components/myPendings/myTasks/reducer';
 import draftDocumentsReducer from '../components/myPendings/draftDocuments/reducer';
@@ -73,6 +73,7 @@ import fieldListReducer from '../components/fieldList/reducer';
 import questionsReducer from '../components/challenger/reducer';
 import objectListReducer from "../components/listaObjetos/reducer";
 import elementsReducer from "../components/elements/reducer";
+import outdatedContacts from "../components/managementView/widgets/alerts/reducer";
 
 export default combineReducers({
     routing: routerReducer,
@@ -108,7 +109,7 @@ export default combineReducers({
     teamParticipantsReducer: teamParticipantsReducer,
     businessPlanReducer: businessPlanReducer,
     clientEconomicGroupReducer: clientEconomicGroupReducer,
-    dashboardReducer: dashboardReducer,
+    mainReducer: mainReducer,
     clientProductReducer: clientProductReducer,
     reducerGlobal: reducerGlobal,
     alerts: alertsReducer,
@@ -148,5 +149,6 @@ export default combineReducers({
     fieldListReducer,
     questionsReducer,
     objectListReducer,
-    elementsReducer
+    elementsReducer,
+    outdatedContacts
 });

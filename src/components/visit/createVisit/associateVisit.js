@@ -14,7 +14,7 @@ import SweetAlert from '../../sweetalertFocus';
 import { Button, Icon } from 'semantic-ui-react'
 import moment from 'moment';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { changeStateSaveData } from "../../dashboard/actions";
+import { changeStateSaveData } from "../../main/actions";
 import _ from 'lodash';
 import ConfidentialBrandComponent from '../../commercialReport/ConfidentialBrandComponent';
 

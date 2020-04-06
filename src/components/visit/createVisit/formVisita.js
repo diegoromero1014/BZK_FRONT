@@ -24,7 +24,7 @@ import { downloadFilePdf } from "../../clientInformation/actions";
 import { consultParameterServer, formValidateKeyEnter, nonValidateEnter, validateValueExist, validateIsNullOrUndefined } from "../../../actionsGlobal";
 import { detailPrevisit } from "../../previsita/actions";
 import { addParticipant, clearParticipants } from "../../participantsVisitPre/actions";
-import { changeStateSaveData } from "../../dashboard/actions";
+import { changeStateSaveData } from "../../main/actions";
 
 import { VISIT_TYPE } from "../../selectsComponent/constants";
 import { KEY_TYPE_VISIT } from "../constants";

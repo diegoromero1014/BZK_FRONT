@@ -15,7 +15,7 @@ import moment from 'moment';
 import { consultList, getMasterDataFields } from '../../selectsComponent/actions';
 import { clientsByEconomicGroup, getAllteams, updateCheckEconomicGroup, updateTeamClients } from '../actions';
 import { consultParameterServer, validateResponse } from '../../../actionsGlobal';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { consultInfoClient } from '../../clientInformation/actions';
 

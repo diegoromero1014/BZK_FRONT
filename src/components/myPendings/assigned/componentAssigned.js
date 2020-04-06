@@ -28,7 +28,7 @@ import {Dropdown} from 'semantic-ui-react'
 import {getMasterDataFields} from '../../selectsComponent/actions';
 import {TASK_STATUS} from '../../selectsComponent/constants';
 import {APP_URL, MODULE_TASKS, DESCARGAR, MESSAGE_DOWNLOAD_DATA} from '../../../constantsGlobal';
-import {changeStateSaveData} from '../../dashboard/actions';
+import {changeStateSaveData} from '../../main/actions';
 import Tooltip from "../../toolTip/toolTipComponent";
 
 const fields = ['stateTask', 'trafficLight', 'keywordClient'];

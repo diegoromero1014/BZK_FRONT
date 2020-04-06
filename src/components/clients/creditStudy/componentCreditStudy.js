@@ -24,7 +24,7 @@ import { updateTitleNavBar } from '../../navBar/actions';
 import * as globalActions from '../../globalComponents/actions';
 import { consultListWithParameterUbication, getMasterDataFields } from '../../selectsComponent/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import { showLoading } from "../../loading/actions";
 import {
     existsPDFforTheSameDay,
