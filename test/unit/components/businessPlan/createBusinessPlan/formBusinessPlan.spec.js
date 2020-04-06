@@ -25,8 +25,8 @@ const setConfidential = () => { };
 const consultParameterServer = () => { };
 const changeStateSaveData = () => {};
 
-const dataPromise = {payload: { data: { status: 200, validateLogin: true, data: { objective: "", opportunitiesAndThreats: "", initialValidityDate: "",
-                            initialValidityDate: "", finalValidityDate: "", clientNeedFulfillmentPlan: "", relatedInternalParties: "", 
+const dataPromise = {payload: { data: { status: 200, validateLogin: true, data: { objective: "", opportunitiesAndThreats: "",
+                            finalValidityDate: "", clientNeedFulfillmentPlan: "", relatedInternalParties: "",
                             commercialReport: { isConfidential: "", usersWithPermission: "" },
                             parameter: ""
                     } } }};

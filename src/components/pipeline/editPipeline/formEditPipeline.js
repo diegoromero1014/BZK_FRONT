@@ -12,7 +12,6 @@ import Input from "../../../ui/input/inputComponent";
 import ComboBox from "../../../ui/comboBox/comboBoxComponent";
 import ComboBoxFilter from "../../../ui/comboBoxFilter/comboBoxFilter";
 import SweetAlert from "../../sweetalertFocus";
-import HeaderPipeline from "../headerPipeline";
 import { addBusiness, clearBusiness, editBusiness } from "../business/ducks";
 import Business from "../business/business";
 import RichText from '../../richText/richTextComponent';
@@ -93,6 +92,7 @@ import PermissionUserReports from "../../commercialReport/permissionsUserReports
 import Classification from '../sections/classification';
 import '../pipeline.style.scss';
 import TextareaComponent from "../../../ui/textarea/textareaComponent";
+import ReportsHeader from "../../globalComponents/reportsHeader/component";
 
 let thisForm;
 let typeButtonClick = null;
@@ -998,7 +998,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
             return (
                 <div>
-                    {origin !== ORIGIN_PIPELIN_BUSINESS && <HeaderPipeline />}
+                    {origin !== ORIGIN_PIPELIN_BUSINESS && <ReportsHeader/>}
                     <form onSubmit={handleSubmit(this._submitEditPipeline)}
                         onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
                         className="my-custom-tab"
