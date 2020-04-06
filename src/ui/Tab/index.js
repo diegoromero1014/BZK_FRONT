@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Segment, Label, Menu, Popup } from "semantic-ui-react";
+import { Label, Menu, Popup, Segment } from "semantic-ui-react";
 import PropTypes from "prop-types";
+import '../../../styles/tabs/main.scss';
 
 class TabComponent extends Component {
   constructor(props) {
@@ -12,12 +13,45 @@ class TabComponent extends Component {
   }
 
   componentDidMount() {
-    const { name } = this.props.tabs[0];
-    this.setState({ tabActive: name });
+    const {name} = this.props.tabs[0];
+    this.setState({tabActive: name});
   }
 
-  handleItemClick = name => this.setState({ tabActive: name });
-  getTabHeader = (name, number, disable, tabActive) => {
+  handleItemClick = (name, callback) => {
+    this.setState({tabActive: name});
+
+    if (callback) {
+      callback(name);
+    }
+  };
+
+  getMenu = tabActive => {
+    const {tabs, classNameColor = 'blue'} = this.props;
+    return (
+      <div className="tabGenericComponent">
+        <div style={{overflowX: 'auto'}}>
+          <Menu pointing secondary>
+            {tabs.map(({name, number, disable, callback, tooltip}) =>
+              tooltip ? (
+                <Popup
+                  inverted
+                  style={{padding: "5px", opacity: 0.8}}
+                  content={tooltip}
+                  trigger={this.getTabHeader(name, number, disable, tabActive)}
+                  key={name}
+                ></Popup>
+              ) : (
+                this.getTabHeader(name, number, disable, tabActive, classNameColor, callback)
+              )
+            )}
+          </Menu>
+        </div>
+        {this.getSegment(tabActive)}
+      </div>
+    );
+  };
+
+  getTabHeader = (name, number, disable, tabActive, classNameColor, callback) => {
     return (
       <Menu.Item
         key={name}
@@ -25,20 +59,20 @@ class TabComponent extends Component {
         className="tabItem"
         style={
           !disable
-            ? { width: "250px" }
+            ? {width: "250px"}
             : {
-                backgroundColor: "rgba(0, 0, 0, 0.09)",
-                width: "250px"
-              }
+              backgroundColor: "rgba(0, 0, 0, 0.09)",
+              width: "250px"
+            }
         }
         onClick={() => {
-          !disable ? this.handleItemClick(name) : null;
+          !disable ? this.handleItemClick(name, callback) : null;
         }}
         active={tabActive === name}
       >
         <div className="tabTextItem">{name}</div>
         {number && number > 0 ? (
-          <Label circular color="red">
+          <Label circular className={classNameColor}>
             {number >= 100 ? "+99" : number}
           </Label>
         ) : (
@@ -47,36 +81,13 @@ class TabComponent extends Component {
       </Menu.Item>
     );
   };
-  getMenu = tabActive => {
-    const { tabs } = this.props;
-    return (
-      <div className="tabGenericComponent">
-        <Menu pointing secondary>
-          {tabs.map(({ name, number, disable, tooltip }) =>
-            tooltip ? (
-              <Popup
-                inverted
-                style={{ padding: "5px", opacity: 0.8 }}
-                content={tooltip}
-                trigger={this.getTabHeader(name, number, disable, tabActive)}
-                key={name}
-              ></Popup>
-            ) : (
-              this.getTabHeader(name, number, disable, tabActive)
-            )
-          )}
-        </Menu>
-        {this.getSegment(tabActive)}
-      </div>
-    );
-  };
 
   getSegment = tabActive => {
-    const { tabs } = this.props;
-    return tabs
-      .filter(({ name }) => name === tabActive)
-      .map(({ content, name }) => <Segment key={name}>{content}</Segment>);
+    const {tabs} = this.props;
+    return tabs.filter(({name}) => name === tabActive)
+    .map(({content, name}) => <Segment key={name} className={'generic-tab-segment'}>{content}</Segment>);
   };
+
   render() {
     return <div>{this.getMenu(this.state.tabActive)}</div>;
   }

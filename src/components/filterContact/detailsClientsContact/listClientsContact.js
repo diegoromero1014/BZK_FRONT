@@ -5,7 +5,7 @@ import { changeValueOpenModal, setEditRelationship, modifyClientRelationship } f
 import { OPEN_CREATE_MODAL, OPEN_EDIT_MODAL } from '../constants';
 import { MESSAGE_SAVE_DATA } from '../../../constantsGlobal';
 import { shorterStringValue } from '../../../actionsGlobal';
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import SweetAlert from '../../sweetalertFocus';

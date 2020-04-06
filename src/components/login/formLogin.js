@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import _ from 'lodash';
+
+import { isInternetExplorer } from '../../utils/browserValidation';
+import SweetAlert from "../sweetalertFocus";
+import ReCaptcha from '../recaptcha/ReCaptcha';
+import {clearCache} from '../../utils/catchRequest';
+
 import {
     stopObservablesLeftTimer,
     validateLogin,
@@ -8,21 +15,14 @@ import {
     clearStateLogin,
     saveSessionUserName,
     clearSessionUserName,
-    saveSessionName,
-    getUserDataFrontOfficeEmployee
 } from './actions';
 import { redirectUrl } from '../globalComponents/actions';
-import _ from 'lodash';
-import { LOADING_LOGIN, ITEM_ACTIVE_MENU_DEFAULT } from './constants';
-import { MESSAGE_SERVER_ERROR, REQUEST_SUCCESS } from '../../constantsGlobal';
 import { showLoading } from '../loading/actions';
 import { changeActiveItemMenu } from '../menu/actions';
-import { isInternetExplorer } from '../../utils/browserValidation';
 
-import SweetAlert from "../sweetalertFocus";
-import ReCaptcha from '../recaptcha/ReCaptcha';
-import {clearCache} from '../../utils/catchRequest';
-import { changeTokenStatus } from '../dashboard/actions';
+import { LOADING_LOGIN, ITEM_ACTIVE_MENU_DEFAULT } from './constants';
+import { MESSAGE_SERVER_ERROR, REQUEST_SUCCESS } from '../../constantsGlobal';
+import { changeTokenStatus } from '../main/actions';
 
 export class FormLogin extends Component {
     constructor(props) {
@@ -41,54 +41,52 @@ export class FormLogin extends Component {
             loginAttempts: 0,
             valueRecaptcha:""
         };        
-        this._redirectLogin = this._redirectLogin.bind(this);
-        this._getValueRecaptcha = this._getValueRecaptcha.bind(this);
+        this.redirectLogin = this.redirectLogin.bind(this);
+        this.getValueRecaptcha = this.getValueRecaptcha.bind(this);
     }
 
-    _handleChangeId(e) {
+    handleChangeId = (e) => {
         this.setState({
             usuario: e.target.value
         })
     }
 
-    _handleChangePassword(e) {
+    handleChangePassword = (e) => {
         this.setState({
             password: e.target.value
         })
     }
 
-    _redirectLogin() {
+    redirectLogin = () => {
         this.setState({ showMessageNotification: false });
         redirectUrl("/dashboard/clients");
     }
 
-    _getValueRecaptcha(value){
+    getValueRecaptcha = (value) => {
         this.setState({valueRecaptcha:value});
     }
 
-    _handleValidateLogin(e) {
+    handleValidateLogin = (e) => {
         e.preventDefault();
         
         const { usuario, password } = this.state;
         const recaptcha = this.state.loginAttempts >= 2 ? this.state.valueRecaptcha : null;
-        const { validateLogin, showLoading, changeActiveItemMenu, changeTokenStatus, getUserDataFrontOfficeEmployee } = this.props;
-        changeTokenStatus(true);
-        showLoading(true, LOADING_LOGIN);        
-        validateLogin(usuario, password, recaptcha)
-            .then(response => {
+        const { dispatchValidateLogin, dispatchShowLoading, dispatchChangeActiveItemMenu, dispatchChangeTokenStatus } = this.props;
+        dispatchChangeTokenStatus(true);
+        dispatchShowLoading(true, LOADING_LOGIN);        
+        dispatchValidateLogin(usuario, password, recaptcha)
+            .then( response => {
                 if (_.get(response, 'payload.data.status') === REQUEST_SUCCESS) {
                     if (_.get(response, 'payload.data.data.message', true)) {
                         this.setState({
                             message: (_.get(response, 'payload.data.data.message'))
                         });
                     } else {
-                        const { saveSessionToken, redirectUrl } = this.props;
-                        saveSessionToken(_.get(response, 'payload.data.data.sessionToken'));
+                        const { dispatchSaveSessionToken } = this.props;
+                        dispatchSaveSessionToken(_.get(response, 'payload.data.data.sessionToken'));
                         saveSessionUserName(usuario, _.get(response, 'payload.data.data.username'));
-                        changeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
-                        getUserDataFrontOfficeEmployee(usuario).then(data => {
-                            saveSessionName(_.get(data, 'payload.data.data.name'));
-                        })
+                        dispatchChangeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
+
                         // Activar cookie
                         document.cookie = 'estadoconexion=activa;path=/';                        
 
@@ -105,10 +103,10 @@ export class FormLogin extends Component {
                         window.location.reload(true);
                     }
                 }
-                showLoading(false, '');
+                dispatchShowLoading(false, '');
             })
             .catch(err => {
-                showLoading(false, '');
+                dispatchShowLoading(false, '');
                 this.setState({
                     message: MESSAGE_SERVER_ERROR
                 });
@@ -116,22 +114,22 @@ export class FormLogin extends Component {
     }
 
     componentWillMount() {
-        const { showLoading, stopObservablesLeftTimer, clearStateLogin, dashboardReducer } = this.props;
+        const { dispatchShowLoading, dispatchStopObservablesLeftTimer, dispatchClearStateLogin, mainReducer } = this.props;
 
         let token = window.localStorage.getItem('sessionTokenFront');
 
-        const validToken = dashboardReducer.get("validToken");
+        const validToken = mainReducer.get("validToken");
 
         clearCache();
-        showLoading(false, null);        
+        dispatchShowLoading(false, null);    
         
         if (token == null || token === '' || !validToken) {
 
-            stopObservablesLeftTimer();
+            dispatchStopObservablesLeftTimer();
             //Limpiar variables de sesion (idClientSelected)
             clearSessionUserName();
             //Esto no hace nada
-            clearStateLogin();
+            dispatchClearStateLogin();
         } else {
             // El usuario ya se encuentra logueado
             redirectUrl("/dashboard/clients");
@@ -141,7 +139,7 @@ export class FormLogin extends Component {
     render() {
         const { login } = this.props;               
         return (
-            <form onSubmit={this._handleValidateLogin.bind(this)} className=" loginform" autoComplete="off">
+            <form onSubmit={this.handleValidateLogin.bind(this)} className=" loginform" autoComplete="off">
                 <h4 className="form-item" style={{ marginLeft: '0px', paddingLeft: '28px', paddingRight: '28px' }}>Hola,
                     ingrese a su cuenta:</h4>
                 <div className="form-item" style={{ marginLeft: "0px", paddingLeft: '28px', paddingRight: '28px' }}>
@@ -153,7 +151,7 @@ export class FormLogin extends Component {
                         padding: "0px 0px 0px 0px !important"
                     }}
                         placeholder="Usuario" className="input-edit"
-                        required value={this.state.id} onChange={this._handleChangeId.bind(this)}></input>
+                        required value={this.state.id} onChange={this.handleChangeId.bind(this)}></input>
                 </div>
                 <div className="form-item" style={{ marginLeft: "0px", paddingLeft: '28px', paddingRight: '28px' }}>
                     <input type="password" id="welcome-login-password" style={{
@@ -165,10 +163,10 @@ export class FormLogin extends Component {
                     }}
                         placeholder="Contraseña" className="input-edit"
                         required value={this.state.password}
-                        onChange={this._handleChangePassword.bind(this)}></input>
+                        onChange={this.handleChangePassword.bind(this)}></input>
                 </div>
                 <div className={'form-item ' + (this.state.loginAttempts >= 2 ? 'show' : 'hidden')} style={{ marginLeft: "0px", paddingLeft: '28px', paddingRight: '28px' }}>
-                    <ReCaptcha _getValueRecaptcha={this._getValueRecaptcha}/>
+                    <ReCaptcha getValueRecaptcha={this.getValueRecaptcha}/>
                 </div>
                 <div style={{ marginLeft: "28px", marginTop: "20px", marginBottom: "0px", marginRight: "10px" }}>
                     <span style={{ color: "#e76e70", size: "17px" }}>{this.state.message}</span>
@@ -193,30 +191,28 @@ export class FormLogin extends Component {
                     confirmButtonColor='#DD6B55'
                     confirmButtonText='Continuar'
 
-                    onConfirm={this._redirectLogin} />
+                    onConfirm={this.redirectLogin} />
             </form>
         );
     }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
-        stopObservablesLeftTimer,
-        validateLogin,
-        saveSessionToken,
-        clearStateLogin,
-        redirectUrl,
-        showLoading,
-        changeActiveItemMenu,
-        changeTokenStatus,
-        getUserDataFrontOfficeEmployee
+        dispatchStopObservablesLeftTimer: stopObservablesLeftTimer,
+        dispatchValidateLogin: validateLogin,
+        dispatchSaveSessionToken: saveSessionToken,
+        dispatchClearStateLogin: clearStateLogin,
+        dispatchShowLoading: showLoading,
+        dispatchChangeActiveItemMenu: changeActiveItemMenu,
+        dispatchChangeTokenStatus: changeTokenStatus,
     }, dispatch);
 }
 
-function mapStateToProps({ login, dashboardReducer }, ownerProps) {
+const mapStateToProps = ({ login, mainReducer }) => {
     return {
         login,
-        dashboardReducer
+        mainReducer
     };
 }
 

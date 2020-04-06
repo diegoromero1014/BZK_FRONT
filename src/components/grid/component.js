@@ -108,7 +108,7 @@ class GridComponent extends Component {
     const { headers } = this.props;
     if(_.has(value, 'text')) {
       const details = value.text;
-      if(details){
+      if(details && !_.isEmpty(details)){
         return (
           <tr>
             <td colSpan={headers().length}>

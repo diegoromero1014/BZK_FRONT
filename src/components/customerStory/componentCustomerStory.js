@@ -14,7 +14,7 @@ import { validateResponse } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { consultInfoClient } from '../clientInformation/actions';
 import { redirectUrl } from '../globalComponents/actions';
-import { changeStateSaveData } from '../dashboard/actions';
+import { changeStateSaveData } from '../main/actions';
 
 import { TAB_STORY, TAB_CUSTOMER_DELIVERY } from './constants';
 import { VALUES_APROVE, OPTION_REQUIRED, MESSAGE_SAVE_DATA, ENTREGA_ESTRUCTURADA } from '../../constantsGlobal';

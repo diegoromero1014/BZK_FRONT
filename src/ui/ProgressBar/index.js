@@ -16,13 +16,15 @@ const returnTitle = (role, total) => {
 }
 const handleProgress = (loading, finalizedN, pendingN, total ) => {
   if(!loading && finalizedN != 0 || pendingN != 0 ){
+    let percent =( finalizedN * parseInt(100) ) / total;
     return (
       <Progress
         className="animated fadeIn"
-        value={isNaN(finalizedN) ? 0 : finalizedN}
+        percent={Math.floor(percent)}
+        //value={isNaN(finalizedN) ? 0 : finalizedN}
         total={isNaN(total) ? 0 : total}
         active
-        label="ratio"
+        label="percent"
         style={{ height: "25px", color: "#005dbf" }}
       />
     );

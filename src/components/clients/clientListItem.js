@@ -11,7 +11,7 @@ import {
 } from '../../constantsGlobal';
 import Tooltip from '../toolTip/toolTipComponent';
 import { deleteRecentClient, getRecentClients } from './actions';
-import { changeStateSaveData } from '../dashboard/actions';
+import { changeStateSaveData } from '../main/actions';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import { validateResponse, shorterStringValue } from '../../actionsGlobal';
 import { MAX_LENGTH_NAME_CLIENT, MAX_LENGTH_DOCUMENT, MAX_LENGTH_ECONOMIC_GROUP } from './constants';
@@ -107,7 +107,7 @@ class ClientListItem extends Component {
           type="warning"
           show={this.state.showEr}
           title="Acceso denegado"
-          text="Señor usuario, usted no pertenece a la célula del cliente seleccionado, por tal motivo no puede ver su información."
+          text="Señor usuario, usted no cuenta con los permisos para visualizar este cliente."
           onConfirm={() => this._closeError()}
         />
       </div>

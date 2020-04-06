@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 
-export default function BiztrackModal({ onCancel, title, body }) {
+export default function BiztrackModal({ onCancel, title, body, head }) {
     return (
         <Modal isOpen={true} className="modalBt3-fade modal fade contact-detail-modal in">
             <div className="modalBt4-dialog modalBt4-lg">
@@ -13,6 +13,7 @@ export default function BiztrackModal({ onCancel, title, body }) {
                             <span className="sr-only">Close</span>
                         </button>
                     </div>
+                    {head}
                     <div style={{ padding: "15px" }}>
                     {body}
                     </div>

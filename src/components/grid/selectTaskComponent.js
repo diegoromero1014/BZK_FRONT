@@ -5,7 +5,7 @@ import { TASK_STATUS } from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import { updateStatusTask } from '../myPendings/myTasks/actions';
 import { MESSAGE_SAVE_DATA } from '../../constantsGlobal';
-import { changeStateSaveData } from '../dashboard/actions';
+import { changeStateSaveData } from '../main/actions';
 import { validateIsNullOrUndefined } from '../../actionsGlobal';
 
 class SelectTaskComponent extends Component {
