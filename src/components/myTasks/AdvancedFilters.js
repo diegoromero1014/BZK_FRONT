@@ -89,9 +89,25 @@ export class AdvancedFilters extends Component {
         await dispatchGetMasterDataFields([TASK_STATUS, LIST_REGIONS, LIST_ZONES, TEAM_VALUE_OBJECTS]);
     };
 
+    onChangeRegionStatus = val =>  {
+        const { setFieldValue, consultListWithParameterUbicationDispatch, clearListsDispatch} = this.props;
+        /*region.onChange(val);
+        zone.onChange("");
+        team.onChange("");*/
+
+        clearListsDispatch([LIST_ZONES, TEAM_VALUE_OBJECTS]);
+
+        if (!_.isEqual(val, "")) {
+            consultListWithParameterUbicationDispatch(LIST_ZONES, val);
+            //this._handlePrevisitsFind();
+        }
+
+        setFieldValue('region', val.title, true);
+    };
+
     render() {
         const {fields: {closingDateFrom, closingDateTo, region, zone, cell, state}} = this.state;
-        const {selectsReducer} = this.props;
+        const {selectsReducer, setFieldValue} = this.props;
         return (<div>
                 <Form style={{backgroundColor: "#FFFFFF", width: "100%", paddingBottom: "50px"}}>
                     <Row style={{width: '99%', paddingLeft: 20}}>
@@ -156,9 +172,7 @@ export class AdvancedFilters extends Component {
                                             valueProp={'id'}
                                             textProp={'value'}
                                             value={value}
-                                            onChange={(id, val) => {
-                                                setFieldValue(name, id, false);
-                                            }}
+                                            onChange={val => this.onChangeRegionStatus(val)}
                                             onBlur={onBlur}
                                             data={selectsReducer.get(LIST_REGIONS) || []}
                                             className='field-input'
@@ -189,7 +203,7 @@ export class AdvancedFilters extends Component {
                                                 setFieldValue(name, id, false);
                                             }}
                                             onBlur={onBlur}
-                                            data={selectsReducer.get(TASK_STATUS) || []}
+                                            data={selectsReducer.get(LIST_ZONES) || []}
                                             className='field-input'
                                             parentId="dashboardComponentScroll"
                                             filterData={true}
@@ -218,7 +232,7 @@ export class AdvancedFilters extends Component {
                                                 setFieldValue(name, id, false);
                                             }}
                                             onBlur={onBlur}
-                                            data={selectsReducer.get('teamValueObjects') || []}
+                                            data={selectsReducer.get(TEAM_VALUE_OBJECTS) || []}
                                             className='field-input'
                                             parentId="dashboardComponentScroll"
                                             filterData={true}
