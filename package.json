@@ -136,6 +136,7 @@
     "react-router": "^2.2.2",
     "react-router-redux": "^4.0.0",
     "react-selectize": "^2.0.1",
+    "react-sidebar": "^3.0.2",
     "react-vis": "^0.4.2",
     "react-widgets": "^3.2.4",
     "redux": "^3.3.1",
