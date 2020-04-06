@@ -5,8 +5,6 @@ import { bindActionCreators } from 'redux';
 
 import ContactDetailsModalComponent from '../contact/contactDetail/contactDetailsModalComponent';
 import ComponentShareHolderDetail from '../clients/partners/shareholder/shareholderDetail/componentShareHolderDetail';
-import ModalTask from '../visit/tasks/modalTask';
-import ModalCreateTask from '../pendingTask/modalCreateTask';
 import ModalTrackingCovenant from '../risksManagement/covenants/createTracking/modalTrackingCovenant';
 import ModalObservation from '../alertPortfolioExpirtation/modalObservation';
 import ModalDetailAEC from '../risksManagement/AEC/modalDetailAEC';
@@ -27,6 +25,8 @@ import * as views from './constants';
 import _ from 'lodash';
 import ConfidentialBrandComponent from '../commercialReport/ConfidentialBrandComponent';
 import AlertPortfolioExpirationObservationsActionModal from '../alertPortfolioExpirtation/alertPortfolioExpirationObservationsActionModal';
+import TaskPage from "../pendingTask/taskPage";
+import ModalTask from "../visit/tasks/modalTask";
 
 export class ModalComponentDialog extends Component {
     constructor(props) {
@@ -67,9 +67,9 @@ export class ModalComponentDialog extends Component {
         }
     }
 
-    _contectViewModal(actions, idx) {
+    _contectViewModal(actions) {
         var cell;
-        const { closeModal, origin } = this.props;
+        const { origin } = this.props;
         switch (actions.component) {
             case views.VIEW_CONTACT:
                 cell = <ContactDetailsModalComponent contactId={actions.id} isOpen={this.closeModal} origin={origin}/>;
@@ -81,7 +81,7 @@ export class ModalComponentDialog extends Component {
                 cell = <ModalTask taskEdit={actions.task} isOpen={this.closeModal} />;
                 break;
             case views.VIEW_TASK_ADMIN:
-                cell = <ModalCreateTask taskEdit={actions.id} isOpen={this.closeModal} idClient={actions.idClient} functCloseModal={actions.functCloseModal} actionEdit={actions.actionEdit} />;
+                cell = <TaskPage params={{ id: actions.id.id ? actions.id.id : actions.id }} idClient={actions.idClient} fromModal={true} closeModal={this.closeModal} updateTasksTables={actions.updateTasksTables}/>;
                 break;
             case views.VIEW_TRACKING_COVENANT:
                 cell = <ModalTrackingCovenant covenantId={actions.id} isOpen={this.closeModal} />;
@@ -137,7 +137,6 @@ export class ModalComponentDialog extends Component {
 
     renderConfidentialBrand() {
         const actions = this.props.actions;
-
         if (typeof actions.id == 'number') {
             if (actions.object.commercialReport && actions.object.commercialReport.isConfidential) {
                 return <ConfidentialBrandComponent /> 

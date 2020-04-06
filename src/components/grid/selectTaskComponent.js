@@ -1,15 +1,13 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { TASK_STATUS } from '../selectsComponent/constants';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
-import { updateStatusTask, tasksByUser } from '../myPendings/myTasks/actions';
-import { NUMBER_RECORDS } from '../myPendings/myTasks/constants';
+import { updateStatusTask } from '../myPendings/myTasks/actions';
 import { MESSAGE_SAVE_DATA } from '../../constantsGlobal';
 import { changeStateSaveData } from '../main/actions';
 import { validateIsNullOrUndefined } from '../../actionsGlobal';
 
-let key = 1;
 class SelectTaskComponent extends Component {
 
   constructor(props) {
@@ -22,43 +20,48 @@ class SelectTaskComponent extends Component {
   }
 
   componentWillMount() {
-    const { valueStatus } = this.props;
+    const { idStatus, idTask } = this.props;
     this.setState({
-      idEstado: valueStatus.idStatus,
-      idTask: valueStatus.idTask
+      idEstado: idStatus,
+      idTask: idTask
     });
   }
 
-  onChangeValue(idValueStatus) {
-    const { updateStatusTask, tasksByUser, changeStateSaveData } = this.props;
+  async onChangeValue (idValueStatus) {
+    const { updateStatusTask, changeStateSaveData, updateBothTabs } = this.props;
     changeStateSaveData(true, MESSAGE_SAVE_DATA);
-    updateStatusTask(this.state.idTask, idValueStatus).then((data) => {
+    let data = await updateStatusTask(this.state.idTask, idValueStatus);
+    if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
+      redirectUrl("/login");
+    } else {
+      await updateBothTabs();
+      this.forceUpdate();
       changeStateSaveData(false, "");
-      if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
-        redirectUrl("/login");
-      } else {
-        tasksByUser(0, NUMBER_RECORDS, "");
-      }
-    });
+    }
   }
 
   render() {
-    const { colorTraffict, selectsReducer, isEditable, styles } = this.props;
-    var editable = isEditable;
-    if (validateIsNullOrUndefined(isEditable)) {
+    const { selectsReducer, permissionEdit, key} = this.props;
+    const { idEstado, idTask } = this.state
+    var editable = permissionEdit;
+    if (validateIsNullOrUndefined(permissionEdit)) {
       editable = true;
     }
     return (
-      <td>
-        <ComboBox name={key++} labelInput="Seleccione"
-          value={this.state.idEstado}
-          valueProp={'id'}
-          textProp={'value'}
-          disabled={editable ? '' : 'disabled'}
+      <td key={idTask}>
+        <ComboBox
+          key={idTask}
+          labelInput="Seleccione"
+          name={idTask}
+          value={idEstado}
+          valueProp={"id"}
+          textProp={"value"}
+          disabled={editable ? "" : "disabled"}
           data={selectsReducer.get(TASK_STATUS) || []}
-          onChange={val => this.onChangeValue(val)}
-          onBlur={() => ''}
-          defaultValue={this.state.idEstado}
+          onChange={val => {
+            val != idEstado ? this.onChangeValue(val) : {};
+          }}
+          defaultValue={idEstado}
         />
       </td>
     );
@@ -68,12 +71,11 @@ class SelectTaskComponent extends Component {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     updateStatusTask,
-    changeStateSaveData,
-    tasksByUser
+    changeStateSaveData
   }, dispatch);
 }
 
-function mapStateToProps({ selectsReducer }, { taskEdit }) {
+function mapStateToProps({ selectsReducer }) {
   return {
     selectsReducer
   }
