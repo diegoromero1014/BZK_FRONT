@@ -58,15 +58,20 @@ const itemTransactional = {
     link: "/dashboard/transactional"
 };
 
+const itemMyTasks = {
+    text: "Tareas",
+    icon: "clipboard",
+    link: "/dashboard/myTask"
+};
+
 const childrenContactsGroupFavorito = { text: "Favoritos", link: "/dashboard/contact/favoriteGroup" };
 const childrenMyPendingsAEC = { text: "AEC", link: "/dashboard/myPendings/AEC" };
-const childrenMyPendingsMyTaks = { text: "Mis tareas", link: "/dashboard/myPendings/myTasks" };
+
 const childrenMyPendingsLinkingRequests = { text: "Solicitudes de vinculación", link: "/dashboard/myPendings/linkingRequests" };
 const childrenMyPendingsMyDraftDocuments = {
     text: "Documentos en borrador",
     link: "/dashboard/myPendings/draftDocuments"
 };
-const childrenMyPendingsAssigned = { text: "Asignadas", link: "/dashboard/myPendings/assigned" };
 
 const itemAlerts = {
     text: "Alertas",
@@ -97,9 +102,8 @@ export class MenuComponent extends Component {
         let menuItems = [];
 
         itemMyPendings.children = [];
-        itemMyPendings.children.push(childrenMyPendingsMyTaks);
         itemMyPendings.children.push(childrenMyPendingsMyDraftDocuments);
-        itemMyPendings.children.push(childrenMyPendingsAssigned);
+
         if (_.get(permissions, MODULE_LINKING_REQUESTS)) {
             itemMyPendings.children.push(childrenMyPendingsLinkingRequests);
         }
@@ -138,6 +142,7 @@ export class MenuComponent extends Component {
         if (_.get(permissions, MODULE_AEC)) {
             itemMyPendings.children.push(childrenMyPendingsAEC);
         }
+        menuItems.push(itemMyTasks);
         menuItems.push(itemMyPendings);
         dispatchInitialMenuPermissions(menuItems);
     }

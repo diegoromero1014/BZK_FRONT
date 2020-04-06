@@ -3,12 +3,8 @@ import { SAVE_DRAFT, SAVE_PUBLISHED } from '../../constantsGlobal';
 
 export default class CommercialReportButtonsComponent extends Component {
 
-    constructor(props){
-        super(props);
-    }
-
     render() {
-        const { onClickSave, onClickDownloadPDF, cancel, fromModal, isEditable, documentDraft, creatingReport } = this.props;
+        const { onClickSave, onClickDownloadPDF, cancel, fromModal, isEditable, documentDraft, creatingReport, definitiveSaveTitle } = this.props;
         return (
             <div 
                 name="commercialReportButtons"
@@ -29,7 +25,7 @@ export default class CommercialReportButtonsComponent extends Component {
                         <button
                             name="btnPreSave"
                             className="btn" type="submit"                             
-                            onClick={() => onClickSave(SAVE_DRAFT)} 
+                            onClick={() => onClickSave && onClickSave(SAVE_DRAFT)}
                             style={{ margin: "8px 10px 0px 8px", backgroundColor: "#00B5AD" }}>
                             <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
                         </button>
@@ -39,9 +35,9 @@ export default class CommercialReportButtonsComponent extends Component {
                             name="btnSave"
                             className="btn" 
                             type="submit" 
-                            onClick={() => onClickSave(SAVE_PUBLISHED)}
+                            onClick={() => onClickSave && onClickSave(SAVE_PUBLISHED)}
                             style={{ margin: "8px 10px 0px 0px" }}>
-                            <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
+                            <span style={{ color: "#FFFFFF", padding: "10px" }}>{definitiveSaveTitle}</span>
                         </button>
                     }                                        
                     { onClickDownloadPDF && !creatingReport &&

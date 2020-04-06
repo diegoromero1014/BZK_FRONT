@@ -30,7 +30,7 @@ class MultipleSelectComponent extends Component {
         if (maxSelections !== null && maxSelections !== undefined && maxSelections !== '') {
             selector.dropdown({
                 fullTextSearch: true,
-                maxSelections: 3,
+                maxSelections: maxSelections,
                 onChange: function (id, text) {
                     self.touched = true;
                     self.setState({
@@ -60,7 +60,7 @@ class MultipleSelectComponent extends Component {
         selector.dropdown('setting', {
             allowAdditions: false,
             message: {
-                maxSelections: 'Máximo 3 opciones',
+                maxSelections: 'Máximo '+ maxSelections +' opciones',
                 noResults: 'No hay valores que cumplan con el filtro'
             },
             forceSelection: false,

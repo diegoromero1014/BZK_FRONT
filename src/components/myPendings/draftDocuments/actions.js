@@ -35,32 +35,6 @@ export function draftsDocumentsByUser(pageNum, maxRows, keyWord, orderDrafts, co
   }
 }
 
-export function getInfoDraftDocument(idTask) {
-  const json = {
-    "messageHeader": {
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "username":"",
-      "timestamp": new Date().getTime(),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
-    },
-    "messageBody": idTask
-  };
-
-
-  var request = axios.post(APP_URL + "/getPendingTaskById", json);
-  return {
-    type: GET_INFO_USERTASK,
-    payload: request
-  }
-}
-
 export function limitiInf(limInf){
   return {
     type: LIMITE_INF,

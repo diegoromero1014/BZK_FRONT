@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import Highlighter from "react-highlight-words";
 import _ from 'lodash';
 
 import HeaderComponent from './headerComponent';
@@ -17,6 +18,9 @@ import TdConfidentialComponent from './tdConfidentialComponent';
 import TdParticularityComponent from './tdParticularityComponent';
 import TdUpdatedInfoComponent from './tdUpdatedInfoComponent';
 import {mapDateValueFromTask} from '../../actionsGlobal';
+import TrafficLightIndicator from './../../ui/TrafficLightIndicator';
+
+import {htmlToTextRegex, cleanTaggedUser} from './../../actionsGlobal';
 
 import { ACTION_CHECK, DATE_CELL } from './constants';
 
@@ -51,6 +55,8 @@ class GridComponent extends Component {
         cell = <ModalComponent key={idx} idModal={_.uniqueId()} modalTitle={modalTitle} actions={_.get(row, value.key)} origin={origin} />
       } else if (value.key === 'trafficLight') {
         cell = <TrafficLightComponent key={idx} colorTraffict={_.get(row, value.key)} />
+      } else if (value.key === 'trafficLightIndicator') {
+        cell = <TrafficLightIndicator key={idx} days={_.get(row, value.key).days} isFinalized={_.get(row, value.key).isFinalized} style={value.style} />
       } else if (value.key === 'delete' && _.get(row, value.key)) {
         if (_.get(row, value.key).permissionsDelete !== undefined && !_.get(row, value.key).permissionsDelete) {
           cell = <TdComponent key={idx} columnRow={""} styles={value.style} />
@@ -71,13 +77,12 @@ class GridComponent extends Component {
         if (_.get(row, value.key).permissionsView !== undefined && !_.get(row, value.key).permissionsView) {
           cell = <TdComponent key={idx} columnRow={""} styles={value.style} />
         } else {
-          cell = <ButtonDetailsRedirectComponent key={idx} icon={value.icon} actionsRedirect={_.get(row, value.key)} />
+          cell = <ButtonDetailsRedirectComponent key={idx} icon={value.icon} actionsRedirect={_.get(row, value.key)} style={value.style} />
         }
       } else if (value.key === 'actionsPdf' && _.get(row, value.key)) {
         cell = <PdfLinkComponent key={idx} actionsPdf={_.get(row, value.key)} />
       } else if (value.key === 'changeStateTask' && _.get(row, value.key)) {
-        cell = <SelectTaskComponent key={idx} valueStatus={_.get(row, value.key)} isEditable={_.get(_.get(row, value.key), 'permissionEdit')}
-          styles={_.get(_.get(row, value.key), 'styles')} />
+        cell = <SelectTaskComponent key={_.get(row, value.key).idTask} {..._.get(row, value.key)}/>
       } else if (value.key === 'clientNameLink') {
         cell = <LinkComponent key={idx} text={_.get(row, 'clientNameLink.value')} url={_.get(row, 'clientNameLink.link')} isRedirect={_.get(value, 'showLink')} idClient={_.get(row, 'clientNameLink.id')} hasAccess={_.get(row, 'clientNameLink.hasAccess')} />
       } else if (value.key === 'modalNameLink') {
@@ -99,21 +104,51 @@ class GridComponent extends Component {
     });
   }
 
-  _renderRow(data, headers, modalTitle, origin) {
+  renderRowExpanded = value => {
+    const { headers } = this.props;
+    if(_.has(value, 'text')) {
+      const details = value.text;
+      if(details && !_.isEmpty(details)){
+        return (
+          <tr>
+            <td colSpan={headers().length}>
+              {this.renderRowExpandedData(details)}
+            </td>
+          </tr>
+        )
+      }
+    }
+    return null;
+  }
+
+  renderRowExpandedData = details => {
+    const {textToHighlight} = this.props;
+    return (
+      <div style={{padding: '5px 0px 0px 45px'}}>
+        <Highlighter
+          searchWords={[textToHighlight]}
+          autoEscape={true}
+          textToHighlight={cleanTaggedUser(htmlToTextRegex(details), '@')}
+          highlightClassName={'highlightClass'}
+        />
+      </div>
+    )
+  }
+
+  _renderRow() {
+    const {headers, data, modalTitle, origin, expandRow } = this.props;
     return data.map((value, idx) => {
-      return (
+      return [
         <tr role="row" key={idx}>
-          {this._renderCell(value, headers, modalTitle, origin)}
-        </tr>
-      );
+          {this._renderCell(value, headers(), modalTitle, origin)}
+        </tr>,
+        expandRow && this.renderRowExpanded(value)
+      ];
     });
   }
 
   render() {
-    const headers = this.props.headers;
-    const data = this.props.data;
-    const modalTitle = this.props.modalTitle;
-    const origin = this.props.origin;    
+    const {headers} = this.props;
     return (
       <table width="100%" className="tableBt4 tableBt4-striped has-column-selection dataTable no-footer" id="datagrid-container" role="grid" aria-describedby="datagrid-container_info">
         <thead style={{ color: '#4c5360' }}>
@@ -122,7 +157,7 @@ class GridComponent extends Component {
           </tr>
         </thead>
         <tbody>
-          {this._renderRow(data, headers(), modalTitle, origin)}
+          {this._renderRow()}
         </tbody>
       </table>
     );
