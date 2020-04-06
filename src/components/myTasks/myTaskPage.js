@@ -28,12 +28,15 @@ import PaginationPendingTaskComponent from './../pendingTask/paginationPendingTa
 import ListMyTasksComponent from './listMyTasksComponent';
 import {getMasterDataFields} from '../selectsComponent/actions';
 import HeaderFilters from "./headerFilters";
+import SearchInputComponent from "../../ui/searchInput/SearchInputComponent";
+import {Col, Grid, Row} from "react-flexbox-grid";
 
 export class MyTaskPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false
+            loading: false,
+            textToSearch: ""
         };
     }
 
@@ -112,6 +115,19 @@ export class MyTaskPage extends Component {
         );
     };
 
+    _onSearchText(value){
+        const {myTasks} = this.props;
+        console.log({myTasks});
+
+        this.setState({
+            textToSearch: value
+        });
+
+        this.fetchAndDispatchPendingTasks(0, myTasks.get("tabPending").order,value === "" ? null : value, myTasks.get("initialFilter"));
+        this.fetchAndDispatchFinalizedTasks(0, myTasks.get("tabPending").order,value === "" ? null : value, myTasks.get("initialFilter"));
+
+    }
+
     handleFetchAndDispatchPendingTasks = (page, mode) => {
         const {myTasks} = this.props;
         switch (mode) {
@@ -119,7 +135,7 @@ export class MyTaskPage extends Component {
                 this.fetchAndDispatchPendingTasks(
                     page,
                     myTasks.get("tabPending").order,
-                    null,
+                    this.state.textToSearch,
                     myTasks.get("initialFilter")
                 );
                 break;
@@ -127,7 +143,7 @@ export class MyTaskPage extends Component {
                 this.fetchAndDispatchFinalizedTasks(
                     page,
                     myTasks.get("tabFinished").order,
-                    null,
+                    this.state.textToSearch,
                     myTasks.get("initialFilter")
                 );
                 break;
@@ -232,6 +248,13 @@ export class MyTaskPage extends Component {
                 role={myTasks.get("initialFilter").rol}
                 loading={loading==true}
               />
+                <Row>
+                    <Col xs={12} sm={8} md={6} lg={6}>
+                        <SearchInputComponent
+                            onChangeSearch={text => this._onSearchText(text)}
+                        />
+                    </Col>
+                </Row>
             </div>
             <div style={{ backgroundColor: "white", width: "100%" }}>
               <div style={{ display: "flex" }}>
