@@ -251,7 +251,7 @@ export class MyTaskPage extends Component {
               </div>
               <TabComponent
                 tabs={[
-                  {
+                  { 
                     name: PENDING_TASKS,
                     number: tabPending.rowCount,
                     tooltip: TOOLTIP_PENDING,
