@@ -37,7 +37,7 @@ class TabComponent extends Component {
                   inverted
                   style={{padding: "5px", opacity: 0.8}}
                   content={tooltip}
-                  trigger={this.getTabHeader(name, number, disable, tabActive)}
+                  trigger={this.getTabHeader(name, number, disable, tabActive, classNameColor, callback)}
                   key={name}
                 ></Popup>
               ) : (

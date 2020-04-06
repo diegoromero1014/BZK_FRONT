@@ -1,8 +1,9 @@
 .ui.progress .bar>.progress {
     background-color: #005dbf;
 }
-.ui.active.progress .bar {
-    background-color: #005dbf;
+
+.ui.progress .bar{
+    background: #005dbf !important;
 }
 #finalized-label{
     border-radius: 25%;

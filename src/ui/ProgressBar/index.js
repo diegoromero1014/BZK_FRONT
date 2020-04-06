@@ -25,7 +25,7 @@ const handleProgress = (loading, finalizedN, pendingN, total ) => {
         total={isNaN(total) ? 0 : total}
         active
         label="percent"
-        style={{ height: "25px", color: "#005dbf" }}
+        style={{ height: "25px" }}
       />
     );
   }else if(finalizedN === 0 && pendingN === 0 && !loading ){
@@ -50,7 +50,7 @@ const ProgressBarComponent = ({finalized, pending, role, loading}) => {
           <h2 style={{ textAlign: "center" }}>{returnTitle(role, total)}</h2>
         </div>
         <Row style={{ height: "50px" }}>
-          <Col xs={12} sm={12} md={12} lg={12}>
+          <Col className="progressCont" xs={12} sm={12} md={12} lg={12}>
             {handleProgress(loading, finalizedN, pendingN, total)}
           </Col>
         </Row>
