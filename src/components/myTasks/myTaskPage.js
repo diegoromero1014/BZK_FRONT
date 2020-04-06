@@ -28,6 +28,7 @@ import PaginationPendingTaskComponent from './../pendingTask/paginationPendingTa
 import ListMyTasksComponent from './listMyTasksComponent';
 import {getMasterDataFields} from '../selectsComponent/actions';
 import HeaderFilters from "./headerFilters";
+import SidebarComponent from "./SidebarComponent";
 
 export class MyTaskPage extends Component {
     constructor(props) {
@@ -232,7 +233,10 @@ export class MyTaskPage extends Component {
                 role={myTasks.get("initialFilter").rol}
                 loading={loading==true}
               />
-            </div>
+            <div>
+                <SidebarComponent />
+            </div>              
+            </div>            
             <div style={{ backgroundColor: "white", width: "100%" }}>
               <div style={{ display: "flex" }}>
                 <PendingTasksHelp />
