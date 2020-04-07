@@ -1,6 +1,7 @@
 export const PORTFOLIO_EXPIRATION_TAB = "Vencimiento de cartera";
 export const COVENANTS_TAB = "Covenants";
 export const OUTDATED_CONTACTS = "Contactos desactualizados";
+export const ACTION_OUTDATED_CONTACTS = "OUTDATED_CONTACTS";
 export const CONTROL_LISTS_TAB = "Listas de control";
 export const MAX_ROWS = 5;
 

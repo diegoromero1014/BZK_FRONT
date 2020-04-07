@@ -74,6 +74,7 @@ import questionsReducer from '../components/challenger/reducer';
 import objectListReducer from "../components/listaObjetos/reducer";
 import elementsReducer from "../components/elements/reducer";
 import outdatedContacts from "../components/managementView/widgets/alerts/reducer";
+import economicGroupsToBeVisited from "../components/managementView/widgets/visits/economicGroupsToBeVisited/reducer";
 
 export default combineReducers({
     routing: routerReducer,
@@ -150,5 +151,6 @@ export default combineReducers({
     questionsReducer,
     objectListReducer,
     elementsReducer,
-    outdatedContacts
+    outdatedContacts,
+    economicGroupsToBeVisited
 });

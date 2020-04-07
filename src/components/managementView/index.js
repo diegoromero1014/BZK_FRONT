@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Col } from 'react-flexbox-grid';
 import { redirectUrl } from "../globalComponents/actions";
 import SecurityMessageComponent from '../globalComponents/securityMessageComponent';
 import Reports from './widgets/reports';
@@ -9,6 +8,7 @@ import Header from './header';
 
 import { updateTitleNavBar } from '../navBar/actions';
 import AlertSection from './widgets/alerts';
+import VisitsSection from './widgets/visits';
 import SectionSearchClient from './widgets/searchClient';
 
 export class ManagementView extends Component {
@@ -39,8 +39,11 @@ export class ManagementView extends Component {
                 <div style={{ marginTop: 100 }}>
                     <Reports />
                 </div>
-                <div style={{ width: '100%', marginTop: 170 }}>
+                <div style={{ width: '100%', marginTop: 100 }}>
                     <AlertSection />
+                </div>
+                <div style={{ width: '100%', marginTop: 100 }}>
+                    <VisitsSection />
                 </div>
             </div>
         );

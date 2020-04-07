@@ -37,8 +37,8 @@ class TabComponent extends Component {
                                 className="tabItem"
                                 style={
                                     !disable
-                                        ? { width: "250px" }
-                                        : { backgroundColor: "rgba(0, 0, 0, 0.09)", width: "250px" }
+                                        ? { width: "auto" }
+                                        : { backgroundColor: "rgba(0, 0, 0, 0.09)", width: "auto" }
                                 }
                                 onClick={() => {
                                     !disable ? this.handleItemClick(name, callback) : null;
