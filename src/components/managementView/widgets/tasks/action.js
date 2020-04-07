@@ -1,6 +1,6 @@
 import axios from 'axios';
 import moment from "moment";
-import { TASK_BOARD_VALUES } from './constants';
+import { TASK_BOARD_VALUES, GET_INFORMATION_USER } from './constants';
 import { APP_URL } from '../../../../constantsGlobal';
 
 const getBody = () => ({
@@ -21,3 +21,12 @@ export const getTaskBoardValues = () => ({
 });
 
 
+export const getInformationUser = () => ({
+    type: GET_INFORMATION_USER,
+    payload: axios.post(APP_URL + "/getUserInSession", {
+        messageHeader: {
+            sessionToken: window.localStorage.getItem('sessionTokenFront')
+        },
+        messageBody: null
+    })
+});

@@ -3,7 +3,7 @@ import { Button } from 'semantic-ui-react';
 import Doughnut from '../../../chart/doughnut';
 import { buildDataStructure } from './utilities';
 
-const AssignedTasks = ({ tasks }) => {
+const AssignedTasks = ({ tasks, handleRedirect }) => {
     const { elements, data } = buildDataStructure(['Finalizadas', 'Pendientes'], tasks);
 
     return (
@@ -20,7 +20,7 @@ const AssignedTasks = ({ tasks }) => {
             <Button
                 fluid
                 style={{ background: 'transparent', marginTop: 20 }}
-                onClick={() => { }}
+                onClick={() => handleRedirect()}
             >
                 Ver detalle
                 </Button>
