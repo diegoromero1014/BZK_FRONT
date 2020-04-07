@@ -8,7 +8,6 @@ import {
     HAS_RISK_GROUP,
     UPDATE_NAME_RISK_GROUP,
     CHANGE_PENDING,
-    VALIDATE_RISK_GROUP_CODE_EXITS,
     SHOW_MODAL_RISK_GROUP,
     LIST_NOVELTIES_RISK_GROUP,
     SAVE_OBSERVATION,
@@ -162,29 +161,6 @@ export function editNameRiskGroup(riskGroup) {
     const request = axios.post(APP_URL + "/editNameRiskgroup", json);
     return {
         type: EDIT_NAME_RISK_GROUP,
-        payload: request
-    }
-}
-
-export function validateRiskGroupCodeExists(riskGroup) {
-    const json = {
-        "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-            "timestamp": new Date().getTime(),
-            "service": "",
-            "status": "0",
-            "language": "es",
-            "displayErrorMessage": "",
-            "technicalErrorMessage": "",
-            "applicationVersion": "",
-            "debug": true,
-            "isSuccessful": true
-        },
-        "messageBody": riskGroup
-    };
-    const request = axios.post(APP_URL + "/validateRiskGroupCodeExists", json);
-    return {
-        type: VALIDATE_RISK_GROUP_CODE_EXITS,
         payload: request
     }
 }

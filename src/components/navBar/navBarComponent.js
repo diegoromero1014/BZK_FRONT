@@ -53,10 +53,10 @@ class NavBarComponent extends Component {
         const userNameLogged = _.toLower(window.localStorage.getItem('name'));
 
         return (
-            <div className="header-quick-nav" style={{ padding: 0,  height: "60px", width: "100%", display: "flex", justifyContent: "space-between"}}>
-                <div style={{ paddingLeft: "5px !important" , width : "72%"}}>
+            <div className="header-quick-nav" style={{ padding: 0,  minHeight: "60px", width: "100%", display: "flex", justifyContent: "space-between"}}>
+                <div style={{ paddingLeft: "5px !important" , width : "65%"}}>
                     <ul className="nav" style={{ paddingLeft: "0px", paddingTop: '10pt' }}>
-                        <li style={{ fontSize: "30px" }}>
+                        <li style={{ fontSize: "30px" , lineHeight: "30px"}}>
                             {titleNavBar}
                             {confidential &&
                                 <ConfidentialBrandComponent />
@@ -64,7 +64,7 @@ class NavBarComponent extends Component {
                         </li>
                     </ul>
                 </div>
-                <div style={{width: "28%", display: "flex" , alignItems: "center", justifyContent: "flex-end" , marginRight: "10px"}}>
+                <div style={{width: "35%", display: "flex" , alignItems: "center", justifyContent: "flex-end" , marginRight: "10px"}}>
                     {_.includes(window.location.pathname, this.state.urlClientInfo) ?
                         <div  style={{ fontSize: "18px", cursor: "pointer" }}>
                             <a onClick={this._clickReturnClients}>
