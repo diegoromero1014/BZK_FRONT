@@ -69,6 +69,28 @@ class DoughnutComponent extends Component {
         }
     }
 
+    handleGenerateLabels = chart => {
+        const data = chart.data;
+        if (data.labels.length && data.datasets.length) {
+            return data.labels.map((label, i) => {
+                const meta = chart.getDatasetMeta(0);
+                const style = meta.controller.getStyle(i);
+
+                const value = meta.controller._data[i];
+
+                return {
+                    text: label + ' ' + value,
+                    fillStyle: style.backgroundColor,
+                    strokeStyle: style.borderColor,
+                    lineWidth: style.borderWidth,
+                    index: i
+                };
+            });
+        }
+
+        return [];
+    }
+
     render() {
         const { data, elements } = this.props;
 
@@ -80,31 +102,12 @@ class DoughnutComponent extends Component {
                         cutoutPercentage: 88,
                         legend: {
                             labels: {
-                                generateLabels(chart) {
-                                    const data = chart.data;
-                                    if (data.labels.length && data.datasets.length) {
-                                        return data.labels.map((label, i) => {
-                                            const meta = chart.getDatasetMeta(0);
-                                            const style = meta.controller.getStyle(i);
-
-                                            const value = meta.controller._data[i];
-
-                                            return {
-                                                text: label + ' ' + value,
-                                                fillStyle: style.backgroundColor,
-                                                strokeStyle: style.borderColor,
-                                                lineWidth: style.borderWidth,
-                                                index: i
-                                            };
-                                        });
-                                    }
-                                    return [];
-                                }
+                                generateLabels: this.handleGenerateLabels
                             },
                             display: true,
                             position: 'right',
                         },
-                        elements: elements
+                        elements
                     }}
                 />
             </div>
