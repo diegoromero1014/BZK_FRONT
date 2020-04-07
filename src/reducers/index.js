@@ -77,6 +77,7 @@ import economicGroupsToBeVisited from "../components/managementView/widgets/visi
 import commentsReducer from '../components/globalComponents/comments/reducer';
 import searchEmployeeInputReducer from '../components/globalComponents/searchEmployeeInput/reducer';
 import myTasksReducer from '../components/myTasks/reducer';
+import boardTaskReducer from "../components/managementView/widgets/tasks/reducer";
 
 export default combineReducers({
     routing: routerReducer,
@@ -156,5 +157,6 @@ export default combineReducers({
     elementsReducer,
     commentsReducer,
     searchEmployeeInputReducer,
-    myTasks: myTasksReducer
+    myTasks: myTasksReducer,
+    boardTaskReducer
 });

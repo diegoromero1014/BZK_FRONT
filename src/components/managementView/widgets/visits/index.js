@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import '../../../../../styles/board/widgets/visits/main.scss';
 
 import TabComponent from "../../../../ui/Tab";
 import EconomicGroupsToBeVisited from './economicGroupsToBeVisited';
@@ -34,6 +35,7 @@ export class VisitsSection extends Component {
                 name: ECONOMIC_GROUPS_TO_BE_VISITED,
                 content: <EconomicGroupsToBeVisited />,
                 disable: false,
+                className: 'economic-groups-tab',
                 number: totalEconomicGroupsToBeVisited || 0,
                 callback: this.handleDispatchGetEconomicGroupsToBeVisited
             },
@@ -42,7 +44,7 @@ export class VisitsSection extends Component {
             }
         ];
         return (
-            <div class="ui segment alert-content" style={{ padding: '0px !important' }}>
+            <div className="ui segment alert-content" style={{ padding: '0px !important' }}>
                 <h3>VISITAS</h3>
                 <div style={{
                     position: 'relative',
