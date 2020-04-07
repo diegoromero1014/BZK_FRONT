@@ -3,7 +3,7 @@ import configureStore from 'redux-mock-store';
 import TasksRedux from "../../../../../../src/components/managementView/widgets/tasks";
 import { Task }  from "../../../../../../src/components/managementView/widgets/tasks";
 import { ASSIGNED_TASKS, ASSIGNED } from "../../../../../../src/components/managementView/widgets/tasks/constants";
-import * as actions from '../../../../../../src/components/globalComponents/actions'
+import * as actions from '../../../../../../src/components/globalComponents/actions';
 
 let defaultProps = {};
 
