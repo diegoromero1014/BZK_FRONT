@@ -97,9 +97,6 @@ export class AdvancedFilters extends Component {
 
     onChangeRegionStatus = val =>  {
         const { setFieldValue, consultListWithParameterUbicationDispatch, clearListsDispatch} = this.props;
-        /*region.onChange(val);
-        zone.onChange("");
-        team.onChange("");*/
 
         clearListsDispatch([LIST_ZONES, TEAM_VALUE_OBJECTS]);
 
@@ -112,20 +109,18 @@ export class AdvancedFilters extends Component {
     };
 
     onChangeZoneStatus = val => {
-        const {consultListWithParameterDispatch, clearListsDispatch, setFieldValue, values: {region}, consultListWithParameterUbicationDispatch} = this.props;
-        /*zone.onChange(val);
-        team.onChange("");*/
+        const {consultListWithParameterDispatch, clearListsDispatch, setFieldValue, values: {region}} = this.props;
+
         setFieldValue('zone', val, true);
+        setFieldValue('cell', '', true);
+
         clearListsDispatch([TEAM_VALUE_OBJECTS]);
 
-        debugger;
         if (val) {
-            consultListWithParameterUbicationDispatch(TEAM_FOR_EMPLOYEE_REGION_ZONE, val);
-            /*consultListWithParameterDispatch(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
+            consultListWithParameterDispatch(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
                 region: region,
                 zone: val
-            });*/
-            //this._handlePrevisitsFind();
+            });
         }
 
     };
@@ -249,7 +244,7 @@ export class AdvancedFilters extends Component {
                                             name="cell"
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
-                                            textProp={'value'}
+                                            textProp={'description'}
                                             value={value}
                                             onChange={(id, val) => {
                                                 setFieldValue(name, id, false);
