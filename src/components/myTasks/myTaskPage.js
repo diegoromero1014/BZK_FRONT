@@ -45,8 +45,7 @@ export class MyTaskPage extends Component {
                 closingDateFrom: null,
                 region: null,
                 zone: null,
-                cell: null,
-                state: null
+                cell: null
             }
         };
     }
@@ -199,12 +198,12 @@ export class MyTaskPage extends Component {
         }
     };
 
-    dispatchFilters = async (filters1) => {
-        const {myTasks} = this.props;
+    dispatchFilters = async (filtersResponse) => {
+        const {myTasks, dispatchSetRolToSearch} = this.props;
         let {filters} = this.state;
 
         this.setState({
-           filters: Object.assign(filters, filters1)
+           filters: Object.assign(filters, filtersResponse)
         });
         console.log(this.state.filters);
         await this.fetchAndDispatchFinalizedTasks(
@@ -213,6 +212,8 @@ export class MyTaskPage extends Component {
         await this.fetchAndDispatchPendingTasks(
             0, myTasks.get("tabPending").order, null, this.state.filters
         );
+
+        dispatchSetRolToSearch(this.state.filters);
     };
 
     permissionToEditTask = () => {

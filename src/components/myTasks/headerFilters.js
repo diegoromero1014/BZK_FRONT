@@ -73,7 +73,7 @@ export class HeaderFilters extends Component {
 
         setTimeout(() => {
             this.validateFilter();
-            dispatchSetRolToSearch(filters);
+            //dispatchSetRolToSearch(filters);
         }, 300);
 
         dispatchFilters(filters);
