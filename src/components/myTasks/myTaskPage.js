@@ -29,12 +29,25 @@ import ListMyTasksComponent from './listMyTasksComponent';
 import {getMasterDataFields} from '../selectsComponent/actions';
 import HeaderFilters from "./headerFilters";
 import SidebarComponent from "./SidebarComponent";
+import {assign} from "rxjs/util/assign";
 
 export class MyTaskPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false
+            loading: false,
+            filters: {
+                users: null,
+                rol: null,
+                initialDate: null,
+                finalDate: null,
+                closingDateTo: null,
+                closingDateFrom: null,
+                region: null,
+                zone: null,
+                cell: null,
+                state: null
+            }
         };
     }
 
@@ -186,13 +199,19 @@ export class MyTaskPage extends Component {
         }
     };
 
-    dispatchFilters = async (filters) => {
+    dispatchFilters = async (filters1) => {
         const {myTasks} = this.props;
+        let {filters} = this.state;
+
+        this.setState({
+           filters: Object.assign(filters, filters1)
+        });
+        console.log(this.state.filters);
         await this.fetchAndDispatchFinalizedTasks(
-            0, myTasks.get("tabFinished").order, null, filters
+            0, myTasks.get("tabFinished").order, null, this.state.filters
         );
         await this.fetchAndDispatchPendingTasks(
-            0, myTasks.get("tabPending").order, null, filters
+            0, myTasks.get("tabPending").order, null, this.state.filters
         );
     };
 
@@ -234,7 +253,7 @@ export class MyTaskPage extends Component {
                 loading={loading==true}
               />
             <div>
-                <SidebarComponent />
+                <SidebarComponent dispatchFilters={this.dispatchFilters}/>
             </div>              
             </div>            
             <div style={{ backgroundColor: "white", width: "100%" }}>
