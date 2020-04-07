@@ -47,7 +47,8 @@ export class Task extends Component {
             finalDate: await moment()
         });
 
-        redirectUrl("/dashboard/myTask/filtered");    }
+        redirectUrl("/dashboard/myTask/filtered");
+    }
 
     getRole = () => this.state.tabName === MY_TASKS ? RESPONSIBLE : ASSIGNED;
 
