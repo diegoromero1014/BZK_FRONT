@@ -12,4 +12,3 @@ export const ERROR_MESSAGE_FOR_ALL_BOARD_MEMBERS_WITH_OBSERVATION = 'Todos los m
 export const SUCCESS_MESSAGE_FOR_SHAREHOLDER = "La información de los accionistas es válida, ";
 export const SUCCESS_MESSAGE_FOR_BOARD_MEMBERS = "La información de los miembros de junta es válida, ";
 export const EXISTS_PDF_FOR_SAME_DAY = "EXISTS_PDF_FOR_SAME_DAY";
-export const GENERATE_PDF = "GENERATE_PDF";
