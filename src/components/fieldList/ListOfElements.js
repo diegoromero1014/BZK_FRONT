@@ -1,9 +1,8 @@
 import React from 'react';
 import { Row, Col } from 'react-flexbox-grid';
-import { mapKeys } from 'lodash';
 
 import ToolTipComponent from '../toolTip/toolTipComponent';
-import { processRules } from '../../validationsFields/rulesField';
+import { elementsKey, validateSchema } from './Objetives/utils';
 
 
 class ListOfElements extends React.Component {
@@ -57,13 +56,8 @@ class ListOfElements extends React.Component {
 
     checkValidations = () => {
         const { schema, fields, setListState } = this.props;
-        const fieldErrors = processRules(fields, schema);
-        let errors = []
-        mapKeys(fieldErrors, (value, _) => {
-            if (value) {
-                errors.push(value);
-            }
-        })
+        
+        const [errors, fieldErrors] = validateSchema(fields, schema);
 
         const isValid = errors.length === 0;
 
@@ -93,7 +87,7 @@ class ListOfElements extends React.Component {
             });
             //Marcar que el elemento cambio
             fields.didChange = true;
-            updateElement(fields);
+            updateElement(elementsKey);
             this.toogleAddSection();
         }
     }
@@ -106,7 +100,7 @@ class ListOfElements extends React.Component {
             `Señor usuario, ¿Esta seguro que desea eliminar ${title}?`,
             {
                 onConfirmCallback: () => {
-                    removeElement(elementToDelete)
+                    removeElement(elementToDelete, elementsKey)
                 },
                 onCancelCallback: () => { }
             },

@@ -4,47 +4,46 @@ import {getCsvBusinessPlanByClient} from '../actions';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {APP_URL, MESSAGE_DOWNLOAD_DATA} from '../../../constantsGlobal';
-import {TAB_BUSINESS} from '../../viewManagement/constants';
+import {TAB_BUSINESS, TYPE_YEAR} from '../../managementView/constants';
 import {getCsvBusinessPlan} from '../actions';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import {changeStateSaveData} from '../../dashboard/actions';
+import {changeStateSaveData} from '../../main/actions';
+import SelectYearComponent from '../../selectsComponent/selectFilterYear/selectYearComponent';
 
-class DownloadBusinessPlan extends Component {
+export class DownloadBusinessPlan extends Component {
 
 	constructor(props) {
-	  super(props);
+	  	super(props);
   		momentLocalizer(moment);
-	  this._checkCheckBox = this._checkCheckBox.bind(this);
-	  this._downloadBusinessPlans = this._downloadBusinessPlans.bind(this);
-	  this.state = {
-	  	haveNeeds: false
-	  };
+	  	this.checkCheckBox = this.checkCheckBox.bind(this);
+		this.downloadBusinessPlans = this.downloadBusinessPlans.bind(this);
+		this.state = {
+			haveNeeds: false,
+			year: ''
+		};
 	}
 
-	_checkCheckBox(event) {
+	checkCheckBox = (event) => {
 		if (event.target.name === 'haveNeeds') {
 			this.setState({haveNeeds: !this.state.haveNeeds});
 		}
 	}
 
-	_downloadBusinessPlans() {
-		let year;
-		let url;
-		const {changeStateSaveData, getCsvBusinessPlanByClient, isOpen, itemSeletedModal, yearModal, getCsvBusinessPlan} = this.props;
-		changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-		if(TAB_BUSINESS === itemSeletedModal) {
-			year = yearModal !== undefined && yearModal !== '' ? yearModal : moment().year();
-		  	url = '/getCsvBusinessPlan';
-			getCsvBusinessPlan(year, this.state.haveNeeds).then(function(data) {
+	downloadBusinessPlans = () => {
+		const {dispatchChangeStateSaveData, dispatchGetCsvBusinessPlanByClient, isOpen, itemSelectedModal, dispatchGetCsvBusinessPlan} = this.props;
+		dispatchChangeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
+		if(TAB_BUSINESS === itemSelectedModal) {
+			const year = this.state.year !== undefined && this.state.year !== '' ? this.state.year : moment().year();
+			dispatchGetCsvBusinessPlan(year, this.state.haveNeeds).then(function(data) {
 				 if (data.payload.data.status === 200) {
 				 	window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
 				 }
-				 changeStateSaveData(false, "");
+				 dispatchChangeStateSaveData(false, "");
 			});
 		} else {
-			getCsvBusinessPlanByClient(window.sessionStorage.getItem('idClientSelected'), this.state.haveNeeds).then(function(data) {
-				changeStateSaveData(false, "");
+			dispatchGetCsvBusinessPlanByClient(window.sessionStorage.getItem('idClientSelected'), this.state.haveNeeds).then(function(data) {
+				dispatchChangeStateSaveData(false, "");
 				if (data.payload.data.status === 200) {
 					window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
 					isOpen();
@@ -59,8 +58,12 @@ class DownloadBusinessPlan extends Component {
 				<div style={{height: 'auto'}} className="modalBt4-body modal-body business-content editable-form-content clearfix" id="modalComponentScroll">
 					<div style={{paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px'}}>
 						<span>{'En esta sección podrá descargar algunos campos  de los "informes de plan de negocio" del cliente.\n Seleccione los campos que desea descargar a excel:'}</span>
+						<SelectYearComponent 
+							idTypeFilter={TYPE_YEAR} 
+							config={{ onChange: (value) => this.setState({ year: value.id }) }} 
+						/>
 						<ul className="ui list" style={{marginLeft:'0px'}}>
-							<div className="item"><input name="haveNeeds" type="checkbox" onChange={this._checkCheckBox} /> {'Necesidades'}</div>
+							<div className="item"><input name="haveNeeds" type="checkbox" onChange={this.checkCheckBox} /> {'Necesidades'}</div>
 						</ul>
 						<span>{'Adicional a los campos seleccionados, en el excel encontrará los siguiente campos:'}</span>
                         <Row style={{margin:'10px'}}>
@@ -93,24 +96,24 @@ class DownloadBusinessPlan extends Component {
 					</div>
 				</div>
 				<div className="modalBt4-footer modal-footer">
-					<button type="submit" className="btn btn-primary modal-button-edit" onClick={this._downloadBusinessPlans}>{'Descargar '}<i className="file excel outline icon"></i></button>
+					<button type="submit" className="btn btn-primary modal-button-edit" onClick={this.downloadBusinessPlans}>{'Descargar '}<i className="file excel outline icon"></i></button>
 				</div>
 			</div>
 		);
 	}
 }
 
-function mapStateToProps({businessPlanReducer}, ownerProps) {
+const mapStateToProps = ({businessPlanReducer}) => {
   return {
     businessPlanReducer
   };
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
-        getCsvBusinessPlanByClient,
-				getCsvBusinessPlan,
-				changeStateSaveData
+        dispatchGetCsvBusinessPlanByClient: getCsvBusinessPlanByClient,
+		dispatchGetCsvBusinessPlan: getCsvBusinessPlan,
+		dispatchChangeStateSaveData: changeStateSaveData
     }, dispatch);
 }
 

@@ -18,7 +18,7 @@ import Classification from '../sections/classification';
 import { redirectUrl } from "../../globalComponents/actions";
 import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans, changeMainPipeline } from "../actions";
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
-import { changeStateSaveData } from "../../dashboard/actions";
+import { changeStateSaveData } from "../../main/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { clearLists, consultDataSelect, consultListWithParameterUbication, getClientNeeds, getMasterDataFields, consultListByCatalogType } from "../../selectsComponent/actions";
 import { consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, handleFocusValueNumber, nonValidateEnter } from "../../../actionsGlobal";

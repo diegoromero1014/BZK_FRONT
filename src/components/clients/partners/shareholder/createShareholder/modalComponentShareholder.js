@@ -14,7 +14,7 @@ import { toggleModalShareholder, clearSearchShareholder, searchShareholder, crea
 import { shareholdersByClientFindServer, clearShareholderOrder, clearShareholderCreate } from '../actions';
 import { consultDataSelect, consultListWithParameterUbication, getMasterDataFields, clearValuesAdressess } from '../../../../selectsComponent/actions';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../../../actionsGlobal';
-import { changeStateSaveData } from '../../../../dashboard/actions';
+import { changeStateSaveData } from '../../../../main/actions';
 import { NUMBER_RECORDS, NATURE_PERSON } from '../constants';
 import {
   MESSAGE_SAVE_DATA

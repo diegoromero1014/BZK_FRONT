@@ -111,6 +111,7 @@ export const MARCAR_CONTACTO_DESACTUALIZADO = "Marcar contacto desactualizado";
 //Variables de los modulos de la aplicación
 export const MODULE_MANAGERIAL_VIEW = "Vista gerencial";
 export const MODULE_CLIENTS = "Clientes";
+export const MODULE_MY_CLIENTS = "Mis clientes";
 export const MODULE_PROSPECT = "Prospectos";
 export const MODULE_CONTACTS = "Contactos";
 export const MODULE_PARTNERS = "Socios";

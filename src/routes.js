@@ -3,7 +3,8 @@ import { Redirect, Route } from "react-router";
 import { Grid } from "react-flexbox-grid";
 
 import LoginComponent from "./components/login/component";
-import DashboardComponent from "./components/dashboard/dashboardComponent";
+import MainComponent from "./components/main/mainComponent";
+import ManagementView from "./components/managementView";
 import ClientsFind from "./components/clients/clientsFind";
 import ShareholderComponent from "./components/clients/partners/shareholder/component";
 import ComponentClientInformation from "./components/clientInformation/componentClientInformation";
@@ -12,7 +13,6 @@ import ClientEdit from "./components/clientEdit/clientEdit";
 import ClientCertify from "./components/clientCertify/clientCertifyComponent";
 import Visit from "./components/visit/createVisit/createVisit";
 import VisitEdit from "./components/visit/editVisit/editVisit";
-import ViewManagement from "./components/viewManagement/viewManagement";
 import BusinessPlan from "./components/businessPlan/createBusinessPlan/createBusinessPlan";
 import EditBusinessPlan from "./components/businessPlan/editBusinessPlan/editBusinessPlan";
 import AdminAlertClientsPendingUpdate from "./components/alertPendingUpdateClient/pendingUpdateClientComponent";
@@ -37,7 +37,8 @@ import Sheduler from "./components/sheduler/shedulerComponent";
 import pageUnderConstructor from "./components/pageUnderConstruction/pageUnderConstruction";
 import PageNotFound from "./components/notFoundPage/PageNotFound";
 import PrevisitPage from "./components/previsita/previsitPage";
-import makeAssociateList from './components/fieldList/makeAssociateList';
+import TaskPage from "./components/pendingTask/taskPage";
+import MyTaskPage from "./components/myTasks/myTaskPage";
 
 
 import {
@@ -47,11 +48,11 @@ import {
     ADMINALERTCLIENTSPORTFOLIOEXPIRATION, EDITBUSINESSPLAN, BUSINESSPLAN,
     EDITFORMPIPELINE, CREATEFORMPIPELINE, VISITEDIT, VISIT, EDITPREVISITA,
     PREVISITA, CLIENTCERTIFY, CLIENTSFIND, CLIENTEDIT, CREATEPROPSPECT, STUDYCREDIT,
-    COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, VIEWMANAGEMENT, DASHBOARDCOMPONENT,
-    LOGINCOMPONENT,
+    COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, MANAGEMENTVIEW,
+    LOGINCOMPONENT,     
     LoginComponentURL,
-    DashboardComponentURL,
-    ViewManagementURL,
+    MainComponentURL,
+    ManagementViewURL,
     ShareholderComponentURL,
     ComponentClientInformationURL,
     StudyCreditURL,
@@ -88,22 +89,17 @@ import {
     VIEWALERT,
     ADMINALERTCLIENTSPENDINGUPDATE,
     SHEDULER,
-    DEFAULT, MyTasksPageUrl, MyTasksPage
+    DEFAULT,
+    MyTasksPageUrl,
+    MyTasksPage
 } from "./constantsAnalytics";
-import TaskPage from "./components/pendingTask/taskPage";
-import MyTaskPage from "./components/myTasks/myTaskPage";
 
-
-const  AssociateObjectives =  makeAssociateList("Objetivos");
 
 class App extends Component {
    
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
           this.onRouteChanged();
-         
-
-
         }
       }
 
@@ -111,10 +107,8 @@ class App extends Component {
           var routeActive =this.validateRouteActive();
           window.dataLayer.push({
             'nombreflujo': nombreflujoAnalytics,
-            'event': BIZTRACK_+routeActive,
+            'event': BIZTRACK_ + routeActive,
             'pagina':routeActive
-
-
           });
         
        
@@ -125,10 +119,10 @@ class App extends Component {
         switch (this.props.location.pathname) {
             case LoginComponentURL:
                 return LOGINCOMPONENT;
-            case DashboardComponentURL:
-                return DASHBOARDCOMPONENT;
-            case ViewManagementURL:
-                return VIEWMANAGEMENT;                                
+            case MainComponentURL:
+                return MAINCOMPONENT;
+            case ManagementViewURL:
+                return MANAGEMENTVIEW;
             case ShareholderComponentURL:
                 return SHAREHOLDERCOMPONENT;
             case ViewAlertsURL:
@@ -216,9 +210,9 @@ export default (
             <Route path="login" component={LoginComponent}></Route>
             <Route path="logout" component={LoginComponent}></Route>
             <Route path="pageUnderConstruction" component={pageUnderConstructor} />
-            <Route path="dashboard" component={DashboardComponent}>
+            <Route path="dashboard" component={MainComponent}>
+                <Route path="managementView" component={ManagementView}></Route>
                 <Route path="clients" component={ClientsFind}></Route>
-                <Route path="viewManagement" component={ViewManagement}></Route>
                 <Route path="shareholder" component={ShareholderComponent}></Route>
                 <Route path="clientInformation" component={ComponentClientInformation}></Route>
                 <Route path="creditStudy" component={StudyCredit}></Route>
@@ -256,7 +250,6 @@ export default (
                 <Route path="walletShare" component={WalletShare}></Route>
                 <Route path="controlDashboard" component={ControlDashboard}></Route>
                 <Route path="sheduler" component={Sheduler}></Route>
-                <Route path="prueba" component={AssociateObjectives} />
             </Route>
             
             <Route path="*" component={PageNotFound}/>

@@ -92,6 +92,25 @@ export function clearFilter() {
     }
 }
 
+export function getAlertPortfolioExpirationDashboard(page) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionTokenFront')
+        },
+        "messageBody": {
+            "pageNum": page,
+            "maxRows": 5,
+            "order" : 1,
+            "columnOrder" : 'balanceOverdue'
+        }
+    };
+    const request = axios.post(APP_URL + "/getClientsPortfolioExpiration", json);
+    return {
+        type: CLEAR_FILTER_CLIENTS_PE,
+        payload: request
+    }
+}
+
 export function changeTeam(idTeam) {
     return {
         type: CHANGE_TEAM_PE,

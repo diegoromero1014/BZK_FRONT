@@ -10,11 +10,11 @@ import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import MultipleSelect from '../../../ui/multipleSelect/multipleSelectComponent';
 
-import { changeStateSaveData } from '../../dashboard/actions';
+import { changeStateSaveData } from '../../main/actions';
 import { getMasterDataFields } from '../../selectsComponent/actions';
 
 import { MESSAGE_ERROR, MESSAGE_DOWNLOAD_DATA, DATE_FORMAT, DATETIME_FORMAT, APP_URL } from '../../../constantsGlobal';
-import { TAB_TASKS } from '../../viewManagement/constants';
+import { TAB_TASKS } from '../../managementView/constants';
 import { TASK_STATUS } from '../../selectsComponent/constants';
 
 
@@ -68,7 +68,7 @@ class DownloadTask extends Component {
 	}
 
 	_downloadTask() {
-		const { fields: { initialValidityDate, finalValidityDate, taskStatus }, changeStateSaveData, getXlsTask, swtShowMessage, itemSeletedModal } = this.props;
+		const { fields: { initialValidityDate, finalValidityDate, taskStatus }, changeStateSaveData, getXlsTask, swtShowMessage, itemSelectedModal } = this.props;
 		let errorInForm = false;
 
 		const states = JSON.parse('[' + ((taskStatus.value) ? taskStatus.value : "") + ']');
@@ -95,7 +95,7 @@ class DownloadTask extends Component {
 
 		if (!errorInForm) {
 			changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
-			if (TAB_TASKS === itemSeletedModal) {
+			if (TAB_TASKS === itemSelectedModal) {
 				getXlsTask(initialValidityDate.value, finalValidityDate.value, states).then(function (data) {
 					if (data.payload.data.status === 200) {
 						window.open(APP_URL + '/getExcelReport?filename=' + data.payload.data.data.filename + '&id=' + data.payload.data.data.sessionToken, '_blank');
