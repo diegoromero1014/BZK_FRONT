@@ -25,6 +25,7 @@ import {
     TEAM_FOR_EMPLOYEE_REGION_ZONE,
     TEAM_VALUE_OBJECTS
 } from "../selectsComponent/constants";
+import moment from "moment";
 
 export class AdvancedFilters extends Component {
     constructor(props) {
@@ -106,6 +107,7 @@ export class AdvancedFilters extends Component {
 
         setFieldValue('region', val, true);
         setFieldValue('zone', '', true);
+        this.dispatchAdvancedFilters();
     };
 
     onChangeZoneStatus = val => {
@@ -122,17 +124,46 @@ export class AdvancedFilters extends Component {
                 zone: val
             });
         }
+        this.dispatchAdvancedFilters();
+    };
 
+    onChangeCell = val => {
+        const {setFieldValue} = this.props;
+        setFieldValue('cell', val, true);
+        this.dispatchAdvancedFilters();
+    };
+
+    onChangeState = val => {
+        const {setFieldValue} = this.props;
+        setFieldValue('state', val, true);
+        this.dispatchAdvancedFilters();
+    };
+
+    dispatchAdvancedFilters = () => {
+        const {dispatchFilters, values: {closingDateTo, closingDateFrom, region, zone, cell, state}} = this.props;
+        let filters = {
+            closingDateTo: moment(closingDateTo, "DD/MM/YYYY").toDate().getTime(),
+            closingDateFrom: moment(closingDateFrom, "DD/MM/YYYY").toDate().getTime(),
+            region,
+            zone,
+            cell,
+            state
+        };
+        dispatchFilters(filters);
     };
 
     render() {
         const {fields: {closingDateFrom, closingDateTo, region, zone, cell, state}} = this.state;
         const {selectsReducer, setFieldValue, doneFilter} = this.props;
         return (<div>
-                <Form style={{backgroundColor: "#FFFFFF", width: "100%", paddingBottom: "50px"}}>                    
-                    <b>Filtrar</b>
-                    <Row style={{width: '99%', paddingLeft: 20}}>
-                        <Col xs={12}><label>Fecha de cierre</label></Col>
+                <Form style={{backgroundColor: "#FFFFFF", width: "100%", paddingBottom: "50px"}}>
+                    <Row style={{paddingTop: 20, width: '99%', paddingLeft: 20}}>
+                        <Col xs={12}>
+                            <h3>Filtrar</h3>
+                        </Col>
+                    </Row>
+                    <Row style={{paddingTop: 20, width: '99%', paddingLeft: 20}}>
+                        <Col xs={12}><b>Fecha de cierre</b></Col>
                         <Col xs={6}>
                             <Field type="date" name="closingDateFrom">
                                 {({field: {value, name, onBlur}}) =>
@@ -248,9 +279,7 @@ export class AdvancedFilters extends Component {
                                             valueProp={'id'}
                                             textProp={'description'}
                                             value={value}
-                                            onChange={(id, val) => {
-                                                setFieldValue(name, id, false);
-                                            }}
+                                            onChange={val => this.onChangeCell(val)}
                                             onBlur={onBlur}
                                             data={selectsReducer.get(TEAM_VALUE_OBJECTS) || []}
                                             className='field-input'
@@ -294,7 +323,7 @@ export class AdvancedFilters extends Component {
                             </Field>
                         </Col>
                     </Row>
-                    <Row style={{ paddingTop: 5, width: '99%', paddingLeft: 20 }}>
+                    <Row style={{ paddingTop: 20, width: '99%', paddingLeft: 20 }}>
                             <Col xs={12} md={12} lg={12}>
                                 <Field type="text" name="done">
                                     {({ field: { value, name, onBlur } }) =>
@@ -312,23 +341,6 @@ export class AdvancedFilters extends Component {
                                 </Field>
                             </Col>
                         </Row>
-                        <Row style={{ paddingTop: 5, width: '99%', paddingLeft: 20 }}>
-                            <Col xs={12} md={12} lg={12}>
-                                <Field type="text" name="clear">
-                                    {({ field: { value, name, onBlur } }) =>
-                                        <div style={{ textAlign: "center" }}>
-                                            <button id="btnClearFilter"
-                                                className="btn"
-                                                title="Limpiar"
-                                                type="button"
-                                                style={{ backgroundColor: "#7c8080" }}>
-                                                Filter
-                                            </button>
-                                        </div>
-                                    }
-                                </Field>
-                            </Col>
-                        </Row>     
                 </Form>
             </div>
         );
