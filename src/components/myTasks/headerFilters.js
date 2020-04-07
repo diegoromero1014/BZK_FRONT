@@ -32,9 +32,22 @@ export class HeaderFilters extends Component {
     }
 
     async componentDidMount() {
-        const {filter, myTasks, fields: {users, rol, initialDate, finalDate}} = this.props;
+        const {filter, myTasks, fields: {users, rol, initialDate, finalDate}, dispatchGetUserAssistantsById} = this.props;
         if (!_.isNil(filter)) {
+
             const filtered = myTasks.get('initialFilter');
+            
+            const getAssistant = await dispatchGetUserAssistantsById();
+
+            await this.setState({
+                subordinates: _.get(getAssistant, 'payload.data.data'),
+                defaultInitialDate: filtered.initialDate,
+                defaultFinalDate: filtered.finalDate,
+                initialDate: filtered.initialDate,
+                finalDate: filtered.finalDate,
+                user: filtered.users
+            });
+            
             users.onChange(filtered.users);
             rol.onChange(filtered.rol);
             initialDate.onChange(filtered.initialDate);
