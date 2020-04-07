@@ -18,7 +18,13 @@ import {
     getRegionsByEmployee
 } from "../selectsComponent/actions";
 import {showLoading} from "../loading/actions";
-import {LIST_REGIONS, LIST_ZONES, TASK_STATUS, TEAM_VALUE_OBJECTS} from "../selectsComponent/constants";
+import {
+    LIST_REGIONS,
+    LIST_ZONES,
+    TASK_STATUS,
+    TEAM_FOR_EMPLOYEE_REGION_ZONE,
+    TEAM_VALUE_OBJECTS
+} from "../selectsComponent/constants";
 
 export class AdvancedFilters extends Component {
     constructor(props) {
@@ -89,9 +95,39 @@ export class AdvancedFilters extends Component {
         await dispatchGetMasterDataFields([TASK_STATUS, LIST_REGIONS, LIST_ZONES, TEAM_VALUE_OBJECTS]);
     };
 
+    onChangeRegionStatus = val =>  {
+        const { setFieldValue, consultListWithParameterUbicationDispatch, clearListsDispatch} = this.props;
+
+        clearListsDispatch([LIST_ZONES, TEAM_VALUE_OBJECTS]);
+
+        if (!_.isEqual(val, "")) {
+            consultListWithParameterUbicationDispatch(LIST_ZONES, val);
+        }
+
+        setFieldValue('region', val, true);
+        setFieldValue('zone', '', true);
+    };
+
+    onChangeZoneStatus = val => {
+        const {consultListWithParameterDispatch, clearListsDispatch, setFieldValue, values: {region}} = this.props;
+
+        setFieldValue('zone', val, true);
+        setFieldValue('cell', '', true);
+
+        clearListsDispatch([TEAM_VALUE_OBJECTS]);
+
+        if (val) {
+            consultListWithParameterDispatch(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
+                region: region,
+                zone: val
+            });
+        }
+
+    };
+
     render() {
         const {fields: {closingDateFrom, closingDateTo, region, zone, cell, state}} = this.state;
-        const {selectsReducer, doneFilter} = this.props;
+        const {selectsReducer, setFieldValue, doneFilter} = this.props;
         return (<div>
                 <Form style={{backgroundColor: "#FFFFFF", width: "100%", paddingBottom: "50px"}}>                    
                     <b>Filtrar</b>
@@ -158,9 +194,7 @@ export class AdvancedFilters extends Component {
                                             valueProp={'id'}
                                             textProp={'value'}
                                             value={value}
-                                            onChange={(id, val) => {
-                                                setFieldValue(name, id, false);
-                                            }}
+                                            onChange={val => this.onChangeRegionStatus(val)}
                                             onBlur={onBlur}
                                             data={selectsReducer.get(LIST_REGIONS) || []}
                                             className='field-input'
@@ -182,16 +216,14 @@ export class AdvancedFilters extends Component {
                                     <div>
                                         {renderLabel(zone)}
                                         <ComboBox
-                                            name="state"
+                                            name="zone"
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
                                             textProp={'value'}
                                             value={value}
-                                            onChange={(id, val) => {
-                                                setFieldValue(name, id, false);
-                                            }}
+                                            onChange={val => this.onChangeZoneStatus(val)}
                                             onBlur={onBlur}
-                                            data={selectsReducer.get(TASK_STATUS) || []}
+                                            data={selectsReducer.get(LIST_ZONES) || []}
                                             className='field-input'
                                             parentId="dashboardComponentScroll"
                                             filterData={true}
@@ -214,13 +246,13 @@ export class AdvancedFilters extends Component {
                                             name="cell"
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
-                                            textProp={'value'}
+                                            textProp={'description'}
                                             value={value}
                                             onChange={(id, val) => {
                                                 setFieldValue(name, id, false);
                                             }}
                                             onBlur={onBlur}
-                                            data={selectsReducer.get('teamValueObjects') || []}
+                                            data={selectsReducer.get(TEAM_VALUE_OBJECTS) || []}
                                             className='field-input'
                                             parentId="dashboardComponentScroll"
                                             filterData={true}
