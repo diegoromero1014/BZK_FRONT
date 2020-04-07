@@ -148,6 +148,7 @@ export class AdvancedFilters extends Component {
                                             placeholder='DD/MM/YYYY'
                                             className='field-input'
                                             name="closingDateFrom"
+                                            style={{fontSize: "85%"}}
                                         />
                                         <ErrorMessage name="closingDateFrom" component={'div'}>
                                             {message => renderMessageError(message)}
@@ -171,7 +172,7 @@ export class AdvancedFilters extends Component {
                                             placeholder='DD/MM/YYYY'
                                             className='field-input'
                                             name="closingDateTo"
-                                           style={{textAlign: "left"}} 
+                                           style={{fontSize: "85%"}} 
                                         />
 
                                         <ErrorMessage name="closingDateTo" component={'div'}>
