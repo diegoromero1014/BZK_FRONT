@@ -19,6 +19,7 @@ let dispatchUpdateTitleNavBar = spy(sinon.stub());
 let getPendingTaskPromise;
 let getFinalizedTaskPromise;
 const defaultProps = {
+    params: {},
   dispatchGetMasterDataFields,
   dispatchUpdateTitleNavBar,
   myTasks,
