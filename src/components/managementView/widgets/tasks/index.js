@@ -41,13 +41,13 @@ class Task extends Component {
         const { dispatchSetRolToSearch } = this.props;
 
         await dispatchSetRolToSearch({
-            users: [await this.getUser()],
+            users: await this.getUser(),
             rol: this.getRole(),
-            initialDate: moment(moment().subtract(3, 'months'), "DD/MM/YYYY").toDate().getTime(),
-            finalDate: moment(moment(), "DD/MM/YYYY").toDate().getTime()
+            initialDate: await moment().subtract(3, 'months'),
+            finalDate: await moment()
         });
 
-        redirectUrl("/dashboard/myTask");
+        redirectUrl("/dashboard/myTask/filtered");
     }
 
     getRole = () => this.state.tabName === MY_TASKS ? RESPONSIBLE : ASSIGNED;
