@@ -5,6 +5,7 @@ import { clientsFindServer } from "../../../clients/actions";
 import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_BUTTON_SEARCH, CLOSE_BUSQUEDA, STYLE_BUTTON_SEARCH_FOCUS, STYLE_BUTTON_PROSPECT} from "./constants";
 import { bindActionCreators } from "redux";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
+import { updateTitleNavBar } from '../../../navBar/actions';
 import { redirectUrl } from "../../../globalComponents/actions";
 import { changeActiveItemMenu } from '../../../menu/actions';
 import { MODULE_MY_CLIENTS } from "../../../../constantsGlobal";
@@ -21,8 +22,9 @@ export class SearchClient extends Component {
 	}
 
 	redirectCreatePropspect = () => {
-		const { dispatchChangeActiveItemMenu } = this.props;
+		const { dispatchChangeActiveItemMenu, dispatchUpdateTitleNavBar } = this.props;
 		dispatchChangeActiveItemMenu(MODULE_MY_CLIENTS);
+		dispatchUpdateTitleNavBar(MODULE_MY_CLIENTS);
 		redirectUrl("/dashboard/createPropspect");
 	}
 
@@ -117,7 +119,8 @@ export class SearchClient extends Component {
 const mapDispatchToProps = dispatch => bindActionCreators({
 	dispatchClientsFindServer: clientsFindServer,
 	dispatchSwtShowMessage: swtShowMessage,
-	dispatchChangeActiveItemMenu : changeActiveItemMenu
+	dispatchChangeActiveItemMenu : changeActiveItemMenu,
+	dispatchUpdateTitleNavBar : updateTitleNavBar
 }, dispatch);
 
 export default connect(null, mapDispatchToProps)(SearchClient);
