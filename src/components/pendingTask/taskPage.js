@@ -7,7 +7,7 @@ import {
     AFFIRMATIVE_ANSWER,
     CANCEL,
     EDITAR,
-    MESSAGE_SAVE_DATA, MODULE_BUSSINESS_PLAN, MODULE_VISITS,
+    MESSAGE_SAVE_DATA, MODULE_BUSSINESS_PLAN, MODULE_TASKS, MODULE_VISITS,
     REQUEST_INVALID_INPUT,
     REQUEST_SUCCESS
 } from "../../constantsGlobal";
@@ -65,14 +65,10 @@ export class TaskPage extends React.Component {
     }
 
     componentWillMount() {
-        const {idClient, dispatchConsultInfoClient} = this.props;
+        const {idClient} = this.props;
         if (idClient) {
-            window.sessionStorage.setItem('idClientSelected', idClient);
-            dispatchConsultInfoClient().then(this.validateClientSelected);
-        } else {
-            this.validateClientSelected();
+            this.setClientIdInSessionStorage(idClient);
         }
-
     }
 
     async componentDidMount() {
@@ -228,6 +224,7 @@ export class TaskPage extends React.Component {
             }
             nameEntity = taskInfo.nameEntity;
             this.entityId = taskInfo.entityId;
+            await dispatchValidatePermissionsByModule(MODULE_TASKS);
             if (taskInfo.nameEntity === 'Plan de negocio') {
                 dispatchValidatePermissionsByModule(MODULE_BUSSINESS_PLAN);
                 dispatchDetailBusiness(taskInfo.entityId);
@@ -241,9 +238,16 @@ export class TaskPage extends React.Component {
                 nameUsuario: taskInfo.assignedBy,
                 canOnlyAddNotes: taskInfo.canOnlyAddNotes
             });
+            this.setClientIdInSessionStorage(taskInfo.clientId);
         } else {
             this.setState({ isEditable: false, canOnlyAddNotes: false });
         }
+    };
+
+    setClientIdInSessionStorage = (idClient) => {
+        const { dispatchConsultInfoClient } = this.props;
+        window.sessionStorage.setItem('idClientSelected', idClient);
+        dispatchConsultInfoClient().then(this.validateClientSelected);
     };
 
     saveTaskComment = async (comment) => {
@@ -409,7 +413,7 @@ function mapDispatchToProps(dispatch) {
         dispatchDetailBusiness: detailBusiness,
         dispatchDetailVisit: detailVisit,
         dispatchValidatePermissionsByModule: validatePermissionsByModule,
-        dispatchShowBrandConfidential: showBrandConfidential
+        dispatchShowBrandConfidential: showBrandConfidential,
     }, dispatch);
 }
 
