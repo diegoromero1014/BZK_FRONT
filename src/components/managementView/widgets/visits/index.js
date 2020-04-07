@@ -6,7 +6,8 @@ import TabComponent from "../../../../ui/Tab";
 import EconomicGroupsToBeVisited from './economicGroupsToBeVisited';
 
 import {
-    ECONOMIC_GROUPS_TO_BE_VISITED
+    ECONOMIC_GROUPS_TO_BE_VISITED,
+    PENDING_VIEWS_TAB
 } from "./constants";
 
 import { getEconomicGroupsToBeVisited } from './actions';
@@ -35,6 +36,9 @@ export class VisitsSection extends Component {
                 disable: false,
                 number: totalEconomicGroupsToBeVisited || 0,
                 callback: this.handleDispatchGetEconomicGroupsToBeVisited
+            },
+            {
+                name: PENDING_VIEWS_TAB
             }
         ];
         return (
