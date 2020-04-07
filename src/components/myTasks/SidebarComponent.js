@@ -1,5 +1,6 @@
 import React from "react";
 import Sidebar from "react-sidebar";
+import AdvancedFilters from './AdvancedFilters'; 
 
 
 class SidebarComponent extends React.Component {
@@ -10,7 +11,7 @@ class SidebarComponent extends React.Component {
     };
     this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
     this.styles = {
-      sidebar: { background: "white", width: "300px" },
+      sidebar: { background: "white", width: "450px" },
       root: { position: 'initial' },
       content: { position: 'initial' }
     }
@@ -24,10 +25,12 @@ class SidebarComponent extends React.Component {
     return (
       <div >
         <Sidebar
-          sidebar={<b>Filtrar</b>          
-          }
+          sidebar={
+            <div>
+              <AdvancedFilters doneFilter={this.onSetSidebarOpen} />
+            </div>
+            }
           open={this.state.sidebarOpen}
-          onSetOpen={this.onSetSidebarOpen}
           styles={this.styles}
           pullRight={true}
         />

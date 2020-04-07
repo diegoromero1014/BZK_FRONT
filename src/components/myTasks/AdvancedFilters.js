@@ -91,9 +91,10 @@ export class AdvancedFilters extends Component {
 
     render() {
         const {fields: {closingDateFrom, closingDateTo, region, zone, cell, state}} = this.state;
-        const {selectsReducer} = this.props;
+        const {selectsReducer, doneFilter} = this.props;
         return (<div>
-                <Form style={{backgroundColor: "#FFFFFF", width: "100%", paddingBottom: "50px"}}>
+                <Form style={{backgroundColor: "#FFFFFF", width: "100%", paddingBottom: "50px"}}>                    
+                    <b>Filtrar</b>
                     <Row style={{width: '99%', paddingLeft: 20}}>
                         <Col xs={12}><label>Fecha de cierre</label></Col>
                         <Col xs={6}>
@@ -134,6 +135,7 @@ export class AdvancedFilters extends Component {
                                             placeholder='DD/MM/YYYY'
                                             className='field-input'
                                             name="closingDateTo"
+                                           style={{textAlign: "left"}} 
                                         />
 
                                         <ErrorMessage name="closingDateTo" component={'div'}>
@@ -260,6 +262,41 @@ export class AdvancedFilters extends Component {
                             </Field>
                         </Col>
                     </Row>
+                    <Row style={{ paddingTop: 5, width: '99%', paddingLeft: 20 }}>
+                            <Col xs={12} md={12} lg={12}>
+                                <Field type="text" name="done">
+                                    {({ field: { value, name, onBlur } }) =>
+                                        <div style={{ textAlign: "center" }}>
+                                            <button id="btnDoneFilter"
+                                                className="btn"
+                                                title="Hecho"
+                                                type="button"
+                                                style={{ backgroundColor: "#7c8080" }}
+                                                onClick={() => doneFilter(false)}>
+                                                Hecho
+                                            </button>
+                                        </div>
+                                    }
+                                </Field>
+                            </Col>
+                        </Row>
+                        <Row style={{ paddingTop: 5, width: '99%', paddingLeft: 20 }}>
+                            <Col xs={12} md={12} lg={12}>
+                                <Field type="text" name="clear">
+                                    {({ field: { value, name, onBlur } }) =>
+                                        <div style={{ textAlign: "center" }}>
+                                            <button id="btnClearFilter"
+                                                className="btn"
+                                                title="Limpiar"
+                                                type="button"
+                                                style={{ backgroundColor: "#7c8080" }}>
+                                                Filter
+                                            </button>
+                                        </div>
+                                    }
+                                </Field>
+                            </Col>
+                        </Row>     
                 </Form>
             </div>
         );
