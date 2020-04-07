@@ -1,5 +1,6 @@
 import React from "react";
 import Sidebar from "react-sidebar";
+import AdvancedFilters from "./AdvancedFilters";
 
 
 class SidebarComponent extends React.Component {
@@ -24,7 +25,11 @@ class SidebarComponent extends React.Component {
     return (
       <div >
         <Sidebar
-          sidebar={<b>Filtrar</b>          
+          sidebar={
+            <div>
+              <span>Filtrar</span>
+              <AdvancedFilters/>
+            </div>
           }
           open={this.state.sidebarOpen}
           onSetOpen={this.onSetSidebarOpen}

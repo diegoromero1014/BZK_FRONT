@@ -18,7 +18,13 @@ import {
     getRegionsByEmployee
 } from "../selectsComponent/actions";
 import {showLoading} from "../loading/actions";
-import {LIST_REGIONS, LIST_ZONES, TASK_STATUS, TEAM_VALUE_OBJECTS} from "../selectsComponent/constants";
+import {
+    LIST_REGIONS,
+    LIST_ZONES,
+    TASK_STATUS,
+    TEAM_FOR_EMPLOYEE_REGION_ZONE,
+    TEAM_VALUE_OBJECTS
+} from "../selectsComponent/constants";
 
 export class AdvancedFilters extends Component {
     constructor(props) {
@@ -99,10 +105,29 @@ export class AdvancedFilters extends Component {
 
         if (!_.isEqual(val, "")) {
             consultListWithParameterUbicationDispatch(LIST_ZONES, val);
+        }
+
+        setFieldValue('region', val, true);
+        setFieldValue('zone', '', true);
+    };
+
+    onChangeZoneStatus = val => {
+        const {consultListWithParameterDispatch, clearListsDispatch, setFieldValue, values: {region}, consultListWithParameterUbicationDispatch} = this.props;
+        /*zone.onChange(val);
+        team.onChange("");*/
+        setFieldValue('zone', val, true);
+        clearListsDispatch([TEAM_VALUE_OBJECTS]);
+
+        debugger;
+        if (val) {
+            consultListWithParameterUbicationDispatch(TEAM_FOR_EMPLOYEE_REGION_ZONE, val);
+            /*consultListWithParameterDispatch(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
+                region: region,
+                zone: val
+            });*/
             //this._handlePrevisitsFind();
         }
 
-        setFieldValue('region', val.title, true);
     };
 
     render() {
@@ -194,14 +219,12 @@ export class AdvancedFilters extends Component {
                                     <div>
                                         {renderLabel(zone)}
                                         <ComboBox
-                                            name="state"
+                                            name="zone"
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
                                             textProp={'value'}
                                             value={value}
-                                            onChange={(id, val) => {
-                                                setFieldValue(name, id, false);
-                                            }}
+                                            onChange={val => this.onChangeZoneStatus(val)}
                                             onBlur={onBlur}
                                             data={selectsReducer.get(LIST_ZONES) || []}
                                             className='field-input'
