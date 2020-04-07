@@ -202,7 +202,7 @@ export class MyTaskPage extends Component {
     };
 
     render() {
-        const {myTasks} = this.props;
+        const {params: {filtered}, myTasks} = this.props;
         const {loading} = this.state;
         let tabPending = myTasks.get("tabPending");
         let tabFinished = myTasks.get("tabFinished");
@@ -225,7 +225,7 @@ export class MyTaskPage extends Component {
                 boxShadow: "0px 0px 10px -7px rgba(0,0,0,0.75)"
               }}
             >
-              <HeaderFilters dispatchFilters={this.dispatchFilters} />
+              <HeaderFilters dispatchFilters={this.dispatchFilters} filter={filtered}/>
               <ProgressBarComponent
                 pending={tabPending.rowCount}
                 finalized={tabFinished.rowCount}

@@ -32,6 +32,26 @@ export class HeaderFilters extends Component {
     }
 
     async componentDidMount() {
+        const {filter, myTasks, fields: {users, rol, initialDate, finalDate}} = this.props;
+        if (!_.isNil(filter)) {
+            const filtered = myTasks.get('initialFilter');
+            users.onChange(filtered.users);
+            rol.onChange(filtered.rol);
+            initialDate.onChange(filtered.initialDate);
+            finalDate.onChange(filtered.finalDate);
+        } else {
+            await this.defaultFilters();
+        }
+    }
+
+    validateFilter = () => {
+        const {fields: {users}} = this.props;
+        if (_.isEmpty(users.value)) {
+            users.onChange(this.state.user);
+        }
+    };
+
+    defaultFilters = async () => {
         const {fields: {users, rol, initialDate, finalDate}, dispatchGetUserAssistantsById} = this.props;
         let userName = window.localStorage.getItem("name");
         let dateInitial = await moment().subtract(3, 'months');
@@ -53,13 +73,6 @@ export class HeaderFilters extends Component {
 
         rol.onChange("RESPONSIBLE");
         users.onChange(value.id);
-    }
-
-    validateFilter = () => {
-        const {fields: {users}} = this.props;
-        if (_.isEmpty(users.value)) {
-            users.onChange(this.state.user);
-        }
     };
 
     searchByFilters = () => {
@@ -196,9 +209,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({reducerGlobal}) {
+function mapStateToProps({reducerGlobal, myTasks}) {
     return {
-        reducerGlobal
+        reducerGlobal,
+        myTasks
     };
 }
 
