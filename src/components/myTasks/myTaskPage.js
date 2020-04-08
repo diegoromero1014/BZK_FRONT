@@ -257,9 +257,9 @@ export class MyTaskPage extends Component {
                 role={myTasks.get("initialFilter").rol}
                 loading={loading==true}
               />
-            <div>
+            <div>{myTasks.get("initialFilter").initialDate &&
                 <SidebarComponent getDefaultFilters={this.getDefaultFilters} dispatchFilters={this.dispatchFilters}/>
-            </div>
+            }</div>
             </div>
             <div style={{ backgroundColor: "white", width: "100%" }}>
               <div style={{ display: "flex" }}>
