@@ -198,6 +198,10 @@ export class MyTaskPage extends Component {
         }
     };
 
+    getDefaultFilters = () => {
+        return this.state.filters;
+    };
+
     dispatchFilters = async (filtersResponse) => {
         const {myTasks, dispatchSetRolToSearch} = this.props;
         let {filters} = this.state;
@@ -205,7 +209,7 @@ export class MyTaskPage extends Component {
         this.setState({
            filters: Object.assign(filters, filtersResponse)
         });
-        console.log(this.state.filters);
+
         await this.fetchAndDispatchFinalizedTasks(
             0, myTasks.get("tabFinished").order, null, this.state.filters
         );
@@ -254,9 +258,9 @@ export class MyTaskPage extends Component {
                 loading={loading==true}
               />
             <div>
-                <SidebarComponent dispatchFilters={this.dispatchFilters}/>
-            </div>              
-            </div>            
+                <SidebarComponent getDefaultFilters={this.getDefaultFilters} dispatchFilters={this.dispatchFilters}/>
+            </div>
+            </div>
             <div style={{ backgroundColor: "white", width: "100%" }}>
               <div style={{ display: "flex" }}>
                 <PendingTasksHelp />
@@ -271,7 +275,7 @@ export class MyTaskPage extends Component {
               </div>
               <TabComponent
                 tabs={[
-                  { 
+                  {
                     name: PENDING_TASKS,
                     number: tabPending.rowCount,
                     tooltip: TOOLTIP_PENDING,

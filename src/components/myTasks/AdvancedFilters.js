@@ -7,18 +7,12 @@ import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import {connect} from 'react-redux';
 import {bindActionCreators} from "redux";
-import {changeTeam, clearFilter} from "../sheduler/actions";
-import {consultInfoClient} from "../clientInformation/actions";
-import {validatePermissionsByModule} from "../../actionsGlobal";
 import {
-    clearLists,
-    consultDataSelect,
     consultListWithParameter,
     consultListWithParameterUbication,
     getMasterDataFields,
     getRegionsByEmployee
 } from "../selectsComponent/actions";
-import {showLoading} from "../loading/actions";
 import {
     LIST_REGIONS,
     LIST_ZONES,
@@ -62,12 +56,12 @@ export class AdvancedFilters extends Component {
     }
 
     async componentDidMount() {
-        const {myTasks, setFieldValue} = this.props;
+        const {setFieldValue, getDefaultFilters} = this.props;
         await this.masterDataFields();
-        let defaultClosingDateFrom = myTasks.get('initialFilter').initialDate;
-        debugger;
-
-        setFieldValue('closingDateFrom', moment(defaultClosingDateFrom).format("DD/MM/YYYY"), true);
+        setFieldValue('closingDateTo', moment(), true);
+        let response = await getDefaultFilters();
+        console.log(response);
+        //setFieldValue('closingDateFrom', moment(response.initialDate).format("DD/MM/YYYY"), true)
     }
 
     renderTitle = ({name, message, nullable}) => (
@@ -109,34 +103,33 @@ export class AdvancedFilters extends Component {
     };
 
     onChangeRegionStatus = val => {
-        const {setFieldValue, consultListWithParameterUbicationDispatch, clearListsDispatch} = this.props;
-
-        clearListsDispatch([LIST_ZONES, TEAM_VALUE_OBJECTS]);
+        const {setFieldValue, consultListWithParameterUbicationDispatch, consultListWithParameterDispatch} = this.props;
 
         if (!_.isEqual(val, "")) {
             consultListWithParameterUbicationDispatch(LIST_ZONES, val);
+            consultListWithParameterDispatch(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
+                region: val,
+                zone: 0
+            });
+            setFieldValue('region', val, true);
+            setFieldValue('zone', '', true);
+            setFieldValue('cell', '', true);
+            this.dispatchAdvancedFilters();
         }
-
-        setFieldValue('region', val, true);
-        setFieldValue('zone', '', true);
-        this.dispatchAdvancedFilters();
     };
 
     onChangeZoneStatus = val => {
-        const {consultListWithParameterDispatch, clearListsDispatch, setFieldValue, values: {region}} = this.props;
-
-        setFieldValue('zone', val, true);
-        setFieldValue('cell', '', true);
-
-        clearListsDispatch([TEAM_VALUE_OBJECTS]);
+        const {consultListWithParameterDispatch, setFieldValue, values: {region}} = this.props;
 
         if (val) {
             consultListWithParameterDispatch(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
                 region: region,
                 zone: val
             });
+            setFieldValue('zone', val, true);
+            setFieldValue('cell', '', true);
+            this.dispatchAdvancedFilters();
         }
-        this.dispatchAdvancedFilters();
     };
 
     onChangeCell = val => {
@@ -354,16 +347,9 @@ const form = withFormik({
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        consultInfoClientDispatch: consultInfoClient,
-        validatePermissionsByModuleDispatch: validatePermissionsByModule,
-        consultDataSelectDispatch: consultDataSelect,
         consultListWithParameterUbicationDispatch: consultListWithParameterUbication,
         consultListWithParameterDispatch: consultListWithParameter,
-        changeTeam,
-        showLoadingDispatch: showLoading,
-        clearFilterDispatch: clearFilter,
         getRegionsByEmployeeDispatch: getRegionsByEmployee,
-        clearListsDispatch: clearLists,
         dispatchGetMasterDataFields: getMasterDataFields,
     }, dispatch);
 }
