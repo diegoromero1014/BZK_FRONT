@@ -3,9 +3,9 @@ import { shallow } from 'enzyme';
 import Immutable from "immutable";
 import _ from "lodash";
 
-import {MyTaskPage} from "../../../../../../../src/components/myTasks/myTaskPage";
-import * as actions from "../../../../../../../src/components/myTasks/actions";
-import { ASSIGNED, PENDING, FINISHED } from "../../../../../../../src/components/myTasks/constants";
+import {MyTaskPage} from "../../../../../src/components/myTasks/myTaskPage";
+import * as actions from "../../../../../src/components/myTasks/actions";
+import { ASSIGNED, PENDING, FINISHED } from "../../../../../src/components/myTasks/constants";
 const myTasks = Immutable.Map({
   tabPending: { order: 0, rowCount: 0, data: {}, page: 0 },
   tabFinished: { order: 0, rowCount: 0, data: {}, page: 0 },
