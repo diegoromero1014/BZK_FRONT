@@ -36,8 +36,7 @@ class SidebarComponent extends React.Component {
                     pullRight={true}
                 />
 
-                <div
-                    style={{textAlign: "right"}}>
+                <div>
                     <button id="btnFilter"
                             className="btn"
                             title="Filtrar"
