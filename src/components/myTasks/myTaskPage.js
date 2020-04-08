@@ -117,7 +117,6 @@ export class MyTaskPage extends Component {
 
     _onSearchText(value){
         const {myTasks} = this.props;
-        console.log({myTasks});
 
         this.setState({
             textToSearch: value
