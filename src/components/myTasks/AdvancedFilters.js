@@ -7,21 +7,15 @@ import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import {connect} from 'react-redux';
 import {bindActionCreators} from "redux";
-import {changeTeam, clearFilter} from "../sheduler/actions";
-import {consultInfoClient} from "../clientInformation/actions";
-import {validatePermissionsByModule} from "../../actionsGlobal";
 import {
-    clearLists,
-    consultDataSelect,
     consultListWithParameter,
-    consultListWithParameterUbication, getMasterDataFields,
+    consultListWithParameterUbication,
+    getMasterDataFields,
     getRegionsByEmployee
 } from "../selectsComponent/actions";
-import {showLoading} from "../loading/actions";
 import {
     LIST_REGIONS,
     LIST_ZONES,
-    TASK_STATUS,
     TEAM_FOR_EMPLOYEE_REGION_ZONE,
     TEAM_VALUE_OBJECTS
 } from "../selectsComponent/constants";
@@ -39,7 +33,7 @@ export class AdvancedFilters extends Component {
                 },
                 closingDateTo: {
                     name: 'Hasta',
-                    nullable: false,
+                    nullable: true,
                     message: null
                 },
                 region: {
@@ -56,18 +50,18 @@ export class AdvancedFilters extends Component {
                     name: 'Célula',
                     nullable: true,
                     message: null
-                },
-                state: {
-                    name: 'Estado',
-                    nullable: true,
-                    message: null
                 }
             }
         }
     }
 
     async componentDidMount() {
+        const {setFieldValue, getDefaultFilters} = this.props;
         await this.masterDataFields();
+        setFieldValue('closingDateTo', moment(), true);
+        let response = await getDefaultFilters();
+        console.log(response);
+        //setFieldValue('closingDateFrom', moment(response.initialDate).format("DD/MM/YYYY"), true)
     }
 
     renderTitle = ({name, message, nullable}) => (
@@ -93,38 +87,49 @@ export class AdvancedFilters extends Component {
 
     masterDataFields = async () => {
         const {dispatchGetMasterDataFields} = this.props;
-        await dispatchGetMasterDataFields([TASK_STATUS, LIST_REGIONS, LIST_ZONES, TEAM_VALUE_OBJECTS]);
+        await dispatchGetMasterDataFields([LIST_REGIONS, LIST_ZONES, TEAM_VALUE_OBJECTS]);
     };
 
-    onChangeRegionStatus = val =>  {
-        const { setFieldValue, consultListWithParameterUbicationDispatch, clearListsDispatch} = this.props;
-
-        clearListsDispatch([LIST_ZONES, TEAM_VALUE_OBJECTS]);
-
-        if (!_.isEqual(val, "")) {
-            consultListWithParameterUbicationDispatch(LIST_ZONES, val);
-        }
-
-        setFieldValue('region', val, true);
-        setFieldValue('zone', '', true);
+    onChangeClosingDateTo = val => {
+        const {setFieldValue} = this.props;
+        setFieldValue('closingDateTo', val, true);
         this.dispatchAdvancedFilters();
     };
 
+    onChangeClosingDateFrom = val => {
+        const {setFieldValue} = this.props;
+        setFieldValue('closingDateFrom', val, true);
+        this.dispatchAdvancedFilters();
+    };
+
+    onChangeRegionStatus = val => {
+        const {setFieldValue, consultListWithParameterUbicationDispatch, consultListWithParameterDispatch} = this.props;
+
+        if (!_.isEqual(val, "")) {
+            consultListWithParameterUbicationDispatch(LIST_ZONES, val);
+            consultListWithParameterDispatch(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
+                region: val,
+                zone: 0
+            });
+            setFieldValue('region', val, true);
+            setFieldValue('zone', '', true);
+            setFieldValue('cell', '', true);
+            this.dispatchAdvancedFilters();
+        }
+    };
+
     onChangeZoneStatus = val => {
-        const {consultListWithParameterDispatch, clearListsDispatch, setFieldValue, values: {region}} = this.props;
-
-        setFieldValue('zone', val, true);
-        setFieldValue('cell', '', true);
-
-        clearListsDispatch([TEAM_VALUE_OBJECTS]);
+        const {consultListWithParameterDispatch, setFieldValue, values: {region}} = this.props;
 
         if (val) {
             consultListWithParameterDispatch(TEAM_FOR_EMPLOYEE_REGION_ZONE, {
                 region: region,
                 zone: val
             });
+            setFieldValue('zone', val, true);
+            setFieldValue('cell', '', true);
+            this.dispatchAdvancedFilters();
         }
-        this.dispatchAdvancedFilters();
     };
 
     onChangeCell = val => {
@@ -133,28 +138,31 @@ export class AdvancedFilters extends Component {
         this.dispatchAdvancedFilters();
     };
 
-    onChangeState = val => {
-        const {setFieldValue} = this.props;
-        setFieldValue('state', val, true);
-        this.dispatchAdvancedFilters();
-    };
-
     dispatchAdvancedFilters = () => {
-        const {dispatchFilters, values: {closingDateTo, closingDateFrom, region, zone, cell, state}} = this.props;
+        const {dispatchFilters, values: {closingDateTo, closingDateFrom, region, zone, cell}} = this.props;
         let filters = {
             closingDateTo: moment(closingDateTo, "DD/MM/YYYY").toDate().getTime(),
             closingDateFrom: moment(closingDateFrom, "DD/MM/YYYY").toDate().getTime(),
             region,
             zone,
-            cell,
-            state
+            cell
         };
         dispatchFilters(filters);
     };
 
+    clearForm = () => {
+        const {setFieldValue} = this.props;
+        setFieldValue('closingDateFrom', '', true);
+        setFieldValue('closingDateTo', '', true);
+        setFieldValue('region', '', true);
+        setFieldValue('zone', '', true);
+        setFieldValue('cell', '', true);
+        this.dispatchAdvancedFilters();
+    };
+
     render() {
-        const {fields: {closingDateFrom, closingDateTo, region, zone, cell, state}} = this.state;
-        const {selectsReducer, setFieldValue, doneFilter} = this.props;
+        const {fields: {closingDateFrom, closingDateTo, region, zone, cell}} = this.state;
+        const {selectsReducer, doneFilter} = this.props;
         return (<div>
                 <Form style={{backgroundColor: "#FFFFFF", width: "100%", paddingBottom: "50px"}}>
                     <Row style={{paddingTop: 20, width: '99%', paddingLeft: 20}}>
@@ -174,7 +182,7 @@ export class AdvancedFilters extends Component {
                                             format={"DD/MM/YYYY"}
                                             time={false}
                                             value={value}
-                                            onChange={val => setFieldValue(name, val, false)}
+                                            onChange={val => this.onChangeClosingDateFrom(val)}
                                             onBlur={onBlur}
                                             placeholder='DD/MM/YYYY'
                                             className='field-input'
@@ -198,7 +206,7 @@ export class AdvancedFilters extends Component {
                                             format={"DD/MM/YYYY"}
                                             time={false}
                                             value={value}
-                                            onChange={val => setFieldValue(name, val, false)}
+                                            onChange={val => this.onChangeClosingDateTo(val)}
                                             onBlur={onBlur}
                                             placeholder='DD/MM/YYYY'
                                             className='field-input'
@@ -295,53 +303,34 @@ export class AdvancedFilters extends Component {
                             </Field>
                         </Col>
                     </Row>
-                    <Row style={{paddingTop: 40, width: '99%', paddingLeft: 20}}>
+                    <Row style={{paddingTop: 20, width: '99%', paddingLeft: 20}}>
                         <Col xs={12} md={12} lg={12}>
-                            <Field type="text" name="state">
-                                {({field: {value, name, onBlur}}) =>
-                                    <div>
-                                        {renderLabel(state)}
-                                        <ComboBox
-                                            name="state"
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            value={value}
-                                            onChange={(id, val) => {
-                                                setFieldValue(name, id, false);
-                                            }}
-                                            onBlur={onBlur}
-                                            data={selectsReducer.get(TASK_STATUS) || []}
-                                            className='field-input'
-                                            parentId="dashboardComponentScroll"
-                                            filterData={true}
-                                        />
-                                        <ErrorMessage name="state" component={'div'}>
-                                            {message => renderMessageError(message)}
-                                        </ErrorMessage>
-                                    </div>
-                                }
-                            </Field>
+                            <div style={{textAlign: "center"}}>
+                                <button id="btnDoneFilter"
+                                        className="btn"
+                                        title="Hecho"
+                                        type="button"
+                                        style={{backgroundColor: "#7c8080"}}
+                                        onClick={() => doneFilter(false)}>
+                                    Hecho
+                                </button>
+                            </div>
                         </Col>
                     </Row>
-                    <Row style={{ paddingTop: 20, width: '99%', paddingLeft: 20 }}>
-                            <Col xs={12} md={12} lg={12}>
-                                <Field type="text" name="done">
-                                    {({ field: { value, name, onBlur } }) =>
-                                        <div style={{ textAlign: "center" }}>
-                                            <button id="btnDoneFilter"
-                                                className="btn"
-                                                title="Hecho"
-                                                type="button"
-                                                style={{ backgroundColor: "#7c8080" }}
-                                                onClick={() => doneFilter(false)}>
-                                                Hecho
-                                            </button>
-                                        </div>
-                                    }
-                                </Field>
-                            </Col>
-                        </Row>
+                    <Row center="xs" style={{paddingTop: 20, width: '99%', paddingLeft: 20}}>
+                        <Col xs={12} md={12} lg={12}>
+                            <div style={{textAlign: "center"}}>
+                                <button id="btnFilter"
+                                        className="btn"
+                                        title="Limpiar"
+                                        type="button"
+                                        style={{backgroundColor: "#7c8080"}}
+                                        onClick={() => this.clearForm()}>
+                                    Limpiar
+                                </button>
+                            </div>
+                        </Col>
+                    </Row>
                 </Form>
             </div>
         );
@@ -353,28 +342,23 @@ const form = withFormik({
         props.onSubmit(values);
     },
 
-    mapPropsToValues: (props) => {}
+    mapPropsToValues: (props) => {
+    }
 })(AdvancedFilters);
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        consultInfoClientDispatch: consultInfoClient,
-        validatePermissionsByModuleDispatch: validatePermissionsByModule,
-        consultDataSelectDispatch: consultDataSelect,
         consultListWithParameterUbicationDispatch: consultListWithParameterUbication,
         consultListWithParameterDispatch: consultListWithParameter,
-        changeTeam,
-        showLoadingDispatch: showLoading,
-        clearFilterDispatch: clearFilter,
         getRegionsByEmployeeDispatch: getRegionsByEmployee,
-        clearListsDispatch: clearLists,
         dispatchGetMasterDataFields: getMasterDataFields,
     }, dispatch);
 }
 
-function mapStateToProps({selectsReducer}) {
+function mapStateToProps({selectsReducer, myTasks}) {
     return {
         selectsReducer,
+        myTasks
     };
 }
 

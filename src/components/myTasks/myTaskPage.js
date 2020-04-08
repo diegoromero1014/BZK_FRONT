@@ -45,8 +45,7 @@ export class MyTaskPage extends Component {
                 closingDateFrom: null,
                 region: null,
                 zone: null,
-                cell: null,
-                state: null
+                cell: null
             }
         };
     }
@@ -199,20 +198,26 @@ export class MyTaskPage extends Component {
         }
     };
 
-    dispatchFilters = async (filters1) => {
-        const {myTasks} = this.props;
+    getDefaultFilters = () => {
+        return this.state.filters;
+    };
+
+    dispatchFilters = async (filtersResponse) => {
+        const {myTasks, dispatchSetRolToSearch} = this.props;
         let {filters} = this.state;
 
         this.setState({
-           filters: Object.assign(filters, filters1)
+           filters: Object.assign(filters, filtersResponse)
         });
-        console.log(this.state.filters);
+
         await this.fetchAndDispatchFinalizedTasks(
             0, myTasks.get("tabFinished").order, null, this.state.filters
         );
         await this.fetchAndDispatchPendingTasks(
             0, myTasks.get("tabPending").order, null, this.state.filters
         );
+
+        dispatchSetRolToSearch(this.state.filters);
     };
 
     permissionToEditTask = () => {
@@ -253,9 +258,9 @@ export class MyTaskPage extends Component {
                 loading={loading==true}
               />
             <div>
-                <SidebarComponent dispatchFilters={this.dispatchFilters}/>
-            </div>              
-            </div>            
+                <SidebarComponent getDefaultFilters={this.getDefaultFilters} dispatchFilters={this.dispatchFilters}/>
+            </div>
+            </div>
             <div style={{ backgroundColor: "white", width: "100%" }}>
               <div style={{ display: "flex" }}>
                 <PendingTasksHelp />
@@ -270,7 +275,7 @@ export class MyTaskPage extends Component {
               </div>
               <TabComponent
                 tabs={[
-                  { 
+                  {
                     name: PENDING_TASKS,
                     number: tabPending.rowCount,
                     tooltip: TOOLTIP_PENDING,

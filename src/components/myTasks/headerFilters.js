@@ -63,7 +63,7 @@ export class HeaderFilters extends Component {
     };
 
     searchByFilters = () => {
-        const {fields: {users, rol}, dispatchFilters, dispatchSetRolToSearch} = this.props;
+        const {fields: {users, rol}, dispatchFilters} = this.props;
         let filters = {
             users: JSON.parse('[' + ((_.isNull(users) || _.isUndefined(users)) ? "" : users.value) + ']'),
             rol: rol.value,
@@ -73,7 +73,6 @@ export class HeaderFilters extends Component {
 
         setTimeout(() => {
             this.validateFilter();
-            dispatchSetRolToSearch(filters);
         }, 300);
 
         dispatchFilters(filters);
