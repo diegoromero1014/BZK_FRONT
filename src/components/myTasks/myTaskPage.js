@@ -198,10 +198,6 @@ export class MyTaskPage extends Component {
         }
     };
 
-    getDefaultFilters = () => {
-        return this.state.filters;
-    };
-
     dispatchFilters = async (filtersResponse) => {
         const {myTasks, dispatchSetRolToSearch} = this.props;
         let {filters} = this.state;
