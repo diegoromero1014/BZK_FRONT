@@ -83,4 +83,17 @@ export const getOutdatedContacts = (first, max) => ({
           max
       }
   })
+})
+
+export const getImportantDates = (position, max, first) => ({  
+  payload: axios.post(APP_URL + "/getImportantDatesContact", {
+      "messageHeader": {
+          "sessionToken": window.localStorage.getItem('sessionTokenFront')
+      },
+      "messageBody": {
+          position,
+          first,
+          max
+      }
+  })
 });

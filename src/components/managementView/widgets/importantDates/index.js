@@ -1,12 +1,40 @@
 import React, { Component } from 'react';
-import { TITLE_IMPORTANT_DATES, TITLE_TAB_DATES, STYLE_CONTAINER_TABS } from './constants';
+import { TITLE_IMPORTANT_DATES,
+     TITLE_TAB_DATES, 
+     STYLE_CONTAINER_TABS,
+     TITLE_STRATEGIC_CONTACTS,
+     TITLE_TACTIC_CONTACTS,
+     TITLE_OPERATIVE_CONTACTS } from './constants';
 import TabComponent from "../../../../ui/Tab";
 
 
 const tabs = [
     {
-        name: TITLE_TAB_DATES,
-        content: <div>Desarrollo de la HU 1338631 </div>,
+        name: TITLE_TAB_DATES
+
+    },
+]
+
+const subTabs = [
+    {
+        name: TITLE_STRATEGIC_CONTACTS,
+        content: <div>Contáctos estratégicos</div>,
+        disable: false,
+        number: 0,
+        callback: () => {}
+
+    },
+    {
+        name: TITLE_TACTIC_CONTACTS,
+        content: <div>Contáctos tácticos</div>,
+        disable: false,
+        number: 0,
+        callback: () => {}
+
+    },
+    {
+        name: TITLE_OPERATIVE_CONTACTS,
+        content: <div>Contáctos operativos</div>,
         disable: false,
         number: 0,
         callback: () => {}
@@ -22,6 +50,7 @@ class SectionImportantDates extends Component {
                 <h3>{TITLE_IMPORTANT_DATES}</h3>
                 <div style={STYLE_CONTAINER_TABS}>
                     <TabComponent tabs={tabs} />
+                        <TabComponent tabs={subTabs} />
                 </div>
             </div >
         )
