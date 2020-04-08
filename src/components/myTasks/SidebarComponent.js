@@ -22,13 +22,13 @@ class SidebarComponent extends React.Component {
     }
 
     render() {
-        const {dispatchFilters, getDefaultFilters} = this.props;
+        const {dispatchFilters, defaultFilters} = this.props;
         return (
             <div>
                 <Sidebar
                     sidebar={
                         <div>
-                            <AdvancedFilters getDefaultFilters={getDefaultFilters} dispatchFilters={dispatchFilters} doneFilter={this.onSetSidebarOpen}/>
+                            <AdvancedFilters defaultFilters={defaultFilters} dispatchFilters={dispatchFilters} doneFilter={this.onSetSidebarOpen}/>
                         </div>
                     }
                     open={this.state.sidebarOpen}

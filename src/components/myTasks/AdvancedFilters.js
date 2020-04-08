@@ -56,11 +56,10 @@ export class AdvancedFilters extends Component {
     }
 
     async componentDidMount() {
-        const {setFieldValue, getDefaultFilters} = this.props;
+        const { setFieldValue, defaultFilters } = this.props;
         await this.masterDataFields();
-        let response = await getDefaultFilters();
         setFieldValue('closingDateTo', moment(), true);
-        setFieldValue('closingDateFrom', moment(response.initialDate).format("DD/MM/YYYY"));
+        setFieldValue('closingDateFrom', moment(defaultFilters.initialDate).format("DD/MM/YYYY"));
     }
 
     renderTitle = ({name, message, nullable}) => (

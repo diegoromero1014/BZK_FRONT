@@ -258,7 +258,7 @@ export class MyTaskPage extends Component {
                 loading={loading==true}
               />
             <div>{myTasks.get("initialFilter").initialDate &&
-                <SidebarComponent getDefaultFilters={this.getDefaultFilters} dispatchFilters={this.dispatchFilters}/>
+                <SidebarComponent key={myTasks.get("initialFilter").initialDate} defaultFilters={this.state.filters} dispatchFilters={this.dispatchFilters}/>
             }</div>
             </div>
             <div style={{ backgroundColor: "white", width: "100%" }}>
