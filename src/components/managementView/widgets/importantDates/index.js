@@ -11,7 +11,8 @@ import '../../../../../styles/importantDates/main.scss';
 
 const tabs = [
     {
-        name: TITLE_TAB_DATES
+        name: TITLE_TAB_DATES,
+        className: 'mainImportantDates'
 
     },
 ]

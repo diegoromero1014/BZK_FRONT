@@ -2,7 +2,7 @@ import axios from 'axios';
 import { APP_URL } from '../../../constantsGlobal';
 import {
   GET_CONTACT_DETAILS, SAVE_CONTACT, CLEAR_EDIT_CONTACT, DELETE_RELATOINSHIP_SERVER,
-  SET_ARRAY_DELETE_CLIENT_CONTACT, DELETE_RELATOINSHIP_LOCAL, SAVE_UPDATED_INFO_CHECK
+  SET_ARRAY_DELETE_CLIENT_CONTACT, SAVE_UPDATED_INFO_CHECK
 } from '../constants';
 
 export function getContactDetails(contactId, clientId) {
@@ -136,13 +136,6 @@ export function setArrayDeleteClientContact(listRelationshipClients) {
     payload: listRelationshipClients
   }
 }
-
-export function deleteRelationship() {
-  return {
-    type: DELETE_RELATOINSHIP_LOCAL
-  }
-}
-
 
 export function deleteRelationshipServer(listClientContactSalve) {
     const json = {
