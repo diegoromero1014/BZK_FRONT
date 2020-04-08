@@ -16,7 +16,7 @@ import {
 } from "./constants";
 
 import { getAlertPortfolioExpirationDashboard } from '../../../alertPortfolioExpirtation/actions';
-import { getOutdatedContacts } from '../../actions';
+import { getOutdatedContacts } from './actions';
 import { blackListAlerts } from '../../../alertBlackList/actions';
 import { covenantsAlerts } from '../../../alertCovenants/actions';
 import { MAX_ROWS } from './constants';
@@ -95,7 +95,6 @@ export class AlertSection extends Component {
                 <div style={{
                     position: 'relative',
                     background: '#FFFFFF',
-
                     boxShadow: '0px 1px 2px 0 rgba(34, 36, 38, 0.15)',
                     margin: '1rem 0em',
                     padding: '0px !important',

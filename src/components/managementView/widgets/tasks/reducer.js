@@ -15,17 +15,16 @@ const initialState = {
     }
 }
 
-export default (state = initialState, { type, payload }) => {
-    switch (type) {
-        case TASK_BOARD_VALUES:
-            const status = get(payload, "data.status", 500);
+export default (state = initialState, action = {}) => {
+    if (action.type == TASK_BOARD_VALUES) {
+        const status = get(action, "payload.data.status", 500);
 
-            if (status !== 500) {
-                return merge({}, state, get(payload, "data.data"));
-            }
+        if (status !== 500) {
+            return merge({}, state, get(action, "payload.data.data"));
+        }
 
-            return state;
-        default:
-            return state;
+        return state;
+    } else {
+        return state;
     }
 }
