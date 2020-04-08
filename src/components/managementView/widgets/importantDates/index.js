@@ -6,6 +6,7 @@ import { TITLE_IMPORTANT_DATES,
      TITLE_TACTIC_CONTACTS,
      TITLE_OPERATIVE_CONTACTS } from './constants';
 import TabComponent from "../../../../ui/Tab";
+import '../../../../../styles/importantDates/main.scss';
 
 
 const tabs = [
@@ -18,6 +19,7 @@ const tabs = [
 const subTabs = [
     {
         name: TITLE_STRATEGIC_CONTACTS,
+        className: 'importantDatesStyle',
         content: <div>Contáctos estratégicos</div>,
         disable: false,
         number: 0,
@@ -26,6 +28,7 @@ const subTabs = [
     },
     {
         name: TITLE_TACTIC_CONTACTS,
+        className: 'importantDatesStyle',
         content: <div>Contáctos tácticos</div>,
         disable: false,
         number: 0,
@@ -34,6 +37,7 @@ const subTabs = [
     },
     {
         name: TITLE_OPERATIVE_CONTACTS,
+        className: 'importantDatesStyle',
         content: <div>Contáctos operativos</div>,
         disable: false,
         number: 0,
