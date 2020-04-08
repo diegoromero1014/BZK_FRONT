@@ -1,4 +1,3 @@
-import React from 'react';
 import reducer from '../../../../src/components/main/reducer';
 import { VALID_TOKEN, SAVE_DATA_LOADING, PRODUCTION_UPGRADE_REQUEST, PRODUCTION_UPGRADE_NOTIFIED } from '../../../../src/components/main/constants';
 import Immutable from 'immutable';
