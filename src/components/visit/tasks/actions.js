@@ -1,4 +1,6 @@
 import * as constants from './constants';
+import {PREPARE_COMMENTS_TO_SEND} from "../../globalComponents/comments/constants";
+import {PREPARE_TASKS_NOTES} from "./constants";
 
 export function deleteTask(index){
   return {
@@ -25,5 +27,11 @@ export function clearTasks(){
   return {
       type: constants.CLEAR_TASKS
     };
+}
+
+export function prepareTasksNotes(){
+    return {
+        type: PREPARE_TASKS_NOTES,
+    }
 }
 
