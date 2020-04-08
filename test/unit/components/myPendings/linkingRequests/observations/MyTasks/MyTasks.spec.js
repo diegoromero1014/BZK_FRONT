@@ -1,11 +1,11 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import {shallow} from 'enzyme';
 import Immutable from "immutable";
-import _ from "lodash";
 
 import {MyTaskPage} from "../../../../../../../src/components/myTasks/myTaskPage";
 import * as actions from "../../../../../../../src/components/myTasks/actions";
-import { ASSIGNED, PENDING, FINISHED } from "../../../../../../../src/components/myTasks/constants";
+import {ASSIGNED, FINISHED, PENDING} from "../../../../../../../src/components/myTasks/constants";
+
 const myTasks = Immutable.Map({
   tabPending: { order: 0, rowCount: 0, data: {}, page: 0 },
   tabFinished: { order: 0, rowCount: 0, data: {}, page: 0 },
@@ -19,11 +19,12 @@ let dispatchUpdateTitleNavBar = spy(sinon.stub());
 let getPendingTaskPromise;
 let getFinalizedTaskPromise;
 const defaultProps = {
-  dispatchGetMasterDataFields,
-  dispatchUpdateTitleNavBar,
-  myTasks,
-  dispatchFinalizedTasks,
-  dispatchPendingTasks
+    params: {},
+    dispatchGetMasterDataFields,
+    dispatchUpdateTitleNavBar,
+    myTasks,
+    dispatchFinalizedTasks,
+    dispatchPendingTasks
 };
 
 describe("Test MyTasks component", () => {
