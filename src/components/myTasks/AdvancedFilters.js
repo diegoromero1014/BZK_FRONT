@@ -56,12 +56,10 @@ export class AdvancedFilters extends Component {
     }
 
     async componentDidMount() {
-        const {setFieldValue, getDefaultFilters} = this.props;
+        const { setFieldValue, defaultFilters } = this.props;
         await this.masterDataFields();
         setFieldValue('closingDateTo', moment(), true);
-        let response = await getDefaultFilters();
-        console.log(response);
-        //setFieldValue('closingDateFrom', moment(response.initialDate).format("DD/MM/YYYY"), true)
+        setFieldValue('closingDateFrom', moment(defaultFilters.initialDate).format("DD/MM/YYYY"));
     }
 
     renderTitle = ({name, message, nullable}) => (
@@ -187,6 +185,7 @@ export class AdvancedFilters extends Component {
                                             placeholder='DD/MM/YYYY'
                                             className='field-input'
                                             name="closingDateFrom"
+                                            style={{fontSize: "85%"}}
                                         />
                                         <ErrorMessage name="closingDateFrom" component={'div'}>
                                             {message => renderMessageError(message)}
@@ -210,7 +209,7 @@ export class AdvancedFilters extends Component {
                                             placeholder='DD/MM/YYYY'
                                             className='field-input'
                                             name="closingDateTo"
-                                            style={{textAlign: "left"}}
+                                           style={{fontSize: "85%"}} 
                                         />
 
                                         <ErrorMessage name="closingDateTo" component={'div'}>

@@ -198,10 +198,6 @@ export class MyTaskPage extends Component {
         }
     };
 
-    getDefaultFilters = () => {
-        return this.state.filters;
-    };
-
     dispatchFilters = async (filtersResponse) => {
         const {myTasks, dispatchSetRolToSearch} = this.props;
         let {filters} = this.state;
@@ -257,9 +253,9 @@ export class MyTaskPage extends Component {
                 role={myTasks.get("initialFilter").rol}
                 loading={loading==true}
               />
-            <div>
-                <SidebarComponent getDefaultFilters={this.getDefaultFilters} dispatchFilters={this.dispatchFilters}/>
-            </div>
+            <div>{myTasks.get("initialFilter").initialDate &&
+                <SidebarComponent key={myTasks.get("initialFilter").initialDate} defaultFilters={this.state.filters} dispatchFilters={this.dispatchFilters}/>
+            }</div>
             </div>
             <div style={{ backgroundColor: "white", width: "100%" }}>
               <div style={{ display: "flex" }}>
