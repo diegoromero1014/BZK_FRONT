@@ -34,7 +34,7 @@ import {createPendingTaskNew} from "./createPendingTask/actions.js";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import moment from "moment";
 import {getInfoTaskUser} from '../myPendings/myTasks/actions';
-import {clearTask} from "./actions";
+import {clearTask, setTaskIdFromRedirect} from "./actions";
 import _ from 'lodash';
 import {consultInfoClient} from "../clientInformation/actions";
 import CommentsComponent from "../globalComponents/comments/commentsComponent";
@@ -45,7 +45,7 @@ import {detailBusiness} from "../businessPlan/actions";
 import {detailVisit} from "../visit/actions";
 import {validatePermissionsByModule} from "../../actionsGlobal";
 import {getTaskNotesByUserTaskId, saveTaskNote} from "./createPendingTask/actions";
-import {showBrandConfidential} from "../navBar/actions";
+import {showBrandConfidential, updateTitleNavBar} from "../navBar/actions";
 
 let nameEntity;
 
@@ -65,14 +65,17 @@ export class TaskPage extends React.Component {
     }
 
     componentWillMount() {
-        const {idClient} = this.props;
+        const {idClient, fromModal, dispatchUpdateTitleNavBar} = this.props;
         if (idClient) {
             this.setClientIdInSessionStorage(idClient);
         }
+
+        if(!fromModal)
+            dispatchUpdateTitleNavBar('Tareas');
     }
 
     async componentDidMount() {
-        const {params: {id}, dispatchShowLoading, filterUsersBancoDispatch, myPendingsReducer, dispatchFillComments} = this.props;
+        const {params: {id}, dispatchShowLoading, filterUsersBancoDispatch, myPendingsReducer, dispatchFillComments, dispatchSetTaskIdFromRedirect} = this.props;
         dispatchShowLoading(true, "Cargando...");
 
         Promise.all([this.masterDataFields(), this.getInfoTask(id)]).then(async () => {
@@ -92,6 +95,7 @@ export class TaskPage extends React.Component {
             if (taskDetail) {
                 dispatchFillComments(taskDetail.notes);
             }
+            dispatchSetTaskIdFromRedirect(null);
         });
     }
 
@@ -414,6 +418,8 @@ function mapDispatchToProps(dispatch) {
         dispatchDetailVisit: detailVisit,
         dispatchValidatePermissionsByModule: validatePermissionsByModule,
         dispatchShowBrandConfidential: showBrandConfidential,
+        dispatchUpdateTitleNavBar: updateTitleNavBar,
+        dispatchSetTaskIdFromRedirect: setTaskIdFromRedirect
     }, dispatch);
 }
 

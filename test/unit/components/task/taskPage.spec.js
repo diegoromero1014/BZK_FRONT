@@ -56,6 +56,8 @@ let dispatchGetCurrentComments;
 let dispatchConsultInfoClient;
 let dispatchSaveTaskNote;
 let dispatchGetTaskNotesByUserTaskId;
+let dispatchUpdateTitleNavBar;
+let dispatchValidatePermissionsByModule;
 let filterUsersBancoDispatch;
 let selectsReducer;
 let setFieldValue;
@@ -95,9 +97,11 @@ describe('Test taskPage', () => {
                 }
             }
         });
+        dispatchValidatePermissionsByModule = sinon.stub();
         dispatchFillComments = sinon.fake();
         dispatchGetCurrentComments = sinon.fake();
         dispatchSaveTaskNote = sinon.fake();
+        dispatchUpdateTitleNavBar = sinon.fake();
         dispatchConsultInfoClient = sinon.stub();
         dispatchGetTaskNotesByUserTaskId = sinon.stub();
         dispatchGetTaskNotesByUserTaskId.resolves({
@@ -153,6 +157,8 @@ describe('Test taskPage', () => {
             dispatchConsultInfoClient,
             dispatchSaveTaskNote,
             dispatchGetTaskNotesByUserTaskId,
+            dispatchUpdateTitleNavBar,
+            dispatchValidatePermissionsByModule,
             fromModal: false,
             closeModal,
             dispatchShowBrandConfidential
@@ -170,12 +176,6 @@ describe('Test taskPage', () => {
     describe('Rendering unit test', () => {
         it('Should render taskPage', () => {
             itRenders(<TaskPage {...defaultProps}/>);
-        });
-
-        it('should redirectUrl when render taskPage', () => {
-            defaultProps.clientInformacion = Immutable.Map({responseClientInfo: {}});
-            itRenders(<TaskPage {...defaultProps}/>);
-            sinon.assert.called(redirectUrl);
         });
 
         it('should unmount taskPage component', () => {

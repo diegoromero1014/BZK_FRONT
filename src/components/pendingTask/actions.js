@@ -1,20 +1,20 @@
-import { APP_URL } from '../../constantsGlobal';
+import {APP_URL} from '../../constantsGlobal';
 import {
   CHANGE_PAGE,
+  CHANGE_PAGE_FINALIZED,
+  CHANGE_PAGE_PENDING,
+  CLEAN_PAG_ORDER_COLUMN_FINALIZED_TASK,
+  CLEAN_PAG_ORDER_COLUMN_PENDING_TASK,
+  CLEAN_TEXT_TO_SEARCH,
   CLEAR_TASK,
-  CLEAR_USER_TASK,
+  FINISHED,
+  GET_FINALIZED_TASKS_CLIENT,
+  GET_PENDING_TASKS_CLIENT,
   GET_XLS_TASK,
   LIMITE_INF,
-  GET_PENDING_TASKS_CLIENT,
-  GET_FINALIZED_TASKS_CLIENT,
-  CLEAN_PAG_ORDER_COLUMN_PENDING_TASK,
-  CLEAN_PAG_ORDER_COLUMN_FINALIZED_TASK,
-  CHANGE_PAGE_PENDING,
-  CHANGE_PAGE_FINALIZED,
   PENDING,
-  FINISHED,
-  SET_TEXT_TO_SEARCH,
-  CLEAN_TEXT_TO_SEARCH
+  SET_TASK_ID_FROM_REDIRECT,
+  SET_TEXT_TO_SEARCH
 } from "./constants";
 import axios from 'axios';
 
@@ -171,6 +171,13 @@ export function setTextToSearch(textToSearch){
   return {
     type: SET_TEXT_TO_SEARCH,
     textToSearch
+  };
+}
+
+export function setTaskIdFromRedirect(id){
+  return {
+    type: SET_TASK_ID_FROM_REDIRECT,
+    id
   };
 }
 

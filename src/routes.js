@@ -39,7 +39,7 @@ import PageNotFound from "./components/notFoundPage/PageNotFound";
 import PrevisitPage from "./components/previsita/previsitPage";
 import TaskPage from "./components/pendingTask/taskPage";
 import MyTaskPage from "./components/myTasks/myTaskPage";
-
+import RedirectTaskComponent from "./components/pendingTask/redirectTask";
 
 import {
     BIZTRACK_, CONTROLDASHBOARD, WALLETSHARE, TRANSACTIONAL, FAVORITESGROUP,
@@ -49,7 +49,7 @@ import {
     EDITFORMPIPELINE, CREATEFORMPIPELINE, VISITEDIT, VISIT, EDITPREVISITA,
     PREVISITA, CLIENTCERTIFY, CLIENTSFIND, CLIENTEDIT, CREATEPROPSPECT, STUDYCREDIT,
     COMPONENTCLIENTINFORMATION, SHAREHOLDERCOMPONENT, MANAGEMENTVIEW,
-    LOGINCOMPONENT,     
+    LOGINCOMPONENT,
     LoginComponentURL,
     MainComponentURL,
     ManagementViewURL,
@@ -91,7 +91,7 @@ import {
     SHEDULER,
     DEFAULT,
     MyTasksPageUrl,
-    MyTasksPage
+    MyTasksPage, MAINCOMPONENT
 } from "./constantsAnalytics";
 
 
@@ -210,6 +210,9 @@ export default (
             <Route path="login" component={LoginComponent}></Route>
             <Route path="logout" component={LoginComponent}></Route>
             <Route path="pageUnderConstruction" component={pageUnderConstructor} />
+            <Route path="redirectTask" component={RedirectTaskComponent}>
+                <Route path=":id" component={RedirectTaskComponent}></Route>
+            </Route>
             <Route path="dashboard" component={MainComponent}>
                 <Route path="managementView" component={ManagementView}></Route>
                 <Route path="clients" component={ClientsFind}></Route>
