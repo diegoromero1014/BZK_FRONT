@@ -3,9 +3,9 @@ import { shallow } from 'enzyme';
 import Immutable from "immutable";
 import _ from "lodash";
 
-import {MyTaskPage} from "../../../../../../../src/components/myTasks/myTaskPage";
-import * as actions from "../../../../../../../src/components/myTasks/actions";
-import { ASSIGNED, PENDING, FINISHED } from "../../../../../../../src/components/myTasks/constants";
+import {MyTaskPage} from "../../../../../src/components/myTasks/myTaskPage";
+import * as actions from "../../../../../src/components/myTasks/actions";
+import { ASSIGNED, PENDING, FINISHED } from "../../../../../src/components/myTasks/constants";
 const myTasks = Immutable.Map({
   tabPending: { order: 0, rowCount: 0, data: {}, page: 0 },
   tabFinished: { order: 0, rowCount: 0, data: {}, page: 0 },
@@ -18,12 +18,22 @@ let dispatchGetMasterDataFields = spy(sinon.stub());
 let dispatchUpdateTitleNavBar = spy(sinon.stub());
 let getPendingTaskPromise;
 let getFinalizedTaskPromise;
+const dispatchValidatePermissionsByModule = sinon
+    .stub()
+    .resolves({
+        payload:{
+            data:{
+                validateLogin:true
+            }
+        }
+    });
 const defaultProps = {
   dispatchGetMasterDataFields,
   dispatchUpdateTitleNavBar,
   myTasks,
   dispatchFinalizedTasks,
-  dispatchPendingTasks
+  dispatchPendingTasks,
+  dispatchValidatePermissionsByModule
 };
 
 describe("Test MyTasks component", () => {
@@ -148,5 +158,29 @@ describe("Test MyTasks component", () => {
       expect(dispatchCleanPageAndSetOrderFinalized).to.have.been.called.exactly(
         1
       );
+    });
+
+    it("test _onChangeSearch when has value ", () => {
+        let wrapper = shallow(<MyTaskPage {...defaultProps}/>);
+        let dispatchPendingTasks = spy(sinon.stub());
+        let dispatchFinalizedTask = spy(sinon.stub());
+        wrapper.instance().fetchAndDispatchPendingTasks = dispatchPendingTasks;
+        wrapper.instance()._onSearchText('Test To Search');
+        expect(dispatchPendingTasks).to.have.been.called.exactly(1);
+        wrapper.instance().fetchAndDispatchFinalizedTasks = dispatchFinalizedTask;
+        wrapper.instance()._onSearchText('Test To Search');
+        expect(dispatchFinalizedTask).to.have.been.called.exactly(1);
+    });
+
+    it("test _onChangeSearch when has not value ", () => {
+        let wrapper = shallow(<MyTaskPage {...defaultProps}/>);
+        let dispatchPendingTasks = spy(sinon.stub());
+        let dispatchFinalizedTask = spy(sinon.stub());
+        wrapper.instance().fetchAndDispatchPendingTasks = dispatchPendingTasks;
+        wrapper.instance()._onSearchText('');
+        expect(dispatchPendingTasks).to.have.been.called.exactly(1);
+        wrapper.instance().fetchAndDispatchFinalizedTasks = dispatchFinalizedTask;
+        wrapper.instance()._onSearchText('');
+        expect(dispatchFinalizedTask).to.have.been.called.exactly(1);
     });
 });
