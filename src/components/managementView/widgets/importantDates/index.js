@@ -5,14 +5,12 @@ import {
   TITLE_IMPORTANT_DATES,
   TITLE_TAB_DATES,
   STYLE_CONTAINER_TABS,
-  TITLE_STRATEGIC_CONTACTS,
-  TITLE_TACTIC_CONTACTS,
-  TITLE_OPERATIVE_CONTACTS
+  ACTION_IMPORTANT_DATES
 } from "./constants";
 import TabComponent from "../../../../ui/Tab";
-import { getImportantDates } from "../../actions";
+import { getImportantDates } from "./actions";
 import "../../../../../styles/importantDates/main.scss";
-import StrategicSection from "./strategicSection";
+import SubTabsBirthdays from './subTabsBirthdays';
 
 class SectionImportantDates extends Component {
 
@@ -24,79 +22,44 @@ class SectionImportantDates extends Component {
 
   handleImportantDates = () => {
       const { dispatchGetImportantDates } = this.props ;
-      dispatchGetImportantDates("",0,0);
+      dispatchGetImportantDates(ACTION_IMPORTANT_DATES, "", 0, 0);
   }
 
-  countImportantDates = () => {
-    const { data  } = this.props;
+  main = () => {
+    const { all } = this.props;
 
     const tabs = [
       {
         name: TITLE_TAB_DATES,
         className: "mainImportantDates",
+        content: <SubTabsBirthdays />,
         disable: false,
-        number: data.length || 0,
+        number: all || 0,
         callback : () => this.handleImportantDates()
       }
     ];
-
-    const subTabs = [
-      {
-        name: TITLE_STRATEGIC_CONTACTS,
-        className: "importantDatesStyle",
-        content: <StrategicSection />,
-        disable: false,
-        number: 0,
-        callback: () => {}
-      },
-      {
-        name: TITLE_TACTIC_CONTACTS,
-        className: "importantDatesStyle",
-        content: <div>Contáctos tácticos</div>,
-        disable: false,
-        number: 0,
-        callback: () => {}
-      },
-      {
-        name: TITLE_OPERATIVE_CONTACTS,
-        className: "importantDatesStyle",
-        content: <div>Contáctos operativos</div>,
-        disable: false,
-        number: 0,
-        callback: () => {}
-      }
-    ];
+    
     return (
-      <div
-        style={{ width : "48%", height : "100%"}}
-      >
+      <div style={{ width : "48%", height : "100%"}}>
         <h3>{TITLE_IMPORTANT_DATES}</h3>
         <div style={STYLE_CONTAINER_TABS}>
           <TabComponent tabs={tabs} />
-            <TabComponent tabs={subTabs} />
         </div>
       </div>
     );
   };
 
   render() {
-    return this.countImportantDates();
+    return this.main();
   }
 }
 
 const mapStateToProps = ({ importantDates }) => ({
-    data : importantDates.rows
+    all: importantDates.allRecords
 })
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      dispatchGetImportantDates: getImportantDates
-    },
-    dispatch
-  );
+const mapDispatchToProps = dispatch => bindActionCreators({
+  dispatchGetImportantDates: getImportantDates
+}, dispatch);
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SectionImportantDates);
+export default connect(mapStateToProps, mapDispatchToProps)(SectionImportantDates);
