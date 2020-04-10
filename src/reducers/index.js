@@ -39,6 +39,7 @@ import myPendingsReducer from '../components/myPendings/myTasks/reducer';
 import draftDocumentsReducer from '../components/myPendings/draftDocuments/reducer';
 import reducerGlobal from '../reducerGlobal';
 import alertsReducer from '../components/alerts/reducer';
+import importantDates from '../components/managementView/widgets/importantDates/reducer';
 import alertPendingUpdateClientReducer from '../components/alertPendingUpdateClient/reducer';
 import alertPortfolioExpirationReducer from '../components/alertPortfolioExpirtation/reducer';
 import loadingReducer from '../components/loading/reducer';
@@ -116,6 +117,7 @@ export default combineReducers({
     clientProductReducer: clientProductReducer,
     reducerGlobal: reducerGlobal,
     alerts: alertsReducer,
+    importantDates,
     alertPendingUpdateClient: alertPendingUpdateClientReducer,
     myPendingsReducer: myPendingsReducer,
     draftDocumentsReducer: draftDocumentsReducer,

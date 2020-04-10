@@ -4,6 +4,7 @@ import { TAB_SELETED_ACTIVE, GET_CSV, CHANGE_ERROR_YEAR } from './constants';
 import { downloadReport } from "../../utils";
 import moment from "moment";
 import { OUTDATED_CONTACTS } from './widgets/alerts/constants';
+import { IMPORTANT_DATES } from './widgets/importantDates/constants';
 
 export function changeTabSeletedChartView(tabSeleted) {
     return {
@@ -85,15 +86,16 @@ export const getOutdatedContacts = (first, max) => ({
   })
 })
 
-export const getImportantDates = (type, max, first) => ({  
+export const getImportantDates = (type, max, first) => ({ 
+  type: IMPORTANT_DATES, 
   payload: axios.post(APP_URL + "/getImportantDatesContact", {
       "messageHeader": {
           "sessionToken": window.localStorage.getItem('sessionTokenFront')
       },
       "messageBody": {
           type,
-          first,
-          max
+          max,
+          first
       }
   })
 });
