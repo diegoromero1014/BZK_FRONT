@@ -58,7 +58,7 @@ export class SubTabsBirthdays extends Component {
         className: "importantDatesStyle",
         content: <StrategicSection />,
         disable: false,
-        number: strategics.length || 0,
+        number: strategics || 0,
         callback: () => this.handleStrategicContacts()
       },
       {
@@ -66,7 +66,7 @@ export class SubTabsBirthdays extends Component {
         className: "importantDatesStyle",
         content: <TacticSection />,
         disable: false,
-        number: tactics.length || 0,
+        number: tactics || 0,
         callback: () => this.handleTacticContacts()
       },
       {
@@ -74,7 +74,7 @@ export class SubTabsBirthdays extends Component {
         className: "importantDatesStyle",
         content: <OperativeSection />,
         disable: false,
-        number: operatives.length || 0,
+        number: operatives || 0,
         callback: () => this.handleOperativeContacts()
       }
     ];
@@ -91,9 +91,9 @@ export class SubTabsBirthdays extends Component {
 }
 
 const mapStateToProps = ({ importantDates }) => ({
-    strategics: importantDates.strategics,
-    tactics: importantDates.tactics,
-    operatives: importantDates.operatives,
+    strategics: importantDates.strategics.rowCount,
+    tactics: importantDates.tactics.rowCount,
+    operatives: importantDates.operatives.rowCount,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

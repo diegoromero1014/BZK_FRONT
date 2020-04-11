@@ -28,21 +28,22 @@ export class StrategicSection extends Component {
     handleOnPageChange = async page => {
         const { dispatchGetImportantDates } = this.props;
         this.setLoading(true);
-        await dispatchGetImportantDates(ACTION_STRATEGIC_CONTACTS, STRATEGIC_CONTACTS, page, MAX_ROWS);
+        await dispatchGetImportantDates(ACTION_STRATEGIC_CONTACTS, STRATEGIC_CONTACTS, page - 1, MAX_ROWS);
         this.setLoading(false);
     }
 
     render() {
-        const { data } = this.props;
+        const { data, total } = this.props;
+
+        debugger;
  
         const tableSettings = new TableBuilder(mapData(data), COLUMNS_CONTACTS)
             .setNoRowMessage("No existen registros.")
             .setRecordsPerPage(5)
             .setStriped(true)
-            .setTotalRecords(data.length)
+            .setTotalRecords(total || 0)
             .setOnPageChange(this.handleOnPageChange)
             .setLoading(this.state.loading)
-            .setMaximumVisiblePages(7)
             .build();
 
         return (
@@ -58,7 +59,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 const mapStateToProps = ({ importantDates }) => ({
-    data: importantDates.strategics
+    data: importantDates.strategics.rows,
+    total: importantDates.strategics.rowCount
 })
 
 

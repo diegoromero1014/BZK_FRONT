@@ -28,18 +28,18 @@ export class TacticSection extends Component {
     handleOnPageChange = async page => {
         const { dispatchGetImportantDates } = this.props;
         this.setLoading(true);
-        await dispatchGetImportantDates(ACTION_TACTIC_CONTACTS, TACTIC_CONTACTS, page, MAX_ROWS);
+        await dispatchGetImportantDates(ACTION_TACTIC_CONTACTS, TACTIC_CONTACTS, page - 1, MAX_ROWS);
         this.setLoading(false);
     }
 
     render() {
-        const { data } = this.props;
+        const { data, total } = this.props;
  
         const tableSettings = new TableBuilder(mapData(data), COLUMNS_CONTACTS)
             .setNoRowMessage("No existen registros.")
             .setRecordsPerPage(5)
             .setStriped(true)
-            .setTotalRecords(data.length)
+            .setTotalRecords(total || 0)
             .setOnPageChange(this.handleOnPageChange)
             .setLoading(this.state.loading)
             .setMaximumVisiblePages(7)
@@ -58,7 +58,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 const mapStateToProps = ({ importantDates }) => ({
-    data: importantDates.tactics
+    data: importantDates.tactics.rows,
+    total: importantDates.tactics.rowCount
 })
 
 

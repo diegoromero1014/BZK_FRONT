@@ -31,8 +31,7 @@ export class ManagementView extends Component {
                     height: 'auto',
                     background: '#fff',
                     width: '100%'
-                }}
-            >
+                }}>
                 <SecurityMessageComponent />
                 <Header />
                 <SectionSearchClient />
@@ -44,7 +43,7 @@ export class ManagementView extends Component {
                 <div
                     style={{
                         width: '100%',
-                        height: 400,
+                        height: 550,
                         background: 'transparent',
                         display: 'flex',
                         justifyContent: 'space-between',

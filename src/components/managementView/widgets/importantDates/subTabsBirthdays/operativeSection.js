@@ -28,21 +28,20 @@ export class OperativeSection extends Component {
     handleOnPageChange = async page => {
         const { dispatchGetImportantDates } = this.props;
         this.setLoading(true);
-        await dispatchGetImportantDates(ACTION_OPERATIVE_CONTACTS, OPERATIVE_CONTACTS, page, MAX_ROWS);
+        await dispatchGetImportantDates(ACTION_OPERATIVE_CONTACTS, OPERATIVE_CONTACTS, page - 1, MAX_ROWS);
         this.setLoading(false);
     }
 
     render() {
-        const { data } = this.props;
+        const { data, total } = this.props;
  
         const tableSettings = new TableBuilder(mapData(data), COLUMNS_CONTACTS)
             .setNoRowMessage("No existen registros.")
             .setRecordsPerPage(5)
             .setStriped(true)
-            .setTotalRecords(data.length)
+            .setTotalRecords(total || 0)
             .setOnPageChange(this.handleOnPageChange)
             .setLoading(this.state.loading)
-            .setMaximumVisiblePages(7)
             .build();
 
         return (
@@ -58,7 +57,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 const mapStateToProps = ({ importantDates }) => ({
-    data: importantDates.operatives
+    data: importantDates.operatives.rows,
+    total: importantDates.operatives.rowCount
 })
 
 

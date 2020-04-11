@@ -1,11 +1,21 @@
-import { ACTION_IMPORTANT_DATES, ACTION_STRATEGIC_CONTACTS, ACTION_TACTIC_CONTACTS, ACTION_OPERATIVE_CONTACTS } from "./subTabsBirthdays/constants"
+import { ACTION_STRATEGIC_CONTACTS, ACTION_TACTIC_CONTACTS, ACTION_OPERATIVE_CONTACTS } from "./subTabsBirthdays/constants";
+import { ACTION_IMPORTANT_DATES } from './constants';
 import { get } from 'lodash';
 
 const initialState = {
     allRecords: null,
-    strategics: [],
-    tactics: [],
-    operatives: [],
+    strategics: {
+      rows: [],
+      rowCount: null
+    },
+    tactics: {
+      rows: [],
+      rowCount: null
+    },
+    operatives: {
+      rows: [],
+      rowCount: null
+    }
 }
 
 export default (state = initialState, action = {}) => {
@@ -34,7 +44,10 @@ export default (state = initialState, action = {}) => {
         state, 
         { 
           allRecords: state.allRecords,
-          strategics: get(action.payload, 'data.data.rows', []),
+          strategics: {
+            rows: get(action.payload, 'data.data.rows', []),
+            rowCount: get(action.payload, 'data.data.rowCount', [])
+          },
           tactics: state.tactics,
           operatives: state.operatives
         }
@@ -46,7 +59,10 @@ export default (state = initialState, action = {}) => {
         { 
           allRecords: state.allRecords,
           strategics: state.strategics,
-          tactics: get(action.payload, 'data.data.rows', []),
+          tactics: {
+            rows: get(action.payload, 'data.data.rows', []),
+            rowCount: get(action.payload, 'data.data.rowCount', [])
+          },
           operatives: state.operatives
         }
       );
@@ -58,7 +74,10 @@ export default (state = initialState, action = {}) => {
           allRecords: state.allRecords,
           strategics: state.strategics,
           tactics: state.tactics,
-          operatives: get(action.payload, 'data.data.rows', [])
+          operatives: {
+            rows: get(action.payload, 'data.data.rows', []),
+            rowCount: get(action.payload, 'data.data.rowCount', [])
+          }
         }
       );
     default:
