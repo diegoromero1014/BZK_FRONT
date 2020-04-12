@@ -1,3 +1,4 @@
+import { ViewDetailClient } from './viewDetailClient';
 export const TITLE_STRATEGIC_CONTACTS = "Estratégicos";
 export const TITLE_TACTIC_CONTACTS = "Tácticos";
 export const TITLE_OPERATIVE_CONTACTS = "Operativos";
@@ -37,6 +38,14 @@ export const COLUMNS_CONTACTS = [
     {
         header: 'Número de contacto',
         prop: 'contactPhone'
-    }
+    },
+
+    {
+        header: 'Clientes',
+        prop: 'clients',
+        component: {
+            Component: ViewDetailClient
+        }
+    },
 
 ]
