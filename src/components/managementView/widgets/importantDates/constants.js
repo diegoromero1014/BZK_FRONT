@@ -1,5 +1,8 @@
 export const TITLE_IMPORTANT_DATES = "FECHAS IMPORTANTES";
 export const TITLE_TAB_DATES = "Cumpleaños";
+
+export const ACTION_IMPORTANT_DATES = "ACTION_IMPORTANT_DATES";
+
 export const STYLE_CONTAINER_TABS = {
     width: '100%',
     height: '100%',
