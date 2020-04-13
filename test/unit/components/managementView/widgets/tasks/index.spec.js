@@ -30,6 +30,7 @@ describe('Tasks test', () => {
 
         defaultProps.dispatchGetInformationUser = sinon.fake();
         defaultProps.dispatchSetRolToSearch = sinon.fake();
+        defaultProps.dispatchChangeActiveItemMenu = sinon.fake();
         redirect = sinon.stub(actions, 'redirectUrl');
 
         const initialStore = {

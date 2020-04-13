@@ -11,6 +11,8 @@ import { getTaskBoardValues, getInformationUser } from './action';
 import '../../../../../styles/board/widgets/tasks/main.scss';
 import { setRolToSearch } from '../../../myTasks/actions';
 import { redirectUrl } from "../../../globalComponents/actions";
+import { changeActiveItemMenu } from '../../../menu/actions';
+import { MODULE_TASKS } from '../../../../constantsGlobal';
 
 export class Task extends Component {
 
@@ -38,7 +40,7 @@ export class Task extends Component {
     }
 
     handleRedirect = async () => {
-        const { dispatchSetRolToSearch } = this.props;
+        const { dispatchSetRolToSearch, dispatchChangeActiveItemMenu } = this.props;
 
         await dispatchSetRolToSearch({
             users: await this.getUser(),
@@ -47,6 +49,7 @@ export class Task extends Component {
             finalDate: await moment()
         });
 
+        dispatchChangeActiveItemMenu(MODULE_TASKS);
         redirectUrl("/dashboard/myTask/filtered");
     }
 
@@ -113,7 +116,8 @@ const mapStateToProps = ({ boardTaskReducer: { assignedCounter, myTaskCounter } 
 const mapDispatchToProps = dispatch => bindActionCreators({
     dispatchGetTaskBoardValues: getTaskBoardValues,
     dispatchGetInformationUser: getInformationUser,
-    dispatchSetRolToSearch: setRolToSearch
+    dispatchSetRolToSearch: setRolToSearch,
+    dispatchChangeActiveItemMenu: changeActiveItemMenu,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Task);
