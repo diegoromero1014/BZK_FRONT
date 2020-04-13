@@ -8,7 +8,7 @@ export class SearchInputComponent extends Component {
         super(props);
         this.onSearch$ = new Subject();
         this.onSearch = this.onSearch.bind(this);
-    };
+    }
 
 
     componentDidMount() {
