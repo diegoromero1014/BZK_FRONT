@@ -73,13 +73,13 @@ class ViewDetailClient extends Component {
                                         tableSettings={
                                             new TableBuilder(clients, COLUMNS_CLIENTS)
                                                 .setNoRowMessage("No existen registros.")
-                                                .setRecordsPerPage(5)
+                                                .setRecordsPerPage(MAX_ROWS)
                                                 .setStriped(true)
-                                                .setTotalRecords(clients.length)
+                                                .setTotalRecords(data.length)
                                                 .setOnPageChange(async page => {
                                                     const indexOfLastPost = page * MAX_ROWS;
                                                     const indexOfFirstPost = indexOfLastPost - MAX_ROWS;
-                                                    
+
                                                     const clients = data
                                                         .split(";;")
                                                         .map(client => ({ name: client }))
