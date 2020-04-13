@@ -1,5 +1,4 @@
 import * as constants from './constants';
-import {PREPARE_COMMENTS_TO_SEND} from "../../globalComponents/comments/constants";
 import {PREPARE_TASKS_NOTES} from "./constants";
 
 export function deleteTask(index){

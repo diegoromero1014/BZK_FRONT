@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {Subject} from "rxjs";
 import {Input} from "semantic-ui-react";
 
@@ -8,7 +8,7 @@ export class SearchInputComponent extends Component {
         super(props);
         this.onSearch$ = new Subject();
         this.onSearch = this.onSearch.bind(this);
-    };
+    }
 
 
     componentDidMount() {
