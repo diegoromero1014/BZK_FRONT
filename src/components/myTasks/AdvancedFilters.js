@@ -156,6 +156,13 @@ export class AdvancedFilters extends Component {
         dispatchFilters(filters);
     };
 
+    validateCloseSideBar = () => {
+        const {values: {closingDateFrom}, doneFilter} = this.props;
+        if (!_.isEmpty(closingDateFrom)) {
+            doneFilter(false);
+        }
+    }
+
     clearForm = () => {
         const {setFieldValue} = this.props;
         setFieldValue('closingDateFrom', '', true);
@@ -168,7 +175,7 @@ export class AdvancedFilters extends Component {
 
     render() {
         const {fields: {closingDateFrom, closingDateTo, region, zone, cell}} = this.state;
-        const {selectsReducer, doneFilter} = this.props;
+        const {selectsReducer} = this.props;
         return (<div>
                 <Form style={{backgroundColor: "#FFFFFF", width: "100%", paddingBottom: "50px"}}>
                     <Row style={{paddingTop: 20, width: '99%', paddingLeft: 20}}>
@@ -317,7 +324,7 @@ export class AdvancedFilters extends Component {
                                         title="Hecho"
                                         type="button"
                                         style={{ margin: "8px 10px 0px 0px", backgroundColor: "rgb(79,78,78)", width: '40%'}}
-                                        onClick={() => doneFilter(false)}>
+                                        onClick={this.validateCloseSideBar}>
                                     <span style={{ color: "#FFFFFF", padding: "10px" }}>Hecho</span>
                                 </button>
                             </div>
