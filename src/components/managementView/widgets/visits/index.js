@@ -1,25 +1,34 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import '../../../../../styles/board/widgets/visits/main.scss';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import TabComponent from "../../../../ui/Tab";
+import PendingVisits from './pendingVisits';
 import EconomicGroupsToBeVisited from './economicGroupsToBeVisited';
 
 import {
+    MAX_ROWS,
     ECONOMIC_GROUPS_TO_BE_VISITED,
     PENDING_VIEWS_TAB
 } from "./constants";
 
 import { getEconomicGroupsToBeVisited } from './actions';
-import { MAX_ROWS } from './constants';
+import { requestPendingVisits } from './pendingVisits/actions';
+
+import '../../../../../styles/board/widgets/visits/main.scss';
 
 export class VisitsSection extends Component {
 
     async componentDidMount() {
         await Promise.all([
+            this.handlePendingVisits(),
             this.handleDispatchGetEconomicGroupsToBeVisited()
         ]);
+    }
+
+    handlePendingVisits = () => {
+        const { dispatchRequestPendingVisits } = this.props;
+        dispatchRequestPendingVisits(0, MAX_ROWS);
     }
 
     handleDispatchGetEconomicGroupsToBeVisited = async () => {
@@ -28,7 +37,7 @@ export class VisitsSection extends Component {
     }
 
     countVisits = () => {
-        const { totalEconomicGroupsToBeVisited } = this.props;
+        const { pendingVisits: { rowCount }, totalEconomicGroupsToBeVisited } = this.props;
 
         const tabs = [
             {
@@ -40,7 +49,12 @@ export class VisitsSection extends Component {
                 callback: this.handleDispatchGetEconomicGroupsToBeVisited
             },
             {
-                name: PENDING_VIEWS_TAB
+                name: PENDING_VIEWS_TAB,
+                content: <PendingVisits />,
+                disable: false,
+                className: 'economic-groups-tab',
+                number: rowCount || 0,
+                callback: () => this.handlePendingVisits
             }
         ];
         return (
@@ -67,14 +81,14 @@ export class VisitsSection extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => {
-    return bindActionCreators({
-        dispatchGetEconomicGroupsToBeVisited: getEconomicGroupsToBeVisited
-    }, dispatch)
-};
+const mapDispatchToProps = dispatch => bindActionCreators({
+    dispatchRequestPendingVisits: requestPendingVisits,
+    dispatchGetEconomicGroupsToBeVisited: getEconomicGroupsToBeVisited
+}, dispatch)
 
-const mapStateToProps = ({ economicGroupsToBeVisited }) => ({
+const mapStateToProps = ({ pendingVisits, economicGroupsToBeVisited }) => ({
+    pendingVisits,
     totalEconomicGroupsToBeVisited: economicGroupsToBeVisited.rowCount
-});
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(VisitsSection);
