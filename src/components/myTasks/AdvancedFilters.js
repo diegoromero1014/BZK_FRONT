@@ -20,6 +20,7 @@ import {
     TEAM_VALUE_OBJECTS
 } from "../selectsComponent/constants";
 import moment from "moment";
+import _ from 'lodash';
 
 export class AdvancedFilters extends Component {
     constructor(props) {
