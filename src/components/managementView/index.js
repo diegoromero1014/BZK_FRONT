@@ -7,7 +7,7 @@ import Reports from './widgets/reports';
 import Header from './header';
 import { updateTitleNavBar } from '../navBar/actions';
 import AlertSection from './widgets/alerts';
-import VisitComponent from './widgets/visits';
+import VisitsSection from './widgets/visits';
 import SectionSearchClient from './widgets/searchClient';
 import SectionImportantDates from './widgets/importantDates';
 import Tasks from './widgets/tasks';
@@ -40,8 +40,7 @@ export class ManagementView extends Component {
                     <Reports />
                 </div>
 
-                <div
-                    style={{
+                <div style={{
                         width: '100%',
                         height: 550,
                         background: 'transparent',
@@ -51,16 +50,18 @@ export class ManagementView extends Component {
                         marginTop: 100
                     }}
                 >
+                    
                     <Tasks />
                     <SectionImportantDates />
                 </div>
+
                 <div style={{ width: '100%', marginTop: 100 }}>
                     <AlertSection />
                 </div>
-                <div style={{ width: '100%', marginTop: 170 }}>
-                    <VisitComponent />
+                <div style={{ width: '100%', marginTop: 100 }}>
+                    <VisitsSection />
                 </div>
-            </div>
+            </div >
         );
     }
 
