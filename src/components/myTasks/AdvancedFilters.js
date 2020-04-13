@@ -93,6 +93,9 @@ export class AdvancedFilters extends Component {
 
     onChangeClosingDateTo = val => {
         const {setFieldValue} = this.props;
+        if (!_.isEmpty(val)) {
+            val = moment();
+        }
         setFieldValue('closingDateTo', val, true);
         this.dispatchAdvancedFilters();
     };
@@ -100,7 +103,9 @@ export class AdvancedFilters extends Component {
     onChangeClosingDateFrom = val => {
         const {setFieldValue} = this.props;
         setFieldValue('closingDateFrom', val, true);
-        this.dispatchAdvancedFilters();
+        if (!_.isEmpty(val)) {
+            this.dispatchAdvancedFilters();
+        }
     };
 
     onChangeRegionStatus = val => {
