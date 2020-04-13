@@ -95,9 +95,6 @@ class ViewDetailClient extends Component {
 
 
                             <div className="modalBt4-footer modal-footer">
-                                <button type="submit" className="btn btn-primary modal-button-edit" style={{ marginRight: 15 }}>
-                                    <span>Guardar</span>
-                                </button>
 
                                 <button type="button" className="btn btn-default modal-button-edit" onClick={this.handleCloseModal}>
                                     <span>Cancelar</span>
