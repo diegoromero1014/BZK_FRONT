@@ -13,30 +13,39 @@ class ViewDetailClient extends Component {
             visible: false,
             name: '',
             open: false,
-            clients: [],
-            page: 1
+            clients: []
         }
     }
 
     async componentWillMount() {
         const { data = [] } = this.props;
-        const { page } = this.state;
 
-        let clients = data.split(";;");
-
-        if (clients.length > 1) {
-            const indexOfLastPost = page * MAX_ROWS;
-            const indexOfFirstPost = indexOfLastPost - MAX_ROWS;
-
-            clients = clients.map(client => ({ name: client })).slice(indexOfFirstPost, indexOfLastPost);
-
-            await this.setState({ visible: true, clients });
+        if (data.length > 1) {
+            await this.setState({
+                visible: true,
+                clients: this.handleBuildData(1)
+            });
         } else {
-            await this.setState({ visible: false, name: clients[0] });
+            await this.setState({
+                visible: false,
+                name: data[0].name
+            });
         }
     }
 
-    handleCloseModal = () => this.setState({ open: false });
+    handleBuildData = page => {
+        const { data = [] } = this.props;
+
+        const indexOfLastPost = page * MAX_ROWS;
+        const indexOfFirstPost = indexOfLastPost - MAX_ROWS;
+
+        return data.slice(indexOfFirstPost, indexOfLastPost);
+    }
+
+    handleCloseModal = () => this.setState({
+        open: false,
+        clients: this.handleBuildData(1)
+    });
 
     handleOnClick = () => this.setState({ open: true });
 
@@ -75,18 +84,8 @@ class ViewDetailClient extends Component {
                                                 .setNoRowMessage("No existen registros.")
                                                 .setRecordsPerPage(MAX_ROWS)
                                                 .setStriped(true)
-                                                .setTotalRecords(data.length)
-                                                .setOnPageChange(async page => {
-                                                    const indexOfLastPost = page * MAX_ROWS;
-                                                    const indexOfFirstPost = indexOfLastPost - MAX_ROWS;
-
-                                                    const clients = data
-                                                        .split(";;")
-                                                        .map(client => ({ name: client }))
-                                                        .slice(indexOfFirstPost, indexOfLastPost);
-
-                                                    await this.setState({ clients });
-                                                })
+                                                .setTotalRecords(data[0].count)
+                                                .setOnPageChange(async page => await this.setState({ clients: this.handleBuildData(page) }))
                                                 .setMaximumVisiblePages(7)
                                                 .build()
                                         }
