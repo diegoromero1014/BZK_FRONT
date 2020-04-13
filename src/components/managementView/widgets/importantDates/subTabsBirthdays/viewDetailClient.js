@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import { Icon } from 'semantic-ui-react';
 import Table from "../../../../table";
 import TableBuilder from "../../../../table/TableBuilder";
-import { COLUMNS_CLIENTS } from './constants';
+import { COLUMNS_CLIENTS, MAX_ROWS } from './constants';
 
 class ViewDetailClient extends Component {
     constructor(props) {
@@ -13,17 +13,22 @@ class ViewDetailClient extends Component {
             visible: false,
             name: '',
             open: false,
-            clients: []
+            clients: [],
+            page: 1
         }
     }
 
     async componentWillMount() {
         const { data = [] } = this.props;
+        const { page } = this.state;
 
         let clients = data.split(";;");
 
         if (clients.length > 1) {
-            clients = clients.map(client => ({ name: client }));
+            const indexOfLastPost = page * MAX_ROWS;
+            const indexOfFirstPost = indexOfLastPost - MAX_ROWS;
+
+            clients = clients.map(client => ({ name: client })).slice(indexOfFirstPost, indexOfLastPost);
 
             await this.setState({ visible: true, clients });
         } else {
@@ -36,6 +41,7 @@ class ViewDetailClient extends Component {
     handleOnClick = () => this.setState({ open: true });
 
     render() {
+        const { data = [] } = this.props;
         const { visible, name, open, clients } = this.state;
 
         return (
@@ -70,7 +76,17 @@ class ViewDetailClient extends Component {
                                                 .setRecordsPerPage(5)
                                                 .setStriped(true)
                                                 .setTotalRecords(clients.length)
-                                                .setOnPageChange(page => console.log(page))
+                                                .setOnPageChange(async page => {
+                                                    const indexOfLastPost = page * MAX_ROWS;
+                                                    const indexOfFirstPost = indexOfLastPost - MAX_ROWS;
+                                                    
+                                                    const clients = data
+                                                        .split(";;")
+                                                        .map(client => ({ name: client }))
+                                                        .slice(indexOfFirstPost, indexOfLastPost);
+
+                                                    await this.setState({ clients });
+                                                })
                                                 .setMaximumVisiblePages(7)
                                                 .build()
                                         }
