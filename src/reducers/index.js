@@ -79,6 +79,7 @@ import commentsReducer from '../components/globalComponents/comments/reducer';
 import searchEmployeeInputReducer from '../components/globalComponents/searchEmployeeInput/reducer';
 import myTasksReducer from '../components/myTasks/reducer';
 import boardTaskReducer from "../components/managementView/widgets/tasks/reducer";
+import pendingVisits from '../components/managementView/widgets/visits/pendingVisits/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -160,5 +161,6 @@ export default combineReducers({
     commentsReducer,
     searchEmployeeInputReducer,
     myTasks: myTasksReducer,
-    boardTaskReducer
+    boardTaskReducer,
+    pendingVisits
 });
