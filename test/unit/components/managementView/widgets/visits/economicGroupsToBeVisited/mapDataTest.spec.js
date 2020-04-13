@@ -12,9 +12,9 @@ describe('mapData Test', () => {
         ];
         const response = mapData(data);
         expect(response[0].principalClientName).to.equal('ANY NAME');
-        expect(response[0].lastVisitType).to.equal('-');
-        expect(response[0].lastVisitAuthor).to.equal('-');
-        expect(response[0].lastVisitTime).to.equal('-');
+        expect(response[0].lastVisitType).to.equal('No hay visitas registradas');
+        expect(response[0].lastVisitAuthor).to.equal('');
+        expect(response[0].lastVisitTime).to.equal('');
     })
 
     it('Case test 2', () => {
@@ -28,9 +28,9 @@ describe('mapData Test', () => {
         ];
         const response = mapData(data);
         expect(response[0].principalClientName).to.equal(null);
-        expect(response[0].lastVisitType).to.equal('-');
-        expect(response[0].lastVisitAuthor).to.equal('-');
-        expect(response[0].lastVisitTime).to.equal('-');
+        expect(response[0].lastVisitType).to.equal('No hay visitas registradas');
+        expect(response[0].lastVisitAuthor).to.equal('');
+        expect(response[0].lastVisitTime).to.equal('');
     })
 
     it('Case test 3', () => {

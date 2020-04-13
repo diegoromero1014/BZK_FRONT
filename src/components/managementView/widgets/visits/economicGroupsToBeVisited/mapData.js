@@ -11,9 +11,9 @@ export const mapData = (data = []) => {
         }
 
         if (!data.lastVisitType && !data.lastVisitAuthor && !data.lastVisitTime) {
-            set(newData, 'lastVisitType', '-');
-            set(newData, 'lastVisitAuthor', '-');
-            set(newData, 'lastVisitTime', '-');
+            set(newData, 'lastVisitType', 'No hay visitas registradas');
+            set(newData, 'lastVisitAuthor', '');
+            set(newData, 'lastVisitTime', '');
         }
 
         if(data.lastVisitAuthor) {
