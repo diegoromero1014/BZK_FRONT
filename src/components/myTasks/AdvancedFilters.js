@@ -21,6 +21,8 @@ import {
 } from "../selectsComponent/constants";
 import moment from "moment";
 import _ from 'lodash';
+import {schema} from "./advancedFiltersSchema";
+import * as Yup from 'yup';
 
 export class AdvancedFilters extends Component {
     constructor(props) {
@@ -86,7 +88,7 @@ export class AdvancedFilters extends Component {
 
     masterDataFields = async () => {
         const {dispatchGetMasterDataFields} = this.props;
-        await dispatchGetMasterDataFields([LIST_REGIONS, LIST_ZONES, TEAM_VALUE_OBJECTS]);
+        await dispatchGetMasterDataFields([LIST_REGIONS]);
     };
 
     onChangeClosingDateTo = val => {
@@ -309,23 +311,23 @@ export class AdvancedFilters extends Component {
                                         className="btn"
                                         title="Hecho"
                                         type="button"
-                                        style={{backgroundColor: "#7c8080"}}
+                                        style={{ margin: "8px 10px 0px 0px", backgroundColor: "rgb(79,78,78)", width: '40%'}}
                                         onClick={() => doneFilter(false)}>
-                                    Hecho
+                                    <span style={{ color: "#FFFFFF", padding: "10px" }}>Hecho</span>
                                 </button>
                             </div>
                         </Col>
                     </Row>
-                    <Row center="xs" style={{paddingTop: 20, width: '99%', paddingLeft: 20}}>
+                    <Row style={{ width: '99%', paddingLeft: 20}}>
                         <Col xs={12} md={12} lg={12}>
                             <div style={{textAlign: "center"}}>
                                 <button id="btnFilter"
                                         className="btn"
                                         title="Limpiar"
                                         type="button"
-                                        style={{backgroundColor: "#7c8080"}}
+                                        style={{ margin: "8px 10px 0px 0px", backgroundColor: "rgb(193, 193, 193)", width: '40%'}}
                                         onClick={() => this.clearForm()}>
-                                    Limpiar
+                                    <span style={{ color: "#FFFFFF", padding: "10px" }}>Limpiar</span>
                                 </button>
                             </div>
                         </Col>
@@ -342,6 +344,12 @@ const form = withFormik({
     },
 
     mapPropsToValues: (props) => {
+    },
+
+    validationSchema: () => {
+        const object = {};
+        const objectSchema = Object.assign({}, schema, object);
+        return Yup.object().shape(objectSchema);
     }
 })(AdvancedFilters);
 
