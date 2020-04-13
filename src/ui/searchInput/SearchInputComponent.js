@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {Subject} from "rxjs";
 import {Input} from "semantic-ui-react";
 
