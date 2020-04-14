@@ -25,6 +25,9 @@ describe('FormLogin Test', () => {
             login: Immutable.Map({ validateLogin: false}),
             dispatchChangeTokenStatus: sinon.fake(),
             dispatchValidateLogin: sinon.stub().resolves({}),
+            tasksByClient: Immutable.Map({ taskIdFromRedirect: null }),
+            dispatchSaveSessionToken: sinon.fake(),
+            dispatchChangeActiveItemMenu: sinon.fake()
         };
 
         store = mockStore({
@@ -129,4 +132,25 @@ describe('FormLogin Test', () => {
         expect(defaultProps.dispatchShowLoading.called).to.equal(true);
         expect(defaultProps.dispatchValidateLogin.called).to.equal(true);
     })
+
+    it('should redirectUrl to TaskPage when taskIdFromRedirect is not null', () => {
+        defaultProps.dispatchValidateLogin = sinon.stub().resolves({
+            payload: {
+                data: {
+                    status: 200,
+                    data: {
+                        message: null
+                    }
+                }
+            }
+        });
+        defaultProps.tasksByClient = Immutable.Map({
+            taskIdFromRedirect: 153648
+        });
+        const wrapper = shallow(<FormLogin {...defaultProps}/>);
+        wrapper.instance().handleValidateLogin({ preventDefault: sinon.fake()});
+        expect(defaultProps.dispatchChangeTokenStatus.called).to.equal(true);
+        expect(defaultProps.dispatchShowLoading.called).to.equal(true);
+        expect(defaultProps.dispatchValidateLogin.called).to.equal(true);
+    });
 })
