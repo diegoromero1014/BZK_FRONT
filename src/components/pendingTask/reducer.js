@@ -9,7 +9,7 @@ import {
   CLEAR_USER_TASK,
   GET_FINALIZED_TASKS_CLIENT,
   GET_PENDING_TASKS_CLIENT,
-  LIMITE_INF,
+  LIMITE_INF, SET_TASK_ID_FROM_REDIRECT,
   SET_TEXT_TO_SEARCH
 } from "./constants";
 
@@ -34,7 +34,8 @@ const initialState = Immutable.Map({
   orderTask: 0,
   columnTask: "finalDate",
   rowCount: 0,
-  textToSearch: null
+  textToSearch: null,
+  taskIdFromRedirect: null
 });
 
 export default (state = initialState, action) => {
@@ -121,6 +122,10 @@ export default (state = initialState, action) => {
     case CLEAN_TEXT_TO_SEARCH:
       return state.withMutations(map => {
         map.set("textToSearch", null);
+      });
+    case SET_TASK_ID_FROM_REDIRECT:
+      return state.withMutations(map => {
+        map.set("taskIdFromRedirect", action.id);
       });
     default:
       return state;

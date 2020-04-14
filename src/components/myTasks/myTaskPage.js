@@ -48,6 +48,7 @@ export class MyTaskPage extends Component {
         this.state = {
             loading: false,
             textToSearch: "",
+            searchByText: false,
             filters: {
                 users: null,
                 rol: null,
@@ -141,6 +142,7 @@ export class MyTaskPage extends Component {
         const {myTasks} = this.props;
 
         this.setState({
+            searchByText: true,
             textToSearch: value
         });
 
@@ -323,7 +325,8 @@ export class MyTaskPage extends Component {
                                             updateBothTabs={this.updateBothTabs}
                                             actualPage={tabPending.page}
                                             mode={PENDING}
-                                        />
+                                            expandRow={this.state.searchByText}
+                                            textToHighlight={this.state.textToSearch}/>
                                         <PaginationPendingTaskComponent
                                             tab={tabPending}
                                             clearUserTask={this.clearUserTask}
@@ -348,7 +351,8 @@ export class MyTaskPage extends Component {
                                             permissionToEditTask={this.permissionToEditTask}
                                             updateBothTabs={this.updateBothTabs}
                                             actualPage={tabPending.page}
-                                            mode={FINISHED}
+                                            mode={FINISHED} expandRow={this.state.searchByText}
+                                            textToHighlight={this.state.textToSearch}
                                         />
                                         <PaginationPendingTaskComponent
                                             tab={tabFinished}
