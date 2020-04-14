@@ -8,7 +8,7 @@ const initialState = {
 	rowCount: 0
 }
 
-const pendingVisits = (state = initialState, action = {}) => {
+export default (state = initialState, action = {}) => {
 
 	if (action.type == REQUEST_PENDING_VISITS) {
 		let newState = Object.assign(
@@ -17,7 +17,7 @@ const pendingVisits = (state = initialState, action = {}) => {
 			{ rows: get(action.payload, 'data.data.rows', []), rowCount: get(action.payload, 'data.data.rowCount', 0) }
 		)
 		const newRows = newState.rows.map(element => 
-			element = Object.assign(
+				Object.assign(
 				{},
 				element, 
 				{ visitTime: mapDateValueFromTaskByFormat(element.visitTime, REVIEWED_DATE_FORMAT_HOUR) })
@@ -27,5 +27,3 @@ const pendingVisits = (state = initialState, action = {}) => {
 		return state;
 	}
 }
-
-export default pendingVisits;
