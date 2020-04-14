@@ -8,6 +8,7 @@ import ComboBox from "../../ui/comboBox/comboBoxComponent";
 import {connect} from 'react-redux';
 import {bindActionCreators} from "redux";
 import {
+    clearLists,
     consultListWithParameter,
     consultListWithParameterUbication,
     getMasterDataFields,
@@ -63,7 +64,7 @@ export class AdvancedFilters extends Component {
     }
 
     async componentDidMount() {
-        const {setFieldValue, defaultFilters} = this.props;
+        const {setFieldValue, defaultFilters, clearListsDispatch} = this.props;
         await this.masterDataFields();
         setFieldValue('closingDateTo', moment(), true);
         setFieldValue('closingDateFrom', moment(defaultFilters.initialDate).format("DD/MM/YYYY"));
@@ -73,6 +74,7 @@ export class AdvancedFilters extends Component {
             finalDate: moment(),
             defaultFinal: moment()
         });
+        clearListsDispatch([LIST_ZONES, TEAM_VALUE_OBJECTS]);
     }
 
     renderTitle = ({name, message, nullable}) => (
@@ -399,6 +401,7 @@ function mapDispatchToProps(dispatch) {
         consultListWithParameterDispatch: consultListWithParameter,
         getRegionsByEmployeeDispatch: getRegionsByEmployee,
         dispatchGetMasterDataFields: getMasterDataFields,
+        clearListsDispatch: clearLists
     }, dispatch);
 }
 

@@ -37,6 +37,7 @@ let getRegionsByEmployeeDispatch;
 let dispatchGetMasterDataFields;
 let dispatchAdvancedFilters;
 let dispatchFilters;
+let clearListsDispatch;
 let defaultFilters = {initialDate: '20/12/2020'};
 let values = {
     closingDateTo: '20/12/2020',
@@ -59,8 +60,9 @@ describe('Test AdvancedFilters', () => {
         getRegionsByEmployeeDispatch = sinon.stub();
         dispatchGetMasterDataFields = sinon.stub();
         dispatchAdvancedFilters = sinon.stub();
-        setFieldValue = sinon.stub();
+        clearListsDispatch = sinon.stub();
         dispatchFilters = sinon.stub();
+        setFieldValue = sinon.stub();
         dispatchGetMasterDataFields.resolves({
             masterDataDetailEntries: region
         });
