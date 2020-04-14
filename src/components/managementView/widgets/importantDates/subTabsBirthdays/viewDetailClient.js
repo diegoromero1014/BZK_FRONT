@@ -18,18 +18,10 @@ class ViewDetailClient extends Component {
     }
 
     async componentWillMount() {
-        const { data = [] } = this.props;
-        if (data.length > 1) {
-            await this.setState({
-                visible: true,
-                clients: this.handleBuildData(1)
-            });
-        } else {
-            await this.setState({
-                visible: false,
-                name: data[0].name
-            });
-        }
+        await this.setState({
+            visible: true,
+            clients: this.handleBuildData(1)
+        });
     }
 
     handleBuildData = page => {
