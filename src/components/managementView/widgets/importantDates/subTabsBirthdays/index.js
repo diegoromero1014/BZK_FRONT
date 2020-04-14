@@ -58,21 +58,21 @@ export class SubTabsBirthdays extends Component {
         className: "importantDatesStyle",
         content: <StrategicSection />,
         disable: false,
-        callback: () => this.handleStrategicContacts()
+        callback: this.handleStrategicContacts
       },
       {
         name: TITLE_TACTIC_CONTACTS,
         className: "importantDatesStyle",
         content: <TacticSection />,
         disable: false,
-        callback: () => this.handleTacticContacts()
+        callback: this.handleTacticContacts
       },
       {
         name: TITLE_OPERATIVE_CONTACTS,
         className: "importantDatesStyle",
         content: <OperativeSection />,
         disable: false,
-        callback: () => this.handleOperativeContacts()
+        callback: this.handleOperativeContacts
       }
     ];
     return (
