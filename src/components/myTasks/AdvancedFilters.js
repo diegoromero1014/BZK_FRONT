@@ -31,7 +31,7 @@ export class AdvancedFilters extends Component {
             fields: {
                 closingDateFrom: {
                     name: 'Desde',
-                    nullable: false,
+                    nullable: true,
                     message: null
                 },
                 closingDateTo: {
@@ -59,7 +59,7 @@ export class AdvancedFilters extends Component {
     }
 
     async componentDidMount() {
-        const { setFieldValue, defaultFilters } = this.props;
+        const {setFieldValue, defaultFilters} = this.props;
         await this.masterDataFields();
         setFieldValue('closingDateTo', moment(), true);
         setFieldValue('closingDateFrom', moment(defaultFilters.initialDate).format("DD/MM/YYYY"));
@@ -96,16 +96,17 @@ export class AdvancedFilters extends Component {
         if (!_.isEmpty(val)) {
             val = moment();
         }
-        setFieldValue('closingDateTo', val, true);
+        setFieldValue('closingDateToState', val, true);
         this.dispatchAdvancedFilters();
     };
 
     onChangeClosingDateFrom = val => {
-        const {setFieldValue} = this.props;
-        setFieldValue('closingDateFrom', val, true);
+        const {setFieldValue, defaultFilters} = this.props;
         if (!_.isEmpty(val)) {
-            this.dispatchAdvancedFilters();
+            val = moment(defaultFilters.initialDate).format("DD/MM/YYYY");
         }
+        setFieldValue('closingDateFromState', val);
+        this.dispatchAdvancedFilters();
     };
 
     onChangeRegionStatus = val => {
@@ -156,13 +157,6 @@ export class AdvancedFilters extends Component {
         dispatchFilters(filters);
     };
 
-    validateCloseSideBar = () => {
-        const {values: {closingDateFrom}, doneFilter} = this.props;
-        if (!_.isEmpty(closingDateFrom)) {
-            doneFilter(false);
-        }
-    }
-
     clearForm = () => {
         const {setFieldValue} = this.props;
         setFieldValue('closingDateFrom', '', true);
@@ -175,7 +169,7 @@ export class AdvancedFilters extends Component {
 
     render() {
         const {fields: {closingDateFrom, closingDateTo, region, zone, cell}} = this.state;
-        const {selectsReducer} = this.props;
+        const {selectsReducer, values: {closingDateFromState, closingDateToState}, doneFilter} = this.props;
         return (<div>
                 <Form style={{backgroundColor: "#FFFFFF", width: "100%", paddingBottom: "50px"}}>
                     <Row style={{paddingTop: 20, width: '99%', paddingLeft: 20}}>
@@ -194,7 +188,7 @@ export class AdvancedFilters extends Component {
                                             culture='es'
                                             format={"DD/MM/YYYY"}
                                             time={false}
-                                            value={value}
+                                            value={closingDateFromState ? closingDateFromState : value}
                                             onChange={val => this.onChangeClosingDateFrom(val)}
                                             onBlur={onBlur}
                                             placeholder='DD/MM/YYYY'
@@ -218,13 +212,13 @@ export class AdvancedFilters extends Component {
                                             culture='es'
                                             format={"DD/MM/YYYY"}
                                             time={false}
-                                            value={value}
+                                            value={closingDateToState ? closingDateToState : value}
                                             onChange={val => this.onChangeClosingDateTo(val)}
                                             onBlur={onBlur}
                                             placeholder='DD/MM/YYYY'
                                             className='field-input'
                                             name="closingDateTo"
-                                           style={{fontSize: "85%"}} 
+                                            style={{fontSize: "85%"}}
                                         />
 
                                         <ErrorMessage name="closingDateTo" component={'div'}>
@@ -323,23 +317,31 @@ export class AdvancedFilters extends Component {
                                         className="btn"
                                         title="Hecho"
                                         type="button"
-                                        style={{ margin: "8px 10px 0px 0px", backgroundColor: "rgb(79,78,78)", width: '40%'}}
-                                        onClick={this.validateCloseSideBar}>
-                                    <span style={{ color: "#FFFFFF", padding: "10px" }}>Hecho</span>
+                                        style={{
+                                            margin: "8px 10px 0px 0px",
+                                            backgroundColor: "rgb(79,78,78)",
+                                            width: '40%'
+                                        }}
+                                        onClick={() => doneFilter(false)}>
+                                    <span style={{color: "#FFFFFF", padding: "10px"}}>Hecho</span>
                                 </button>
                             </div>
                         </Col>
                     </Row>
-                    <Row style={{ width: '99%', paddingLeft: 20}}>
+                    <Row style={{width: '99%', paddingLeft: 20}}>
                         <Col xs={12} md={12} lg={12}>
                             <div style={{textAlign: "center"}}>
                                 <button id="btnFilter"
                                         className="btn"
                                         title="Limpiar"
                                         type="button"
-                                        style={{ margin: "8px 10px 0px 0px", backgroundColor: "rgb(193, 193, 193)", width: '40%'}}
+                                        style={{
+                                            margin: "8px 10px 0px 0px",
+                                            backgroundColor: "rgb(193, 193, 193)",
+                                            width: '40%'
+                                        }}
                                         onClick={() => this.clearForm()}>
-                                    <span style={{ color: "#FFFFFF", padding: "10px" }}>Limpiar</span>
+                                    <span style={{color: "#FFFFFF", padding: "10px"}}>Limpiar</span>
                                 </button>
                             </div>
                         </Col>
