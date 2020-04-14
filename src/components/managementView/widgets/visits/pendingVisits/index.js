@@ -8,69 +8,69 @@ import { requestPendingVisits } from '../pendingVisits/actions';
 import { redirectUrl } from "../../../../globalComponents/actions";
 import { changeActiveItemMenu } from '../../../../menu/actions';
 import { updateTitleNavBar } from '../../../../navBar/actions';
-import { consultInfoClient } from '../../../../clientInformation/actions'; 
+import { consultInfoClient } from '../../../../clientInformation/actions';
 import { MODULE_MY_CLIENTS, MODULE_PREVISIT_REPORT } from "../../../../../constantsGlobal";
 
 export class PendingVisits extends Component {
 
-   constructor(props) {
-      super(props);
+	constructor(props) {
+		super(props);
 
-      this.state = {
-         loading: false
-      }
-   }
+		this.state = {
+			loading: false
+		}
+	}
 
-   currentPage = async (page) => {
-      const { dispatchRequestPendingVisits } = this.props;
-      await this.setState({ loading: true });
-      await dispatchRequestPendingVisits((page - 1), MAX_ROWS);
-      await this.setState({ loading: false });
-   }
+	currentPage = async (page) => {
+		const { dispatchRequestPendingVisits } = this.props;
+		await this.setState({ loading: true });
+		await dispatchRequestPendingVisits((page - 1), MAX_ROWS);
+		await this.setState({ loading: false });
+	}
 
-   handelClickClient =  async element => {
-      const { idPrevisit, idClient } = element;
-      const { dispatchChangeActiveItemMenu, dispatchUpdateTitleNavBar, dispatchConsultInfoClient } = this.props;
-      dispatchChangeActiveItemMenu(MODULE_MY_CLIENTS);
-      await dispatchConsultInfoClient(idClient);
-      dispatchUpdateTitleNavBar(MODULE_PREVISIT_REPORT);
-      redirectUrl(`/dashboard/previsita/${idPrevisit}`);
-   }
+	handelClickClient = async element => {
+		const { idPrevisit, idClient } = element;
+		const { dispatchChangeActiveItemMenu, dispatchUpdateTitleNavBar, dispatchConsultInfoClient } = this.props;
+		dispatchChangeActiveItemMenu(MODULE_MY_CLIENTS);
+		await dispatchConsultInfoClient(idClient);
+		dispatchUpdateTitleNavBar(MODULE_PREVISIT_REPORT);
+		redirectUrl(`/dashboard/previsita/${idPrevisit}`);
+	}
 
-   render() {
-      const { data, totalRecords } = this.props;
+	render() {
+		const { data, totalRecords } = this.props;
 
-      return (
-         <div>
-            <h5 style={STYLE_MESSAGE_SECTION_VISITS_PENDING}> {MESSAGE_SECTION_PENDING_VISITS} </h5>
-            <TableComponent tableSettings={
-               new TableBuilder(data, COLUMNS_PENDING_VISITS)
-                  .setNoRowMessage(MESSAGE_NO_RESULTS)
-                  .setRecordsPerPage(MAX_ROWS)
-                  .setStriped(true)
-                  .setOnClick(this.handelClickClient)
-                  .setTotalRecords(totalRecords)
-                  .setOnPageChange(this.currentPage)
-                  .setLoading(this.state.loading)
-                  .setMaximumVisiblePages(7)
-                  .build()
-            }
-            />
-         </div>
-      )
-   }
+		return (
+			<div>
+				<h5 style={STYLE_MESSAGE_SECTION_VISITS_PENDING}> {MESSAGE_SECTION_PENDING_VISITS} </h5>
+				<TableComponent tableSettings={
+					new TableBuilder(data, COLUMNS_PENDING_VISITS)
+						.setNoRowMessage(MESSAGE_NO_RESULTS)
+						.setRecordsPerPage(MAX_ROWS)
+						.setStriped(true)
+						.setOnClick(this.handelClickClient)
+						.setTotalRecords(totalRecords)
+						.setOnPageChange(this.currentPage)
+						.setLoading(this.state.loading)
+						.setMaximumVisiblePages(7)
+						.build()
+				}
+				/>
+			</div>
+		)
+	}
 }
 
 const mapStateToProps = ({ pendingVisits }) => ({
-   data: pendingVisits.rows,
-   totalRecords: pendingVisits.rowCount
+	data: pendingVisits.rows,
+	totalRecords: pendingVisits.rowCount
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-   dispatchRequestPendingVisits: requestPendingVisits,
-   dispatchChangeActiveItemMenu: changeActiveItemMenu,
-   dispatchUpdateTitleNavBar: updateTitleNavBar,
-   dispatchConsultInfoClient: consultInfoClient
+	dispatchRequestPendingVisits: requestPendingVisits,
+	dispatchChangeActiveItemMenu: changeActiveItemMenu,
+	dispatchUpdateTitleNavBar: updateTitleNavBar,
+	dispatchConsultInfoClient: consultInfoClient
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(PendingVisits);
