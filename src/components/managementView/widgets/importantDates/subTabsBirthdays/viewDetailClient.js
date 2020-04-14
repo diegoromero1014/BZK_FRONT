@@ -4,7 +4,6 @@ import { Icon } from 'semantic-ui-react';
 import Table from "../../../../table";
 import TableBuilder from "../../../../table/TableBuilder";
 import { COLUMNS_CLIENTS, MAX_ROWS } from './constants';
-import Tooltip from '../../../../toolTip/toolTipComponent';
 
 class ViewDetailClient extends Component {
     constructor(props) {
@@ -20,10 +19,17 @@ class ViewDetailClient extends Component {
 
     async componentWillMount() {
         const { data = [] } = this.props;
-        await this.setState({
-            visible: true,
-            clients: this.handleBuildData(1)
-        });
+        if (data.length > 1) {
+            await this.setState({
+                visible: true,
+                clients: this.handleBuildData(1)
+            });
+        } else {
+            await this.setState({
+                visible: false,
+                name: data[0].name
+            });
+        }
     }
 
     handleBuildData = page => {
@@ -48,13 +54,7 @@ class ViewDetailClient extends Component {
 
         return (
             <div>
-                {visible ? 
-                    <Tooltip text={data.length}>
-                        <Icon onClick={this.handleOnClick} name='users' /> 
-                    </Tooltip> 
-                    : 
-                    <p>{name}</p>
-                }
+                {visible ? <Icon onClick={this.handleOnClick} name='users' /> : <p>{name}</p>}
 
                 <Modal isOpen={open} onRequestClose={this.handleCloseModal} className="modalBt4-fade modal fade contact-detail-modal in" style={{ zIndex: 100 }}>
                     <div className="modalBt4-dialog modalBt4-lg" style={{ zIndex: 100 }}>
