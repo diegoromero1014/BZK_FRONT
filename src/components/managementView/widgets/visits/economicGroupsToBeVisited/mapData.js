@@ -26,6 +26,7 @@ export const mapData = (data = []) => {
         }
 
         return {
+            idPrincipalClient: newData.idPrincipalClient,
             principalClientName: newData.principalClientName,
             lastVisitType: newData.lastVisitType,
             lastVisitAuthor: newData.lastVisitAuthor,

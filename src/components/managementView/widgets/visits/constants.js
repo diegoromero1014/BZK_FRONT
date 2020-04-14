@@ -1,4 +1,5 @@
 import NameCapitalize from "./economicGroupsToBeVisited/nameCapitalize";
+import ButtonCreatePrevisit from "./economicGroupsToBeVisited/buttonCreatePrevisit";
 
 export const MESSAGE_NO_RESULTS = "No hay registros"
 export const MESSAGE_SECTION_PENDING_VISITS = "Visitas pendientes en los proximos 30 días";
@@ -54,9 +55,17 @@ export const COLUMNS_ECONOMIC_GROUPS_TO_BE_VISITED = [
             Component: NameCapitalize
         }
     },
-
     {
         header: 'Fecha/hora',
         prop: 'lastVisitTime'
+    },
+    
+    {
+        header: 'Crear previsita',
+        prop: 'idPrincipalClient',
+        component: {
+            Component: ButtonCreatePrevisit
+        },
+        width: 2
     }
 ]
