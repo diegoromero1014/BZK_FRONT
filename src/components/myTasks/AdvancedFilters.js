@@ -29,7 +29,7 @@ export class AdvancedFilters extends Component {
         super(props);
         this.state = {
             fields: {
-                closingDateFrom: {
+                closingDateFromState: {
                     name: 'Desde',
                     nullable: true,
                     message: null
@@ -54,7 +54,11 @@ export class AdvancedFilters extends Component {
                     nullable: true,
                     message: null
                 }
-            }
+            },
+            initial: null,
+            finalDate: null,
+            defaultInitial: null,
+            defaultFinal: null
         }
     }
 
@@ -63,6 +67,12 @@ export class AdvancedFilters extends Component {
         await this.masterDataFields();
         setFieldValue('closingDateTo', moment(), true);
         setFieldValue('closingDateFrom', moment(defaultFilters.initialDate).format("DD/MM/YYYY"));
+        await this.setState({
+            initial: moment(defaultFilters.initialDate).format("DD/MM/YYYY"),
+            defaultInitial: moment(defaultFilters.initialDate).format("DD/MM/YYYY"),
+            finalDate: moment(),
+            defaultFinal: moment()
+        });
     }
 
     renderTitle = ({name, message, nullable}) => (
@@ -91,21 +101,33 @@ export class AdvancedFilters extends Component {
         await dispatchGetMasterDataFields([LIST_REGIONS]);
     };
 
-    onChangeClosingDateTo = val => {
+    onChangeClosingDateTo = async val => {
         const {setFieldValue} = this.props;
-        if (!_.isEmpty(val)) {
+        if (_.isEmpty(val)) {
             val = moment();
+            await this.setState({
+                finalDate: val
+            });
         }
-        setFieldValue('closingDateToState', val, true);
+        setFieldValue('closingDateTo', val, true);
+        await this.setState({
+            finalDate: val
+        })
         this.dispatchAdvancedFilters();
     };
 
-    onChangeClosingDateFrom = val => {
+    onChangeClosingDateFrom =  async val => {
         const {setFieldValue, defaultFilters} = this.props;
-        if (!_.isEmpty(val)) {
+        if (_.isEmpty(val)) {
             val = moment(defaultFilters.initialDate).format("DD/MM/YYYY");
+            await this.setState({
+                initial: val
+            });
         }
-        setFieldValue('closingDateFromState', val);
+        setFieldValue('closingDateFrom', val, true);
+        await this.setState({
+            initial: val
+        })
         this.dispatchAdvancedFilters();
     };
 
@@ -146,10 +168,10 @@ export class AdvancedFilters extends Component {
     };
 
     dispatchAdvancedFilters = () => {
-        const {dispatchFilters, values: {closingDateTo, closingDateFrom, region, zone, cell}} = this.props;
+        const {dispatchFilters, values: {region, zone, cell}} = this.props;
         let filters = {
-            closingDateTo: moment(closingDateTo, "DD/MM/YYYY").toDate().getTime(),
-            closingDateFrom: moment(closingDateFrom, "DD/MM/YYYY").toDate().getTime(),
+            closingDateTo: moment(this.state.finalDate, "DD/MM/YYYY").toDate().getTime(),
+            closingDateFrom: moment(this.state.initial, "DD/MM/YYYY").toDate().getTime(),
             region,
             zone,
             cell
@@ -159,8 +181,8 @@ export class AdvancedFilters extends Component {
 
     clearForm = () => {
         const {setFieldValue} = this.props;
-        setFieldValue('closingDateFrom', '', true);
-        setFieldValue('closingDateTo', '', true);
+        setFieldValue('closingDateFrom', this.state.defaultInitial, true);
+        setFieldValue('closingDateTo', this.state.defaultFinal, true);
         setFieldValue('region', '', true);
         setFieldValue('zone', '', true);
         setFieldValue('cell', '', true);
@@ -168,8 +190,8 @@ export class AdvancedFilters extends Component {
     };
 
     render() {
-        const {fields: {closingDateFrom, closingDateTo, region, zone, cell}} = this.state;
-        const {selectsReducer, values: {closingDateFromState, closingDateToState}, doneFilter} = this.props;
+        const {fields: {closingDateFromState, closingDateTo, region, zone, cell}} = this.state;
+        const {selectsReducer, doneFilter} = this.props;
         return (<div>
                 <Form style={{backgroundColor: "#FFFFFF", width: "100%", paddingBottom: "50px"}}>
                     <Row style={{paddingTop: 20, width: '99%', paddingLeft: 20}}>
@@ -183,12 +205,12 @@ export class AdvancedFilters extends Component {
                             <Field type="date" name="closingDateFrom">
                                 {({field: {value, name, onBlur}}) =>
                                     <div>
-                                        {renderLabel(closingDateFrom)}
+                                        {renderLabel(closingDateFromState)}
                                         <DateTimePickerUi
                                             culture='es'
                                             format={"DD/MM/YYYY"}
                                             time={false}
-                                            value={closingDateFromState ? closingDateFromState : value}
+                                            value={this.state.initial}
                                             onChange={val => this.onChangeClosingDateFrom(val)}
                                             onBlur={onBlur}
                                             placeholder='DD/MM/YYYY'
@@ -212,7 +234,7 @@ export class AdvancedFilters extends Component {
                                             culture='es'
                                             format={"DD/MM/YYYY"}
                                             time={false}
-                                            value={closingDateToState ? closingDateToState : value}
+                                            value={this.state.finalDate}
                                             onChange={val => this.onChangeClosingDateTo(val)}
                                             onBlur={onBlur}
                                             placeholder='DD/MM/YYYY'

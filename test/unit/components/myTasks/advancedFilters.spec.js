@@ -125,13 +125,25 @@ describe('Test AdvancedFilters', () => {
         it('onChangeClosingDateTo', async () => {
             const wrapper = shallow(<AdvancedFilters {...defaultProps}/>);
             await wrapper.instance().onChangeClosingDateTo(120);
-            sinon.assert.calledOnce(setFieldValue);
+            sinon.assert.calledThrice(setFieldValue);
+        });
+
+        it('onChangeClosingDateTo value empty', async () => {
+            const wrapper = shallow(<AdvancedFilters {...defaultProps}/>);
+            await wrapper.instance().onChangeClosingDateTo('');
+            sinon.assert.calledThrice(setFieldValue);
         });
 
         it('onChangeClosingDateFrom', async () => {
             const wrapper = shallow(<AdvancedFilters {...defaultProps}/>);
             await wrapper.instance().onChangeClosingDateFrom(120);
-            sinon.assert.calledOnce(setFieldValue);
+            sinon.assert.calledThrice(setFieldValue);
+        });
+
+        it('onChangeClosingDateFrom value empty', async () => {
+            const wrapper = shallow(<AdvancedFilters {...defaultProps}/>);
+            await wrapper.instance().onChangeClosingDateFrom('');
+            sinon.assert.calledThrice(setFieldValue);
         });
 
         it('onChangeRegionStatus', async () => {
@@ -140,10 +152,22 @@ describe('Test AdvancedFilters', () => {
             sinon.assert.calledThrice(setFieldValue);
         });
 
+        it('onChangeRegionStatus value empty', async () => {
+            const wrapper = shallow(<AdvancedFilters {...defaultProps}/>);
+            await wrapper.instance().onChangeRegionStatus('');
+            sinon.assert.notCalled(setFieldValue);
+        });
+
         it('onChangeZoneStatus', async () => {
             const wrapper = shallow(<AdvancedFilters {...defaultProps}/>);
             await wrapper.instance().onChangeZoneStatus(120);
             sinon.assert.calledTwice(setFieldValue);
+        });
+
+        it('onChangeZoneStatus value empty', async () => {
+            const wrapper = shallow(<AdvancedFilters {...defaultProps}/>);
+            await wrapper.instance().onChangeZoneStatus('');
+            sinon.assert.notCalled(setFieldValue);
         });
 
         it('onChangeCell', async () => {
