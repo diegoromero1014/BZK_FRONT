@@ -3,25 +3,25 @@ import { set } from 'lodash';
 
 export const mapData = (data = []) => {
 
-    return data.map((data, index) => {
-        const newData = Object.assign({}, data);
+    return data.map((item) => {
+        const newData = Object.assign({}, item);
 
-        if (data.principalClientName) {
-            set(newData, 'principalClientName', data.principalClientName.toUpperCase());
+        if (item.principalClientName) {
+            set(newData, 'principalClientName', item.principalClientName.toUpperCase());
         }
 
-        if (!data.lastVisitType && !data.lastVisitAuthor && !data.lastVisitTime) {
+        if (!item.lastVisitType && !item.lastVisitAuthor && !item.lastVisitTime) {
             set(newData, 'lastVisitType', 'No hay visitas registradas');
             set(newData, 'lastVisitAuthor', '');
             set(newData, 'lastVisitTime', '');
         }
 
-        if(data.lastVisitAuthor) {
-            set(newData, 'lastVisitAuthor', data.lastVisitAuthor.toLowerCase());
+        if(item.lastVisitAuthor) {
+            set(newData, 'lastVisitAuthor', item.lastVisitAuthor.toLowerCase());
         }
 
-        if (data.lastVisitTime) {
-            let lastVisitTime = moment(data.lastVisitTime).locale('es');
+        if (item.lastVisitTime) {
+            let lastVisitTime = moment(item.lastVisitTime).locale('es');
             set(newData, 'lastVisitTime', lastVisitTime.format("DD") + " " + lastVisitTime.format("MMM") + " " + lastVisitTime.format("YYYY")+ ", " + lastVisitTime.format("hh:mm a"));
         }
 
