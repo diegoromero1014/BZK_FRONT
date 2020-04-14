@@ -49,7 +49,7 @@ class ViewDetailClient extends Component {
         return (
             <div>
                 {visible ? 
-                    <Tooltip text={data.length > 1 ? data.length + " Clientes" : data.length + " Cliente" }>
+                    <Tooltip text={data.length}>
                         <Icon onClick={this.handleOnClick} name='users' /> 
                     </Tooltip> 
                     : 
