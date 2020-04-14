@@ -29,7 +29,7 @@ import {
 } from "../../../validationsFields/patternsToValidateField";
 import {
     MESSAGE_ERROR_INJECTION_HTML,
-    MESSAGE_WARNING_FORBIDDEN_CHARACTER, MESSAGE_WARNING_FORBIDDEN_CHARACTER_COMMENT,
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER_COMMENT,
     MESSAGE_WARNING_MAX_LENGTH,
     MESSAGE_WARNING_TASK_OBSERVATIONS
 } from "../../../validationsFields/validationsMessages";

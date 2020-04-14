@@ -1,6 +1,6 @@
 import { APP_URL } from '../../constantsGlobal';
 import axios from 'axios';
-import { GET_SCHEDULER_PREVISIT, CLEAR_SCHEDULER_PREVISIT, CHANGE_TEAM, CHANGE_REGION, CHANGE_ZONE } from "./constants";
+import { GET_SCHEDULER_PREVISIT, CLEAR_SCHEDULER_PREVISIT, CHANGE_TEAM } from "./constants";
 
 export function getSchedulerPrevisits(idTeam, idRegion, idZone, idUser) {
     const json = {

@@ -2,7 +2,6 @@ import { APP_URL } from '../../constantsGlobal';
 import {
   CHANGE_PAGE,
   CLEAR_TASK,
-  CLEAR_USER_TASK,
   GET_XLS_TASK,
   LIMITE_INF,
   GET_PENDING_TASKS_CLIENT,

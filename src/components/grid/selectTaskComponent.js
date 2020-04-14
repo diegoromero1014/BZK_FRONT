@@ -28,20 +28,20 @@ class SelectTaskComponent extends Component {
   }
 
   async onChangeValue (idValueStatus) {
-    const { updateStatusTask, changeStateSaveData, updateBothTabs } = this.props;
-    changeStateSaveData(true, MESSAGE_SAVE_DATA);
-    let data = await updateStatusTask(this.state.idTask, idValueStatus);
+    const { dispatchUpdateStatusTask, dispatchChangeStateSaveData, updateBothTabs } = this.props;
+    dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
+    let data = await dispatchUpdateStatusTask(this.state.idTask, idValueStatus);
     if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
       redirectUrl("/login");
     } else {
       await updateBothTabs();
       this.forceUpdate();
-      changeStateSaveData(false, "");
+      dispatchChangeStateSaveData(false, "");
     }
   }
 
   render() {
-    const { selectsReducer, permissionEdit, key} = this.props;
+    const { selectsReducer, permissionEdit } = this.props;
     const { idEstado, idTask } = this.state
     var editable = permissionEdit;
     if (validateIsNullOrUndefined(permissionEdit)) {
@@ -69,10 +69,13 @@ class SelectTaskComponent extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    updateStatusTask,
-    changeStateSaveData
-  }, dispatch);
+  return bindActionCreators(
+    {
+      dispatchUpdateStatusTask: updateStatusTask,
+      dispatchChangeStateSaveData: changeStateSaveData,
+    },
+    dispatch
+  );
 }
 
 function mapStateToProps({ selectsReducer }) {
