@@ -237,7 +237,9 @@ export default (
                 <Route path="alertClientPendingUpdate" component={AdminAlertClientsPendingUpdate}></Route>
                 <Route path="alertClientsPortfolioExpiration" component={AdminAlertClientsPortfolioExpiration}></Route>
                 <Route path="alertCovenants" component={AlertCovenants}></Route>
-                <Route path="myTask" component={MyTaskPage}/>
+                <Route path="myTask" component={MyTaskPage}>
+                    <Route path=":filtered" component={MyTaskPage}/>
+                </Route>
                 <Route path="myPendings">
                     <Route path="draftDocuments" component={ModalDraftDocuments}></Route>
                     <Route path="AEC" component={AEC} key="AEC"></Route>
