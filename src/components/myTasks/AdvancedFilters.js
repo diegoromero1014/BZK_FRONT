@@ -181,8 +181,12 @@ export class AdvancedFilters extends Component {
 
     clearForm = () => {
         const {setFieldValue} = this.props;
-        setFieldValue('closingDateFrom', this.state.defaultInitial, true);
-        setFieldValue('closingDateTo', this.state.defaultFinal, true);
+        this.setState({
+            initial : this.state.defaultInitial,
+            finalDate: this.state.defaultFinal
+        });
+        setFieldValue('closingDateFrom', this.state.initial, true);
+        setFieldValue('closingDateTo', this.state.finalDate, true);
         setFieldValue('region', '', true);
         setFieldValue('zone', '', true);
         setFieldValue('cell', '', true);
