@@ -48,9 +48,9 @@ export default (state = initialState, action) => {
     case constants.VALIDATE_TASK:
       return state;
     case PREPARE_TASKS_NOTES:
-      return state.map(task => {
-        if(task.notes.length){
-          task.notes.map(note => {
+      return state.map(taskMapped => {
+        if(taskMapped.notes.length){
+          taskMapped.notes.map(note => {
             note.id = typeof note.id === 'string' && note.id.includes('new') ? null : note.id;
             note.createdTimestamp = moment(note.createdTimestamp).valueOf();
             if (note.replies.length) {
