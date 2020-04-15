@@ -181,9 +181,9 @@ export class AdvancedFilters extends Component {
         dispatchFilters(filters);
     };
 
-    clearForm = () => {
+    clearForm =  async () => {
         const {setFieldValue} = this.props;
-        this.setState({
+        await this.setState({
             initial : this.state.defaultInitial,
             finalDate: this.state.defaultFinal
         });
