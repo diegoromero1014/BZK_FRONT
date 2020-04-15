@@ -29,12 +29,12 @@ export class PendingVisits extends Component {
 	}
 
 	handelClickClient = async element => {
-		const { idPrevisit, idClient } = element;
+		const { previsitId, previsitClientId } = element;
 		const { dispatchChangeActiveItemMenu, dispatchUpdateTitleNavBar, dispatchConsultInfoClient } = this.props;
 		dispatchChangeActiveItemMenu(MODULE_MY_CLIENTS);
-		await dispatchConsultInfoClient(idClient);
+		await dispatchConsultInfoClient(previsitClientId);
 		dispatchUpdateTitleNavBar(MODULE_PREVISIT_REPORT);
-		redirectUrl(`/dashboard/previsita/${idPrevisit}`);
+		redirectUrl(`/dashboard/previsita/${previsitId}`);
 	}
 
 	render() {

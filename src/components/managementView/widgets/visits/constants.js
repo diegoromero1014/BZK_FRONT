@@ -20,7 +20,7 @@ export const STYLE_MESSAGE_SECTION_VISITS_PENDING = {
 export const COLUMNS_PENDING_VISITS = [
     {
         header: 'Nombre/Razón social',
-        prop: 'clientName',
+        prop: 'previsitClientName',
         width: 5
     },
     {
