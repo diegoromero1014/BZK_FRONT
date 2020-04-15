@@ -7,7 +7,6 @@ import _ from 'lodash';
 import $ from 'jquery';
 
 import Input from '../../ui/input/inputComponent';
-import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 
 import { addParticipant, clearParticipants, filterUsersBanco } from './actions';
 import { contactsByClientFindServer } from '../contact/actions';
@@ -15,6 +14,8 @@ import { validateValue, validateValueExist, validateIsNullOrUndefined } from '..
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 import { NUMBER_CONTACTS, KEY_PARTICIPANT_BANCO } from './constants';
+import SearchEmployeeInput from "../globalComponents/searchEmployeeInput/component";
+import {clearEmployeeValue} from "../globalComponents/searchEmployeeInput/actions";
 
 var self;
 const validate = values => {
@@ -33,15 +34,13 @@ class ParticipantesBancolombia extends Component {
       showParticipantExistBanco: false,
       validateConsultParticipants: false,
       showInvalidCharacter: false,
-    }
+    };
 
     this._addParticipantBanc = this._addParticipantBanc.bind(this);
-    this._updateValue = this._updateValue.bind(this);
-    this.updateKeyValueUsersBanco = this.updateKeyValueUsersBanco.bind(this);
   }
 
   _addParticipantBanc() {
-    const { fields: { idUsuario, objetoUsuario, nameUsuario, cargoUsuario, empresaUsuario }, participants, addParticipant, swtShowMessage } = this.props;
+    const { fields: { idUsuario, objetoUsuario, nameUsuario, cargoUsuario, empresaUsuario }, participants, addParticipant, swtShowMessage, dispatchClearEmployeeValue } = this.props;
     if (validateValue(nameUsuario.value) && !(validateIsNullOrUndefined(idUsuario.value) || idUsuario.value <= 0)) {
       var particip = participants.find(function (item) {
         if (item.tipoParticipante === KEY_PARTICIPANT_BANCO) {
@@ -74,30 +73,7 @@ class ParticipantesBancolombia extends Component {
     } else {
       swtShowMessage('error', "Error participante", "Señor usuario, para agregar un participante debe seleccionar un usuario del banco");
     }
-  }
-
-  _updateValue(value) {
-    const { fields: { idUsuario, nameUsuario, cargoUsuario }, contactsByClient } = this.props;
-    var contactClient = contactsByClient.get('contacts');
-    var userSelected;
-
-    _.map(contactClient, contact => {
-      if (contact.id.toString() === value) {
-        userSelected = contact;
-        return contact;
-      }
-    });
-
-    if (validateValue(userSelected)) {
-      idUsuario.onChange(userSelected.id);
-      nameUsuario.onChange(userSelected.nameComplet);
-      cargoUsuario.onChange(userSelected.contactPosition);
-      empresaUsuario.onChange(userSelected.company);
-    } else {
-      if (idUsuario.value > 0) {
-        idUsuario.onChange('');
-      }
-    }
+    dispatchClearEmployeeValue();
   }
 
   componentWillMount() {
@@ -125,47 +101,25 @@ class ParticipantesBancolombia extends Component {
     });
   }
 
-  updateKeyValueUsersBanco(e) {
-    const { fields: { objetoUsuario, nameUsuario, idUsuario, cargoUsuario, empresaUsuario }, filterUsersBanco, swtShowMessage } = this.props;
-    
-    if (e.keyCode === 13 || e.which === 13) {
-      e.consultclick ? "" : e.preventDefault();
-      if (nameUsuario.value !== "" && nameUsuario.value.length >= 3 && nameUsuario.value !== null && nameUsuario.value !== undefined) {
-        $('.ui.search.participantBanc').toggleClass('loading');
-        filterUsersBanco(nameUsuario.value).then((data) => {
-          usersBanco = _.get(data, 'payload.data.data');
-          $('.ui.search.participantBanc')
-            .search({
-              cache: false,
-              source: usersBanco,
-              maxResults: 1500,
-              searchFields: [
-                'title',
-                'description',
-                'idUsuario',
-                'cargo'
-              ],
-              onSelect: function (event) {
-                objetoUsuario.onChange(event);
-                nameUsuario.onChange(event.title);
-                idUsuario.onChange(event.idUsuario);
-                cargoUsuario.onChange(event.cargo);
-                empresaUsuario.onChange(event.empresa);
-                return 'default';
-              }
-            });
-          $('.ui.search.participantBanc').toggleClass('loading');
-          setTimeout(function () {
-            $('#inputParticipantBanc').focus();
-          }, 150);
-        });
-      } else {
-        if (nameUsuario.value.length <= 3) {
-          swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
-        }
-      }
+  onSelectEmployee = employee => {
+    const { fields: { idUsuario, nameUsuario, cargoUsuario, empresaUsuario } } = this.props;
+    if(employee.idUsuario){
+      idUsuario.onChange(employee.idUsuario);
+      nameUsuario.onChange(employee.title);
+      cargoUsuario.onChange(employee.cargo);
+      empresaUsuario.onChange(employee.empresa);
+    }else{
+      idUsuario.onChange('');
+      nameUsuario.onChange('');
+      cargoUsuario.onChange('');
+      empresaUsuario.onChange('');
     }
-  }
+  };
+
+  validateOnChangeEmployee = value => {
+    const { fields: { nameUsuario } } = this.props;
+    nameUsuario.onChange(value);
+  };
 
   render() {
     const { fields: { nameUsuario, cargoUsuario, empresaUsuario }, participants, disabled } = this.props;
@@ -195,16 +149,11 @@ class ParticipantesBancolombia extends Component {
                 <dt><span>Nombre (<span style={{ color: "red" }}>*</span>)</span></dt>
                 <dt>
                   <div className="ui dropdown search participantBanc fluid" style={{ border: "0px", zIndex: "1", padding: "0px" }}>
-                    <ComboBoxFilter
-                      name="inputParticipantBanc"
-                      placeholder="Ingrese un criterio de búsqueda..."
-                      {...nameUsuario}
-                      parentId="dashboardComponentScroll"
-                      value={nameUsuario.value}
-                      onChange={nameUsuario.onChange}
-                      onKeyPress={this.updateKeyValueUsersBanco}
-                      onSelect={val => this._updateValue(val)}
-                      max="255"
+                    <SearchEmployeeInput
+                        inputName={'inputParticipantBanc'}
+                        value={nameUsuario.value}
+                        onSelect={this.onSelectEmployee}
+                        validateOnChange={this.validateOnChangeEmployee}
                     />
                     <div className="menu results"></div>
                   </div>
@@ -266,7 +215,8 @@ function mapDispatchToProps(dispatch) {
     clearParticipants,
     contactsByClientFindServer,
     filterUsersBanco,
-    swtShowMessage
+    swtShowMessage,
+    dispatchClearEmployeeValue: clearEmployeeValue
   }, dispatch);
 }
 

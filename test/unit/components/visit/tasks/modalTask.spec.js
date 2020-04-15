@@ -1,12 +1,17 @@
 import React from 'react';
 import {ModalTask} from "../../../../../src/components/visit/tasks/modalTask";
 import * as actionsGlobal from "../../../../../src/actionsGlobal";
+import {REQUEST_ERROR, REQUEST_SUCCESS} from "../../../../../src/constantsGlobal";
+import Immutable from 'immutable';
 
 let defaultProps = {};
 
 let htmlToTextStub;
 let preventDefault;
 let filterUsersBancoDispatch;
+let dispatchGetTaskNotesByUserTaskId;
+let dispatchSaveTaskNote;
+let visitReducer;
 let consultclick;
 
 describe('Test ModalTask component', () => {
@@ -28,6 +33,23 @@ describe('Test ModalTask component', () => {
                             id: 2,
                             title: 'Daniel Rodriguez'
                         }]
+                }
+            }
+        });
+        dispatchGetTaskNotesByUserTaskId = sinon.stub();
+        dispatchGetTaskNotesByUserTaskId.resolves({
+            payload: {
+                status: REQUEST_SUCCESS,
+                data: {
+                    data: []
+                }
+            }
+        });
+        dispatchSaveTaskNote = sinon.stub();
+        visitReducer = Immutable.Map({
+            detailVisit: {
+                data: {
+                    documentStatus: 1
                 }
             }
         });
@@ -60,13 +82,16 @@ describe('Test ModalTask component', () => {
             taskEdit: {
 
             },
-            addTask: sinon.fake(),
-            editTask: sinon.fake(),
+            dispatchAddTask: sinon.fake(),
+            dispatchEditTask: sinon.fake(),
             handleSubmit: sinon.fake(),
             dispatchGetCurrentComments: sinon.fake(),
             dispatchFillComments: sinon.fake(),
-            swtShowMessage: sinon.fake(),
-            filterUsersBancoDispatch
+            dispatchSwtShowMessage: sinon.fake(),
+            dispatchGetTaskNotesByUserTaskId,
+            dispatchSaveTaskNote,
+            filterUsersBancoDispatch,
+            visitReducer
         };
     });
 
@@ -79,6 +104,11 @@ describe('Test ModalTask component', () => {
         it('should render ModalTask component', () => {
             itRenders(<ModalTask {...defaultProps}/>);
         });
+
+        it('should render ModalTask component and call dispatchFillComments when id value is null', () => {
+            defaultProps.fields.id.value = null;
+            itRenders(<ModalTask {...defaultProps}/>);
+        });
     });
 
     describe('Actions tests', () => {
@@ -87,22 +117,22 @@ describe('Test ModalTask component', () => {
             defaultProps.taskEdit = undefined;
             const wrapper = itRenders(<ModalTask {...defaultProps}/>);
             wrapper.instance()._handleCreateTask();
-            expect(defaultProps.addTask.called).to.equal(true);
-            expect(defaultProps.swtShowMessage.called).to.equal(true);
+            expect(defaultProps.dispatchAddTask.called).to.equal(true);
+            expect(defaultProps.dispatchSwtShowMessage.called).to.equal(true);
         });
 
         it('_handleCreateTask should call editTask', () => {
             const wrapper = itRenders(<ModalTask {...defaultProps}/>);
             wrapper.instance()._handleCreateTask();
-            expect(defaultProps.editTask.called).to.equal(true);
-            expect(defaultProps.swtShowMessage.called).to.equal(true);
+            expect(defaultProps.dispatchEditTask.called).to.equal(true);
+            expect(defaultProps.dispatchSwtShowMessage.called).to.equal(true);
         });
 
         it('updateKeyValueUserBanco should call dispatchSwtShowMessage when employeeValue length is less than 3', () => {
             defaultProps.fields.responsable.value = 'Da';
             const wrapper = shallow(<ModalTask {...defaultProps}/>);
             wrapper.instance().updateKeyValueUsersBanco({ keyCode: 13, which: 13, preventDefault});
-            expect(defaultProps.swtShowMessage.called).to.equals(true);
+            expect(defaultProps.dispatchSwtShowMessage.called).to.equals(true);
         });
 
         it('updateKeyValueUserBanco should not call preventDefault', () => {
@@ -116,8 +146,50 @@ describe('Test ModalTask component', () => {
             defaultProps.fields.responsable.value = 'Dani';
             const wrapper = shallow(<ModalTask {...defaultProps}/>);
             wrapper.instance().updateKeyValueUsersBanco({ keyCode: 13, which: 13, preventDefault});
-            expect(defaultProps.swtShowMessage.called).to.equals(false);
+            expect(defaultProps.dispatchSwtShowMessage.called).to.equals(false);
             expect(filterUsersBancoDispatch.called).to.equals(true);
+        });
+
+        it('saveTaskComment should call dispatchSaveTaskNote', async () => {
+            const wrapper = shallow(<ModalTask {...defaultProps}/>);
+            const comment = {
+                id: null,
+                content: 'Algo',
+                author: 'Daniel Gallego'
+            };
+            await wrapper.instance().saveTaskComment(comment);
+            expect(dispatchSaveTaskNote.called).to.equal(true);
+        });
+
+        it('getTaskNotesByUserTaskId should not call dispatchFillComments when request is error', async () => {
+            defaultProps.dispatchGetTaskNotesByUserTaskId.resolves({
+                payload: {
+                    data: {
+                        status: REQUEST_ERROR,
+                        data: []
+                    }
+                }
+            });
+            const wrapper = shallow(<ModalTask {...defaultProps}/>);
+            await wrapper.instance().getTaskNotesByUserTaskId();
+            expect(dispatchGetTaskNotesByUserTaskId.called).to.equal(true);
+            expect(defaultProps.dispatchFillComments.called).to.equal(false);
+        });
+
+        it('getTaskNotesByUserTaskId should call dispatchFillComments when request is success', async () => {
+            defaultProps.fields.id.value= 1231;
+            defaultProps.dispatchGetTaskNotesByUserTaskId.resolves({
+                payload: {
+                    data: {
+                        status: REQUEST_SUCCESS,
+                        data: []
+                    }
+                }
+            });
+            const wrapper = shallow(<ModalTask {...defaultProps}/>);
+            await wrapper.instance().getTaskNotesByUserTaskId();
+            expect(dispatchGetTaskNotesByUserTaskId.called).to.equal(true);
+            expect(defaultProps.dispatchFillComments.called).to.equal(true);
         });
     });
 });

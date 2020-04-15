@@ -1,6 +1,5 @@
 import React from "react";
 import createFormPipeline from "../../../../../src/components/pipeline/createPipeline/formPipeline";
-import HeaderPipeline from "../../../../../src/components/pipeline/headerPipeline";
 import {
   ORIGIN_PIPELIN_BUSINESS,
   OPORTUNITIES_MANAGEMENT,
@@ -23,6 +22,7 @@ import SweetAlert from "../../../../../src/components/sweetalertFocus";
 import * as selectsComponent from "../../../../../src/components/selectsComponent/actions";
 import _ from "lodash";
 import Tooltip from "../../../../../src/components/toolTip/toolTipComponent";
+import ReportsHeader from "../../../../../src/components/globalComponents/reportsHeader/component";
 
 const middleWares = [thunk];
 const mockStore = configureStore(middleWares);
@@ -125,14 +125,14 @@ describe("Test CreatePipeline", () => {
     expect(wrapper.find(PermissionsUserReports)).to.have.length(1);
   });
 
-  it("should render formPipeline/HeaderPipeline", () => {
+  it("should render formPipeline/ReportsHeader", () => {
     const wrapper = shallow(<PipelineComponent store={store} />)
       .dive()
       .dive()
       .dive()
       .dive();
 
-    expect(wrapper.find(HeaderPipeline)).to.have.length(1);
+    expect(wrapper.find(ReportsHeader)).to.have.length(1);
   });
 
   it("should render formPipeline/oportunityName", () => {
@@ -754,7 +754,7 @@ describe("Test CreatePipelineChildren", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(HeaderPipeline)).to.have.length(0);
+    expect(wrapper.find(ReportsHeader)).to.have.length(0);
   });
   it("when createPipeline Children should not render formPipeline/PermissionsUserReports ", () => {
     const wrapper = shallow(<PipelineComponentChildren store={store} />)

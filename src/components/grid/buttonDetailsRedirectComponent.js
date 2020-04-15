@@ -14,6 +14,7 @@ import { updateStatusModal } from '../myPendings/draftDocuments/actions';
 import { toggleMenu } from '../navBar/actions';
 import { MENU_OPENED } from '../navBar/constants';
 import { MODULE_VISIT, MODULE_PREVISIT, MODULE_PIPELINE, MODULE_BUSINESS_PLAN } from './constants';
+import {MODULE_TASKS} from "../../constantsGlobal";
 
 class ButtonDetailsRedirectComponent extends Component {
 
@@ -71,6 +72,15 @@ class ButtonDetailsRedirectComponent extends Component {
                 showLoading(false, null);
                 redirectUrl(redirectObject.urlRedirect + '/' + redirectObject.id);
             }
+        } else if (redirectObject.typeClickDetail === MODULE_TASKS) {
+            updateTitleNavBar("Tareas");
+            changeOwnerDraftPipeline(redirectObject.ownerDraft);
+            if (!isUndefined(redirectObject.idClient)) {
+                this._handleRedirect(redirectObject.urlRedirect + '/' + redirectObject.id, redirectObject.idClient);
+            } else {
+                showLoading(false, null);
+                redirectUrl(redirectObject.urlRedirect + '/' + redirectObject.id);
+            }
         }
         if (navBar.get('status') === MENU_OPENED) {
             toggleMenu();
@@ -91,7 +101,7 @@ class ButtonDetailsRedirectComponent extends Component {
     render() {
         const iconButton = isUndefined(this.props.icon) ? "zoom icon" : this.props.icon;
         return (
-            <td>
+            <td style={this.props.style}>
                 <button className="btn btn-primary btn-sm" onClick={this._detailVisit}>
                     <i className={iconButton} style={{ margin: '0em', fontSize: '1.2em' }} />
                 </button>

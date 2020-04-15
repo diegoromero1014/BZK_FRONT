@@ -1,56 +1,28 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {tasksByClientFindServer,changePage, limitiInf,clearUserTask,clearUserTaskOrder} from './actions';
 import {NUMBER_RECORDS} from './constants';
-
-let v1 ="" ;
 class PaginationPendingTaskComponent extends Component {
 
   constructor(props) {
      super(props);
-     this._handleTaskByClientsFind = this._handleTaskByClientsFind.bind(this);
   }
 
-
-  componentWillMount(){
-    const{clearUserTask} = this.props;
-    clearUserTask();
+  componentDidMount(){
+    const { clearUserTask, mode } = this.props;
+    clearUserTask(mode);
   }
 
-  componentWillReceiveProps(nextProps){
-    const {
-        value1
-    } = nextProps;
-    if ((v1 !== nextProps.value1)){
-      v1 = nextProps.value1;
-      const {clearUserTaskOrder} = this.props;
-      clearUserTaskOrder();
-      this._handleTaskByClientsFind(0);
-    }
-  }
-
-  _handlePaginar(page) {
-    const {changePage, limitiInf, tasksByClient} = this.props;
-    var limInf = (page - 1);
-    limitiInf(limInf);
-    this._handleTaskByClientsFind(limInf);
-    changePage(page);
-  }
-
-  _handleTaskByClientsFind(limInf) {
-      const {tasksByClient, tasksByClientFindServer} = this.props;
-      tasksByClientFindServer(limInf, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, tasksByClient.get('columnTask'), tasksByClient.get('orderTask'), v1);
+  _handlePaginar = page => {
+    const { handlePaginar, mode } = this.props;
+    handlePaginar(page, mode );
   }
 
   render() {
-    const {tasksByClient, config} = this.props;
-    var page = tasksByClient.get('page');
+    const { rowCount } = this.props.tab;
+    const page = this.props.tab.page + 1;
     var firstPage = 1;
     if(page > 7) {
       firstPage = page - 6;
     }
-    var rowCount = tasksByClient.get('rowCount');
     var lastPage = Math.ceil(rowCount / NUMBER_RECORDS);
     return (
       <div>
@@ -59,30 +31,30 @@ class PaginationPendingTaskComponent extends Component {
             <span style={{fontWeight: 'bold'}}>Pág. {page} de {lastPage}</span>
             <div style={{textAlign:"center"}} >
               <ul className="pagination">
-                {page !== 1 ? <li onClick={() => {this._handlePaginar(page - 1)}}><a>«</a></li> :"" }
+                {page !== 1 ? <li onClick={() => {this._handlePaginar(page - 2)}}><a>«</a></li> :"" }
                 {firstPage <= lastPage ?
-                  <li><a className={page === firstPage ? "active" :"" } onClick={() => {this._handlePaginar(firstPage)}}>{firstPage}</a></li>
+                  <li><a className={page === firstPage ? "active" :"" } onClick={() => {this._handlePaginar(firstPage-1)}}>{firstPage}</a></li>
                 : ''}
                 {firstPage + 1 <= lastPage ?
-                  <li><a className={page === firstPage + 1 ? "active" :"" }  onClick={() => {this._handlePaginar(firstPage + 1)}}>{firstPage + 1}</a></li>
+                  <li><a className={page === firstPage + 1 ? "active" :"" }  onClick={() => {this._handlePaginar(firstPage)}}>{firstPage + 1}</a></li>
                 : ''}
                 {firstPage + 2 <= lastPage ?
-                  <li><a className={page === firstPage + 2 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 2)}}>{firstPage + 2}</a></li>
+                  <li><a className={page === firstPage + 2 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 1)}}>{firstPage + 2}</a></li>
                 : ''}
                 {firstPage + 3 <= lastPage ?
-                  <li><a className={page === firstPage + 3 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 3)}}>{firstPage + 3}</a></li>
+                  <li><a className={page === firstPage + 3 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 2)}}>{firstPage + 3}</a></li>
                 : ''}
                 {firstPage + 4 <= lastPage ?
-                  <li><a className={page === firstPage + 4 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 4)}}>{firstPage + 4}</a></li>
+                  <li><a className={page === firstPage + 4 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 3)}}>{firstPage + 4}</a></li>
                 : ''}
                 {firstPage + 5 <= lastPage ?
-                  <li><a className={page === firstPage + 5 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 5)}}>{firstPage + 5}</a></li>
+                  <li><a className={page === firstPage + 5 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 4)}}>{firstPage + 5}</a></li>
                 : ''}
                 {firstPage + 6 <= lastPage ?
-                  <li><a className={page === firstPage + 6 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 6)}}>{firstPage + 6}</a></li>
+                  <li><a className={page === firstPage + 6 ? "active" :"" } onClick={() => {this._handlePaginar(firstPage + 5)}}>{firstPage + 6}</a></li>
                 : ''}
                 {page !== lastPage ?
-                  <li onClick={() => {this._handlePaginar(page + 1)}}><a>»</a></li>
+                  <li onClick={() => {this._handlePaginar(page)}}><a>»</a></li>
                 : ''}
               </ul>
             </div>
@@ -93,16 +65,5 @@ class PaginationPendingTaskComponent extends Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    tasksByClientFindServer, changePage, limitiInf,clearUserTask,clearUserTaskOrder
-  }, dispatch);
-}
 
-function mapStateToProps({tasksByClient}, ownerProps) {
-  return {
-    tasksByClient
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PaginationPendingTaskComponent);
+export default PaginationPendingTaskComponent;

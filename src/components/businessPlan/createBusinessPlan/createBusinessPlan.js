@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import HeaderBusinessPlan from '../headerBusinessPlan';
 import FormBusinessPlan from './formBusinessPlan';
 import { redirectUrl } from '../../globalComponents/actions';
+import ReportsHeader from "../../globalComponents/reportsHeader/component";
 
 class CreateBusinessPlan extends Component {
 
@@ -18,7 +18,7 @@ class CreateBusinessPlan extends Component {
   render() {
     return (
       <div>
-        <HeaderBusinessPlan />
+        <ReportsHeader/>
         <FormBusinessPlan />
       </div>
     );

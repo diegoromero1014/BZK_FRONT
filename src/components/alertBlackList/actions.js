@@ -120,13 +120,6 @@ export function clearClientPagination() {
     };
 }
 
-export function updateNumberTotalBlackList(totalCovenants) {
-    return {
-        type: constant.UPDATE_NUMBER_TOTAL_BLACK_LIST,
-        totalCovenants
-    };
-}
-
 export function orderColumnBlackList(orderClients, columnClients) {
     return {
         type: constant.ORDER_COLUMN_CLIENT_BLACK_LIST,

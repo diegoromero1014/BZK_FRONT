@@ -1,7 +1,6 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { PrevisitPage } from '../../../../src/components/previsita/previsitPage';
-import HeaderPrevisita from '../../../../src/components/previsita/headerPrevisita';
 import PermissionUserReports from '../../../../src/components/commercialReport/permissionsUserReports';
 import PrevisitFormComponent from '../../../../src/components/previsita/previsitFormComponent';
 import SweetAlert from '../../../../src/components/sweetalertFocus';
@@ -9,6 +8,7 @@ import { TITLE_PREVISIT_EDIT, TITLE_PREVISIT_CREATE, MESSAGE_PREVISIT_EDIT_SUCCE
 import * as globalActions from '../../../../src/components/globalComponents/actions';
 import { EDITAR, REQUEST_SUCCESS, REQUEST_INVALID_INPUT, REQUEST_ERROR } from '../../../../src/constantsGlobal';
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from '../../../../src/components/participantsVisitPre/constants';
+import ReportsHeader from "../../../../src/components/globalComponents/reportsHeader/component";
 
 const validateEnter = true;
 const ownerDraft = true;
@@ -165,9 +165,9 @@ describe('Test previsitPage', () => {
             expect(dispatchSetConfidential).to.have.been.called.twice;
         });
     
-        it('should render HeaderPrevisita', () => {
+        it('should render ReportsHeader', () => {
             const wrapper = shallow(<PrevisitPage {...defaultProps}/>);
-            expect(wrapper.find(<HeaderPrevisita/>))
+            expect(wrapper.find(<ReportsHeader/>))
         });
     
         it('should render Editar button when validatePermissionsPrevisit is true and state isEditable is true', () => {

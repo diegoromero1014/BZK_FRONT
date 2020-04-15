@@ -10,7 +10,6 @@ let defaultProps = {
     dispatchAddAnswer: spy(sinon.fake()),
     setFieldValue: sinon.fake(),
     setFieldTouched: sinon.fake(),
-    dispatchGetAllQuestions: sinon.fake(),
     answers: []
 }
 
