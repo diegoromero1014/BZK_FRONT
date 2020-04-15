@@ -33,7 +33,7 @@ export class VisitsSection extends Component {
 
     handleDispatchGetEconomicGroupsToBeVisited = async () => {
         const { dispatchGetEconomicGroupsToBeVisited } = this.props;
-        return await dispatchGetEconomicGroupsToBeVisited(0, MAX_ROWS);
+        dispatchGetEconomicGroupsToBeVisited(0, MAX_ROWS);
     }
 
     countVisits = () => {
@@ -54,7 +54,7 @@ export class VisitsSection extends Component {
                 disable: false,
                 className: 'economic-groups-tab',
                 number: rowCount || 0,
-                callback: () => this.handlePendingVisits
+                callback: this.handlePendingVisits
             }
         ];
         return (

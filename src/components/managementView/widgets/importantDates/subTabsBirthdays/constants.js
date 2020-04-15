@@ -14,7 +14,7 @@ export const ACTION_OPERATIVE_CONTACTS = "ACTION_OPERATIVE_CONTACTS";
 export const NAME = "NAME";
 export const LAST_NAME = "LAST_NAME";
 
-export const MAX_ROWS = 5;
+export const MAX_ROWS = 4;
 
 export const COLUMNS_CLIENTS = [
     {
