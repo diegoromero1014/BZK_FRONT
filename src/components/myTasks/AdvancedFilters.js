@@ -347,7 +347,7 @@ export class AdvancedFilters extends Component {
                                         type="button"
                                         style={{
                                             margin: "8px 10px 0px 0px",
-                                            backgroundColor: "rgb(79,78,78)",
+                                            backgroundColor: "#00448c",
                                             width: '40%'
                                         }}
                                         onClick={() => doneFilter(false)}>
