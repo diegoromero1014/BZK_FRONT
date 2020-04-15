@@ -34,10 +34,6 @@ export class OperativeSection extends Component {
         this.setLoading(false);
     };
 
-    handleOnClick = data => {
-        
-    }
-
     render() {
         const { data, total } = this.props;
 

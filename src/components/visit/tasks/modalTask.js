@@ -82,13 +82,13 @@ export class ModalTask extends Component {
     }
 
     updateKeyValueUsersBanco(e) {
-        const { fields: { responsable, idEmployee }, filterUsersBancoDispatch, swtShowMessage } = this.props;
+        const { fields: { responsable, idEmployee }, filterUsersBancoDispatch, dispatchSwtShowMessage } = this.props;
         const selector = $('.ui.search.responsable');
 
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             if (responsable.value !== "" && responsable.value !== null && responsable.value !== undefined) {
                 if (responsable.value.length < 3) {
-                    swtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
+                    dispatchSwtShowMessage('error', 'Error', 'Señor usuario, para realizar la búsqueda es necesario ingresar al menos 3 caracteres');
                     return;
                 }
                 selector.toggleClass('loading');
@@ -122,7 +122,7 @@ export class ModalTask extends Component {
     }
 
     _handleCreateTask() {
-        const {fields: {responsable, fecha, tarea, idEmployee, id}, addTask, editTask, taskEdit, swtShowMessage, commentsReducer} = this.props;
+        const {fields: {responsable, fecha, tarea, idEmployee, id}, dispatchAddTask, dispatchEditTask, taskEdit, dispatchSwtShowMessage, commentsReducer} = this.props;
         if (responsable.value !== nameUsuario) {
             nameUsuario = responsable.value;
             idUsuario = null;
@@ -138,9 +138,9 @@ export class ModalTask extends Component {
                 taskEdit.fechaForm = fecha.value;
                 taskEdit.id = id.value;
                 taskEdit.notes = Object.assign(commentsReducer.comments);
-                editTask(taskEdit);
+                dispatchEditTask(taskEdit);
 
-                swtShowMessage('success', 'Tarea editada', 'Señor usuario, la tarea fue editada exitosamente', {onConfirmCallback: this._closeCreate})
+                dispatchSwtShowMessage('success', 'Tarea editada', 'Señor usuario, la tarea fue editada exitosamente', {onConfirmCallback: this._closeCreate})
 
             } else {
                 const uuid = _.uniqueId('task_');
@@ -156,10 +156,10 @@ export class ModalTask extends Component {
                     notes: Object.assign(commentsReducer.comments),
                     taskAsignator : window.localStorage.getItem('name')
                 };
-                addTask(task);
+                dispatchAddTask(task);
 
                 // Aqui hay que llamar la accion
-                swtShowMessage('success', 'Tarea agregada', 'Señor usuario, la tarea fue agregada exitosamente', {onConfirmCallback: this._closeCreate})
+                dispatchSwtShowMessage('success', 'Tarea agregada', 'Señor usuario, la tarea fue agregada exitosamente', {onConfirmCallback: this._closeCreate})
             }
         } else {
             fecha.onChange('');
@@ -274,10 +274,10 @@ export class ModalTask extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        addTask,
-        editTask,
+        dispatchAddTask: addTask,
+        dispatchEditTask: editTask,
         filterUsersBancoDispatch: filterUsersBanco,
-        swtShowMessage,
+        dispatchSwtShowMessage: swtShowMessage,
         dispatchFillComments: fillComments,
         dispatchGetTaskNotesByUserTaskId: getTaskNotesByUserTaskId,
         dispatchSaveTaskNote: saveTaskNote

@@ -18,7 +18,6 @@ class ViewDetailClient extends Component {
     }
 
     async componentWillMount() {
-        const { data = [] } = this.props;
         await this.setState({
             visible: true,
             clients: this.handleBuildData(1)

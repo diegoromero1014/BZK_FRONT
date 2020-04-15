@@ -7,7 +7,6 @@ import _ from 'lodash';
 import $ from 'jquery';
 
 import Input from '../../ui/input/inputComponent';
-import ComboBoxFilter from "../../ui/comboBoxFilter/comboBoxFilter";
 
 import { addParticipant, clearParticipants, filterUsersBanco } from './actions';
 import { contactsByClientFindServer } from '../contact/actions';

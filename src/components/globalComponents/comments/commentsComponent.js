@@ -29,7 +29,7 @@ import {
 } from "../../../validationsFields/patternsToValidateField";
 import {
     MESSAGE_ERROR_INJECTION_HTML,
-    MESSAGE_WARNING_FORBIDDEN_CHARACTER, MESSAGE_WARNING_FORBIDDEN_CHARACTER_COMMENT,
+    MESSAGE_WARNING_FORBIDDEN_CHARACTER_COMMENT,
     MESSAGE_WARNING_MAX_LENGTH,
     MESSAGE_WARNING_TASK_OBSERVATIONS
 } from "../../../validationsFields/validationsMessages";
@@ -48,7 +48,9 @@ export class CommentsComponent extends Component {
             showNewCommentError: null,
             showReplyCommentError: null,
             showNewCommentLoader: false,
-            showReplyCommentLoader: false
+            showReplyCommentLoader: false,
+            disableAddButton: false,
+            disableResponseAddButton: false
         }
     }
 
@@ -150,9 +152,9 @@ export class CommentsComponent extends Component {
 
     showHideLoadingAddComment = (show, source) => {
         if(source === 'new')
-            this.setState({ showNewCommentLoader: show });
+            this.setState({ showNewCommentLoader: show, disableAddButton: show });
         else
-            this.setState({ showReplyCommentLoader: show });
+            this.setState({ showReplyCommentLoader: show, disableResponseAddButton: show });
     };
 
     addComment = async (e, parentCommentId, content, source) => {
@@ -252,7 +254,8 @@ export class CommentsComponent extends Component {
                             <Col xs={12} md={12} ld={12}>
                                 <div style={{ float: 'right' }}>
                                     {showReplyCommentLoader && <Loader active inline style={{marginRight: 15}}></Loader>}
-                                    <button id={`replyCommentButton${id}`} className="btn btn-primary" onClick={e => this.addComment(e, id, this.state.commentReply, 'reply')}>Responder</button>
+                                    <button id={`replyCommentButton${id}`} className="btn btn-primary" onClick={e => this.addComment(e, id, this.state.commentReply, 'reply')}
+                                        disabled={this.state.disableResponseAddButton && 'disabled'}>Responder</button>
                                 </div>
                             </Col>
                         </Row>
@@ -325,7 +328,7 @@ export class CommentsComponent extends Component {
                                 <div style={{ float: 'right' }}>
                                     {showNewCommentLoader && <Loader active inline style={{marginRight: 15}}></Loader> }
                                     <button id="addCommentButton" className="btn btn-primary" onClick={e => this.addComment(e,null, this.state.comment, 'new')}
-                                            disabled={disabled && 'disabled'}>Agregar nota</button>
+                                            disabled={disabled || this.state.disableAddButton ? 'disabled' : ''}>Agregar nota</button>
                                 </div>
                             </Col>
                         </Row>

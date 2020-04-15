@@ -12,7 +12,7 @@ import { getImportantDates } from "./actions";
 import "../../../../../styles/importantDates/main.scss";
 import SubTabsBirthdays from './subTabsBirthdays';
 
-class SectionImportantDates extends Component {
+export class SectionImportantDates extends Component {
 
   async componentDidMount() {
       await Promise.all([
@@ -35,7 +35,7 @@ class SectionImportantDates extends Component {
         content: <SubTabsBirthdays />,
         disable: false,
         number: all || 0,
-        callback : () => this.handleImportantDates()
+        callback: this.handleImportantDates
       }
     ];
     

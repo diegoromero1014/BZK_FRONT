@@ -50,7 +50,6 @@ export class SubTabsBirthdays extends Component {
   }
 
   countImportantDates = () => {
-    const { strategics, tactics, operatives } = this.props;
 
     const tabs = [
       {
@@ -58,21 +57,21 @@ export class SubTabsBirthdays extends Component {
         className: "importantDatesStyle",
         content: <StrategicSection />,
         disable: false,
-        callback: () => this.handleStrategicContacts()
+        callback: this.handleStrategicContacts
       },
       {
         name: TITLE_TACTIC_CONTACTS,
         className: "importantDatesStyle",
         content: <TacticSection />,
         disable: false,
-        callback: () => this.handleTacticContacts()
+        callback: this.handleTacticContacts
       },
       {
         name: TITLE_OPERATIVE_CONTACTS,
         className: "importantDatesStyle",
         content: <OperativeSection />,
         disable: false,
-        callback: () => this.handleOperativeContacts()
+        callback: this.handleOperativeContacts
       }
     ];
     return (
@@ -87,14 +86,8 @@ export class SubTabsBirthdays extends Component {
   }
 }
 
-const mapStateToProps = ({ importantDates }) => ({
-    strategics: importantDates.strategics.rowCount,
-    tactics: importantDates.tactics.rowCount,
-    operatives: importantDates.operatives.rowCount,
-})
-
 const mapDispatchToProps = dispatch => bindActionCreators({
   dispatchGetImportantDates: getImportantDates
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(SubTabsBirthdays);
+export default connect(null, mapDispatchToProps)(SubTabsBirthdays);

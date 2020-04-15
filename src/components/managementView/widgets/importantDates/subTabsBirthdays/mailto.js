@@ -8,5 +8,4 @@ const MailTo = ({ data, type }) => (
     </a>
 );
 
-
 export default MailTo;
