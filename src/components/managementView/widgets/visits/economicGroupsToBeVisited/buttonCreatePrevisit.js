@@ -31,6 +31,7 @@ export class ButtonCreatePrevisit extends Component {
         return <button 
                     className="btn btn-primary btn-sm" 
                     type="button"
+                    style={{background : "#00448C"}}
                     title="Crear Previsita"
                     onClick={() => this.handleClick(data)}
                 >
