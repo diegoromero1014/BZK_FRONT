@@ -7,7 +7,7 @@ import {
     AFFIRMATIVE_ANSWER,
     CANCEL,
     EDITAR,
-    MESSAGE_SAVE_DATA, MODULE_BUSSINESS_PLAN, MODULE_VISITS,
+    MESSAGE_SAVE_DATA, MODULE_BUSSINESS_PLAN, MODULE_TASKS, MODULE_VISITS,
     REQUEST_INVALID_INPUT,
     REQUEST_SUCCESS
 } from "../../constantsGlobal";
@@ -34,7 +34,7 @@ import {createPendingTaskNew} from "./createPendingTask/actions.js";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import moment from "moment";
 import {getInfoTaskUser} from '../myPendings/myTasks/actions';
-import {clearTask} from "./actions";
+import {clearTask, setTaskIdFromRedirect} from "./actions";
 import _ from 'lodash';
 import {consultInfoClient} from "../clientInformation/actions";
 import CommentsComponent from "../globalComponents/comments/commentsComponent";
@@ -45,7 +45,7 @@ import {detailBusiness} from "../businessPlan/actions";
 import {detailVisit} from "../visit/actions";
 import {validatePermissionsByModule} from "../../actionsGlobal";
 import {getTaskNotesByUserTaskId, saveTaskNote} from "./createPendingTask/actions";
-import {showBrandConfidential} from "../navBar/actions";
+import {showBrandConfidential, updateTitleNavBar} from "../navBar/actions";
 
 let nameEntity;
 
@@ -65,18 +65,17 @@ export class TaskPage extends React.Component {
     }
 
     componentWillMount() {
-        const {idClient, dispatchConsultInfoClient} = this.props;
+        const {idClient, fromModal, dispatchUpdateTitleNavBar} = this.props;
         if (idClient) {
-            window.sessionStorage.setItem('idClientSelected', idClient);
-            dispatchConsultInfoClient().then(this.validateClientSelected);
-        } else {
-            this.validateClientSelected();
+            this.setClientIdInSessionStorage(idClient);
         }
 
+        if(!fromModal)
+            dispatchUpdateTitleNavBar('Tareas');
     }
 
     async componentDidMount() {
-        const {params: {id}, dispatchShowLoading, filterUsersBancoDispatch, myPendingsReducer, dispatchFillComments} = this.props;
+        const {params: {id}, dispatchShowLoading, filterUsersBancoDispatch, myPendingsReducer, dispatchFillComments, dispatchSetTaskIdFromRedirect} = this.props;
         dispatchShowLoading(true, "Cargando...");
 
         Promise.all([this.masterDataFields(), this.getInfoTask(id)]).then(async () => {
@@ -96,6 +95,7 @@ export class TaskPage extends React.Component {
             if (taskDetail) {
                 dispatchFillComments(taskDetail.notes);
             }
+            dispatchSetTaskIdFromRedirect(null);
         });
     }
 
@@ -228,6 +228,7 @@ export class TaskPage extends React.Component {
             }
             nameEntity = taskInfo.nameEntity;
             this.entityId = taskInfo.entityId;
+            await dispatchValidatePermissionsByModule(MODULE_TASKS);
             if (taskInfo.nameEntity === 'Plan de negocio') {
                 dispatchValidatePermissionsByModule(MODULE_BUSSINESS_PLAN);
                 dispatchDetailBusiness(taskInfo.entityId);
@@ -241,9 +242,16 @@ export class TaskPage extends React.Component {
                 nameUsuario: taskInfo.assignedBy,
                 canOnlyAddNotes: taskInfo.canOnlyAddNotes
             });
+            this.setClientIdInSessionStorage(taskInfo.clientId);
         } else {
             this.setState({ isEditable: false, canOnlyAddNotes: false });
         }
+    };
+
+    setClientIdInSessionStorage = (idClient) => {
+        const { dispatchConsultInfoClient } = this.props;
+        window.sessionStorage.setItem('idClientSelected', idClient);
+        dispatchConsultInfoClient().then(this.validateClientSelected);
     };
 
     saveTaskComment = async (comment) => {
@@ -409,7 +417,9 @@ function mapDispatchToProps(dispatch) {
         dispatchDetailBusiness: detailBusiness,
         dispatchDetailVisit: detailVisit,
         dispatchValidatePermissionsByModule: validatePermissionsByModule,
-        dispatchShowBrandConfidential: showBrandConfidential
+        dispatchShowBrandConfidential: showBrandConfidential,
+        dispatchUpdateTitleNavBar: updateTitleNavBar,
+        dispatchSetTaskIdFromRedirect: setTaskIdFromRedirect
     }, dispatch);
 }
 

@@ -40,7 +40,12 @@ export function getPendingTaskPromise(pageNum, order, maxRows, textToSearch, fil
                 order,
                 textToSearch,
                 createDateFrom: filters.initialDate,
-                createDateTo: filters.finalDate
+                createDateTo: filters.finalDate,
+                closeDateTo: filters.closingDateTo,
+                closeDateFrom: filters.closingDateFrom,
+                regionId: filters.region,
+                zoneId: filters.zone,
+                teamId: filters.cell
             }
         }
     };
@@ -81,7 +86,12 @@ export function getFinalizedTaskPromise(pageNum, order, maxRows, textToSearch, f
                 order,
                 textToSearch,
                 createDateFrom: filters.initialDate,
-                createDateTo: filters.finalDate
+                createDateTo: filters.finalDate,
+                closeDateTo: filters.closingDateTo,
+                closeDateFrom: filters.closingDateFrom,
+                regionId: filters.region,
+                zoneId: filters.zone,
+                teamId: filters.cell
             }
         }
     };

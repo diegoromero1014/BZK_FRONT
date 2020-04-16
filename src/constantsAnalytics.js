@@ -96,3 +96,4 @@ export const ControlDashboardURL="/dashboard/controlDashboard";
 export const ShedulerURL ="/dashboard/sheduler";
 export const MyTasksPage ="MY_TASK";
 export const MyTasksPageUrl ="/dashboard/myTaskPage";
+export const TaskPageUrl = "/dashboard/task";

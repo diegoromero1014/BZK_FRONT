@@ -146,13 +146,15 @@ class ListMyTasksComponent extends Component {
   };
 
   render() {
-    const { tasks, mode } = this.props;
+    const { tasks, mode, expandRow, textToHighlight } = this.props;
     return (
       <div>
         <GridComponent key={mode}
           headers={this._renderHeaders}
           data={this._renderCellView(tasks)}
           modalTitle={MODAL_TITLE}
+         expandRow={expandRow}
+         textToHighlight={textToHighlight}
         />
       </div>
     );

@@ -2,12 +2,21 @@ import React, {Component} from 'react';
 import {bindActionCreators} from "redux";
 import {connect} from 'react-redux';
 import {Loader} from 'semantic-ui-react';
-import { get, indexOf } from "lodash";
+import {get, indexOf} from "lodash";
 import {redirectUrl} from "../globalComponents/actions";
 import {updateTitleNavBar} from "../navBar/actions";
-import {FINALIZED_TASKS, FINISHED, MODAL_TITLE, NUMBER_RECORDS, PENDING, PENDING_TASKS, TOOLTIP_PENDING, TOOLTIP_FINISHED} from "./constants";
+import {
+    FINALIZED_TASKS,
+    FINISHED,
+    MODAL_TITLE,
+    NUMBER_RECORDS,
+    PENDING,
+    PENDING_TASKS,
+    TOOLTIP_FINISHED,
+    TOOLTIP_PENDING
+} from "./constants";
 import {validatePermissionsByModule} from '../../actionsGlobal';
-import { REQUEST_SUCCESS, EDITAR, MODULE_TASKS } from "../../constantsGlobal";
+import {EDITAR, MODULE_TASKS, REQUEST_SUCCESS} from "../../constantsGlobal";
 import {TASK_STATUS} from "../selectsComponent/constants";
 import {
     cleanFinalizedTasks,
@@ -19,7 +28,8 @@ import {
     getPendingTaskPromise,
     pendingTasks,
     setPageFinalized,
-    setPagePending, setRolToSearch
+    setPagePending,
+    setRolToSearch
 } from './actions';
 import ProgressBarComponent from "../../ui/ProgressBar";
 import TabComponent from '../../ui/Tab';
@@ -28,12 +38,28 @@ import PaginationPendingTaskComponent from './../pendingTask/paginationPendingTa
 import ListMyTasksComponent from './listMyTasksComponent';
 import {getMasterDataFields} from '../selectsComponent/actions';
 import HeaderFilters from "./headerFilters";
+import SidebarComponent from "./SidebarComponent";
+import SearchInputComponent from "../../ui/searchInput/SearchInputComponent";
+import {Col, Row} from "react-flexbox-grid";
 
 export class MyTaskPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false
+            loading: false,
+            textToSearch: "",
+            searchByText: false,
+            filters: {
+                users: null,
+                rol: null,
+                initialDate: null,
+                finalDate: null,
+                closingDateTo: null,
+                closingDateFrom: null,
+                region: null,
+                zone: null,
+                cell: null
+            }
         };
     }
 
@@ -112,6 +138,19 @@ export class MyTaskPage extends Component {
         );
     };
 
+    _onSearchText(value) {
+        const {myTasks} = this.props;
+
+        this.setState({
+            searchByText: true,
+            textToSearch: value
+        });
+
+        this.fetchAndDispatchPendingTasks(0, myTasks.get("tabPending").order, value === "" ? null : value, myTasks.get("initialFilter"));
+        this.fetchAndDispatchFinalizedTasks(0, myTasks.get("tabPending").order, value === "" ? null : value, myTasks.get("initialFilter"));
+
+    }
+
     handleFetchAndDispatchPendingTasks = (page, mode) => {
         const {myTasks} = this.props;
         switch (mode) {
@@ -119,7 +158,7 @@ export class MyTaskPage extends Component {
                 this.fetchAndDispatchPendingTasks(
                     page,
                     myTasks.get("tabPending").order,
-                    null,
+                    this.state.textToSearch,
                     myTasks.get("initialFilter")
                 );
                 break;
@@ -127,7 +166,7 @@ export class MyTaskPage extends Component {
                 this.fetchAndDispatchFinalizedTasks(
                     page,
                     myTasks.get("tabFinished").order,
-                    null,
+                    this.state.textToSearch,
                     myTasks.get("initialFilter")
                 );
                 break;
@@ -185,125 +224,151 @@ export class MyTaskPage extends Component {
         }
     };
 
-    dispatchFilters = async (filters) => {
-        const {myTasks} = this.props;
+    dispatchFilters = async (filtersResponse) => {
+        const {myTasks, dispatchSetRolToSearch} = this.props;
+        let {filters} = this.state;
+
+        this.setState({
+            filters: Object.assign(filters, filtersResponse)
+        });
+
         await this.fetchAndDispatchFinalizedTasks(
-            0, myTasks.get("tabFinished").order, null, filters
+            0, myTasks.get("tabFinished").order, null, this.state.filters
         );
         await this.fetchAndDispatchPendingTasks(
-            0, myTasks.get("tabPending").order, null, filters
+            0, myTasks.get("tabPending").order, null, this.state.filters
         );
+
+        dispatchSetRolToSearch(this.state.filters);
     };
 
     permissionToEditTask = () => {
-        const {reducerGlobal}= this.props;
+        const {reducerGlobal} = this.props;
         let editPendings = get(reducerGlobal.get("permissionsTasks"), indexOf(reducerGlobal.get("permissionsTasks"), EDITAR), false);
         return (editPendings === EDITAR);
     };
 
     render() {
-        const {myTasks} = this.props;
+        const {params: {filtered}, myTasks} = this.props;
         const {loading} = this.state;
         let tabPending = myTasks.get("tabPending");
         let tabFinished = myTasks.get("tabFinished");
         return (
-          <div
-            className="tab-pane quickZoomIn animated"
-            style={{
-              width: "100%",
-              marginTop: "10px",
-              marginBottom: "20px"
-            }}
-          >
             <div
-              style={{
-                padding: "10px",
-                overflow: "initial",
-                backgroundColor: "white",
-                margin: "10px",
-                borderRadius: "5px",
-                boxShadow: "0px 0px 10px -7px rgba(0,0,0,0.75)"
-              }}
+                className="tab-pane quickZoomIn animated"
+                style={{
+                    width: "100%",
+                    marginTop: "10px",
+                    marginBottom: "20px"
+                }}
             >
-              <HeaderFilters dispatchFilters={this.dispatchFilters} />
-              <ProgressBarComponent
-                pending={tabPending.rowCount}
-                finalized={tabFinished.rowCount}
-                role={myTasks.get("initialFilter").rol}
-                loading={loading==true}
-              />
-            </div>
-            <div style={{ backgroundColor: "white", width: "100%" }}>
-              <div style={{ display: "flex" }}>
-                <PendingTasksHelp />
-                <div style={{ display: "flex" }}>
-                  {loading === true && (
-                    <div style={{ padding: "10px" }}>
-                      <Loader active inline></Loader>
-                      <span style={{ marginLeft: "10px" }}>Cargando...</span>
-                    </div>
-                  )}
+                <div
+                    style={{
+                        padding: "10px",
+                        overflow: "initial",
+                        backgroundColor: "white",
+                        margin: "10px",
+                        borderRadius: "5px",
+                        boxShadow: "0px 0px 10px -7px rgba(0,0,0,0.75)"
+                    }}
+                >
+                    <HeaderFilters dispatchFilters={this.dispatchFilters} filter={filtered}/>
+                    <ProgressBarComponent
+                        pending={tabPending.rowCount}
+                        finalized={tabFinished.rowCount}
+                        role={myTasks.get("initialFilter").rol}
+                        loading={loading == true}
+                    />
+                    <Row style={{padding: "40px 10px 0px 20px"}}>
+                        <Col xs={12} sm={8} md={6} lg={6}>
+                            <SearchInputComponent
+                                onChangeSearch={text => this._onSearchText(text)}
+                            />
+                        </Col>
+                        <Col xs={12} sm={8} md={6} lg={6}>
+                            {myTasks.get("initialFilter").initialDate &&
+                            <SidebarComponent
+                                key={myTasks.get("initialFilter").initialDate}
+                                defaultFilters={this.state.filters}
+                                dispatchFilters={this.dispatchFilters}/>
+                            }
+                        </Col>
+                    </Row>
                 </div>
-              </div>
-              <TabComponent
-                tabs={[
-                  { 
-                    name: PENDING_TASKS,
-                    number: tabPending.rowCount,
-                    tooltip: TOOLTIP_PENDING,
-                    content: (
-                      <div>
-                        <ListMyTasksComponent
-                          orderColumn={this.orderColumn}
-                          tasks={tabPending.data}
-                          handleTaskByClientsFind={
-                            this.handleFetchAndDispatchPendingTasks
-                          }
-                          permissionToEditTask={this.permissionToEditTask}
-                          updateBothTabs={this.updateBothTabs}
-                          actualPage={tabPending.page}
-                          mode={PENDING}
-                        />
-                        <PaginationPendingTaskComponent
-                          tab={tabPending}
-                          clearUserTask={this.clearUserTask}
-                          handlePaginar={this.handlePaginar}
-                          mode={PENDING}
-                        />
-                      </div>
-                    )
-                  },
-                  {
-                    name: FINALIZED_TASKS,
-                    number: tabFinished.rowCount,
-                    tooltip: TOOLTIP_FINISHED,
-                    content: (
-                      <div>
-                        <ListMyTasksComponent
-                          orderColumn={this.orderColumn}
-                          tasks={tabFinished.data}
-                          handleTaskByClientsFind={
-                            this.handleFetchAndDispatchPendingTasks
-                          }
-                          permissionToEditTask={this.permissionToEditTask}
-                          updateBothTabs={this.updateBothTabs}
-                          actualPage={tabPending.page}
-                          mode={FINISHED}
-                        />
-                        <PaginationPendingTaskComponent
-                          tab={tabFinished}
-                          clearUserTask={this.clearUserTask}
-                          handlePaginar={this.handlePaginar}
-                          mode={FINISHED}
-                        />
-                      </div>
-                    )
-                  }
-                ]}
-              />
+                <div style={{backgroundColor: "white", width: "100%"}}>
+                    <div style={{display: "flex"}}>
+                        <PendingTasksHelp/>
+                        <div style={{display: "flex"}}>
+                            {loading === true && (
+                                <div style={{padding: "10px"}}>
+                                    <Loader active inline></Loader>
+                                    <span style={{marginLeft: "10px"}}>Cargando...</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    <TabComponent
+                        tabs={[
+                            {
+                                name: PENDING_TASKS,
+                                number: tabPending.rowCount,
+                                tooltip: TOOLTIP_PENDING,
+                                content: (
+                                    <div>
+                                        <ListMyTasksComponent
+                                            orderColumn={this.orderColumn}
+                                            tasks={tabPending.data}
+                                            handleTaskByClientsFind={
+                                                this.handleFetchAndDispatchPendingTasks
+                                            }
+                                            permissionToEditTask={this.permissionToEditTask}
+                                            updateBothTabs={this.updateBothTabs}
+                                            actualPage={tabPending.page}
+                                            mode={PENDING}
+                                            expandRow={this.state.searchByText}
+                                            textToHighlight={this.state.textToSearch}/>
+                                        <PaginationPendingTaskComponent
+                                            tab={tabPending}
+                                            clearUserTask={this.clearUserTask}
+                                            handlePaginar={this.handlePaginar}
+                                            mode={PENDING}
+                                        />
+                                    </div>
+                                )
+                            },
+                            {
+                                name: FINALIZED_TASKS,
+                                number: tabFinished.rowCount,
+                                tooltip: TOOLTIP_FINISHED,
+                                content: (
+                                    <div>
+                                        <ListMyTasksComponent
+                                            orderColumn={this.orderColumn}
+                                            tasks={tabFinished.data}
+                                            handleTaskByClientsFind={
+                                                this.handleFetchAndDispatchPendingTasks
+                                            }
+                                            permissionToEditTask={this.permissionToEditTask}
+                                            updateBothTabs={this.updateBothTabs}
+                                            actualPage={tabPending.page}
+                                            mode={FINISHED} expandRow={this.state.searchByText}
+                                            textToHighlight={this.state.textToSearch}
+                                        />
+                                        <PaginationPendingTaskComponent
+                                            tab={tabFinished}
+                                            clearUserTask={this.clearUserTask}
+                                            handlePaginar={this.handlePaginar}
+                                            mode={FINISHED}
+                                        />
+                                    </div>
+                                )
+                            }
+                        ]}
+                    />
+                </div>
             </div>
-          </div>
-        );
+        )
+            ;
     }
 }
 
