@@ -58,6 +58,7 @@ let dispatchSaveTaskNote;
 let dispatchGetTaskNotesByUserTaskId;
 let dispatchUpdateTitleNavBar;
 let dispatchValidatePermissionsByModule;
+let dispatchSetTaskIdFromRedirect;
 let filterUsersBancoDispatch;
 let selectsReducer;
 let setFieldValue;
@@ -76,6 +77,7 @@ describe('Test taskPage', () => {
         dispatchGetMasterDataFields = sinon.stub();
         dispatchSwtShowMessage = spy(sinon.fake());
         dispatchGetInfoTaskUser = sinon.stub();
+        dispatchSetTaskIdFromRedirect = sinon.fake();
         dispatchGetInfoTaskUser.resolves({
            payload:{
                data:{
@@ -147,6 +149,7 @@ describe('Test taskPage', () => {
             selectsReducer,
             dispatchShowLoading,
             dispatchGetMasterDataFields,
+            dispatchSetTaskIdFromRedirect,
             dispatchSwtShowMessage,
             dispatchCreatePendingTaskNew,
             dispatchClearUserTask,
@@ -289,6 +292,15 @@ describe('Test taskPage', () => {
         it('onClickConfirmCancelCommercialReport should call redirectUrl and change showConfirmationCancelTask to false', () => {
             defaultProps.fromModal = false;
             const wrapper = shallow(<TaskPage {...defaultProps}/>);
+            wrapper.instance().onClickConfirmCancelCommercialReport();
+            expect(wrapper.state().showConfirmationCancelTask).to.equal(false);
+            expect(redirectUrl.calledOnce).to.equal(true);
+        });
+
+        it('onClickConfirmCancelCommercialReport should call redirectUrl and change showConfirmationCancelTask to false when canOnlyAddNotes state is true', () => {
+            defaultProps.fromModal = false;
+            const wrapper = shallow(<TaskPage {...defaultProps}/>);
+            wrapper.setState({canOnlyAddNotes: true});
             wrapper.instance().onClickConfirmCancelCommercialReport();
             expect(wrapper.state().showConfirmationCancelTask).to.equal(false);
             expect(redirectUrl.calledOnce).to.equal(true);
