@@ -22,7 +22,7 @@ export class HeaderFilters extends Component {
         super(props);
         this.state = {
             subordinates: [],
-            user: null,
+            user: [],
             rol: null,
             initialDate: null,
             finalDate: null,
@@ -32,7 +32,32 @@ export class HeaderFilters extends Component {
     }
 
     async componentDidMount() {
-        const {fields: {users, rol, initialDate, finalDate}, dispatchGetUserAssistantsById} = this.props;
+        const {filter} = this.props;
+        if (!_.isNil(filter)) {
+            await this.defaultFiltersReducer();
+        } else {
+            await this.defaultFilters();
+        }
+    }
+
+    defaultFiltersReducer = async () => {
+        const {myTasks, dispatchGetUserAssistantsById, fields: {rol}} = this.props;
+        const filtered = myTasks.get('initialFilter');
+        const getAssistant = await dispatchGetUserAssistantsById();
+        await this.setState({
+            subordinates: _.get(getAssistant, 'payload.data.data'),
+            defaultInitialDate: moment(filtered.initialDate).format("DD/MM/YYYY"),
+            defaultFinalDate: moment(filtered.finalDate).format("DD/MM/YYYY"),
+            initialDate: moment(filtered.initialDate).format("DD/MM/YYYY"),
+            finalDate: moment(filtered.finalDate).format("DD/MM/YYYY"),
+            user: [filtered.users],
+            rol: filtered.rol
+        });
+        rol.onChange("RESPONSIBLE");
+    };
+
+    defaultFilters = async () => {
+        const {fields: {initialDate, finalDate, rol}, dispatchGetUserAssistantsById} = this.props;
         let userName = window.localStorage.getItem("name");
         let dateInitial = await moment().subtract(3, 'months');
         initialDate.onChange(dateInitial);
@@ -48,12 +73,11 @@ export class HeaderFilters extends Component {
             defaultFinalDate: dateFinal,
             initialDate: dateInitial,
             finalDate: dateFinal,
-            user: value.id
+            user: value.id,
+            rol: "RESPONSIBLE"
         });
-
         rol.onChange("RESPONSIBLE");
-        users.onChange(value.id);
-    }
+    };
 
     validateFilter = () => {
         const {fields: {users}} = this.props;
@@ -63,9 +87,15 @@ export class HeaderFilters extends Component {
     };
 
     searchByFilters = () => {
-        const {fields: {users, rol}, dispatchFilters, dispatchSetRolToSearch} = this.props;
+        const {fields: {users, rol}, dispatchFilters} = this.props;
+        let usersFiltered = [];
+        if (_.isEmpty(users.value)) {
+            usersFiltered = this.state.user;
+        } else {
+            usersFiltered = users.value;
+        }
         let filters = {
-            users: JSON.parse('[' + ((_.isNull(users) || _.isUndefined(users)) ? "" : users.value) + ']'),
+            users: JSON.parse('[' + (usersFiltered) + ']'),
             rol: rol.value,
             initialDate: moment(this.state.initialDate, "DD/MM/YYYY").toDate().getTime(),
             finalDate: moment(this.state.finalDate, "DD/MM/YYYY").toDate().getTime()
@@ -73,7 +103,6 @@ export class HeaderFilters extends Component {
 
         setTimeout(() => {
             this.validateFilter();
-            dispatchSetRolToSearch(filters);
         }, 300);
 
         dispatchFilters(filters);
@@ -133,6 +162,7 @@ export class HeaderFilters extends Component {
                             valueProp={'id'}
                             textProp={'name'}
                             touched={true}
+                            value={this.state.user}
                             data={this.state.subordinates}
                             maxSelections={15}
                             onChange={() => this.searchByFilters()}
@@ -196,9 +226,10 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-function mapStateToProps({reducerGlobal}) {
+function mapStateToProps({reducerGlobal, myTasks}) {
     return {
-        reducerGlobal
+        reducerGlobal,
+        myTasks
     };
 }
 

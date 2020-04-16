@@ -31,7 +31,12 @@ const initialState = Immutable.Map({
         users: [],
         rol: null,
         initialDate: null,
-        finalDate: null
+        finalDate: null,
+        closingDateTo: null,
+        closingDateFrom: null,
+        region: null,
+        zone: null,
+        cell: null
     }
 });
 
@@ -127,7 +132,12 @@ export default (state = initialState, action) => {
                 users: action.rolFilter.users,
                 rol: action.rolFilter.rol,
                 initialDate: action.rolFilter.initialDate,
-                finalDate: action.rolFilter.finalDate
+                finalDate: action.rolFilter.finalDate,
+                closingDateTo: action.rolFilter.closingDateTo,
+                closingDateFrom: action.rolFilter.closingDateFrom,
+                region: action.rolFilter.region,
+                zone: action.rolFilter.zone,
+                cell: action.rolFilter.cell
             };
             return state.withMutations(map => {
                 map.set("initialFilter", initialFilters);
