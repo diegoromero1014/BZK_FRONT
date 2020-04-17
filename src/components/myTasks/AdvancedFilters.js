@@ -25,8 +25,6 @@ import _ from 'lodash';
 import {schema} from "./advancedFiltersSchema";
 import * as Yup from 'yup';
 
-let isChanged = false;
-
 export class AdvancedFilters extends Component {
     constructor(props) {
         super(props);
@@ -61,7 +59,8 @@ export class AdvancedFilters extends Component {
             initial: null,
             finalDate: null,
             defaultInitial: null,
-            defaultFinal: null
+            defaultFinal: null,
+            isChanged: false
         }
     }
 
@@ -117,7 +116,9 @@ export class AdvancedFilters extends Component {
         await this.setState({
             finalDate: val
         });
-        isChanged = true;
+        this.setState({
+            isChanged: true
+        });
         this.dispatchAdvancedFilters();
     };
 
@@ -133,7 +134,9 @@ export class AdvancedFilters extends Component {
         await this.setState({
             initial: val
         })
-        isChanged = true;
+        this.setState({
+            isChanged: true
+        });
         this.dispatchAdvancedFilters();
     };
 
@@ -150,7 +153,9 @@ export class AdvancedFilters extends Component {
             setFieldValue('zone', '', true);
             setFieldValue('cell', '', true);
             this.dispatchAdvancedFilters();
-            isChanged = true;
+            this.setState({
+                isChanged: true
+            });
         }
     };
 
@@ -165,7 +170,9 @@ export class AdvancedFilters extends Component {
             setFieldValue('zone', val, true);
             setFieldValue('cell', '', true);
             this.dispatchAdvancedFilters();
-            isChanged = true;
+            this.setState({
+                isChanged: true
+            });
         }
     };
 
@@ -173,7 +180,9 @@ export class AdvancedFilters extends Component {
         const {setFieldValue} = this.props;
         setFieldValue('cell', val, true);
         this.dispatchAdvancedFilters();
-        isChanged = true;
+        this.setState({
+            isChanged: true
+        });
     };
 
     dispatchAdvancedFilters = () => {
@@ -200,7 +209,7 @@ export class AdvancedFilters extends Component {
 
     clearForm = async () => {
         const {setFieldValue} = this.props;
-        if (isChanged) {
+        if (this.state.isChanged) {
             await this.setStateDates('', '');
             setFieldValue('region', '', true);
             setFieldValue('zone', '', true);
@@ -208,6 +217,9 @@ export class AdvancedFilters extends Component {
             this.dispatchAdvancedFilters();
             await this.setStateDates(this.state.defaultInitial, this.state.defaultFinal);
         }
+        this.setState({
+            isChanged: false
+        });
     };
 
     render() {
