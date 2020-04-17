@@ -181,6 +181,7 @@ describe('Test AdvancedFilters', () => {
         it('clearForm', async () => {
             const wrapper = shallow(<AdvancedFilters {...defaultProps}/>);
             await wrapper.instance().clearForm();
+            await wrapper.setState({isChanged: true});
             sinon.assert.called(setFieldValue);
         });
     });

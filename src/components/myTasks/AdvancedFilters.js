@@ -62,7 +62,8 @@ export class AdvancedFilters extends Component {
             initial: null,
             finalDate: null,
             defaultInitial: null,
-            defaultFinal: null
+            defaultFinal: null,
+            isChanged: false
         }
     }
 
@@ -117,7 +118,10 @@ export class AdvancedFilters extends Component {
         setFieldValue('closingDateTo', val, true);
         await this.setState({
             finalDate: val
-        })
+        });
+        this.setState({
+            isChanged: true
+        });
         this.dispatchAdvancedFilters();
     };
 
@@ -133,6 +137,9 @@ export class AdvancedFilters extends Component {
         await this.setState({
             initial: val
         })
+        this.setState({
+            isChanged: true
+        });
         this.dispatchAdvancedFilters();
     };
 
@@ -149,6 +156,9 @@ export class AdvancedFilters extends Component {
             setFieldValue('zone', '', true);
             setFieldValue('cell', '', true);
             this.dispatchAdvancedFilters();
+            this.setState({
+                isChanged: true
+            });
         }
     };
 
@@ -163,6 +173,9 @@ export class AdvancedFilters extends Component {
             setFieldValue('zone', val, true);
             setFieldValue('cell', '', true);
             this.dispatchAdvancedFilters();
+            this.setState({
+                isChanged: true
+            });
         }
     };
 
@@ -170,6 +183,9 @@ export class AdvancedFilters extends Component {
         const {setFieldValue} = this.props;
         setFieldValue('cell', val, true);
         this.dispatchAdvancedFilters();
+        this.setState({
+            isChanged: true
+        });
     };
 
     dispatchAdvancedFilters = () => {
@@ -184,18 +200,29 @@ export class AdvancedFilters extends Component {
         dispatchFilters(filters);
     };
 
-    clearForm = () => {
+    setStateDates = async (initial, final) => {
         const {setFieldValue} = this.props;
-        this.setState({
-            initial : this.state.defaultInitial,
-            finalDate: this.state.defaultFinal
+        await this.setState({
+            initial : initial,
+            finalDate: final
         });
         setFieldValue('closingDateFrom', this.state.initial, true);
         setFieldValue('closingDateTo', this.state.finalDate, true);
-        setFieldValue('region', '', true);
-        setFieldValue('zone', '', true);
-        setFieldValue('cell', '', true);
-        this.dispatchAdvancedFilters();
+    }
+
+    clearForm = async () => {
+        const {setFieldValue} = this.props;
+        if (this.state.isChanged) {
+            await this.setStateDates('', '');
+            setFieldValue('region', '', true);
+            setFieldValue('zone', '', true);
+            setFieldValue('cell', '', true);
+            this.dispatchAdvancedFilters();
+            await this.setStateDates(this.state.defaultInitial, this.state.defaultFinal);
+        }
+        this.setState({
+            isChanged: false
+        });
     };
 
     render() {
@@ -354,7 +381,7 @@ export class AdvancedFilters extends Component {
                                         type="button"
                                         style={{
                                             margin: "8px 10px 0px 0px",
-                                            backgroundColor: "rgb(79,78,78)",
+                                            backgroundColor: "#00448c",
                                             width: '40%'
                                         }}
                                         onClick={() => doneFilter(false)}>

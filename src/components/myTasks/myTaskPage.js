@@ -242,10 +242,10 @@ export class MyTaskPage extends Component {
         });
 
         await this.fetchAndDispatchFinalizedTasks(
-            0, myTasks.get("tabFinished").order, null, this.state.filters
+            0, myTasks.get("tabFinished").order, this.state.textToSearch, this.state.filters
         );
         await this.fetchAndDispatchPendingTasks(
-            0, myTasks.get("tabPending").order, null, this.state.filters
+            0, myTasks.get("tabPending").order, this.state.textToSearch, this.state.filters
         );
 
         dispatchSetRolToSearch(this.state.filters);

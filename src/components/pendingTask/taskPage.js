@@ -1,7 +1,7 @@
 import React from 'react';
 import {redirectUrl} from "../globalComponents/actions";
 import {connect} from 'react-redux';
-import {ComponentClientInformationURL, LoginComponentURL} from "../../constantsAnalytics";
+import {ClientsFindURL, ComponentClientInformationURL, LoginComponentURL} from "../../constantsAnalytics";
 import {TASK_STATUS} from "../selectsComponent/constants";
 import {
     AFFIRMATIVE_ANSWER,
@@ -197,9 +197,12 @@ export class TaskPage extends React.Component {
         this.setState({showConfirmationCancelTask: false});
         if (fromModal) {
             closeModal();
-        } else {
+        } else if(this.state.canOnlyAddNotes){
+            redirectUrl(ClientsFindURL);
+        } else{
             redirectUrl(ComponentClientInformationURL);
         }
+
     };
 
     renderTitleSubmitAlert = (id) => {

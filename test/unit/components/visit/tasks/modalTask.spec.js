@@ -82,12 +82,12 @@ describe('Test ModalTask component', () => {
             taskEdit: {
 
             },
-            addTask: sinon.fake(),
-            editTask: sinon.fake(),
+            dispatchAddTask: sinon.fake(),
+            dispatchEditTask: sinon.fake(),
             handleSubmit: sinon.fake(),
             dispatchGetCurrentComments: sinon.fake(),
             dispatchFillComments: sinon.fake(),
-            swtShowMessage: sinon.fake(),
+            dispatchSwtShowMessage: sinon.fake(),
             dispatchGetTaskNotesByUserTaskId,
             dispatchSaveTaskNote,
             filterUsersBancoDispatch,
@@ -117,22 +117,22 @@ describe('Test ModalTask component', () => {
             defaultProps.taskEdit = undefined;
             const wrapper = itRenders(<ModalTask {...defaultProps}/>);
             wrapper.instance()._handleCreateTask();
-            expect(defaultProps.addTask.called).to.equal(true);
-            expect(defaultProps.swtShowMessage.called).to.equal(true);
+            expect(defaultProps.dispatchAddTask.called).to.equal(true);
+            expect(defaultProps.dispatchSwtShowMessage.called).to.equal(true);
         });
 
         it('_handleCreateTask should call editTask', () => {
             const wrapper = itRenders(<ModalTask {...defaultProps}/>);
             wrapper.instance()._handleCreateTask();
-            expect(defaultProps.editTask.called).to.equal(true);
-            expect(defaultProps.swtShowMessage.called).to.equal(true);
+            expect(defaultProps.dispatchEditTask.called).to.equal(true);
+            expect(defaultProps.dispatchSwtShowMessage.called).to.equal(true);
         });
 
         it('updateKeyValueUserBanco should call dispatchSwtShowMessage when employeeValue length is less than 3', () => {
             defaultProps.fields.responsable.value = 'Da';
             const wrapper = shallow(<ModalTask {...defaultProps}/>);
             wrapper.instance().updateKeyValueUsersBanco({ keyCode: 13, which: 13, preventDefault});
-            expect(defaultProps.swtShowMessage.called).to.equals(true);
+            expect(defaultProps.dispatchSwtShowMessage.called).to.equals(true);
         });
 
         it('updateKeyValueUserBanco should not call preventDefault', () => {
@@ -146,7 +146,7 @@ describe('Test ModalTask component', () => {
             defaultProps.fields.responsable.value = 'Dani';
             const wrapper = shallow(<ModalTask {...defaultProps}/>);
             wrapper.instance().updateKeyValueUsersBanco({ keyCode: 13, which: 13, preventDefault});
-            expect(defaultProps.swtShowMessage.called).to.equals(false);
+            expect(defaultProps.dispatchSwtShowMessage.called).to.equals(false);
             expect(filterUsersBancoDispatch.called).to.equals(true);
         });
 
