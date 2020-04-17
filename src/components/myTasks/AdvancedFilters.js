@@ -61,10 +61,7 @@ export class AdvancedFilters extends Component {
             initial: null,
             finalDate: null,
             defaultInitial: null,
-            defaultFinal: null,
-            region: null,
-            zone: null,
-            cell: null
+            defaultFinal: null
         }
     }
 
@@ -121,7 +118,6 @@ export class AdvancedFilters extends Component {
             finalDate: val
         });
         isChanged = true;
-        console.log(isChanged);
         this.dispatchAdvancedFilters();
     };
 
@@ -138,7 +134,6 @@ export class AdvancedFilters extends Component {
             initial: val
         })
         isChanged = true;
-        console.log(isChanged);
         this.dispatchAdvancedFilters();
     };
 
@@ -156,7 +151,6 @@ export class AdvancedFilters extends Component {
             setFieldValue('cell', '', true);
             this.dispatchAdvancedFilters();
             isChanged = true;
-            console.log(isChanged);
         }
     };
 
@@ -172,7 +166,6 @@ export class AdvancedFilters extends Component {
             setFieldValue('cell', '', true);
             this.dispatchAdvancedFilters();
             isChanged = true;
-            console.log(isChanged);
         }
     };
 
@@ -181,7 +174,6 @@ export class AdvancedFilters extends Component {
         setFieldValue('cell', val, true);
         this.dispatchAdvancedFilters();
         isChanged = true;
-        console.log(isChanged);
     };
 
     dispatchAdvancedFilters = () => {
