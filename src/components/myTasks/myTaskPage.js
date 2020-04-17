@@ -1,23 +1,26 @@
-import React, {Component} from 'react';
-import {bindActionCreators} from "redux";
-import {connect} from 'react-redux';
-import {Loader} from 'semantic-ui-react';
-import {get, indexOf} from "lodash";
-import {redirectUrl} from "../globalComponents/actions";
-import {updateTitleNavBar} from "../navBar/actions";
-import {
-    FINALIZED_TASKS,
-    FINISHED,
-    MODAL_TITLE,
-    NUMBER_RECORDS,
-    PENDING,
-    PENDING_TASKS,
-    TOOLTIP_FINISHED,
-    TOOLTIP_PENDING
-} from "./constants";
-import {validatePermissionsByModule} from '../../actionsGlobal';
-import {EDITAR, MODULE_TASKS, REQUEST_SUCCESS} from "../../constantsGlobal";
-import {TASK_STATUS} from "../selectsComponent/constants";
+import React, { Component } from 'react';
+import { bindActionCreators } from "redux";
+import { connect } from 'react-redux';
+import { Loader } from 'semantic-ui-react';
+import { get, indexOf } from "lodash";
+import { Col, Row } from "react-flexbox-grid";
+import moment from "moment";
+import _ from 'lodash';
+
+import PendingTasksHelp from './../pendingTask/pendingTasksHelp';
+import TabComponent from '../../ui/Tab';
+import ProgressBarComponent from "../../ui/ProgressBar";
+import HeaderFilters from "./headerFilters";
+import ListMyTasksComponent from './listMyTasksComponent';
+import PaginationPendingTaskComponent from './../pendingTask/paginationPendingTaskComponent';
+import SidebarComponent from "./SidebarComponent";
+import SearchInputComponent from "../../ui/searchInput/SearchInputComponent";
+import RecentSearchBox from './RecentSearchBox'
+
+import { redirectUrl } from "../globalComponents/actions";
+import { getMasterDataFields } from '../selectsComponent/actions';
+import { updateTitleNavBar } from "../navBar/actions";
+import { validatePermissionsByModule } from '../../actionsGlobal';
 import {
     cleanFinalizedTasks,
     cleanPageAndSetOrderFinalized,
@@ -29,18 +32,24 @@ import {
     pendingTasks,
     setPageFinalized,
     setPagePending,
-    setRolToSearch
+    setRolToSearch,
+    addRecentSearch,
+    removeRecentSearch,
+    useRecentSearch
 } from './actions';
-import ProgressBarComponent from "../../ui/ProgressBar";
-import TabComponent from '../../ui/Tab';
-import PendingTasksHelp from './../pendingTask/pendingTasksHelp';
-import PaginationPendingTaskComponent from './../pendingTask/paginationPendingTaskComponent';
-import ListMyTasksComponent from './listMyTasksComponent';
-import {getMasterDataFields} from '../selectsComponent/actions';
-import HeaderFilters from "./headerFilters";
-import SidebarComponent from "./SidebarComponent";
-import SearchInputComponent from "../../ui/searchInput/SearchInputComponent";
-import {Col, Row} from "react-flexbox-grid";
+
+import { EDITAR, MODULE_TASKS, REQUEST_SUCCESS } from "../../constantsGlobal";
+import { LIST_REGIONS, LIST_ZONES, TASK_STATUS, TEAM_VALUE_OBJECTS } from "../selectsComponent/constants";
+import {
+    FINALIZED_TASKS,
+    FINISHED,
+    MODAL_TITLE,
+    NUMBER_RECORDS,
+    PENDING,
+    PENDING_TASKS,
+    TOOLTIP_FINISHED,
+    TOOLTIP_PENDING
+} from "./constants";
 
 export class MyTaskPage extends Component {
     constructor(props) {
@@ -248,11 +257,92 @@ export class MyTaskPage extends Component {
         return (editPendings === EDITAR);
     };
 
+    createRecentSearch = () => {
+        const {selectsReducer, dispatchAddRecentSearch} = this.props;
+
+        this.removeLastRecentSearch();
+
+        let nameRecentSearch = "".concat(moment(this.state.filters.closingDateFrom).format("DD/MM/YYYY"))
+        nameRecentSearch = nameRecentSearch.concat(" - ")
+            .concat(moment(this.state.filters.closingDateTo).format("DD/MM/YYYY"));
+
+        const regions = selectsReducer.get(LIST_REGIONS) || [];
+        regions.filter((region) => {
+            if (this.state.filters.region && region.id == this.state.filters.region){
+                nameRecentSearch = nameRecentSearch.concat(" - ".concat(region.value));
+            }
+        });
+
+        const zones = selectsReducer.get(LIST_ZONES) || [];
+        zones.filter((zone) => {
+            if(this.state.filters.zone && zone.id == this.state.filters.zone){
+                nameRecentSearch = nameRecentSearch.concat(" - ".concat(zone.value));
+            }
+        });
+
+        const teams = selectsReducer.get(TEAM_VALUE_OBJECTS) || [];
+        teams.filter((team) => {
+            if(this.state.filters.cell && team.id == this.state.filters.cell){
+                nameRecentSearch = nameRecentSearch.concat(" - ".concat(team.description));
+            }
+        });
+
+        let recordRecentSearch = {
+            id: Math.floor(Math.random() * 1000),
+            name: nameRecentSearch,
+            isSelected: true,
+            filter: {
+                closeDateFrom: this.state.filters.closingDateFrom,
+                closeDateTo: this.state.filters.closingDateTo,
+                regionId: this.state.filters.region,
+                zoneId: this.state.filters.zone,
+                teamId: this.state.filters.cell
+            }
+        }
+
+        dispatchAddRecentSearch(recordRecentSearch);
+    }
+
+    removeLastRecentSearch = () => {
+        const {allRecentSearch} = this.props
+        if (allRecentSearch.data.length >= 4) {
+            const recentSearchToDelete = _.head(allRecentSearch.data);
+            this.removeRecentSearch(recentSearchToDelete.id);
+        }
+    }
+
+    removeRecentSearch = idRecord => {
+        const {dispatchRemoveRecentSearch} = this.props;
+        dispatchRemoveRecentSearch(idRecord);
+    }
+
+    applyRecentSearch = idRecord => {
+        debugger;
+        const {allRecentSearch, dispatchUseRecentSearch} = this.props;
+
+        const search = allRecentSearch.data.filter(record => {
+            return record.id == idRecord;
+        });
+
+        const recentSearchToApply = _.head(search);
+        const dataToApply = {
+            closingDateTo: recentSearchToApply.filter.closeDateTo,
+            closingDateFrom: recentSearchToApply.filter.closeDateFrom,
+            region: recentSearchToApply.filter.regionId,
+            zone: recentSearchToApply.filter.zoneId,
+            cell: recentSearchToApply.filter.teamId
+        }
+
+        this.dispatchFilters(dataToApply);
+        dispatchUseRecentSearch(idRecord)
+    }
+
     render() {
-        const {params: {filtered}, myTasks} = this.props;
+        const {params: {filtered}, myTasks, allRecentSearch} = this.props;
         const {loading} = this.state;
         let tabPending = myTasks.get("tabPending");
         let tabFinished = myTasks.get("tabFinished");
+
         return (
             <div
                 className="tab-pane quickZoomIn animated"
@@ -290,11 +380,21 @@ export class MyTaskPage extends Component {
                             <SidebarComponent
                                 key={myTasks.get("initialFilter").initialDate}
                                 defaultFilters={this.state.filters}
-                                dispatchFilters={this.dispatchFilters}/>
+                                dispatchFilters={this.dispatchFilters}
+                                applyRecentSearch={this.createRecentSearch}
+                            />
                             }
                         </Col>
                     </Row>
+                    <Row xs={12} sm={12} md={12} lg={12} style={{padding: "40px 10px 0px 20px"}}>
+                        <RecentSearchBox
+                          recordsRecentSearch={allRecentSearch.data}
+                          deleteSearch={(idRecentSearch) => this.removeRecentSearch(idRecentSearch)}
+                          applyRecentSearch={(idCurrentRecentSearch) => this.applyRecentSearch(idCurrentRecentSearch)}
+                        />
+                    </Row>
                 </div>
+
                 <div style={{backgroundColor: "white", width: "100%"}}>
                     <div style={{display: "flex"}}>
                         <PendingTasksHelp/>
@@ -367,8 +467,7 @@ export class MyTaskPage extends Component {
                     />
                 </div>
             </div>
-        )
-            ;
+        );
     }
 }
 
@@ -387,16 +486,21 @@ function mapDispatchToProps(dispatch) {
             dispatchGetMasterDataFields: getMasterDataFields,
             dispatchSetRolToSearch: setRolToSearch,
             dispatchValidatePermissionsByModule: validatePermissionsByModule,
+            dispatchAddRecentSearch: addRecentSearch,
+            dispatchRemoveRecentSearch: removeRecentSearch,
+            dispatchUseRecentSearch: useRecentSearch
         },
         dispatch
     );
 }
 
-function mapStateToProps({reducerGlobal, navBar, myTasks}) {
+function mapStateToProps({reducerGlobal, navBar, myTasks, selectsReducer}) {
     return {
         reducerGlobal,
         navBar,
-        myTasks
+        myTasks,
+        selectsReducer,
+        allRecentSearch: myTasks.get("recentSearches")
     };
 }
 

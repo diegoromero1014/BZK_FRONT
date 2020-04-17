@@ -18,3 +18,6 @@ export const GET_ASSISTANTS_USER = 'GET_ASSISTANTS_USER';
 export const SET_FILTERS = 'SET_FILTERS';
 export const TOOLTIP_PENDING = "Tareas Pendientes";
 export const TOOLTIP_FINISHED = "Tareas Cerradas y Canceladas";
+export const ADD_RECENT_SEARCH = "ADD_RECENT_SEARCH";
+export const REMOVE_RECENT_SEARCH = "REMOVE_RECENT_SEARCH";
+export const USE_RECENT_SEARCH = "USE_RECENT_SEARCH";

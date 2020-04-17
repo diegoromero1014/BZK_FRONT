@@ -1,12 +1,18 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Tooltip from "../toolTip/toolTipComponent";
-import {ErrorMessage, Field, Form, withFormik} from "formik";
-import {Col, Row} from "react-flexbox-grid";
-import {renderLabel, renderMessageError} from "../../functions";
+import { ErrorMessage, Field, Form, withFormik } from "formik";
+import { Col, Row } from "react-flexbox-grid";
+import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import moment from "moment";
+import * as Yup from 'yup';
+import { schema } from "./advancedFiltersSchema";
+import _ from 'lodash';
+
 import DateTimePickerUi from "../../ui/dateTimePicker/dateTimePickerComponent";
 import ComboBox from "../../ui/comboBox/comboBoxComponent";
-import {connect} from 'react-redux';
-import {bindActionCreators} from "redux";
+
+import { renderLabel, renderMessageError } from "../../functions";
 import {
     clearLists,
     consultListWithParameter,
@@ -14,16 +20,13 @@ import {
     getMasterDataFields,
     getRegionsByEmployee
 } from "../selectsComponent/actions";
+
 import {
     LIST_REGIONS,
     LIST_ZONES,
     TEAM_FOR_EMPLOYEE_REGION_ZONE,
     TEAM_VALUE_OBJECTS
 } from "../selectsComponent/constants";
-import moment from "moment";
-import _ from 'lodash';
-import {schema} from "./advancedFiltersSchema";
-import * as Yup from 'yup';
 
 export class AdvancedFilters extends Component {
     constructor(props) {
@@ -198,6 +201,10 @@ export class AdvancedFilters extends Component {
     render() {
         const {fields: {closingDateFromState, closingDateTo, region, zone, cell}} = this.state;
         const {selectsReducer, doneFilter} = this.props;
+
+        console.log("RENDER ADVANCED FILTER ==============>", this.props);
+
+
         return (<div>
                 <Form style={{backgroundColor: "#FFFFFF", width: "100%", paddingBottom: "50px"}}>
                     <Row style={{paddingTop: 20, width: '99%', paddingLeft: 20}}>
