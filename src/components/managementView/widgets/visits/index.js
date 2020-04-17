@@ -9,6 +9,7 @@ import EconomicGroupsToBeVisited from './economicGroupsToBeVisited';
 import {
     MAX_ROWS,
     ECONOMIC_GROUPS_TO_BE_VISITED,
+    MESSAGE_SECTION_PENDING_VISITS,
     PENDING_VIEWS_TAB
 } from "./constants";
 
@@ -54,11 +55,12 @@ export class VisitsSection extends Component {
                 disable: false,
                 className: 'economic-groups-tab',
                 number: rowCount || 0,
-                callback: this.handlePendingVisits
+                callback: this.handlePendingVisits,
+                tooltip: MESSAGE_SECTION_PENDING_VISITS
             }
         ];
         return (
-            <div className="ui segment alert-content" style={{ padding: '0px !important' }}>
+            <div>
                 <h3>VISITAS</h3>
                 <div style={{
                     position: 'relative',
