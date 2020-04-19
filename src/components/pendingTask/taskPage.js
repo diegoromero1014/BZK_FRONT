@@ -46,6 +46,7 @@ import {detailVisit} from "../visit/actions";
 import {validatePermissionsByModule} from "../../actionsGlobal";
 import {getTaskNotesByUserTaskId, saveTaskNote} from "./createPendingTask/actions";
 import {showBrandConfidential, updateTitleNavBar} from "../navBar/actions";
+import { changeActiveItemMenu } from '../menu/actions';
 
 let nameEntity;
 
@@ -271,12 +272,13 @@ export class TaskPage extends React.Component {
     };
 
     handleRelationLink = () => {
-        const {businessPlanReducer, visitReducer} = this.props;
+        const {businessPlanReducer, visitReducer, dispatchChangeActiveItemMenu} = this.props;
         let actionsRedirect;
         let detail;
         switch (nameEntity) {
             case "Plan de negocio":
                 detail = businessPlanReducer.get("detailBusiness");
+                dispatchChangeActiveItemMenu("Mis clientes");
                 actionsRedirect = {
                     typeClickDetail: "businessPlan",
                     ownerDraft: detail.data.documentStatus,
@@ -287,6 +289,7 @@ export class TaskPage extends React.Component {
                 break;
             case"Visita":
                 detail = visitReducer.get("detailVisit");
+                dispatchChangeActiveItemMenu("Mis clientes");
                 actionsRedirect = {
                     typeClickDetail: "visita",
                     ownerDraft: detail.data.documentStatus,
@@ -419,7 +422,8 @@ function mapDispatchToProps(dispatch) {
         dispatchValidatePermissionsByModule: validatePermissionsByModule,
         dispatchShowBrandConfidential: showBrandConfidential,
         dispatchUpdateTitleNavBar: updateTitleNavBar,
-        dispatchSetTaskIdFromRedirect: setTaskIdFromRedirect
+        dispatchSetTaskIdFromRedirect: setTaskIdFromRedirect,
+        dispatchChangeActiveItemMenu: changeActiveItemMenu
     }, dispatch);
 }
 
