@@ -12,7 +12,8 @@ import {
   GET_PENDING_TASKS,
   REMOVE_RECENT_SEARCH,
   SET_FILTERS,
-  USE_RECENT_SEARCH
+  USE_RECENT_SEARCH,
+  LOAD_RECENT_SEARCH
 } from "./constants";
 
 const initialState = Immutable.Map({
@@ -178,7 +179,7 @@ export default (state = initialState, action) => {
     case USE_RECENT_SEARCH:
       let allRecentSearch = state.get("recentSearches");
       allRecentSearch.data.map((record) => {
-        if (record.id == action.idRecord){
+        if (record.id == action.idRecord) {
           record.isSelected = true;
         } else {
           record.isSelected = false;
@@ -190,6 +191,33 @@ export default (state = initialState, action) => {
       }
       return state.withMutations(map => {
         map.set("recentSearches", finalData);
+      });
+
+    case LOAD_RECENT_SEARCH:
+      let myRecentSearch = [];
+      action.data.map(record => {
+        myRecentSearch.push(
+          Object.assign({}, {
+            id: record.id,
+            name: record.name,
+            isSelected: record.isSelected,
+            filter: {
+              closeDateFrom: record.filter.closeDateFrom,
+              closeDateTo: record.filter.closeDateTo,
+              regionId: record.filter.regionId,
+              zoneId: record.filter.zoneId,
+              teamId: record.filter.teamId
+            }
+          })
+        )
+      });
+
+      const completeRecentSearch = {
+        data: myRecentSearch
+      };
+
+      return state.withMutations(map => {
+        map.set("recentSearches", completeRecentSearch);
       });
 
     default:

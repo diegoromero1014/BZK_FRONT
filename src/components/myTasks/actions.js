@@ -15,7 +15,8 @@ import {
   PENDING,
   REMOVE_RECENT_SEARCH,
   SET_FILTERS,
-  USE_RECENT_SEARCH
+  USE_RECENT_SEARCH,
+  LOAD_RECENT_SEARCH
 } from "./constants";
 
 export function getPendingTaskPromise(pageNum, order, maxRows, textToSearch, filters) {
@@ -196,4 +197,80 @@ export function useRecentSearch(idRecord) {
     type: USE_RECENT_SEARCH,
     idRecord
   };
+}
+
+export function requestSaveRecentSearch(recentSearch) {
+  const request = {
+    messageHeader: {
+      sessionToken: window.localStorage.getItem("sessionTokenFront"),
+      username: "",
+      timestamp: new Date().getTime(),
+      service: "",
+      status: "0",
+      language: "es",
+      displayErrorMessage: "",
+      technicalErrorMessage: "",
+      applicationVersion: "",
+      debug: true,
+      isSuccessful: true
+    },
+    messageBody: {
+      closeDateTo: recentSearch.closeDateTo,
+      closeDateFrom: recentSearch.closeDateFrom,
+      regionId: recentSearch.regionId,
+      zoneId: recentSearch.zoneId,
+      teamId: recentSearch.teamId
+    }
+  };
+
+  return axios.post(APP_URL + "/saveRecentSearch", request);
+}
+
+export function getMyRecentSearch() {
+  const request = {
+    messageHeader: {
+      sessionToken: window.localStorage.getItem("sessionTokenFront"),
+      username: "",
+      timestamp: new Date().getTime(),
+      service: "",
+      status: "0",
+      language: "es",
+      displayErrorMessage: "",
+      technicalErrorMessage: "",
+      applicationVersion: "",
+      debug: true,
+      isSuccessful: true
+    },
+    messageBody: 0
+  };
+
+  return axios.post(APP_URL + "/getMyRecentSearch", request);
+}
+
+export function loadRecentSearch(data = []) {
+  return {
+    type: LOAD_RECENT_SEARCH,
+    data: data
+  };
+}
+
+export function deleteRecentSearch(recentSearchId) {
+  const request = {
+    messageHeader: {
+      sessionToken: window.localStorage.getItem("sessionTokenFront"),
+      username: "",
+      timestamp: new Date().getTime(),
+      service: "",
+      status: "0",
+      language: "es",
+      displayErrorMessage: "",
+      technicalErrorMessage: "",
+      applicationVersion: "",
+      debug: true,
+      isSuccessful: true
+    },
+    messageBody: recentSearchId
+  };
+
+  return axios.post(APP_URL + "/deleteRecentSearch", request);
 }
