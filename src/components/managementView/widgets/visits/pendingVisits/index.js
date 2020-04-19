@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { COLUMNS_PENDING_VISITS, MESSAGE_NO_RESULTS, MESSAGE_SECTION_PENDING_VISITS, STYLE_MESSAGE_SECTION_VISITS_PENDING, MAX_ROWS } from '../constants';
+import { 
+	COLUMNS_PENDING_VISITS, 
+	MESSAGE_NO_RESULTS_VISITS, 
+	MAX_ROWS 
+} from '../constants';
 import { bindActionCreators } from 'redux';
 import TableBuilder from "../../../../table/TableBuilder";
 import TableComponent from "../../../../table";
@@ -42,10 +46,9 @@ export class PendingVisits extends Component {
 
 		return (
 			<div>
-				<h5 style={STYLE_MESSAGE_SECTION_VISITS_PENDING}> {MESSAGE_SECTION_PENDING_VISITS} </h5>
 				<TableComponent tableSettings={
 					new TableBuilder(data, COLUMNS_PENDING_VISITS)
-						.setNoRowMessage(MESSAGE_NO_RESULTS)
+						.setNoRowMessage(MESSAGE_NO_RESULTS_VISITS)
 						.setRecordsPerPage(MAX_ROWS)
 						.setStriped(true)
 						.setOnClick(this.handelClickClient)
