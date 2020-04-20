@@ -288,6 +288,7 @@ export class MyTaskPage extends Component {
       if (this.state.filters.region && region.id == this.state.filters.region) {
         nameRecentSearch = nameRecentSearch.concat(" - ".concat(region.value));
       }
+      return region;
     });
 
     const zones = selectsReducer.get(LIST_ZONES) || [];
@@ -295,6 +296,7 @@ export class MyTaskPage extends Component {
       if (this.state.filters.zone && zone.id == this.state.filters.zone) {
         nameRecentSearch = nameRecentSearch.concat(" - ".concat(zone.value));
       }
+      return zone;
     });
 
     const teams = selectsReducer.get(TEAM_VALUE_OBJECTS) || [];
@@ -302,6 +304,7 @@ export class MyTaskPage extends Component {
       if (this.state.filters.cell && team.id == this.state.filters.cell) {
         nameRecentSearch = nameRecentSearch.concat(" - ".concat(team.description));
       }
+      return team;
     });
 
     let recordRecentSearch = {
