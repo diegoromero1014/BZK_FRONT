@@ -13,7 +13,8 @@ import { redirectUrl } from "../../../../globalComponents/actions";
 import { changeActiveItemMenu } from '../../../../menu/actions';
 import { updateTitleNavBar } from '../../../../navBar/actions';
 import { consultInfoClient } from '../../../../clientInformation/actions';
-import { MODULE_MY_CLIENTS, MODULE_PREVISIT_REPORT } from "../../../../../constantsGlobal";
+import { validatePermissionsByModule } from '../../../../../actionsGlobal';
+import { MODULE_MY_CLIENTS, MODULE_PREVISIT_REPORT, MODULE_PREVISITS } from "../../../../../constantsGlobal";
 
 export class PendingVisits extends Component {
 
@@ -34,9 +35,10 @@ export class PendingVisits extends Component {
 
 	handelClickClient = async element => {
 		const { previsitId, previsitClientId } = element;
-		const { dispatchChangeActiveItemMenu, dispatchUpdateTitleNavBar, dispatchConsultInfoClient } = this.props;
+		const { dispatchChangeActiveItemMenu, dispatchUpdateTitleNavBar, dispatchConsultInfoClient, dispatchValidatePermissionsByModule } = this.props;
 		dispatchChangeActiveItemMenu(MODULE_MY_CLIENTS);
 		await dispatchConsultInfoClient(previsitClientId);
+		await dispatchValidatePermissionsByModule(MODULE_PREVISITS);
 		dispatchUpdateTitleNavBar(MODULE_PREVISIT_REPORT);
 		redirectUrl(`/dashboard/previsita/${previsitId}`);
 	}
@@ -73,7 +75,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 	dispatchRequestPendingVisits: requestPendingVisits,
 	dispatchChangeActiveItemMenu: changeActiveItemMenu,
 	dispatchUpdateTitleNavBar: updateTitleNavBar,
-	dispatchConsultInfoClient: consultInfoClient
+	dispatchConsultInfoClient: consultInfoClient,
+	dispatchValidatePermissionsByModule: validatePermissionsByModule
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(PendingVisits);
