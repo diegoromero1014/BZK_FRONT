@@ -83,7 +83,7 @@ export class MyTaskPage extends Component {
         dispatchUpdateTitleNavBar,
         dispatchGetMasterDataFields,
         dispatchValidatePermissionsByModule,
-        dispatchLoadRecentSearch
+        dispatchLoadRecentSearch,
       } = this.props;
       dispatchValidatePermissionsByModule(MODULE_TASKS);
       dispatchGetMasterDataFields([TASK_STATUS]);
@@ -284,24 +284,27 @@ export class MyTaskPage extends Component {
     .concat(moment(this.state.filters.closingDateTo).format("DD/MM/YYYY"));
 
     const regions = selectsReducer.get(LIST_REGIONS) || [];
-    regions.filter((region) => {
+    regions.map((region) => {
       if (this.state.filters.region && region.id == this.state.filters.region) {
         nameRecentSearch = nameRecentSearch.concat(" - ".concat(region.value));
       }
+      return region;
     });
 
     const zones = selectsReducer.get(LIST_ZONES) || [];
-    zones.filter((zone) => {
+    zones.map((zone) => {
       if (this.state.filters.zone && zone.id == this.state.filters.zone) {
         nameRecentSearch = nameRecentSearch.concat(" - ".concat(zone.value));
       }
+      return zone;
     });
 
     const teams = selectsReducer.get(TEAM_VALUE_OBJECTS) || [];
-    teams.filter((team) => {
+    teams.map((team) => {
       if (this.state.filters.cell && team.id == this.state.filters.cell) {
         nameRecentSearch = nameRecentSearch.concat(" - ".concat(team.description));
       }
+      return team;
     });
 
     let recordRecentSearch = {
@@ -318,19 +321,20 @@ export class MyTaskPage extends Component {
 
     requestSaveRecentSearch(recordRecentSearch.filter).then(data => {
       if (data.data.status == REQUEST_SUCCESS) {
+        debugger;
         Object.assign(recordRecentSearch, {id: data.data.data});
         dispatchAddRecentSearch(recordRecentSearch);
       }
     })
-  }
+  };
 
   removeLastRecentSearch = () => {
-    const {allRecentSearch} = this.props
+    const {allRecentSearch} = this.props;
     if (allRecentSearch.data.length >= 4) {
       const recentSearchToDelete = _.head(allRecentSearch.data);
       this.removeRecentSearch(recentSearchToDelete.id);
     }
-  }
+  };
 
   removeRecentSearch = idRecord => {
     const {dispatchRemoveRecentSearch} = this.props;
@@ -339,7 +343,7 @@ export class MyTaskPage extends Component {
         dispatchRemoveRecentSearch(idRecord);
       }
     });
-  }
+  };
 
   applyRecentSearch = idRecord => {
     const {allRecentSearch, dispatchUseRecentSearch} = this.props;
@@ -355,11 +359,11 @@ export class MyTaskPage extends Component {
       region: recentSearchToApply.filter.regionId,
       zone: recentSearchToApply.filter.zoneId,
       cell: recentSearchToApply.filter.teamId
-    }
+    };
 
     this.dispatchFilters(dataToApply);
     dispatchUseRecentSearch(idRecord)
-  }
+  };
 
   render() {
     const {params: {filtered}, myTasks, allRecentSearch} = this.props;

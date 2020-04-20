@@ -29,7 +29,6 @@ describe('ElementsComponent Test', () => {
             elementsReducer: {},
             dispatchRemoveFromList,
             setValues,
-            dispatchSetToShow,
             max: 0,
             handleSubmit,
             isValid: false,
