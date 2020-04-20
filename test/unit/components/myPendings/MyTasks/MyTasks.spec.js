@@ -5,12 +5,17 @@ import Immutable from "immutable";
 import {MyTaskPage} from "../../../../../src/components/myTasks/myTaskPage";
 import * as actions from "../../../../../src/components/myTasks/actions";
 import {ASSIGNED, FINISHED, PENDING} from "../../../../../src/components/myTasks/constants";
+import * as globalActions from "../../../../../src/components/globalComponents/actions";
+import * as myTasksActions from "../../../../../src/components/myTasks/actions";
 
 const myTasks = Immutable.Map({
     tabPending: {order: 0, rowCount: 0, data: {}, page: 0},
     tabFinished: {order: 0, rowCount: 0, data: {}, page: 0},
     initialFilter: {rol: ""},
-    textToSearch: ""
+    textToSearch: "",
+    recentSearches: {
+        data: []
+    }
 });
 let selectsReducer = Immutable.Map({
    region: [
@@ -37,10 +42,18 @@ let dispatchPendingTasks = spy(sinon.fake());
 let dispatchGetMasterDataFields = spy(sinon.stub());
 let dispatchUpdateTitleNavBar = spy(sinon.stub());
 let dispatchSetRolToSearch = spy(sinon.fake());
-let dispatchRequestSaveRecentSearch = sinon.stub();
+let dispatchRequestSaveRecentSearch = sinon.stub(myTasksActions, 'requestSaveRecentSearch');
+let dispatchDeleteRecentSearch = sinon.stub(myTasksActions, 'deleteRecentSearch');
+let dispatchRemoveRecentSearch = spy(sinon.fake());
 let dispatchAddRecentSearch = sinon.fake();
+let dispatchUseRecentSearch = sinon.fake();
+let dispatchGetMyRecentSearch = sinon.stub();
+let dispatchCleanPendingTasks = sinon.fake();
+let dispatchCleanFinalizedTasks = sinon.fake();
 let getPendingTaskPromise;
 let getFinalizedTaskPromise;
+let redirectUrl;
+let defaultProps;
 const dispatchValidatePermissionsByModule = sinon
     .stub()
     .resolves({
@@ -50,22 +63,6 @@ const dispatchValidatePermissionsByModule = sinon
             }
         }
     });
-const defaultProps = {
-    params: {},
-    dispatchGetMasterDataFields,
-    dispatchUpdateTitleNavBar,
-    myTasks,
-    dispatchFinalizedTasks,
-    dispatchPendingTasks,
-    dispatchValidatePermissionsByModule,
-    dispatchSetRolToSearch,
-    dispatchRequestSaveRecentSearch,
-    selectsReducer,
-    dispatchAddRecentSearch,
-    allRecentSearch: {
-        data: []
-    }
-};
 
 describe("Test MyTasks component", () => {
     beforeEach(() => {
@@ -77,12 +74,37 @@ describe("Test MyTasks component", () => {
             .resolves({data: {status: 200, data: {}}});
 
         dispatchRequestSaveRecentSearch.resolves({data: {status: 200, data: 12}});
-
+        dispatchDeleteRecentSearch.resolves({data: {status: 200, data: {status: 200}}});
+        dispatchGetMyRecentSearch.resolves({data: {data: { status: 200, data: []}}});
+        redirectUrl = sinon.stub(globalActions, "redirectUrl");
+        defaultProps = {
+            params: {},
+            dispatchGetMasterDataFields,
+            dispatchUpdateTitleNavBar,
+            myTasks,
+            dispatchFinalizedTasks,
+            dispatchPendingTasks,
+            dispatchValidatePermissionsByModule,
+            dispatchSetRolToSearch,
+            dispatchRequestSaveRecentSearch,
+            selectsReducer,
+            dispatchAddRecentSearch,
+            dispatchDeleteRecentSearch,
+            dispatchRemoveRecentSearch,
+            dispatchUseRecentSearch,
+            dispatchGetMyRecentSearch,
+            dispatchCleanPendingTasks,
+            dispatchCleanFinalizedTasks,
+            allRecentSearch: {
+                data: []
+            }
+        };
     });
 
     afterEach(() => {
         getPendingTaskPromise.restore();
         getFinalizedTaskPromise.restore();
+        redirectUrl.restore();
     });
 
     it("Should render MyTasks component", () => {
@@ -266,5 +288,73 @@ describe("Test MyTasks component", () => {
         });
         wrapper.instance().createRecentSearch();
         expect(dispatchRequestSaveRecentSearch.calledOnce).to.equal(true);
+    });
+
+    it('removeLastRecentSearch should call removeRecentSearch', () => {
+        defaultProps.allRecentSearch = {
+            data: [
+                {
+                    id: 1
+                },
+                {
+                    id: 2
+                },
+                {
+                    id: 3
+                },
+                {
+                    id: 4
+                }
+            ]
+        };
+        const removeRecentSearchFunction = spy(sinon.fake());
+        let wrapper = shallow(<MyTaskPage {...defaultProps}/>);
+        wrapper.instance().removeRecentSearch = removeRecentSearchFunction;
+        wrapper.update();
+        wrapper.instance().removeLastRecentSearch();
+        expect(removeRecentSearchFunction).to.have.been.called.exactly(1);
+    });
+
+    it('removeRecentSearch should call dispatchDeleteRecentSearch', () => {
+        let wrapper = shallow(<MyTaskPage {...defaultProps}/>);
+        wrapper.instance().removeRecentSearch(1);
+        expect(dispatchDeleteRecentSearch.calledOnce).to.equal(true);
+    });
+
+    it('applyRecentSearch should call dispatchUseRecentSearch', () => {
+        defaultProps.allRecentSearch = {
+            data: [
+                {
+                    id: 1,
+                    filter: {
+                        closeDateTo: new Date(),
+                        closeDateFrom: new Date(),
+                        regionId: 1,
+                        zoneId: 2,
+                        teamId: 3
+                    }
+                },
+                {
+                    id: 2,
+                    filter: {
+                        closeDateTo: new Date(),
+                        closeDateFrom: new Date(),
+                        regionId: 1,
+                        zoneId: 2,
+                        teamId: 3
+                    }
+                }
+            ]
+        };
+        let wrapper = shallow(<MyTaskPage {...defaultProps}/>);
+        wrapper.instance().applyRecentSearch(1);
+        expect(dispatchUseRecentSearch.calledOnce).to.equal(true);
+    });
+
+    it('should call dispatchCleanPendingTasks and dispatchCleanFinalizedTasks on componentWillUnmount', () => {
+        let wrapper = shallow(<MyTaskPage {...defaultProps}/>);
+        wrapper.instance().componentWillUnmount();
+        expect(dispatchCleanPendingTasks.calledOnce).to.equal(true);
+        expect(dispatchCleanFinalizedTasks.calledOnce).to.equal(true);
     });
 });
