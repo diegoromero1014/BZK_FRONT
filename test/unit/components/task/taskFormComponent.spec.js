@@ -1,7 +1,6 @@
 import React from 'react';
-import TaskFormComponentFormik, { TaskFormComponent } from "../../../../src/components/pendingTask/taskFormComponent";
+import TaskFormComponentFormik, {TaskFormComponent} from "../../../../src/components/pendingTask/taskFormComponent";
 import {Field} from "formik";
-import {CommentsComponent} from "../../../../src/components/globalComponents/comments/commentsComponent";
 
 let defaultProps;
 let onSubmit;
