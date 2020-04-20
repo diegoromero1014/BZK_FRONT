@@ -1,6 +1,9 @@
 .importantDatesStyle {
     width: 33% !important;
     min-width: 33% !important;
+    &.disable-tab:hover{
+        cursor: not-allowed !important;
+    }
 }
 
 .mainImportantDates {
