@@ -287,24 +287,24 @@ export class MyTaskPage extends Component {
     regions.map((region) => {
       if (this.state.filters.region && region.id == this.state.filters.region) {
         nameRecentSearch = nameRecentSearch.concat(" - ".concat(region.value));
+        return region;
       }
-      return region;
     });
 
     const zones = selectsReducer.get(LIST_ZONES) || [];
     zones.map((zone) => {
       if (this.state.filters.zone && zone.id == this.state.filters.zone) {
         nameRecentSearch = nameRecentSearch.concat(" - ".concat(zone.value));
+        return zone;
       }
-      return zone;
     });
 
     const teams = selectsReducer.get(TEAM_VALUE_OBJECTS) || [];
     teams.map((team) => {
       if (this.state.filters.cell && team.id == this.state.filters.cell) {
         nameRecentSearch = nameRecentSearch.concat(" - ".concat(team.description));
+        return team;
       }
-      return team;
     });
 
     let recordRecentSearch = {
@@ -321,7 +321,6 @@ export class MyTaskPage extends Component {
 
     requestSaveRecentSearch(recordRecentSearch.filter).then(data => {
       if (data.data.status == REQUEST_SUCCESS) {
-        debugger;
         Object.assign(recordRecentSearch, {id: data.data.data});
         dispatchAddRecentSearch(recordRecentSearch);
       }
