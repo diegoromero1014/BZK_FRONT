@@ -275,7 +275,7 @@ export class MyTaskPage extends Component {
   };
 
   createRecentSearch = () => {
-    const {selectsReducer, dispatchAddRecentSearch} = this.props;
+    const {selectsReducer, dispatchAddRecentSearch, dispatchRequestSaveRecentSearch} = this.props;
 
     this.removeLastRecentSearch();
 
@@ -316,7 +316,7 @@ export class MyTaskPage extends Component {
       }
     };
 
-    requestSaveRecentSearch(recordRecentSearch.filter).then(data => {
+    dispatchRequestSaveRecentSearch(recordRecentSearch.filter).then(data => {
       if (data.data.status == REQUEST_SUCCESS) {
         Object.assign(recordRecentSearch, {id: data.data.data});
         dispatchAddRecentSearch(recordRecentSearch);
@@ -513,7 +513,8 @@ function mapDispatchToProps(dispatch) {
       dispatchAddRecentSearch: addRecentSearch,
       dispatchRemoveRecentSearch: removeRecentSearch,
       dispatchUseRecentSearch: useRecentSearch,
-      dispatchLoadRecentSearch: loadRecentSearch
+      dispatchLoadRecentSearch: loadRecentSearch,
+      dispatchRequestSaveRecentSearch: requestSaveRecentSearch
     },
     dispatch
   );
