@@ -321,7 +321,6 @@ export class MyTaskPage extends Component {
 
     requestSaveRecentSearch(recordRecentSearch.filter).then(data => {
       if (data.data.status == REQUEST_SUCCESS) {
-        debugger;
         Object.assign(recordRecentSearch, {id: data.data.data});
         dispatchAddRecentSearch(recordRecentSearch);
       }
