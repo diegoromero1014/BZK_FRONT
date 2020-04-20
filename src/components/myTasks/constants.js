@@ -18,3 +18,4 @@ export const GET_ASSISTANTS_USER = 'GET_ASSISTANTS_USER';
 export const SET_FILTERS = 'SET_FILTERS';
 export const TOOLTIP_PENDING = "Tareas Pendientes";
 export const TOOLTIP_FINISHED = "Tareas Cerradas y Canceladas";
+export const DATES_HELP_MESSAGE = 'El rango de fecha para realizar la descarga de información debe ser menor o igual a 360 días';

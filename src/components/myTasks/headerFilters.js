@@ -10,6 +10,8 @@ import moment from "moment";
 import {DATE_FORMAT, MESSAGE_ERROR} from "../../constantsGlobal";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import _ from 'lodash';
+import Tooltip, {TOOLTIP_POSITION} from "../toolTip/toolTipComponent";
+import {DATES_HELP_MESSAGE} from "./constants";
 
 const fields = ["users", "rol", "initialDate", "finalDate"];
 const rolFilter = [
@@ -27,7 +29,8 @@ export class HeaderFilters extends Component {
             initialDate: null,
             finalDate: null,
             defaultInitialDate: null,
-            defaultFinalDate: null
+            defaultFinalDate: null,
+            rangeFromDates: false
         }
     }
 
@@ -122,11 +125,20 @@ export class HeaderFilters extends Component {
             });
         }
 
-        if (moment(this.state.initialDate, DATE_FORMAT).isAfter(moment(this.state.finalDate, DATE_FORMAT))) {
+        let initialValue = moment(this.state.initialDate, DATE_FORMAT);
+        let finalValue = moment(this.state.finalDate, DATE_FORMAT);
+
+        if (initialValue.isAfter(finalValue)) {
             dispatchShowMessage(MESSAGE_ERROR, 'Rango de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');
             await this.setState({
                 initialDate: this.state.defaultInitialDate,
                 finalDate: this.state.defaultFinalDate,
+            });
+        }
+
+        if (initialValue.diff(finalValue, 'days') < -360) {
+            await this.setState({
+                rangeFromDates: true
             });
         }
 
@@ -152,7 +164,7 @@ export class HeaderFilters extends Component {
         const {fields: {users, rol, initialDate, finalDate}} = this.props;
         return (
             <div style={{paddingTop: "10px", width: "100%", paddingBottom: "50px"}}>
-                <Row style={{padding: "5px 10px 0px 20px"}}>
+                <Row style={{padding: "5px 20px 0px 20px"}}>
                     <Col xs={3} sm={3} md={3} lg={3}>
                         <span>Usuario</span>
                         <MultipleSelect
@@ -198,6 +210,13 @@ export class HeaderFilters extends Component {
                     </Col>
                     <Col xs={3} sm={3} md={3} lg={3}>
                         <span>Hasta</span>
+                        {
+                            this.state.rangeFromDates &&
+                            <Tooltip text={DATES_HELP_MESSAGE} position={TOOLTIP_POSITION.topRight}>
+                                <i className="help circle icon blue"
+                                   style={{fontSize: "15px", cursor: "pointer", marginLeft: "10px"}}/>
+                            </Tooltip>
+                        }
                         <DateTimePickerUi
                             {...finalDate}
                             culture='es'

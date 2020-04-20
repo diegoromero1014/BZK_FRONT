@@ -279,19 +279,29 @@ export class MyTaskPage extends Component {
                         role={myTasks.get("initialFilter").rol}
                         loading={loading == true}
                     />
-                    <Row style={{padding: "40px 10px 0px 20px"}}>
-                        <Col xs={12} sm={8} md={6} lg={6}>
+                    <Row style={{padding: "40px 20px 0px 20px"}}>
+                        <Col xs={12} sm={6} md={8} lg={8} >
                             <SearchInputComponent
                                 onChangeSearch={text => this._onSearchText(text)}
                             />
                         </Col>
-                        <Col xs={12} sm={8} md={6} lg={6}>
+                        <Col xs={6} sm={3} md={2} lg={2}>
                             {myTasks.get("initialFilter").initialDate &&
                             <SidebarComponent
                                 key={myTasks.get("initialFilter").initialDate}
                                 defaultFilters={this.state.filters}
                                 dispatchFilters={this.dispatchFilters}/>
                             }
+                        </Col>
+                        <Col xs={6} sm={3} md={2} lg={2}>
+                            <button id="btnDownload"
+                                    className="btn"
+                                    title="descargar"
+                                    type="button"
+                                    style={{backgroundColor: "#00448c", width: '100%'}}>
+                                <i className="download icon" style={{margin: '0em', fontSize: '1.2em'}}/>
+                                &nbsp;Descargar
+                            </button>
                         </Col>
                     </Row>
                 </div>
