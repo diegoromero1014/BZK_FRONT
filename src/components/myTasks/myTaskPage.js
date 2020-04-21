@@ -6,6 +6,7 @@ import {get, indexOf} from "lodash";
 import {redirectUrl} from "../globalComponents/actions";
 import {updateTitleNavBar} from "../navBar/actions";
 import {
+    DATES_HELP_MESSAGE_DOWNLOAD,
     FINALIZED_TASKS,
     FINISHED,
     MODAL_TITLE,
@@ -16,7 +17,7 @@ import {
     TOOLTIP_PENDING
 } from "./constants";
 import {validatePermissionsByModule} from '../../actionsGlobal';
-import {EDITAR, MODULE_TASKS, REQUEST_SUCCESS} from "../../constantsGlobal";
+import {DATE_FORMAT, EDITAR, MESSAGE_ERROR, MODULE_TASKS, REQUEST_SUCCESS} from "../../constantsGlobal";
 import {TASK_STATUS} from "../selectsComponent/constants";
 import {
     cleanFinalizedTasks,
@@ -25,7 +26,7 @@ import {
     cleanPendingTasks,
     finalizedTasks,
     getFinalizedTaskPromise,
-    getPendingTaskPromise,
+    getPendingTaskPromise, getXlsTask,
     pendingTasks,
     setPageFinalized,
     setPagePending,
@@ -41,6 +42,8 @@ import HeaderFilters from "./headerFilters";
 import SidebarComponent from "./SidebarComponent";
 import SearchInputComponent from "../../ui/searchInput/SearchInputComponent";
 import {Col, Row} from "react-flexbox-grid";
+import moment from "moment";
+import {swtShowMessage} from "../sweetAlertMessages/actions";
 
 export class MyTaskPage extends Component {
     constructor(props) {
@@ -248,6 +251,18 @@ export class MyTaskPage extends Component {
         return (editPendings === EDITAR);
     };
 
+    downloadTask = async () => {
+        const {dispatchShowMessage, dispatchGetXlsTask} = this.props;
+        let {filters} = this.state;
+        let initialValue = moment(filters.initialDate);
+        let finalValue = moment(filters.finalDate);
+        if (moment(initialValue, DATE_FORMAT).diff(moment(finalValue, DATE_FORMAT), 'days') < -360) {
+            dispatchShowMessage(MESSAGE_ERROR, 'Rango de fecha', DATES_HELP_MESSAGE_DOWNLOAD);
+            return;
+        }
+        const response = await dispatchGetXlsTask(filters, this.state.textToSearch);
+    };
+
     render() {
         const {params: {filtered}, myTasks} = this.props;
         const {loading} = this.state;
@@ -298,7 +313,9 @@ export class MyTaskPage extends Component {
                                     className="btn"
                                     title="descargar"
                                     type="button"
-                                    style={{backgroundColor: "#00448c", width: '100%'}}>
+                                    style={{backgroundColor: "#00448c", width: '100%'}}
+                                    onClick={() => this.downloadTask()}
+                            >
                                 <i className="download icon" style={{margin: '0em', fontSize: '1.2em'}}/>
                                 &nbsp;Descargar
                             </button>
@@ -397,6 +414,8 @@ function mapDispatchToProps(dispatch) {
             dispatchGetMasterDataFields: getMasterDataFields,
             dispatchSetRolToSearch: setRolToSearch,
             dispatchValidatePermissionsByModule: validatePermissionsByModule,
+            dispatchShowMessage: swtShowMessage,
+            dispatchGetXlsTask: getXlsTask
         },
         dispatch
     );

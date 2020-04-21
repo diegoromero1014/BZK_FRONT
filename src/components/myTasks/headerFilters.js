@@ -140,6 +140,10 @@ export class HeaderFilters extends Component {
             await this.setState({
                 rangeFromDates: true
             });
+        } else {
+            await this.setState({
+                rangeFromDates: false
+            });
         }
 
         this.searchByFilters();
