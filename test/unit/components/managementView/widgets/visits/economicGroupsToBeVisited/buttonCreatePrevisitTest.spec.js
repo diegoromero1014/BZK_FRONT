@@ -12,6 +12,7 @@ let redirectUrl;
 let dispatchChangeActiveItemMenu;
 let dispatchConsultInfoClient;
 let disptachUpdateTitleNavBar;
+let dispatchUpdateTabSeleted; 
 
 let store;
 let middlewares = [thunk];
@@ -24,11 +25,13 @@ describe("ButtonCreatePrevisit Test", () => {
         dispatchChangeActiveItemMenu = sinon.fake();
         dispatchConsultInfoClient = sinon.fake();
         disptachUpdateTitleNavBar = sinon.fake();
+        dispatchUpdateTabSeleted = sinon.fake();
         defaultProps = {
             data: 1,
             dispatchChangeActiveItemMenu,
             dispatchConsultInfoClient,
-            disptachUpdateTitleNavBar
+            disptachUpdateTitleNavBar,
+            dispatchUpdateTabSeleted
         };
         store = mockStore({ });
     })
@@ -50,6 +53,7 @@ describe("ButtonCreatePrevisit Test", () => {
         await wrapper.instance().handleClick(wrapper.props().data);
         sinon.assert.calledOnce(dispatchChangeActiveItemMenu);
         sinon.assert.calledOnce(dispatchConsultInfoClient);
+        sinon.assert.calledOnce(dispatchUpdateTabSeleted);
     })
 
     it("When handleClick is instanced", async () => {
@@ -57,5 +61,6 @@ describe("ButtonCreatePrevisit Test", () => {
         wrapper.find("button").simulate("click");
         sinon.assert.calledOnce(dispatchChangeActiveItemMenu);
         sinon.assert.calledOnce(dispatchConsultInfoClient);
+        sinon.assert.calledOnce(dispatchUpdateTabSeleted);
     })
 })
