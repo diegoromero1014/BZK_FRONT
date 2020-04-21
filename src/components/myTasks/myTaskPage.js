@@ -30,7 +30,15 @@ import {
   TOOLTIP_FINISHED,
   TOOLTIP_PENDING
 } from "./constants";
-import {DATE_FORMAT, EDITAR, MESSAGE_ERROR, MODULE_TASKS, REQUEST_SUCCESS} from "../../constantsGlobal";
+import {
+  APP_URL,
+  DATE_FORMAT,
+  EDITAR,
+  MESSAGE_DOWNLOAD_DATA,
+  MESSAGE_ERROR,
+  MODULE_TASKS,
+  REQUEST_SUCCESS
+} from "../../constantsGlobal";
 import {LIST_REGIONS, LIST_ZONES, TASK_STATUS, TEAM_VALUE_OBJECTS} from "../selectsComponent/constants";
 import {
   addRecentSearch,
@@ -54,6 +62,8 @@ import {
   useRecentSearch
 } from './actions';
 import {swtShowMessage} from "../sweetAlertMessages/actions";
+import {changeStateSaveData} from "../main/actions";
+import RecentSearchBox from "./RecentSearchBox";
 
 export class MyTaskPage extends Component {
   constructor(props) {
@@ -365,17 +375,23 @@ export class MyTaskPage extends Component {
     dispatchUseRecentSearch(idRecord)
   };
 
-    downloadTask = async () => {
-        const {dispatchShowMessage, dispatchGetXlsTask} = this.props;
-        let {filters} = this.state;
-        let initialValue = moment(filters.initialDate);
-        let finalValue = moment(filters.finalDate);
-        if (moment(initialValue, DATE_FORMAT).diff(moment(finalValue, DATE_FORMAT), 'days') < -360) {
-            dispatchShowMessage(MESSAGE_ERROR, 'Rango de fecha', DATES_HELP_MESSAGE_DOWNLOAD);
-            return;
-        }
-        const response = await dispatchGetXlsTask(filters, this.state.textToSearch);
-    };
+  downloadTask = async () => {
+    const {dispatchShowMessage, dispatchGetXlsTask, dispatchChangeStateSaveData} = this.props;
+    let {filters} = this.state;
+    let initialValue = moment(filters.initialDate);
+    let finalValue = moment(filters.finalDate);
+    if (moment(initialValue, DATE_FORMAT).diff(moment(finalValue, DATE_FORMAT), 'days') < -360) {
+      dispatchShowMessage(MESSAGE_ERROR, 'Rango de fecha', DATES_HELP_MESSAGE_DOWNLOAD);
+      return;
+    }
+    const response = await dispatchGetXlsTask(filters, this.state.textToSearch);
+    dispatchChangeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
+    let result = response.payload.data;
+    if (result.status === 200) {
+      window.open(APP_URL + '/getExcelReport?filename=' + result.data.filename + '&id=' + result.data.sessionToken, '_blank');
+    }
+    dispatchChangeStateSaveData(false, "");
+  };
 
   render() {
     const {params: {filtered}, myTasks, allRecentSearch} = this.props;
@@ -420,6 +436,7 @@ export class MyTaskPage extends Component {
                     <SidebarComponent
                         key={myTasks.get("initialFilter").initialDate}
                         defaultFilters={this.state.filters}
+                        onCreateRecentSearch={this.createRecentSearch}
                         dispatchFilters={this.dispatchFilters}/>
                     }
                 </Col>
@@ -436,6 +453,13 @@ export class MyTaskPage extends Component {
                     </button>
                 </Col>
             </Row>
+          <Row xs={12} sm={12} md={12} lg={12} style={{padding: "40px 10px 0px 20px"}}>
+            <RecentSearchBox
+                recordsRecentSearch={allRecentSearch.data}
+                deleteSearch={(idRecentSearch) => this.removeRecentSearch(idRecentSearch)}
+                applyRecentSearch={(idCurrentRecentSearch) => this.applyRecentSearch(idCurrentRecentSearch)}
+            />
+          </Row>
         </div>
 
         <div style={{backgroundColor: "white", width: "100%"}}>
@@ -533,8 +557,9 @@ function mapDispatchToProps(dispatch) {
       dispatchRemoveRecentSearch: removeRecentSearch,
       dispatchUseRecentSearch: useRecentSearch,
       dispatchLoadRecentSearch: loadRecentSearch,
-        dispatchShowMessage: swtShowMessage,
-        dispatchGetXlsTask: getXlsTask
+      dispatchShowMessage: swtShowMessage,
+      dispatchGetXlsTask: getXlsTask,
+      dispatchChangeStateSaveData: changeStateSaveData
     },
     dispatch
   );
