@@ -296,7 +296,7 @@ export function getXlsTask(filters, textToSearch) {
         }
     };
 
-    let request = axios.post(APP_URL + "/getXlsTask", json);
+    let request = axios.post(APP_URL + "/getTaskFile", json);
     return {
         type: GET_XLS_TASK,
         payload: request
