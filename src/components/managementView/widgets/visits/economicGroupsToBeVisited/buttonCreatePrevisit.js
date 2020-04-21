@@ -6,7 +6,8 @@ import { redirectUrl } from '../../../../globalComponents/actions';
 import { updateTitleNavBar } from '../../../../navBar/actions';
 import { consultInfoClient } from '../../../../clientInformation/actions'; 
 import { changeActiveItemMenu } from '../../../../menu/actions'; 
-import { MODULE_MY_CLIENTS } from "../../../../../constantsGlobal";
+import { MODULE_MY_CLIENTS, MODULE_PREVISITS } from "../../../../../constantsGlobal";
+import { updateTabSeleted } from '../../../../clientDetailsInfo/actions';
 
 export class ButtonCreatePrevisit extends Component {
     
@@ -18,9 +19,13 @@ export class ButtonCreatePrevisit extends Component {
         const { 
             dispatchConsultInfoClient, 
             disptachUpdateTitleNavBar,
-            dispatchChangeActiveItemMenu
+            dispatchChangeActiveItemMenu,
+            dispatchUpdateTabSeleted
          } = this.props;
         dispatchChangeActiveItemMenu(MODULE_MY_CLIENTS)
+        window.sessionStorage.setItem('idClientSelected', data);
+        debugger;
+        dispatchUpdateTabSeleted(MODULE_PREVISITS);
         await dispatchConsultInfoClient(data);
         disptachUpdateTitleNavBar("Informe de previsita");
         redirectUrl("/dashboard/previsita");
@@ -51,7 +56,8 @@ export class ButtonCreatePrevisit extends Component {
 const mapDispatchToProps = dispatch => bindActionCreators({
     disptachUpdateTitleNavBar: updateTitleNavBar,
     dispatchConsultInfoClient: consultInfoClient,
-    dispatchChangeActiveItemMenu: changeActiveItemMenu
+    dispatchChangeActiveItemMenu: changeActiveItemMenu,
+    dispatchUpdateTabSeleted: updateTabSeleted
 }, dispatch);
   
 export default connect(null, mapDispatchToProps)(ButtonCreatePrevisit);
