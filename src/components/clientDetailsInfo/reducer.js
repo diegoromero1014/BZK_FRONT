@@ -40,7 +40,6 @@ const initialState = Immutable.Map({
 export default (state = initialState, action) => {
     switch (action.type) {
         case UPDATE_ACTIVE_TAB:
-            debugger;
             return state.set("tabSelected", action.payload);
         case CLICK_BUTTON_UPDATE_EDIT:
             return state.set("seletedButton", action.payload);

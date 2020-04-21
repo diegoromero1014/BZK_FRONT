@@ -6,7 +6,7 @@ import { redirectUrl } from '../../../../globalComponents/actions';
 import { updateTitleNavBar } from '../../../../navBar/actions';
 import { consultInfoClient } from '../../../../clientInformation/actions'; 
 import { changeActiveItemMenu } from '../../../../menu/actions'; 
-import { MODULE_MY_CLIENTS, MODULE_PREVISITS } from "../../../../../constantsGlobal";
+import { MODULE_MY_CLIENTS, TAB_PREVISITS} from "../../../../../constantsGlobal";
 import { updateTabSeleted } from '../../../../clientDetailsInfo/actions';
 
 export class ButtonCreatePrevisit extends Component {
@@ -24,8 +24,7 @@ export class ButtonCreatePrevisit extends Component {
          } = this.props;
         dispatchChangeActiveItemMenu(MODULE_MY_CLIENTS)
         window.sessionStorage.setItem('idClientSelected', data);
-        debugger;
-        dispatchUpdateTabSeleted(MODULE_PREVISITS);
+        dispatchUpdateTabSeleted(TAB_PREVISITS);
         await dispatchConsultInfoClient(data);
         disptachUpdateTitleNavBar("Informe de previsita");
         redirectUrl("/dashboard/previsita");
