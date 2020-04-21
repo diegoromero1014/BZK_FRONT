@@ -167,7 +167,7 @@ export class HeaderFilters extends Component {
     render() {
         const {fields: {users, rol, initialDate, finalDate}} = this.props;
         return (
-            <div style={{paddingTop: "10px", width: "100%", paddingBottom: "50px"}}>
+            <div style={{paddingTop: "10px", width: "100%", paddingBottom: "20px"}}>
                 <Row style={{padding: "5px 20px 0px 20px"}}>
                     <Col xs={3} sm={3} md={3} lg={3}>
                         <span>Usuario</span>
