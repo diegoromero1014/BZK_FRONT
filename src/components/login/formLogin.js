@@ -23,6 +23,7 @@ import { changeActiveItemMenu } from '../menu/actions';
 import { LOADING_LOGIN, ITEM_ACTIVE_MENU_DEFAULT } from './constants';
 import { MESSAGE_SERVER_ERROR, REQUEST_SUCCESS } from '../../constantsGlobal';
 import { changeTokenStatus } from '../main/actions';
+import {TaskPageUrl} from "../../constantsAnalytics";
 
 export class FormLogin extends Component {
     constructor(props) {
@@ -49,29 +50,30 @@ export class FormLogin extends Component {
         this.setState({
             usuario: e.target.value
         })
-    }
+    };
 
     handleChangePassword = (e) => {
         this.setState({
             password: e.target.value
         })
-    }
+    };
 
     redirectLogin = () => {
         this.setState({ showMessageNotification: false });
         redirectUrl("/dashboard/clients");
-    }
+    };
 
     getValueRecaptcha = (value) => {
         this.setState({valueRecaptcha:value});
-    }
+    };
 
     handleValidateLogin = (e) => {
         e.preventDefault();
         
         const { usuario, password } = this.state;
         const recaptcha = this.state.loginAttempts >= 2 ? this.state.valueRecaptcha : null;
-        const { dispatchValidateLogin, dispatchShowLoading, dispatchChangeActiveItemMenu, dispatchChangeTokenStatus } = this.props;
+        const { dispatchValidateLogin, dispatchShowLoading, dispatchChangeActiveItemMenu, dispatchChangeTokenStatus, tasksByClient } = this.props;
+        const taskIdFromRedirect = tasksByClient.get('taskIdFromRedirect');
         dispatchChangeTokenStatus(true);
         dispatchShowLoading(true, LOADING_LOGIN);        
         dispatchValidateLogin(usuario, password, recaptcha)
@@ -88,15 +90,16 @@ export class FormLogin extends Component {
                         dispatchChangeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
 
                         // Activar cookie
-                        document.cookie = 'estadoconexion=activa;path=/';                        
-
-                        redirectUrl("/dashboard/clients");
+                        document.cookie = 'estadoconexion=activa;path=/';
+                        if(taskIdFromRedirect)
+                            redirectUrl(`${TaskPageUrl}/${taskIdFromRedirect}`);
+                        else
+                            redirectUrl("/dashboard/clients");
                     }
                 } else {
                     let res = JSON.parse(response.payload.data.data);
                     this.setState({
-                        message: res.message,             
-                        //TODO: reCaptcha deshabilitado           
+                        message: res.message,
                         loginAttempts: res.loginAttempts
                     });
                     if(res.shouldReload){
@@ -111,7 +114,7 @@ export class FormLogin extends Component {
                     message: MESSAGE_SERVER_ERROR
                 });
             });
-    }
+    };
 
     componentWillMount() {
         const { dispatchShowLoading, dispatchStopObservablesLeftTimer, dispatchClearStateLogin, mainReducer } = this.props;
@@ -209,10 +212,11 @@ const mapDispatchToProps = (dispatch) => {
     }, dispatch);
 }
 
-const mapStateToProps = ({ login, mainReducer }) => {
+const mapStateToProps = ({ login, mainReducer, tasksByClient }) => {
     return {
         login,
-        mainReducer
+        mainReducer,
+        tasksByClient
     };
 }
 
