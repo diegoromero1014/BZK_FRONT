@@ -227,10 +227,13 @@ export class AdvancedFilters extends Component {
   };
 
   handleClickOnDone = () => {
-    const {onCreateRecentSearch, doneFilter} = this.props;
+    const {onCreateRecentSearch, doneFilter, setFieldValue} = this.props;
 
     if (this.state.isChanged) {
       onCreateRecentSearch();
+      setFieldValue('region', '', true);
+      setFieldValue('zone', '', true);
+      setFieldValue('cell', '', true);
       this.setState({
         isChanged: false
       })
