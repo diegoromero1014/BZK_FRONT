@@ -42,7 +42,7 @@ export class ManagementView extends Component {
 
                 <div style={{
                         width: '100%',
-                        height: 550,
+                        height: 500,
                         background: 'transparent',
                         display: 'flex',
                         justifyContent: 'space-between',

@@ -42,7 +42,7 @@ export class SectionImportantDates extends Component {
     return (
       <div style={{ width : "45%", height : "100%"}}>
         <h3>{TITLE_IMPORTANT_DATES}</h3>
-        <div style={STYLE_CONTAINER_TABS}>
+        <div className = 'importantDateTabs' style={STYLE_CONTAINER_TABS}>
           <TabComponent tabs={tabs} />
         </div>
       </div>
