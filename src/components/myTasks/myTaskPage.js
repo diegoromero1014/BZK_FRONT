@@ -384,8 +384,8 @@ export class MyTaskPage extends Component {
       dispatchShowMessage(MESSAGE_ERROR, 'Rango de fecha', DATES_HELP_MESSAGE_DOWNLOAD);
       return;
     }
-    const response = await dispatchGetXlsTask(filters, this.state.textToSearch);
     dispatchChangeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
+    const response = await dispatchGetXlsTask(filters, this.state.textToSearch);
     let result = response.payload.data;
     if (result.status === 200) {
       window.open(APP_URL + '/getExcelReport?filename=' + result.data.filename + '&id=' + result.data.sessionToken, '_blank');
@@ -453,7 +453,7 @@ export class MyTaskPage extends Component {
                     </button>
                 </Col>
             </Row>
-          <Row xs={12} sm={12} md={12} lg={12} style={{padding: "40px 10px 0px 20px"}}>
+          <Row xs={12} sm={12} md={12} lg={12} style={{padding: "40px 20px 0px 20px"}}>
             <RecentSearchBox
                 recordsRecentSearch={allRecentSearch.data}
                 deleteSearch={(idRecentSearch) => this.removeRecentSearch(idRecentSearch)}
