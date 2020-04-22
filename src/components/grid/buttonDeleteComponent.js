@@ -164,7 +164,7 @@ class ButtonDeleteComponent extends Component {
             } else if (actionsDelete.typeDelete === DELETE_TYPE_BUSINESS_PLAN) {
                 clearBusinessPlanOrder();
                 clearBusinessPlanPaginator();
-                businessPlanByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "bp.initialValidityDate", 1, "", "");
+                businessPlanByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "initialValidityDate", 1, "", "");
                 clearDraftDocumentOrder();
                 clearDraftDocumentPaginator();
                 draftsDocumentsByUser(0, NUMBER_RECORDS, "", null, "");

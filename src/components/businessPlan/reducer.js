@@ -8,7 +8,7 @@ const initialState = Immutable.Map({
   rowCount: 0,
   limInf : 0,
   page: 1,
-  columnBusinessPlan: 'bp.initialValidityDate',
+  columnBusinessPlan: 'initialValidityDate',
   orderBusinessPlan : 1,
   detailBusinessPlan: {},
   ownerDraft: 0
@@ -39,7 +39,7 @@ export default (state = initialState, action) => {
                 .set('businessPlanList', [])
                 .set('rowCount', 0)
                 .set('orderBusinessPlan', 1)
-                .set('columnBusinessPlan', 'bp.initialValidityDate');
+                .set('columnBusinessPlan', 'initialValidityDate');
         });
     case CLEAR_BUSINESS_PLAN_PAGINATOR:
           return state.withMutations(map => {
@@ -50,7 +50,7 @@ export default (state = initialState, action) => {
     case CLEAR_BUSINESS_PLAN_ORDER:
         return state.withMutations(map => {
             map.set('orderBusinessPlan', 1)
-                .set('columnBusinessPlan', 'bp.initialValidityDate');
+                .set('columnBusinessPlan', 'initialValidityDate');
         });
     case GET_DETAIL_BUSINESS:
       return state.set('detailBusiness', action.payload.data);
