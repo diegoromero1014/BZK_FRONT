@@ -10,7 +10,7 @@ import moment from "moment";
 import {DATE_FORMAT, MESSAGE_ERROR} from "../../constantsGlobal";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import _ from 'lodash';
-import Tooltip, {TOOLTIP_POSITION} from "../toolTip/toolTipComponent";
+import Tooltip from "../toolTip/toolTipComponent";
 import {DATES_HELP_MESSAGE} from "./constants";
 
 const fields = ["users", "rol", "initialDate", "finalDate"];
@@ -214,26 +214,29 @@ export class HeaderFilters extends Component {
                     </Col>
                     <Col xs={3} sm={3} md={3} lg={3}>
                         <span>Hasta</span>
-                        {
-                            this.state.rangeFromDates &&
-                            <Tooltip text={DATES_HELP_MESSAGE} position={TOOLTIP_POSITION.topRight}>
-                                <i className="help circle icon blue"
-                                   style={{fontSize: "15px", cursor: "pointer", marginLeft: "10px"}}/>
-                            </Tooltip>
-                        }
-                        <DateTimePickerUi
-                            {...finalDate}
-                            culture='es'
-                            format={"DD/MM/YYYY"}
-                            time={false}
-                            placeholder='DD/MM/YYYY'
-                            className='field-input'
-                            name="finalDate"
-                            touched={true}
-                            value={this.state.finalDate}
-                            onChange={val => this.onClickDate("final", val)}
-                            onBlur={val => this.fillDateEmpty("final", val)}
-                        />
+                        <div style={{position: 'relative'}}>
+                            <DateTimePickerUi
+                                {...finalDate}
+                                culture='es'
+                                format={"DD/MM/YYYY"}
+                                time={false}
+                                placeholder='DD/MM/YYYY'
+                                className='field-input'
+                                name="finalDate"
+                                touched={true}
+                                value={this.state.finalDate}
+                                onChange={val => this.onClickDate("final", val)}
+                                onBlur={val => this.fillDateEmpty("final", val)}
+                            />
+                            <div style={{position: 'relative',
+                                padding: '5px',
+                                background: '#353535',
+                                color: 'white',
+                                borderRadius: '7px',
+                                marginTop: '10px',}}>
+                                <span>{DATES_HELP_MESSAGE}</span>
+                            </div>
+                        </div>
                     </Col>
                 </Row>
             </div>
