@@ -32,7 +32,6 @@ export function createPrevisit(jsonVisit) {
     },
     "messageBody": jsonVisit
   }
-
   var request = axios.post(APP_URL + "/savePreVisit", json);
   return {
     type: constants.CREATE_PREVISIT,
