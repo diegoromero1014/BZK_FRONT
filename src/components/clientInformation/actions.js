@@ -84,7 +84,7 @@ export function validateExpiredPortfolio(idClient) {
       "debug": true,
       "isSuccessful": true
     },
-    "messageBody": idClient ? new Number(idClient) : new Number(window.sessionStorage.getItem('idClientSelected'))
+    "messageBody": idClient ? Number(idClient) : Number(window.sessionStorage.getItem('idClientSelected'))
   };
 
   var request = axios.post(APP_URL + "/alert/expiredPortfolio/client", json);

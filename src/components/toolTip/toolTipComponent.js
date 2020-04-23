@@ -29,7 +29,7 @@ export const TOOLTIP_ACTION = {
 
 class ToolTipComponent extends Component {
     render() {
-        const {children, text, position, title, action, style, size, inverted, wide, rendertooltip} = this.props;
+        const {children, text, position, title, action, style, size, inverted, wide} = this.props;
         const _header = isUndefined(title) ? null : title;
         const _position = isUndefined(position) ? 'top left' : position;
         const _style = isUndefined(style) ? null : style;
