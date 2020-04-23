@@ -1,15 +1,18 @@
 import React from 'react';
 import SearchClientRedux from '../../../../../../src/components/managementView/widgets/searchClient/searchClient';
 import { SearchClient } from '../../../../../../src/components/managementView/widgets/searchClient/searchClient';
+import * as globalActions from '../../../../../../src/components/globalComponents/actions';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 
 
+let dispatchChangeActiveItemMenu;
 let dispatchClientsFindServer ;
 let dispatchUpdateTitleNavBar ; 
 let dispatchSwtShowMessage ; 
 let handleSetSearched ;
 let handleSearchClient ;
+let redirectUrl;
 let setKeyword ;
 let restartPage ;
 
@@ -23,6 +26,8 @@ describe('Test searchClient component', () => {
 
     beforeEach(() => {
         store = mockStore({});
+        redirectUrl = sinon.stub(globalActions, "redirectUrl"); 
+        dispatchChangeActiveItemMenu = sinon.fake();
         dispatchClientsFindServer = sinon.fake();
         dispatchUpdateTitleNavBar = sinon.fake();
         dispatchSwtShowMessage = sinon.fake();
@@ -32,6 +37,7 @@ describe('Test searchClient component', () => {
         restartPage = sinon.fake();
 
         defaultProps = {
+            dispatchChangeActiveItemMenu,
             dispatchClientsFindServer,
             dispatchSwtShowMessage,
             handleSetSearched,
@@ -41,6 +47,10 @@ describe('Test searchClient component', () => {
             restartPage
         }
 
+    })
+
+    afterEach(() => {
+        redirectUrl.restore();
     })
 
     describe('Rendering test', () => {
@@ -56,6 +66,14 @@ describe('Test searchClient component', () => {
     })
 
     describe('test functions of searchClient component', () => {
+
+        it('test redirectCreatePropspect function', () => {
+            const wrapper = shallow(<SearchClient {...defaultProps}/>);
+            wrapper.instance().redirectCreatePropspect();
+            sinon.assert.calledOnce(dispatchChangeActiveItemMenu);
+            sinon.assert.calledOnce(dispatchUpdateTitleNavBar);
+            sinon.assert.calledOnce(redirectUrl);
+        })
         
         it('Test handleInput function', () => {
             let evento = {
