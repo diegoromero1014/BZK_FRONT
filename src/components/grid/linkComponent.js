@@ -8,7 +8,7 @@ import { seletedButton } from '../clientDetailsInfo/actions';
 
 import { BUTTON_UPDATE } from '../clientDetailsInfo/constants';
 
-class LinkComponent extends Component {
+export class LinkComponent extends Component {
 
     constructor(props) {
         super(props);
@@ -16,13 +16,13 @@ class LinkComponent extends Component {
     }
 
     _redirect() {
-        const { url, idClient, consultInfoClient, seletedButton } = this.props;
+        const { url, idClient, dispatchConsultInfoClient, dispatchSeletedButton } = this.props;
         window.sessionStorage.setItem('idClientSelected', idClient);
         if (url === '/dashboard/clientEdit') {
 
-            seletedButton(BUTTON_UPDATE);
+            dispatchSeletedButton(BUTTON_UPDATE);
 
-            consultInfoClient(idClient).then(() => {
+            dispatchConsultInfoClient(idClient).then(() => {
                 redirectUrl(url);
             })
 
@@ -48,7 +48,11 @@ LinkComponent.propTypes = {
 };
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ consultInfoClient, seletedButton }, dispatch);
+    return bindActionCreators({ 
+        dispatchConsultInfoClient : consultInfoClient, 
+        dispatchSeletedButton : seletedButton 
+    },
+    dispatch);
 }
 
 function mapStateToProps({ }, ownerProps) {
