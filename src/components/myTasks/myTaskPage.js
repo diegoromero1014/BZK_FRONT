@@ -35,7 +35,7 @@ import {
   DATE_FORMAT,
   EDITAR,
   MESSAGE_DOWNLOAD_DATA,
-  MESSAGE_ERROR,
+  MESSAGE_ERROR, MESSAGE_SUCCESS,
   MODULE_TASKS,
   REQUEST_SUCCESS
 } from "../../constantsGlobal";
@@ -389,8 +389,11 @@ export class MyTaskPage extends Component {
     let result = response.payload.data;
     if (result.status === 200) {
       window.open(APP_URL + '/getExcelReport?filename=' + result.data.filename + '&id=' + result.data.sessionToken, '_blank');
+    } else if (result.status === 500) {
+        dispatchShowMessage(MESSAGE_ERROR, 'Error', 'Ocurrió un error generando el archivo.');
     }
     dispatchChangeStateSaveData(false, "");
+    dispatchShowMessage(MESSAGE_SUCCESS, 'Descarga', 'Senor usuario, el archivo se ha generado exitosamente.');
   };
 
   render() {

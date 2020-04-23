@@ -58,6 +58,7 @@ let redirectUrl;
 let defaultProps;
 let dispatchChangeStateSaveData;
 let dispatchGetXlsTask = sinon.stub();
+let dispatchShowMessage = sinon.stub();
 let store;
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -106,6 +107,7 @@ describe("Test MyTasks component", () => {
             dispatchCleanFinalizedTasks,
             dispatchChangeStateSaveData,
             dispatchGetXlsTask,
+            dispatchShowMessage,
             allRecentSearch: {
                 data: []
             }
@@ -365,7 +367,7 @@ describe("Test MyTasks component", () => {
         expect(dispatchUseRecentSearch.calledOnce).to.equal(true);
     });
 
-    it('removeLastRecentSearch should call removeRecentSearch', async () => {
+    it('downloadTask test', async () => {
         let wrapper = shallow(<MyTaskPage {...defaultProps}/>);
         await wrapper.instance().downloadTask();
         wrapper.update();

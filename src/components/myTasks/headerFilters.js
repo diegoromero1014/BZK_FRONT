@@ -228,14 +228,17 @@ export class HeaderFilters extends Component {
                                 onChange={val => this.onClickDate("final", val)}
                                 onBlur={val => this.fillDateEmpty("final", val)}
                             />
-                            <div style={{position: 'relative',
-                                padding: '5px',
-                                background: '#353535',
-                                color: 'white',
-                                borderRadius: '7px',
-                                marginTop: '10px',}}>
-                                <span>{DATES_HELP_MESSAGE}</span>
-                            </div>
+                            {
+                                this.state.rangeFromDates &&
+                                <div style={{position: 'relative',
+                                    padding: '15px',
+                                    background: '#353535',
+                                    color: 'white',
+                                    borderRadius: '7px',
+                                    marginTop: '10px',}}>
+                                    <span>{DATES_HELP_MESSAGE}</span>
+                                </div>
+                            }
                         </div>
                     </Col>
                 </Row>
