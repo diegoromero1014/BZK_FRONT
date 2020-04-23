@@ -212,8 +212,9 @@ export class AdvancedFilters extends Component {
   }
 
   clearForm = async () => {
-    const {setFieldValue} = this.props;
-    if (this.state.isChanged) {
+    const {setFieldValue, values: {region, zone, cell}} = this.props;
+
+    if(!_.isEmpty(region) || !_.isEmpty(zone) || !_.isEmpty(cell)){
       await this.setStateDates('', '');
       setFieldValue('region', '', true);
       setFieldValue('zone', '', true);
@@ -221,19 +222,17 @@ export class AdvancedFilters extends Component {
       this.dispatchAdvancedFilters();
       await this.setStateDates(this.state.defaultInitial, this.state.defaultFinal);
     }
+
     this.setState({
       isChanged: false
     });
   };
 
   handleClickOnDone = () => {
-    const {onCreateRecentSearch, doneFilter, setFieldValue} = this.props;
+    const {onCreateRecentSearch, doneFilter} = this.props;
 
     if (this.state.isChanged) {
       onCreateRecentSearch();
-      setFieldValue('region', '', true);
-      setFieldValue('zone', '', true);
-      setFieldValue('cell', '', true);
       this.setState({
         isChanged: false
       })
