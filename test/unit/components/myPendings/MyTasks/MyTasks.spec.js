@@ -2,13 +2,11 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import Immutable from "immutable";
 
-import MyTaskPageRedux, {MyTaskPage} from "../../../../../src/components/myTasks/myTaskPage";
+import {MyTaskPage} from "../../../../../src/components/myTasks/myTaskPage";
 import * as actions from "../../../../../src/components/myTasks/actions";
 import * as myTasksActions from "../../../../../src/components/myTasks/actions";
 import {ASSIGNED, FINISHED, PENDING} from "../../../../../src/components/myTasks/constants";
 import * as globalActions from "../../../../../src/components/globalComponents/actions";
-import thunk from "redux-thunk";
-import configureStore from 'redux-mock-store';
 
 const myTasks = Immutable.Map({
     tabPending: {order: 0, rowCount: 0, data: {}, page: 0},
@@ -59,9 +57,6 @@ let defaultProps;
 let dispatchChangeStateSaveData;
 let dispatchGetXlsTask = sinon.stub();
 let dispatchShowMessage = sinon.stub();
-let store;
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
 const dispatchValidatePermissionsByModule = sinon
     .stub()
     .resolves({
@@ -112,9 +107,6 @@ describe("Test MyTasks component", () => {
                 data: []
             }
         };
-        store = mockStore({
-            defaultProps
-        });
     });
 
     afterEach(() => {

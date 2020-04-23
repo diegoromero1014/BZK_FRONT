@@ -10,7 +10,6 @@ import moment from "moment";
 import {DATE_FORMAT, MESSAGE_ERROR} from "../../constantsGlobal";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import _ from 'lodash';
-import Tooltip from "../toolTip/toolTipComponent";
 import {DATES_HELP_MESSAGE} from "./constants";
 
 const fields = ["users", "rol", "initialDate", "finalDate"];
