@@ -9,4 +9,14 @@ describe('test reducer transactional', () => {
         expect(response).not.to.equal(null);
     })
 
+    it('reducer called actions.GET_ALL_CATEGORIES', () => {
+        const response = reducer(Immutable.Map({}), { type: actions.GET_ALL_CATEGORIES , payload: { data: { data: null }} })
+        expect(response).not.to.equal(null);
+    })
+
+    it('reducer called type null', () => {
+        const response = reducer(Immutable.Map({}), { type: null });
+        expect(response).not.to.equal(null);
+    })
+
 })
