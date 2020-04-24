@@ -8,7 +8,7 @@ const initialState = Immutable.Map({
   "TABLERO_DE_CONTROL_URL": ""
 });
 
-export default (state = initialState, action) => {
+export default (state = initialState, action = {}) => {
   switch (action.type) {
     case actions.SET_URL_PARAMETER:
       return state.set(action.parameter, action.url);
