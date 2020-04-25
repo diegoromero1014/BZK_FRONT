@@ -12,7 +12,7 @@ import {showLoading} from '../loading/actions';
 import {updateTabSeleted} from '../clientDetailsInfo/actions';
 import _ from 'lodash';
 
-class SearchBarClient extends Component {
+export class SearchBarClient extends Component {
 
     constructor(props) {
         super(props);
@@ -29,13 +29,14 @@ class SearchBarClient extends Component {
     }
 
     componentWillMount() {
-        const {login, updateTabSeleted, getAlertsByUser} = this.props;
+        const { dispatchUpdateTabSeleted, dispatchGetAlertsByUser } = this.props;
         const self = this;
-        updateTabSeleted(null);
+        dispatchUpdateTabSeleted(null);
         if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
         }
-        getAlertsByUser().then((data) => {
+        debugger;
+        dispatchGetAlertsByUser().then((data) => {
             _.get(data, 'payload.data.data').map((item, idx) => {
                 if (item.codeAlert === CODE_BLACK_LIST_ALERT && !item.active) {
                     self.setState({openMessagePermissions: true});
@@ -45,15 +46,15 @@ class SearchBarClient extends Component {
     }
 
     _handleChangeKeywordClient(e) {
-        const {changeKeywordClient} = this.props;
-        changeKeywordClient(e.target.value);
+        const { dispatchChangeKeywordClient } = this.props;
+        dispatchChangeKeywordClient(e.target.value);
         if (e.keyCode === 13 || e.which === 13) {
             this._handleClientsFind(e);
         }
     }
 
     _handleClientsFind(e) {
-        const {blackListFindServer, alertBlackList, changePage, showLoading} = this.props;
+        const {dispatchBlackListFindServer, alertBlackList, dispatchChangePage, dispatchShowLoading} = this.props;
         const keywordNameNitClient = alertBlackList.get('keywordNameNitClient');
         if (keywordNameNitClient === '' || keywordNameNitClient === undefined) {
             this.setState({showEr: true});
@@ -62,11 +63,11 @@ class SearchBarClient extends Component {
             const keyWordNameNit = alertBlackList.get('keywordNameNit');
             const order = alertBlackList.get('order');
             const columnOrder = alertBlackList.get('columnOrder');
-            showLoading(true, 'Cargando..');
-            blackListFindServer(keyWordNameNit, keywordNameNitClient,typeEntity, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
+            dispatchShowLoading(true, 'Cargando..');
+            dispatchBlackListFindServer(keyWordNameNit, keywordNameNitClient,typeEntity, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
                 if (_.has(data, 'payload.data.data')) {
-                    showLoading(false, null);
-                    changePage(1);
+                    dispatchShowLoading(false, null);
+                    dispatchChangePage(1);
                 }
             });
         }
@@ -101,7 +102,12 @@ class SearchBarClient extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        blackListFindServer, changePage, changeKeywordClient, updateTabSeleted, redirectUrl, showLoading, getAlertsByUser
+        dispatchBlackListFindServer : blackListFindServer, 
+        dispatchChangePage : changePage, 
+        dispatchChangeKeywordClient : changeKeywordClient, 
+        dispatchUpdateTabSeleted : updateTabSeleted, 
+        dispatchShowLoading : showLoading, 
+        dispatchGetAlertsByUser : getAlertsByUser
     }, dispatch);
 }
 
