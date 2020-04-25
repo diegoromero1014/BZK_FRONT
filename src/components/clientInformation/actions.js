@@ -2,6 +2,8 @@ import {APP_URL} from '../../constantsGlobal';
 import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, CLAER_CLIENT_INFO, UPDATE_FIELD_INFO_CLIENT,
   CHANGE_VALUE_LIST_CLIENT, CHANGE_INFO_CLIENT, VALIDATE_EXPIRED_PORTFOLIO} from './constants';
 import axios from 'axios';
+import {downloadReport} from "../../utils"
+import {changeStateSaveData} from "../main/actions"
 
 export function consultInfoClient(idClient){
   const json = {
@@ -30,7 +32,15 @@ export function consultInfoClient(idClient){
 }
 
 export function downloadFilePdf(idFileDownload){
-  window.open(APP_URL + "/downloadFilePDF/" + idFileDownload, '_blank', '');
+  const payload = {
+    messageHeader:{
+      sessionToken: window.localStorage.getItem('sessionTokenFront')
+    },
+    messageBody: idFileDownload
+  };
+ 
+  
+  downloadReport(payload, "/downloadFilePDF", "Prueba.pdf", null);
 }
 
 export function clearInfoClient(){
