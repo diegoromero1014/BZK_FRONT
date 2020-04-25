@@ -5,11 +5,11 @@ import { Combobox } from 'react-widgets';
 
 class ComponentTypeDocument extends Component{
   render(){
-    const {selectsReducer, onChange, store, styles, defaultValue, valueField, textField, data} = this.props;
+    const { onChange, store, styles, defaultValue, valueField, textField, data} = this.props;
     return(
       <div>
         <Combobox
-          value={store}
+          value={store} 
           onChange={onChange}
           style={styles}
           defaultValue={defaultValue}
