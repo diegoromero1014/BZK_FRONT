@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Immutable from 'immutable';
 
+let dispatchChangeKeywordClient;
 let dispatchBlackListFindServer;
 let dispatchChangePage;
 let dispatchChangeKeyword;
@@ -22,6 +23,7 @@ const mockStore = configureStore(middlewares);
 describe('Unit test for SearchBarBlackList component', () => {
 
     beforeEach(() => {
+        dispatchChangeKeywordClient = sinon.fake();
         dispatchBlackListFindServer = sinon.stub();
         dispatchBlackListFindServer.resolves({
             payload: {
@@ -78,7 +80,37 @@ describe('Unit test for SearchBarBlackList component', () => {
             expect(wrapper.state().showEr).to.equal(false);
         })
 
-        
+        it('When handleChangeKeywordEntity is instanced', () => {
+            const wrapper = shallow(<SearchBarBlackList {...defaultProps} />);
+            wrapper.instance().handleChangeKeywordEntity({ target: { value : null }});
+            sinon.assert.calledOnce(dispatchChangeKeyword);
+        })
+
+        it('When handleEntityFind is instanced and keyCode is 13', () => {
+            const wrapper = shallow(<SearchBarBlackList {...defaultProps} />);
+            wrapper.instance().handleChangeKeywordEntity({ target: { value :null }, keyCode: 13});
+            sinon.assert.calledOnce(dispatchChangeKeyword);
+        })
+
+        it('When handleClientsFind is instanced', () => {
+            defaultProps.alertBlackList = Immutable.Map({
+                keywordNameNit: "",
+            })
+            const wrapper = shallow(<SearchBarBlackList {...defaultProps} />);
+            wrapper.instance().handleEntityFind();
+            expect(wrapper.state().showEr).to.equal(true);
+        })
+
+
+        it('When handleClientsFind is instanced and keywordNameNit not void', () => {
+            defaultProps.alertBlackList = Immutable.Map({
+                keywordNameNit: "Test",
+            })
+            const wrapper = shallow(<SearchBarBlackList {...defaultProps} />);
+            wrapper.instance().handleEntityFind();
+            sinon.assert.calledOnce(dispatchShowLoading)
+            sinon.assert.calledOnce(dispatchBlackListFindServer)
+        })
 
     })
     

@@ -48,7 +48,7 @@ export class SearchBarBlackList extends Component {
         const { dispatchChangeKeyword } = this.props;
         dispatchChangeKeyword(e.target.value);
         if (e.keyCode === 13 || e.which === 13) {
-            this._handleEntityFind(e);
+            this.handleEntityFind(e);
         }
     }
 

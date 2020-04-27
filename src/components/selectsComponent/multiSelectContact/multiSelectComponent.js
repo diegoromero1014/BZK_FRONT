@@ -5,58 +5,52 @@ import { consultDataSelect } from '../actions';
 import { Multiselect } from 'react-widgets';
 import { FILTER_FUNCTION_ID, FILTER_TYPE_LBO_ID, FILTER_HOBBIES, FILTER_SPORTS } from '../constants';
 
-class MultiSelectComponent extends Component{
+export class MultiSelectComponent extends Component {
 
-  constructor(props){
-      super(props);
+  constructor(props) {
+    super(props);
   }
 
-  componentWillMount(){
-    const {consultDataSelect, idTypeFilter} = this.props;
-    consultDataSelect(idTypeFilter);
+  componentWillMount() {
+    const { dispatchConsultDataSelect, idTypeFilter } = this.props;
+    dispatchConsultDataSelect(idTypeFilter);
   }
 
-  render(){
-      const { selectsReducer, idTypeFilter } = this.props;
-      var data =[];
-      if(idTypeFilter === FILTER_FUNCTION_ID){
-        data = selectsReducer.get('dataTypeFunction');
-      } else if(idTypeFilter === FILTER_TYPE_LBO_ID) {
-        data = selectsReducer.get('dataTypeLBO'); 
-      } else if (idTypeFilter === FILTER_HOBBIES) {
-        data = selectsReducer.get('dataTypeHobbies');
-      } else if (idTypeFilter === FILTER_SPORTS) {
-        data = selectsReducer.get('dataTypeSports');
-      }
-      return(
-          <Multiselect
-              onChange = {value => this.setState({value})}
-              valueField='id'
-              textField='value'
-              data={data}
-              minLength={3}
-              filter='contains'
-          />
-      );
+  render() {
+    const { selectsReducer, idTypeFilter } = this.props;
+    var data = [];
+    if (idTypeFilter === FILTER_FUNCTION_ID) {
+      data = selectsReducer.get('dataTypeFunction');
+    } else if (idTypeFilter === FILTER_TYPE_LBO_ID) {
+      data = selectsReducer.get('dataTypeLBO');
+    } else if (idTypeFilter === FILTER_HOBBIES) {
+      data = selectsReducer.get('dataTypeHobbies');
+    } else if (idTypeFilter === FILTER_SPORTS) {
+      data = selectsReducer.get('dataTypeSports');
+    }
+    return (
+      <Multiselect
+        onChange={value => this.setState({ value })}
+        valueField='id'
+        textField='value'
+        data={data}
+        minLength={3}
+        filter='contains'
+      />
+    );
   }
 
 }
 
 MultiSelectComponent.PropTypes = {
-    idTypeFilter: PropTypes.string
+  idTypeFilter: PropTypes.string
 };
 
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    consultDataSelect
-  }, dispatch);
-}
+const mapDispatchToProps = dispatch => bindActionCreators({
+  dispatchConsultDataSelect: consultDataSelect
+}, dispatch);
 
-function mapStateToProps({selectsReducer}, ownerProps) {
-  return {
-    selectsReducer
-  };
-}
+const mapStateToProps = ({ selectsReducer }) => ({ selectsReducer })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MultiSelectComponent);
