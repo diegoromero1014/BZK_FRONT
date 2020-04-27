@@ -39,6 +39,7 @@ import myPendingsReducer from '../components/myPendings/myTasks/reducer';
 import draftDocumentsReducer from '../components/myPendings/draftDocuments/reducer';
 import reducerGlobal from '../reducerGlobal';
 import alertsReducer from '../components/alerts/reducer';
+import importantDates from '../components/managementView/widgets/importantDates/reducer';
 import alertPendingUpdateClientReducer from '../components/alertPendingUpdateClient/reducer';
 import alertPortfolioExpirationReducer from '../components/alertPortfolioExpirtation/reducer';
 import loadingReducer from '../components/loading/reducer';
@@ -73,9 +74,12 @@ import questionsReducer from '../components/challenger/reducer';
 import objectListReducer from "../components/listaObjetos/reducer";
 import elementsReducer from "../components/elements/reducer";
 import outdatedContacts from "../components/managementView/widgets/alerts/reducer";
+import economicGroupsToBeVisited from "../components/managementView/widgets/visits/economicGroupsToBeVisited/reducer";
 import commentsReducer from '../components/globalComponents/comments/reducer';
 import searchEmployeeInputReducer from '../components/globalComponents/searchEmployeeInput/reducer';
 import myTasksReducer from '../components/myTasks/reducer';
+import boardTaskReducer from "../components/managementView/widgets/tasks/reducer";
+import pendingVisits from '../components/managementView/widgets/visits/pendingVisits/reducer';
 
 export default combineReducers({
     routing: routerReducer,
@@ -115,6 +119,7 @@ export default combineReducers({
     clientProductReducer: clientProductReducer,
     reducerGlobal: reducerGlobal,
     alerts: alertsReducer,
+    importantDates,
     alertPendingUpdateClient: alertPendingUpdateClientReducer,
     myPendingsReducer: myPendingsReducer,
     draftDocumentsReducer: draftDocumentsReducer,
@@ -151,8 +156,11 @@ export default combineReducers({
     questionsReducer,
     objectListReducer,
     outdatedContacts,
+    economicGroupsToBeVisited,
     elementsReducer,
     commentsReducer,
     searchEmployeeInputReducer,
-    myTasks: myTasksReducer
+    myTasks: myTasksReducer,
+    boardTaskReducer,
+    pendingVisits
 });

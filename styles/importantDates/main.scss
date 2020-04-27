@@ -1,0 +1,22 @@
+.importantDateTabs{
+    .tabGenericComponent{
+        .generic-tab-segment{
+            padding-top: 3px;
+            padding-left: 2px;
+            padding-right: 2px;
+            margin: 2px;
+        }
+    }
+}
+
+.importantDatesStyle {
+    width: 33% !important;
+    min-width: 33% !important;
+    &.disable-tab:hover{
+        cursor: not-allowed !important;
+    }
+}
+
+.mainImportantDates {
+    width: 50% !important;
+}

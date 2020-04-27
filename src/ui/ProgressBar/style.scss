@@ -5,6 +5,11 @@
 .ui.progress .bar{
     background: #005dbf !important;
 }
+
+.ui.active.top.attached.progress-table.progress .bar{
+    background: transparent !important;
+}
+
 #finalized-label{
     border-radius: 25%;
     width: 20px;
