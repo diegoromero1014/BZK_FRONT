@@ -14,7 +14,6 @@ let dispatchShowLoading;
 let dispatchGetAlertsByUser;
 let redirectUrl;
 let defaultProps;
-let alertBlackList;
 
 let store;
 const middlewares = [thunk];
@@ -62,7 +61,7 @@ describe('Test SearchBarClient component', () => {
     })
 
 
-    describe('Test rendering', () => {
+    describe('Test rendering and functions', () => {
 
         it('rendering component SearchBarClient', () => {
             itRenders(<SearchBarClient {...defaultProps} />)
