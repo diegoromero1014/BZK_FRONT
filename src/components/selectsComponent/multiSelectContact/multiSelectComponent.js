@@ -12,21 +12,17 @@ class MultiSelectComponent extends Component{
   }
 
   componentWillMount(){
-    const {consultDataSelect, getMasterDataFields, idTypeFilter} = this.props;
+    const {consultDataSelect, idTypeFilter} = this.props;
     consultDataSelect(idTypeFilter);
   }
 
   render(){
-      const {
-          selectsReducer,
-          idTypeFilter,
-          config
-      } = this.props;
+      const { selectsReducer, idTypeFilter } = this.props;
       var data =[];
       if(idTypeFilter === FILTER_FUNCTION_ID){
         data = selectsReducer.get('dataTypeFunction');
       } else if(idTypeFilter === FILTER_TYPE_LBO_ID) {
-        data = selectsReducer.get('dataTypeLBO');
+        data = selectsReducer.get('dataTypeLBO'); 
       } else if (idTypeFilter === FILTER_HOBBIES) {
         data = selectsReducer.get('dataTypeHobbies');
       } else if (idTypeFilter === FILTER_SPORTS) {

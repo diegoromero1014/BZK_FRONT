@@ -12,30 +12,30 @@ import {showLoading} from '../loading/actions';
 import {updateTabSeleted} from '../clientDetailsInfo/actions';
 import _ from 'lodash';
 
-class SearchBarClient extends Component {
+export class SearchBarClient extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             showEr: false,
         };
-        this._handleClientsFind = this._handleClientsFind.bind(this);
-        this._handleChangeKeywordClient = this._handleChangeKeywordClient.bind(this);
-        this._closeError = this._closeError.bind(this);
+        this.handleClientsFind = this.handleClientsFind.bind(this);
+        this.handleChangeKeywordClient = this.handleChangeKeywordClient.bind(this);
+        this.closeError = this.closeError.bind(this);
     }
 
-    _closeError() {
+    closeError = () => {
         this.setState({showEr: false});
     }
 
     componentWillMount() {
-        const {login, updateTabSeleted, getAlertsByUser} = this.props;
+        const { dispatchUpdateTabSeleted, dispatchGetAlertsByUser } = this.props;
         const self = this;
-        updateTabSeleted(null);
+        dispatchUpdateTabSeleted(null);
         if (window.localStorage.getItem('sessionTokenFront') === "") {
             redirectUrl("/login");
         }
-        getAlertsByUser().then((data) => {
+        dispatchGetAlertsByUser().then((data) => {
             _.get(data, 'payload.data.data').map((item, idx) => {
                 if (item.codeAlert === CODE_BLACK_LIST_ALERT && !item.active) {
                     self.setState({openMessagePermissions: true});
@@ -44,16 +44,16 @@ class SearchBarClient extends Component {
         });
     }
 
-    _handleChangeKeywordClient(e) {
-        const {changeKeywordClient} = this.props;
-        changeKeywordClient(e.target.value);
+    handleChangeKeywordClient = e => {
+        const { dispatchChangeKeywordClient } = this.props;
+        dispatchChangeKeywordClient(e.target.value);
         if (e.keyCode === 13 || e.which === 13) {
-            this._handleClientsFind(e);
+            this.handleClientsFind(e);
         }
     }
 
-    _handleClientsFind(e) {
-        const {blackListFindServer, alertBlackList, changePage, showLoading} = this.props;
+    handleClientsFind = () => {
+        const {dispatchBlackListFindServer, alertBlackList, dispatchChangePage, dispatchShowLoading} = this.props;
         const keywordNameNitClient = alertBlackList.get('keywordNameNitClient');
         if (keywordNameNitClient === '' || keywordNameNitClient === undefined) {
             this.setState({showEr: true});
@@ -62,11 +62,11 @@ class SearchBarClient extends Component {
             const keyWordNameNit = alertBlackList.get('keywordNameNit');
             const order = alertBlackList.get('order');
             const columnOrder = alertBlackList.get('columnOrder');
-            showLoading(true, 'Cargando..');
-            blackListFindServer(keyWordNameNit, keywordNameNitClient,typeEntity, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
+            dispatchShowLoading(true, 'Cargando..');
+            dispatchBlackListFindServer(keyWordNameNit, keywordNameNitClient,typeEntity, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
                 if (_.has(data, 'payload.data.data')) {
-                    showLoading(false, null);
-                    changePage(1);
+                    dispatchShowLoading(false, null);
+                    dispatchChangePage(1);
                 }
             });
         }
@@ -79,10 +79,10 @@ class SearchBarClient extends Component {
             <div style={{marginLeft: '17px'}}>
                 <div className="InputAddOn">
                     <input type="text" style={{padding: '0px 11px !important'}} placeholder="Buscar por nombe o NIT del cliente"
-                           value={keyword} onKeyPress={this._handleChangeKeywordClient} onChange={this._handleChangeKeywordClient}
+                           value={keyword} onKeyPress={this.handleChangeKeywordClient} onChange={this.handleChangeKeywordClient}
                            className="input-lg input InputAddOn-field"/>
                     <button id="searchClients" className="btn" title="Buscar clientes" type="button"
-                            onClick={this._handleClientsFind} style={{backgroundColor: "#E0E2E2"}}>
+                            onClick={this.handleClientsFind} style={{backgroundColor: "#E0E2E2"}}>
                         <i className="search icon" style={{margin: '0em', fontSize: '1.2em'}}/>
                     </button>
                 </div>
@@ -91,7 +91,7 @@ class SearchBarClient extends Component {
                     show={this.state.showEr}
                     title="Error de búsqueda"
                     text="Señor usuario, por favor ingrese un criterio de búsqueda."
-                    onConfirm={() => this._closeError()}
+                    onConfirm={() => this.closeError()}
                 />
                 <AlertWithoutPermissions openMessagePermissions={this.state.openMessagePermissions}/>
             </div>
@@ -99,13 +99,18 @@ class SearchBarClient extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = dispatch => {
     return bindActionCreators({
-        blackListFindServer, changePage, changeKeywordClient, updateTabSeleted, redirectUrl, showLoading, getAlertsByUser
+        dispatchBlackListFindServer : blackListFindServer, 
+        dispatchChangePage : changePage, 
+        dispatchChangeKeywordClient : changeKeywordClient, 
+        dispatchUpdateTabSeleted : updateTabSeleted, 
+        dispatchShowLoading : showLoading, 
+        dispatchGetAlertsByUser : getAlertsByUser
     }, dispatch);
 }
 
-function mapStateToProps({alertBlackList}, ownerProps) {
+const mapStateToProps = ({alertBlackList}) => {
     return {alertBlackList};
 }
 

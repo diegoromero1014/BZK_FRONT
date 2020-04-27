@@ -76,7 +76,7 @@ class CreatePropspect extends Component {
       personType: null
     });
 
-  };
+  }
 
   _clickButtonCreateProps(formData) {
     const { fields: { idType, idNumber }, validateProspectExists } = this.props;
