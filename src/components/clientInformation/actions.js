@@ -40,7 +40,7 @@ export function downloadFilePdf(idFileDownload){
   };
  
   
-  downloadReport(payload, "/downloadFilePDF", "Prueba.pdf", null);
+  downloadReport(payload, "/generate/downloadFilePDF", "Prueba.pdf", null);
 }
 
 export function clearInfoClient(){
