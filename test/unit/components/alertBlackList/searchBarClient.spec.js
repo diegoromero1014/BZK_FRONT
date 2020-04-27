@@ -23,7 +23,6 @@ const mockStore = configureStore(middlewares);
 describe('Test SearchBarClient component', () => {
 
     beforeEach(() => {
-        store = mockStore({});
         dispatchBlackListFindServer = sinon.stub();
         dispatchBlackListFindServer.resolves({
             payload: {
@@ -45,7 +44,6 @@ describe('Test SearchBarClient component', () => {
         dispatchUpdateTabSeleted = sinon.fake();
         dispatchShowLoading = sinon.fake();
         redirectUrl = sinon.stub(globalActions, "redirectUrl");
-        keyword = alertBlackList.get('keywordNameNitClient')
 
         defaultProps = {
             dispatchBlackListFindServer,
@@ -54,9 +52,9 @@ describe('Test SearchBarClient component', () => {
             dispatchUpdateTabSeleted,
             dispatchShowLoading,
             dispatchGetAlertsByUser,
-
             alertBlackList : Immutable.Map({ keyWordNameNit: '', keywordNameNitClient : 'black_list_alert'})
         }
+        store = mockStore({});
     })
 
     afterEach(() => {
@@ -66,15 +64,47 @@ describe('Test SearchBarClient component', () => {
 
     describe('Test rendering', () => {
 
-        // it('rendering component with redux', () => {
-        //     itRenders(<SearchBarClientRedux store={store} />)
-        // })
+        it('rendering component SearchBarClient', () => {
+            itRenders(<SearchBarClient {...defaultProps} />)
+        })
+        
+        it('rendering component with redux', () => {
+            itRenders(<SearchBarClientRedux store={store} />)
+        })
 
-        // it('rendering component SearchBarClient', () => {
-        //     itRenders(<SearchBarClient {...defaultProps} />)
-        // })
+        it('When closeError is instanced', () => {
+            const wrapper = shallow(<SearchBarClient {...defaultProps} />);
+            wrapper.instance().closeError();
+            expect(wrapper.state().showEr).to.equal(false);
+        })
 
+        it('When handleChangeKeywordClient is instanced', () => {
+            const wrapper = shallow(<SearchBarClient {...defaultProps} />);
+            wrapper.instance().handleChangeKeywordClient({ target: { value: null }});
+            sinon.assert.calledOnce(dispatchChangeKeywordClient);
+        })
+
+        it('When handleChangeKeywordClient is instanced and keyCode is 13', () => {
+            const wrapper = shallow(<SearchBarClient {...defaultProps} />);
+            wrapper.instance().handleChangeKeywordClient({ target: { value: null }, keyCode: 13 });
+            sinon.assert.calledOnce(dispatchChangeKeywordClient);
+        })
+
+        
+        it('When handleClientsFind is instanced', () => {
+            defaultProps.alertBlackList = Immutable.Map({
+                keywordNameNitClient: "",
+            })
+            const wrapper = shallow(<SearchBarClient {...defaultProps} />);
+            wrapper.instance().handleClientsFind();
+            expect(wrapper.state().showEr).to.equal(true);
+        })
+
+        it('When handleChangeKeywordClient is instanced and keyCode is 13 and dispatchBlackListFindServer.resolves is empty', () => {
+            defaultProps.dispatchBlackListFindServer = sinon.stub().resolves({});
+            const wrapper = shallow(<SearchBarClient {...defaultProps} />);
+            wrapper.instance().handleChangeKeywordClient({ target: { value: null }, keyCode: 13 });
+            sinon.assert.calledOnce(dispatchChangeKeywordClient);
+        })
     })
-
-
 })
