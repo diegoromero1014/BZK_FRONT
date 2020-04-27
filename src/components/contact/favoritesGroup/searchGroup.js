@@ -8,43 +8,38 @@ import SweetAlert from '../../sweetalertFocus';
 import { showLoading } from '../../loading/actions';
 import _ from 'lodash';
 
-class SearchGroup extends Component {
+export class SearchGroup extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             showEr: false,
         };
-        this._handleClientsFind = this._handleClientsFind.bind(this);
-        this._handleChangeKeyword = this._handleChangeKeyword.bind(this);
+        this.handleClientsFind = this.handleClientsFind.bind(this);
+        this.handleChangeKeyword = this.handleChangeKeyword.bind(this);
     }
 
-    componentWillMount() {
-        const { login } = this.props;
-        const self = this;
-    }
-
-    _handleChangeKeyword(e) {
-        const { changeKeyword } = this.props;
-        changeKeyword(e.target.value);
+    handleChangeKeyword = e => {
+        const { dispatchChangeKeyword } = this.props;
+        dispatchChangeKeyword(e.target.value);
         if (e.keyCode === 13 || e.which === 13) {
-            this._handleClientsFind(e);
+            this.handleClientsFind(e);
         }
     }
 
-    _handleClientsFind(e) {
-        const { groupFindServer, groupsFavoriteContacts, changePage, showLoading } = this.props;
+    handleClientsFind = () => {
+        const { dispatchGroupFindServer, groupsFavoriteContacts, dispatchChangePage, dispatchShowLoading } = this.props;
         const keywordName = groupsFavoriteContacts.get('keywordName');
         if (keywordName === '' || keywordName === undefined || keywordName === null) {
             this.setState({
                 showEr: true
             });
         } else {
-            showLoading(true, 'Cargando..');
-            groupFindServer(keywordName, 1, NUMBER_RECORDS).then((data) => {
+            dispatchShowLoading(true, 'Cargando..');
+            dispatchGroupFindServer(keywordName, 1, NUMBER_RECORDS).then((data) => {
                 if (_.has(data, 'payload.data.data')) {
-                    showLoading(false, null);
-                    changePage(1);
+                    dispatchShowLoading(false, null);
+                    dispatchChangePage(1);
                 }
             });
         }
@@ -58,10 +53,10 @@ class SearchGroup extends Component {
             <div style={{ marginLeft: '17px' }}>
                 <div className="InputAddOn">
                     <input type="text" style={{ padding: '0px 11px !important' }} placeholder="Buscar por nombre de grupo"
-                        value={keyword} onKeyPress={this._handleChangeKeyword} onChange={this._handleChangeKeyword}
+                        value={keyword} onKeyPress={this.handleChangeKeyword} onChange={this.handleChangeKeyword}
                         className="input-lg input InputAddOn-field" />
                     <button id="searchClients" className="btn" title="Buscar grupo favoritos" type="button"
-                        onClick={this._handleClientsFind} style={{ backgroundColor: "#E0E2E2" }}>
+                        onClick={this.handleClientsFind} style={{ backgroundColor: "#E0E2E2" }}>
                         <i className="search icon" style={{ margin: '0em', fontSize: '1.2em' }} />
                     </button>
                 </div>
@@ -78,11 +73,13 @@ class SearchGroup extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        groupFindServer, changePage, changeKeyword, showLoading
-    }, dispatch);
-}
+const mapDispatchToProps = dispatch => bindActionCreators({
+    dispatchGroupFindServer : groupFindServer,
+    dispatchChangePage : changePage,
+    dispatchChangeKeyword : changeKeyword,
+    dispatchShowLoading : showLoading
+}, dispatch);
+
 
 function mapStateToProps({ groupsFavoriteContacts }, ownerProps) {
     return { groupsFavoriteContacts };
