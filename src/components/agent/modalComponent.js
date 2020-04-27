@@ -76,7 +76,7 @@ class ModalComponentAgent extends Component{
           </Row>
         </div>
     )
-  };
+  }
 }
 
 function mapDispatchToProps(dispatch) {
