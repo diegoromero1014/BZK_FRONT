@@ -47,6 +47,7 @@ describe('Unit test for SearchBarBlackList component', () => {
         redirectUrl = sinon.stub(globalActions, "redirectUrl");
 
         defaultProps = {
+            dispatchChangeKeywordClient,
             dispatchBlackListFindServer,
             dispatchGetAlertsByUser,
             dispatchChangePage,
@@ -100,7 +101,6 @@ describe('Unit test for SearchBarBlackList component', () => {
             wrapper.instance().handleEntityFind();
             expect(wrapper.state().showEr).to.equal(true);
         })
-
 
         it('When handleClientsFind is instanced and keywordNameNit not void', () => {
             defaultProps.alertBlackList = Immutable.Map({
