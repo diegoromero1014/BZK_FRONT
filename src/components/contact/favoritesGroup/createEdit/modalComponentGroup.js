@@ -20,6 +20,7 @@ import {
 
 import { MESSAGE_ERROR, MESSAGE_LOAD_DATA, VALUE_XSS_INVALID } from "../../../../constantsGlobal";
 import { MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP } from '../constants';
+import _ from 'lodash';
 
 var listContact = [];
 const fields = ['contact', 'searchGroup', 'tipoDocumento', 'numeroDocumento'];
@@ -55,6 +56,10 @@ export class ModalComponentGroup extends Component {
             disabled: 'disabled',
             validateExistGroup: false,
         };
+    }
+
+    noop = () => {
+        //
     }
 
     componentWillMount() {
@@ -93,7 +98,7 @@ export class ModalComponentGroup extends Component {
 
     handleKeyValidateExistGroup = e => {
         if (e.keyCode === 13 || e.which === 13) {
-            e.consultclick ? "" : e.preventDefault();
+            e.consultclick ? this.noop() : e.preventDefault();
             this.handleValidateExistGroupSearch();
         }
     }
@@ -283,7 +288,7 @@ export class ModalComponentGroup extends Component {
         this.props.dispatchDeleteContactList(contact.id);
     }
 
-    searchContactForGroup() {
+    searchContactForGroup = () => {
         const { 
             fields: { 
                 tipoDocumento, 
