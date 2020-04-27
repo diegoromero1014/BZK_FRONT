@@ -3,23 +3,22 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid';
 import { bindActionCreators } from 'redux';
 import { changeValueActiveLog, consultValueActiveLog } from '../../actionsGlobal';
-import _ from 'lodash';
 import $ from 'jquery';
 
-class ModalComponentAgent extends Component{
+export class ModalComponentAgent extends Component{
   constructor(props){
     super(props);
     this.state = {
       modalIsOpen: false,
       valueCheck: false
     };
-    this._changeValueActiveTrazas = this._changeValueActiveTrazas.bind(this);
-    this._clickButtonDownloadTraza = this._clickButtonDownloadTraza.bind(this);
+    this.changeValueActiveTrazas = this.changeValueActiveTrazas.bind(this);
+    this.clickButtonDownloadTraza = this.clickButtonDownloadTraza.bind(this);
   }
 
   componentWillMount(){
-    const {consultValueActiveLog} = this.props;
-    consultValueActiveLog().then((data) => {
+    const { dispatchConsultValueActiveLog } = this.props;
+    dispatchConsultValueActiveLog().then((data) => {
       if( data ){
         $('.logs.checkbox').checkbox('set checked');
       }
@@ -29,23 +28,24 @@ class ModalComponentAgent extends Component{
     });
   }
 
-  _changeValueActiveTrazas(){
-    const {changeValueActiveLog} = this.props;
+  changeValueActiveTrazas = () => {
+    const { dispatchChangeValueActiveLog } = this.props;
     if( this.state.valueCheck ){
       $('.logs.checkbox').checkbox('set unchecked');
-      changeValueActiveLog(false);
+      dispatchChangeValueActiveLog(false);
       this.setState({
         valueCheck: false
       });
     } else {
-      changeValueActiveLog(true);
+      dispatchChangeValueActiveLog(true);
       this.setState({
         valueCheck: true
       });
     }
   }
 
-  _clickButtonDownloadTraza(){
+  clickButtonDownloadTraza = () => {
+    // Noop
   }
 
   render(){
@@ -57,7 +57,7 @@ class ModalComponentAgent extends Component{
               <div className="ui logs toggle checkbox"
                 ref={checkbox => {
                   $(checkbox).checkbox({
-                    onChange: () => this._changeValueActiveTrazas()
+                    onChange: () => this.changeValueActiveTrazas()
                   });
                 }}
               >
@@ -69,7 +69,7 @@ class ModalComponentAgent extends Component{
           </Row>
           <Row>
             <Col xs={12} md={12} lg={12} style={{textAlign: 'center'}}>
-              <button className="btn" type="submit" onClick={this._clickButtonDownloadTraza}>
+              <button className="btn" type="submit" onClick={this.clickButtonDownloadTraza}>
                 <span style={{color: "#FFFFFF", padding:"10px"}}>Descargar traza</span>
               </button>
             </Col>
@@ -79,14 +79,14 @@ class ModalComponentAgent extends Component{
   };
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = dispatch => {
   return bindActionCreators({
-    changeValueActiveLog,
-    consultValueActiveLog
+    dispatchChangeValueActiveLog: changeValueActiveLog,
+    dispatchConsultValueActiveLog: consultValueActiveLog
   }, dispatch);
 }
 
-function mapStateToProps({clientInformacion}, ownerProps) {
+const mapStateToProps = ({clientInformacion}) => {
   return {
     clientInformacion
   };
