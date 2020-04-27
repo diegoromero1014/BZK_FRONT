@@ -10,7 +10,6 @@ import { redirectUrl } from "../../../globalComponents/actions";
 import { changeActiveItemMenu } from '../../../menu/actions';
 import { mapDataGrid } from "../../../alertPortfolioExpirtation/clientPortfolioExpirationUtilities";
 
-
 export class AlertPortfolioExpiration extends Component {
 
     constructor(props) {

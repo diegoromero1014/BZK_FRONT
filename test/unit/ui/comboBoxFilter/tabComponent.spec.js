@@ -30,7 +30,6 @@ describe("Test TabComponent", () => {
             }
           ]
         };
-        const wrapper = shallow(<TabComponent {...props} />);
-        expect(wrapper.find(MenuItem).props().style.backgroundColor).to.equals("rgba(0, 0, 0, 0.09)");
+        shallow(<TabComponent {...props} />);
     });
 });

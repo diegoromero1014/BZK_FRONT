@@ -5,7 +5,7 @@ import Table from "../../../table";
 import TableBuilder from "../../../table/TableBuilder";
 import { COLUMNS_OUTDATED_CONTACTS, MAX_ROWS } from './constants';
 import { redirectUrl } from "../../../globalComponents/actions";
-import { getOutdatedContacts } from '../../actions';
+import { getOutdatedContacts } from './actions';
 import { changeActiveItemMenu } from '../../../menu/actions';
 import { MODULE_CONTACTS } from '../../../../constantsGlobal';
 

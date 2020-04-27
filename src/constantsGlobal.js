@@ -72,6 +72,7 @@ export const VALUE_XSS_INVALID = "La información ingresada contiene caracteres 
 export const DATE_FORMAT = "DD/MM/YYYY";
 export const DATETIME_FORMAT = "DD/MM/YYYY hh:mm a";
 export const REVIEWED_DATE_FORMAT = "DD MMM YYYY";
+export const REVIEWED_DATE_FORMAT_HOUR = "DD MMM YYYY - hh:mm a";
 export const ONLY_POSITIVE_INTEGER = 1;
 export const ALLOWS_NEGATIVE_INTEGER = 2;
 export const MESSAGE_ERROR = "error";
@@ -132,6 +133,7 @@ export const MODULE_TRANSACTIONAL = "Mis Informes";
 export const MODULE_RISK_GROUP = "Grupos de riesgo";
 export const MODULE_LINKING_REQUESTS = "Solicitudes de vinculación";
 export const MODULE_STUDY_CREDIT = "Estudio de crédito";
+export const MODULE_PREVISIT_REPORT = "Informe de previsita";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;
