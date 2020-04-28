@@ -14,6 +14,8 @@ let dispatchShowLoading;
 let dispatchGetGroupForId;
 let dispatchGetListContactGroupForId;
 let dispatchSwtShowMessage;
+let dispatchGetValidateExistGroup;
+let dispatchSaveNameGroup;
 
 let store;
 const middlewares = [thunk];
@@ -29,9 +31,11 @@ describe('Test ModalComponentGroup', () => {
         dispatchGetGroupForId = sinon.fake();
         dispatchGetListContactGroupForId = sinon.stub().resolves({});
         dispatchSwtShowMessage = sinon.fake();
+        dispatchGetValidateExistGroup = sinon.stub().resolves({});
+        dispatchSaveNameGroup = sinon.fake();
         defaultProps = {
             fields: {
-                searchGroup: { value: null, onChange: sinon.fake() },
+                searchGroup: { value: 'hola', onChange: sinon.fake() },
                 contact: { value: null }
             },
             resetForm,
@@ -39,14 +43,17 @@ describe('Test ModalComponentGroup', () => {
             dispatchClearContactName,
             groupsFavoriteContacts: Immutable.Map({
                 group: Immutable.Map({
-                    listContact: []
+                    listContact: [],
+                    name: null
                 })
             }),
             groupId: null,
             dispatchShowLoading,
             dispatchGetGroupForId,
             dispatchGetListContactGroupForId,
-            dispatchSwtShowMessage
+            dispatchSwtShowMessage,
+            dispatchGetValidateExistGroup,
+            dispatchSaveNameGroup
         };
         store = mockStore({});
     })
@@ -88,12 +95,37 @@ describe('Test ModalComponentGroup', () => {
     it('When handleKeyValidateExistGroup is instanced', () => {
         const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
         wrapper.instance().handleKeyValidateExistGroup({ keyCode: null });
-    })
-    
-    it('When handleKeyValidateExistGroup is instanced and keyCode is 13', () => {
-        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
         wrapper.instance().handleKeyValidateExistGroup({ keyCode: 13, preventDefault: sinon.fake() });
         sinon.assert.calledOnce(dispatchShowLoading);
         sinon.assert.calledOnce(dispatchSwtShowMessage);
+        wrapper.instance().handleKeyValidateExistGroup({ keyCode: 13, preventDefault: sinon.fake(), consultclick: true });
+    })
+    
+    it('When handleValidateExistGroup is instanced', () => {
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().handleValidateExistGroup();
+        sinon.assert.calledOnce(dispatchShowLoading);
+        sinon.assert.calledOnce(dispatchSwtShowMessage);
+    })
+
+    it('When handleValidateExistGroup is instanced and searchGroup has value', () => {
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().props.fields.searchGroup.value = 'any';
+        wrapper.instance().handleValidateExistGroup();
+        sinon.assert.calledOnce(dispatchGetValidateExistGroup);
+    })
+
+    it('When handleValidateExistGroup is instanced and dispatchGetValidateExistGroup is resolved', () => {
+        defaultProps.dispatchGetValidateExistGroup = sinon.stub().resolves({
+            payload: {
+                data: {
+                    data: 'any'
+                }
+            }
+        })
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().props.fields.searchGroup.value = 'any';
+        wrapper.instance().handleValidateExistGroup();
+        sinon.assert.calledOnce(wrapper.instance().props.dispatchGetValidateExistGroup);
     })
 })

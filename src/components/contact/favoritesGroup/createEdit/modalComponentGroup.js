@@ -14,7 +14,7 @@ import { showLoading } from "../../../loading/actions";
 import { shorterStringValue, xssValidation } from "../../../../actionsGlobal";
 import {
     addContactList, clearContactName, clearFilterGroup, deleteContactList,
-    getGroupForId, getListContactGroupForId, getValidateExistGroup, groupFindServer,
+    getGroupForId, getListContactGroupForId, getValidateExistGroup,
     resetModal, saveGroupFavoriteContacts, saveNameGroup, searchContactForGroup
 } from "../actions";
 
@@ -46,8 +46,6 @@ export class ModalComponentGroup extends Component {
         this.updateKeyValueContact = this.updateKeyValueContact.bind(this);
         this.state = {
             modalIsOpen: false,
-            visibleMessage: 'block',
-            visibleTable: "none",
             visibleNameContact: "none",
             searchContact: "none",
             createGroup: true,
@@ -55,6 +53,8 @@ export class ModalComponentGroup extends Component {
             disableSave: 'none',
             disabled: 'disabled',
             validateExistGroup: false,
+            visibleMessage: 'block',
+            visibleTable: 'none'
         };
     }
 
@@ -375,20 +375,10 @@ export class ModalComponentGroup extends Component {
 
     render() {
         let { fields: { contact, searchGroup }, groupsFavoriteContacts } = this.props;
-        let { visibleMessage, visibleTable } = this.state;
+                
         const data = groupsFavoriteContacts.get('group').get('listContact');
-        let countFilter = _.size(data);
-        if (countFilter !== 0) {
-            visibleTable = 'block';
-            visibleMessage = 'none';
-        } else {
-            visibleTable = 'none';
-            visibleMessage = 'block';
-        }
-        var typeCursor = "pointer";
-        if (this.state.disabled === "") {
-            typeCursor = "noDrop";
-        }
+        const countFilter = _.size(data);
+
         return (
             <div>
                 <div className="modalBt4-body modal-body"
@@ -439,8 +429,15 @@ export class ModalComponentGroup extends Component {
                                 </dd>
                             </Col>
                             <Col xs={12} md={2} lg={2}>
-                                <button className="btn btn-primary" type="button" onClick={this.searchContactForGroup}
-                                    disabled={this.state.disabled} style={{ cursor: typeCursor, marginTop: '20px' }}>
+                                <button 
+                                    className="btn btn-primary" 
+                                    type="button" 
+                                    onClick={this.searchContactForGroup}
+                                    disabled={this.state.disabled} 
+                                    style={{ 
+                                        cursor: this.state.disabled === "" ? "noDrop" : "pointer", 
+                                        marginTop: '20px' 
+                                    }}>
                                     <i className="plus icon"></i> Agregar
                                 </button>
                             </Col>
@@ -453,7 +450,7 @@ export class ModalComponentGroup extends Component {
                             </div>
                         </Row>
                         <Row>
-                            <Col xs={12} sm={12} md={12} lg={12} style={{ display: visibleTable }}>
+                            <Col xs={12} sm={12} md={12} lg={12} style={{ display: countFilter !== 0 ? 'block' : 'none' }}>
                                 <div className="horizontal-scroll-wrapper"
                                     style={{ overflow: 'scroll', background: '#fff', maxHeight: "200px !important" }}>
                                     <table className="ui striped table">
@@ -471,7 +468,7 @@ export class ModalComponentGroup extends Component {
                                     </table>
                                 </div>
                             </Col>
-                            <Col xs={12} sm={12} md={12} lg={12} style={{ display: visibleMessage }}>
+                            <Col xs={12} sm={12} md={12} lg={12} style={{ display:  countFilter !== 0 ? 'none' : 'block' }}>
                                 <div
                                     style={{ padding: "15px", fontSize: '15px', textAlign: 'center', width: '100%' }}>
                                     No se han adicionado contactos
@@ -483,7 +480,7 @@ export class ModalComponentGroup extends Component {
                 </div>
                 <div className="modalBt4-footer modal-footer">
                     <button type="button" onClick={this.handleValidateExistGroup}
-                        disabled={this.state.disabled} style={{ cursor: typeCursor }}
+                        disabled={this.state.disabled} style={{ cursor: this.state.disabled === "" ? "noDrop" : "pointer" }}
                         className="btn btn-primary modal-button-edit">Guardar
                     </button>
                 </div>
