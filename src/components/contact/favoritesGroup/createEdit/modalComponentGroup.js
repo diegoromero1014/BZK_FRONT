@@ -13,35 +13,36 @@ import { swtShowMessage } from "../../../sweetAlertMessages/actions";
 import { showLoading } from "../../../loading/actions";
 import { shorterStringValue, xssValidation } from "../../../../actionsGlobal";
 import {
-    addContactList, changeKeywordNameNewGroup, clearContactName, clearFilterGroup, deleteContactList,
+    addContactList, clearContactName, clearFilterGroup, deleteContactList,
     getGroupForId, getListContactGroupForId, getValidateExistGroup, groupFindServer,
     resetModal, saveGroupFavoriteContacts, saveNameGroup, searchContactForGroup
 } from "../actions";
 
 import { MESSAGE_ERROR, MESSAGE_LOAD_DATA, VALUE_XSS_INVALID } from "../../../../constantsGlobal";
 import { MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP } from '../constants';
+import _ from 'lodash';
 
 var listContact = [];
 const fields = ['contact', 'searchGroup', 'tipoDocumento', 'numeroDocumento'];
 var thisForm;
 
-class ModalComponentGroup extends Component {
+export class ModalComponentGroup extends Component {
 
     constructor(props) {
         super(props);
         thisForm = this;
         this.closeModal = this.closeModal.bind(this);
         this.openModal = this.openModal.bind(this);
-        this._renderCellView = this._renderCellView.bind(this);
-        this._handleValidateExistGroup = this._handleValidateExistGroup.bind(this);
-        this._handleValidateExistGroupSearch = this._handleValidateExistGroupSearch.bind(this);
-        this._searchContactForGroup = this._searchContactForGroup.bind(this);
-        this._onClickLimpiar = this._onClickLimpiar.bind(this);
-        this._addContactList = this._addContactList.bind(this);
-        this._deleteContactList = this._deleteContactList.bind(this);
-        this._onClickLimpiarNameGroup = this._onClickLimpiarNameGroup.bind(this);
-        this._saveGroupFavoriteContacts = this._saveGroupFavoriteContacts.bind(this);
-        this._handleKeyValidateExistGroup = this._handleKeyValidateExistGroup.bind(this);
+        this.renderCellView = this.renderCellView.bind(this);
+        this.handleValidateExistGroup = this.handleValidateExistGroup.bind(this);
+        this.handleValidateExistGroupSearch = this.handleValidateExistGroupSearch.bind(this);
+        this.searchContactForGroup = this.searchContactForGroup.bind(this);
+        this.onClickLimpiar = this.onClickLimpiar.bind(this);
+        this.addContactList = this.addContactList.bind(this);
+        this.deleteContactList = this.deleteContactList.bind(this);
+        this.onClickLimpiarNameGroup = this.onClickLimpiarNameGroup.bind(this);
+        this.saveGroupFavoriteContacts = this.saveGroupFavoriteContacts.bind(this);
+        this.handleKeyValidateExistGroup = this.handleKeyValidateExistGroup.bind(this);
         this.updateKeyValueContact = this.updateKeyValueContact.bind(this);
         this.state = {
             modalIsOpen: false,
@@ -57,174 +58,219 @@ class ModalComponentGroup extends Component {
         };
     }
 
+    noop = () => {
+        //
+    }
+
     componentWillMount() {
-        const { groupId, getGroupForId,
-            getListContactGroupForId, clearContactName, resetForm,
-            resetModal, fields: { searchGroup }, showLoading, swtShowMessage
+        const { 
+            groupId, 
+            dispatchGetGroupForId, 
+            dispatchGetListContactGroupForId, 
+            dispatchClearContactName, 
+            resetForm, 
+            dispatchResetModal, 
+            fields: { 
+                searchGroup 
+            }, 
+            dispatchShowLoading, 
+            dispatchSwtShowMessage 
         } = this.props;
         resetForm();
-        resetModal();
+        dispatchResetModal();
         if (groupId != undefined) {
-            showLoading(true, MESSAGE_LOAD_DATA);
-            getGroupForId(groupId);
-            getListContactGroupForId(groupId).then((data) => {
+            dispatchShowLoading(true, MESSAGE_LOAD_DATA);
+            dispatchGetGroupForId(groupId);
+            dispatchGetListContactGroupForId(groupId).then((data) => {
                 if (!_.isEqual(_.get(data, 'payload.data.status'), 200)) {
-                    swtShowMessage('error', 'Error servidor', 'Lo sentimos, ocurrió un error en el servidor');
+                    dispatchSwtShowMessage('error', 'Error servidor', 'Lo sentimos, ocurrió un error en el servidor');
                 }
-                showLoading(false, '');
+                dispatchShowLoading(false, '');
             });
             this.setState({ disableName: '', disabled: '' });
         } else {
             searchGroup.value = '';
-            clearContactName();
+            dispatchClearContactName();
             resetForm();
-            resetModal();
+            dispatchResetModal();
         }
     }
 
-    _handleKeyValidateExistGroup(e) {
+    handleKeyValidateExistGroup = e => {
         if (e.keyCode === 13 || e.which === 13) {
-            e.consultclick ? "" : e.preventDefault();
-            this._handleValidateExistGroupSearch();
+            e.consultclick ? this.noop() : e.preventDefault();
+            this.handleValidateExistGroupSearch();
         }
     }
 
-    _handleValidateExistGroup() {
-        const { showLoading, fields: { searchGroup }, getValidateExistGroup, swtShowMessage, resetForm, resetModal, saveNameGroup, groupsFavoriteContacts } = this.props;
+    handleValidateExistGroup = () => {
+        const { 
+            dispatchShowLoading, 
+            fields: { 
+                searchGroup 
+            }, 
+            dispatchGetValidateExistGroup, 
+            dispatchSwtShowMessage, 
+            resetForm, 
+            dispatchResetModal, 
+            dispatchSaveNameGroup, 
+            groupsFavoriteContacts 
+        } = this.props;
         searchGroup.onChange(searchGroup.value.trim());
         if (!_.isEqual(searchGroup.value.trim(), '')) {
-            getValidateExistGroup(searchGroup.value).then((data) => {
+            dispatchGetValidateExistGroup(searchGroup.value).then((data) => {
                 const groupSearch = _.get(data.payload, 'data.data', null);
                 if (!_.isNull(groupSearch)) {
                     if (groupsFavoriteContacts.get('group').get('id') == groupSearch.id) {
-                        saveNameGroup(searchGroup.value);
-                        thisForm._saveGroupFavoriteContacts();
+                        dispatchSaveNameGroup(searchGroup.value);
+                        thisForm.saveGroupFavoriteContacts();
                     } else {
                         if (groupsFavoriteContacts.get('group').get('id') !== '') {
-                            swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
-                            saveNameGroup(searchGroup.value);
+                            dispatchSwtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                            dispatchSaveNameGroup(searchGroup.value);
                         } else {
-                            swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                            dispatchSwtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
                             resetForm();
-                            resetModal();
+                            dispatchResetModal();
                             this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
                         }
-                        showLoading(false, '');
+                        dispatchShowLoading(false, '');
                     }
                 } else {
                     this.setState({ disableName: '', disabled: '', validateExistGroup: true });
-                    saveNameGroup(searchGroup.value);
-                    thisForm._saveGroupFavoriteContacts();
+                    dispatchSaveNameGroup(searchGroup.value);
+                    thisForm.saveGroupFavoriteContacts();
                 }
             });
 
         } else {
-            showLoading(false, '');
-            swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no puede estar vacio');
+            dispatchShowLoading(false, '');
+            dispatchSwtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no puede estar vacio');
 
         }
     }
 
-    _handleValidateExistGroupSearch() {
-        const { showLoading, fields: { searchGroup }, getValidateExistGroup, swtShowMessage, resetForm, resetModal, saveNameGroup, groupsFavoriteContacts } = this.props;
+    handleValidateExistGroupSearch = () => {
+        const { 
+            dispatchShowLoading, 
+            fields: { 
+                searchGroup 
+            }, 
+            dispatchGetValidateExistGroup, 
+            dispatchSwtShowMessage, 
+            resetForm, 
+            dispatchResetModal, 
+            dispatchSaveNameGroup, 
+            groupsFavoriteContacts 
+        } = this.props;
         searchGroup.onChange(searchGroup.value.trim());
         if (!_.isEqual(searchGroup.value.trim(), '')) {
             if (xssValidation(searchGroup.value)) {
-                swtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
-                showLoading(false, '');
+                dispatchSwtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
+                dispatchShowLoading(false, '');
             }
             else {
-                getValidateExistGroup(searchGroup.value).then((data) => {
+                dispatchGetValidateExistGroup(searchGroup.value).then((data) => {
                     const groupSearch = _.get(data.payload, 'data.data', null);
                     if(data.payload.data.status == 200){
                     if (!_.isNull(groupSearch)) {
                         if (groupsFavoriteContacts.get('group').get('id') == groupSearch.id) {
-                            saveNameGroup(searchGroup.value);
-                            showLoading(false, '');
+                            dispatchSaveNameGroup(searchGroup.value);
+                            dispatchShowLoading(false, '');
                         } else {
                             if (groupsFavoriteContacts.get('group').get('id') !== '') {
-                                swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
-                                saveNameGroup(searchGroup.value);
+                                dispatchSwtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                                dispatchSaveNameGroup(searchGroup.value);
                             } else {
-                                swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                                dispatchSwtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
                                 resetForm();
-                                resetModal();
+                                dispatchResetModal();
                                 this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
                             }
-                            showLoading(false, '');
+                            dispatchShowLoading(false, '');
                         }
                     } else {
                         if (groupsFavoriteContacts.get('group').get('id') !== '') {
-                            saveNameGroup(searchGroup.value);
-                            showLoading(false, '');
+                            dispatchSaveNameGroup(searchGroup.value);
+                            dispatchShowLoading(false, '');
                         } else {
                             this.setState({ disableName: '', disabled: '', validateExistGroup: true });
-                            saveNameGroup(searchGroup.value);
-                            showLoading(false, '');
+                            dispatchSaveNameGroup(searchGroup.value);
+                            dispatchShowLoading(false, '');
                         }
                     }
                 } else if (data.payload.data.status == 422) {
-                    swtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
-                    showLoading(false, '');
+                    dispatchSwtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
+                    dispatchShowLoading(false, '');
                 }else {
-                    swtShowMessage(MESSAGE_ERROR, 'Error en el servidor', 'Ocurrió un error en el servidor');
-                    showLoading(false, '');
+                    dispatchSwtShowMessage(MESSAGE_ERROR, 'Error en el servidor', 'Ocurrió un error en el servidor');
+                    dispatchShowLoading(false, '');
                 }
                 });
             }
 
 
         } else {
-            showLoading(false, '');
-            swtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no puede estar vacio');
+            dispatchShowLoading(false, '');
+            dispatchSwtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no puede estar vacio');
         }
     }
 
-    _saveGroupFavoriteContacts() {
-        const { showLoading, groupsFavoriteContacts, clearFilterGroup, saveGroupFavoriteContacts, swtShowMessage, keyWordName, pageNum } = this.props;
+    saveGroupFavoriteContacts = () => {
+        const { dispatchShowLoading, groupsFavoriteContacts, dispatchClearFilterGroup, dispatchSaveGroupFavoriteContacts, dispatchSwtShowMessage } = this.props;
         const group = groupsFavoriteContacts.get('group');
         const list = groupsFavoriteContacts.get('group').get('listContact');
         if (_.size(list) > 1) {
-            saveGroupFavoriteContacts(group.toJSON()).then((data) => {
+            dispatchSaveGroupFavoriteContacts(group.toJSON()).then((data) => {
                 if (data.payload.data.status == 200) {
-                    swtShowMessage('success', 'Guardar', 'Señor usuario, se ha guardado con éxito.');
+                    dispatchSwtShowMessage('success', 'Guardar', 'Señor usuario, se ha guardado con éxito.');
                     thisForm.closeModal();
-                    clearFilterGroup();
+                    dispatchClearFilterGroup();
                 } else {
-                    swtShowMessage('Error', 'Guardar', 'Señor usuario, se ha producido un error en el servidor.');
+                    dispatchSwtShowMessage('Error', 'Guardar', 'Señor usuario, se ha producido un error en el servidor.');
                 }
             });
         } else {
-            swtShowMessage('error', 'Guardar', 'Señor usuario, debe agregar por lo menos dos contactos');
+            dispatchSwtShowMessage('error', 'Guardar', 'Señor usuario, debe agregar por lo menos dos contactos');
         }
-        showLoading(false, '');
+        dispatchShowLoading(false, '');
     }
 
-    _addContactList() {
-        const { addContactList, clearContactName, groupsFavoriteContacts, resetForm, swtShowMessage, fields: { numeroDocumento, tipoDocumento, contact } } = this.props;
+    addContactList = () => {
+        const { 
+            dispatchAddContactList, 
+            dispatchClearContactName, 
+            groupsFavoriteContacts,
+            dispatchSwtShowMessage, 
+            fields: { 
+                numeroDocumento, 
+                tipoDocumento, 
+                contact 
+            } 
+        } = this.props;
         const contactReduce = groupsFavoriteContacts.get('contact');
         const list = groupsFavoriteContacts.get('group').get('listContact');
         const exist = _.findIndex(list, (item) => _.isEqual(item.id, contactReduce.id));
         if (exist >= 0) {
-            swtShowMessage('error', 'Contacto duplicado', 'Señor usuario, el contacto ya se encuentra en el grupo');
+            dispatchSwtShowMessage('error', 'Contacto duplicado', 'Señor usuario, el contacto ya se encuentra en el grupo');
         } else {
             if (_.size(list) === MAXIMUM_NUMBER_OF_CONTACTS_FOR_GROUP) {
-                swtShowMessage('error', 'Contactos máximos', 'Señor usuario, el grupo tiene la máxima cantidad de contactos');
+                dispatchSwtShowMessage('error', 'Contactos máximos', 'Señor usuario, el grupo tiene la máxima cantidad de contactos');
             } else {
                 if (!_.isNull(_.get(contactReduce, 'emailAddress', null))) {
-                    addContactList();
+                    dispatchAddContactList();
                 } else {
-                    swtShowMessage('error', 'Contacto', 'Señor usuario, el contacto no tiene correo electrónico');
+                    dispatchSwtShowMessage('error', 'Contacto', 'Señor usuario, el contacto no tiene correo electrónico');
                 }
             }
-            clearContactName();
+            dispatchClearContactName();
             contact.onChange('');
             numeroDocumento.onChange('');
             tipoDocumento.onChange('');
         }
     }
 
-    _renderCellView(contact, idx) {
+    renderCellView = (contact, idx) => {
         const message = "Señor usuario ¿está seguro que desea eliminar el contacto ";
         return <tr key={idx}>
             <td>{contact.document}</td>
@@ -232,45 +278,52 @@ class ModalComponentGroup extends Component {
             <td>{contact.email}</td>
             <td className="collapsing">
                 <ButtonDeleteLocalComponent key={contact.id} message={`${message} ${contact.completeName}?`} typeAction="icon"
-                    fn={this._deleteContactList} args={[contact]} />
+                    fn={this.deleteContactList} args={[contact]} />
             </td>
         </tr>
 
     }
 
-    _deleteContactList(contact) {
-        this.props.deleteContactList(contact.id);
+    deleteContactList = contact => {
+        this.props.dispatchDeleteContactList(contact.id);
     }
 
-    _searchContactForGroup() {
-        const { fields: { tipoDocumento, numeroDocumento, contact }, swtShowMessage, searchContactForGroup } = this.props;
+    searchContactForGroup = () => {
+        const { 
+            fields: { 
+                tipoDocumento, 
+                numeroDocumento 
+            }, 
+            dispatchSwtShowMessage, 
+            dispatchSearchContactForGroup 
+        } = this.props;
         if (!_.isEqual(numeroDocumento.value.trim(), '') && !_.isEqual(tipoDocumento.value, '')) {
-            searchContactForGroup(tipoDocumento.value, numeroDocumento.value, '').then((data) => {
-                thisForm._addContactList();
+            dispatchSearchContactForGroup(tipoDocumento.value, numeroDocumento.value, '').then((data) => {
+                thisForm.addContactList();
             });
         } else {
-            swtShowMessage('error', 'Campos obligatorios', 'Señor usuario, para agregar un contacto debe ingresar los campos obligatorios.');
+            dispatchSwtShowMessage('error', 'Campos obligatorios', 'Señor usuario, para agregar un contacto debe ingresar los campos obligatorios.');
         }
     }
 
-    _onClickLimpiarNameGroup() {
-        const { resetForm, resetModal } = this.props;
+    onClickLimpiarNameGroup = () => {
+        const { resetForm, dispatchResetModal } = this.props;
         resetForm();
-        resetModal();
+        dispatchResetModal();
         this.setState({ disableName: '', disabled: 'disabled' });
     }
 
-    _onClickLimpiar() {
-        const { resetForm, clearContactName } = this.props;
+    onClickLimpiar = () => {
+        const { resetForm, dispatchClearContactName } = this.props;
         resetForm();
-        clearContactName();
+        dispatchClearContactName();
     }
 
-    openModal() {
+    openModal = () => {
         this.setState({ modalIsOpen: true });
     }
 
-    closeModal() {
+    closeModal = () => {
         this.setState({ modalIsOpen: false });
         $('.remove.icon.modal-icon-close').click();
     }
@@ -282,13 +335,13 @@ class ModalComponentGroup extends Component {
         });
     }
 
-    updateKeyValueContact(e) {
-        const { fields: { contact, tipoDocumento, numeroDocumento }, swtShowMessage, contactsFindServer } = this.props;
+    updateKeyValueContact = e => {
+        const { fields: { contact, tipoDocumento, numeroDocumento }, dispatchSwtShowMessage, dispatchContactsFindServer } = this.props;
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
             e.consultclick ? "" : e.preventDefault();
             if (contact.value !== "" && contact.value !== null && contact.value !== undefined && contact.value.length >= 3) {
                 $('.ui.search.contactSearch').toggleClass('loading');
-                contactsFindServer(contact.value, false, 0, -1).then((data) => {
+                dispatchContactsFindServer(contact.value, false, 0, -1).then((data) => {
                     listContact = _.get(data, 'payload', []);
                     listContact = listContact.data.data.listContact;
                     $('.ui.search.contactSearch')
@@ -314,15 +367,15 @@ class ModalComponentGroup extends Component {
                     }, 150);
                 });
             } else {
-                swtShowMessage('error', 'Error de búsqueda', 'Señor usuario, debe ingresar por lo menos tres caracteres.');
+                dispatchSwtShowMessage('error', 'Error de búsqueda', 'Señor usuario, debe ingresar por lo menos tres caracteres.');
             }
         }
     }
 
 
     render() {
-        let { groupId, fields: { contact, searchGroup }, groupsFavoriteContacts, selectsReducer } = this.props;
-        let { createGroup, searchContact, visibleMessage, visibleTable, visibleNameContact } = this.state;
+        let { fields: { contact, searchGroup }, groupsFavoriteContacts } = this.props;
+        let { visibleMessage, visibleTable } = this.state;
         const data = groupsFavoriteContacts.get('group').get('listContact');
         let countFilter = _.size(data);
         if (countFilter !== 0) {
@@ -350,15 +403,15 @@ class ModalComponentGroup extends Component {
                                         disabled={this.state.disableName}
                                         {...searchGroup}
                                         maxlength="150"
-                                        onKeyPress={this._handleKeyValidateExistGroup}
+                                        onKeyPress={this.handleKeyValidateExistGroup}
                                         className="input-lg input InputAddOn-field" />
-                                    <button onClick={this._handleValidateExistGroupSearch}
+                                    <button onClick={this.handleValidateExistGroupSearch}
                                         className="button InputAddOn-item">
                                         <i className="search icon" />
                                     </button>
 
                                     <button type="button" className="btn btn-primary" style={{ marginLeft: "20px" }}
-                                        onClick={this._onClickLimpiarNameGroup}>
+                                        onClick={this.onClickLimpiarNameGroup}>
                                         <i style={{ color: "white", margin: '0em', fontSize: '1.2em' }}
                                             className="erase icon" />
                                     </button>
@@ -386,7 +439,7 @@ class ModalComponentGroup extends Component {
                                 </dd>
                             </Col>
                             <Col xs={12} md={2} lg={2}>
-                                <button className="btn btn-primary" type="button" onClick={this._searchContactForGroup}
+                                <button className="btn btn-primary" type="button" onClick={this.searchContactForGroup}
                                     disabled={this.state.disabled} style={{ cursor: typeCursor, marginTop: '20px' }}>
                                     <i className="plus icon"></i> Agregar
                                 </button>
@@ -413,7 +466,7 @@ class ModalComponentGroup extends Component {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {data.map(this._renderCellView)}
+                                            {data.map(this.renderCellView)}
                                         </tbody>
                                     </table>
                                 </div>
@@ -429,7 +482,7 @@ class ModalComponentGroup extends Component {
 
                 </div>
                 <div className="modalBt4-footer modal-footer">
-                    <button type="button" onClick={this._handleValidateExistGroup}
+                    <button type="button" onClick={this.handleValidateExistGroup}
                         disabled={this.state.disabled} style={{ cursor: typeCursor }}
                         className="btn btn-primary modal-button-edit">Guardar
                     </button>
@@ -440,27 +493,26 @@ class ModalComponentGroup extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = dispatch => {
     return bindActionCreators({
-        getGroupForId,
-        changeKeywordNameNewGroup,
-        getListContactGroupForId,
-        getValidateExistGroup,
-        searchContactForGroup,
-        swtShowMessage,
-        addContactList,
-        clearContactName,
-        deleteContactList,
-        saveGroupFavoriteContacts,
-        resetModal,
-        groupFindServer,
-        contactsFindServer,
-        saveNameGroup,
-        clearFilterGroup, showLoading
+        dispatchGetGroupForId: getGroupForId,
+        dispatchGetListContactGroupForId: getListContactGroupForId,
+        dispatchGetValidateExistGroup: getValidateExistGroup,
+        dispatchSearchContactForGroup: searchContactForGroup,
+        dispatchSwtShowMessage: swtShowMessage,
+        dispatchAddContactList: addContactList,
+        dispatchClearContactName: clearContactName,
+        dispatchDeleteContactList: deleteContactList,
+        dispatchSaveGroupFavoriteContacts: saveGroupFavoriteContacts,
+        dispatchResetModal: resetModal,
+        dispatchContactsFindServer: contactsFindServer,
+        dispatchSaveNameGroup: saveNameGroup,
+        dispatchClearFilterGroup: clearFilterGroup, 
+        dispatchShowLoading: showLoading
     }, dispatch);
 }
 
-function mapStateToProps({ groupsFavoriteContacts, selectsReducer }, ownerProps) {
+const mapStateToProps = ({ groupsFavoriteContacts, selectsReducer }) => {
     const keyWordName = groupsFavoriteContacts.get('pageNum');
     const pageNum = groupsFavoriteContacts.get('keywordName');
     const searchGroup = groupsFavoriteContacts.get('group').get('name').trim();
