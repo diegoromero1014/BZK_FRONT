@@ -128,4 +128,36 @@ describe('Test ModalComponentGroup', () => {
         wrapper.instance().handleValidateExistGroup();
         sinon.assert.calledOnce(wrapper.instance().props.dispatchGetValidateExistGroup);
     })
+
+
+
+
+
+
+
+
+
+
+    // mateo 
+    it('updateKeyValueContact instance', () => {
+        defaultProps.fields = {
+            searchGroup: { value: 'hola', onChange: sinon.fake() },
+            contact : {
+                value : "test"
+            },
+            tipoDocumento : "",
+            numeroDocumento : "",
+            dispatchContactsFindServer : sinon.fake()
+        }
+
+        const e = {
+            keyCode : 13,
+            which : 13,
+            preventDefault : sinon.fake()
+        }
+
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().updateKeyValueContact(e);
+
+    })
 })

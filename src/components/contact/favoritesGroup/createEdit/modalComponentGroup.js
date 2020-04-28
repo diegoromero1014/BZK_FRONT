@@ -338,7 +338,7 @@ export class ModalComponentGroup extends Component {
     updateKeyValueContact = e => {
         const { fields: { contact, tipoDocumento, numeroDocumento }, dispatchSwtShowMessage, dispatchContactsFindServer } = this.props;
         if (e.keyCode === 13 || e.which === 13 || e.which === 1) {
-            e.consultclick ? "" : e.preventDefault();
+            e.consultclick ? this.noop() : e.preventDefault();
             if (contact.value !== "" && contact.value !== null && contact.value !== undefined && contact.value.length >= 3) {
                 $('.ui.search.contactSearch').toggleClass('loading');
                 dispatchContactsFindServer(contact.value, false, 0, -1).then((data) => {
