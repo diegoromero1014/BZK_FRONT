@@ -18,6 +18,8 @@ let dispatchGetValidateExistGroup;
 let dispatchSaveNameGroup;
 let dispatchContactsFindServer;
 let dispatchSearchContactForGroup;
+let dispatchSaveGroupFavoriteContacts;
+let dispatchClearFilterGroup;
 
 let store;
 const middlewares = [thunk];
@@ -45,6 +47,8 @@ describe('Test ModalComponentGroup', () => {
             }
         });
         dispatchSaveNameGroup = sinon.fake();
+        dispatchSaveGroupFavoriteContacts = sinon.stub().resolves({});
+        dispatchClearFilterGroup = sinon.fake();
         defaultProps = {
             fields: {
                 searchGroup: { value: 'hola', onChange: sinon.fake() },
@@ -67,7 +71,9 @@ describe('Test ModalComponentGroup', () => {
             dispatchSwtShowMessage,
             dispatchGetValidateExistGroup,
             dispatchSaveNameGroup,
-            dispatchContactsFindServer
+            dispatchContactsFindServer,
+            dispatchSaveGroupFavoriteContacts,
+            dispatchClearFilterGroup
         };
         store = mockStore({});
     })
@@ -308,6 +314,51 @@ describe('Test ModalComponentGroup', () => {
         const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
         wrapper.instance().props.fields.searchGroup.value = 'onload';
         wrapper.instance().handleValidateExistGroupSearch();
+    })
+
+    it('saveGroupFavoriteContacts instance', () => {
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().saveGroupFavoriteContacts();
+        sinon.assert.calledOnce(dispatchShowLoading);
+        sinon.assert.calledOnce(dispatchSwtShowMessage);
+    })
+
+    it('saveGroupFavoriteContacts instance and groupsFavoriteContacts.group.listContact is not empty', () => {
+        defaultProps.dispatchSaveGroupFavoriteContacts = sinon.stub().resolves({
+            payload: {
+                data: {
+                    data: null,
+                    status: 200
+                }
+            }
+        })
+        defaultProps.groupsFavoriteContacts = Immutable.Map({
+            group: Immutable.Map({
+                listContact: [1, 2]
+            })
+        });
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().saveGroupFavoriteContacts();
+        sinon.assert.calledOnce(wrapper.instance().props.dispatchSaveGroupFavoriteContacts);
+    })
+
+    it('saveGroupFavoriteContacts instance and groupsFavoriteContacts.group.listContact is not empty and status is not 200', () => {
+        defaultProps.dispatchSaveGroupFavoriteContacts = sinon.stub().resolves({
+            payload: {
+                data: {
+                    data: null,
+                    status: 500
+                }
+            }
+        })
+        defaultProps.groupsFavoriteContacts = Immutable.Map({
+            group: Immutable.Map({
+                listContact: [1, 2]
+            })
+        });
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().saveGroupFavoriteContacts();
+        sinon.assert.calledOnce(wrapper.instance().props.dispatchSaveGroupFavoriteContacts);
     })
 
     it('onClickLimpiarNameGroup instance', () => {
