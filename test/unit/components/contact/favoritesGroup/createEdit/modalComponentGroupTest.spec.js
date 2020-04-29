@@ -16,6 +16,8 @@ let dispatchGetListContactGroupForId;
 let dispatchSwtShowMessage;
 let dispatchGetValidateExistGroup;
 let dispatchSaveNameGroup;
+let dispatchContactsFindServer;
+let dispatchSearchContactForGroup;
 
 let store;
 const middlewares = [thunk];
@@ -32,6 +34,16 @@ describe('Test ModalComponentGroup', () => {
         dispatchGetListContactGroupForId = sinon.stub().resolves({});
         dispatchSwtShowMessage = sinon.fake();
         dispatchGetValidateExistGroup = sinon.stub().resolves({});
+        dispatchSearchContactForGroup = sinon.stub();
+        dispatchContactsFindServer = sinon.stub().resolves({
+            payload: {
+                data: {
+                    data: {
+                        listContact: ""
+                    }
+                }
+            }
+        });
         dispatchSaveNameGroup = sinon.fake();
         defaultProps = {
             fields: {
@@ -54,17 +66,18 @@ describe('Test ModalComponentGroup', () => {
             dispatchGetListContactGroupForId,
             dispatchSwtShowMessage,
             dispatchGetValidateExistGroup,
-            dispatchSaveNameGroup
+            dispatchSaveNameGroup,
+            dispatchContactsFindServer
         };
         store = mockStore({});
     })
-    
+
     it('Should render component', () => {
         itRenders(<ModalComponentGroup {...defaultProps} />);
     })
-    
+
     it('Should render component with redux', () => {
-        itRenders(<ModalComponentGroupRedux {...defaultProps} store={store}/>);
+        itRenders(<ModalComponentGroupRedux {...defaultProps} store={store} />);
     })
 
     it('When noop is instanced', () => {
@@ -92,7 +105,7 @@ describe('Test ModalComponentGroup', () => {
         sinon.assert.calledTwice(dispatchResetModal);
         sinon.assert.calledTwice(dispatchShowLoading);
     })
-    
+
     it('When handleKeyValidateExistGroup is instanced', () => {
         const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
         wrapper.instance().handleKeyValidateExistGroup({ keyCode: null });
@@ -101,7 +114,7 @@ describe('Test ModalComponentGroup', () => {
         sinon.assert.calledOnce(dispatchSwtShowMessage);
         wrapper.instance().handleKeyValidateExistGroup({ keyCode: 13, preventDefault: sinon.fake(), consultclick: true });
     })
-    
+
     it('When handleValidateExistGroup is instanced', () => {
         const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
         wrapper.instance().handleValidateExistGroup();
@@ -295,5 +308,89 @@ describe('Test ModalComponentGroup', () => {
         const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
         wrapper.instance().props.fields.searchGroup.value = 'onload';
         wrapper.instance().handleValidateExistGroupSearch();
+    })
+
+    it('onClickLimpiarNameGroup instance', () => {
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().onClickLimpiarNameGroup();
+        sinon.assert.calledThrice(resetForm);
+        sinon.assert.calledThrice(dispatchResetModal);
+        expect(wrapper.state().disableName).to.equal('');
+        expect(wrapper.state().disabled).to.equal('disabled');
+    })
+
+    it('onClickLimpiar  instance', () => {
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().onClickLimpiar();
+        sinon.assert.calledOn(resetForm);
+        sinon.assert.calledTwice(dispatchClearContactName);
+    })
+
+    it('openModal instance', () => {
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().openModal();
+        sinon.assert.calledTwice(resetForm);
+        sinon.assert.calledOnce(dispatchClearContactName);
+    })
+
+    it('closeModal instance', () => {
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().closeModal();
+        expect(wrapper.state().modalIsOpen).to.equal(false);
+    })
+
+    it('updateKeyValueContact instance', () => {
+        defaultProps.fields = {
+            searchGroup: { value: 'hola', onChange: sinon.fake() },
+            contact: {
+                value: "test"
+            },
+            tipoDocumento: "",
+            numeroDocumento: ""
+        }
+        const e = {
+            keyCode: 13,
+            which: 13,
+            preventDefault: sinon.fake()
+        }
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().updateKeyValueContact(e);
+    })
+
+    it('updateKeyValueContact instance keycode diferent to 13', () => {
+        defaultProps.fields = {
+            searchGroup: { value: 'hola', onChange: sinon.fake() },
+            contact: {
+                value: "test"
+            },
+            tipoDocumento: "",
+            numeroDocumento: ""
+        }
+        const e = {
+            keyCode: 0,
+            which: 0,
+            preventDefault: sinon.fake()
+        }
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().updateKeyValueContact(e);
+    })
+
+    it('updateKeyValueContact instance with vale null', () => {
+        defaultProps.fields = {
+            searchGroup: { value: 'hola', onChange: sinon.fake() },
+            contact: {
+                value: null
+            },
+            tipoDocumento: "",
+            numeroDocumento: ""
+        }
+        const e = {
+            keyCode: 13,
+            which: 13,
+            preventDefault: sinon.fake()
+        }
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().updateKeyValueContact(e);
+        sinon.assert.calledOnce(dispatchSwtShowMessage)
     })
 })
