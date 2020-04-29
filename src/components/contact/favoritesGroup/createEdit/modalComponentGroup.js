@@ -173,39 +173,39 @@ export class ModalComponentGroup extends Component {
                 dispatchGetValidateExistGroup(searchGroup.value).then((data) => {
                     const groupSearch = _.get(data.payload, 'data.data', null);
                     if(data.payload.data.status == 200){
-                    if (!_.isNull(groupSearch)) {
-                        if (groupsFavoriteContacts.get('group').get('id') == groupSearch.id) {
-                            dispatchSaveNameGroup(searchGroup.value);
-                            dispatchShowLoading(false, '');
+                        if (!_.isNull(groupSearch)) {
+                            if (groupsFavoriteContacts.get('group').get('id') == groupSearch.id) {
+                                dispatchSaveNameGroup(searchGroup.value);
+                                dispatchShowLoading(false, '');
+                            } else {
+                                if (groupsFavoriteContacts.get('group').get('id') !== '') {
+                                    dispatchSwtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                                    dispatchSaveNameGroup(searchGroup.value);
+                                } else {
+                                    dispatchSwtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
+                                    resetForm();
+                                    dispatchResetModal();
+                                    this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
+                                }
+                                dispatchShowLoading(false, '');
+                            }
                         } else {
                             if (groupsFavoriteContacts.get('group').get('id') !== '') {
-                                dispatchSwtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
                                 dispatchSaveNameGroup(searchGroup.value);
+                                dispatchShowLoading(false, '');
                             } else {
-                                dispatchSwtShowMessage('error', 'Nombre de grupo', 'Señor usuario, el nombre de grupo no se encuentra disponible');
-                                resetForm();
-                                dispatchResetModal();
-                                this.setState({ disableName: '', disabled: 'disabled', validateExistGroup: false });
+                                this.setState({ disableName: '', disabled: '', validateExistGroup: true });
+                                dispatchSaveNameGroup(searchGroup.value);
+                                dispatchShowLoading(false, '');
                             }
-                            dispatchShowLoading(false, '');
                         }
+                    } else if (data.payload.data.status == 422) {
+                        dispatchSwtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
+                        dispatchShowLoading(false, '');
                     } else {
-                        if (groupsFavoriteContacts.get('group').get('id') !== '') {
-                            dispatchSaveNameGroup(searchGroup.value);
-                            dispatchShowLoading(false, '');
-                        } else {
-                            this.setState({ disableName: '', disabled: '', validateExistGroup: true });
-                            dispatchSaveNameGroup(searchGroup.value);
-                            dispatchShowLoading(false, '');
-                        }
+                        dispatchSwtShowMessage(MESSAGE_ERROR, 'Error en el servidor', 'Ocurrió un error en el servidor');
+                        dispatchShowLoading(false, '');
                     }
-                } else if (data.payload.data.status == 422) {
-                    dispatchSwtShowMessage(MESSAGE_ERROR, 'Caracteres inválidos', VALUE_XSS_INVALID);
-                    dispatchShowLoading(false, '');
-                }else {
-                    dispatchSwtShowMessage(MESSAGE_ERROR, 'Error en el servidor', 'Ocurrió un error en el servidor');
-                    dispatchShowLoading(false, '');
-                }
                 });
             }
 

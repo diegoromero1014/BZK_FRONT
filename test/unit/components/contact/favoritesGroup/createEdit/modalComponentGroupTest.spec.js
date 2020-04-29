@@ -44,7 +44,8 @@ describe('Test ModalComponentGroup', () => {
             groupsFavoriteContacts: Immutable.Map({
                 group: Immutable.Map({
                     listContact: [],
-                    name: null
+                    name: null,
+                    id: null
                 })
             }),
             groupId: null,
@@ -119,7 +120,7 @@ describe('Test ModalComponentGroup', () => {
         defaultProps.dispatchGetValidateExistGroup = sinon.stub().resolves({
             payload: {
                 data: {
-                    data: 'any'
+                    data: ""
                 }
             }
         })
@@ -127,5 +128,172 @@ describe('Test ModalComponentGroup', () => {
         wrapper.instance().props.fields.searchGroup.value = 'any';
         wrapper.instance().handleValidateExistGroup();
         sinon.assert.calledOnce(wrapper.instance().props.dispatchGetValidateExistGroup);
+    })
+
+    it('When handleValidateExistGroup is instanced and dispatchGetValidateExistGroup is resolved and groupSearch is not null', () => {
+        defaultProps.dispatchGetValidateExistGroup = sinon.stub().resolves({
+            payload: {
+                data: {
+                    data: { id: 1 }
+                }
+            }
+        })
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().props.fields.searchGroup.value = 'any';
+        wrapper.instance().handleValidateExistGroup();
+        sinon.assert.calledOnce(wrapper.instance().props.dispatchGetValidateExistGroup);
+    })
+    
+    it('When handleValidateExistGroup is instanced and dispatchGetValidateExistGroup is resolved and groupSearch is empty', () => {
+        defaultProps.dispatchGetValidateExistGroup = sinon.stub().resolves({
+            payload: {
+                data: {
+                    data: { id: 2 }
+                }
+            }
+        });
+        defaultProps.groupsFavoriteContacts = Immutable.Map({
+            group: Immutable.Map({
+                listContact: [],
+                id: ''
+            })
+        });
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().props.fields.searchGroup.value = 'any';
+        wrapper.instance().handleValidateExistGroup();
+        sinon.assert.calledOnce(wrapper.instance().props.dispatchGetValidateExistGroup);
+    })
+
+    it('When handleValidateExistGroupSearch is instanced data is not null', () => {
+        defaultProps.dispatchGetValidateExistGroup = sinon.stub().resolves({
+            payload: {
+                data: {
+                    data: {},
+                    status: 200
+                }
+            }
+        })
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().props.fields.searchGroup.value = 'any';
+        wrapper.instance().handleValidateExistGroupSearch();
+        sinon.assert.calledOnce(wrapper.instance().props.dispatchGetValidateExistGroup);
+    })
+
+    it('When handleValidateExistGroupSearch is instanced data is null', () => {
+        defaultProps.dispatchGetValidateExistGroup = sinon.stub().resolves({
+            payload: {
+                data: {
+                    data: null,
+                    status: 200
+                }
+            }
+        })
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().props.fields.searchGroup.value = 'any';
+        wrapper.instance().handleValidateExistGroupSearch();
+        sinon.assert.calledOnce(wrapper.instance().props.dispatchGetValidateExistGroup);
+    })
+
+    it('When handleValidateExistGroupSearch is instanced and status is not 200', () => {
+        defaultProps.dispatchGetValidateExistGroup = sinon.stub().resolves({
+            payload: {
+                data: {
+                    data: null,
+                    status: 500
+                }
+            }
+        })
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().props.fields.searchGroup.value = 'any';
+        wrapper.instance().handleValidateExistGroupSearch();
+        sinon.assert.calledOnce(wrapper.instance().props.dispatchGetValidateExistGroup);
+    })
+
+    it('When handleValidateExistGroupSearch is instanced and status is 422', () => {
+        defaultProps.dispatchGetValidateExistGroup = sinon.stub().resolves({
+            payload: {
+                data: {
+                    data: null,
+                    status: 422
+                }
+            }
+        })
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().props.fields.searchGroup.value = 'any';
+        wrapper.instance().handleValidateExistGroupSearch();
+        sinon.assert.calledOnce(wrapper.instance().props.dispatchGetValidateExistGroup);
+    })
+
+    it('When handleValidateExistGroupSearch is instanced and data is null and groupsFavoriteContacts.group.id is not empty', () => {
+        defaultProps.dispatchGetValidateExistGroup = sinon.stub().resolves({
+            payload: {
+                data: {
+                    data: null,
+                    status: 200
+                }
+            }
+        });
+        defaultProps.groupsFavoriteContacts = Immutable.Map({
+            group: Immutable.Map({
+                listContact: [],
+                id: ''
+            })
+        });
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().props.fields.searchGroup.value = 'any';
+        wrapper.instance().handleValidateExistGroupSearch();
+        sinon.assert.calledOnce(wrapper.instance().props.dispatchGetValidateExistGroup);
+    })
+
+    it('When handleValidateExistGroupSearch is instanced and status is not 200, groupsFavoriteContacts.group.id is empty', () => {
+        defaultProps.dispatchGetValidateExistGroup = sinon.stub().resolves({
+            payload: {
+                data: {
+                    data: { 
+                        id: 2
+                    },
+                    status: 200
+                }
+            }
+        });
+        defaultProps.groupsFavoriteContacts = Immutable.Map({
+            group: Immutable.Map({
+                listContact: [],
+                id: ''
+            })
+        });
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().props.fields.searchGroup.value = 'any';
+        wrapper.instance().handleValidateExistGroupSearch();
+        sinon.assert.calledOnce(wrapper.instance().props.dispatchGetValidateExistGroup);
+    })
+
+    it('When handleValidateExistGroupSearch is instanced and status is not 200, groupsFavoriteContacts.group.id is 1', () => {
+        defaultProps.dispatchGetValidateExistGroup = sinon.stub().resolves({
+            payload: {
+                data: {
+                    data: { 
+                        id: 2
+                    },
+                    status: 200
+                }
+            }
+        });
+        defaultProps.groupsFavoriteContacts = Immutable.Map({
+            group: Immutable.Map({
+                listContact: [],
+                id: 1
+            })
+        });
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().props.fields.searchGroup.value = 'any';
+        wrapper.instance().handleValidateExistGroupSearch();
+        sinon.assert.calledOnce(wrapper.instance().props.dispatchGetValidateExistGroup);
+    })
+
+    it('When handleValidateExistGroupSearch is instanced and searchGroup.value has xssValidation false', () => {
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().props.fields.searchGroup.value = 'onload';
+        wrapper.instance().handleValidateExistGroupSearch();
     })
 })
