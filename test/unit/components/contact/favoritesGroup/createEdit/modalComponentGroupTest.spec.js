@@ -17,6 +17,7 @@ let dispatchSwtShowMessage;
 let dispatchGetValidateExistGroup;
 let dispatchSaveNameGroup;
 let dispatchContactsFindServer;
+let dispatchSearchContactForGroup;
 
 let store;
 const middlewares = [thunk];
@@ -33,6 +34,7 @@ describe('Test ModalComponentGroup', () => {
         dispatchGetListContactGroupForId = sinon.stub().resolves({});
         dispatchSwtShowMessage = sinon.fake();
         dispatchGetValidateExistGroup = sinon.stub().resolves({});
+        dispatchSearchContactForGroup = sinon.stub();
         dispatchContactsFindServer = sinon.stub().resolves({
             payload: {
                 data: {
@@ -141,6 +143,36 @@ describe('Test ModalComponentGroup', () => {
     })
 
     //mateo 
+
+    it('onClickLimpiarNameGroup instance', () => {
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().onClickLimpiarNameGroup();
+        sinon.assert.calledThrice(resetForm);
+        sinon.assert.calledThrice(dispatchResetModal);
+        expect(wrapper.state().disableName).to.equal('');
+        expect(wrapper.state().disabled).to.equal('disabled');
+    })
+
+    it('onClickLimpiar  instance', () => {
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().onClickLimpiar();
+        sinon.assert.calledOn(resetForm);
+        sinon.assert.calledTwice(dispatchClearContactName);
+    })
+
+    it('openModal instance', () => {
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().openModal();
+        sinon.assert.calledTwice(resetForm);
+        sinon.assert.calledOnce(dispatchClearContactName);
+    })
+
+    it('closeModal instance', () => {
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().closeModal();
+        expect(wrapper.state().modalIsOpen).to.equal(false);
+    })
+
     it('updateKeyValueContact instance', () => {
         defaultProps.fields = {
             searchGroup: { value: 'hola', onChange: sinon.fake() },
@@ -195,6 +227,6 @@ describe('Test ModalComponentGroup', () => {
         wrapper.instance().updateKeyValueContact(e);
         sinon.assert.calledOnce(dispatchSwtShowMessage)
     })
-    //mateo
+    //mateo 
 
 })
