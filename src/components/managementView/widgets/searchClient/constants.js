@@ -1,6 +1,6 @@
 import ProspectIcon from './prospectIcon';
 
-export const TITLE_SEARCH_CLIENT = 'Buscar clientes';
+export const TITLE_SEARCH_CLIENT = 'BUSCAR CLIENTES';
 export const CLOSE_BUSQUEDA = 'Limpiar búsqueda';
 export const PLACEHOLDER_SEARCH_CLIENT = 'Buscar por nombre, NIT o grupo económico';
 export const MESSAGE_TOOLTIP = 'Crear prospecto';
