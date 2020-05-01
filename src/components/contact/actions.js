@@ -2,7 +2,6 @@ import {APP_URL} from '../../constantsGlobal';
 import {CLEAR_CONTACT_ORDER,CLEAR_CONTACT_CREAR,ORDER_COLUMN,GET_CONTACT_LIST_CLIENT,CHANGE_KEYWORD_CONTACT,CHANGE_PAGE,LIMITE_INF,CLEAR_CONTACT,CLEAR_CONTACT_PAGINATOR} from './constants';
 import axios from 'axios';
 import {downloadReport} from "../../utils"
-import {changeStateSaveData} from "../main/actions"
 
 export function contactsByClientFindServer(pageNum,clientId,maxRows,columnOrder,order,searchTerm,functionId,lobId,typeOfContactId,outdatedContact){
   const json = {
@@ -51,7 +50,7 @@ export function findContactsByClient(clientId, maxRows) {
         "pageNum": 0,
         "maxRows" : maxRows,
         "searchTerm" : "",
-        "columnOrder": "",
+        "columnOrder": "", 
         "order": 0,
         "functionId" : "",
         "lobId" : "",
@@ -61,17 +60,6 @@ export function findContactsByClient(clientId, maxRows) {
   }
   
   return { type: GET_CONTACT_LIST_CLIENT, payload: axios.post(APP_URL + "/listClientContacts", json) }
-}
-
-export function downloadFilePDF(idFileDownload){
-  const payload = {
-    messageHeader:{
-      sessionToken: window.localStorage.getItem('sessionTokenFront')
-    },
-    messageBody: idFileDownload
-  };
-  console.log("downloadFilePDF");
-  downloadReport(payload, "/generate/downloadFilePDF", "Prueba.pdf",null);
 }
 
 export function changePage(page){

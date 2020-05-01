@@ -1,66 +1,83 @@
-import {APP_URL} from '../../constantsGlobal';
-import {CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, CLAER_CLIENT_INFO, UPDATE_FIELD_INFO_CLIENT,
-  CHANGE_VALUE_LIST_CLIENT, CHANGE_INFO_CLIENT, VALIDATE_EXPIRED_PORTFOLIO} from './constants';
+import { APP_URL, FILE_OPTION_SHOPPING_MAP, FILE_OPTION_PRE_VISIT_GUIDE, FILE_OPTION_VISIT_REPORT, FILE_OPTION_SOCIAL_STYLE_CONTACT } from '../../constantsGlobal';
+import {
+    CONSULT_INFO_CLIENT, CHANGE_CHECK_CLIENT, CLAER_CLIENT_INFO, UPDATE_FIELD_INFO_CLIENT,
+    CHANGE_VALUE_LIST_CLIENT, CHANGE_INFO_CLIENT, VALIDATE_EXPIRED_PORTFOLIO
+} from './constants';
 import axios from 'axios';
-import {downloadReport} from "../../utils"
-import {changeStateSaveData} from "../main/actions"
+import { downloadReport } from "../../utils";
 
-export function consultInfoClient(idClient){
-  const json = {
-    "messageHeader":{
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "timestamp": new Date().getTime(),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
-    },
-    "messageBody":{
-      "clientId":  (idClient) ? idClient : window.sessionStorage.getItem('idClientSelected')
+export function consultInfoClient(idClient) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": {
+            "clientId": (idClient) ? idClient : window.sessionStorage.getItem('idClientSelected')
+        }
+    };
+
+    var request = axios.post(APP_URL + "/clientInformation", json);
+    return {
+        type: CONSULT_INFO_CLIENT,
+        payload: request
     }
-  };
-
-  var request = axios.post(APP_URL + "/clientInformation", json);
-  return{
-    type: CONSULT_INFO_CLIENT,
-    payload: request
-  }
 }
 
-export function downloadFilePdf(idFileDownload){
-  const payload = {
-    messageHeader:{
-      sessionToken: window.localStorage.getItem('sessionTokenFront')
-    },
-    messageBody: idFileDownload
-  };
- 
-  
-  downloadReport(payload, "/generate/downloadFilePDF", "Prueba.pdf", null);
+export function downloadFilePdf(idFileDownload) {
+    const payload = {
+        messageHeader: {
+            sessionToken: window.localStorage.getItem('sessionTokenFront')
+        },
+        messageBody: idFileDownload
+    };
+
+    switch (idFileDownload) {
+
+        case FILE_OPTION_SOCIAL_STYLE_CONTACT:
+            downloadReport(payload, "/generate/downloadFilePDF", "EstiloSocial.pdf", null);
+            break;
+        case FILE_OPTION_VISIT_REPORT:
+            downloadReport(payload, "/generate/downloadFilePDF", "InformeVisita.pdf", null);
+            break;
+        case FILE_OPTION_SHOPPING_MAP:
+            downloadReport(payload, "/generate/downloadFilePDF", "MapaDeCompras.pdf", null);
+            break;
+        case FILE_OPTION_PRE_VISIT_GUIDE:
+            downloadReport(payload, "/generate/downloadFilePDF", "GuiaPrevisita.pdf", null);
+            break;
+
+        default:
+            break;
+    }
 }
 
-export function clearInfoClient(){
-  return {
-    type: CLAER_CLIENT_INFO
-  }
+export function clearInfoClient() {
+    return {
+        type: CLAER_CLIENT_INFO
+    }
 }
 
-export function changeEconomicGroup(economicGroup){
-  return {
-    type: CHANGE_INFO_CLIENT,
-    economicGroup
-  }
+export function changeEconomicGroup(economicGroup) {
+    return {
+        type: CHANGE_INFO_CLIENT,
+        economicGroup
+    }
 }
 
-export function changeCheckInfoClient(check){
-  return {
-    type: CHANGE_CHECK_CLIENT,
-    payload: check
-  }
+export function changeCheckInfoClient(check) {
+    return {
+        type: CHANGE_CHECK_CLIENT,
+        payload: check
+    }
 }
 
 export function updateFieldInfoClient(field, value) {
@@ -81,26 +98,26 @@ export function changeValueListClient(field, list) {
 }
 
 export function validateExpiredPortfolio(idClient) {
-  const json = {
-    "messageHeader":{
-      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-      "timestamp": new Date().getTime(),
-      "service": "",
-      "status": "0",
-      "language": "es",
-      "displayErrorMessage": "",
-      "technicalErrorMessage": "",
-      "applicationVersion": "",
-      "debug": true,
-      "isSuccessful": true
-    },
-    "messageBody": idClient ? new Number(idClient) : new Number(window.sessionStorage.getItem('idClientSelected'))
-  };
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": idClient ? new Number(idClient) : new Number(window.sessionStorage.getItem('idClientSelected'))
+    };
 
-  var request = axios.post(APP_URL + "/alert/expiredPortfolio/client", json);
+    var request = axios.post(APP_URL + "/alert/expiredPortfolio/client", json);
 
-  return {
-    type: VALIDATE_EXPIRED_PORTFOLIO,
-    payload: request
-  }
+    return {
+        type: VALIDATE_EXPIRED_PORTFOLIO,
+        payload: request
+    }
 }

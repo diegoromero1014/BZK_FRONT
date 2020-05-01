@@ -64,8 +64,8 @@ export class PrevisitComponent extends Component {
   }
 
   _downloadFilePrevisitGuide() {
-    const { downloadFilePdf } = this.props;
-    downloadFilePdf(FILE_OPTION_PRE_VISIT_GUIDE);
+    const { dispatchDownloadFilePdf } = this.props;
+    dispatchDownloadFilePdf(FILE_OPTION_PRE_VISIT_GUIDE);
   }
 
   render() {
@@ -132,8 +132,11 @@ export class PrevisitComponent extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    previsitByClientFindServer, clearPrevisit, downloadFilePdf, updateTitleNavBar,
-    validatePermissionsByModule
+    previsitByClientFindServer, 
+    clearPrevisit,
+    updateTitleNavBar,
+    validatePermissionsByModule,
+    dispatchDownloadFilePdf : downloadFilePdf
   }, dispatch);
 }
 

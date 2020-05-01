@@ -2,6 +2,7 @@ export const VERSION_DATE = "18/10/2019";
 export const NATURAL_PERSON = "Persona natural";
 export const JURIDICAL_PERSON = "Persona jurídica";
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
+export const FILE_OPTION_VISIT_REPORT = 2;
 export const FILE_OPTION_SHOPPING_MAP = 3;
 export const FILE_OPTION_PRE_VISIT_GUIDE = 4;
 export const CONSULT_PARAMETER_NAME = 'CONSULT_PARAMETER_NAME';

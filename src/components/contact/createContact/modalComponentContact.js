@@ -22,7 +22,8 @@ import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 import { patternOfNumberDocument, patternOfForbiddenCharacter } from '../../../validationsFields/patternsToValidateField';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { toggleModalContact, createContactNew, searchContact, clearSearchContact } from './actions';
-import { contactsByClientFindServer, clearContactOrder, clearContactCreate, downloadFilePDF } from '../actions'
+import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions'
+import { downloadFilePdf } from '../../clientInformation/actions';
 import { changeStateSaveData } from '../../main/actions';
 import { getListContactGroupById } from '../favoritesGroup/actions';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
@@ -116,8 +117,8 @@ class ModalComponentContact extends Component {
     }
 
     _downloadFileSocialStyle() {
-        const { downloadFilePDF } = this.props;
-        downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
+        const { dispatchDownloadFilePdf } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT);
     }
 
     _close() {
@@ -855,14 +856,14 @@ function mapDispatchToProps(dispatch) {
         clearContactCreate,
         clearContactOrder,
         consultList,
-        downloadFilePDF,
         changeStateSaveData,
         nonValidateEnter,
         getListContactGroupById,
         dispatchCleanList: cleanList,
         dispatchAddToList: addToList,
         dispatchCreateList: createList,
-        dispatchSwtShowMessage: swtShowMessage
+        dispatchSwtShowMessage: swtShowMessage,
+        dispatchDownloadFilePdf: downloadFilePdf
     }, dispatch);
 }
 

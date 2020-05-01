@@ -113,8 +113,8 @@ class FormEdit extends Component {
     }
 
     _downloadFileShoppingMap() {
-        const { downloadFilePdf } = this.props;
-        downloadFilePdf(FILE_OPTION_SHOPPING_MAP);
+        const { dispatchDownloadFilePdf } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SHOPPING_MAP);
     }
 
     _clickSeletedTab(tab) {
@@ -989,7 +989,6 @@ function mapDispatchToProps(dispatch) {
         detailVisit,
         filterUsersBanco,
         addTask,
-        downloadFilePdf,
         changeStateSaveData,
         nonValidateEnter,
         showLoading,
@@ -1000,7 +999,8 @@ function mapDispatchToProps(dispatch) {
         addUsers,
         setConfidential,
         clearParticipants,
-        dispatchPrepareTasksNotes: prepareTasksNotes
+        dispatchPrepareTasksNotes: prepareTasksNotes,
+        dispatchDownloadFilePdf : downloadFilePdf
     }, dispatch);
 }
 

@@ -12,7 +12,7 @@ import Tooltip from "../toolTip/toolTipComponent";
 
 import { addParticipant, clearParticipants } from './actions';
 import { contactsByClientFindServer } from '../contact/actions';
-import { downloadFilePDF } from '../contact/actions'
+import { downloadFilePdf } from '../clientInformation/actions';
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
@@ -82,8 +82,8 @@ class ParticipantesCliente extends Component {
     }
 
     _downloadFileSocialStyle() {
-        const { downloadFilePDF } = this.props;
-        downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
+        const { dispatchDownloadFilePdf } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT);
     }
 
     componentWillMount() {
@@ -257,9 +257,9 @@ function mapDispatchToProps(dispatch) {
         addParticipant,
         contactsByClientFindServer,
         clearParticipants,
-        downloadFilePDF,
         validatePermissionsByModule,
-        swtShowMessage
+        swtShowMessage,
+        dispatchDownloadFilePdf : downloadFilePdf
     }, dispatch);
 }
 

@@ -19,7 +19,7 @@ import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../main/actions';
-import { downloadFilePDF } from '../actions';
+import { downloadFilePdf } from '../../clientInformation/actions';
 import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer, markAsOutdated } from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions';
 import {
@@ -163,8 +163,8 @@ export class ContactDetailsModalComponent extends Component {
     }
 
     _downloadFileSocialStyle() {
-        const { downloadFilePDF } = this.props;
-        downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
+        const { dispatchDownloadFilePdf } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT);
         this.setState({ generoData: genero });
     }
 
@@ -1031,7 +1031,6 @@ function mapDispatchToProps(dispatch) {
         consultListWithParameterUbication,
         contactsByClientFindServer,
         clearClienEdit,
-        downloadFilePDF,
         changeStateSaveData,
         nonValidateEnter,
         deleteRelationshipServer,
@@ -1040,7 +1039,8 @@ function mapDispatchToProps(dispatch) {
         markAsOutdated,
         dispatchCleanList: cleanList,
         dispatchAddToList: addToList,
-        dispatchCreateList: createList
+        dispatchCreateList: createList,
+        dispatchDownloadFilePdf : downloadFilePdf
     }, dispatch);
 }
 
