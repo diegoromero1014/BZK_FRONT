@@ -20,6 +20,7 @@ let dispatchContactsFindServer;
 let dispatchSearchContactForGroup;
 let dispatchSaveGroupFavoriteContacts;
 let dispatchClearFilterGroup;
+let dispatchDeleteContactList;
 
 let store;
 const middlewares = [thunk];
@@ -49,6 +50,7 @@ describe('Test ModalComponentGroup', () => {
         dispatchSaveNameGroup = sinon.fake();
         dispatchSaveGroupFavoriteContacts = sinon.stub().resolves({});
         dispatchClearFilterGroup = sinon.fake();
+        dispatchDeleteContactList = sinon.fake();
         defaultProps = {
             fields: {
                 searchGroup: { value: 'hola', onChange: sinon.fake() },
@@ -73,7 +75,8 @@ describe('Test ModalComponentGroup', () => {
             dispatchSaveNameGroup,
             dispatchContactsFindServer,
             dispatchSaveGroupFavoriteContacts,
-            dispatchClearFilterGroup
+            dispatchClearFilterGroup,
+            dispatchDeleteContactList
         };
         store = mockStore({});
     })
@@ -443,5 +446,36 @@ describe('Test ModalComponentGroup', () => {
         const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
         wrapper.instance().updateKeyValueContact(e);
         sinon.assert.calledOnce(dispatchSwtShowMessage)
+    })
+
+    it('addContactList instance', () => {
+        defaultProps.fields = {
+            searchGroup: { value: 'hola', onChange: sinon.fake() },
+            contact: { value: null, onChange: sinon.fake() },
+            tipoDocumento: { value: null, onChange: sinon.fake() },
+            numeroDocumento: { value: null, onChange: sinon.fake() },
+        }
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().addContactList();
+        sinon.assert.calledOnce(dispatchSwtShowMessage);
+        sinon.assert.calledTwice(dispatchClearContactName);
+    })
+
+    it('deleteContactList instance', () => {
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().deleteContactList({ id: 1 });
+        sinon.assert.calledOnce(dispatchDeleteContactList);
+    })
+
+    it('searchContactForGroup instance', () => {
+        defaultProps.fields = {
+            searchGroup: { value: 'hola', onChange: sinon.fake() },
+            contact: { value: null, onChange: sinon.fake() },
+            tipoDocumento: { value: null, onChange: sinon.fake() },
+            numeroDocumento: { value: "", onChange: sinon.fake() },
+        };
+        const wrapper = shallow(<ModalComponentGroup {...defaultProps} />);
+        wrapper.instance().searchContactForGroup();
+        sinon.assert.calledOnce(dispatchSwtShowMessage);
     })
 })
