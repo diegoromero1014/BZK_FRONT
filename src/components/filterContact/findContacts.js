@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {NUMBER_RECORDS} from './constants';
+import {NUMBER_RECORDS, MESSAGE_PLACEHOLDER} from './constants';
 import {redirectUrl} from '../globalComponents/actions';
 import {changeKeyword, contactsFindServer, changePage, clearContacts, changeSearchAllIntoContacts} from './actions';
 import SweetAlert from '../sweetalertFocus';
@@ -16,6 +16,9 @@ import Tooltip from '../toolTip/toolTipComponent';
 import {Checkbox} from 'semantic-ui-react';
 import {validateResponse} from '../../actionsGlobal';
 import {swtShowMessage} from '../sweetAlertMessages/actions';
+
+import '../../../styles/app/placeholder.scss';
+
 
 class SearchContacts extends Component {
     constructor(props) {
@@ -138,7 +141,7 @@ class SearchContacts extends Component {
                     <Col xs={12} sm={12} md={5} lg={5}>
                         <div className="InputAddOn">
                             <input type="text" style={{padding: '0px 11px !important'}}
-                                   placeholder="Búsqueda por documento o nombre del contacto"
+                                   placeholder={MESSAGE_PLACEHOLDER}
                                    value={keyword} onKeyPress={this._handleChangeKeyword}
                                    onChange={this._handleChangeKeyword}
                                    className="input-lg input InputAddOn-field"/>
