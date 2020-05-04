@@ -1047,6 +1047,48 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
                     <dt>
+                      <span>Moneda (</span><span style={{ color: "red" }}>*</span>)
+                    </dt>
+                    <div onClick={() => this.showAlertDisabledCurrency(isEditableValue)} >
+                      <ComboBox
+                          labelInput="Seleccione..."
+                          valueProp={'id'}
+                          textProp={'value'}
+                          {...currency}
+                          name={nameCurrency}
+                          parentId="dashboardComponentScroll"
+                          data={selectsReducer.get(CURRENCY) || []}
+                          onChange={val => this._changeCurrency(val)}
+                          disabled={isEditableValue ? '' : 'disabled'}
+                      />
+                    </div>
+                  </div>
+                </Col>
+                <Col xs={6} md={3} lg={3}>
+                  <div style={{ paddingRight: "15px" }}>
+                    <dt>
+                      <span>Valor nominal (</span><span style={{ color: "red" }}>*</span>)
+                    </dt>
+                    <ToolTip text={this.state.messageTooltipNominalValue} rendertooltip={this.state.messageTooltipNominalValue}>
+                      <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
+                        <Input
+                            {...value}
+                            name="valueMillions"
+                            type="text"
+                            placeholder="Miles ' , ' y decimales ' . '"
+                            parentId="dashboardComponentScroll"
+                            onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
+                            onFocus={val => handleFocusValueNumber(value, value.value)}
+                            disabled={isEditableValue ? '' : 'disabled'}
+                            onChange={val => this._changeValue(val)}
+                        />
+                      </div>
+                    </ToolTip>
+                  </div>
+                </Col>
+                <Col xs={6} md={3} lg={3}>
+                  <div style={{ paddingRight: "15px" }}>
+                    <dt>
                       <span>Estado del negocio (</span><span style={{ color: "red" }}>*</span>)
                     </dt>
                     <ComboBox
@@ -1062,69 +1104,70 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     />
                   </div>
                 </Col>
-                {this.state.showJustificationField ?
-                  <Col xs={12} md={6} lg={6}>
-                    <div style={{ paddingRight: "15px" }}>
-                      <dt>
-                        <span>Justificación (</span><span style={{ color: "red" }}>*</span>)
-                      </dt>
-                      <ComboBox
-                        labelInput="Seleccione..."
-                        valueProp={'id'}
-                        textProp={'value'}
-                        {...justification}
-                        name={nameJustificationPipeline}
-                        parentId="dashboardComponentScroll"
-                        data={selectsReducer.get(PIPELINE_JUSTIFICATION) || []}
-                      />
-                    </div>
-                  </Col>
-                : null}
               </Row>
-                <Row style={{ padding: "0px 10px 20px 20px" }}>
-                    {this.state.showJustificationField ?
-                        <Col xs={12} md={6} lg={6}>
-                            <div style={{paddingRight: "15px"}}>
-                                <dt>
-                                    <span>Detalle justificación </span>
-                                </dt>
-                              <TextareaComponent
-                                  name="txtJustificationDetail"
-                                  type="text"
-                                  {...justificationDetail}
-                                  parentId="dashboardComponentScroll"
-                                  rows={4}
-                                  style={{ width: '100%', height: '100%' }}
-                              />
-                            </div>
-                        </Col>
-                        : null}
-                </Row>
-              <Row style={{ padding: "0px 10px 20px 20px" }}>
-                {this.state.showMellowingPeriodField ?
-                  <Col xs={6} md={3} lg={3}>
-                    <div style={{ paddingRight: "15px" }}>
-                      <dt>
-                        <span>Período de maduración</span>
-                        <ToolTip text={HELP_PROBABILITY}>
-                          <i className="help circle icon blue"
-                            style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
-                        </ToolTip>
-                      </dt>
-                      <ComboBox
-                        labelInput="Seleccione..."
-                        valueProp={'id'}
-                        textProp={'value'}
-                        {...mellowingPeriod}
-                        name={nameMellowingPeriod}
-                        parentId="dashboardComponentScroll"
-                        data={selectsReducer.get(MELLOWING_PERIOD) || []}
-                      />
-                    </div>
-                  </Col>
-                 : null}
-              </Row>
-
+              {this.state.showJustificationField ?
+                  <Row style={{padding: "0px 10px 20px 20px"}}>
+                    <Col xs={12} md={6} lg={6}>
+                      <div style={{paddingRight: "15px"}}>
+                        <dt>
+                          <span>Justificación (</span><span style={{color: "red"}}>*</span>)
+                        </dt>
+                        <ComboBox
+                            labelInput="Seleccione..."
+                            valueProp={'id'}
+                            textProp={'value'}
+                            {...justification}
+                            name={nameJustificationPipeline}
+                            parentId="dashboardComponentScroll"
+                            data={selectsReducer.get(PIPELINE_JUSTIFICATION) || []}
+                        />
+                      </div>
+                    </Col>
+                  </Row>
+                  : null}
+              {this.state.showJustificationField ?
+                  <Row style={{padding: "0px 10px 20px 20px"}}>
+                    <Col xs={12} md={6} lg={6}>
+                      <div style={{paddingRight: "15px"}}>
+                        <dt>
+                          <span>Detalle justificación </span>
+                        </dt>
+                        <TextareaComponent
+                            name="txtJustificationDetail"
+                            type="text"
+                            {...justificationDetail}
+                            parentId="dashboardComponentScroll"
+                            rows={4}
+                            style={{width: '100%', height: '100%'}}
+                        />
+                      </div>
+                    </Col>
+                  </Row>
+                  : null}
+              {this.state.showMellowingPeriodField ?
+                  <Row style={{padding: "0px 10px 20px 20px"}}>
+                    <Col xs={6} md={3} lg={3}>
+                      <div style={{paddingRight: "15px"}}>
+                        <dt>
+                          <span>Período de maduración</span>
+                          <ToolTip text={HELP_PROBABILITY}>
+                            <i className="help circle icon blue"
+                               style={{fontSize: "15px", cursor: "pointer", marginLeft: "5px"}}/>
+                          </ToolTip>
+                        </dt>
+                        <ComboBox
+                            labelInput="Seleccione..."
+                            valueProp={'id'}
+                            textProp={'value'}
+                            {...mellowingPeriod}
+                            name={nameMellowingPeriod}
+                            parentId="dashboardComponentScroll"
+                            data={selectsReducer.get(MELLOWING_PERIOD) || []}
+                        />
+                      </div>
+                    </Col>
+                  </Row>
+                  : null}
               <Row style={{ padding: "0px 10px 20px 20px" }}>
                 {this.state.showProbabilityField ?
                   <Col xs={6} md={3} lg={3}>
@@ -1245,50 +1288,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     </ToolTip>
                   </div>
                 </Col>
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{ paddingRight: "15px" }}>
-                    <dt>
-                      <span>Moneda (</span><span style={{ color: "red" }}>*</span>)
-                    </dt>
-                    <div onClick={() => this.showAlertDisabledCurrency(isEditableValue)} >
-                      <ComboBox
-                        labelInput="Seleccione..."
-                        valueProp={'id'}
-                        textProp={'value'}
-                        {...currency}
-                        name={nameCurrency}
-                        parentId="dashboardComponentScroll"
-                        data={selectsReducer.get(CURRENCY) || []}
-                        onChange={val => this._changeCurrency(val)}
-                        disabled={isEditableValue ? '' : 'disabled'}
-                      />
-                    </div>
-                  </div>
-                </Col>
               </Row>
               <Row className="pipeline__section__fields">
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{ paddingRight: "15px" }}>
-                    <dt>
-                      <span>Valor nominal (</span><span style={{ color: "red" }}>*</span>)
-                    </dt>
-                    <ToolTip text={this.state.messageTooltipNominalValue} rendertooltip={this.state.messageTooltipNominalValue}>
-                    <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
-                      <Input
-                        {...value}
-                        name="valueMillions"
-                        type="text"
-                        placeholder="Miles ' , ' y decimales ' . '"
-                        parentId="dashboardComponentScroll"
-                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
-                        onFocus={val => handleFocusValueNumber(value, value.value)}
-                        disabled={isEditableValue ? '' : 'disabled'}
-                        onChange={val => this._changeValue(val)}
-                      />
-                    </div>
-                    </ToolTip>
-                  </div>
-                </Col>
                 {this.state.showpendingDisbursementAmountField ?
                   <Col xs={6} md={3} lg={3}>
                   <div style={{ paddingRight: "15px" }}>
