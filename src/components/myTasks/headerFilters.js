@@ -50,10 +50,10 @@ export class HeaderFilters extends Component {
             defaultFinalDate: moment(filtered.finalDate).format("DD/MM/YYYY"),
             initialDate: moment(filtered.initialDate).format("DD/MM/YYYY"),
             finalDate: moment(filtered.finalDate).format("DD/MM/YYYY"),
-            user: [filtered.users],
+            user: filtered.users,
             rol: filtered.rol
         });
-        rol.onChange("RESPONSIBLE");
+        rol.onChange(filtered.rol);
     };
 
     defaultFilters = async () => {
