@@ -44,7 +44,9 @@ export const fieldsWithRules = {
     justification: { rules: [checkRequiredPipelineJustification]},
     pivotNit: {rules: [checkRequiredPivotNit]},
     margen:{rules: [validateDecimal]},
-    typePolicy: { rules: [] }
+    typePolicy: { rules: [] },
+    businessCategory2: { rules: [checkRequiredWithGlobalCondition] },
+    nominalValue2:{ rules: [checkRequired, checkNumberLength(15)] }
 }
 
 export const fields = _.keys(fieldsWithRules);
