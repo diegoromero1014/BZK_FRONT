@@ -1173,6 +1173,50 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
+                                            <span>Moneda (</span><span style={{ color: "red" }}>*</span>)
+                                        </dt>
+                                        <div onClick={() => this.showAlertDisabledCurrency(isEditableValue)} >
+                                            <ComboBox
+                                                labelInput="Seleccione..."
+                                                valueProp={'id'}
+                                                textProp={'value'}
+                                                {...currency}
+                                                name={nameCurrency}
+                                                parentId="dashboardComponentScroll"
+                                                data={selectsReducer.get(CURRENCY) || []}
+                                                disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
+                                                onChange={val => this._changeCurrency(val)}
+                                            />
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Valor nominal (</span>
+                                            <span style={{ color: "red" }}>*</span>)
+                                        </dt>
+                                        <ToolTip text={this.state.messageTooltipNominalValue} rendertooltip={this.state.messageTooltipNominalValue}>
+                                            <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
+                                                <Input
+                                                    {...value}
+                                                    name="valueMillions"
+                                                    type="text"
+                                                    placeholder="Miles ' , ' y decimales ' . '"
+                                                    parentId="dashboardComponentScroll"
+                                                    onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
+                                                    onFocus={val => handleFocusValueNumber(value, value.value)}
+                                                    disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
+                                                    onChange={val => this._changeValue(val)
+                                                    }
+                                                />
+                                            </div>
+                                        </ToolTip>
+                                    </div>
+                                </Col>
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
                                             <span>Estado del negocio (</span><span style={{ color: "red" }}>*</span>)
                                         </dt>
                                         <ComboBox
@@ -1189,11 +1233,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-                                {this.state.showJustificationField ?
+                            </Row>
+                            {this.state.showJustificationField ?
+                                <Row style={{padding: "0px 10px 20px 20px"}}>
                                     <Col xs={12} md={6} lg={6}>
-                                        <div style={{ paddingRight: "15px" }}>
+                                        <div style={{paddingRight: "15px"}}>
                                             <dt>
-                                                <span>Justificación (</span><span style={{ color: "red" }}>*</span>)
+                                                <span>Justificación (</span><span style={{color: "red"}}>*</span>)
                                             </dt>
                                             <ComboBox
                                                 labelInput="Seleccione..."
@@ -1207,10 +1253,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             />
                                         </div>
                                     </Col>
-                                    : null}
-                            </Row>
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                {this.state.showJustificationField ?
+                                </Row>
+                                : null}
+                            {this.state.showJustificationField ?
+                                <Row style={{padding: "0px 10px 20px 20px"}}>
                                     <Col xs={12} md={6} lg={6}>
                                         <div style={{paddingRight: "15px"}}>
                                             <dt>
@@ -1227,10 +1273,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             />
                                         </div>
                                     </Col>
-                                    : null}
-                            </Row>
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>                                
-                                {this.state.showMellowingPeriodField ?
+                                </Row>
+                                : null}
+                            {this.state.showMellowingPeriodField ?
+                            <Row style={{ padding: "0px 10px 20px 20px" }}>
                                     <Col xs={12} md={6} lg={6}>
                                         <div style={{ paddingRight: "15px" }}>
                                             <dt>
@@ -1252,10 +1298,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             />
                                         </div>
                                     </Col>
-                                    : null}                                
                             </Row>
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
+                                    : null}
                                 {this.state.showProbabilityField ?
+                            <Row style={{ padding: "0px 10px 20px 20px" }}>
                                     <Col xs={6} md={3} lg={3}>
                                         <div style={{ paddingRight: "15px" }}>
                                             <dt>
@@ -1273,8 +1319,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             />
                                         </div>
                                     </Col>
-                                    : null}
                             </Row>
+                                    : null}
                             <Row style={{ padding: "20px 23px 20px 20px" }}>
                                 <Col xs={12} md={12} lg={12}>
                                     <div style={{
@@ -1390,53 +1436,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         </ToolTip>
                                     </div>
                                 </Col>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Moneda (</span><span style={{ color: "red" }}>*</span>)
-                                        </dt>
-                                        <div onClick={() => this.showAlertDisabledCurrency(isEditableValue)} >
-                                            <ComboBox
-                                                labelInput="Seleccione..."
-                                                valueProp={'id'}
-                                                textProp={'value'}
-                                                {...currency}
-                                                name={nameCurrency}
-                                                parentId="dashboardComponentScroll"
-                                                data={selectsReducer.get(CURRENCY) || []}
-                                                disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
-                                                onChange={val => this._changeCurrency(val)}
-                                            />
-                                        </div>
-
-                                    </div>
-                                </Col>
                                 </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Valor nominal (</span>
-                                            <span style={{ color: "red" }}>*</span>)
-                                        </dt>
-                                            <ToolTip text={this.state.messageTooltipNominalValue} rendertooltip={this.state.messageTooltipNominalValue}>
-                                                <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
-                                                    <Input
-                                                        {...value}
-                                                        name="valueMillions"
-                                                        type="text"
-                                                        placeholder="Miles ' , ' y decimales ' . '"
-                                                        parentId="dashboardComponentScroll"
-                                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
-                                                        onFocus={val => handleFocusValueNumber(value, value.value)}
-                                                        disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
-                                                        onChange={val => this._changeValue(val)
-                                                        }
-                                                    />
-                                                </div>
-                                            </ToolTip>
-                                    </div>
-                                </Col>
                                 {this.state.showpendingDisbursementAmountField ?
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
