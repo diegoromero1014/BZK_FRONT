@@ -394,7 +394,7 @@ export class MyTaskPage extends Component {
         dispatchShowMessage(MESSAGE_ERROR, 'Error', 'Ocurrió un error generando el archivo.');
     }
     dispatchChangeStateSaveData(false, "");
-    dispatchShowMessage(MESSAGE_SUCCESS, 'Descarga', 'Senor usuario, el archivo se ha generado exitosamente.');
+    dispatchShowMessage(MESSAGE_SUCCESS, 'Descarga', 'Señor usuario, el archivo se ha generado exitosamente.');
   };
 
   render() {
