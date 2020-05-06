@@ -150,7 +150,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showJustificationField: false,
                 showProbabilityField: true,
                 showMellowingPeriodField: true,
-                showPivotNitField: false,
                 pipelineStatus: [],
                 messageTooltipNominalValue:null,
                 showInteresSpread: false,
@@ -194,7 +193,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._onChangeBusinessCategory=this._onChangeBusinessCategory.bind(this);
             this._pipelineTypeAndBusinessOnChange = this._pipelineTypeAndBusinessOnChange.bind(this);
             this._changeAreaAssetsEnabledValue = this._changeAreaAssetsEnabledValue.bind(this);
-            this._changeShowPivotNitField = this._changeShowPivotNitField.bind(this);
             this.setPipelineStatusValues = this.setPipelineStatusValues.bind(this);
             this.renderNominalValue = this.renderNominalValue.bind(this);
             this._showAlertFinancingAndPlan = this._showAlertFinancingAndPlan.bind(this);
@@ -371,12 +369,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
               });
         }
 
-        _changeShowPivotNitField(value){
-            this.setState({
-                showPivotNitField: value
-              });
-        }
-
         _changeProduct(value){                         
             const { fields: { productFamily }, selectsReducer } = this.props;
             let productFamilySelected = selectsReducer.get(ALL_PRODUCT_FAMILIES).find((family) => family.id == productFamily.value);
@@ -398,21 +390,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     this._changeAreaAssetsEnabledValue(false);
                     break;
                 }
-              }else if(productFamilySelectedKey === FACTORING){                  
-                switch (productSelectedKey) {
-                  case FACTORING_BANCOLOMBIA_CONFIRMING:
-                  case FACTORING_PLUS:
-                  case TRIANGULAR_LINE:
-                    this._changeShowPivotNitField(true);
-                    break;          
-                  default:
-                    this._changeShowPivotNitField(false);
-                    break;
-                }
-              }       
-            }else{
-                this._changeShowPivotNitField(false);
-            }   
+              }     
+            }  
           }
 
         _closeConfirmChangeCurrency() {
@@ -643,8 +622,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         _submitEditPipeline() {
             const { fields: {
                 idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
-                moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen, justificationDetail
+                moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets,
+                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, typePolicy, margen, justificationDetail
             }, createEditPipeline, changeStateSaveData, swtShowMessage, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
             } = this.props;
 
@@ -690,13 +669,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "productFamily": productFamily.value ? productFamily.value : "",
                             "mellowingPeriod": mellowingPeriod.value ? mellowingPeriod.value : "",
                             "areaAssets": areaAssets.value ? areaAssets.value : "",
-                            "areaAssetsValue": areaAssetsValue.value === undefined || areaAssetsValue.value === null || areaAssetsValue.value === '' ? '' : numeral(areaAssetsValue.value).format('0.00'),
                             "disbursementPlans": listDisburmentPlans,
                             "commercialReport": buildJsoncommercialReport(this.state.commercialReport, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick),
                             "pipelineType": pipelineType.value,
                             "commercialOportunity": commercialOportunity.value,
                             "justification": justification.value,
-                            "pivotNit": pivotNit.value ? pivotNit.value : "",
                             "margin": margen.value === undefined || margen.value === null || margen.value === '' ? '' : numeral(margen.value).format('0.00'),
                             "policyType": typePolicy.value ? typePolicy.value : "",
                             "justificationDetail": justificationDetail.value ? justificationDetail.value : ""
@@ -836,8 +813,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const {
                 fields: { businessStatus, commission, currency, idUsuario, nameUsuario, indexing, need, observations, product, roe, sva, moneyDistribitionMarket,
                     termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, positionCreatedBy,
-                    positionUpdatedBy, reviewedDate, probability, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                    termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen, justificationDetail
+                    positionUpdatedBy, reviewedDate, probability, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets,
+                    termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, typePolicy, margen, justificationDetail
                 }, updateDisbursementPlans
             } = this.props;                        
             updateDisbursementPlans(data.disbursementPlans, origin);
@@ -863,8 +840,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             termInMonths.onChange(data.termInMonths);
             termInMonthsValues.onChange(data.termInMonthsValues);            
             areaAssets.onChange(data.areaAssets);
-            areaAssetsValue.onChange(fomatInitialStateNumber(data.areaAssetsValue, 2));                        
-            pivotNit.onChange(data.pivotNit);                                        
             observations.onChange(data.observations === null ? '' : data.observations);                                    
             client.onChange(data.client);
             documentStatus.onChange(data.documentStatus);
@@ -978,8 +953,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const {
                 fields: { nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                     moneyDistribitionMarket, pendingDisbursementAmount, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
-                    positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                    termInMonthsValues, pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen, justificationDetail
+                    positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets,
+                    termInMonthsValues, pipelineType, commercialOportunity, justification, typePolicy, margen, justificationDetail
                 }, selectsReducer, handleSubmit, pipelineReducer, reducerGlobal
             } = this.props;            
             const ownerDraft = pipelineReducer.get('ownerDraft');
@@ -1513,41 +1488,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 : null}
                             </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Valor del activo/Proyecto</span>
-                                        </dt>
-                                        <Input
-                                            name="areaAssetsValue"
-                                            type="text"
-                                            {...areaAssetsValue}
-                                            parentId="dashboardComponentScroll"
-                                            onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, areaAssetsValue, val, true, 2)}
-                                            onFocus={val => handleFocusValueNumber(areaAssetsValue, areaAssetsValue.value)}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                        />
-                                    </div>
-                                </Col>
-                                {this.state.showPivotNitField ? 
-                                    <Col xs={6} md={3} lg={3}>
-                                        <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Nit pivote (</span><span style={{ color: "red" }}>*</span>)
-                                        </dt>
-                                        <div>
-                                            <Input
-                                            name="pivotNit"
-                                            type="text"
-                                            max="30"
-                                            parentId="dashboardComponentScroll"
-                                            {...pivotNit}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                            />
-                                        </div>
-                                        </div>
-                                    </Col>
-                                : null}
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
