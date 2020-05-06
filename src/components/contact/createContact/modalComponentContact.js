@@ -118,8 +118,8 @@ class ModalComponentContact extends Component {
     }
 
     _downloadFileSocialStyle() {
-        const { dispatchDownloadFilePdf , changeStateSaveData} = this.props;
-        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT, NAME_FILE_SOCIAL_STYLE_CONTACT, changeStateSaveData);
+        const { dispatchDownloadFilePdf , dispatchChangeStateSaveData} = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT, NAME_FILE_SOCIAL_STYLE_CONTACT, dispatchChangeStateSaveData);
     }
 
     _close() {
@@ -214,7 +214,7 @@ class ModalComponentContact extends Component {
     }
 
     _handleCreateContact() {
-        const { createContactNew, contactsByClientFindServer, changeStateSaveData } = this.props;
+        const { createContactNew, contactsByClientFindServer, dispatchChangeStateSaveData } = this.props;
         const {
             fields: {
                 id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial,
@@ -270,9 +270,9 @@ class ModalComponentContact extends Component {
             "interlocutorObjsDTO": interlocutor.elements
         };
 
-        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+        dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
         createContactNew(messageBody).then((data) => {
-            changeStateSaveData(false, "");
+            dispatchChangeStateSaveData(false, "");
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
                 redirectUrl("/login");
             } else {
@@ -284,7 +284,7 @@ class ModalComponentContact extends Component {
                 }
             }
         }, (reason) => {
-            changeStateSaveData(false, "");
+            dispatchChangeStateSaveData(false, "");
             this.setState({ showEr: true });
         });
     }
@@ -857,14 +857,14 @@ function mapDispatchToProps(dispatch) {
         clearContactCreate,
         clearContactOrder,
         consultList,
-        changeStateSaveData,
         nonValidateEnter,
         getListContactGroupById,
         dispatchCleanList: cleanList,
         dispatchAddToList: addToList,
         dispatchCreateList: createList,
         dispatchSwtShowMessage: swtShowMessage,
-        dispatchDownloadFilePdf: downloadFilePdf
+        dispatchDownloadFilePdf: downloadFilePdf,
+        dispatchChangeStateSaveData: changeStateSaveData,
     }, dispatch);
 }
 

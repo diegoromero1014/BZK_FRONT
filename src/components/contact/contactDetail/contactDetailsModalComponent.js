@@ -164,8 +164,8 @@ export class ContactDetailsModalComponent extends Component {
     }
 
     _downloadFileSocialStyle() {
-        const { dispatchDownloadFilePdf, changeStateSaveData } = this.props;
-        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT,  NAME_FILE_SOCIAL_STYLE_CONTACT, changeStateSaveData);
+        const { dispatchDownloadFilePdf, dispatchChangeStateSaveData } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT,  NAME_FILE_SOCIAL_STYLE_CONTACT, dispatchChangeStateSaveData);
         this.setState({ generoData: genero });
     }
 
@@ -308,7 +308,7 @@ export class ContactDetailsModalComponent extends Component {
                 contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact,
                 contactLineOfBusiness, contactFunctions, contactHobbies, contactSports, contactSocialStyle,
                 contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures, updateCheckObservation
-            }, changeStateSaveData, callFromModuleContact, resetPage, swtShowMessage, elementsReducer
+            }, dispatchChangeStateSaveData, callFromModuleContact, resetPage, swtShowMessage, elementsReducer
         } = this.props;
         const { contactDetail, contactsByClientFindServer } = this.props;
         const contact = contactDetail.get('contactDetailList');
@@ -362,9 +362,9 @@ export class ContactDetailsModalComponent extends Component {
             "interlocutorObjsDTO": interlocutor.elements
         };
 
-        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+        dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
         saveContact(jsonUpdateContact).then((data) => {
-            changeStateSaveData(false, "");
+            dispatchChangeStateSaveData(false, "");
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
                 redirectUrl("/login");
             } else {
@@ -385,7 +385,7 @@ export class ContactDetailsModalComponent extends Component {
                 }
             }
         }, () => {
-            changeStateSaveData(false, "");
+            dispatchChangeStateSaveData(false, "");
             swtShowMessage('error', 'Error editando contacto', 'Señor usuario, ocurrió un error editando el contacto.');
         });
     }
@@ -422,7 +422,7 @@ export class ContactDetailsModalComponent extends Component {
         this._markAsOutdated();
     }
     _markAsOutdated() {
-        const { fields: { updateCheckObservation }, redirectUrl, changeStateSaveData, resetPage, swtShowMessage, showLoading } = this.props;
+        const { fields: { updateCheckObservation }, redirectUrl, dispatchChangeStateSaveData, resetPage, swtShowMessage, showLoading } = this.props;
         const { markAsOutdated } = this.props;
         const { contactDetail, contactsByClientFindServer } = this.props;
 
@@ -436,7 +436,7 @@ export class ContactDetailsModalComponent extends Component {
         showLoading(true, MESSAGE_LOAD_DATA);
         markAsOutdated(jsonContact).then((data) => {
             showLoading(false, "");
-            changeStateSaveData(false, "");
+            dispatchChangeStateSaveData(false, "");
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
                 redirectUrl("/login");
             } else {
@@ -459,7 +459,7 @@ export class ContactDetailsModalComponent extends Component {
                 }
             }
         }, () => {
-            changeStateSaveData(false, "");
+            dispatchChangeStateSaveData(false, "");
             swtShowMessage('error', 'Error actualizando información', 'Señor usuario, ocurrió un error guardando la información.');
         });
 
@@ -1032,7 +1032,6 @@ function mapDispatchToProps(dispatch) {
         consultListWithParameterUbication,
         contactsByClientFindServer,
         clearClienEdit,
-        changeStateSaveData,
         nonValidateEnter,
         deleteRelationshipServer,
         showLoading,
@@ -1041,7 +1040,8 @@ function mapDispatchToProps(dispatch) {
         dispatchCleanList: cleanList,
         dispatchAddToList: addToList,
         dispatchCreateList: createList,
-        dispatchDownloadFilePdf : downloadFilePdf
+        dispatchDownloadFilePdf : downloadFilePdf,
+        dispatchChangeStateSaveData : changeStateSaveData
     }, dispatch);
 }
 
