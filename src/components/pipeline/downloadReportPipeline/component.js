@@ -174,7 +174,6 @@ export class DownloadPipeline extends Component {
                                         <li>{'Roe'}</li>
                                         <li>{'Margen'}</li>
                                         <li>{'SVA'}</li>
-                                        <li>{'Nit Pivote'}</li>
                                         <li>{'Justificación'}</li>
                                         <li>{'Libros'}</li>
                                         <li>{'Observaciones'}</li>
