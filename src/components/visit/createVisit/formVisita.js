@@ -37,7 +37,8 @@ import {
   TITLE_BANC_PARTICIPANTS,
   TITLE_CLIENT_PARTICIPANTS,
   TITLE_CONCLUSIONS_VISIT,
-  TITLE_OTHERS_PARTICIPANTS
+  TITLE_OTHERS_PARTICIPANTS,
+  NAME_FILE_SHOPPING_MAP
 } from "../../../constantsGlobal";
 import { LAST_VISIT_REVIEW } from "../../../constantsParameters";
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from "../../participantsVisitPre/constants";
@@ -401,8 +402,8 @@ class FormVisita extends Component {
   }
 
   _downloadFileShoppingMap() {
-    const { dispatchDownloadFilePdf } = this.props;
-    dispatchDownloadFilePdf(FILE_OPTION_SHOPPING_MAP);
+    const { dispatchDownloadFilePdf, dispatchChangeStateSaveData } = this.props;
+    dispatchDownloadFilePdf(FILE_OPTION_SHOPPING_MAP, NAME_FILE_SHOPPING_MAP, dispatchChangeStateSaveData);
   }
 
   componentWillMount() {
@@ -780,11 +781,11 @@ function mapDispatchToProps(dispatch) {
     addParticipant,
     clearIdPrevisit,
     clearParticipants,
-    changeStateSaveData,
     nonValidateEnter,
     setConfidential,
     dispatchPrepareTasksNotes: prepareTasksNotes,
-    dispatchDownloadFilePdf: downloadFilePdf
+    dispatchDownloadFilePdf: downloadFilePdf,
+    dispatchChangeStateSaveData : changeStateSaveData
   }, dispatch);
 }
 

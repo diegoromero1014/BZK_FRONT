@@ -39,7 +39,8 @@ import {
     FILE_OPTION_SOCIAL_STYLE_CONTACT,
     MESSAGE_SAVE_DATA,
     VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS_MESAGE
+    REGEX_SIMPLE_XSS_MESAGE,
+    NAME_FILE_SOCIAL_STYLE_CONTACT
 } from '../../../constantsGlobal';
 
 import {
@@ -117,8 +118,8 @@ class ModalComponentContact extends Component {
     }
 
     _downloadFileSocialStyle() {
-        const { dispatchDownloadFilePdf } = this.props;
-        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT);
+        const { dispatchDownloadFilePdf , changeStateSaveData} = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT, NAME_FILE_SOCIAL_STYLE_CONTACT, changeStateSaveData);
     }
 
     _close() {

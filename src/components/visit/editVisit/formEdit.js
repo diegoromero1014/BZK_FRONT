@@ -46,7 +46,8 @@ import {
     TITLE_BANC_PARTICIPANTS,
     TITLE_CLIENT_PARTICIPANTS,
     TITLE_CONCLUSIONS_VISIT,
-    TITLE_OTHERS_PARTICIPANTS
+    TITLE_OTHERS_PARTICIPANTS,
+    NAME_FILE_SHOPPING_MAP
 } from "../../../constantsGlobal";
 import {
     KEY_PARTICIPANT_CLIENT,
@@ -113,8 +114,8 @@ class FormEdit extends Component {
     }
 
     _downloadFileShoppingMap() {
-        const { dispatchDownloadFilePdf } = this.props;
-        dispatchDownloadFilePdf(FILE_OPTION_SHOPPING_MAP);
+        const { dispatchDownloadFilePdf, dispatchChangeStateSaveData } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SHOPPING_MAP, NAME_FILE_SHOPPING_MAP,dispatchChangeStateSaveData);
     }
 
     _clickSeletedTab(tab) {
@@ -989,7 +990,6 @@ function mapDispatchToProps(dispatch) {
         detailVisit,
         filterUsersBanco,
         addTask,
-        changeStateSaveData,
         nonValidateEnter,
         showLoading,
         addListParticipant,
@@ -1000,7 +1000,8 @@ function mapDispatchToProps(dispatch) {
         setConfidential,
         clearParticipants,
         dispatchPrepareTasksNotes: prepareTasksNotes,
-        dispatchDownloadFilePdf : downloadFilePdf
+        dispatchDownloadFilePdf : downloadFilePdf,
+        dispatchChangeStateSaveData : changeStateSaveData
     }, dispatch);
 }
 

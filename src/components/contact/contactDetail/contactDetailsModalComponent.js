@@ -52,7 +52,8 @@ import {
     MESSAGE_LOAD_DATA,
     VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS_MESAGE,
-    MARCAR_CONTACTO_DESACTUALIZADO
+    MARCAR_CONTACTO_DESACTUALIZADO,
+    NAME_FILE_SOCIAL_STYLE_CONTACT
 } from '../../../constantsGlobal';
 import {
     MESSAGE_WARNING_FORBIDDEN_CHARACTER,
@@ -163,8 +164,8 @@ export class ContactDetailsModalComponent extends Component {
     }
 
     _downloadFileSocialStyle() {
-        const { dispatchDownloadFilePdf } = this.props;
-        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT);
+        const { dispatchDownloadFilePdf, changeStateSaveData } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT,  NAME_FILE_SOCIAL_STYLE_CONTACT, changeStateSaveData);
         this.setState({ generoData: genero });
     }
 

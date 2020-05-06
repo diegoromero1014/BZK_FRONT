@@ -12,9 +12,10 @@ import { OBJECTIVES, OBJECTIVES_ERROR_MSG, MANDATORY_OBJECTIVES_MSG, OBJECTIVES_
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import Tooltip from "../toolTip/toolTipComponent";
 import { downloadFilePdf } from '../clientInformation/actions';
-import { FILE_OPTION_SOCIAL_STYLE_CONTACT } from '../../constantsGlobal';
+import { FILE_OPTION_SOCIAL_STYLE_CONTACT, NAME_FILE_SOCIAL_STYLE_CONTACT } from '../../constantsGlobal';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import { FILTER_SOCIAL_STYLE } from '../selectsComponent/constants';
+import { changeStateSaveData } from '../main/actions';
 
 export class ParticipantInformation extends Component {
 
@@ -62,8 +63,8 @@ export class ParticipantInformation extends Component {
     }
 
     handleDownloadFileSocialStyle = () => {
-        const { dispatchDownloadFilePdf } = this.props;
-        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT);
+        const { dispatchDownloadFilePdf, dispatchChangeStateSaveData } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT,  NAME_FILE_SOCIAL_STYLE_CONTACT, dispatchChangeStateSaveData);
     }
 
     renderLabelSocialStyle = ({ name, message, nullable }) => (
@@ -261,7 +262,8 @@ const mapDispatchToProps = dispatch => {
         dispatchAddToList: addToList,
         dispatchCreateList: createList,
         dispatchSwtShowMessage: swtShowMessage,
-        dispatchDownloadFilePdf: downloadFilePdf
+        dispatchDownloadFilePdf: downloadFilePdf,
+        dispatchChangeStateSaveData : changeStateSaveData
     }, dispatch)
 };
 

@@ -32,32 +32,14 @@ export function consultInfoClient(idClient) {
     }
 }
 
-export function downloadFilePdf(idFileDownload) {
+export function downloadFilePdf(idFileDownload, filename ,changeStateSaveData) {
     const payload = {
         messageHeader: {
             sessionToken: window.localStorage.getItem('sessionTokenFront')
         },
         messageBody: idFileDownload
     };
-
-    switch (idFileDownload) {
-
-        case FILE_OPTION_SOCIAL_STYLE_CONTACT:
-            downloadReport(payload, "/generate/downloadFilePDF", "EstiloSocial.pdf", null);
-            break;
-        case FILE_OPTION_VISIT_REPORT:
-            downloadReport(payload, "/generate/downloadFilePDF", "InformeVisita.pdf", null);
-            break;
-        case FILE_OPTION_SHOPPING_MAP:
-            downloadReport(payload, "/generate/downloadFilePDF", "MapaDeCompras.pdf", null);
-            break;
-        case FILE_OPTION_PRE_VISIT_GUIDE:
-            downloadReport(payload, "/generate/downloadFilePDF", "GuiaPrevisita.pdf", null);
-            break;
-
-        default:
-            break;
-    }
+    downloadReport(payload, "/generate/downloadFilePDF", filename, changeStateSaveData);
 }
 
 export function clearInfoClient() {
