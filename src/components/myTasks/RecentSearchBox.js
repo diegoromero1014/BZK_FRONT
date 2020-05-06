@@ -26,7 +26,7 @@ const RecentSearchBox = ({recordsRecentSearch, deleteSearch, applyRecentSearch})
   return (
     <Segment style={{padding: "10px", width: '100%'}}>
       <div style={{display: "flex"}}>
-        <h4 style={{margin: "3px"}}>Busquedas recientes:</h4>
+        <h4 style={{margin: "3px"}}>Búsquedas recientes:</h4>
         <div style={{paddingLeft: "5px", paddingRight: "5px"}}>
           {renderSearches()}
         </div>

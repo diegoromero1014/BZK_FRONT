@@ -94,7 +94,7 @@ export class Task extends Component {
         ];
 
         return (
-            <div style={{ width: '45%', height: '100%' }}>
+            <div style={{ width: '47%', height: '100%' }}>
                 <h3>TAREAS</h3>
                 <div className={'dashboard-tasks-container'} >
                     <Tabs tabs={tabs} />

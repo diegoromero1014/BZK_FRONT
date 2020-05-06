@@ -4,9 +4,9 @@ import Immutable from "immutable";
 
 import {MyTaskPage} from "../../../../../src/components/myTasks/myTaskPage";
 import * as actions from "../../../../../src/components/myTasks/actions";
+import * as myTasksActions from "../../../../../src/components/myTasks/actions";
 import {ASSIGNED, FINISHED, PENDING} from "../../../../../src/components/myTasks/constants";
 import * as globalActions from "../../../../../src/components/globalComponents/actions";
-import * as myTasksActions from "../../../../../src/components/myTasks/actions";
 
 const myTasks = Immutable.Map({
     tabPending: {order: 0, rowCount: 0, data: {}, page: 0},
@@ -54,6 +54,9 @@ let getPendingTaskPromise;
 let getFinalizedTaskPromise;
 let redirectUrl;
 let defaultProps;
+let dispatchChangeStateSaveData;
+let dispatchGetXlsTask = sinon.stub();
+let dispatchShowMessage = sinon.stub();
 const dispatchValidatePermissionsByModule = sinon
     .stub()
     .resolves({
@@ -74,6 +77,8 @@ describe("Test MyTasks component", () => {
             .resolves({data: {status: 200, data: {}}});
 
         dispatchRequestSaveRecentSearch.resolves({data: {status: 200, data: 12}});
+        dispatchGetXlsTask.resolves({payload:{data:{data: { status: 200, filename: '', data: []}}}});
+        dispatchChangeStateSaveData = sinon.fake();
         dispatchDeleteRecentSearch.resolves({data: {status: 200, data: {status: 200}}});
         dispatchGetMyRecentSearch.resolves({data: {data: { status: 200, data: []}}});
         redirectUrl = sinon.stub(globalActions, "redirectUrl");
@@ -95,6 +100,9 @@ describe("Test MyTasks component", () => {
             dispatchGetMyRecentSearch,
             dispatchCleanPendingTasks,
             dispatchCleanFinalizedTasks,
+            dispatchChangeStateSaveData,
+            dispatchGetXlsTask,
+            dispatchShowMessage,
             allRecentSearch: {
                 data: []
             }
@@ -349,6 +357,14 @@ describe("Test MyTasks component", () => {
         let wrapper = shallow(<MyTaskPage {...defaultProps}/>);
         wrapper.instance().applyRecentSearch(1);
         expect(dispatchUseRecentSearch.calledOnce).to.equal(true);
+    });
+
+    it('downloadTask test', async () => {
+        let wrapper = shallow(<MyTaskPage {...defaultProps}/>);
+        await wrapper.instance().downloadTask();
+        wrapper.update();
+        wrapper.instance().removeLastRecentSearch();
+        sinon.assert.calledTwice(dispatchChangeStateSaveData);
     });
 
     it('should call dispatchCleanPendingTasks and dispatchCleanFinalizedTasks on componentWillUnmount', () => {
