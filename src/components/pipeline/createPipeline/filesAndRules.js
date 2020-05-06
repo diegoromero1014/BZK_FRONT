@@ -45,8 +45,8 @@ export const fieldsWithRules = {
     pivotNit: {rules: [checkRequiredPivotNit]},
     margen:{rules: [validateDecimal]},
     typePolicy: { rules: [] },
-    businessCategory2: { rules: [checkRequiredWithGlobalCondition] },
-    nominalValue2:{ rules: [checkRequired, checkNumberLength(15)] }
+    businessCategory2: { rules: [] },
+    nominalValue2:{ rules: [checkNumberLength(15)] }
 }
 
 export const fields = _.keys(fieldsWithRules);
