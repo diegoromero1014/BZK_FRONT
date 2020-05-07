@@ -21,14 +21,13 @@ import SecurityMessageComponent from '../../globalComponents/securityMessageComp
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 import { patternOfNumberDocument, patternOfForbiddenCharacter } from '../../../validationsFields/patternsToValidateField';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { toggleModalContact, createContactNew, searchContact, clearSearchContact } from './actions';
+import { createContactNew, searchContact, clearSearchContact } from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions'
 import { downloadFilePdf } from '../../clientInformation/actions';
 import { changeStateSaveData } from '../../main/actions';
 import { getListContactGroupById } from '../favoritesGroup/actions';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
 import {
-    consultDataSelect,
     consultListWithParameterUbication,
     getMasterDataFields
 } from '../../selectsComponent/actions';
@@ -795,7 +794,7 @@ export class ModalComponentContact extends Component {
     }
 }
 
-const mapStateToProps = ({ createContactReducer, selectsReducer, reducerGlobal, groupsFavoriteContacts,clientInformacion, elementsReducer }, { fields }) => {
+const mapStateToProps = ({ createContactReducer, selectsReducer, reducerGlobal, groupsFavoriteContacts,clientInformacion, elementsReducer }) => {
     const contactDetail = !createContactReducer.get('isClientContact') ? createContactReducer.get('responseSearchContactData') : false;
     const clientInfo = Object.assign({}, clientInformacion.get('responseClientInfo'));
     
