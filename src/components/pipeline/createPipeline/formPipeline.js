@@ -934,6 +934,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _showBusinessCategory2(value){
+      const {fields:{businessCategory2, nominalValue2}} = this.props;
       if(value){
         this.setState({
           showBusinessCategory2: true
@@ -941,8 +942,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       }else {
         this.setState({
           showBusinessCategory2: false
-        })
+        });
+        this._onChangeBusinessCategory2("");
       }
+      businessCategory2.onChange("");
+      nominalValue2.onChange("");
     }
 
     render() {
@@ -1180,7 +1184,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 </Col>
                 <Col xs={6} md={3} lg={3}>
                   <ToolTip text='Eliminar categoría del negocio 2 / Valor nominal 2' rendertooltip='Eliminar categoría del negocio 2 / Valor nominal 2'>
-                    <button className="btn btn-secondary" type="button" style={{ marginTop: '18px' }} onClick={() => this._showBusinessCategory2(false)}>
+                    <button className="btn btn-secondary" type="button" style={{ marginTop: '18px', backgroundColor: "rgb(193, 193, 193)" , padding: "4x" }}
+                            onClick={() => this._showBusinessCategory2(false)}>
                       <i className="delete icon"/>
                     </button>
                   </ToolTip>

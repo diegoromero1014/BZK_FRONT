@@ -147,6 +147,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
     let message = "";
     let idCurrencyAux = null;
     let contollerErrorChangeType = false;
+    let keyBusinessCategory = "";
+    let keyBusinessCategory2 = "";
 
     class FormEditPipeline extends Component {
         constructor(props) {
@@ -475,11 +477,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         _onChangeBusinessCategory2(val){
             const { fields: { commission }, selectsReducer } = this.props;
             const businessCategories2 = selectsReducer.get(ALL_BUSINESS_CATEGORIES);
-
-            const selectedBusinessCategory2 = businessCategories2.find((businessCategory2) => businessCategory2.id === val);
-            const keyBusinessCategory2= selectedBusinessCategory2 ? selectedBusinessCategory2.key.toLowerCase() : '';
-
-            if(keyBusinessCategory2 === PLACEMENTS || keyBusinessCategory2 === CATCHMENTS ){
+            const selectedBusinessCategory2 = businessCategories2.find((businessCategory2) => businessCategory2.id == val);
+             keyBusinessCategory2 = selectedBusinessCategory2 ? selectedBusinessCategory2.key.toLowerCase() : '';
+            if((keyBusinessCategory2 === PLACEMENTS || keyBusinessCategory2 === CATCHMENTS) || (keyBusinessCategory === PLACEMENTS || keyBusinessCategory === CATCHMENTS)){
                 this.setState({
                     showInteresSpread: true
                 });
@@ -517,8 +517,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const { fields: { commission }, selectsReducer } = this.props; 
             const businessCategories = selectsReducer.get(ALL_BUSINESS_CATEGORIES);
             const selectedBusinessCategory = businessCategories.find((businessCategory) => businessCategory.id == businessCategoryValue);     
-            const keyBusinessCategory= selectedBusinessCategory ? selectedBusinessCategory.key.toLowerCase() : '';
-            if(keyBusinessCategory == PLACEMENTS || keyBusinessCategory == CATCHMENTS){                
+            keyBusinessCategory = selectedBusinessCategory ? selectedBusinessCategory.key.toLowerCase() : '';
+            if((keyBusinessCategory === PLACEMENTS || keyBusinessCategory === CATCHMENTS) || (keyBusinessCategory2 === PLACEMENTS || keyBusinessCategory2 === CATCHMENTS)){
                 this.setState({
                     showInteresSpread: true
                 });
@@ -1046,9 +1046,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 this.setState({
                     showBusinessCategory2: false
                 });
-                businessCategory2.onChange('');
-                nominalValue2.onChange('');
+                this._onChangeBusinessCategory2("");
             }
+            businessCategory2.onChange("");
+            nominalValue2.onChange("");
         }
 
         renderNominalValue() {
@@ -1353,7 +1354,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     </Col>
                                     <Col xs={6} md={3} lg={3}>
                                         <ToolTip text='Eliminar categoría del negocio 2 / Valor nominal 2' rendertooltip='Eliminar categoría del negocio 2 / Valor nominal 2'>
-                                            <button className="btn btn-secondary" type="button" style={{ marginTop: '18px' , backgroundColor: "rgb(193, 193, 193)"  }}
+                                            <button className="btn btn-secondary" type="button" style={{ marginTop: '18px' , backgroundColor: "rgb(193, 193, 193)" , padding: "4x"  }}
                                                     onClick={() => this._showBusinessCategory2(false)}
                                                     disabled={this.state.isEditable ? '' : 'disabled'}>
                                                 <i className="delete icon"/>
