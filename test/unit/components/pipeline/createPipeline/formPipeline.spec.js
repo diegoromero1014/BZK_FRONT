@@ -183,7 +183,7 @@ describe("Test CreatePipeline", () => {
         .dive()
         .dive()
         .dive();
-    const svaFieldTooltip = wrapper.find(Tooltip).find({ text: HELP_SVA, rendertooltip: HELP_SVA });
+    const svaFieldTooltip = wrapper.find(Tooltip).find({ text: HELP_SVA });
     const svaField = wrapper.find(Input).find({ name: "sva" });
     expect(svaFieldTooltip).to.have.lengthOf(1);
     expect(svaFieldTooltip).contains(svaField);

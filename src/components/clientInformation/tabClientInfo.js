@@ -174,8 +174,7 @@ export class TabClientInfo extends Component {
                                 {
                                     this.state.counterTabPending > 0 &&
                                     <ToolTip
-                                      text={TOOLTIP_PENDING_TASK(this.state.counterTabPending)}
-                                      rendertooltip={TOOLTIP_PENDING_TASK(this.state.counterTabPending)}>
+                                      text={TOOLTIP_PENDING_TASK(this.state.counterTabPending)}>
                                         <Label
                                           circular
                                           floating

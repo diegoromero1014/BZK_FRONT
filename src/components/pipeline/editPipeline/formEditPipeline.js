@@ -1375,7 +1375,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         <dt>
                                             <span>SVA</span>
                                         </dt>
-                                        <ToolTip text={HELP_SVA} rendertooltip={HELP_SVA}>
+                                        <ToolTip text={HELP_SVA}>
                                             <div>
                                                 <Input
                                                   {...sva}
@@ -1419,7 +1419,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                             <span>Valor nominal (</span>
                                             <span style={{ color: "red" }}>*</span>)
                                         </dt>
-                                            <ToolTip text={this.state.messageTooltipNominalValue} rendertooltip={this.state.messageTooltipNominalValue}>
+                                            <ToolTip text={this.state.messageTooltipNominalValue}>
                                                 <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
                                                     <Input
                                                         {...value}

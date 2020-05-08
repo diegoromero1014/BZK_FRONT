@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { APP_URL, MESSAGE_DOWNLOAD_DATA } from './constantsGlobal';
 
 export function createErrorsPriority(fields, order) {

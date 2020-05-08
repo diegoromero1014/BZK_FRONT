@@ -56,10 +56,6 @@ class ToolTipComponent extends Component {
     }
 }
 
-ToolTipComponent.defaultProps = {
-    rendertooltip: true
-}
-
 ToolTipComponent.propTypes = {
     children: PropTypes.element.isRequired,
     title: PropTypes.string,
