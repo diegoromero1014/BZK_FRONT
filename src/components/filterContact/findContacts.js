@@ -105,8 +105,8 @@ export class SearchContacts extends Component {
         dispatchClearContacts();
     }
 
-    mapContactsItems = (item, idx) => {
-        <ContactListItem
+    _mapContactsItems(item, idx) {
+        return <ContactListItem
             key={idx}
             id={item.id}
             typeDocument={item.typeDocument}
@@ -188,7 +188,7 @@ export class SearchContacts extends Component {
                                 <Col xs>
                                     <div className="news-page content">
                                         <div className="team-modal">
-                                            {contactItems.map(this.mapContactsItems)}
+                                            {contactItems.map(this._mapContactsItems)}
                                         </div>
                                     </div>
                                 </Col>
