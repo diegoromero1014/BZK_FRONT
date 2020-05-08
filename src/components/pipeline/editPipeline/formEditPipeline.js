@@ -516,6 +516,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         showInteresSpreadField(businessCategoryValue){
             const { fields: { commission }, selectsReducer } = this.props; 
             const businessCategories = selectsReducer.get(ALL_BUSINESS_CATEGORIES);
+            console.log({businessCategories});
             const selectedBusinessCategory = businessCategories.find((businessCategory) => businessCategory.id == businessCategoryValue);     
             keyBusinessCategory = selectedBusinessCategory ? selectedBusinessCategory.key.toLowerCase() : '';
             if((keyBusinessCategory === PLACEMENTS || keyBusinessCategory === CATCHMENTS) || (keyBusinessCategory2 === PLACEMENTS || keyBusinessCategory2 === CATCHMENTS)){
@@ -1303,7 +1304,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
                                     <ToolTip text='Agregar categoría del negocio 2 / Valor nominal 2' rendertooltip='Agregar categoría del negocio 2 / Valor nominal 2'>
-                                        <button className="btn btn-primary" type="button" style={{ marginTop: '18px' }} onClick={() => this._showBusinessCategory2(true)}
+                                        <button className="btn btn-primary" type="button"  id="addCategory" style={{ marginTop: '18px' }} onClick={() => this._showBusinessCategory2(true)}
                                                 disabled={this.state.isEditable ? '' : 'disabled'}>
                                             <i className="plus icon"/> Categoría del negocio
                                         </button>
