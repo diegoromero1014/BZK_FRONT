@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { OutdatedContactsComponent } from '../../../../../../src/components/managementView/widgets/alerts/outdatedContacts';
 import OutdatedContactsComponentRedux from '../../../../../../src/components/managementView/widgets/alerts/outdatedContacts';
 import configureStore from 'redux-mock-store';

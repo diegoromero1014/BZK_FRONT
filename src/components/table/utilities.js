@@ -38,7 +38,7 @@ export const buildRows = tableSettings => {
     if (loading) {
         return (
             <Table.HeaderCell colSpan={colSpan} textAlign='center' style={{ cursor: 'pointer' }}>
-                <Progress percent={100} active attached='top' />
+                <Progress percent={100} active attached='top' className={'progress-table'} />
             </Table.HeaderCell>
         )
     }
