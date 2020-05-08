@@ -48,10 +48,10 @@ class SidebarComponent extends React.Component {
                   className="btn"
                   title="Filtrar"
                   type="button"
-                  style={{backgroundColor: "#00448c"}}
+                  style={{backgroundColor: "#00448c", width: '100%'}}
                   onClick={() => this.onSetSidebarOpen(true)}>
             <i className="filter icon" style={{margin: '0em', fontSize: '1.2em'}}/>
-            Filtrar
+            &nbsp;Filtrar
           </button>
         </div>
 

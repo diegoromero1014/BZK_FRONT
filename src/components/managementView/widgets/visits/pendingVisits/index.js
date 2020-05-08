@@ -35,6 +35,7 @@ export class PendingVisits extends Component {
 
 	handelClickClient = async element => {
 		const { previsitId, previsitClientId } = element;
+		window.sessionStorage.setItem('idClientSelected', previsitClientId);
 		const { dispatchChangeActiveItemMenu, dispatchUpdateTitleNavBar, dispatchConsultInfoClient, dispatchValidatePermissionsByModule } = this.props;
 		dispatchChangeActiveItemMenu(MODULE_MY_CLIENTS);
 		await dispatchConsultInfoClient(previsitClientId);
