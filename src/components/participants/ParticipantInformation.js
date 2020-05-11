@@ -63,8 +63,8 @@ export class ParticipantInformation extends Component {
     }
 
     handleDownloadFileSocialStyle = () => {
-        const { dispatchDownloadFilePdf, dispatchChangeStateSaveData } = this.props;
-        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT,  NAME_FILE_SOCIAL_STYLE_CONTACT, dispatchChangeStateSaveData);
+        const { dispatchDownloadFilePdf, dispatchChangeStateSaveData, dispatchSwtShowMessage } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT,  NAME_FILE_SOCIAL_STYLE_CONTACT, dispatchChangeStateSaveData, dispatchSwtShowMessage);
     }
 
     renderLabelSocialStyle = ({ name, message, nullable }) => (

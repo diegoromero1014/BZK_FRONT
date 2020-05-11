@@ -60,6 +60,7 @@ import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercia
 import {
     checkRequired, checkRichTextRequired
 } from './../../../validationsFields/rulesField';
+import { swtShowMessage } from "../../sweetAlertMessages/actions";
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral", "participantesCliente", "participantesBanco", "participantesOtros", "pendientes"];
 let dateVisitLastReview;
@@ -114,8 +115,8 @@ class FormEdit extends Component {
     }
 
     _downloadFileShoppingMap() {
-        const { dispatchDownloadFilePdf, dispatchChangeStateSaveData } = this.props;
-        dispatchDownloadFilePdf(FILE_OPTION_SHOPPING_MAP, NAME_FILE_SHOPPING_MAP,dispatchChangeStateSaveData);
+        const { dispatchDownloadFilePdf, dispatchChangeStateSaveData, dispatchSwtShowMessage } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SHOPPING_MAP, NAME_FILE_SHOPPING_MAP, dispatchChangeStateSaveData, dispatchSwtShowMessage );
     }
 
     _clickSeletedTab(tab) {
@@ -1001,7 +1002,8 @@ function mapDispatchToProps(dispatch) {
         clearParticipants,
         dispatchPrepareTasksNotes: prepareTasksNotes,
         dispatchDownloadFilePdf : downloadFilePdf,
-        dispatchChangeStateSaveData : changeStateSaveData
+        dispatchChangeStateSaveData : changeStateSaveData,
+        dispatchSwtShowMessage : swtShowMessage
     }, dispatch);
 }
 

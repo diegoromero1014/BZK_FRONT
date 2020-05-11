@@ -52,6 +52,7 @@ import moment from "moment";
 import { buildJsoncommercialReport } from "../../commercialReport/functionsGenerics";
 import { setConfidential } from "../../commercialReport/actions";
 import {prepareTasksNotes} from "../tasks/actions";
+import { swtShowMessage } from "../../sweetAlertMessages/actions";
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral"];
 var dateVisitLastReview;
@@ -402,8 +403,8 @@ class FormVisita extends Component {
   }
 
   _downloadFileShoppingMap() {
-    const { dispatchDownloadFilePdf, dispatchChangeStateSaveData } = this.props;
-    dispatchDownloadFilePdf(FILE_OPTION_SHOPPING_MAP, NAME_FILE_SHOPPING_MAP, dispatchChangeStateSaveData);
+    const { dispatchDownloadFilePdf, dispatchChangeStateSaveData, dispatchSwtShowMessage } = this.props;
+    dispatchDownloadFilePdf(FILE_OPTION_SHOPPING_MAP, NAME_FILE_SHOPPING_MAP, dispatchChangeStateSaveData, dispatchSwtShowMessage);
   }
 
   componentWillMount() {
@@ -785,7 +786,8 @@ function mapDispatchToProps(dispatch) {
     setConfidential,
     dispatchPrepareTasksNotes: prepareTasksNotes,
     dispatchDownloadFilePdf: downloadFilePdf,
-    dispatchChangeStateSaveData : changeStateSaveData
+    dispatchChangeStateSaveData : changeStateSaveData,
+    dispatchSwtShowMessage : swtShowMessage
   }, dispatch);
 }
 

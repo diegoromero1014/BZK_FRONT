@@ -32,14 +32,22 @@ export function consultInfoClient(idClient) {
     }
 }
 
-export function downloadFilePdf(idFileDownload, filename ,changeStateSaveData) {
+export const downloadFilePdf = async (idFileDownload, filename ,changeStateSaveData, swtShowMessage) => {
     const payload = {
         messageHeader: {
             sessionToken: window.localStorage.getItem('sessionTokenFront')
         },
         messageBody: idFileDownload
     };
-    downloadReport(payload, "/generate/downloadFilePDF", filename, changeStateSaveData);
+
+    let response = await axios.post(`${APP_URL}/generate/downloadFilePDF`, payload)
+
+    if (response.data.status === 500 ) {
+        swtShowMessage('error','Error descargando el pdf','Señor usuario, ocurrió un error descargando el pdf')
+    }else{
+        downloadReport(payload, "/generate/downloadFilePDF", filename, changeStateSaveData);
+    }
+
 }
 
 export function clearInfoClient() {

@@ -20,6 +20,7 @@ import { FILE_OPTION_PRE_VISIT_GUIDE, MODULE_PREVISITS, CREAR, DESCARGAR, NAME_F
 import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _PREVISIT } from '../../constantsAnalytics';
 import _ from 'lodash';
 import { changeStateSaveData } from '../main/actions';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 export class PrevisitComponent extends Component {
 
@@ -65,8 +66,8 @@ export class PrevisitComponent extends Component {
   }
 
   downloadFilePrevisitGuide = () => {
-    const { dispatchDownloadFilePdf, dispatchChangeStateSaveData } = this.props;
-    dispatchDownloadFilePdf(FILE_OPTION_PRE_VISIT_GUIDE, NAME_FILE_PRE_VISIT_GUIDE, dispatchChangeStateSaveData);
+    const { dispatchDownloadFilePdf, dispatchChangeStateSaveData, dispatchSwtShowMessage } = this.props;
+    dispatchDownloadFilePdf(FILE_OPTION_PRE_VISIT_GUIDE, NAME_FILE_PRE_VISIT_GUIDE, dispatchChangeStateSaveData, dispatchSwtShowMessage);
   }
 
   render() {
@@ -137,7 +138,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   dispatchUpdateTitleNavBar: updateTitleNavBar,
   dispatchValidatePermissionsByModule: validatePermissionsByModule,
   dispatchDownloadFilePdf: downloadFilePdf,
-  dispatchChangeStateSaveData: changeStateSaveData
+  dispatchChangeStateSaveData: changeStateSaveData,
+  dispatchSwtShowMessage : swtShowMessage
 }, dispatch);
 
 const mapStateToProps = ({ previsitReducer, reducerGlobal, navBar }) => ({
