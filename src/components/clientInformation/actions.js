@@ -43,7 +43,7 @@ export const downloadFilePdf = async (idFileDownload, filename ,changeStateSaveD
     let response = await axios.post(`${APP_URL}/generate/downloadFilePDF`, payload)
 
     if (response.data.status === 500 ) {
-        swtShowMessage('error','Error descargando el pdf','Señor usuario, ocurrió un error descargando el pdf')
+        swtShowMessage('error','Error','Señor usuario, el pdf que intenta descargar aun no se encuentra en la base de datos.')
     }else{
         downloadReport(payload, "/generate/downloadFilePDF", filename, changeStateSaveData);
     }
