@@ -36,6 +36,7 @@ export function validateLogin(username, password, recaptcha) {
 }
 
 export function saveSessionToken(sessionToken) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${sessionToken}` 
     window.localStorage.setItem('sessionTokenFront', sessionToken);
     return {
         type: CHANGE_STATUS_LOGIN,
