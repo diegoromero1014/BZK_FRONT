@@ -516,8 +516,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         showInteresSpreadField(businessCategoryValue){
             const { fields: { commission }, selectsReducer } = this.props; 
             const businessCategories = selectsReducer.get(ALL_BUSINESS_CATEGORIES);
-            console.log({businessCategories});
-            const selectedBusinessCategory = businessCategories.find((businessCategory) => businessCategory.id == businessCategoryValue);     
+            const selectedBusinessCategory = businessCategories.find((businessCategory) => businessCategory.id == businessCategoryValue);
             keyBusinessCategory = selectedBusinessCategory ? selectedBusinessCategory.key.toLowerCase() : '';
             if((keyBusinessCategory === PLACEMENTS || keyBusinessCategory === CATCHMENTS) || (keyBusinessCategory2 === PLACEMENTS || keyBusinessCategory2 === CATCHMENTS)){
                 this.setState({

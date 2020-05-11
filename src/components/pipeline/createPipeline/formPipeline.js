@@ -354,11 +354,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     _onChangeBusinessCategory2(val){
       const { fields: { commission }} = this.props;
       let showLocalInteresSpread = false;
-      console.log("businessCategories2", this.state.businessCategories2);
-      console.log("val", val);
       keyBusinessCategory2 = _.get(_.find(this.state.businessCategories2, ['id', parseInt(val)]), 'key') ? _.get(_.find(this.state.businessCategories2, ['id', parseInt(val)]), 'key').toLowerCase() : '';
 
-      console.log("keyBusinessCategory2", keyBusinessCategory2);
       if((keyBusinessCategory2 === PLACEMENTS || keyBusinessCategory2 === CATCHMENTS) || (keyBusinessCategory === PLACEMENTS || keyBusinessCategory === CATCHMENTS)){
         showLocalInteresSpread=true;
       }
