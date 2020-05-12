@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { bindActionCreators } from "redux";
-import { connect } from 'react-redux';
-import { Loader } from 'semantic-ui-react';
-import _, { get, indexOf } from "lodash";
-import { Col, Row } from "react-flexbox-grid";
+import React, {Component} from 'react';
+import {bindActionCreators} from "redux";
+import {connect} from 'react-redux';
+import {Loader} from 'semantic-ui-react';
+import _, {get, indexOf} from "lodash";
+import {Col, Row} from "react-flexbox-grid";
 import moment from "moment";
 
 import PendingTasksHelp from './../pendingTask/pendingTasksHelp';
@@ -14,12 +14,33 @@ import ListMyTasksComponent from './listMyTasksComponent';
 import PaginationPendingTaskComponent from './../pendingTask/paginationPendingTaskComponent';
 import SidebarComponent from "./SidebarComponent";
 import SearchInputComponent from "../../ui/searchInput/SearchInputComponent";
-import RecentSearchBox from './RecentSearchBox'
 
-import { redirectUrl } from "../globalComponents/actions";
-import { getMasterDataFields } from '../selectsComponent/actions';
-import { updateTitleNavBar } from "../navBar/actions";
-import { validatePermissionsByModule } from '../../actionsGlobal';
+import {redirectUrl} from "../globalComponents/actions";
+import {getMasterDataFields} from '../selectsComponent/actions';
+import {updateTitleNavBar} from "../navBar/actions";
+import {validatePermissionsByModule} from '../../actionsGlobal';
+import {
+  DATES_HELP_MESSAGE_DOWNLOAD,
+  FINALIZED_TASKS,
+  FINISHED,
+  MODAL_TITLE,
+  NUMBER_RECORDS,
+  PENDING,
+  PENDING_TASKS,
+  TOOLTIP_FINISHED,
+  TOOLTIP_PENDING
+} from "./constants";
+import {
+  APP_URL,
+  DATE_FORMAT,
+  EDITAR,
+  MESSAGE_DOWNLOAD_DATA,
+  MESSAGE_ERROR,
+  MESSAGE_SUCCESS,
+  MODULE_TASKS,
+  REQUEST_SUCCESS
+} from "../../constantsGlobal";
+import {LIST_REGIONS, LIST_ZONES, TASK_STATUS, TEAM_VALUE_OBJECTS} from "../selectsComponent/constants";
 import {
   addRecentSearch,
   cleanFinalizedTasks,
@@ -31,6 +52,7 @@ import {
   getFinalizedTaskPromise,
   getMyRecentSearch,
   getPendingTaskPromise,
+  getXlsTask,
   loadRecentSearch,
   pendingTasks,
   removeRecentSearch,
@@ -40,19 +62,9 @@ import {
   setRolToSearch,
   useRecentSearch
 } from './actions';
-
-import { EDITAR, MODULE_TASKS, REQUEST_SUCCESS } from "../../constantsGlobal";
-import { LIST_REGIONS, LIST_ZONES, TASK_STATUS, TEAM_VALUE_OBJECTS } from "../selectsComponent/constants";
-import {
-  FINALIZED_TASKS,
-  FINISHED,
-  MODAL_TITLE,
-  NUMBER_RECORDS,
-  PENDING,
-  PENDING_TASKS,
-  TOOLTIP_FINISHED,
-  TOOLTIP_PENDING
-} from "./constants";
+import {swtShowMessage} from "../sweetAlertMessages/actions";
+import {changeStateSaveData} from "../main/actions";
+import RecentSearchBox from "./RecentSearchBox";
 
 export class MyTaskPage extends Component {
   constructor(props) {
@@ -364,6 +376,27 @@ export class MyTaskPage extends Component {
     dispatchUseRecentSearch(idRecord)
   };
 
+  downloadTask = async () => {
+    const {dispatchShowMessage, dispatchGetXlsTask, dispatchChangeStateSaveData} = this.props;
+    let {filters} = this.state;
+    let initialValue = moment(filters.initialDate);
+    let finalValue = moment(filters.finalDate);
+    if (moment(initialValue, DATE_FORMAT).diff(moment(finalValue, DATE_FORMAT), 'days') < -360) {
+      dispatchShowMessage(MESSAGE_ERROR, 'Rango de fecha', DATES_HELP_MESSAGE_DOWNLOAD);
+      return;
+    }
+    dispatchChangeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
+    const response = await dispatchGetXlsTask(filters, this.state.textToSearch);
+    let result = response.payload.data;
+    if (result.status === 200) {
+      window.open(APP_URL + '/getExcelReport?filename=' + result.data.filename + '&id=' + result.data.sessionToken, '_blank');
+    } else if (result.status === 500) {
+        dispatchShowMessage(MESSAGE_ERROR, 'Error', 'Ocurrió un error generando el archivo.');
+    }
+    dispatchChangeStateSaveData(false, "");
+    dispatchShowMessage(MESSAGE_SUCCESS, 'Descarga', 'Señor usuario, el archivo se ha generado exitosamente.');
+  };
+
   render() {
     const {params: {filtered}, myTasks, allRecentSearch} = this.props;
     const {loading} = this.state;
@@ -396,28 +429,39 @@ export class MyTaskPage extends Component {
             role={myTasks.get("initialFilter").rol}
             loading={loading == true}
           />
-          <Row style={{padding: "40px 10px 0px 20px"}}>
-            <Col xs={12} sm={8} md={6} lg={6}>
-              <SearchInputComponent
-                onChangeSearch={text => this._onSearchText(text)}
-              />
-            </Col>
-            <Col xs={12} sm={8} md={6} lg={6}>
-              {myTasks.get("initialFilter").initialDate &&
-              <SidebarComponent
-                key={myTasks.get("initialFilter").initialDate}
-                defaultFilters={this.state.filters}
-                dispatchFilters={this.dispatchFilters}
-                onCreateRecentSearch={this.createRecentSearch}
-              />
-              }
-            </Col>
-          </Row>
-          <Row xs={12} sm={12} md={12} lg={12} style={{padding: "40px 10px 0px 20px"}}>
+            <Row style={{padding: "40px 20px 0px 20px"}}>
+                <Col xs={12} sm={6} md={8} lg={8} >
+                    <SearchInputComponent
+                        onChangeSearch={text => this._onSearchText(text)}
+                    />
+                </Col>
+                <Col xs={6} sm={3} md={2} lg={2}>
+                    {myTasks.get("initialFilter").initialDate &&
+                    <SidebarComponent
+                        key={myTasks.get("initialFilter").initialDate}
+                        defaultFilters={this.state.filters}
+                        onCreateRecentSearch={this.createRecentSearch}
+                        dispatchFilters={this.dispatchFilters}/>
+                    }
+                </Col>
+                <Col xs={6} sm={3} md={2} lg={2}>
+                    <button id="btnDownload"
+                            className="btn"
+                            title="descargar"
+                            type="button"
+                            style={{backgroundColor: "#00448c", width: '100%'}}
+                            onClick={() => this.downloadTask()}
+                    >
+                        <i className="download icon" style={{margin: '0em', fontSize: '1.2em'}}/>
+                        &nbsp;Descargar
+                    </button>
+                </Col>
+            </Row>
+          <Row xs={12} sm={12} md={12} lg={12} style={{padding: "40px 20px 0px 20px"}}>
             <RecentSearchBox
-              recordsRecentSearch={allRecentSearch.data}
-              deleteSearch={(idRecentSearch) => this.removeRecentSearch(idRecentSearch)}
-              applyRecentSearch={(idCurrentRecentSearch) => this.applyRecentSearch(idCurrentRecentSearch)}
+                recordsRecentSearch={allRecentSearch.data}
+                deleteSearch={(idRecentSearch) => this.removeRecentSearch(idRecentSearch)}
+                applyRecentSearch={(idCurrentRecentSearch) => this.applyRecentSearch(idCurrentRecentSearch)}
             />
           </Row>
         </div>
@@ -516,7 +560,10 @@ function mapDispatchToProps(dispatch) {
       dispatchAddRecentSearch: addRecentSearch,
       dispatchRemoveRecentSearch: removeRecentSearch,
       dispatchUseRecentSearch: useRecentSearch,
-      dispatchLoadRecentSearch: loadRecentSearch
+      dispatchLoadRecentSearch: loadRecentSearch,
+      dispatchShowMessage: swtShowMessage,
+      dispatchGetXlsTask: getXlsTask,
+      dispatchChangeStateSaveData: changeStateSaveData
     },
     dispatch
   );

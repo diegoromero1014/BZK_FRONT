@@ -142,7 +142,7 @@ describe("Test CreatePipeline", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(5);
+    expect(wrapper.find(Input)).to.have.length(4);
   });
 
   it('should render SVA field', () => {
@@ -211,30 +211,6 @@ describe("Test CreatePipeline", () => {
       wrapper.instance()._changeAreaAssetsEnabledValue(false);         
 
       expect(wrapper.find(ComboBox)).to.have.length(9);
-  });
-
-  it('show PivotNit field when showPivotNitField value is true', () => {
-    const wrapper = shallow(<PipelineComponent store={store} />)
-      .dive()
-      .dive()
-      .dive()
-      .dive();
-
-      wrapper.instance()._changeShowPivotNitField(true);         
-
-      expect(wrapper.find(Input).find({name: 'pivotNit'})).to.have.length(1);
-  });
-
-  it('hide PivotNit field when showPivotNitField value is false', () => {
-    const wrapper = shallow(<PipelineComponent store={store} />)
-      .dive()
-      .dive()
-      .dive()
-      .dive();
-
-      wrapper.instance()._changeShowPivotNitField(false);         
-
-      expect(wrapper.find(Input).find({name: 'pivotNit'})).to.have.length(0);
   });
 
   it('Show render formPipeline/SwetAlert ', () => {
@@ -851,7 +827,7 @@ describe("Test CreatePipelineChildren", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(5);
+    expect(wrapper.find(Input)).to.have.length(4);
     expect(
       wrapper.find(Input).find({ name: "txtOpportunityName" })
     ).to.have.length(0);

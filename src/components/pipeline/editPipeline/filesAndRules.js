@@ -4,7 +4,7 @@ import {
     checkRequired, processRules, checkRequiredWithGlobalCondition,
     checkOnlyAlphabetical, checkPipeLineOpportunityName,
     checkFirstCharacter, checkNumberLength, checkRequiredPipelineJustification,
-    checkRequiredComercialOportunity, checkRequiredPivotNit, checkRequiredTermInMonths,
+    checkRequiredComercialOportunity, checkRequiredTermInMonths,
     checkRequiredTermInMonthsValue, validateDecimal, checkJustificationDetails, checkRegexHtmlInjection
 } from '../../../validationsFields/rulesField';
 
@@ -44,13 +44,11 @@ export const fieldsWithRules = {
     mellowingPeriod: { rules: [] }, 
     moneyDistribitionMarket: { rules: [] }, 
     areaAssets: { rules: [] }, 
-    areaAssetsValue: { rules: [checkNumberLength(15)] }, 
     termInMonthsValues: { rules: [checkRequiredTermInMonthsValue] },
     pendingDisbursementAmount: { rules: [checkNumberLength(15)] },
     pipelineType: { rules: [checkRequired] },
     commercialOportunity: { rules: [checkRequiredComercialOportunity] },
     justification : {rules: [checkRequiredPipelineJustification] },
-    pivotNit: {rules: [checkRequiredPivotNit]},
     margen: {rules:[validateDecimal]},
     typePolicy: { rules: [] },
     businessCategory2: { rules:[] },
