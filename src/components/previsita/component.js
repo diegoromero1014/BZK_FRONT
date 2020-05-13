@@ -16,25 +16,27 @@ import { validatePermissionsByModule } from '../../actionsGlobal';
 import { updateTitleNavBar } from '../navBar/actions';
 
 import { NUMBER_RECORDS, FILTER_STATUS_PREVISIT_ID } from './constants';
-import { FILE_OPTION_PRE_VISIT_GUIDE, MODULE_PREVISITS, CREAR, DESCARGAR } from '../../constantsGlobal';
+import { FILE_OPTION_PRE_VISIT_GUIDE, MODULE_PREVISITS, CREAR, DESCARGAR, NAME_FILE_PRE_VISIT_GUIDE } from '../../constantsGlobal';
 import { nombreflujoAnalytics, BIZTRACK_MY_CLIENTS, _PREVISIT } from '../../constantsAnalytics';
 import _ from 'lodash';
+import { changeStateSaveData } from '../main/actions';
+import { swtShowMessage } from '../sweetAlertMessages/actions';
 
 export class PrevisitComponent extends Component {
 
   constructor(props) {
     super(props);
-    this._createPrevisita = this._createPrevisita.bind(this);
-    this._downloadFilePrevisitGuide = this._downloadFilePrevisitGuide.bind(this);
+    this.createPrevisita = this.createPrevisita.bind(this);
+    this.downloadFilePrevisitGuide = this.downloadFilePrevisitGuide.bind(this);
     this.state = {
       openMessagePermissions: false,
       value1: ""
     };
   }
 
-  _createPrevisita() {
-    const { updateTitleNavBar } = this.props;
-    updateTitleNavBar("Informe de previsita");
+  createPrevisita = () => {
+    const { dispatchUpdateTitleNavBar } = this.props;
+    dispatchUpdateTitleNavBar("Informe de previsita");
     redirectUrl("/dashboard/previsita");
   }
 
@@ -42,16 +44,16 @@ export class PrevisitComponent extends Component {
     window.dataLayer.push({
       'nombreflujo': nombreflujoAnalytics,
       'event': BIZTRACK_MY_CLIENTS + _PREVISIT,
-      'pagina':_PREVISIT
+      'pagina': _PREVISIT
 
     });
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     } else {
-      const { previsitByClientFindServer, clearPrevisit, validatePermissionsByModule } = this.props;
-      clearPrevisit();
-      previsitByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
-      validatePermissionsByModule(MODULE_PREVISITS).then((data) => {
+      const { dispatchprevisitByClientFindServer, dispatchClearPrevisit, dispatchValidatePermissionsByModule } = this.props;
+      dispatchClearPrevisit();
+      dispatchprevisitByClientFindServer(window.sessionStorage.getItem('idClientSelected'), 0, NUMBER_RECORDS, "pvd.visitTime", 1, "");
+      dispatchValidatePermissionsByModule(MODULE_PREVISITS).then((data) => {
         if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
           redirectUrl("/login");
         } else {
@@ -63,16 +65,16 @@ export class PrevisitComponent extends Component {
     }
   }
 
-  _downloadFilePrevisitGuide() {
-    const { downloadFilePdf } = this.props;
-    downloadFilePdf(FILE_OPTION_PRE_VISIT_GUIDE);
+  downloadFilePrevisitGuide = () => {
+    const { dispatchDownloadFilePdf, dispatchChangeStateSaveData, dispatchSwtShowMessage } = this.props;
+    dispatchDownloadFilePdf(FILE_OPTION_PRE_VISIT_GUIDE, NAME_FILE_PRE_VISIT_GUIDE, dispatchChangeStateSaveData, dispatchSwtShowMessage);
   }
 
   render() {
     let visibleTable = 'none';
     let visibleMessage = 'block';
     let visibleDownload = 'none';
-    const { previsitReducer, reducerGlobal, navBar } = this.props;
+    const { previsitReducer, reducerGlobal } = this.props;
     if (previsitReducer.get('rowCount') !== 0) {
       visibleTable = 'block';
       visibleMessage = 'none';
@@ -91,13 +93,13 @@ export class PrevisitComponent extends Component {
                 {
                   _.get(reducerGlobal.get('permissionsPrevisits'), _.indexOf(reducerGlobal.get('permissionsPrevisits'), CREAR), false) &&
                   <button className="btn btn-primary" type="button" title="Crear previsita"
-                    style={{ marginTop: "18px" }} onClick={this._createPrevisita}>
+                    style={{ marginTop: "18px" }} onClick={this.createPrevisita}>
                     <i className="plus icon" style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i> Crear
                   </button>
                 }
 
                 <button className="btn btn-primary" style={{ marginTop: '20px', marginLeft: '15px' }}
-                  type="button" title="Caso práctico previsita" onClick={this._downloadFilePrevisitGuide}>
+                  type="button" title="Caso práctico previsita" onClick={this.downloadFilePrevisitGuide}>
                   <span>{'Caso práctico'} </span>
                   <i title="Informe de previsita guía" className="file pdf outline icon"
                     style={{ cursor: "pointer", position: 'relative' }}></i>
@@ -130,19 +132,20 @@ export class PrevisitComponent extends Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    previsitByClientFindServer, clearPrevisit, downloadFilePdf, updateTitleNavBar,
-    validatePermissionsByModule
-  }, dispatch);
-}
+const mapDispatchToProps = dispatch => bindActionCreators({
+  dispatchprevisitByClientFindServer: previsitByClientFindServer,
+  dispatchClearPrevisit: clearPrevisit,
+  dispatchUpdateTitleNavBar: updateTitleNavBar,
+  dispatchValidatePermissionsByModule: validatePermissionsByModule,
+  dispatchDownloadFilePdf: downloadFilePdf,
+  dispatchChangeStateSaveData: changeStateSaveData,
+  dispatchSwtShowMessage : swtShowMessage
+}, dispatch);
 
-function mapStateToProps({ previsitReducer, reducerGlobal, navBar }, ownerProps) {
-  return {
-    previsitReducer,
-    reducerGlobal,
-    navBar
-  };
-}
+const mapStateToProps = ({ previsitReducer, reducerGlobal, navBar }) => ({
+  previsitReducer,
+  reducerGlobal,
+  navBar
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(PrevisitComponent);

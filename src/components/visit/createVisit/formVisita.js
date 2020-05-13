@@ -37,7 +37,8 @@ import {
   TITLE_BANC_PARTICIPANTS,
   TITLE_CLIENT_PARTICIPANTS,
   TITLE_CONCLUSIONS_VISIT,
-  TITLE_OTHERS_PARTICIPANTS
+  TITLE_OTHERS_PARTICIPANTS,
+  NAME_FILE_SHOPPING_MAP
 } from "../../../constantsGlobal";
 import { LAST_VISIT_REVIEW } from "../../../constantsParameters";
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from "../../participantsVisitPre/constants";
@@ -51,6 +52,7 @@ import moment from "moment";
 import { buildJsoncommercialReport } from "../../commercialReport/functionsGenerics";
 import { setConfidential } from "../../commercialReport/actions";
 import {prepareTasksNotes} from "../tasks/actions";
+import { swtShowMessage } from "../../sweetAlertMessages/actions";
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral"];
 var dateVisitLastReview;
@@ -401,8 +403,8 @@ class FormVisita extends Component {
   }
 
   _downloadFileShoppingMap() {
-    const { downloadFilePdf } = this.props;
-    downloadFilePdf(FILE_OPTION_SHOPPING_MAP);
+    const { dispatchDownloadFilePdf, dispatchChangeStateSaveData, dispatchSwtShowMessage } = this.props;
+    dispatchDownloadFilePdf(FILE_OPTION_SHOPPING_MAP, NAME_FILE_SHOPPING_MAP, dispatchChangeStateSaveData, dispatchSwtShowMessage);
   }
 
   componentWillMount() {
@@ -776,15 +778,16 @@ function mapDispatchToProps(dispatch) {
     getMasterDataFields,
     consultParameterServer,
     createVisti,
-    downloadFilePdf,
     detailPrevisit,
     addParticipant,
     clearIdPrevisit,
     clearParticipants,
-    changeStateSaveData,
     nonValidateEnter,
     setConfidential,
-    dispatchPrepareTasksNotes: prepareTasksNotes
+    dispatchPrepareTasksNotes: prepareTasksNotes,
+    dispatchDownloadFilePdf: downloadFilePdf,
+    dispatchChangeStateSaveData : changeStateSaveData,
+    dispatchSwtShowMessage : swtShowMessage
   }, dispatch);
 }
 
