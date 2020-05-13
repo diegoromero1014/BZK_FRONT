@@ -46,7 +46,25 @@ describe('Pruebas unitarias editar pipeline', () =>{
         const selectsReducer = Immutable.Map({
             PRODUCT_FAMILY: [{id: 505950, value: 'Leasing'}],
             clientNeed: [{id: 12012, value: 'Alguna necesidad'}],
-            allProductFamilies: [{id: 1, key: PRODUCT_FAMILY_LEASING}, {id: 2, key: 'Factoring'}] });
+            allProductFamilies: [{id: 1, key: PRODUCT_FAMILY_LEASING}, {id: 2, key: 'Factoring'}],
+            allBusinessCategories:[{
+
+                description: "Valor total del negocio",
+                field: "businessCategory",
+                id: 5110627,
+                key: "Colocaciones",
+                parentId: 5230109,
+                value: "Colocación"
+            },
+                {
+                    description: "Valor total del negocio",
+                    field: "businessCategory",
+                    id: 5110627,
+                    key: "Colocaciones",
+                    parentId: 5230109,
+                    value: "Colocación"
+                }]
+        });
         const clientInformacion = Immutable.Map({ responseClientInfo: clientInfo });
         const reducerGlobal = Immutable.Map({});
         const pipelineReducer = Immutable.Map({
@@ -317,4 +335,45 @@ describe('Pruebas unitarias editar pipeline', () =>{
       expect(wrapper.state().showPolicyType).to.equal(false);
       expect(wrapper.find(ComboBox).find({id: "typePolicy"})).to.have.length(0);
   });
+
+    it('should render field intereses/spred when value is Colocaciones', () => {
+
+        const wrapper = shallow(<PipelineComponent store={store} />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        wrapper.instance().showInteresSpreadField(5110627);
+        wrapper.instance()._onChangeBusinessCategory2(5110627);
+        expect(wrapper.find(Input).find({ name: 'commission' }));
+    });
+
+    it('should render field intereses/spred when value is Colocaciones', () => {
+
+        const wrapper = shallow(<PipelineComponent store={store}  />)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        wrapper.instance().showInteresSpreadField(5110628);
+        wrapper.instance()._onChangeBusinessCategory2(5110628);
+        expect(wrapper.find(Input).find({ name: 'commission' }));
+    });
+
+    it('should call shouwBisnessCategory2', ()=>{
+
+        const wrapper = shallow(<PipelineComponent store={store}/>)
+            .dive()
+            .dive()
+            .dive()
+            .dive();
+
+        const button = wrapper.find('button').find({ id: 'addCategory' });
+        button.at(0).simulate('click');
+        wrapper.instance()._showBusinessCategory2();
+
+    });
+
 });
