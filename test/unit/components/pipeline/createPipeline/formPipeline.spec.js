@@ -142,7 +142,7 @@ describe("Test CreatePipeline", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(5);
+    expect(wrapper.find(Input)).to.have.length(4);
   });
 
   it('should render SVA field', () => {
@@ -211,30 +211,6 @@ describe("Test CreatePipeline", () => {
       wrapper.instance()._changeAreaAssetsEnabledValue(false);         
 
       expect(wrapper.find(ComboBox)).to.have.length(9);
-  });
-
-  it('show PivotNit field when showPivotNitField value is true', () => {
-    const wrapper = shallow(<PipelineComponent store={store} />)
-      .dive()
-      .dive()
-      .dive()
-      .dive();
-
-      wrapper.instance()._changeShowPivotNitField(true);         
-
-      expect(wrapper.find(Input).find({name: 'pivotNit'})).to.have.length(1);
-  });
-
-  it('hide PivotNit field when showPivotNitField value is false', () => {
-    const wrapper = shallow(<PipelineComponent store={store} />)
-      .dive()
-      .dive()
-      .dive()
-      .dive();
-
-      wrapper.instance()._changeShowPivotNitField(false);         
-
-      expect(wrapper.find(Input).find({name: 'pivotNit'})).to.have.length(0);
   });
 
   it('Show render formPipeline/SwetAlert ', () => {
@@ -593,6 +569,85 @@ describe("Test CreatePipeline", () => {
     expect(createEditPipeline.calledOnce).to.equal(true);
 
   });
+
+  it('should render field intereses/spred when value is Colocaciones', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    wrapper.setState({
+      businessCategories:[{
+        description: "Valor total del negocio",
+        field: "businessCategory",
+        id: 5110627,
+        key: "Colocaciones",
+        parentId: 5230109,
+        value: "Colocación"
+      }],
+      businessCategories2:[{
+        description: "Valor total del negocio",
+        field: "businessCategory",
+        id: 5110627,
+        key: "Colocaciones",
+        parentId: 5230109,
+        value: "Colocación"
+      }]
+    });
+
+    wrapper.instance()._onChangeBusinessCategory(5110627);
+    wrapper.instance()._onChangeBusinessCategory2(5110627);
+    expect(wrapper.find(Input).find({ name: 'commission' }));
+  });
+
+  it('should render field intereses/spred', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    wrapper.setState({
+
+      businessCategories2:[{
+        description: "Valor total del negocio",
+        field: "businessCategory",
+        id: 5110627,
+        key: "Colocaciones",
+        parentId: 5230109,
+        value: "Colocación"
+      }]
+    });
+
+    wrapper.instance()._onChangeBusinessCategory(5110628);
+    wrapper.instance()._onChangeBusinessCategory2(5110628);
+    expect(wrapper.find(Input).find({ name: 'commission' }));
+  });
+
+  it('should call shouwBisnessCategory2', ()=>{
+    let defaultProps = {};
+    let _showBusinessCategory2 ;
+
+    beforeEach(() => {
+      _showBusinessCategory2 = sinon.fake();
+      defaultProps = {
+        _showBusinessCategory2
+      };
+
+    });
+    const wrapper = shallow(<PipelineComponent store={store} {...defaultProps}/>)
+        .dive()
+        .dive()
+        .dive()
+        .dive()
+
+    const button = wrapper.find('button').find({ id: 'addCategory' });
+    button.at(0).simulate('click');
+    wrapper.instance()._showBusinessCategory2();
+
+  });
+
 });
 
 describe("Test CreatePipelineChildren", () => {
@@ -772,7 +827,7 @@ describe("Test CreatePipelineChildren", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(5);
+    expect(wrapper.find(Input)).to.have.length(4);
     expect(
       wrapper.find(Input).find({ name: "txtOpportunityName" })
     ).to.have.length(0);
