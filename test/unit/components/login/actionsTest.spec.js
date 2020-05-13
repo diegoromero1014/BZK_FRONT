@@ -1,16 +1,13 @@
-import React from 'react';
 import { 
     validateLogin,
     saveSessionToken,
     saveSessionUserName,
-    saveSessionName,
     clearSessionUserName,
     clearStateLogin,
     loadObservablesLeftTimer,
     stopObservablesLeftTimer,
-    getUserDataFrontOfficeEmployee
 } from '../../../../src/components/login/actions';
-import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN, CLEAR_STATE, GET_DATA_USER } from '../../../../src/components/login/constants';
+import { VALIDATE_LOGIN, CHANGE_STATUS_LOGIN, CLEAR_STATE } from '../../../../src/components/login/constants';
 import { INIT_INPUT_EVENTS, STOP_INPUT_EVENTS } from '../../../../src/constantsGlobal';
 
 describe('Login Test Actions', () => {

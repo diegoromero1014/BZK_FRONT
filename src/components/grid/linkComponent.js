@@ -49,9 +49,9 @@ LinkComponent.propTypes = {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ 
-        dispatchConsultInfoClient : consultInfoClient, 
+        dispatchConsultInfoClient : consultInfoClient,
         dispatchSeletedButton : seletedButton 
-    },
+    }, 
     dispatch);
 }
 

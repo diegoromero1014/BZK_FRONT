@@ -138,6 +138,6 @@ export function validationRules(props) {
     } else {
         return validations;
     }
-};
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActividadEconomica)

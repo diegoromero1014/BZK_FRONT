@@ -52,7 +52,7 @@ export const buildRows = tableSettings => {
 
 export const validateData = data => Array.isArray(data) && data.length;
 
-export const buildRow = (element, index, { columns, onClick }) => {
+export const buildRow = (element, index, { columns, onClick, selectable }) => {
     const cells = columns.map(column => Object.assign({}, column, { prop: get(column, PROPERTY, ALL_OBJECT) }));
 
     return (
@@ -64,7 +64,7 @@ export const buildRow = (element, index, { columns, onClick }) => {
                         whiteSpace: 'pre-line',
                         textOverflow: 'ellipsis',
                         wordWrap: 'break-word',
-                        cursor: 'pointer',
+                        cursor: `${selectable ? 'pointer' : 'default'}`,
                         overflow: 'inherit'
                     }}
                     key={i}

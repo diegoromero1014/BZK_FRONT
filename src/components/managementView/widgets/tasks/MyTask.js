@@ -19,7 +19,7 @@ const MyTask = ({ tasks, handleRedirect }) => {
             <Doughnut elements={elements} data={data} />
             <Button
                 fluid
-                style={{ background: 'transparent', marginTop: 20 }}
+                style={{ background: 'transparent', marginTop: 20, color: '#00448c', fontSize: '16px' }}
                 onClick={() => handleRedirect()}
             >
                 Ver detalle

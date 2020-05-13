@@ -88,21 +88,21 @@ export function changeValueListClient(field, list) {
 }
 
 export function validateExpiredPortfolio(idClient) {
-    const json = {
-        "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
-            "timestamp": new Date().getTime(),
-            "service": "",
-            "status": "0",
-            "language": "es",
-            "displayErrorMessage": "",
-            "technicalErrorMessage": "",
-            "applicationVersion": "",
-            "debug": true,
-            "isSuccessful": true
-        },
-        "messageBody": idClient ? new Number(idClient) : new Number(window.sessionStorage.getItem('idClientSelected'))
-    };
+  const json = {
+    "messageHeader":{
+      "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+      "timestamp": new Date().getTime(),
+      "service": "",
+      "status": "0",
+      "language": "es",
+      "displayErrorMessage": "",
+      "technicalErrorMessage": "",
+      "applicationVersion": "",
+      "debug": true,
+      "isSuccessful": true
+    },
+    "messageBody": idClient ? Number(idClient) : Number(window.sessionStorage.getItem('idClientSelected'))
+  };
 
     var request = axios.post(APP_URL + "/alert/expiredPortfolio/client", json);
 

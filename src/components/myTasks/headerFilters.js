@@ -34,17 +34,18 @@ export class HeaderFilters extends Component {
     }
 
     async componentDidMount() {
-        const {filter} = this.props;
-        if (!_.isNil(filter)) {
-            await this.defaultFiltersReducer();
+        const {filter, myTasks} = this.props;
+        const filtered = myTasks.get('initialFilter');
+        if (!_.isNil(filter) && !(_.values(filtered).every(_.isEmpty))) {
+            await this.defaultFiltersReducer(filtered);
         } else {
             await this.defaultFilters();
         }
     }
 
-    defaultFiltersReducer = async () => {
-        const {myTasks, dispatchGetUserAssistantsById, fields: {rol}} = this.props;
-        const filtered = myTasks.get('initialFilter');
+    defaultFiltersReducer = async filtered => {
+        const {dispatchGetUserAssistantsById, fields: {rol}} = this.props;
+
         const getAssistant = await dispatchGetUserAssistantsById();
         await this.setState({
             subordinates: _.get(getAssistant, 'payload.data.data'),

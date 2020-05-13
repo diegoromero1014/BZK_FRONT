@@ -14,7 +14,7 @@ export default class NotificationComponent extends Component {
     
     render() {
         const { type, title, component } = this.props;
-        const option = this.state.options.filter(elem => elem.type === type);
+        const option = this.state.options.filter(element => element.type === type);
 
         return (
             <div 
