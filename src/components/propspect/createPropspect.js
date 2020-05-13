@@ -11,9 +11,9 @@ import Input from '../../ui/input/inputComponent';
 import { fields, validations as validate } from './fieldsAndRulesCreatePropspect';
 import SecurityMessageComponent from './../globalComponents/securityMessageComponent';
 
-import { clearAllState, clearState, validateProspectExists } from './actions';
+import { clearAllState, validateProspectExists } from './actions';
 import { redirectUrl } from '../globalComponents/actions';
-import { consultDataSelect, consultList, getMasterDataFields } from '../selectsComponent/actions';
+import { consultList, getMasterDataFields } from '../selectsComponent/actions';
 
 import { onSessionExpire } from '../../actionsGlobal';
 import * as constants from '../selectsComponent/constants';
@@ -25,7 +25,7 @@ var typeMessage = "warning";
 var titleMessage = "Prospecto/cliente existente";
 var message = "El prospecto/cliente ya se encuentra registrado en la aplicación.";
 
-class CreatePropspect extends Component {
+export class CreatePropspect extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,37 +35,37 @@ class CreatePropspect extends Component {
       idTypeMasterSelector: "",
       personType: null
     }
-    this._clickButtonCreateProps = this._clickButtonCreateProps.bind(this);
-    this._onClickButtonChange = this._onClickButtonChange.bind(this);
+    this.clickButtonCreateProps = this.clickButtonCreateProps.bind(this);
+    this.onClickButtonChange = this.onClickButtonChange.bind(this);
     this.clientetypeChange = this.clientetypeChange.bind(this);
-    this._closeError = this._closeError.bind(this);
+    this.closeError = this.closeError.bind(this);
   }
 
   componentWillMount() {
-    const { clearAllState } = this.props;
-    clearAllState();
+    const { dispatchClearAllState } = this.props;
+    dispatchClearAllState();
     if (window.localStorage.getItem('sessionTokenFront') === "") {
       redirectUrl("/login");
     }
-    const { consultList, getMasterDataFields } = this.props;
+    const { dispatchConsultList, dispatchGetMasterDataFields } = this.props;
 
-    getMasterDataFields([constants.CLIENT_ID_TYPE, constants.CONTACT_ID_TYPE, constants.CLIENT_TYPE]).then((data) => {
+    dispatchGetMasterDataFields([constants.CLIENT_ID_TYPE, constants.CONTACT_ID_TYPE, constants.CLIENT_TYPE]).then((data) => {
       if (_.get(data, 'payload.data.validateLogin') === false) {
         onSessionExpire();
       }
     });
 
-    consultList(constants.TEAM_FOR_EMPLOYEE);
+    dispatchConsultList(constants.TEAM_FOR_EMPLOYEE);
   }
 
-  _closeError() {
+  closeError = () => {
     this.setState({ showEx: false, showEr: false });
   }
 
-  _onClickButtonChange() {
+  onClickButtonChange = () => {
     prospectInApplication = true;
-    const { fields: { idType, idNumber, clientType }, clearAllState } = this.props;
-    clearAllState();
+    const { fields: { idType, idNumber, clientType }, dispatchClearAllState } = this.props;
+    dispatchClearAllState();
     idNumber.onChange('');
     idType.onChange('');
     clientType.onChange('');
@@ -76,12 +76,12 @@ class CreatePropspect extends Component {
       personType: null
     });
 
-  };
+  }
 
-  _clickButtonCreateProps(formData) {
-    const { fields: { idType, idNumber }, validateProspectExists } = this.props;
+  clickButtonCreateProps = () => {
+    const { fields: { idType, idNumber }, dispatchValidateProspectExists } = this.props;
     idNumber.onChange(idNumber.value.trim());
-    validateProspectExists(idType.value, idNumber.value.trim())
+    dispatchValidateProspectExists(idType.value, idNumber.value.trim())
       .then((data) => {
         if ((_.get(data, 'payload.data.data.status') === "Exists")) {
           typeMessage = "warning";
@@ -100,7 +100,7 @@ class CreatePropspect extends Component {
   }
 
 
-  clientetypeChange(valor) {
+  clientetypeChange = valor => {
     const { fields: { idType }, selectsReducer } = this.props;
     let clientTypes = selectsReducer.get('clientType');
 
@@ -146,7 +146,7 @@ class CreatePropspect extends Component {
         <SecurityMessageComponent />
         <span style={{ marginLeft: "20px" }} >Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
         {prospectInApplication &&
-          <form onSubmit={handleSubmit(this._clickButtonCreateProps)}>
+          <form onSubmit={handleSubmit(this.clickButtonCreateProps)}>
             <Row style={{ padding: "10px 10px 20px 20px", boxShadow: "-2px 2px 4px 0 rgba(0, 0, 0, 0.2)" }}>
               <Col xs={12} md={5} lg={3}>
                 <dt><span>Tipo de cliente (</span><span style={{ color: "red" }}>*</span>)</dt>
@@ -208,7 +208,7 @@ class CreatePropspect extends Component {
             <Col xs={12} md={3} lg={2} style={{ margingLeft: "30px" }}>
               <button className="btn" type="button" title="cambiar tipo de cliente, tipo de documento y número documento"
                 style={{ marginTop: "5px", color: "white" }}
-                onClick={this._onClickButtonChange}
+                onClick={this.onClickButtonChange}
               >
                 <i style={{ color: "white", margin: '0em', fontSize: '1.2em' }} className="erase icon" ></i>
               </button>
@@ -224,7 +224,7 @@ class CreatePropspect extends Component {
           show={this.state.showEr}
           title={titleMessage}
           text={message}
-          onConfirm={() => this._closeError()}
+          onConfirm={() => this.closeError()}
         />
       </div>
     );
@@ -232,22 +232,15 @@ class CreatePropspect extends Component {
 
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    validateProspectExists,
-    clearState,
-    clearAllState,
-    consultDataSelect,
-    consultList,
-    getMasterDataFields
+const mapDispatchToProps = dispatch => bindActionCreators({
+    dispatchValidateProspectExists : validateProspectExists,
+    dispatchClearAllState : clearAllState,
+    dispatchConsultList : consultList,
+    dispatchGetMasterDataFields : getMasterDataFields
   }, dispatch);
-}
 
-function mapStateToProps({ propspectReducer, selectsReducer }, ownerProps) {
-  return {
-    propspectReducer, selectsReducer
-  };
-}
+
+const mapStateToProps = ({ propspectReducer, selectsReducer }) => ({ propspectReducer, selectsReducer })
 
 export default reduxForm({
   form: 'submitValidation',

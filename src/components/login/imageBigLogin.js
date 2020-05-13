@@ -4,14 +4,14 @@ import ImageLogoApp from '../globalComponents/logoApplication';
 import TitleLogin from './titleLogin';
 import FormLogin from './formLogin';
 import FooterLogin from './footer';
-import {Row, Grid, Col} from 'react-flexbox-grid';
+import {Row, Col} from 'react-flexbox-grid';
 import ImageLogin from '../../../img/bg-login2.jpg';
 import Loading from '../loading/loadingComponent';
 
 class ImageBigLogin extends Component{
 
   render(){
-    const {urlImage} = this.props;
+
     return (
       <Row>
         <Col xs={12} sm={12} md={12} lg={12}>

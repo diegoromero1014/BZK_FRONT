@@ -11,10 +11,11 @@ import { cleanList, addToList, createList } from '../elements/actions';
 import { OBJECTIVES, OBJECTIVES_ERROR_MSG, MANDATORY_OBJECTIVES_MSG, OBJECTIVES_OPEN_ERROR_MSG, OBJECTIVES_PLACEHOLDER } from './constants';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 import Tooltip from "../toolTip/toolTipComponent";
-import { downloadFilePDF } from '../contact/actions';
-import { FILE_OPTION_SOCIAL_STYLE_CONTACT } from '../../constantsGlobal';
+import { downloadFilePdf } from '../clientInformation/actions';
+import { FILE_OPTION_SOCIAL_STYLE_CONTACT, NAME_FILE_SOCIAL_STYLE_CONTACT } from '../../constantsGlobal';
 import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import { FILTER_SOCIAL_STYLE } from '../selectsComponent/constants';
+import { changeStateSaveData } from '../main/actions';
 
 export class ParticipantInformation extends Component {
 
@@ -62,8 +63,8 @@ export class ParticipantInformation extends Component {
     }
 
     handleDownloadFileSocialStyle = () => {
-        const { dispatchDownloadFilePDF } = this.props;
-        dispatchDownloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
+        const { dispatchDownloadFilePdf, dispatchChangeStateSaveData, dispatchSwtShowMessage } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT,  NAME_FILE_SOCIAL_STYLE_CONTACT, dispatchChangeStateSaveData, dispatchSwtShowMessage);
     }
 
     renderLabelSocialStyle = ({ name, message, nullable }) => (
@@ -261,7 +262,8 @@ const mapDispatchToProps = dispatch => {
         dispatchAddToList: addToList,
         dispatchCreateList: createList,
         dispatchSwtShowMessage: swtShowMessage,
-        dispatchDownloadFilePDF: downloadFilePDF
+        dispatchDownloadFilePdf: downloadFilePdf,
+        dispatchChangeStateSaveData : changeStateSaveData
     }, dispatch)
 };
 

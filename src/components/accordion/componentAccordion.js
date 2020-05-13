@@ -24,7 +24,7 @@ class ComponentAccordion extends Component {
                 </Accordion>
             </div>
         );
-    };
+    }
 }
 
 ComponentAccordion.PropTypes = {

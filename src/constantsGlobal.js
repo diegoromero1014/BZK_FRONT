@@ -2,8 +2,13 @@ export const VERSION_DATE = "18/10/2019";
 export const NATURAL_PERSON = "Persona natural";
 export const JURIDICAL_PERSON = "Persona jurídica";
 export const FILE_OPTION_SOCIAL_STYLE_CONTACT = 1;
+export const FILE_OPTION_VISIT_REPORT = 2;
 export const FILE_OPTION_SHOPPING_MAP = 3;
 export const FILE_OPTION_PRE_VISIT_GUIDE = 4;
+export const NAME_FILE_SOCIAL_STYLE_CONTACT = "EstiloSocial.pdf";
+export const NAME_FILE_VISIT_REPORT = "InformeVisita.pdf";
+export const NAME_FILE_SHOPPING_MAP = "MapaDeCompras.pdf"
+export const NAME_FILE_PRE_VISIT_GUIDE = "GuiaPrevisita.pdf";
 export const CONSULT_PARAMETER_NAME = 'CONSULT_PARAMETER_NAME';
 export const CHANGE_VALUE_LOGS = 'CHANGE_VALUE_LOGS';
 export const CONSULT_VALUE_LOGS = 'CONSULT_VALUE_LOGS';
@@ -16,7 +21,6 @@ export const REQUEST_SUCCESS = 200;
 export const ERROR_MESSAGE_REQUEST_TITLE = 'Error cargando información';
 export const ERROR_MESSAGE_REQUEST = 'Lo sentimos, ocurrió un error ejecutando la acción.';
 export const MESSAGE_USER_WITHOUT_PERMISSIONS = 'Lo sentimos, usted no tiene permisos para ejecutar la acción.';
-export const ACTIVE_LOGS = "db6d27e0-9a1d-4286-805b-6732d4cacc6d";
 export const SESSION_EXPIRED = "-2";
 export const MESSAGE_SAVE_DATA = "Guardando...";
 export const MESSAGE_DOWNLOAD_DATA = "Descargando...";
@@ -65,7 +69,7 @@ export const TITLE_CLIENT_PARTICIPANTS = "En esta sección se podrán adicionar 
 "\n\nAgregar un participante: \n" +
 "\n\n1. Ingrese el nombre del contacto.\n"  +
 "\n\n2. Seleccione el contacto que desea como participante. Los campos “Cargo”, “Estilo social”, “Actitud frente al grupo”, se alimentan automáticamente de la información del contacto registrada en Biztrack, si salen en blanco deberá: a. Guardar el informe como borrador b. Ir a la pestaña de “contactos” y completar los campos. c. Retomar la edición del informe y agregar el contacto. Crear contacto: Si desea crear un contacto en Biztrack para adicionarlo como participante haga clic en el botón “más” y diligencie todos los campos. Repita los pasos para agregar participante.";
-export const TITLE_OPPORTUNITY_BUSINESS = "Piense en: Medio Ambiente de la Industria, Medio ambiente económico, Mercado, Competencia, Medio Ambiente Político, Legislación, Tendencias Sociales.";
+export const TITLE_OPPORTUNITY_BUSINESS = "Piense en: Entorno de la industria, entorno económico, mercado, competencia, entorno político, lesgislación, tendencias sociales.";
 export const OPTION_REQUIRED = "Debe seleccionar una opción";
 export const VALUE_REQUIERED = "Debe ingresar un valor";
 export const VALUE_XSS_INVALID = "La información ingresada contiene caracteres invalidos.";

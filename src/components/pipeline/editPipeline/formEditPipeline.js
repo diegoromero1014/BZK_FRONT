@@ -1544,7 +1544,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         <dt>
                                             <span>SVA</span>
                                         </dt>
-                                        <ToolTip text={HELP_SVA} rendertooltip={HELP_SVA}>
+                                        <ToolTip text={HELP_SVA}>
                                             <div>
                                                 <Input
                                                   {...sva}

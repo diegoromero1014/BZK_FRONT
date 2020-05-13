@@ -46,7 +46,8 @@ import {
     TITLE_BANC_PARTICIPANTS,
     TITLE_CLIENT_PARTICIPANTS,
     TITLE_CONCLUSIONS_VISIT,
-    TITLE_OTHERS_PARTICIPANTS
+    TITLE_OTHERS_PARTICIPANTS,
+    NAME_FILE_SHOPPING_MAP
 } from "../../../constantsGlobal";
 import {
     KEY_PARTICIPANT_CLIENT,
@@ -59,6 +60,7 @@ import { buildJsoncommercialReport, fillUsersPermissions } from "../../commercia
 import {
     checkRequired, checkRichTextRequired
 } from './../../../validationsFields/rulesField';
+import { swtShowMessage } from "../../sweetAlertMessages/actions";
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral", "participantesCliente", "participantesBanco", "participantesOtros", "pendientes"];
 let dateVisitLastReview;
@@ -113,8 +115,8 @@ class FormEdit extends Component {
     }
 
     _downloadFileShoppingMap() {
-        const { downloadFilePdf } = this.props;
-        downloadFilePdf(FILE_OPTION_SHOPPING_MAP);
+        const { dispatchDownloadFilePdf, dispatchChangeStateSaveData, dispatchSwtShowMessage } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SHOPPING_MAP, NAME_FILE_SHOPPING_MAP, dispatchChangeStateSaveData, dispatchSwtShowMessage );
     }
 
     _clickSeletedTab(tab) {
@@ -989,8 +991,6 @@ function mapDispatchToProps(dispatch) {
         detailVisit,
         filterUsersBanco,
         addTask,
-        downloadFilePdf,
-        changeStateSaveData,
         nonValidateEnter,
         showLoading,
         addListParticipant,
@@ -1000,7 +1000,10 @@ function mapDispatchToProps(dispatch) {
         addUsers,
         setConfidential,
         clearParticipants,
-        dispatchPrepareTasksNotes: prepareTasksNotes
+        dispatchPrepareTasksNotes: prepareTasksNotes,
+        dispatchDownloadFilePdf : downloadFilePdf,
+        dispatchChangeStateSaveData : changeStateSaveData,
+        dispatchSwtShowMessage : swtShowMessage
     }, dispatch);
 }
 

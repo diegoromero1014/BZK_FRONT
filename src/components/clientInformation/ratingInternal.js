@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from 'react';
 import {VALUE_LIMIT_GREEN, VALUE_LIMIT_ORANGE, COLOR_GREEN, COLOR_ORANGE, COLOR_RED} from './constants';
-import _ from 'lodash';
 
 const valor= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 var raitingReceive = 0;
