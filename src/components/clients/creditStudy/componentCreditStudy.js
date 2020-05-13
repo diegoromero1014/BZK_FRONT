@@ -744,11 +744,11 @@ export class ComponentStudyCredit extends Component {
                     if (_.isEqual(GOVERNMENT, value) || _.isEqual(FINANCIAL_INSTITUTIONS, value)) {
                         consultListWithParameterUbication(constantsSelects.CUSTOMER_TYPOLOGY, infoClient.segment).then(() => {
                             customerTypology.onChange(infoClient.idCustomerTypology);
-                        });;
+                        });
                     } else {
                         getMasterDataFields([constantsSelects.CUSTOMER_TYPOLOGY], true).then(() => {
                             customerTypology.onChange(infoClient.idCustomerTypology);
-                        });;
+                        });
                     }
                 }
             }, () => {

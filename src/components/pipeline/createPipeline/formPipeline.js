@@ -1353,7 +1353,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     <dt>
                       <span>SVA</span>
                     </dt>
-                    <ToolTip text={HELP_SVA} rendertooltip={HELP_SVA}>
+                    <ToolTip text={HELP_SVA}>
                       <div>
                         <Input
                           {...sva}
