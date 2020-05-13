@@ -8,7 +8,6 @@ const RecentSearchBox = ({recordsRecentSearch, deleteSearch, applyRecentSearch})
     return recordsRecentSearch.map(({id, name, isSelected}) => (
       <ToolTip
         text={name}
-        rendertooltip={name}
       >
         <Label key={id} style={{margin: "2px"}} color={isSelected ? 'blue' : null}>
           <span style={{cursor: 'pointer'}} onClick={() => applyRecentSearch(id)}>

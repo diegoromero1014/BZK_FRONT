@@ -19,11 +19,10 @@ import { showLoading } from '../../loading/actions';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
 import { changeStateSaveData } from '../../main/actions';
-import { downloadFilePDF } from '../actions';
-import { getContactDetails, saveContact, clearClienEdit, deleteRelationshipServer, markAsOutdated } from './actions';
+import { downloadFilePdf } from '../../clientInformation/actions';
+import { getContactDetails, saveContact, clearClienEdit, markAsOutdated } from './actions';
 import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions';
 import {
-    consultDataSelect,
     getMasterDataFields,
     consultListWithParameterUbication
 } from '../../selectsComponent/actions';
@@ -52,7 +51,8 @@ import {
     MESSAGE_LOAD_DATA,
     VALUE_XSS_INVALID,
     REGEX_SIMPLE_XSS_MESAGE,
-    MARCAR_CONTACTO_DESACTUALIZADO
+    MARCAR_CONTACTO_DESACTUALIZADO,
+    NAME_FILE_SOCIAL_STYLE_CONTACT
 } from '../../../constantsGlobal';
 import {
     MESSAGE_WARNING_FORBIDDEN_CHARACTER,
@@ -63,7 +63,7 @@ import ElementsComponent from '../../elements/';
 import { cleanList, addToList, createList } from '../../elements/actions';
 import { MANDATORY_OBJECTIVES_MSG, OBJECTIVES_OPEN_ERROR_MSG, OBJECTIVES, OBJECTIVES_PLACEHOLDER } from '../../participants/constants';
 import Tooltip from "../../toolTip/toolTipComponent";
-
+import _ from 'lodash';
 var thisForm;
 
 export class ContactDetailsModalComponent extends Component {
@@ -103,14 +103,14 @@ export class ContactDetailsModalComponent extends Component {
     /* Carga la información del contacto */
     componentWillMount() {
         const {
-            nonValidateEnter, getMasterDataFields, getContactDetails, contactId, callFromModuleContact, showLoading, reducerGlobal, dispatchCleanList, dispatchAddToList, dispatchCreateList
+            dispatchNonValidateEnter, dispatchGetMasterDataFields, dispatchGetContactDetails, contactId, callFromModuleContact, dispatchShowLoading, reducerGlobal, dispatchCleanList, dispatchAddToList, dispatchCreateList
         } = this.props;
         let updateCheckPermission = _.get(reducerGlobal.get('permissionsContacts'), _.indexOf(reducerGlobal.get('permissionsContacts'), MARCAR_CONTACTO_DESACTUALIZADO), false);
         this.setState({ updateCheckPermission });
         setGlobalCondition(!callFromModuleContact);
 
-        nonValidateEnter(false);
-        showLoading(true, MESSAGE_LOAD_DATA);
+        dispatchNonValidateEnter(false);
+        dispatchShowLoading(true, MESSAGE_LOAD_DATA);
 
         const that = this;
         const { fields: { contactFunctions, contactHobbies, contactSports, contactLineOfBusiness, contactCity } } = this.props;
@@ -121,10 +121,10 @@ export class ContactDetailsModalComponent extends Component {
             FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP
         ];
 
-        getMasterDataFields(masterData).then(function () {
-            getContactDetails(contactId, idClient)
+        dispatchGetMasterDataFields(masterData).then(function () {
+            dispatchGetContactDetails(contactId, idClient)
                 .then(function (data) {
-                    showLoading(false, "");
+                    dispatchShowLoading(false, "");
                     const contact = _.get(data, 'payload.data.data');
                     let hasToUpdateInfo = !that.state.updateCheckPermission && !contact.updatedInfo;
                     that.setState({ updateCheck: !contact.updatedInfo, hasToUpdateInfo });
@@ -163,8 +163,8 @@ export class ContactDetailsModalComponent extends Component {
     }
 
     _downloadFileSocialStyle() {
-        const { downloadFilePDF } = this.props;
-        downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
+        const { dispatchDownloadFilePdf, dispatchChangeStateSaveData, dispatchSwtShowMessage } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT,  NAME_FILE_SOCIAL_STYLE_CONTACT, dispatchChangeStateSaveData, dispatchSwtShowMessage);
         this.setState({ generoData: genero });
     }
 
@@ -267,16 +267,16 @@ export class ContactDetailsModalComponent extends Component {
     }
 
     _uploadProvincesByCountryId(countryId) {
-        const { consultListWithParameterUbication } = this.props;
+        const { dispatchConsultListWithParameterUbication } = this.props;
         if (countryId !== undefined && countryId !== null) {
-            consultListWithParameterUbication(FILTER_PROVINCE, countryId);
+            dispatchConsultListWithParameterUbication(FILTER_PROVINCE, countryId);
         }
     }
 
     _uploadCitiesByProvinceId(provinceId) {
-        const { consultListWithParameterUbication } = this.props;
+        const { dispatchConsultListWithParameterUbication } = this.props;
         if (provinceId !== undefined && provinceId !== null) {
-            consultListWithParameterUbication(FILTER_CITY, provinceId);
+            dispatchConsultListWithParameterUbication(FILTER_CITY, provinceId);
         }
     }
 
@@ -287,14 +287,14 @@ export class ContactDetailsModalComponent extends Component {
     }
 
     _closeViewOrEditContact() {
-        const { isOpen, clearClienEdit, clearContactOrder, clearContactCreate, callFromModuleContact } = this.props;
+        const { isOpen, dispatchClearClienEdit, dispatchClearContactOrder, dispatchClearContactCreate, callFromModuleContact } = this.props;
         this.setState({ isEditable: false });
         if (!callFromModuleContact) {
             isOpen();
             this.props.resetForm();
-            clearClienEdit();
-            clearContactCreate();
-            clearContactOrder();
+            dispatchClearClienEdit();
+            dispatchClearContactCreate();
+            dispatchClearContactOrder();
         }
     }
 
@@ -307,16 +307,16 @@ export class ContactDetailsModalComponent extends Component {
                 contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress, contactTypeOfContact,
                 contactLineOfBusiness, contactFunctions, contactHobbies, contactSports, contactSocialStyle,
                 contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures, updateCheckObservation
-            }, changeStateSaveData, callFromModuleContact, resetPage, swtShowMessage, elementsReducer
+            }, dispatchChangeStateSaveData, callFromModuleContact, resetPage, dispatchsSwtShowMessage, elementsReducer
         } = this.props;
-        const { contactDetail, contactsByClientFindServer } = this.props;
+        const { contactDetail, dispatchContactsByClientFindServer } = this.props;
         const contact = contactDetail.get('contactDetailList');
-        const { saveContact } = this.props;
+        const { dispatchSaveContact } = this.props;
 
         let interlocutor = elementsReducer[OBJECTIVES];
 
         if (interlocutor && interlocutor.open) {
-            swtShowMessage('error', 'Error', OBJECTIVES_OPEN_ERROR_MSG);
+            dispatchsSwtShowMessage('error', 'Error', OBJECTIVES_OPEN_ERROR_MSG);
             return;
         }
 
@@ -361,9 +361,9 @@ export class ContactDetailsModalComponent extends Component {
             "interlocutorObjsDTO": interlocutor.elements
         };
 
-        changeStateSaveData(true, MESSAGE_SAVE_DATA);
-        saveContact(jsonUpdateContact).then((data) => {
-            changeStateSaveData(false, "");
+        dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
+        dispatchSaveContact(jsonUpdateContact).then((data) => {
+            dispatchChangeStateSaveData(false, "");
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
                 redirectUrl("/login");
             } else {
@@ -373,19 +373,19 @@ export class ContactDetailsModalComponent extends Component {
                         this.setState({ showMessage: true });
                     } else {
                         this._closeViewOrEditContact();
-                        swtShowMessage('success', 'Edición de contacto', 'Señor usuario, el contacto se editó de forma exitosa.');
+                        dispatchsSwtShowMessage('success', 'Edición de contacto', 'Señor usuario, el contacto se editó de forma exitosa.');
                     }
-                    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "", "");
+                    dispatchContactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "", "");
                     if (!_.isUndefined(resetPage)) {
                         resetPage();
                     }
                 } else {
-                    swtShowMessage('error', 'Error editando contacto', 'Señor usuario, ocurrió un error editando el contacto.');
+                    dispatchsSwtShowMessage('error', 'Error editando contacto', 'Señor usuario, ocurrió un error editando el contacto.');
                 }
             }
         }, () => {
-            changeStateSaveData(false, "");
-            swtShowMessage('error', 'Error editando contacto', 'Señor usuario, ocurrió un error editando el contacto.');
+            dispatchChangeStateSaveData(false, "");
+            dispatchsSwtShowMessage('error', 'Error editando contacto', 'Señor usuario, ocurrió un error editando el contacto.');
         });
     }
     _handleChangeUpdateCheck() {
@@ -399,20 +399,20 @@ export class ContactDetailsModalComponent extends Component {
         }
     }
     cancelAlert() {
-        const { contactsByClientFindServer } = this.props;
+        const { dispatchContactsByClientFindServer, dispatchShowLoading } = this.props;
         this.setState({
             updateCheck: true,
             showMessage: false
         })
         if (this.state.isUpdatedInSubmit) {
-            showLoading(false, "");
+            dispatchShowLoading(false, "");
             this._closeViewOrEditContact();
-            contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
+            dispatchContactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
         }
     }
     unmarkContact() {
-        const { fields: { updateCheckObservation }, showLoading } = this.props;
-        showLoading(true, MESSAGE_LOAD_DATA);
+        const { fields: { updateCheckObservation }, dispatchShowLoading } = this.props;
+        dispatchShowLoading(true, MESSAGE_LOAD_DATA);
         this.setState({
             updateCheck: false,
             showMessage: false
@@ -421,9 +421,9 @@ export class ContactDetailsModalComponent extends Component {
         this._markAsOutdated();
     }
     _markAsOutdated() {
-        const { fields: { updateCheckObservation }, redirectUrl, changeStateSaveData, resetPage, swtShowMessage, showLoading } = this.props;
-        const { markAsOutdated } = this.props;
-        const { contactDetail, contactsByClientFindServer } = this.props;
+        const { fields: { updateCheckObservation }, dispatchChangeStateSaveData, resetPage, dispatchsSwtShowMessage, dispatchShowLoading } = this.props;
+        const { dispatchMarkAsOutdated } = this.props;
+        const { contactDetail, dispatchContactsByClientFindServer } = this.props;
 
         const contact = contactDetail.get('contactDetailList');
         const jsonContact = {
@@ -432,18 +432,18 @@ export class ContactDetailsModalComponent extends Component {
             "contactType": contact.contactType,
             "contactIdentityNumber": contact.contactIdentityNumber,
         };
-        showLoading(true, MESSAGE_LOAD_DATA);
-        markAsOutdated(jsonContact).then((data) => {
-            showLoading(false, "");
-            changeStateSaveData(false, "");
+        dispatchShowLoading(true, MESSAGE_LOAD_DATA);
+        dispatchMarkAsOutdated(jsonContact).then((data) => {
+            dispatchShowLoading(false, "");
+            dispatchChangeStateSaveData(false, "");
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
                 redirectUrl("/login");
             } else {
                 if (_.get(data, 'payload.data.status') === 200) {
                     this.setState({ isUpdatedInSubmit: false });
                     this._closeViewOrEditContact();
-                    swtShowMessage('success', 'Actualización de información', 'Señor usuario, la información se guardó de forma exitosa.');
-                    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
+                    dispatchsSwtShowMessage('success', 'Actualización de información', 'Señor usuario, la información se guardó de forma exitosa.');
+                    dispatchContactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "");
                     if (!_.isUndefined(resetPage)) {
                         resetPage();
                     }
@@ -454,12 +454,12 @@ export class ContactDetailsModalComponent extends Component {
                     const val_ = updateCheckObservation.value;
                     updateCheckObservation.onChange(val_);
                 } else {
-                    swtShowMessage('error', 'Error actualizando información', 'Señor usuario, ocurrió un error guardando la información.');
+                    dispatchsSwtShowMessage('error', 'Error actualizando información', 'Señor usuario, ocurrió un error guardando la información.');
                 }
             }
         }, () => {
-            changeStateSaveData(false, "");
-            swtShowMessage('error', 'Error actualizando información', 'Señor usuario, ocurrió un error guardando la información.');
+            dispatchChangeStateSaveData(false, "");
+            dispatchsSwtShowMessage('error', 'Error actualizando información', 'Señor usuario, ocurrió un error guardando la información.');
         });
 
     }
@@ -473,7 +473,7 @@ export class ContactDetailsModalComponent extends Component {
                 contactTelephoneNumber, contactExtension, contactMobileNumber, contactEmailAddress,
                 contactTypeOfContact, contactLineOfBusiness, contactFunctions, contactHobbies, contactSports,
                 contactSocialStyle, contactAttitudeOverGroup, contactDateOfBirth, contactRelevantFeatures, updateCheckObservation
-            }, handleSubmit, selectsReducer, reducerGlobal, clientInfo, consultListWithParameterUbication, origin
+            }, handleSubmit, selectsReducer, reducerGlobal, clientInfo, dispatchConsultListWithParameterUbication, origin
         } = this.props;
 
         return (
@@ -739,7 +739,7 @@ export class ContactDetailsModalComponent extends Component {
                     <dt className="business-title"><span style={{ paddingLeft: '20px' }}>Información de ubicación y correspondencia</span>
                     </dt>
                     <Ubicacion fields={{ contactCountry, contactProvince, contactCity, contactAddress, contactNeighborhood }} selectsReducer={selectsReducer}
-                        isEditable={this.state.isEditable} clientInfo={clientInfo} consultListWithParameterUbication={consultListWithParameterUbication} origin={origin}
+                        isEditable={this.state.isEditable} clientInfo={clientInfo} consultListWithParameterUbication={dispatchConsultListWithParameterUbication} origin={origin}
                     />
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                         <Row>
@@ -1020,31 +1020,27 @@ ContactDetailsModalComponent.PropTypes = {
     contactId: PropTypes.number
 };
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        getContactDetails,
-        saveContact,
-        clearContactOrder,
-        clearContactCreate,
-        consultDataSelect,
-        getMasterDataFields,
-        consultListWithParameterUbication,
-        contactsByClientFindServer,
-        clearClienEdit,
-        downloadFilePDF,
-        changeStateSaveData,
-        nonValidateEnter,
-        deleteRelationshipServer,
-        showLoading,
-        swtShowMessage,
-        markAsOutdated,
-        dispatchCleanList: cleanList,
-        dispatchAddToList: addToList,
-        dispatchCreateList: createList
-    }, dispatch);
-}
+const mapDispatchToProps = dispatch => bindActionCreators({
+    dispatchGetContactDetails: getContactDetails,
+    dispatchSaveContact: saveContact,
+    dispatchClearContactOrder: clearContactOrder,
+    dispatchClearContactCreate: clearContactCreate,
+    dispatchGetMasterDataFields: getMasterDataFields,
+    dispatchConsultListWithParameterUbication: consultListWithParameterUbication,
+    dispatchContactsByClientFindServer: contactsByClientFindServer,
+    dispatchClearClienEdit: clearClienEdit,
+    dispatchNonValidateEnter: nonValidateEnter,
+    dispatchMarkAsOutdated: markAsOutdated,
+    dispatchShowLoading: showLoading,
+    dispatchsSwtShowMessage: swtShowMessage,
+    dispatchCleanList: cleanList,
+    dispatchAddToList: addToList,
+    dispatchCreateList: createList,
+    dispatchDownloadFilePdf: downloadFilePdf,
+    dispatchChangeStateSaveData: changeStateSaveData
+}, dispatch);
 
-function mapStateToProps({ contactDetail, selectsReducer, reducerGlobal, clientInformacion, elementsReducer }) {
+const mapStateToProps = ({ contactDetail, selectsReducer, reducerGlobal, clientInformacion, elementsReducer }) => {
     const contact = contactDetail.get('contactDetailList');
     const clientInfo = Object.assign({}, clientInformacion.get('responseClientInfo'));
     if (contact) {

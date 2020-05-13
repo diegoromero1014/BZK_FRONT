@@ -542,19 +542,6 @@ export const checkRequiredPipelineJustification = (value, fields, props) => {
     return null;
 }
 
-export const checkRequiredPivotNit = (value, fields, props) => {        
-    return checkReducerValue(value,
-        fields.product,
-        props.selectsReducer.get(PRODUCTS_MASK),
-        (value) => {
-            const productKey = value ? value.toLowerCase() : '';                 
-            return (productKey == FACTORING_BANCOLOMBIA_CONFIRMING || productKey == FACTORING_PLUS || productKey == TRIANGULAR_LINE);
-        },
-        (value) => {
-            return checkRequired(value) || checkNumberDocument(value) || checkFirstCharacter(value)
-        });
-}
-
 export const checkRequiredTermInMonths = (value, fields, props) => {
     return checkReducerValue(value,
         fields.need,

@@ -55,7 +55,7 @@ export class BlackListAlertsComponent extends Component {
                 />
                 <Button
                     fluid
-                    style={{ background: 'transparent' }}
+                    style={{ background: 'transparent', color: '#00448c', fontSize: '16px' }}
                     onClick={this.reditectToBlackListAlerts}
                 >
                     Ver detalle

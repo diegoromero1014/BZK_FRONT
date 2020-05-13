@@ -58,7 +58,7 @@ export class AlertPortfolioExpiration extends Component {
                 <Table tableSettings={tableSettings} />
                 <Button
                     fluid
-                    style={{ background: 'transparent' }}
+                    style={{ background: 'transparent', color: '#00448c', fontSize: '16px' }}
                     onClick={this.redirectToAlertPortfolioExpiration}
                 >
                     Ver detalle
