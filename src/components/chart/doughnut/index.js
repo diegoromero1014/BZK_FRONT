@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Doughnut, Chart } from 'react-chartjs-2';
+import { noop } from 'lodash';
 
 class DoughnutComponent extends Component {
 
@@ -15,7 +16,8 @@ class DoughnutComponent extends Component {
         data: {
             labels: [],
             datasets: []
-        }
+        },
+        onClick: noop
     }
 
     componentWillMount() {
@@ -92,7 +94,7 @@ class DoughnutComponent extends Component {
     }
 
     render() {
-        const { data, elements } = this.props;
+        const { data, elements, onClick } = this.props;
 
         return (
             <div>
@@ -106,6 +108,7 @@ class DoughnutComponent extends Component {
                             },
                             display: true,
                             position: 'right',
+                            onClick
                         },
                         elements
                     }}

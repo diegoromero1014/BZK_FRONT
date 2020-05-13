@@ -10,6 +10,7 @@ import moment from "moment";
 import {DATE_FORMAT, MESSAGE_ERROR} from "../../constantsGlobal";
 import {swtShowMessage} from "../sweetAlertMessages/actions";
 import _ from 'lodash';
+import {DATES_HELP_MESSAGE} from "./constants";
 
 const fields = ["users", "rol", "initialDate", "finalDate"];
 const rolFilter = [
@@ -27,7 +28,8 @@ export class HeaderFilters extends Component {
             initialDate: null,
             finalDate: null,
             defaultInitialDate: null,
-            defaultFinalDate: null
+            defaultFinalDate: null,
+            rangeFromDates: false
         }
     }
 
@@ -50,10 +52,10 @@ export class HeaderFilters extends Component {
             defaultFinalDate: moment(filtered.finalDate).format("DD/MM/YYYY"),
             initialDate: moment(filtered.initialDate).format("DD/MM/YYYY"),
             finalDate: moment(filtered.finalDate).format("DD/MM/YYYY"),
-            user: [filtered.users],
+            user: filtered.users,
             rol: filtered.rol
         });
-        rol.onChange("RESPONSIBLE");
+        rol.onChange(filtered.rol);
     };
 
     defaultFilters = async () => {
@@ -122,11 +124,24 @@ export class HeaderFilters extends Component {
             });
         }
 
-        if (moment(this.state.initialDate, DATE_FORMAT).isAfter(moment(this.state.finalDate, DATE_FORMAT))) {
+        let initialValue = moment(this.state.initialDate, DATE_FORMAT);
+        let finalValue = moment(this.state.finalDate, DATE_FORMAT);
+
+        if (initialValue.isAfter(finalValue)) {
             dispatchShowMessage(MESSAGE_ERROR, 'Rango de fechas', 'Señor usuario, la fecha inicial tiene que ser menor o igual a la final.');
             await this.setState({
                 initialDate: this.state.defaultInitialDate,
                 finalDate: this.state.defaultFinalDate,
+            });
+        }
+
+        if (initialValue.diff(finalValue, 'days') < -360) {
+            await this.setState({
+                rangeFromDates: true
+            });
+        } else {
+            await this.setState({
+                rangeFromDates: false
             });
         }
 
@@ -152,7 +167,7 @@ export class HeaderFilters extends Component {
         const {fields: {users, rol, initialDate, finalDate}} = this.props;
         return (
             <div style={{paddingTop: "10px", width: "100%", paddingBottom: "20px"}}>
-                <Row style={{padding: "5px 10px 0px 20px"}}>
+                <Row style={{padding: "5px 20px 0px 20px"}}>
                     <Col xs={3} sm={3} md={3} lg={3}>
                         <span>Usuario</span>
                         <MultipleSelect
@@ -198,19 +213,32 @@ export class HeaderFilters extends Component {
                     </Col>
                     <Col xs={3} sm={3} md={3} lg={3}>
                         <span>Hasta</span>
-                        <DateTimePickerUi
-                            {...finalDate}
-                            culture='es'
-                            format={"DD/MM/YYYY"}
-                            time={false}
-                            placeholder='DD/MM/YYYY'
-                            className='field-input'
-                            name="finalDate"
-                            touched={true}
-                            value={this.state.finalDate}
-                            onChange={val => this.onClickDate("final", val)}
-                            onBlur={val => this.fillDateEmpty("final", val)}
-                        />
+                        <div style={{position: 'relative'}}>
+                            <DateTimePickerUi
+                                {...finalDate}
+                                culture='es'
+                                format={"DD/MM/YYYY"}
+                                time={false}
+                                placeholder='DD/MM/YYYY'
+                                className='field-input'
+                                name="finalDate"
+                                touched={true}
+                                value={this.state.finalDate}
+                                onChange={val => this.onClickDate("final", val)}
+                                onBlur={val => this.fillDateEmpty("final", val)}
+                            />
+                            {
+                                this.state.rangeFromDates &&
+                                <div style={{position: 'relative',
+                                    padding: '15px',
+                                    background: '#353535',
+                                    color: 'white',
+                                    borderRadius: '7px',
+                                    marginTop: '10px',}}>
+                                    <span>{DATES_HELP_MESSAGE}</span>
+                                </div>
+                            }
+                        </div>
                     </Col>
                 </Row>
             </div>
