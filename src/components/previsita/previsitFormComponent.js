@@ -180,7 +180,7 @@ export class PrevisitFormComponent extends Component {
                               <Input
                                  name="endTime"
                                  value={value}
-                                 placeholder="Duración previsita"
+                                 placeholder="Duración visita"
                                  type="text"
                                  onChange={onChange}
                                  onBlur={onBlur}
