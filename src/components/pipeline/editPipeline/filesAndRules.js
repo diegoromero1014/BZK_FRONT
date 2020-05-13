@@ -50,7 +50,10 @@ export const fieldsWithRules = {
     commercialOportunity: { rules: [checkRequiredComercialOportunity] },
     justification : {rules: [checkRequiredPipelineJustification] },
     margen: {rules:[validateDecimal]},
-    typePolicy: { rules: [] }
+    typePolicy: { rules: [] },
+    businessCategory2: { rules:[] },
+    nominalValue2: { rules: [ checkNumberLength(15)] }
+
 }
 
 export const fields = _.keys(fieldsWithRules);
