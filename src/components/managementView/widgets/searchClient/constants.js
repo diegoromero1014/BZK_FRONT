@@ -1,6 +1,9 @@
 import ProspectIcon from './prospectIcon';
 import ButtonsFilter from './buttonsFilter';
 
+export const FILTER_BY_CLIENTS = "FILTER_BY_CLIENTS";
+export const FILTER_BY_RELATION = "FILTER_BY_RELATION";
+
 export const TITLE_SEARCH_CLIENT = 'BUSCAR CLIENTES';
 export const CLOSE_BUSQUEDA = 'Limpiar búsqueda';
 export const PLACEHOLDER_SEARCH_CLIENT = 'Buscar por nombre, NIT o grupo económico';
@@ -72,7 +75,8 @@ export const COLUMNS_SEARCH_CLIENT = [
     },
     {
         header: 'Tipo documuento',
-        prop: 'documentType'
+        prop: 'documentType',
+        width: 2
     },
     {
         header: 'Número de documento',
@@ -88,7 +92,6 @@ export const COLUMNS_SEARCH_CLIENT = [
     },
     {
         header: 'Opciones',
-        prop: 'prospect',
         component: {
             Component: ButtonsFilter
         }
