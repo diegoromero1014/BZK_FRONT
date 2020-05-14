@@ -46,13 +46,34 @@ import {
   FILTER_TYPE_POLICY
 } from "../../selectsComponent/constants";
 import {
-  BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY,
-  ORIGIN_PIPELIN_BUSINESS, CURRENCY_MESSAGE, OPORTUNITIES_MANAGEMENT,
-  BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO, LEASING, FINANCIAL_LEASING,
-  OPERATING_LEASE, IMPORTATION_LEASING, FACTORING, FACTORING_BANCOLOMBIA_CONFIRMING,
-  FACTORING_PLUS, TRIANGULAR_LINE, NUEVO_NEGOCIO, NEED_FINANCING,
-  PIPELINE_INDEXING_FIELD, PIPELINE_PENDING_DISBURSEMENT_AMOUNT, PIPELINE_TERM_IN_MONTHS_AND_VALUES,
-  PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS, PRODUCT_FAMILY_LEASING, HELP_SVA
+  BUSINESS_STATUS_COMPROMETIDO,
+  BUSINESS_STATUS_COTIZACION,
+  HELP_PROBABILITY,
+  ORIGIN_PIPELIN_BUSINESS,
+  CURRENCY_MESSAGE,
+  OPORTUNITIES_MANAGEMENT,
+  BUSINESS_STATUS_PERDIDO,
+  BUSINESS_STATUS_NO_CONTACTADO,
+  LEASING,
+  FINANCIAL_LEASING,
+  OPERATING_LEASE,
+  IMPORTATION_LEASING,
+  FACTORING,
+  FACTORING_BANCOLOMBIA_CONFIRMING,
+  FACTORING_PLUS,
+  TRIANGULAR_LINE,
+  NUEVO_NEGOCIO,
+  NEED_FINANCING,
+  PIPELINE_INDEXING_FIELD,
+  PIPELINE_PENDING_DISBURSEMENT_AMOUNT,
+  PIPELINE_TERM_IN_MONTHS_AND_VALUES,
+  PIPELINE_NEED_CLIENT,
+  PIPELINE_DISBURSEMENT_PLAN_MESSAGE,
+  PLACEMENTS,
+  CATCHMENTS,
+  PRODUCT_FAMILY_LEASING,
+  HELP_SVA,
+  OTHER_JUSTIFICATION
 } from "../constants";
 import {
   ALLOWS_NEGATIVE_INTEGER,
@@ -139,6 +160,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         showAlertCurrency: false,
         messageTooltipNominalValue: '',
         showJustificationField: false,
+        detailJustificationObligatory: false,
         showProbabilityField: true,
         showMellowingPeriodField: true,
         pipelineStatus: [],
@@ -199,6 +221,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._nameDisbursementPlansInReducer = this._nameDisbursementPlansInReducer.bind(this);
       this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
       this._showBusinessCategory2 = this._showBusinessCategory2.bind(this);
+      this._showJustificationsDetail = this._showJustificationsDetail.bind(this);
+      this._justificationObligatoryField = this._justificationObligatoryField.bind(this);
+      this._onChangeJustification = this._onChangeJustification.bind(this);
     }
 
     showFormDisbursementPlan(isOpen) {
@@ -522,7 +547,11 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     _pipelineTypeAndBusinessOnChange(value){
       let businessStatusSelectedKey = this.getBusinessStatusKey();
       let pipelineTypeSelectedKey = this.getPipelineSelectedKey(value);
-      this._validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey);
+      if (pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT){
+        this._validateShowJustificationProbabilityAndMellowingPeriodFields( businessStatusSelectedKey);
+      }else if (pipelineTypeSelectedKey === NUEVO_NEGOCIO){
+        this._showJustificationsDetail(businessStatusSelectedKey);
+      }
     }
 
     setPipelineStatusValues(pipelineTypeSelectedKey, businessStatusSelectedKey) {
@@ -546,9 +575,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       return businessStatusList.find((status) => status.id == id);
     }
 
-    _validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey){
+    _validateShowJustificationProbabilityAndMellowingPeriodFields( businessStatusSelectedKey ){
       const { fields: {justification, justificationDetail} } = this.props;
-      if(pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){
+      if(businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO){
         this.setState({
           showMellowingPeriodField: false,
           showProbabilityField: false,
@@ -563,6 +592,44 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       }
       justification.onChange("");
       justificationDetail.onChange("");
+    }
+
+    _showJustificationsDetail(businessStatusSelectedKey){
+      const { fields: {justification, justificationDetail} } = this.props;
+      if(businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO){
+        this.setState({
+          showJustificationField: true
+        })
+      }else{
+        this.setState({
+          showJustificationField: false
+        })
+      }
+      justification.onChange("");
+      justificationDetail.onChange("");
+    }
+
+    _onChangeJustification(value){
+      this._justificationObligatoryField(value);
+    }
+
+    _justificationObligatoryField(value){
+      const { selectsReducer } = this.props;
+      const justificationsTypes = selectsReducer.get(PIPELINE_JUSTIFICATION);
+      let justificationsTypeSelectedKey = null;
+      if(justificationsTypes){
+        let justificationsTypeSelected = justificationsTypes.find((justificationsType) => justificationsType.id == value);
+        justificationsTypeSelectedKey = justificationsTypeSelected ? justificationsTypeSelected.key.toLowerCase() : '';
+      }
+      if(justificationsTypeSelectedKey === OTHER_JUSTIFICATION){
+        this.setState({
+          detailJustificationObligatory:true
+        })
+      }else{
+        this.setState({
+          detailJustificationObligatory:false
+        })
+      }
     }
 
   _showAlertFinancingAndPlan(isEditableValue) {
@@ -1167,8 +1234,26 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 </Col>
               </Row>
               : null }
-              {this.state.showJustificationField ?
                   <Row style={{padding: "0px 10px 20px 20px"}}>
+                    <Col xs={6} md={3} lg={3}>
+                      <div style={{paddingRight: "15px"}}>
+                        <dt>
+                          <span>Estado del negocio (</span><span style={{color: "red"}}>*</span>)
+                        </dt>
+                        <ComboBox
+                            labelInput="Seleccione..."
+                            valueProp={'id'}
+                            textProp={'value'}
+                            {...businessStatus}
+                            name={nameBusinessStatus}
+                            parentId="dashboardComponentScroll"
+                            data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
+                            onChange={val => this._changeBusinessStatus(val)}
+                            filterData={true}
+                        />
+                      </div>
+                    </Col>
+              {this.state.showJustificationField ?
                     <Col xs={12} md={6} lg={6}>
                       <div style={{paddingRight: "15px"}}>
                         <dt>
@@ -1182,17 +1267,19 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                             name={nameJustificationPipeline}
                             parentId="dashboardComponentScroll"
                             data={selectsReducer.get(PIPELINE_JUSTIFICATION) || []}
+                            onChange={val => this._onChangeJustification(val)}
                         />
                       </div>
                     </Col>
-                  </Row>
                   : null}
+                  </Row>
               {this.state.showJustificationField ?
                   <Row style={{padding: "0px 10px 20px 20px"}}>
                     <Col xs={12} md={6} lg={6}>
                       <div style={{paddingRight: "15px"}}>
                         <dt>
                           <span>Detalle justificación </span>
+                          {this.state.detailJustificationObligatory ? <span>(<span style={{color: "red"}}>*</span>)</span> : ''}
                         </dt>
                         <TextareaComponent
                             name="txtJustificationDetail"
@@ -1207,24 +1294,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   </Row>
                   : null}
               <Row style={{padding: "0px 10px 20px 20px"}}>
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{paddingRight: "15px"}}>
-                    <dt>
-                      <span>Estado del negocio (</span><span style={{color: "red"}}>*</span>)
-                    </dt>
-                    <ComboBox
-                        labelInput="Seleccione..."
-                        valueProp={'id'}
-                        textProp={'value'}
-                        {...businessStatus}
-                        name={nameBusinessStatus}
-                        parentId="dashboardComponentScroll"
-                        data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
-                        onChange={val => this._changeBusinessStatus(val)}
-                        filterData={true}
-                    />
-                  </div>
-                </Col>
               {this.state.showMellowingPeriodField ?
                     <Col xs={6} md={3} lg={3}>
                       <div style={{paddingRight: "15px"}}>
