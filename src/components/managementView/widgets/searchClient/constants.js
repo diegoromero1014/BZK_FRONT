@@ -3,6 +3,8 @@ import ButtonsFilter from './buttonsFilter';
 
 export const FILTER_BY_CLIENTS = "FILTER_BY_CLIENTS";
 export const FILTER_BY_RELATION = "FILTER_BY_RELATION";
+export const TITLE_FILTER_BY_CLIENTS = "Cliente /";
+export const TITLE_FILTER_BY_RELATION = "Grupo económico /";
 
 export const TITLE_SEARCH_CLIENT = 'BUSCAR CLIENTES';
 export const CLOSE_BUSQUEDA = 'Limpiar búsqueda';

@@ -12,14 +12,14 @@ export default (state = initialState, action = {}) => {
 
         case FILTER_BY_CLIENTS:
             {
-                const { payload: { filterCriteria, id } } = action;
-                const newState = Object.assign({}, state, { filterMode: filterCriteria, id, title: "Filter cliente" })
+                const { payload: { filterCriteria, id, title } } = action;
+                const newState = Object.assign({}, state, { filterMode: filterCriteria, id, title })
                 return newState
             }
         case FILTER_BY_RELATION:
             {
-                const { payload: { filterCriteria, id } } = action;
-                const newState = Object.assign({}, state, { filterMode: filterCriteria, id, title: "Filter Relation" })
+                const { payload: { filterCriteria, id, title } } = action;
+                const newState = Object.assign({}, state, { filterMode: filterCriteria, id, title })
                 return newState
             }
         default:

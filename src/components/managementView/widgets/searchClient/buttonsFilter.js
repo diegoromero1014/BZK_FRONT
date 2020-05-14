@@ -1,38 +1,41 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { filterByClient } from './actions';
+import { filterByClient, filterByRealtion } from './actions';
+import { TITLE_FILTER_BY_CLIENTS, TITLE_FILTER_BY_RELATION } from './constants'
 
 class ButtonsFilter extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
     handleFilterByClient = (event, data) => {
         event.stopPropagation();
-        console.log(">>", data);
+        const { name, id } = data;
+        const { dispatchFilterbyClients } = this.props;
+        dispatchFilterbyClients(name, id, TITLE_FILTER_BY_CLIENTS);
     }
 
     handleFilterByRelation = (event, data) => {
         event.stopPropagation();
-        console.log(">>", data);
+        const { economicGroup, id } = data;
+        const { dispatchFilterByRealtion } = this.props;
+        dispatchFilterByRealtion(economicGroup, id, TITLE_FILTER_BY_RELATION);
     }
 
     render() {
 
         const { data } = this.props;
 
-        console.log(this);
-
         return (
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <button
                     className="btn btn-primary btn-sm"
                     type="button"
-                    style={{ background: "#00448C"}}
+                    style={{ background: "#00448C" }}
                     title="Filtro por cliente"
-                    onClick={event => this.handleFilter(event, data)}
+                    onClick={event => this.handleFilterByClient(event, data)}
                 >
                     <i
                         className="filter icon"
@@ -47,9 +50,9 @@ class ButtonsFilter extends Component {
                 <button
                     className="btn btn-primary btn-sm"
                     type="button"
-                    style={{ background: "#00448C"}}
+                    style={{ background: "#00448C" }}
                     title="Filtro por Relacion"
-                    onClick={event => handleFilterByRelation(event, data)}
+                    onClick={event => this.handleFilterByRelation(event, data)}
                 >
                     <i
                         className="filter icon"
@@ -66,11 +69,12 @@ class ButtonsFilter extends Component {
     }
 }
 
-const mapStateToProps = ({filterDashboard}) => ({ filterDashboard });
+const mapStateToProps = ({ filterDashboard }) => ({ filterDashboard });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    dispatchFilterbyClients : filterByClient
-},dispatch)
+    dispatchFilterbyClients: filterByClient,
+    dispatchFilterByRealtion: filterByRealtion
+}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(ButtonsFilter);
 
