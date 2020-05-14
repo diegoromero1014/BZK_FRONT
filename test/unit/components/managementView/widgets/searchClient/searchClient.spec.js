@@ -12,6 +12,7 @@ let dispatchUpdateTitleNavBar ;
 let dispatchSwtShowMessage ; 
 let handleSetSearched ;
 let handleSearchClient ;
+let dispatchFilterbyClients;
 let redirectUrl;
 let setKeyword ;
 let restartPage ;
@@ -31,6 +32,7 @@ describe('Test searchClient component', () => {
         dispatchClientsFindServer = sinon.fake();
         dispatchUpdateTitleNavBar = sinon.fake();
         dispatchSwtShowMessage = sinon.fake();
+        dispatchFilterbyClients = sinon.fake();
         handleSetSearched = sinon.fake();
         handleSearchClient = spy(sinon.fake());
         setKeyword = sinon.fake();
@@ -42,6 +44,7 @@ describe('Test searchClient component', () => {
             dispatchSwtShowMessage,
             handleSetSearched,
             dispatchUpdateTitleNavBar,
+            dispatchFilterbyClients,
             handleSearchClient,
             setKeyword,
             restartPage
