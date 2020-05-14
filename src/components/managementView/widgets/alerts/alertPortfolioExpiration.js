@@ -34,7 +34,7 @@ export class AlertPortfolioExpiration extends Component {
         const { dispatchGetAlertPortfolioExpirationDashboard } = this.props;
 
         this.setLoading(true);
-        await dispatchGetAlertPortfolioExpirationDashboard(page);
+        await dispatchGetAlertPortfolioExpirationDashboard(page, null, null);
         this.setLoading(false);
     }
 
