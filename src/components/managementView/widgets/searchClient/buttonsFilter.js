@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Tooltip from "../../../toolTip/toolTipComponent";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { filterByClient, filterByRealtion } from './actions';
@@ -19,9 +20,9 @@ class ButtonsFilter extends Component {
 
     handleFilterByRelation = (event, data) => {
         event.stopPropagation();
-        const { economicGroup, id } = data;
+        const { economicGroup, idEconomicGroup } = data;
         const { dispatchFilterByRealtion } = this.props;
-        dispatchFilterByRealtion(economicGroup, id, TITLE_FILTER_BY_RELATION);
+        dispatchFilterByRealtion(economicGroup, idEconomicGroup, TITLE_FILTER_BY_RELATION);
     }
 
     render() {
@@ -30,40 +31,44 @@ class ButtonsFilter extends Component {
 
         return (
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                <button
-                    className="btn btn-primary btn-sm"
-                    type="button"
-                    style={{ background: "#00448C" }}
-                    title="Filtro por cliente"
-                    onClick={event => this.handleFilterByClient(event, data)}
-                >
-                    <i
-                        className="filter icon"
-                        style={{
-                            color: "white",
-                            marginRight: "5px",
-                            fontSize: "8pt"
-                        }}
-                    />
-                    Cliente
-                </button>
-                <button
-                    className="btn btn-primary btn-sm"
-                    type="button"
-                    style={{ background: "#00448C" }}
-                    title="Filtro por Relacion"
-                    onClick={event => this.handleFilterByRelation(event, data)}
-                >
-                    <i
-                        className="filter icon"
-                        style={{
-                            color: "white",
-                            marginRight: "5px",
-                            fontSize: "8pt"
-                        }}
-                    />
-                    Relación
-                </button>
+                <Tooltip text={data.name ? 'Filtrar por cliente' : 'Cliente sin NIT principal'}>
+                    <button
+                        className="btn btn-primary btn-sm"
+                        type="button"
+                        style={{ background: `${data.name ? '#00448C' : '#9C9C9C'}` }}
+                        disabled={data.name ? false : true}
+                        onClick={event => this.handleFilterByClient(event, data)}
+                    >
+                        <i
+                            className="filter icon"
+                            style={{
+                                color: "white",
+                                marginRight: "5px",
+                                fontSize: "8pt"
+                            }}
+                        />
+                        Cliente
+                    </button>
+                </Tooltip>
+                <Tooltip text={data.economicGroup ? 'Filtrar por grupo económico' : 'Client sin grupo económico'}>
+                    <button
+                        className="btn btn-primary btn-sm"
+                        type="button"
+                        style={{ background: `${data.economicGroup ? '#00448C' : '#9C9C9C'}` }}
+                        disabled={data.economicGroup ? false : true}
+                        onClick={event => this.handleFilterByRelation(event, data)}
+                    >
+                        <i
+                            className="filter icon"
+                            style={{
+                                color: "white",
+                                marginRight: "5px",
+                                fontSize: "8pt"
+                            }}
+                        />
+                        Relación
+                    </button>
+                </Tooltip>
             </div>
         );
     }
