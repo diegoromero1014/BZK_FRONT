@@ -99,7 +99,7 @@ import {
     NUEVO_NEGOCIO,
     OPERATING_LEASE,
     OPORTUNITIES_MANAGEMENT,
-    ORIGIN_PIPELIN_BUSINESS,
+    ORIGIN_PIPELIN_BUSINESS, OTHER_JUSTIFICATION,
     PIPELINE_DISBURSEMENT_PLAN_MESSAGE,
     PIPELINE_INDEXING_FIELD,
     PIPELINE_NEED_CLIENT,
@@ -190,7 +190,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 businessCategories: null,
                 businessCategories2: null,
                 showPolicyType: false,
-                showBusinessCategory2: false
+                showBusinessCategory2: false,
+                detailJustificationObligatory: false
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -238,6 +239,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._showBusinessCategory2 = this._showBusinessCategory2.bind(this);
             this._onChangeBusinessCategory2 = this._onChangeBusinessCategory2.bind(this);
             this._showLoadBusinessCategory2 = this._showLoadBusinessCategory2.bind(this);
+            this._showJustificationsDetail = this._showJustificationsDetail.bind(this);
+            this._justificationObligatoryField = this._justificationObligatoryField.bind(this);
+            this._onChangeJustification = this._onChangeJustification.bind(this);
+            this.getPipelineSelectedKey = this.getPipelineSelectedKey.bind(this);
         }
 
         showFormDisbursementPlan(isOpen) {
@@ -513,24 +518,31 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             });
         }
 
+        getPipelineSelectedKey(value) {
+            const { selectsReducer } = this.props;
+            const pipelineTypes = selectsReducer.get(PIPELINE_TYPE);
+            const pipelineTypeSelected = pipelineTypes.find((pipelineType) => pipelineType.id == value);
+            if(pipelineTypeSelected){
+                return pipelineTypeSelected.key ? pipelineTypeSelected.key.toLowerCase() : '';
+            }
+            return "";
+        }
+
         _pipelineTypeAndBusinessOnChange(value) {        
-            const { fields: { businessStatus }, selectsReducer } = this.props;
+            const { fields: { businessStatus } } = this.props;
             let businessStatusSelectedKey = null;
             let businessStatusSelected = null;
-            let pipelineTypeSelectedKey = null;
-            const pipelineTypes = selectsReducer.get(PIPELINE_TYPE);
-            const pipelineTypeSelected = pipelineTypes.find((pipelineType) => pipelineType.id == value);            
-
-            if (pipelineTypeSelected) {
-                pipelineTypeSelectedKey = pipelineTypeSelected.key ? pipelineTypeSelected.key.toLowerCase() : '';
-            }
+            let pipelineTypeSelectedKey = this.getPipelineSelectedKey(value);
 
             if (businessStatus.value) {
                 businessStatusSelected = this._getBusinessStatusById(businessStatus.value);
                 businessStatusSelectedKey = businessStatusSelected ? businessStatusSelected.key.toLowerCase() : '';
             }
-
-            this._validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey);
+            if(pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT){
+                this._validateShowJustificationProbabilityAndMellowingPeriodFields( businessStatusSelectedKey);
+            }else if (pipelineTypeSelectedKey === NUEVO_NEGOCIO){
+                this._showJustificationsDetail(businessStatusSelectedKey)
+            }
             this.setPipelineStatusValues(pipelineTypeSelectedKey);
         }
 
@@ -552,9 +564,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             return businessStatusList.find((status) => status.id == id);
           }
 
-        _validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey) {
+        _validateShowJustificationProbabilityAndMellowingPeriodFields( businessStatusSelectedKey) {
             const { fields: {justification, justificationDetail} } = this.props;
-            if(pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){
+            if(businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO){
                 this.setState({
                     showMellowingPeriodField: false,
                     showProbabilityField: false,
@@ -568,6 +580,45 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 });
                 justification.onChange("");
                 justificationDetail.onChange("");
+            }
+        }
+
+        _showJustificationsDetail(businessStatusSelectedKey){
+            const { fields: {justification, justificationDetail} } = this.props;
+            if(businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO){
+                this.setState({
+                    showJustificationField: true
+                })
+            }else{
+                this.setState({
+                    showJustificationField: false
+                })
+            }
+            justification.onChange("");
+            justificationDetail.onChange("");
+        }
+
+        _onChangeJustification(value){
+            this._justificationObligatoryField(value);
+        }
+
+        _justificationObligatoryField(value){
+            const { fields:{pipelineType}, selectsReducer } = this.props;
+            let pipelineTypeSelectedKey = this.getPipelineSelectedKey(pipelineType.value);
+            const justificationsTypes = selectsReducer.get(PIPELINE_JUSTIFICATION);
+            let justificationsTypeSelectedKey = null;
+            if(justificationsTypes){
+                let justificationsTypeSelected = justificationsTypes.find((justificationsType) => justificationsType.id == value);
+                justificationsTypeSelectedKey = justificationsTypeSelected ? justificationsTypeSelected.key.toLowerCase() : '';
+            }
+            if(pipelineTypeSelectedKey === NUEVO_NEGOCIO && justificationsTypeSelectedKey === OTHER_JUSTIFICATION){
+                this.setState({
+                    detailJustificationObligatory:true
+                })
+            }else{
+                this.setState({
+                    detailJustificationObligatory:false
+                })
             }
         }
 
@@ -1338,8 +1389,27 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     </Col>
                                 </Row>
                                 : null }
-                            {this.state.showJustificationField ?
                                 <Row style={{padding: "0px 10px 20px 20px"}}>
+                                    <Col xs={6} md={3} lg={3}>
+                                        <div style={{paddingRight: "15px"}}>
+                                            <dt>
+                                                <span>Estado del negocio (</span><span style={{color: "red"}}>*</span>)
+                                            </dt>
+                                            <ComboBox
+                                                labelInput="Seleccione..."
+                                                valueProp={'id'}
+                                                textProp={'value'}
+                                                {...businessStatus}
+                                                name={nameBusinessStatus}
+                                                parentId="dashboardComponentScroll"
+                                                data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
+                                                disabled={this.state.isEditable ? '' : 'disabled'}
+                                                onChange={val => this._changeBusinessStatus(val)}
+                                                filterData={true}
+                                            />
+                                        </div>
+                                    </Col>
+                            {this.state.showJustificationField ?
                                     <Col xs={12} md={6} lg={6}>
                                         <div style={{paddingRight: "15px"}}>
                                             <dt>
@@ -1354,17 +1424,19 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                 parentId="dashboardComponentScroll"
                                                 data={selectsReducer.get(PIPELINE_JUSTIFICATION) || []}
                                                 disabled={this.state.isEditable ? '' : 'disabled'}
+                                                onChange={val => this._onChangeJustification(val)}
                                             />
                                         </div>
                                     </Col>
-                                </Row>
                                 : null}
+                                </Row>
                             {this.state.showJustificationField ?
                                 <Row style={{padding: "0px 10px 20px 20px"}}>
                                     <Col xs={12} md={6} lg={6}>
                                         <div style={{paddingRight: "15px"}}>
                                             <dt>
                                                 <span>Detalle justificación </span>
+                                                {this.state.detailJustificationObligatory ? <span>(<span style={{color: "red"}}>*</span>)</span> : ''}
                                             </dt>
                                             <TextareaComponent
                                                 name="txtJustificationDetail"
@@ -1380,25 +1452,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 </Row>
                                 : null}
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{paddingRight: "15px"}}>
-                                        <dt>
-                                            <span>Estado del negocio (</span><span style={{color: "red"}}>*</span>)
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            {...businessStatus}
-                                            name={nameBusinessStatus}
-                                            parentId="dashboardComponentScroll"
-                                            data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                            onChange={val => this._changeBusinessStatus(val)}
-                                            filterData={true}
-                                        />
-                                    </div>
-                                </Col>
                             {this.state.showMellowingPeriodField ?
                                     <Col xs={12} md={6} lg={6}>
                                         <div style={{ paddingRight: "15px" }}>

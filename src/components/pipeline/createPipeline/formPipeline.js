@@ -614,14 +614,15 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _justificationObligatoryField(value){
-      const { selectsReducer } = this.props;
+      const { fields:{pipelineType}, selectsReducer } = this.props;
+      let pipelineTypeSelectedKey = this.getPipelineSelectedKey(pipelineType.value);
       const justificationsTypes = selectsReducer.get(PIPELINE_JUSTIFICATION);
       let justificationsTypeSelectedKey = null;
       if(justificationsTypes){
         let justificationsTypeSelected = justificationsTypes.find((justificationsType) => justificationsType.id == value);
         justificationsTypeSelectedKey = justificationsTypeSelected ? justificationsTypeSelected.key.toLowerCase() : '';
       }
-      if(justificationsTypeSelectedKey === OTHER_JUSTIFICATION){
+      if(pipelineTypeSelectedKey === NUEVO_NEGOCIO && justificationsTypeSelectedKey === OTHER_JUSTIFICATION){
         this.setState({
           detailJustificationObligatory:true
         })
