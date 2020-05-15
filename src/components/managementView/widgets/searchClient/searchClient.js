@@ -2,7 +2,15 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import Tooltip from "../../../toolTip/toolTipComponent";
 import { clientsFindServer } from "../../../clients/actions";
-import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_BUTTON_SEARCH, CLOSE_BUSQUEDA, STYLE_BUTTON_SEARCH_FOCUS, STYLE_BUTTON_PROSPECT} from "./constants";
+import { 
+	PLACEHOLDER_SEARCH_CLIENT, 
+	MESSAGE_TOOLTIP, 
+	SEARCH_CLIENT, 
+	STYLE_BUTTON_SEARCH, 
+	CLOSE_BUSQUEDA, 
+	STYLE_BUTTON_SEARCH_FOCUS, 
+	STYLE_BUTTON_PROSPECT
+} from "./constants";
 import { bindActionCreators } from "redux";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 import { updateTitleNavBar } from '../../../navBar/actions';
@@ -18,7 +26,7 @@ export class SearchClient extends Component {
 		this.state = {
             keyword: "",
 			closeIcon : false,
-			background : true 
+			background : true
 		};
 	}
 
@@ -68,6 +76,7 @@ export class SearchClient extends Component {
     }
 
 	render() {
+		const { name } = this.props;
         const { keyword, closeIcon, background} = this.state;
 		const functionButton = closeIcon ? this.handleCloseButton : this.handleSearchClient ;
 		const styleButton = !background ? STYLE_BUTTON_SEARCH_FOCUS : STYLE_BUTTON_SEARCH ;
@@ -86,9 +95,9 @@ export class SearchClient extends Component {
 						onKeyPress={this.handleKeyword}
 						onFocus={() => this.setState({background : false})}
 						onBlur={() => this.setState({background : true})}
-						value={keyword}
+						value={name ? name : keyword}
 					/>
-					<Tooltip text={`${ closeIcon ? CLOSE_BUSQUEDA : TITLE_SEARCH_CLIENT }`}>
+					<Tooltip text={`${ closeIcon ? CLOSE_BUSQUEDA : SEARCH_CLIENT }`}>
 						<button
 							id="searchClients"
 							className="btn"
@@ -118,6 +127,10 @@ export class SearchClient extends Component {
 	}
 }
 
+const mapStateToProps = ({filterDashboard}) => ({
+	name : filterDashboard.filterMode
+})
+
 const mapDispatchToProps = dispatch => bindActionCreators({
 	dispatchClientsFindServer: clientsFindServer,
 	dispatchSwtShowMessage: swtShowMessage,
@@ -127,4 +140,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     dispatchFilterByRealtion: filterByRealtion
 }, dispatch);
 
-export default connect(null, mapDispatchToProps)(SearchClient);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchClient);

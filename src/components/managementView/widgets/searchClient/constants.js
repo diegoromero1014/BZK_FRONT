@@ -5,9 +5,12 @@ export const FILTER_BY_CLIENTS = "FILTER_BY_CLIENTS";
 export const FILTER_BY_RELATION = "FILTER_BY_RELATION";
 export const TITLE_FILTER_BY_CLIENTS = "Cliente /";
 export const TITLE_FILTER_BY_RELATION = "Grupo económico /";
+export const NAME_FILTER_CLIENTS = "CLIENTE";
+export const NAME_FILTER_RELATION = "GRUPO_ECONOMICO";
 
 export const TITLE_SEARCH_CLIENT = 'BUSCAR CLIENTES';
-export const CLOSE_BUSQUEDA = 'Limpiar búsqueda';
+export const SEARCH_CLIENT = 'Buscar clientes';
+export const CLOSE_BUSQUEDA = 'Limpiar búsqueda y filtro';
 export const PLACEHOLDER_SEARCH_CLIENT = 'Buscar por nombre, NIT o grupo económico';
 export const MESSAGE_TOOLTIP = 'Crear prospecto';
 export const MESSAGE_NO_RESULTS = 'Señor usuario, no se encontraron clientes que cumplan el criterio de búsqueda.';
