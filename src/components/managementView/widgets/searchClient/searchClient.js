@@ -9,6 +9,7 @@ import { updateTitleNavBar } from '../../../navBar/actions';
 import { redirectUrl } from "../../../globalComponents/actions";
 import { changeActiveItemMenu } from '../../../menu/actions';
 import { MODULE_MY_CLIENTS } from "../../../../constantsGlobal";
+import { filterByClient, filterByRealtion } from './actions';
 
 export class SearchClient extends Component {
 	constructor(props) {
@@ -57,7 +58,8 @@ export class SearchClient extends Component {
 	};
 
     handleCloseButton = () => {
-		const { handleSetSearched } = this.props;
+		const { handleSetSearched , dispatchFilterbyClients} = this.props;
+		dispatchFilterbyClients("","","");
 		handleSetSearched(false)
 		this.setState({
 			keyword : "",
@@ -120,7 +122,9 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 	dispatchClientsFindServer: clientsFindServer,
 	dispatchSwtShowMessage: swtShowMessage,
 	dispatchChangeActiveItemMenu : changeActiveItemMenu,
-	dispatchUpdateTitleNavBar : updateTitleNavBar
+	dispatchUpdateTitleNavBar : updateTitleNavBar,
+	dispatchFilterbyClients: filterByClient,
+    dispatchFilterByRealtion: filterByRealtion
 }, dispatch);
 
 export default connect(null, mapDispatchToProps)(SearchClient);
