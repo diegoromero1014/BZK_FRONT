@@ -16,6 +16,7 @@ class ButtonsFilter extends Component {
         const { name, id } = data;
         const { dispatchFilterbyClients } = this.props;
         dispatchFilterbyClients(name, id, TITLE_FILTER_BY_CLIENTS);
+        this.focusAlert();    
     }
 
     handleFilterByRelation = (event, data) => {
@@ -23,20 +24,25 @@ class ButtonsFilter extends Component {
         const { economicGroup, idEconomicGroup } = data;
         const { dispatchFilterByRealtion } = this.props;
         dispatchFilterByRealtion(economicGroup, idEconomicGroup, TITLE_FILTER_BY_RELATION);
+        this.focusAlert()        
+    }
+
+    focusAlert = () => {
+        document.getElementById("alert-section").focus();
     }
 
     render() {
 
-        const { data } = this.props;
+        const { data , data: { name, economicGroup, access } } = this.props;
 
         return (
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                <Tooltip text={data.name ? 'Filtrar por cliente' : 'Cliente sin NIT principal'}>
+                <Tooltip text={!access ? 'No cuenta con permisos' : name ? 'Filtrar por cliente' : 'Cliente sin NIT principal'}>
                     <button
                         className="btn btn-primary btn-sm"
                         type="button"
-                        style={{ background: `${data.name ? '#00448C' : '#9C9C9C'}` }}
-                        disabled={data.name ? false : true}
+                        style={{ background: `${!access ? '#9C9C9C' : name ? '#00448C' : '#9C9C9C'}` }}
+                        disabled={!access ? true : name ? false : true}
                         onClick={event => this.handleFilterByClient(event, data)}
                     >
                         <i
@@ -50,12 +56,12 @@ class ButtonsFilter extends Component {
                         Cliente
                     </button>
                 </Tooltip>
-                <Tooltip text={data.economicGroup ? 'Filtrar por grupo económico' : 'Client sin grupo económico'}>
+                <Tooltip text={!access ? 'No cuenta con permisos' : economicGroup ? 'Filtrar por grupo económico' : 'Client sin grupo económico'}>
                     <button
                         className="btn btn-primary btn-sm"
                         type="button"
-                        style={{ background: `${data.economicGroup ? '#00448C' : '#9C9C9C'}` }}
-                        disabled={data.economicGroup ? false : true}
+                        style={{ background: `${!access ? '#9C9C9C' : economicGroup ? '#00448C' : '#9C9C9C'}` }}
+                        disabled={!access ? true : economicGroup ? false : true}
                         onClick={event => this.handleFilterByRelation(event, data)}
                     >
                         <i
