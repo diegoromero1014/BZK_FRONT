@@ -19,10 +19,22 @@ export class OutdatedContactsComponent extends Component {
         }
     }
 
+    componentDidMount() {
+        this.handleOnPageChange(1);
+    }
+   
+    componentDidUpdate(prevProps) {
+        if (prevProps.idFilter !== this.props.idFilter) {
+            this.handleOnPageChange(1);
+        }
+    }
+
     handleOnPageChange = async page => {
-        const { dispatchGetOutdatedContacts } = this.props;
+        const { dispatchGetOutdatedContacts, idFilter, filterType } = this.props;
+        const filterClient = filterType == "CLIENTE" ? idFilter : null;
+        const filterEconomicGroup = filterType == "GRUPO_ECONOMICO" ? idFilter : null;
         await this.setState({ loading: true});
-        await dispatchGetOutdatedContacts((page - 1), MAX_ROWS);
+        await dispatchGetOutdatedContacts((page - 1), MAX_ROWS, filterClient, filterEconomicGroup);
         await this.setState({ loading: false });
     }
 
@@ -58,9 +70,11 @@ export class OutdatedContactsComponent extends Component {
     }
 }
 
-const mapStateToProps = ({ outdatedContacts: { rows, rowCount } }) => ({
+const mapStateToProps = ({ outdatedContacts: { rows, rowCount }, filterDashboard: { criterio, id } }) => ({
     data: rows,
-    total: rowCount
+    total: rowCount,
+    filterType: criterio,
+    idFilter: id
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

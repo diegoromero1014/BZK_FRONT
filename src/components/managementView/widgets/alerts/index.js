@@ -32,7 +32,6 @@ export class AlertSection extends Component {
         ]);
     }
 
-
     handleDispatchBlackList = async () => {
         const { dispatchBlackListAlerts } = this.props;
         return await dispatchBlackListAlerts(0, MAX_ROWS);
@@ -44,13 +43,17 @@ export class AlertSection extends Component {
     }
 
     handleDispatchGetAlertPortfolioExpirationDashboard = async () => {
-        const { dispatchGetAlertPortfolioExpirationDashboard } = this.props;
-        return await dispatchGetAlertPortfolioExpirationDashboard(1);
+        const { dispatchGetAlertPortfolioExpirationDashboard, idFilter, filterType } = this.props;
+        const filterClient = filterType == "CLIENTE" ? idFilter : null;
+        const filterEconomicGroup = filterType == "GRUPO_ECONOMICO" ? idFilter : null;
+        return await dispatchGetAlertPortfolioExpirationDashboard(1, filterClient, filterEconomicGroup);
     }
 
     handleDispatchGetOutdatedContacts = async () => {
-        const { dispatchGetOutdatedContacts } = this.props;
-        return await dispatchGetOutdatedContacts(0, MAX_ROWS);
+        const { dispatchGetOutdatedContacts, idFilter, filterType } = this.props;
+        const filterClient = filterType == "CLIENTE" ? idFilter : null;
+        const filterEconomicGroup = filterType == "GRUPO_ECONOMICO" ? idFilter : null;
+        return await dispatchGetOutdatedContacts(0, MAX_ROWS, filterClient, filterEconomicGroup);
     }
 
     countAlerts = (total) => {
@@ -123,11 +126,13 @@ const mapDispatchToProps = dispatch => {
     }, dispatch)
 };
 
-const mapStateToProps = ({ alertPortfolioExpiration, alertBlackList, alertCovenant, outdatedContacts }) => ({
+const mapStateToProps = ({ alertPortfolioExpiration, alertBlackList, alertCovenant, outdatedContacts, filterDashboard }) => ({
     alertPortfolioExpiration,
     totalBlackList: alertBlackList.get('totalBlackListFiltered'),
     totalCovenant: alertCovenant.get('totalCovenantsByFiltered'),
-    totalOutdatedContacts: outdatedContacts.rowCount
+    totalOutdatedContacts: outdatedContacts.rowCount,
+    idFilter: filterDashboard.id,
+    filterType: filterDashboard.criterio
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlertSection);

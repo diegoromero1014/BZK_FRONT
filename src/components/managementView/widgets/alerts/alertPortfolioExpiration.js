@@ -20,8 +20,22 @@ export class AlertPortfolioExpiration extends Component {
         }
     }
 
+    // componentDidMount() {
+    //     this.forceUpdate();
+    // }
+
     componentDidMount() {
         this.forceUpdate();
+    }
+   
+    componentDidUpdate(prevProps) {
+        console.log('aquifuera');
+        console.log('pre', prevProps);
+        console.log('pos', this.props);
+        if (prevProps.idFilter !== this.props.idFilter) {
+            console.log('aquidentro');
+            this.handleOnPageChange(1);
+        }
     }
 
     redirectToAlertPortfolioExpiration = () => {
@@ -31,10 +45,11 @@ export class AlertPortfolioExpiration extends Component {
     }
 
     handleOnPageChange = async page => {
-        const { dispatchGetAlertPortfolioExpirationDashboard } = this.props;
-
+        const { dispatchGetAlertPortfolioExpirationDashboard, idFilter, filterType } = this.props;
+        const filterClient = filterType == "CLIENTE" ? idFilter : null;
+        const filterEconomicGroup = filterType == "GRUPO_ECONOMICO" ? idFilter : null;
         this.setLoading(true);
-        await dispatchGetAlertPortfolioExpirationDashboard(page, null, null);
+        await dispatchGetAlertPortfolioExpirationDashboard(page, filterClient, filterEconomicGroup);
         this.setLoading(false);
     }
 
@@ -75,10 +90,12 @@ const mapDispatchToProps = dispatch => {
     }, dispatch)
 };
 
-const mapStateToProps = ({ alertPortfolioExpiration }) => {
+const mapStateToProps = ({ alertPortfolioExpiration, filterDashboard: { id, criterio } }) => {
     return {
         alertPortfolioExpiration,
-        data: alertPortfolioExpiration.get('responseClients')
+        data: alertPortfolioExpiration.get('responseClients'),
+        idFilter: id,
+        filterType: criterio
     };
 }
 

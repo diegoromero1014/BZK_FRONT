@@ -35,7 +35,7 @@ export class ManagementView extends Component {
                 <SecurityMessageComponent />
                 <Header />
                 <SectionSearchClient />
-
+{/* 
                 <div style={{ marginTop: 100 }}>
                     <Reports />
                 </div>
@@ -53,14 +53,14 @@ export class ManagementView extends Component {
                     
                     <Tasks />
                     <SectionImportantDates />
-                </div>
+                </div> */}
 
                 <div style={{ width: '100%', marginTop: 100 }}>
                     <AlertSection />
                 </div>
-                <div style={{ width: '100%', marginTop: 100 }}>
+                {/* <div style={{ width: '100%', marginTop: 100 }}>
                     <VisitsSection />
-                </div>
+                </div> */}
             </div >
         );
     }
