@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { covenantsAlerts } from '../../../alertCovenants/actions';
+import { covenantsAlerts, covenantsFilter } from '../../../alertCovenants/actions';
 import Table from "../../../table";
 import TableBuilder from "../../../table/TableBuilder";
 import { COLUMNS_COVENANTS_ALERTS, MAX_ROWS } from './constants';
 import Modal from 'react-modal';
 import ModaltrackingCovenant  from '../../../risksManagement/covenants/createTracking/modalTrackingCovenant';
 import {mapDataGrid} from '../../../alertCovenants/alertCovenantsUtilities';
+import { NAME_FILTER_CLIENTS, NAME_FILTER_RELATION } from "../searchClient/constants";
 
 export class CovenantsAlertsComponent extends Component {
 
@@ -22,10 +23,12 @@ export class CovenantsAlertsComponent extends Component {
     }
 
     handleOnPageChange = async page => {
-        const { dispatchCovenantsAlerts } = this.props;
-
+        const { dispatchCovenantsAlerts, dispatchCovenantsFilter, idFilter, filterType } = this.props;
+        const filterClient = filterType == NAME_FILTER_CLIENTS ? idFilter : null;
+        const filterEconomicGroup = filterType == NAME_FILTER_RELATION ? idFilter : null;
         await this.setState({ loading: true });
         await dispatchCovenantsAlerts(page, MAX_ROWS);
+        await dispatchCovenantsFilter(page, MAX_ROWS, filterClient, filterEconomicGroup);
         await this.setState({ loading: false });
     }
 
@@ -76,14 +79,17 @@ export class CovenantsAlertsComponent extends Component {
     }
 }
 
-const mapStateToProps = ({ alertCovenant }) => ({
+const mapStateToProps = ({ alertCovenant, filterDashboard: { id, criterio } }) => ({
     alertCovenant,
     data: alertCovenant.get('responseCovenants'),
-    total: alertCovenant.get('totalCovenantsByFiltered')
+    total: alertCovenant.get('totalCovenantsByFiltered'),
+    idFilter: id,
+    filterType: criterio
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    dispatchCovenantsAlerts: covenantsAlerts
+    dispatchCovenantsAlerts: covenantsAlerts,
+    dispatchCovenantsFilter: covenantsFilter
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(CovenantsAlertsComponent);

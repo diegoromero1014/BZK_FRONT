@@ -53,6 +53,28 @@ export function covenantsAlerts(pageNum, maxRows,order,columnOrder) {
     }
 }
 
+export function covenantsFilter(pageNum, maxRows,order,columnOrder, filterClient, filterEconomicGroup) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionTokenFront')
+        },
+        "messageBody": {
+            "pageNum": pageNum,
+            "maxRows": maxRows,
+            "order" : order,
+            "columnOrder" : columnOrder,
+            filterClient,
+            filterEconomicGroup
+        }
+    };
+
+    const request = axios.post(APP_URL + "/getCovenantsAlert", json);
+    return {
+        type: constant.FIND_ALERT_COVENANTS,
+        payload: request
+    }
+}
+
 export function changePage(page) {
     return {
         type: constant.CHANGE_PAGE_FOR_COVENANTS,
