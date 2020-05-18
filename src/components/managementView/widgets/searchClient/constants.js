@@ -3,6 +3,7 @@ import ButtonsFilter from './buttonsFilter';
 
 export const FILTER_BY_CLIENTS = "FILTER_BY_CLIENTS";
 export const FILTER_BY_RELATION = "FILTER_BY_RELATION";
+export const CLEAR_FILTER = "CLEAR_FILTER";
 export const TITLE_FILTER_BY_CLIENTS = "Cliente /";
 export const TITLE_FILTER_BY_RELATION = "Relación /";
 export const NAME_FILTER_CLIENTS = "CLIENTE";

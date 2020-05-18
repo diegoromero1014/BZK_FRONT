@@ -16,19 +16,13 @@ class ButtonsFilter extends Component {
         const { name, id } = data;
         const { dispatchFilterbyClients } = this.props;
         dispatchFilterbyClients(name, id, TITLE_FILTER_BY_CLIENTS);
-        this.focusAlert();    
     }
 
     handleFilterByRelation = (event, data) => {
         event.stopPropagation();
         const { economicGroup, idEconomicGroup } = data;
         const { dispatchFilterByRealtion } = this.props;
-        dispatchFilterByRealtion(economicGroup, idEconomicGroup, TITLE_FILTER_BY_RELATION);
-        this.focusAlert()        
-    }
-
-    focusAlert = () => {
-        document.getElementById("alert-section").focus();
+        dispatchFilterByRealtion(economicGroup, idEconomicGroup, TITLE_FILTER_BY_RELATION);  
     }
 
     render() {

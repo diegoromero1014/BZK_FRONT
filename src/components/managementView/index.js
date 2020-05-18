@@ -24,6 +24,9 @@ export class ManagementView extends Component {
     }
 
     render() {
+
+        const { filter } = this.props;
+
         return (
             <div
                 style={{
@@ -44,10 +47,10 @@ export class ManagementView extends Component {
                         width: '100%',
                         height: 500,
                         background: 'transparent',
-                        display: 'flex',
+                        display : `${filter ? 'none' : 'flex'}`,
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        marginTop: 100
+                        marginTop: 100,
                     }}
                 >
                     
@@ -58,7 +61,7 @@ export class ManagementView extends Component {
                 <div style={{ width: '100%', marginTop: 100 }}>
                     <AlertSection />
                 </div>
-                <div style={{ width: '100%', marginTop: 100 }}>
+                <div style={{ width: '100%', marginTop: 100 , display : `${filter ? 'none' : ''}` }}>
                     <VisitsSection />
                 </div>
             </div >
@@ -67,10 +70,14 @@ export class ManagementView extends Component {
 
 }
 
+const mapStateToProps = ({ filterDashboard }) => ({
+    filter : filterDashboard.filterMode
+})
+
 const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
-        dispatchUpdateTitleNavBar: updateTitleNavBar,
+        dispatchUpdateTitleNavBar: updateTitleNavBar
     }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(ManagementView);
+export default connect(mapStateToProps, mapDispatchToProps)(ManagementView);
