@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { filterByClient, filterByRealtion } from './actions';
 import { TITLE_FILTER_BY_CLIENTS, TITLE_FILTER_BY_RELATION } from './constants'
 
-class ButtonsFilter extends Component {
+export class ButtonsFilter extends Component {
 
     constructor(props) {
         super(props);
@@ -13,18 +13,23 @@ class ButtonsFilter extends Component {
 
     handleFilterByClient = (event, data) => {
         event.stopPropagation();
-        document.getElementById("alertSection").scrollIntoView(true);
         const { name, id } = data;
         const { dispatchFilterbyClients } = this.props;
         dispatchFilterbyClients(name, id, TITLE_FILTER_BY_CLIENTS);
+        this.focusAlertSection();
     }
 
     handleFilterByRelation = (event, data) => {
         event.stopPropagation();
-        document.getElementById("alertSection").scrollIntoView(true);
         const { economicGroup, idEconomicGroup } = data;
         const { dispatchFilterByRealtion } = this.props;
         dispatchFilterByRealtion(economicGroup, idEconomicGroup, TITLE_FILTER_BY_RELATION);  
+        this.focusAlertSection();
+    }
+
+    focusAlertSection = () => {
+        let section = document.getElementById("alertSection");
+        section.scrollIntoView();
     }
 
     render() {
@@ -76,11 +81,9 @@ class ButtonsFilter extends Component {
     }
 }
 
-const mapStateToProps = ({ filterDashboard }) => ({ filterDashboard });
-
 const mapDispatchToProps = dispatch => bindActionCreators({
     dispatchFilterbyClients: filterByClient,
     dispatchFilterByRealtion: filterByRealtion
 }, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(ButtonsFilter);
+export default connect(null, mapDispatchToProps)(ButtonsFilter);
