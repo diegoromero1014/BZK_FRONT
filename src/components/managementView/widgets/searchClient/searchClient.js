@@ -17,7 +17,7 @@ import { updateTitleNavBar } from '../../../navBar/actions';
 import { redirectUrl } from "../../../globalComponents/actions";
 import { changeActiveItemMenu } from '../../../menu/actions';
 import { MODULE_MY_CLIENTS } from "../../../../constantsGlobal";
-import { filterByClient, filterByRealtion, clearFilter } from './actions';
+import { clearFilter } from './actions';
 
 export class SearchClient extends Component {
 	constructor(props) {
