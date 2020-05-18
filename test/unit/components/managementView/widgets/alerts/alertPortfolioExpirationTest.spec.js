@@ -19,6 +19,12 @@ describe('AlertPortfolioExpiration Test', () => {
         }
         store = mockStore({
             alertPortfolioExpiration: Immutable.Map({ responseClients: {} }),
+            filterDashboard : Immutable.Map({
+                filterMode : "",
+                criterio: "",
+                id: "",
+                title:""
+            })
         });
     })
 
