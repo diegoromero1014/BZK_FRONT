@@ -363,17 +363,17 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeProductFamily(currencyValue) {
-      const { fields: { areaAssets, product, businessCategory, businessCategory2 }, consultListByCatalogType } = this.props;
+      const { fields: { areaAssets, product, businessCategory, businessCategory2 }, dispatchConsultListByCatalogType } = this.props;
       areaAssets.onChange('');
 
-      consultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {
+      dispatchConsultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {
         this.setState({
           products: _.get(data, 'payload.data.data', [])
         });
       });
       product.onChange('');
 
-      consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "businessCategory").then((data) => {
+      dispatchConsultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "businessCategory").then((data) => {
           this.setState({
               businessCategories: _.get(data, 'payload.data.data', []),
               businessCategories2: _.get(data, 'payload.data.data', [])
@@ -602,8 +602,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   }
 
   _changeCatalogProductFamily(currencyValue){
-      const { fields: { productFamily }, consultListByCatalogType } = this.props;
-      consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "productFamily").then((data) => {
+      const { fields: { productFamily }, dispatchConsultListByCatalogType } = this.props;
+    dispatchConsultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "productFamily").then((data) => {
           this.setState({
               productsFamily: _.get(data, 'payload.data.data', [])
           });
@@ -1666,7 +1666,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       updateDisbursementPlans,
       swtShowMessage,
       consultListWithParameterUbication,
-      consultListByCatalogType,
+      dispatchConsultListByCatalogType: consultListByCatalogType,
       clearLists,
       consultDataSelect,
       setConfidential,
