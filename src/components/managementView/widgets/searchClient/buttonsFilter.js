@@ -13,6 +13,7 @@ class ButtonsFilter extends Component {
 
     handleFilterByClient = (event, data) => {
         event.stopPropagation();
+        document.getElementById("alertSection").scrollIntoView(true);
         const { name, id } = data;
         const { dispatchFilterbyClients } = this.props;
         dispatchFilterbyClients(name, id, TITLE_FILTER_BY_CLIENTS);
@@ -20,6 +21,7 @@ class ButtonsFilter extends Component {
 
     handleFilterByRelation = (event, data) => {
         event.stopPropagation();
+        document.getElementById("alertSection").scrollIntoView(true);
         const { economicGroup, idEconomicGroup } = data;
         const { dispatchFilterByRealtion } = this.props;
         dispatchFilterByRealtion(economicGroup, idEconomicGroup, TITLE_FILTER_BY_RELATION);  
@@ -82,5 +84,3 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(ButtonsFilter);
-
-// export default ButtonsFilter;

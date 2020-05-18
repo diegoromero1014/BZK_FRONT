@@ -57,7 +57,7 @@ export class ManagementView extends Component {
                     <SectionImportantDates />
                 </div>
 
-                <div style={{ width: '100%', marginTop: 100 }}>
+                <div id="alertSection" style={{ width: '100%', marginTop: 100 }}>
                     <AlertSection />
                 </div>
                 <div style={{ width: '100%', marginTop: 100 , display : `${filter ? 'none' : ''}` }}>
