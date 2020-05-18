@@ -92,7 +92,7 @@ export function clearFilter() {
     }
 }
 
-export function getAlertPortfolioExpirationDashboard(page) {
+export function getAlertPortfolioExpirationDashboard(page, filterClient, filterEconomicGroup) {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionTokenFront')
@@ -100,8 +100,10 @@ export function getAlertPortfolioExpirationDashboard(page) {
         "messageBody": {
             "pageNum": page,
             "maxRows": 5,
-            "order" : 1,
-            "columnOrder" : 'balanceOverdue'
+            "order": 1,
+            "columnOrder": 'balanceOverdue',
+            filterClient,
+            filterEconomicGroup
         }
     };
     const request = axios.post(APP_URL + "/getClientsPortfolioExpiration", json);

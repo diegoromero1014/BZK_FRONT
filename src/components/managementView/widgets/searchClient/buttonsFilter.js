@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Tooltip from "../../../toolTip/toolTipComponent";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { filterByClient, filterByRealtion } from './actions';
@@ -12,6 +13,7 @@ class ButtonsFilter extends Component {
 
     handleFilterByClient = (event, data) => {
         event.stopPropagation();
+        document.getElementById("alertSection").scrollIntoView(true);
         const { name, id } = data;
         const { dispatchFilterbyClients } = this.props;
         dispatchFilterbyClients(name, id, TITLE_FILTER_BY_CLIENTS);
@@ -19,51 +21,56 @@ class ButtonsFilter extends Component {
 
     handleFilterByRelation = (event, data) => {
         event.stopPropagation();
-        const { economicGroup, id } = data;
+        document.getElementById("alertSection").scrollIntoView(true);
+        const { economicGroup, idEconomicGroup } = data;
         const { dispatchFilterByRealtion } = this.props;
-        dispatchFilterByRealtion(economicGroup, id, TITLE_FILTER_BY_RELATION);
+        dispatchFilterByRealtion(economicGroup, idEconomicGroup, TITLE_FILTER_BY_RELATION);  
     }
 
     render() {
 
-        const { data } = this.props;
+        const { data , data: { name, economicGroup, access } } = this.props;
 
         return (
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                <button
-                    className="btn btn-primary btn-sm"
-                    type="button"
-                    style={{ background: "#00448C" }}
-                    title="Filtro por cliente"
-                    onClick={event => this.handleFilterByClient(event, data)}
-                >
-                    <i
-                        className="filter icon"
-                        style={{
-                            color: "white",
-                            marginRight: "5px",
-                            fontSize: "8pt"
-                        }}
-                    />
-                    Cliente
-                </button>
-                <button
-                    className="btn btn-primary btn-sm"
-                    type="button"
-                    style={{ background: "#00448C" }}
-                    title="Filtro por Relacion"
-                    onClick={event => this.handleFilterByRelation(event, data)}
-                >
-                    <i
-                        className="filter icon"
-                        style={{
-                            color: "white",
-                            marginRight: "5px",
-                            fontSize: "8pt"
-                        }}
-                    />
-                    Relación
-                </button>
+                <Tooltip text={!access ? 'No cuenta con permisos' : name ? 'Filtrar por cliente' : 'Cliente sin NIT principal'}>
+                    <button
+                        className="btn btn-primary btn-sm"
+                        type="button"
+                        style={{ background: `${!access ? '#9C9C9C' : name ? '#00448C' : '#9C9C9C'}` }}
+                        disabled={!access ? true : name ? false : true}
+                        onClick={event => this.handleFilterByClient(event, data)}
+                    >
+                        <i
+                            className="filter icon"
+                            style={{
+                                color: "white",
+                                marginRight: "5px",
+                                fontSize: "8pt"
+                            }}
+                        />
+                        Cliente
+                    </button>
+                </Tooltip>
+                <Tooltip text={!access ? 'No cuenta con permisos' : economicGroup ? 'Filtrar por grupo económico' : 'Client sin grupo económico'}>
+                    <button
+                        className="btn btn-primary btn-sm"
+                        type="button"
+                        style={{ background: `${!access ? '#9C9C9C' : economicGroup ? '#00448C' : '#9C9C9C'}` }}
+                        disabled={!access ? true : economicGroup ? false : true}
+                        onClick={event => this.handleFilterByRelation(event, data)}
+                    >
+                        <i
+                            className="filter icon"
+                            style={{
+                                color: "white",
+                                marginRight: "5px",
+                                fontSize: "8pt"
+                            }}
+                        />
+                        Relación
+                    </button>
+                </Tooltip>
             </div>
         );
     }
@@ -77,5 +84,3 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(ButtonsFilter);
-
-// export default ButtonsFilter;

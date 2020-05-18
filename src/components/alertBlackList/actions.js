@@ -34,15 +34,19 @@ export function blackListFindServer(keyWordNameNit, keyWordNameNitClient, typeEn
     }
 }
 
-export const blackListAlerts = (pageNum, maxRows) => ({
+export const blackListAlerts = (first, max, filterClient, filterEconomicGroup) => ({
     type: constant.FIND_ALERT_BLACK_LIST,
     payload: axios.post(APP_URL + "/blackListAlerts", {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionTokenFront')
         },
         "messageBody": {
-            "pageNum": pageNum,
-            "maxRows": maxRows,
+            paginationRequest: {
+                first,
+                max
+            },
+            filterClient,
+            filterEconomicGroup,
         }
     })
 });
