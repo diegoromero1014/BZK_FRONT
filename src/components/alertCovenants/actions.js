@@ -33,7 +33,7 @@ export function covenantsFindServer(keyWordNameNit, statusCovenant, pageNum, max
     }
 }
 
-export function covenantsAlerts(pageNum, maxRows,order,columnOrder) {
+export function covenantsAlerts(pageNum, maxRows, filterClient, filterGroupId) {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionTokenFront')
@@ -41,30 +41,10 @@ export function covenantsAlerts(pageNum, maxRows,order,columnOrder) {
         "messageBody": {
             "pageNum": pageNum,
             "maxRows": maxRows,
-            "order" : order,
-            "columnOrder" : columnOrder
-        }
-    };
-
-    const request = axios.post(APP_URL + "/getCovenantsAlert", json);
-    return {
-        type: constant.FIND_ALERT_COVENANTS,
-        payload: request
-    }
-}
-
-export function covenantsFilter(pageNum, maxRows,order,columnOrder, filterClient, filterEconomicGroup) {
-    const json = {
-        "messageHeader": {
-            "sessionToken": window.localStorage.getItem('sessionTokenFront')
-        },
-        "messageBody": {
-            "pageNum": pageNum,
-            "maxRows": maxRows,
-            "order" : order,
-            "columnOrder" : columnOrder,
+            "order" : null,
+            "columnOrder" : null,
             filterClient,
-            filterEconomicGroup
+            filterGroupId
         }
     };
 

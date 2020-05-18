@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { covenantsAlerts, covenantsFilter } from '../../../alertCovenants/actions';
+import { covenantsAlerts } from '../../../alertCovenants/actions';
 import Table from "../../../table";
 import TableBuilder from "../../../table/TableBuilder";
 import { COLUMNS_COVENANTS_ALERTS, MAX_ROWS } from './constants';
@@ -23,12 +23,11 @@ export class CovenantsAlertsComponent extends Component {
     }
 
     handleOnPageChange = async page => {
-        const { dispatchCovenantsAlerts, dispatchCovenantsFilter, idFilter, filterType } = this.props;
+        const { dispatchCovenantsAlerts, idFilter, filterType } = this.props;
         const filterClient = filterType == NAME_FILTER_CLIENTS ? idFilter : null;
         const filterEconomicGroup = filterType == NAME_FILTER_RELATION ? idFilter : null;
         await this.setState({ loading: true });
-        await dispatchCovenantsAlerts(page, MAX_ROWS);
-        await dispatchCovenantsFilter(page, MAX_ROWS, filterClient, filterEconomicGroup);
+        await dispatchCovenantsAlerts(page, MAX_ROWS, filterClient, filterEconomicGroup);
         await this.setState({ loading: false });
     }
 
@@ -88,8 +87,7 @@ const mapStateToProps = ({ alertCovenant, filterDashboard: { id, criterio } }) =
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    dispatchCovenantsAlerts: covenantsAlerts,
-    dispatchCovenantsFilter: covenantsFilter
+    dispatchCovenantsAlerts: covenantsAlerts
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(CovenantsAlertsComponent);

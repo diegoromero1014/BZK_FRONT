@@ -51,9 +51,9 @@ export class AlertSection extends Component {
         return await dispatchBlackListAlerts(0, MAX_ROWS, filterClient, filterEconomicGroup);
     }
 
-    handleDispatchCovenantsAlerts = async () => {
+    handleDispatchCovenantsAlerts = async (filterClient, filterEconomicGroup) => {
         const { dispatchCovenantsAlerts } = this.props;
-        return await dispatchCovenantsAlerts(1, MAX_ROWS);
+        return await dispatchCovenantsAlerts(1, MAX_ROWS, filterClient, filterEconomicGroup);
     }
 
     handleDispatchGetAlertPortfolioExpirationDashboard = async (filterClient, filterEconomicGroup) => {
