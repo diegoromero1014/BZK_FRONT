@@ -233,7 +233,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const {
         fields: {
           nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, reviewedDate,
-          client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues, justification, pivotNit, typePolicy, justificationDetail,
+          client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets,  termInMonthsValues, justification,  typePolicy, justificationDetail,
           businessCategory2, nominalValue2
         }
       } = this.props;
@@ -363,17 +363,17 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeProductFamily(currencyValue) {
-      const { fields: { areaAssets, product, businessCategory, businessCategory2 }, consultListByCatalogType } = this.props;
+      const { fields: { areaAssets, product, businessCategory, businessCategory2 }, dispatchConsultListByCatalogType } = this.props;
       areaAssets.onChange('');
 
-      consultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {
+      dispatchConsultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {
         this.setState({
           products: _.get(data, 'payload.data.data', [])
         });
       });
       product.onChange('');
 
-      consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "businessCategory").then((data) => {
+      dispatchConsultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "businessCategory").then((data) => {
           this.setState({
               businessCategories: _.get(data, 'payload.data.data', []),
               businessCategories2: _.get(data, 'payload.data.data', [])
@@ -602,8 +602,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   }
 
   _changeCatalogProductFamily(currencyValue){
-      const { fields: { productFamily }, consultListByCatalogType } = this.props;
-      consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "productFamily").then((data) => {
+      const { fields: { productFamily }, dispatchConsultListByCatalogType } = this.props;
+    dispatchConsultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "productFamily").then((data) => {
           this.setState({
               productsFamily: _.get(data, 'payload.data.data', [])
           });
@@ -668,8 +668,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const {
         fields: {
           idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, probability, nameUsuario,
-          opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues, pendingDisbursementAmount,
-          pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen,justificationDetail, businessCategory2, nominalValue2
+          opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets,  termInMonthsValues, pendingDisbursementAmount,
+          pipelineType, commercialOportunity, justification,  typePolicy, margen,justificationDetail, businessCategory2, nominalValue2
         }, createEditPipeline, swtShowMessage, changeStateSaveData, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
       } = this.props;
 
@@ -920,16 +920,17 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           showBusinessCategory2: false
         });
         this._onChangeBusinessCategory2("");
+        businessCategory2.onChange("");
+        nominalValue2.onChange("");
       }
-      businessCategory2.onChange("");
-      nominalValue2.onChange("");
     }
 
     render() {
       const { fields: { nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, pendingDisbursementAmount,
         probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod,
-        moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity, areaAssetsValue, termInMonthsValues, justification, pivotNit, typePolicy, margen, justificationDetail, businessCategory2, nominalValue2 },
+        moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity,  termInMonthsValues, justification,
+        typePolicy, margen, justificationDetail, businessCategory2, nominalValue2 },
         selectsReducer, handleSubmit, reducerGlobal, pipelineReducer } = this.props;
 
       const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
@@ -1665,7 +1666,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       updateDisbursementPlans,
       swtShowMessage,
       consultListWithParameterUbication,
-      consultListByCatalogType,
+      dispatchConsultListByCatalogType: consultListByCatalogType,
       clearLists,
       consultDataSelect,
       setConfidential,
