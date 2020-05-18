@@ -8,6 +8,7 @@ import { redirectUrl } from "../../../globalComponents/actions";
 import { getOutdatedContacts } from './actions';
 import { changeActiveItemMenu } from '../../../menu/actions';
 import { MODULE_CONTACTS } from '../../../../constantsGlobal';
+import { NAME_FILTER_CLIENTS, NAME_FILTER_RELATION } from '../searchClient/constants';
 
 export class OutdatedContactsComponent extends Component {
 
@@ -31,8 +32,8 @@ export class OutdatedContactsComponent extends Component {
 
     handleOnPageChange = async page => {
         const { dispatchGetOutdatedContacts, idFilter, filterType } = this.props;
-        const filterClient = filterType == "CLIENTE" ? idFilter : null;
-        const filterEconomicGroup = filterType == "GRUPO_ECONOMICO" ? idFilter : null;
+        const filterClient = filterType == NAME_FILTER_CLIENTS ? idFilter : null;
+        const filterEconomicGroup = filterType == NAME_FILTER_RELATION ? idFilter : null;
         await this.setState({ loading: true});
         await dispatchGetOutdatedContacts((page - 1), MAX_ROWS, filterClient, filterEconomicGroup);
         await this.setState({ loading: false });

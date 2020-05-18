@@ -9,6 +9,7 @@ import { Button } from 'semantic-ui-react'
 import { redirectUrl } from "../../../globalComponents/actions";
 import { changeActiveItemMenu } from '../../../menu/actions';
 import { mapDataGrid } from "../../../alertPortfolioExpirtation/clientPortfolioExpirationUtilities";
+import { NAME_FILTER_CLIENTS, NAME_FILTER_RELATION } from "../searchClient/constants";
 
 export class AlertPortfolioExpiration extends Component {
 
@@ -20,20 +21,12 @@ export class AlertPortfolioExpiration extends Component {
         }
     }
 
-    // componentDidMount() {
-    //     this.forceUpdate();
-    // }
-
     componentDidMount() {
         this.forceUpdate();
     }
    
     componentDidUpdate(prevProps) {
-        console.log('aquifuera');
-        console.log('pre', prevProps);
-        console.log('pos', this.props);
         if (prevProps.idFilter !== this.props.idFilter) {
-            console.log('aquidentro');
             this.handleOnPageChange(1);
         }
     }
@@ -46,8 +39,8 @@ export class AlertPortfolioExpiration extends Component {
 
     handleOnPageChange = async page => {
         const { dispatchGetAlertPortfolioExpirationDashboard, idFilter, filterType } = this.props;
-        const filterClient = filterType == "CLIENTE" ? idFilter : null;
-        const filterEconomicGroup = filterType == "GRUPO_ECONOMICO" ? idFilter : null;
+        const filterClient = filterType == NAME_FILTER_CLIENTS ? idFilter : null;
+        const filterEconomicGroup = filterType == NAME_FILTER_RELATION ? idFilter : null;
         this.setLoading(true);
         await dispatchGetAlertPortfolioExpirationDashboard(page, filterClient, filterEconomicGroup);
         this.setLoading(false);

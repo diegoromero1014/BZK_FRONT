@@ -20,21 +20,35 @@ import { getOutdatedContacts } from './actions';
 import { blackListAlerts } from '../../../alertBlackList/actions';
 import { covenantsAlerts } from '../../../alertCovenants/actions';
 import { MAX_ROWS } from './constants';
+import { NAME_FILTER_CLIENTS, NAME_FILTER_RELATION } from "../searchClient/constants";
 
 export class AlertSection extends Component {
+   
+    async componentDidUpdate(prevProps) {
+        if (prevProps.idFilter !== this.props.idFilter) {
+            await this.firstCharge();
+        }
+    }
 
     async componentDidMount() {
+        await this.firstCharge();
+    }
+
+    firstCharge = async () => {
+        const { idFilter, filterType } = this.props;
+        const filterClient = filterType == NAME_FILTER_CLIENTS ? idFilter : null;
+        const filterEconomicGroup = filterType == NAME_FILTER_RELATION ? idFilter : null;
         await Promise.all([
-            this.handleDispatchCovenantsAlerts(),
-            this.handleDispatchBlackList(),
-            this.handleDispatchGetAlertPortfolioExpirationDashboard(),
-            this.handleDispatchGetOutdatedContacts()
+            this.handleDispatchCovenantsAlerts(filterClient, filterEconomicGroup),
+            this.handleDispatchBlackList(filterClient, filterEconomicGroup),
+            this.handleDispatchGetAlertPortfolioExpirationDashboard(filterClient, filterEconomicGroup),
+            this.handleDispatchGetOutdatedContacts(filterClient, filterEconomicGroup)
         ]);
     }
 
-    handleDispatchBlackList = async () => {
+    handleDispatchBlackList = async (filterClient, filterEconomicGroup) => {
         const { dispatchBlackListAlerts } = this.props;
-        return await dispatchBlackListAlerts(0, MAX_ROWS);
+        return await dispatchBlackListAlerts(0, MAX_ROWS, filterClient, filterEconomicGroup);
     }
 
     handleDispatchCovenantsAlerts = async () => {
@@ -42,22 +56,20 @@ export class AlertSection extends Component {
         return await dispatchCovenantsAlerts(1, MAX_ROWS);
     }
 
-    handleDispatchGetAlertPortfolioExpirationDashboard = async () => {
-        const { dispatchGetAlertPortfolioExpirationDashboard, idFilter, filterType } = this.props;
-        const filterClient = filterType == "CLIENTE" ? idFilter : null;
-        const filterEconomicGroup = filterType == "GRUPO_ECONOMICO" ? idFilter : null;
+    handleDispatchGetAlertPortfolioExpirationDashboard = async (filterClient, filterEconomicGroup) => {
+        const { dispatchGetAlertPortfolioExpirationDashboard } = this.props;
         return await dispatchGetAlertPortfolioExpirationDashboard(1, filterClient, filterEconomicGroup);
     }
 
-    handleDispatchGetOutdatedContacts = async () => {
-        const { dispatchGetOutdatedContacts, idFilter, filterType } = this.props;
-        const filterClient = filterType == "CLIENTE" ? idFilter : null;
-        const filterEconomicGroup = filterType == "GRUPO_ECONOMICO" ? idFilter : null;
+    handleDispatchGetOutdatedContacts = async (filterClient, filterEconomicGroup) => {
+        const { dispatchGetOutdatedContacts } = this.props;
         return await dispatchGetOutdatedContacts(0, MAX_ROWS, filterClient, filterEconomicGroup);
     }
 
     countAlerts = (total) => {
-        const { totalBlackList, totalOutdatedContacts, totalCovenant } = this.props;
+        const { totalBlackList, totalOutdatedContacts, totalCovenant, idFilter, filterType } = this.props;
+        const filterClient = filterType == NAME_FILTER_CLIENTS ? idFilter : null;
+        const filterEconomicGroup = filterType == NAME_FILTER_RELATION ? idFilter : null;
 
         const tabs = [
             {
@@ -68,28 +80,28 @@ export class AlertSection extends Component {
                     </div>
                 ),
                 number: total || 0,
-                callback: this.handleDispatchGetAlertPortfolioExpirationDashboard
+                callback: () => this.handleDispatchGetAlertPortfolioExpirationDashboard(filterClient, filterEconomicGroup)
             },
             {
                 name: COVENANTS_TAB,
                 content: <CovenantsAlertsComponent />,
                 disable: false,
                 number: totalCovenant || 0,
-                callback: this.handleDispatchCovenantsAlerts
+                callback: () => this.handleDispatchCovenantsAlerts(filterClient, filterEconomicGroup)
             },
             {
                 name: OUTDATED_CONTACTS,
                 content: <OutdatedContactsComponent />,
                 disable: false,
                 number: totalOutdatedContacts || 0,
-                callback: this.handleDispatchGetOutdatedContacts
+                callback: () => this.handleDispatchGetOutdatedContacts(filterClient, filterEconomicGroup)
             },
             {
                 name: CONTROL_LISTS_TAB,
                 content: <BlackListAlerts />,
                 disable: false,
                 number: totalBlackList || 0,
-                callback: this.handleDispatchBlackList
+                callback: () => this.handleDispatchBlackList(filterClient, filterEconomicGroup)
             }
         ];
         return (

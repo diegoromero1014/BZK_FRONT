@@ -102,8 +102,8 @@ export function getAlertPortfolioExpirationDashboard(page, filterClient, filterE
             "maxRows": 5,
             "order": 1,
             "columnOrder": 'balanceOverdue',
-            "filterClient": filterClient,
-            "filterEconomicGroup": filterEconomicGroup
+            filterClient,
+            filterEconomicGroup
         }
     };
     const request = axios.post(APP_URL + "/getClientsPortfolioExpiration", json);
