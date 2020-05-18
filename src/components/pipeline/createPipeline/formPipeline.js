@@ -920,9 +920,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           showBusinessCategory2: false
         });
         this._onChangeBusinessCategory2("");
+        businessCategory2.onChange("");
+        nominalValue2.onChange("");
       }
-      businessCategory2.onChange("");
-      nominalValue2.onChange("");
     }
 
     render() {
