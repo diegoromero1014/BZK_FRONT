@@ -3,8 +3,9 @@ import ButtonsFilter from './buttonsFilter';
 
 export const FILTER_BY_CLIENTS = "FILTER_BY_CLIENTS";
 export const FILTER_BY_RELATION = "FILTER_BY_RELATION";
+export const CLEAR_FILTER = "CLEAR_FILTER";
 export const TITLE_FILTER_BY_CLIENTS = "Cliente /";
-export const TITLE_FILTER_BY_RELATION = "Grupo económico /";
+export const TITLE_FILTER_BY_RELATION = "Relación /";
 export const NAME_FILTER_CLIENTS = "CLIENTE";
 export const NAME_FILTER_RELATION = "GRUPO_ECONOMICO";
 
@@ -65,7 +66,7 @@ export const STYLE_FILTER_ICON = {
     fontSize: "15px",
     fontWeight: 'bold',
     color: "white",
-    width: "120px",
+    width: "90px",
     height: "36px",
 }
 

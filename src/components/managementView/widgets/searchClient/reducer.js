@@ -1,4 +1,4 @@
-import { FILTER_BY_CLIENTS, FILTER_BY_RELATION, NAME_FILTER_CLIENTS, NAME_FILTER_RELATION } from './constants';
+import { FILTER_BY_CLIENTS, FILTER_BY_RELATION, NAME_FILTER_CLIENTS, NAME_FILTER_RELATION, CLEAR_FILTER } from './constants';
 
 const initialState = {
     filterMode: "",
@@ -21,6 +21,11 @@ export default (state = initialState, action = {}) => {
             {
                 const { payload: { filterCriteria, id, title } } = action;
                 const newState = Object.assign({}, state, { filterMode: filterCriteria, criterio : NAME_FILTER_RELATION, id, title })
+                return newState
+            }
+        case CLEAR_FILTER:
+            {
+                const newState = Object.assign({}, state, { filterMode: "", criterio : "", id : "", title : "" })
                 return newState
             }
         default:

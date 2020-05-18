@@ -1,4 +1,4 @@
-import { FILTER_BY_CLIENTS, FILTER_BY_RELATION } from './constants';
+import { FILTER_BY_CLIENTS, FILTER_BY_RELATION, CLEAR_FILTER } from './constants';
 
 export const filterByClient = (filterCriteria, id, title) => ({
     type : FILTER_BY_CLIENTS,
@@ -16,6 +16,10 @@ export const filterByRealtion = (filterCriteria, id, title) => ({
         id,
         title : `${title} ${filterCriteria}` 
     }
+})
+
+export const clearFilter = () => ({
+    type : CLEAR_FILTER
 })
 
 
