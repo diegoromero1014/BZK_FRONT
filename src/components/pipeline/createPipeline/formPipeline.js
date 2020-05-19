@@ -20,7 +20,7 @@ import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans, changeM
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import { changeStateSaveData } from "../../main/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { clearLists, consultDataSelect, consultListWithParameterUbication, getClientNeeds, getMasterDataFields, consultListByCatalogType } from "../../selectsComponent/actions";
+import { clearLists, consultDataSelect, consultListWithParameterUbication, getClientNeeds, getMasterDataFields, consultListByCatalogType, dispatchChildCatalogs } from "../../selectsComponent/actions";
 import { consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, handleFocusValueNumber, nonValidateEnter } from "../../../actionsGlobal";
 
 import {
@@ -76,6 +76,7 @@ import { buildJsoncommercialReport } from "../../commercialReport/functionsGener
 import { setConfidential } from "../../commercialReport/actions";
 import TextareaComponent from "../../../ui/textarea/textareaComponent";
 import ReportsHeader from "../../globalComponents/reportsHeader/component";
+import GetChildCatalogs from './../pipelineUtilities/GetChildCatalogs';
 
 let thisForm;
 let typeMessage = "success";
@@ -186,7 +187,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.setPipelineStatusValues = this.setPipelineStatusValues.bind(this);
       this._showAlertFinancingAndPlan = this._showAlertFinancingAndPlan.bind(this);
       this._changeNeedsClient = this._changeNeedsClient.bind(this);
-      this._changeCatalogProductFamily = this._changeCatalogProductFamily.bind(this);
       this.showMessageChangeClientNeed = this.showMessageChangeClientNeed.bind(this);
       this._cleanFieldsOfClientNeed = this._cleanFieldsOfClientNeed.bind(this);
       this._closeCancelConfirmChanNeed = this._closeCancelConfirmChanNeed.bind(this);
@@ -201,6 +201,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._showBusinessCategory2 = this._showBusinessCategory2.bind(this);
     }
 
+    setValueToState = (args) => {
+      this.setState(args);
+    }
     showFormDisbursementPlan(isOpen) {
       this.setState({
         showFormAddDisbursementPlan: isOpen,
@@ -363,22 +366,15 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeProductFamily(currencyValue) {
-      const { fields: { areaAssets, product, businessCategory, businessCategory2 }, consultListByCatalogType } = this.props;
+      const {
+        fields: { areaAssets, product, businessCategory, businessCategory2 },
+        dispatchChildren,
+      } = this.props;
+      
+      GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);
+      
       areaAssets.onChange('');
-
-      consultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {
-        this.setState({
-          products: _.get(data, 'payload.data.data', [])
-        });
-      });
       product.onChange('');
-
-      consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "businessCategory").then((data) => {
-          this.setState({
-              businessCategories: _.get(data, 'payload.data.data', []),
-              businessCategories2: _.get(data, 'payload.data.data', [])
-          });
-      });
       this.showTypePolicy();
       businessCategory.onChange('');
       businessCategory2.onChange('');
@@ -409,7 +405,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeProduct(value) {
-      const { fields: { productFamily } } = this.props;
+      const { fields: { productFamily }, dispatchChildren } = this.props;
+      GetChildCatalogs(value, dispatchChildren, this.setValueToState);
       let productFamilySelected = this.state.productsFamily.find((family) => family.id == productFamily.value);
       let products = this.state.products;
       let productSelected = products.find((product) => product.id == value);
@@ -570,7 +567,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   }
 
   _changeNeedsClient() {
-      const { pipelineReducer, fields: { need }, selectsReducer } = this.props;
+      const { pipelineReducer, fields: { need, productFamily }, selectsReducer, dispatchChildren } = this.props;
       let needSelectedKey = null;
       let needSelected = null;
       let newValueIsFinancing = null;
@@ -592,23 +589,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       }
 
       if((newValueIsFinancing && !this.state.isFinancingNeed) || (!newValueIsFinancing && !this.state.isFinancingNeed)) {
-          this._changeCatalogProductFamily(need.value);
+          GetChildCatalogs(need.value, dispatchChildren, this.setValueToState);
+          productFamily.onChange("");
       }
 
       if (newValueIsFinancing) {
           this.setState({isFinancingNeed: true});
           this._validateShowFinancingNeedFields(true);
       }
-  }
-
-  _changeCatalogProductFamily(currencyValue){
-      const { fields: { productFamily }, consultListByCatalogType } = this.props;
-      consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "productFamily").then((data) => {
-          this.setState({
-              productsFamily: _.get(data, 'payload.data.data', [])
-          });
-        });
-        productFamily.onChange('');
   }
 
   showMessageChangeClientNeed() {
@@ -639,13 +627,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   }
 
   _closeConfirmChangeNeed() {
-      const {fields: { need }} = this.props;
+      const {fields: { need, productFamily }, dispatchChildren} = this.props;
       this._validateShowFinancingNeedFields(false);
       this.setState({
           showConfirmChangeNeed: false,
           isFinancingNeed: false
       });
-      this._changeCatalogProductFamily(need.value);
+      GetChildCatalogs(need.value, dispatchChildren, this.setValueToState);
+      productFamily.onChange("");
       this._cleanFieldsOfClientNeed();
   }
 
@@ -1669,7 +1658,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       clearLists,
       consultDataSelect,
       setConfidential,
-      changeMainPipeline
+      changeMainPipeline,
+      dispatchChildren: dispatchChildCatalogs
     }, dispatch);
   }
 
