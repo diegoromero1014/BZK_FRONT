@@ -32,6 +32,10 @@ export class ButtonsFilter extends Component {
         section.scrollIntoView();
     }
 
+    noop = event => {
+        event.stopPropagation();
+    }
+
     render() {
 
         const { data , data: { name, economicGroup, access } } = this.props;
@@ -43,8 +47,7 @@ export class ButtonsFilter extends Component {
                         className="btn btn-primary btn-sm"
                         type="button"
                         style={{ background: `${!access ? '#9C9C9C' : name ? '#00448C' : '#9C9C9C'}` }}
-                        disabled={!access ? true : name ? false : true}
-                        onClick={event => this.handleFilterByClient(event, data)}
+                        onClick={!access ? (event) => this.noop(event) : name ? (event) => this.handleFilterByClient(event, data) : (event) => this.noop(event)}
                     >
                         <i
                             className="filter icon"
@@ -57,13 +60,12 @@ export class ButtonsFilter extends Component {
                         Cliente
                     </button>
                 </Tooltip>
-                <Tooltip text={!access ? 'No cuenta con permisos' : economicGroup ? 'Filtrar por grupo económico' : 'Client sin grupo económico'}>
+                <Tooltip text={!access ? 'No cuenta con permisos' : economicGroup ? 'Filtrar por grupo económico' : 'Cliente sin grupo económico'}>
                     <button
-                        className="btn btn-primary btn-sm"
+                        className="btn btn-primary btn-sm"economicGroup
                         type="button"
                         style={{ background: `${!access ? '#9C9C9C' : economicGroup ? '#00448C' : '#9C9C9C'}` }}
-                        disabled={!access ? true : economicGroup ? false : true}
-                        onClick={event => this.handleFilterByRelation(event, data)}
+                        onClick={!access ? (event) => this.noop(event) : economicGroup ? (event) => this.handleFilterByRelation(event, data) : (event) => this.noop(event)}
                     >
                         <i
                             className="filter icon"
