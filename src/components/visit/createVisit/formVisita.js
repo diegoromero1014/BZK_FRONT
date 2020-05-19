@@ -156,7 +156,7 @@ class FormVisita extends Component {
 
   _submitCreateVisita() {
     const {
-      participants, tasks, createVisti, clearIdPrevisit, clearParticipants, changeStateSaveData, usersPermission, confidentialReducer, dispatchPrepareTasksNotes } = this.props;
+      participants, tasks, createVisti, clearIdPrevisit, clearParticipants, dispatchChangeStateSaveData, usersPermission, confidentialReducer, dispatchPrepareTasksNotes } = this.props;
     var errorInForm = false;
     let errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
     let errorMessageTitle = "Campos obligatorios";
@@ -276,10 +276,10 @@ class FormVisita extends Component {
           "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
         }
         const that = this;
-        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+        dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
 
         createVisti(visitJson).then((data) => {
-          changeStateSaveData(false, "");
+          dispatchChangeStateSaveData(false, "");
           if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
             redirectUrl("/login");
           } else {
@@ -308,7 +308,7 @@ class FormVisita extends Component {
             }
           }
         }, () => {
-          changeStateSaveData(false, "");
+          dispatchChangeStateSaveData(false, "");
           typeMessage = "error";
           titleMessage = "Creación visita";
           message = "Señor usuario, ocurrió un error creando la visita.";
