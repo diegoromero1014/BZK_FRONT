@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { filterByClient, filterByRealtion } from './actions';
 import { TITLE_FILTER_BY_CLIENTS, TITLE_FILTER_BY_RELATION } from './constants'
+import $ from "jquery";
 
 class ButtonsFilter extends Component {
 
@@ -13,7 +14,11 @@ class ButtonsFilter extends Component {
 
     handleFilterByClient = (event, data) => {
         event.stopPropagation();
-        document.getElementById("alertSection").scrollIntoView(true);
+
+        $('#dashboardComponentScroll').animate({ 
+            scrollTop: $("#alertSection").offset().top
+        }, 1000);
+
         const { name, id } = data;
         const { dispatchFilterbyClients } = this.props;
         dispatchFilterbyClients(name, id, TITLE_FILTER_BY_CLIENTS);
