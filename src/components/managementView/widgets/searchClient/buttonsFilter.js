@@ -64,7 +64,7 @@ export class ButtonsFilter extends Component {
                 </Tooltip>
                 <Tooltip text={!access ? 'No cuenta con permisos' : economicGroup ? 'Filtrar por grupo económico' : 'Cliente sin grupo económico'}>
                     <button
-                        className="btn btn-primary btn-sm"economicGroup
+                        className="btn btn-primary btn-sm"
                         type="button"
                         style={{ background: `${!access ? '#9C9C9C' : economicGroup ? '#00448C' : '#9C9C9C'}` }}
                         onClick={!access ? (event) => this.noop(event) : economicGroup ? (event) => this.handleFilterByRelation(event, data) : (event) => this.noop(event)}
