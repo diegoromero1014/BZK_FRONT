@@ -14,11 +14,7 @@ class ButtonsFilter extends Component {
 
     handleFilterByClient = (event, data) => {
         event.stopPropagation();
-
-        $('#dashboardComponentScroll').animate({ 
-            scrollTop: $("#alertSection").offset().top
-        }, 1000);
-
+        this.focusSection();
         const { name, id } = data;
         const { dispatchFilterbyClients } = this.props;
         dispatchFilterbyClients(name, id, TITLE_FILTER_BY_CLIENTS);
@@ -26,15 +22,21 @@ class ButtonsFilter extends Component {
 
     handleFilterByRelation = (event, data) => {
         event.stopPropagation();
-        document.getElementById("alertSection").scrollIntoView(true);
+        this.focusSection();
         const { economicGroup, idEconomicGroup } = data;
         const { dispatchFilterByRealtion } = this.props;
-        dispatchFilterByRealtion(economicGroup, idEconomicGroup, TITLE_FILTER_BY_RELATION);  
+        dispatchFilterByRealtion(economicGroup, idEconomicGroup, TITLE_FILTER_BY_RELATION);
+    }
+
+    focusSection = () => {
+        $('#dashboardComponentScroll').animate({
+            scrollTop: $("#alertSection").offset().top
+        }, 1000);
     }
 
     render() {
 
-        const { data , data: { name, economicGroup, access } } = this.props;
+        const { data, data: { name, economicGroup, access } } = this.props;
 
         return (
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
