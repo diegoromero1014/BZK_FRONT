@@ -6,7 +6,7 @@ import { filterByClient, filterByRealtion } from './actions';
 import { TITLE_FILTER_BY_CLIENTS, TITLE_FILTER_BY_RELATION } from './constants'
 import $ from "jquery";
 
-class ButtonsFilter extends Component {
+export class ButtonsFilter extends Component {
 
     constructor(props) {
         super(props);
@@ -34,6 +34,10 @@ class ButtonsFilter extends Component {
         }, 1000);
     }
 
+    noop = event => {
+        event.stopPropagation();
+    }
+
     render() {
 
         const { data, data: { name, economicGroup, access } } = this.props;
@@ -45,8 +49,7 @@ class ButtonsFilter extends Component {
                         className="btn btn-primary btn-sm"
                         type="button"
                         style={{ background: `${!access ? '#9C9C9C' : name ? '#00448C' : '#9C9C9C'}` }}
-                        disabled={!access ? true : name ? false : true}
-                        onClick={event => this.handleFilterByClient(event, data)}
+                        onClick={!access ? (event) => this.noop(event) : name ? (event) => this.handleFilterByClient(event, data) : (event) => this.noop(event)}
                     >
                         <i
                             className="filter icon"
@@ -59,13 +62,12 @@ class ButtonsFilter extends Component {
                         Cliente
                     </button>
                 </Tooltip>
-                <Tooltip text={!access ? 'No cuenta con permisos' : economicGroup ? 'Filtrar por grupo económico' : 'Client sin grupo económico'}>
+                <Tooltip text={!access ? 'No cuenta con permisos' : economicGroup ? 'Filtrar por grupo económico' : 'Cliente sin grupo económico'}>
                     <button
                         className="btn btn-primary btn-sm"
                         type="button"
                         style={{ background: `${!access ? '#9C9C9C' : economicGroup ? '#00448C' : '#9C9C9C'}` }}
-                        disabled={!access ? true : economicGroup ? false : true}
-                        onClick={event => this.handleFilterByRelation(event, data)}
+                        onClick={!access ? (event) => this.noop(event) : economicGroup ? (event) => this.handleFilterByRelation(event, data) : (event) => this.noop(event)}
                     >
                         <i
                             className="filter icon"
@@ -83,11 +85,9 @@ class ButtonsFilter extends Component {
     }
 }
 
-const mapStateToProps = ({ filterDashboard }) => ({ filterDashboard });
-
 const mapDispatchToProps = dispatch => bindActionCreators({
     dispatchFilterbyClients: filterByClient,
     dispatchFilterByRealtion: filterByRealtion
 }, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(ButtonsFilter);
+export default connect(null, mapDispatchToProps)(ButtonsFilter);

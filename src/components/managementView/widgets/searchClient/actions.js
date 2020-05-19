@@ -5,7 +5,7 @@ export const filterByClient = (filterCriteria, id, title) => ({
     payload : {
         filterCriteria,
         id,
-        title : `${title} ${filterCriteria}` 
+        title : `${title}${filterCriteria}` 
     }
 })
 
@@ -14,7 +14,7 @@ export const filterByRealtion = (filterCriteria, id, title) => ({
     payload : {
         filterCriteria,
         id,
-        title : `${title} ${filterCriteria}` 
+        title : `${title}${filterCriteria}` 
     }
 })
 
