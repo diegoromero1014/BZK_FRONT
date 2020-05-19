@@ -5,7 +5,7 @@ import configureStore from './store/store';
 import Routes from './routes';
 import Router from './historyRouter';
 import { syncHistoryWithStore } from 'react-router-redux';
-import axios from 'axios';
+import { setAuthorizationHeader, setInterceptors } from './api';
 
 export const store = configureStore();
 
@@ -15,9 +15,8 @@ require("../styles/index");
 require('jquery');
 require('semantic-ui/dist/semantic');
 
-if (localStorage.getItem('sessionTokenFront')) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('sessionTokenFront')}` 
-}
+setAuthorizationHeader(localStorage.getItem('sessionTokenFront'));
+setInterceptors();
 
 
 ReactDom.render(

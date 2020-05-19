@@ -4,6 +4,8 @@ import { INIT_INPUT_EVENTS, STOP_INPUT_EVENTS, APP_NAME } from '../../constantsG
 import axios from 'axios';
 import momentTimeZone from 'moment-timezone';
 
+import { setAuthorizationHeader } from '../../api';
+
 export function validateLogin(username, password, recaptcha) {
 
     const json = {
@@ -36,7 +38,7 @@ export function validateLogin(username, password, recaptcha) {
 }
 
 export function saveSessionToken(sessionToken) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${sessionToken}` 
+    setAuthorizationHeader(sessionToken);
     window.localStorage.setItem('sessionTokenFront', sessionToken);
     return {
         type: CHANGE_STATUS_LOGIN,
