@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { filterByClient, filterByRealtion } from './actions';
 import { TITLE_FILTER_BY_CLIENTS, TITLE_FILTER_BY_RELATION } from './constants'
+import $ from "jquery";
 
 export class ButtonsFilter extends Component {
 
@@ -13,23 +14,24 @@ export class ButtonsFilter extends Component {
 
     handleFilterByClient = (event, data) => {
         event.stopPropagation();
+        this.focusSection();
         const { name, id } = data;
         const { dispatchFilterbyClients } = this.props;
         dispatchFilterbyClients(name, id, TITLE_FILTER_BY_CLIENTS);
-        this.focusAlertSection();
     }
 
     handleFilterByRelation = (event, data) => {
         event.stopPropagation();
+        this.focusSection();
         const { economicGroup, idEconomicGroup } = data;
         const { dispatchFilterByRealtion } = this.props;
-        dispatchFilterByRealtion(economicGroup, idEconomicGroup, TITLE_FILTER_BY_RELATION);  
-        this.focusAlertSection();
+        dispatchFilterByRealtion(economicGroup, idEconomicGroup, TITLE_FILTER_BY_RELATION);
     }
 
-    focusAlertSection = () => {
-        let section = document.getElementById("alertSection");
-        section.scrollIntoView();
+    focusSection = () => {
+        $('#dashboardComponentScroll').animate({
+            scrollTop: $("#alertSection").offset().top
+        }, 1000);
     }
 
     noop = event => {
@@ -38,7 +40,7 @@ export class ButtonsFilter extends Component {
 
     render() {
 
-        const { data , data: { name, economicGroup, access } } = this.props;
+        const { data, data: { name, economicGroup, access } } = this.props;
 
         return (
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
