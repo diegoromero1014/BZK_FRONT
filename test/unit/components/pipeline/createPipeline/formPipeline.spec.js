@@ -23,6 +23,7 @@ import * as selectsComponent from "../../../../../src/components/selectsComponen
 import _ from "lodash";
 import Tooltip from "../../../../../src/components/toolTip/toolTipComponent";
 import ReportsHeader from "../../../../../src/components/globalComponents/reportsHeader/component";
+//import GetChildCatalogs from './../../../../../src/components/pipeline/pipelineUtilities/GetChildCatalogs';
 
 const middleWares = [thunk];
 const mockStore = configureStore(middleWares);
@@ -52,6 +53,7 @@ let createEditPipeline;
 let stubHandleBlurValueNumber;
 let stubHandleFocusValueNumber;
 let redirectUrl;
+let GetChildCatalogs;
 
 describe("Test CreatePipeline", () => {
   let store;
@@ -98,7 +100,9 @@ describe("Test CreatePipeline", () => {
       .returns(() => {
         return new Promise((resolve, reject) => resolve(getParameterSuccess));
       });
-
+    GetChildCatalogs = sinon.stub(selectsComponent, "dispatchChildCatalogs").returns(() => { return new Promise((resolve, reject) => resolve(
+        {payload: {data: {data: { id: 1, value: 'Factoring', key: 'Factoring', field: 'productFamily', description: ''}}}}
+      )); });
     stubGetCatalogType = sinon.stub(selectsComponent, "consultListByCatalogType");
     stubGetCatalogType.onCall(0)
       .returns(() => { return new Promise((resolve, reject) => resolve(
@@ -114,6 +118,7 @@ describe("Test CreatePipeline", () => {
     stubHandleFocusValueNumber.restore();
     createEditPipeline.restore();
     redirectUrl.restore();
+    GetChildCatalogs.restore();
   });
 
   let origin = "pipeline";
@@ -498,29 +503,7 @@ describe("Test CreatePipeline", () => {
       expect(wrapper.state().isFinancingNeed).to.equal(false);
     }, 1 );
   });
-
-  it('should refresh productFamily when need field changes', () => {
-    const wrapper = shallow(<PipelineComponent store={store} />)
-    .dive()
-    .dive()
-    .dive()
-    .dive();
-
-    wrapper.instance()._changeCatalogProductFamily(1);
-    setTimeout(() => expect(wrapper.state().productsFamily.value).to.equal("Factoring"), 1 );
-  });
-
   it('should refresh products and categories lists when need changes', () => {
-    stubGetCatalogType.onCall(0)
-      .returns(() => { return new Promise((resolve, reject) => resolve(
-        productsFamilyResolve
-    )); });
-
-    stubGetCatalogType.onCall(1)
-      .returns(() => { return new Promise((resolve, reject) => resolve(
-          productsResolve
-    )); });
-
     const wrapper = shallow(<PipelineComponent store={store} />)
     .dive()
     .dive()
@@ -528,10 +511,8 @@ describe("Test CreatePipeline", () => {
     .dive();
 
     wrapper.instance()._changeProductFamily(1);
-    setTimeout(() => {
-      expect(wrapper.state().products.value).to.equal("Factoring Plus");
-      expect(wrapper.state().businessCategories.value).to.equal("Captación");
-    }, 1 );
+   console.log(wrapper.state());
+    sinon.assert.called(GetChildCatalogs);
   });
 
   it('should render field justification when business status is no contactado', ()=>{
@@ -892,38 +873,4 @@ describe("Test CreatePipelineChildren", () => {
     }, 1 );
   });
 
-  it('should refresh productFamily when need field changes formPipeline/pipelineChild', () => {
-    const wrapper = shallow(<PipelineComponentChildren store={store} />)
-    .dive()
-    .dive()
-    .dive()
-    .dive();
-
-    wrapper.instance()._changeCatalogProductFamily(1);
-    setTimeout(() => expect(wrapper.state().productsFamily.value).to.equal("Factoring"), 1 );
-  });
-
-  it('should refresh products and categories lists when need changes formPipeline/pipelineChild', () => {
-    stubGetCatalogType.onCall(0)
-      .returns(() => { return new Promise((resolve, reject) => resolve(
-        productsFamilyResolve
-    )); });
-
-    stubGetCatalogType.onCall(1)
-      .returns(() => { return new Promise((resolve, reject) => resolve(
-        productsResolve
-    )); });
-
-    const wrapper = shallow(<PipelineComponentChildren store={store} />)
-    .dive()
-    .dive()
-    .dive()
-    .dive();
-
-    wrapper.instance()._changeProductFamily(1);
-    setTimeout(() => {
-      expect(wrapper.state().products.value).to.equal("Factoring Plus");
-      expect(wrapper.state().businessCategories.value).to.equal("Captación");
-    }, 1 );
-  });
 });

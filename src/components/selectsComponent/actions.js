@@ -8,7 +8,8 @@ import {
   FILTER_MULTISELECT_FIELDS,
   LIST_REGIONS_BY_EMPLOYEE,
   PIPELINE_CLIENT_NEEDS,
-  TEAM_FOR_REGION_EMPLOYEE
+  TEAM_FOR_REGION_EMPLOYEE,
+  DISPATCH_CHILD_CATALOGS
 } from './constants';
 import { isNull, isUndefined } from 'lodash';
 
@@ -293,5 +294,31 @@ export function getRegionsByEmployee() {
   };
 
 }
+export function dispatchChildCatalogs(parentId) {
+  const json = {
+    messageHeader: {
+      timestamp: new Date().getTime(),
+      sessionToken: window.localStorage.getItem("sessionTokenFront"),
+      service: "",
+      status: "0",
+      language: "es",
+      displayErrorMessage: "",
+      technicalErrorMessage: "",
+      applicationVersion: "",
+      debug: true,
+      isSuccessful: true,
+    },
+    messageBody: {
+      parentId: parentId,
+      field: null,
+    },
+  };
+  const request = axios.post(APP_URL + "/masterDataByParentId", json);
+  return {
+    type: DISPATCH_CHILD_CATALOGS,
+    payload: request,
+  };
+}
+
 
 export default {getMasterDataFields}
