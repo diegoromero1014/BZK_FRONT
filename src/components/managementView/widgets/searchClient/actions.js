@@ -1,11 +1,11 @@
-import { FILTER_BY_CLIENTS, FILTER_BY_RELATION } from './constants';
+import { FILTER_BY_CLIENTS, FILTER_BY_RELATION, CLEAR_FILTER } from './constants';
 
 export const filterByClient = (filterCriteria, id, title) => ({
     type : FILTER_BY_CLIENTS,
     payload : {
         filterCriteria,
         id,
-        title : `${title} ${filterCriteria}` 
+        title : `${title}${filterCriteria}` 
     }
 })
 
@@ -14,8 +14,12 @@ export const filterByRealtion = (filterCriteria, id, title) => ({
     payload : {
         filterCriteria,
         id,
-        title : `${title} ${filterCriteria}` 
+        title : `${title}${filterCriteria}` 
     }
+})
+
+export const clearFilter = () => ({
+    type : CLEAR_FILTER
 })
 
 

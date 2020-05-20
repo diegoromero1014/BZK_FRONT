@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import Tooltip from "../../../toolTip/toolTipComponent";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { filterByClient, filterByRealtion } from './actions';
 import { TITLE_FILTER_BY_CLIENTS, TITLE_FILTER_BY_RELATION } from './constants'
+import $ from "jquery";
 
-class ButtonsFilter extends Component {
+export class ButtonsFilter extends Component {
 
     constructor(props) {
         super(props);
@@ -12,6 +14,7 @@ class ButtonsFilter extends Component {
 
     handleFilterByClient = (event, data) => {
         event.stopPropagation();
+        this.focusSection();
         const { name, id } = data;
         const { dispatchFilterbyClients } = this.props;
         dispatchFilterbyClients(name, id, TITLE_FILTER_BY_CLIENTS);
@@ -19,63 +22,72 @@ class ButtonsFilter extends Component {
 
     handleFilterByRelation = (event, data) => {
         event.stopPropagation();
-        const { economicGroup, id } = data;
+        this.focusSection();
+        const { economicGroup, idEconomicGroup } = data;
         const { dispatchFilterByRealtion } = this.props;
-        dispatchFilterByRealtion(economicGroup, id, TITLE_FILTER_BY_RELATION);
+        dispatchFilterByRealtion(economicGroup, idEconomicGroup, TITLE_FILTER_BY_RELATION);
+    }
+
+    focusSection = () => {
+        $('#dashboardComponentScroll').animate({
+            scrollTop: $("#alertSection").offset().top
+        }, 1000);
+    }
+
+    noop = event => {
+        event.stopPropagation();
     }
 
     render() {
 
-        const { data } = this.props;
+        const { data, data: { name, economicGroup, access } } = this.props;
 
         return (
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                <button
-                    className="btn btn-primary btn-sm"
-                    type="button"
-                    style={{ background: "#00448C" }}
-                    title="Filtro por cliente"
-                    onClick={event => this.handleFilterByClient(event, data)}
-                >
-                    <i
-                        className="filter icon"
-                        style={{
-                            color: "white",
-                            marginRight: "5px",
-                            fontSize: "8pt"
-                        }}
-                    />
-                    Cliente
-                </button>
-                <button
-                    className="btn btn-primary btn-sm"
-                    type="button"
-                    style={{ background: "#00448C" }}
-                    title="Filtro por Relacion"
-                    onClick={event => this.handleFilterByRelation(event, data)}
-                >
-                    <i
-                        className="filter icon"
-                        style={{
-                            color: "white",
-                            marginRight: "5px",
-                            fontSize: "8pt"
-                        }}
-                    />
-                    Relación
-                </button>
+                <Tooltip text={!access ? 'No cuenta con permisos' : name ? 'Filtrar por cliente' : 'Cliente sin NIT principal'}>
+                    <button
+                        className="btn btn-primary btn-sm"
+                        type="button"
+                        style={{ background: `${!access ? '#9C9C9C' : name ? '#00448C' : '#9C9C9C'}` }}
+                        onClick={!access ? (event) => this.noop(event) : name ? (event) => this.handleFilterByClient(event, data) : (event) => this.noop(event)}
+                    >
+                        <i
+                            className="filter icon"
+                            style={{
+                                color: "white",
+                                marginRight: "5px",
+                                fontSize: "8pt"
+                            }}
+                        />
+                        Cliente
+                    </button>
+                </Tooltip>
+                <Tooltip text={!access ? 'No cuenta con permisos' : economicGroup ? 'Filtrar por grupo económico' : 'Cliente sin grupo económico'}>
+                    <button
+                        className="btn btn-primary btn-sm"
+                        type="button"
+                        style={{ background: `${!access ? '#9C9C9C' : economicGroup ? '#00448C' : '#9C9C9C'}` }}
+                        onClick={!access ? (event) => this.noop(event) : economicGroup ? (event) => this.handleFilterByRelation(event, data) : (event) => this.noop(event)}
+                    >
+                        <i
+                            className="filter icon"
+                            style={{
+                                color: "white",
+                                marginRight: "5px",
+                                fontSize: "8pt"
+                            }}
+                        />
+                        Relación
+                    </button>
+                </Tooltip>
             </div>
         );
     }
 }
-
-const mapStateToProps = ({ filterDashboard }) => ({ filterDashboard });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     dispatchFilterbyClients: filterByClient,
     dispatchFilterByRealtion: filterByRealtion
 }, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(ButtonsFilter);
-
-// export default ButtonsFilter;
+export default connect(null, mapDispatchToProps)(ButtonsFilter);
