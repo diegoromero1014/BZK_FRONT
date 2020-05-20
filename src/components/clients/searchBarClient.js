@@ -74,7 +74,7 @@ class SearchBarClient extends Component {
                         className="input-lg input InputAddOn-field"
                         type="text"
                         style={{ padding: '0px 11px !important' }}
-                        placeholder={MESSAGE_PLACEHOLDER}
+                        placeholder="Búsqueda por cliente, NIT o grupo económico"
                         value={keyword} onKeyPress={this._handleChangeKeyword}
                         onChange={this._handleChangeKeyword}
                     />
