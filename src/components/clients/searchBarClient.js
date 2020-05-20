@@ -7,7 +7,6 @@ import SweetAlert from '../sweetalertFocus';
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import _ from 'lodash';
 import { saveSelectValue, backButtonFilter, clearSaveSelectedValue } from '../clients/actions';
-import { MESSAGE_PLACEHOLDER } from './constants';
 
 import '../../../styles/app/placeholder.scss';
 
