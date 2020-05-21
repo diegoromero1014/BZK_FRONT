@@ -97,11 +97,19 @@ import {
 } from './validationsMessages';
 
 import {
-    REASON_TRANFER, MANAGEMENT_BRAND, PIPELINE_TYPE, CLIENT_NEED, PRODUCTS_MASK
+    REASON_TRANFER,
+    MANAGEMENT_BRAND,
+    PIPELINE_TYPE,
+    CLIENT_NEED,
+    PRODUCTS_MASK,
+    MELLOWING_PERIOD,
+    ALL_BUSINESS_CATEGORIES, PRODUCT_FAMILY
 } from '../components/selectsComponent/constants';
 
-import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO,
-    FACTORING_BANCOLOMBIA_CONFIRMING, FACTORING_PLUS, TRIANGULAR_LINE, NEED_FINANCING } from "../components/pipeline/constants";
+import {
+    PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO,
+    FACTORING_BANCOLOMBIA_CONFIRMING, FACTORING_PLUS, TRIANGULAR_LINE, NEED_FINANCING, PLACEMENTS
+} from "../components/pipeline/constants";
 
 let globalCondition = false;
 export const setGlobalCondition = value => {
@@ -541,6 +549,36 @@ export const checkRequiredPipelineJustification = (value, fields, props) => {
 
     return null;
 }
+
+export const checkRequiredMellowingPeriodDate = (value, field, props)=>{
+        const businessCategorys = props.selectsReducer.get(ALL_BUSINESS_CATEGORIES);
+        let businessCategorySelectedKey = null;
+
+        if(businessCategorys){
+            let businessCategorySelected = businessCategorys.find((businessCategory) => businessCategory.id == field.businessCategory);
+            businessCategorySelectedKey = businessCategorySelected ? businessCategorySelected.key.toLowerCase() : '';
+        }
+
+        if(businessCategorySelectedKey !== PLACEMENTS){
+            return checkRequired(value);
+        }
+
+};
+
+export const checkRequiredMellowingPeriod = (value, field, props)=>{
+        const businessCategorys = props.selectsReducer.get(ALL_BUSINESS_CATEGORIES);
+        let businessCategorySelectedKey = null;
+
+        if(businessCategorys){
+            let businessCategorySelected = businessCategorys.find((businessCategory) => businessCategory.id == field.businessCategory);
+            businessCategorySelectedKey = businessCategorySelected ? businessCategorySelected.key.toLowerCase() : '';
+        }
+
+        if(businessCategorySelectedKey === PLACEMENTS){
+            return checkRequired(value);
+        }
+
+};
 
 export const checkRequiredTermInMonths = (value, fields, props) => {
     return checkReducerValue(value,

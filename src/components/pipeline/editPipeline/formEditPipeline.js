@@ -67,7 +67,7 @@ import {
     TERM_IN_MONTHS_VALUES
 } from "../../selectsComponent/constants";
 import {
-    ALLOWS_NEGATIVE_INTEGER,
+    ALLOWS_NEGATIVE_INTEGER, DATE_FORMAT_MONT_YEAR,
     EDITAR,
     MESSAGE_ERROR,
     MESSAGE_ERROR_SWEET_ALERT,
@@ -87,9 +87,6 @@ import {
     BUSINESS_STATUS_PERDIDO,
     CATCHMENTS,
     CURRENCY_MESSAGE,
-    FACTORING,
-    FACTORING_BANCOLOMBIA_CONFIRMING,
-    FACTORING_PLUS,
     FINANCIAL_LEASING,
     HELP_PROBABILITY,
     HELP_SVA,
@@ -99,7 +96,7 @@ import {
     NUEVO_NEGOCIO,
     OPERATING_LEASE,
     OPORTUNITIES_MANAGEMENT,
-    ORIGIN_PIPELIN_BUSINESS,
+    ORIGIN_PIPELIN_BUSINESS, PIPELINE_DISBURSEMENT_PLAN,
     PIPELINE_DISBURSEMENT_PLAN_MESSAGE,
     PIPELINE_INDEXING_FIELD,
     PIPELINE_NEED_CLIENT,
@@ -116,6 +113,7 @@ import Classification from '../sections/classification';
 import '../pipeline.style.scss';
 import TextareaComponent from "../../../ui/textarea/textareaComponent";
 import ReportsHeader from "../../globalComponents/reportsHeader/component";
+import DateTimePickerUi from '../../../ui/dateTimePicker/dateTimePickerComponent';
 
 let thisForm;
 let typeButtonClick = null;
@@ -222,7 +220,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._pipelineTypeAndBusinessOnChange = this._pipelineTypeAndBusinessOnChange.bind(this);
             this._changeAreaAssetsEnabledValue = this._changeAreaAssetsEnabledValue.bind(this);
             this.setPipelineStatusValues = this.setPipelineStatusValues.bind(this);
-            this.renderNominalValue = this.renderNominalValue.bind(this);
             this._showAlertFinancingAndPlan = this._showAlertFinancingAndPlan.bind(this);
             this._changeNeedsClient = this._changeNeedsClient.bind(this);
             this._changeCatalogProductFamily = this._changeCatalogProductFamily.bind(this);
@@ -492,8 +489,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         showInteresSpreadField(businessCategoryValue){
-            const { fields: { commission }, selectsReducer } = this.props; 
+            const { fields: { commission, mellowingPeriod, mellowingPeriodDate }, selectsReducer } = this.props;
             const businessCategories = selectsReducer.get(ALL_BUSINESS_CATEGORIES);
+            let meellowingPeriodField = false;
+            let componentDisbursementPlan = false;
             const selectedBusinessCategory = businessCategories.find((businessCategory) => businessCategory.id == businessCategoryValue);
             keyBusinessCategory = selectedBusinessCategory ? selectedBusinessCategory.key.toLowerCase() : '';
             if((keyBusinessCategory === PLACEMENTS || keyBusinessCategory === CATCHMENTS) || (keyBusinessCategory2 === PLACEMENTS || keyBusinessCategory2 === CATCHMENTS)){
@@ -507,8 +506,19 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 commission.onChange("");
             }
 
+            if(keyBusinessCategory === PLACEMENTS){
+                meellowingPeriodField = true;
+                componentDisbursementPlan = true;
+                mellowingPeriod.onChange(_.get(_.filter(selectsReducer.get(MELLOWING_PERIOD), ['key', PIPELINE_DISBURSEMENT_PLAN]), '[0].id', ""))
+                mellowingPeriodDate.onChange('');
+            }else{
+                mellowingPeriod.onChange('');
+            }
+
             this.setState({
-                messageTooltipNominalValue: _.get(_.find(businessCategories, ['id', parseInt(businessCategoryValue)]), 'description')                
+                messageTooltipNominalValue: _.get(_.find(businessCategories, ['id', parseInt(businessCategoryValue)]), 'description'),
+                showMellowingPeriodField: meellowingPeriodField,
+                showComponentDisbursementPlan: componentDisbursementPlan
             });
         }
 
@@ -555,13 +565,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const { fields: {justification, justificationDetail} } = this.props;
             if(pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){
                 this.setState({
-                    showMellowingPeriodField: false,
                     showProbabilityField: false,
                     showJustificationField: true
                 });
             } else {
                 this.setState({
-                    showMellowingPeriodField: true,
                     showProbabilityField: true,
                     showJustificationField: false
                 });
@@ -664,8 +672,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this.setState({
                 showtermInMonthsField: isFinancingNeed,
                 showindexingField: isFinancingNeed,
-                showpendingDisbursementAmountField: isFinancingNeed,
-                showComponentDisbursementPlan: isFinancingNeed
+                showpendingDisbursementAmountField: isFinancingNeed
             });
         }
 
@@ -674,7 +681,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                 moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets,
                 termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification,  typePolicy, margen, justificationDetail,
-                businessCategory2, nominalValue2
+                businessCategory2, nominalValue2, mellowingPeriodDate
             }, createEditPipeline, changeStateSaveData, swtShowMessage, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
             } = this.props;
 
@@ -730,6 +737,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "justificationDetail": justificationDetail.value ? justificationDetail.value : "",
                             "businessCategory2": businessCategory2.value,
                             "nominalValue2": nominalValue2.value === undefined || nominalValue2.value === null || nominalValue2.value === '' ? '' : numeral(nominalValue2.value).format('0.00'),
+                            "mellowingPeriodDate":  mellowingPeriodDate.value === undefined || mellowingPeriodDate.value === null || mellowingPeriodDate.value === '' ? '' :  Number(moment(mellowingPeriodDate.value, DATE_FORMAT_MONT_YEAR).format('x'))
 
                         };
                         if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -868,7 +876,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 fields: { businessStatus, commission, currency, idUsuario, nameUsuario, indexing, need, observations, product, roe, sva, moneyDistribitionMarket,
                     termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, positionCreatedBy,
                     positionUpdatedBy, reviewedDate, probability, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets,
-                    termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, typePolicy, margen, justificationDetail
+                    termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, typePolicy, margen, justificationDetail,
+                    mellowingPeriodDate
                 }, updateDisbursementPlans
             } = this.props;                        
             updateDisbursementPlans(data.disbursementPlans, origin);
@@ -912,6 +921,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             sva.onChange(data.sva);
             typePolicy.onChange(data.policyType);
             justificationDetail.onChange(data.justificationDetail);
+            mellowingPeriodDate.onChange(moment(data.mellowingPeriodDate).format('MM/YYYY'));
             this._showLoadBusinessCategory2(data.businessCategory2, data.nominalValue2);
         }
 
@@ -1026,10 +1036,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
         }
 
-        renderNominalValue() {
-            const { pipelineReducer } = this.props;
-            const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
-        }
 
         _nameDisbursementPlansInReducer() {
             return (origin === ORIGIN_PIPELIN_BUSINESS) ? 'childBusinessDisbursementPlans': 'disbursementPlans';
@@ -1040,7 +1046,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 fields: { nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                     moneyDistribitionMarket, pendingDisbursementAmount, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
                     positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, 
-                    termInMonthsValues, pipelineType, commercialOportunity, justification,  typePolicy, margen, justificationDetail, businessCategory2, nominalValue2
+                    termInMonthsValues, pipelineType, commercialOportunity, justification,  typePolicy, margen, justificationDetail, businessCategory2, nominalValue2,
+                    mellowingPeriodDate
                 }, selectsReducer, handleSubmit, pipelineReducer, reducerGlobal
             } = this.props;            
             const ownerDraft = pipelineReducer.get('ownerDraft');
@@ -1397,16 +1404,16 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         />
                                     </div>
                                 </Col>
-                            {this.state.showMellowingPeriodField ?
                                     <Col xs={12} md={6} lg={6}>
                                         <div style={{ paddingRight: "15px" }}>
                                             <dt>
-                                                <span>Período de maduración</span>
+                                                <span>Período de maduración (</span><span style={{color: "red"}}>*</span>)
                                                 <ToolTip text={HELP_PROBABILITY}>
                                                     <i className="help circle icon blue"
                                                         style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
                                                 </ToolTip>
                                             </dt>
+                            {this.state.showMellowingPeriodField ?
                                             <ComboBox
                                                 labelInput="Seleccione..."
                                                 valueProp={'id'}
@@ -1417,9 +1424,19 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                 data={selectsReducer.get(MELLOWING_PERIOD) || []}
                                                 disabled={this.state.isEditable ? '' : 'disabled'}
                                             />
+                                    :
+                                    <DateTimePickerUi
+                                        culture='es'
+                                        format={DATE_FORMAT_MONT_YEAR}
+                                        placeholder='"MM/YYYY"'
+                                        time={false}
+                                        touched={true}
+                                        {...mellowingPeriodDate}
+                                        disabled={this.state.isEditable ? '' : 'disabled'}
+                                    />
+                            }
                                         </div>
                                     </Col>
-                                    : null}
                             </Row>
                                 {this.state.showProbabilityField ?
                             <Row style={{ padding: "0px 10px 20px 20px" }}>

@@ -276,7 +276,7 @@ describe("Test CreatePipeline", () => {
       .dive();
 
       wrapper.instance()._validateShowFinancingNeedFields(true);
-      expect(wrapper.find(ComponentDisbursementPlan)).to.have.length(1);
+      expect(wrapper.find(ComponentDisbursementPlan)).to.have.length(0);
   });
 
   it('Hide termInMonths when showtermInMonthsField is false', () => {
@@ -599,6 +599,7 @@ describe("Test CreatePipeline", () => {
     wrapper.instance()._onChangeBusinessCategory(5110627);
     wrapper.instance()._onChangeBusinessCategory2(5110627);
     expect(wrapper.find(Input).find({ name: 'commission' }));
+    expect(wrapper.find(ComponentDisbursementPlan)).to.have.length(1);
   });
 
   it('should render field intereses/spred', () => {
@@ -744,7 +745,7 @@ describe("Test CreatePipelineChildren", () => {
       .dive();
 
       wrapper.instance()._validateShowFinancingNeedFields(true);
-      expect(wrapper.find(ComponentDisbursementPlan)).to.have.length(1);
+      expect(wrapper.find(ComponentDisbursementPlan)).to.have.length(0);
   });
 
   it('Hide termInMonths when showtermInMonthsField is false formPipeline/pipelineChild', () => {

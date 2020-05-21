@@ -70,6 +70,7 @@ export const OPTION_REQUIRED = "Debe seleccionar una opción";
 export const VALUE_REQUIERED = "Debe ingresar un valor";
 export const VALUE_XSS_INVALID = "La información ingresada contiene caracteres invalidos.";
 export const DATE_FORMAT = "DD/MM/YYYY";
+export const DATE_FORMAT_MONT_YEAR = "MM/YYYY";
 export const DATETIME_FORMAT = "DD/MM/YYYY hh:mm a";
 export const REVIEWED_DATE_FORMAT = "DD MMM YYYY";
 export const REVIEWED_DATE_FORMAT_HOUR = "DD MMM YYYY - hh:mm a";
