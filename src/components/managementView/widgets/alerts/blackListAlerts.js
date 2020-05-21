@@ -9,6 +9,7 @@ import { redirectUrl } from "../../../globalComponents/actions";
 import { changeActiveItemMenu } from '../../../menu/actions';
 import { Button } from 'semantic-ui-react';
 import { MODULE_ALERTS } from '../../../../constantsGlobal';
+import { NAME_FILTER_CLIENTS, NAME_FILTER_RELATION } from '../searchClient/constants';
 
 export class BlackListAlertsComponent extends Component {
 
@@ -20,11 +21,22 @@ export class BlackListAlertsComponent extends Component {
         }
     }
 
-    handleOnPageChange = async page => {
-        const { dispatchBlackListAlerts } = this.props;
+    componentDidMount() {
+        this.handleOnPageChange(1);
+    }
+   
+    componentDidUpdate(prevProps) {
+        if (prevProps.idFilter !== this.props.idFilter) {
+            this.handleOnPageChange(1);
+        }
+    }
 
+    handleOnPageChange = async page => {
+        const { dispatchBlackListAlerts, idFilter, filterType } = this.props;
+        const filterClient = filterType == NAME_FILTER_CLIENTS ? idFilter : null;
+        const filterEconomicGroup = filterType == NAME_FILTER_RELATION ? idFilter : null;
         await this.setState({ loading: true });
-        await dispatchBlackListAlerts((page - 1), MAX_ROWS);
+        await dispatchBlackListAlerts((page - 1), MAX_ROWS, filterClient, filterEconomicGroup);
         await this.setState({ loading: false });
     }
 
@@ -65,16 +77,17 @@ export class BlackListAlertsComponent extends Component {
     }
 }
 
-const mapStateToProps = ({ alertBlackList }) => ({
+const mapStateToProps = ({ alertBlackList, filterDashboard: { id, criterio} }) => ({
     alertBlackList,
     data: alertBlackList.get('responseBlackList'),
-    total: alertBlackList.get('totalBlackListFiltered')
+    total: alertBlackList.get('totalBlackListFiltered'),
+    idFilter: id,
+    filterType: criterio
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     dispatchBlackListAlerts: blackListAlerts,
     dispatchChangeActiveItemMenu : changeActiveItemMenu
-    
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(BlackListAlertsComponent);

@@ -2,23 +2,37 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import Tooltip from "../../../toolTip/toolTipComponent";
 import { clientsFindServer } from "../../../clients/actions";
-import { PLACEHOLDER_SEARCH_CLIENT, MESSAGE_TOOLTIP, TITLE_SEARCH_CLIENT, STYLE_BUTTON_SEARCH, CLOSE_BUSQUEDA, STYLE_BUTTON_SEARCH_FOCUS, STYLE_BUTTON_PROSPECT} from "./constants";
+import {
+	PLACEHOLDER_SEARCH_CLIENT,
+	MESSAGE_TOOLTIP,
+	SEARCH_CLIENT,
+	STYLE_BUTTON_SEARCH,
+	CLOSE_BUSQUEDA,
+	STYLE_BUTTON_SEARCH_FOCUS,
+	STYLE_BUTTON_PROSPECT
+} from "./constants";
 import { bindActionCreators } from "redux";
 import { swtShowMessage } from '../../../sweetAlertMessages/actions';
 import { updateTitleNavBar } from '../../../navBar/actions';
 import { redirectUrl } from "../../../globalComponents/actions";
 import { changeActiveItemMenu } from '../../../menu/actions';
 import { MODULE_MY_CLIENTS } from "../../../../constantsGlobal";
+import { clearFilter } from './actions';
 
 export class SearchClient extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-            keyword: "",
-			closeIcon : false,
-			background : true 
+			keyword: "",
+			closeIcon: false,
+			background: true
 		};
+	}
+
+	componentWillMount() {
+		const { dispatchClearFilter } = this.props;
+		dispatchClearFilter();
 	}
 
 	redirectCreatePropspect = () => {
@@ -38,7 +52,7 @@ export class SearchClient extends Component {
 
 	handleSearchClient = async () => {
 		const { keyword } = this.state;
-		const { dispatchClientsFindServer, dispatchSwtShowMessage, setKeyword, restartPage, handleSetSearched , setLoading} = this.props;
+		const { dispatchClientsFindServer, dispatchSwtShowMessage, setKeyword, restartPage, handleSetSearched, setLoading } = this.props;
 
 		if (!keyword) {
 			dispatchSwtShowMessage("error", "Error en la búsqueda", `Señor usuario, por favor ingrese un criterio de búsqueda.`);
@@ -48,45 +62,47 @@ export class SearchClient extends Component {
 			await dispatchClientsFindServer(keyword, 0, 10);
 			setKeyword(keyword);
 			await setLoading(false);
-            this.setState({
-                closeIcon : true
-            })
+			this.setState({
+				closeIcon: true
+			})
 		}
 
 		restartPage();
 	};
 
-    handleCloseButton = () => {
-		const { handleSetSearched } = this.props;
+	handleCloseButton = () => {
+		const { handleSetSearched, dispatchClearFilter } = this.props;
+		dispatchClearFilter();
 		handleSetSearched(false)
 		this.setState({
-			keyword : "",
-            closeIcon : false,
+			keyword: "",
+			closeIcon: false,
 		})
-    }
+	}
 
 	render() {
-        const { keyword, closeIcon, background} = this.state;
-		const functionButton = closeIcon ? this.handleCloseButton : this.handleSearchClient ;
-		const styleButton = !background ? STYLE_BUTTON_SEARCH_FOCUS : STYLE_BUTTON_SEARCH ;
+		const { name } = this.props;
+		const { keyword, closeIcon, background } = this.state;
+		const functionButton = closeIcon ? this.handleCloseButton : this.handleSearchClient;
+		const styleButton = !background ? STYLE_BUTTON_SEARCH_FOCUS : STYLE_BUTTON_SEARCH;
 
 		return (
-			<div style={{ width: "100%", display: "flex", justifyContent: "space-between" , marginBottom: "40px"}} >
+			<div style={{ width: "100%", display: "flex", justifyContent: "space-between", marginBottom: "40px" }} >
 				<div style={{ width: "90%" }}>
 					<input
 						className="input-lg input InputAddOn-field"
 						name="keyword"
 						type="text"
 						autoComplete="off"
-						style={{ padding: "0px 11px !important", width: "60%"}}
+						style={{ padding: "0px 11px !important", width: "60%" }}
 						placeholder={PLACEHOLDER_SEARCH_CLIENT}
 						onChange={this.handleInput}
 						onKeyPress={this.handleKeyword}
-						onFocus={() => this.setState({background : false})}
-						onBlur={() => this.setState({background : true})}
-						value={keyword}
+						onFocus={() => this.setState({ background: false })}
+						onBlur={() => this.setState({ background: true })}
+						value={name ? name : keyword}
 					/>
-					<Tooltip text={`${ closeIcon ? CLOSE_BUSQUEDA : TITLE_SEARCH_CLIENT }`}>
+					<Tooltip text={`${closeIcon ? CLOSE_BUSQUEDA : SEARCH_CLIENT}`}>
 						<button
 							id="searchClients"
 							className="btn"
@@ -94,7 +110,7 @@ export class SearchClient extends Component {
 							type="button"
 							onClick={functionButton}
 						>
-							<i className={`${closeIcon ? 'times': 'search'} icon`} style={{ margin: "0em", fontSize: "1.5em" }} />
+							<i className={`${closeIcon ? 'times' : 'search'} icon`} style={{ margin: "0em", fontSize: "1.5em" }} />
 						</button>
 					</Tooltip>
 				</div>
@@ -116,11 +132,16 @@ export class SearchClient extends Component {
 	}
 }
 
+const mapStateToProps = ({ filterDashboard }) => ({
+	name: filterDashboard.filterMode
+})
+
 const mapDispatchToProps = dispatch => bindActionCreators({
 	dispatchClientsFindServer: clientsFindServer,
 	dispatchSwtShowMessage: swtShowMessage,
-	dispatchChangeActiveItemMenu : changeActiveItemMenu,
-	dispatchUpdateTitleNavBar : updateTitleNavBar
+	dispatchChangeActiveItemMenu: changeActiveItemMenu,
+	dispatchUpdateTitleNavBar: updateTitleNavBar,
+	dispatchClearFilter: clearFilter,
 }, dispatch);
 
-export default connect(null, mapDispatchToProps)(SearchClient);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchClient);

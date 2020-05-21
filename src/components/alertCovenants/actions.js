@@ -33,7 +33,7 @@ export function covenantsFindServer(keyWordNameNit, statusCovenant, pageNum, max
     }
 }
 
-export function covenantsAlerts(pageNum, maxRows,order,columnOrder) {
+export function covenantsAlerts(pageNum, maxRows, filterClient, filterGroupId) {
     const json = {
         "messageHeader": {
             "sessionToken": window.localStorage.getItem('sessionTokenFront')
@@ -41,8 +41,10 @@ export function covenantsAlerts(pageNum, maxRows,order,columnOrder) {
         "messageBody": {
             "pageNum": pageNum,
             "maxRows": maxRows,
-            "order" : order,
-            "columnOrder" : columnOrder
+            "order" : null,
+            "columnOrder" : null,
+            filterClient,
+            filterGroupId
         }
     };
 
