@@ -46,7 +46,7 @@ class ViewDetailClient extends Component {
 
         return (
             <div>
-                {visible ? <Icon onClick={this.handleOnClick} name='users' /> : <p>{name}</p>}
+                {visible ? <Icon style= {{cursor: 'pointer'}} onClick={this.handleOnClick} name='users' /> : <p>{name}</p>}
 
                 <Modal isOpen={open} onRequestClose={this.handleCloseModal} className="modalBt4-fade modal fade contact-detail-modal in" style={{ zIndex: 100 }}>
                     <div className="modalBt4-dialog modalBt4-lg" style={{ zIndex: 100 }}>

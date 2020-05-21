@@ -2,6 +2,7 @@ import React from 'react';
 import SearchClientRedux from '../../../../../../src/components/managementView/widgets/searchClient/searchClient';
 import { SearchClient } from '../../../../../../src/components/managementView/widgets/searchClient/searchClient';
 import * as globalActions from '../../../../../../src/components/globalComponents/actions';
+import Immutable from 'immutable';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 
@@ -10,8 +11,10 @@ let dispatchChangeActiveItemMenu;
 let dispatchClientsFindServer ;
 let dispatchUpdateTitleNavBar ; 
 let dispatchSwtShowMessage ; 
+let dispatchClearFilter;
 let handleSetSearched ;
 let handleSearchClient ;
+let dispatchFilterbyClients;
 let redirectUrl;
 let setKeyword ;
 let restartPage ;
@@ -25,12 +28,21 @@ const mockStore = configureStore(middlewares) ;
 describe('Test searchClient component', () => {
 
     beforeEach(() => {
-        store = mockStore({});
+        store = mockStore({
+            filterDashboard: Immutable.Map({
+                filterMode: "",
+                criterio: "",
+                id: "",
+                title: ""
+            })
+        });
         redirectUrl = sinon.stub(globalActions, "redirectUrl"); 
         dispatchChangeActiveItemMenu = sinon.fake();
         dispatchClientsFindServer = sinon.fake();
         dispatchUpdateTitleNavBar = sinon.fake();
+        dispatchClearFilter = sinon.fake();
         dispatchSwtShowMessage = sinon.fake();
+        dispatchFilterbyClients = sinon.fake();
         handleSetSearched = sinon.fake();
         handleSearchClient = spy(sinon.fake());
         setKeyword = sinon.fake();
@@ -42,6 +54,8 @@ describe('Test searchClient component', () => {
             dispatchSwtShowMessage,
             handleSetSearched,
             dispatchUpdateTitleNavBar,
+            dispatchFilterbyClients,
+            dispatchClearFilter,
             handleSearchClient,
             setKeyword,
             restartPage

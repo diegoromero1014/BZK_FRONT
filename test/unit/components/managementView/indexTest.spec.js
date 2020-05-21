@@ -1,6 +1,7 @@
 import React from 'react';
 import { ManagementView } from '../../../../src/components/managementView';
 import ManagementViewRedux from '../../../../src/components/managementView';
+import Immutable from 'immutable';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 
@@ -19,7 +20,13 @@ describe('ManagementView Test Component', () => {
         };
 
         store = mockStore({
-            defaultProps
+            defaultProps,
+            filterDashboard : Immutable.Map({
+                filterMode : "",
+                criterio: "",
+                id: "",
+                title:""
+            })
         })
     })
 
