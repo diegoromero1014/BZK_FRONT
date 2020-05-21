@@ -23,7 +23,6 @@ import * as selectsComponent from "../../../../../src/components/selectsComponen
 import _ from "lodash";
 import Tooltip from "../../../../../src/components/toolTip/toolTipComponent";
 import ReportsHeader from "../../../../../src/components/globalComponents/reportsHeader/component";
-//import GetChildCatalogs from './../../../../../src/components/pipeline/pipelineUtilities/GetChildCatalogs';
 
 const middleWares = [thunk];
 const mockStore = configureStore(middleWares);
