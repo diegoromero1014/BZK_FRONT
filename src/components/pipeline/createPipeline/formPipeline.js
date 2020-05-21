@@ -42,15 +42,13 @@ import {
   COMMERCIAL_OPORTUNITY,
   PIPELINE_JUSTIFICATION,
   CLIENT_NEED,
-  FILTER_MULTISELECT_FIELDS,
   FILTER_TYPE_POLICY
 } from "../../selectsComponent/constants";
 import {
   BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY,
   ORIGIN_PIPELIN_BUSINESS, CURRENCY_MESSAGE, OPORTUNITIES_MANAGEMENT,
   BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO, LEASING, FINANCIAL_LEASING,
-  OPERATING_LEASE, IMPORTATION_LEASING, FACTORING, FACTORING_BANCOLOMBIA_CONFIRMING,
-  FACTORING_PLUS, TRIANGULAR_LINE, NUEVO_NEGOCIO, NEED_FINANCING,
+  OPERATING_LEASE, IMPORTATION_LEASING, NUEVO_NEGOCIO, NEED_FINANCING,
   PIPELINE_INDEXING_FIELD, PIPELINE_PENDING_DISBURSEMENT_AMOUNT, PIPELINE_TERM_IN_MONTHS_AND_VALUES,
   PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS, PRODUCT_FAMILY_LEASING, HELP_SVA
 } from "../constants";
@@ -236,7 +234,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const {
         fields: {
           nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, reviewedDate,
-          client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues, justification, pivotNit, typePolicy, justificationDetail,
+          client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets,  termInMonthsValues, justification,  typePolicy, justificationDetail,
           businessCategory2, nominalValue2
         }
       } = this.props;
@@ -657,8 +655,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const {
         fields: {
           idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, probability, nameUsuario,
-          opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, areaAssetsValue, termInMonthsValues, pendingDisbursementAmount,
-          pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen,justificationDetail, businessCategory2, nominalValue2
+          opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets,  termInMonthsValues, pendingDisbursementAmount,
+          pipelineType, commercialOportunity, justification,  typePolicy, margen,justificationDetail, businessCategory2, nominalValue2
         }, createEditPipeline, swtShowMessage, changeStateSaveData, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
       } = this.props;
 
@@ -909,16 +907,17 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           showBusinessCategory2: false
         });
         this._onChangeBusinessCategory2("");
+        businessCategory2.onChange("");
+        nominalValue2.onChange("");
       }
-      businessCategory2.onChange("");
-      nominalValue2.onChange("");
     }
 
     render() {
       const { fields: { nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, pendingDisbursementAmount,
         probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod,
-        moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity, areaAssetsValue, termInMonthsValues, justification, pivotNit, typePolicy, margen, justificationDetail, businessCategory2, nominalValue2 },
+        moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity,  termInMonthsValues, justification,
+        typePolicy, margen, justificationDetail, businessCategory2, nominalValue2 },
         selectsReducer, handleSubmit, reducerGlobal, pipelineReducer } = this.props;
 
       const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
@@ -1654,7 +1653,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       updateDisbursementPlans,
       swtShowMessage,
       consultListWithParameterUbication,
-      consultListByCatalogType,
+      dispatchConsultListByCatalogType: consultListByCatalogType,
       clearLists,
       consultDataSelect,
       setConfidential,

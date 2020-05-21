@@ -107,8 +107,7 @@ import {
     PIPELINE_PENDING_DISBURSEMENT_AMOUNT,
     PIPELINE_TERM_IN_MONTHS_AND_VALUES,
     PLACEMENTS,
-    PRODUCT_FAMILY_LEASING,
-    TRIANGULAR_LINE
+    PRODUCT_FAMILY_LEASING
 } from "../constants";
 import {addUsers, setConfidential} from "../../commercialReport/actions";
 import {buildJsoncommercialReport, fillUsersPermissions} from "../../commercialReport/functionsGenerics";
@@ -670,8 +669,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         _submitEditPipeline() {
             const { fields: {
                 idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
-                moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen, justificationDetail,
+                moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets,
+                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification,  typePolicy, margen, justificationDetail,
                 businessCategory2, nominalValue2
             }, createEditPipeline, changeStateSaveData, swtShowMessage, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
             } = this.props;
@@ -1006,9 +1005,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     showBusinessCategory2: false
                 });
                 this._onChangeBusinessCategory2("");
+                businessCategory2.onChange("");
+                nominalValue2.onChange("");
             }
-            businessCategory2.onChange("");
-            nominalValue2.onChange("");
         }
 
         renderNominalValue() {
@@ -1024,8 +1023,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const {
                 fields: { nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                     moneyDistribitionMarket, pendingDisbursementAmount, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
-                    positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                    termInMonthsValues, pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen, justificationDetail, businessCategory2, nominalValue2
+                    positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, 
+                    termInMonthsValues, pipelineType, commercialOportunity, justification,  typePolicy, margen, justificationDetail, businessCategory2, nominalValue2
                 }, selectsReducer, handleSubmit, pipelineReducer, reducerGlobal
             } = this.props;            
             const ownerDraft = pipelineReducer.get('ownerDraft');
@@ -1305,7 +1304,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue2, val, true, 2)}
                                                         onFocus={val => handleFocusValueNumber(nominalValue2, nominalValue2.value)}
                                                         disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
-                                                        onChange={val => this._changeValue(val)}
                                                     />
                                                 </div>
                                             </ToolTip>
