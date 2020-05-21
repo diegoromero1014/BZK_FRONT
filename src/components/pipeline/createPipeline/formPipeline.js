@@ -151,7 +151,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         updateValues: {},
         probabilityEnabled: false,
         areaAssetsEnabled: false,
-        //Se utilizan para controlar el componente de planes de desembolso 
+        //Se utilizan para controlar el componente de planes de desembolso
         showFormAddDisbursementPlan: false,
         disbursementPlanRequired: false,
         products: [],
@@ -159,7 +159,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         businessCategories: [],
         businessCategories2: [],
         showAlertCurrency: false,
-        messageTooltipNominalValue: '',
+        messageTooltipNominalValue: "",
         showJustificationField: false,
         detailJustificationObligatory: false,
         showProbabilityField: true,
@@ -175,7 +175,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         isFinancingNeed: false,
         showPolicyType: false,
         showBusinessCategory2: false,
-        showLocalInteresSpread2: false
+        showLocalInteresSpread2: false,
+        pipelineJustification: []
       };
 
 
@@ -542,6 +543,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _pipelineTypeAndBusinessOnChange(value){
+      const { dispatchChildren } = this.props;
+      GetChildCatalogs(value, dispatchChildren, this.setValueToState);
       let businessStatusSelectedKey = this.getBusinessStatusKey();
       let pipelineTypeSelectedKey = this.getPipelineSelectedKey(value);
       if (pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT){
@@ -1256,7 +1259,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                             {...justification}
                             name={nameJustificationPipeline}
                             parentId="dashboardComponentScroll"
-                            data={selectsReducer.get(PIPELINE_JUSTIFICATION) || []}
+                            data={this.state.pipelineJustification}
                             onChange={val => this._onChangeJustification(val)}
                         />
                       </div>
