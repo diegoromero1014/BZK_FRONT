@@ -87,9 +87,6 @@ import {
     BUSINESS_STATUS_PERDIDO,
     CATCHMENTS,
     CURRENCY_MESSAGE,
-    FACTORING,
-    FACTORING_BANCOLOMBIA_CONFIRMING,
-    FACTORING_PLUS,
     FINANCIAL_LEASING,
     HELP_PROBABILITY,
     HELP_SVA,
@@ -107,7 +104,6 @@ import {
     PIPELINE_TERM_IN_MONTHS_AND_VALUES,
     PLACEMENTS,
     PRODUCT_FAMILY_LEASING,
-    TRIANGULAR_LINE
 } from "../constants";
 import {addUsers, setConfidential} from "../../commercialReport/actions";
 import {buildJsoncommercialReport, fillUsersPermissions} from "../../commercialReport/functionsGenerics";

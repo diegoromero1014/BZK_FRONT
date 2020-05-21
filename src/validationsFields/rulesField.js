@@ -97,11 +97,10 @@ import {
 } from './validationsMessages';
 
 import {
-    REASON_TRANFER, MANAGEMENT_BRAND, PIPELINE_TYPE, CLIENT_NEED, PRODUCTS_MASK
+    REASON_TRANFER, MANAGEMENT_BRAND, PIPELINE_TYPE, CLIENT_NEED
 } from '../components/selectsComponent/constants';
 
-import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO,
-    FACTORING_BANCOLOMBIA_CONFIRMING, FACTORING_PLUS, TRIANGULAR_LINE, NEED_FINANCING } from "../components/pipeline/constants";
+import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO, NEED_FINANCING } from "../components/pipeline/constants";
 
 let globalCondition = false;
 export const setGlobalCondition = value => {
