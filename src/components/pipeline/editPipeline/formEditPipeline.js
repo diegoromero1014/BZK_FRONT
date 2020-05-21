@@ -193,7 +193,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 businessCategories2: null,
                 showPolicyType: false,
                 showBusinessCategory2: false,
-                detailJustificationObligatory: false
+                detailJustificationObligatory: false, 
+                pipelineJustification: []
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -528,8 +529,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             return "";
         }
 
-        _pipelineTypeAndBusinessOnChange(value) {        
-            const { fields: { businessStatus } } = this.props;
+        _pipelineTypeAndBusinessOnChange(value) {   
+            //tipo de pipeline     
+            const { fields: { businessStatus }, dispatchChildCatalogs } = this.props;
+            GetChildCatalogs(value, dispatchChildCatalogs, this.setValueToState);
             let businessStatusSelectedKey = null;
             let businessStatusSelected = null;
             let pipelineTypeSelectedKey = this.getPipelineSelectedKey(value);
@@ -726,7 +729,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 businessCategory2, nominalValue2
             }, createEditPipeline, changeStateSaveData, swtShowMessage, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
             } = this.props;
-
             const idPipeline = origin === ORIGIN_PIPELIN_BUSINESS ? pipelineBusiness.id : this.props.params.id;
             if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
                 this.setState({
@@ -1400,13 +1402,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                 <span>Justificación (</span><span style={{color: "red"}}>*</span>)
                                             </dt>
                                             <ComboBox
+                                                key={nameJustificationPipeline}
                                                 labelInput="Seleccione..."
                                                 valueProp={'id'}
                                                 textProp={'value'}
                                                 {...justification}
                                                 name={nameJustificationPipeline}
                                                 parentId="dashboardComponentScroll"
-                                                data={selectsReducer.get(PIPELINE_JUSTIFICATION) || []}
+                                                data={this.state.pipelineJustification}
                                                 disabled={this.state.isEditable ? '' : 'disabled'}
                                                 onChange={val => this._onChangeJustification(val)}
                                             />

@@ -545,7 +545,7 @@ export const checkRequiredPipelineJustification = (value, fields, props) => {
         businessStatusSelectedKey = businessStatusSelected ? businessStatusSelected.key.toLowerCase() : '';
     }
         
-    if(pipelineTypeSelectedKey == OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){                
+    if((pipelineTypeSelectedKey == NUEVO_NEGOCIO || pipelineTypeSelectedKey == OPORTUNITIES_MANAGEMENT) && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){                
         return checkRequired(value);
     }
 

@@ -23,4 +23,9 @@ export default async function GetChildCatalogs(parentId, dispatcher, componentSt
     if (businessCategories.length > 0) {
       componentState({businessCategories, businessCategories2: businessCategories});
     }
+
+    let pipelineJustification = data.filter((p) => p.field === "pipelineJustification");
+    if (pipelineJustification.length > 0) {
+      componentState({ pipelineJustification });
+    }
 }
