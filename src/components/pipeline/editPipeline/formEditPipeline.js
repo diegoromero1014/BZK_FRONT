@@ -52,7 +52,6 @@ import {
     FILTER_ACTIVE,
     FILTER_COUNTRY,
     FILTER_MONEY_DISTRIBITION_MARKET,
-    FILTER_MULTISELECT_FIELDS,
     FILTER_TYPE_POLICY,
     LINE_OF_BUSINESS,
     MELLOWING_PERIOD,
@@ -88,9 +87,6 @@ import {
     BUSINESS_STATUS_PERDIDO,
     CATCHMENTS,
     CURRENCY_MESSAGE,
-    FACTORING,
-    FACTORING_BANCOLOMBIA_CONFIRMING,
-    FACTORING_PLUS,
     FINANCIAL_LEASING,
     HELP_PROBABILITY,
     HELP_SVA,
@@ -107,8 +103,7 @@ import {
     PIPELINE_PENDING_DISBURSEMENT_AMOUNT,
     PIPELINE_TERM_IN_MONTHS_AND_VALUES,
     PLACEMENTS,
-    PRODUCT_FAMILY_LEASING,
-    TRIANGULAR_LINE
+    PRODUCT_FAMILY_LEASING
 } from "../constants";
 import {addUsers, setConfidential} from "../../commercialReport/actions";
 import {buildJsoncommercialReport, fillUsersPermissions} from "../../commercialReport/functionsGenerics";
@@ -724,8 +719,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         _submitEditPipeline() {
             const { fields: {
                 idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
-                moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen, justificationDetail,
+                moneyDistribitionMarket, nameUsuario, probability, opportunityName, productFamily, mellowingPeriod, areaAssets,
+                termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, typePolicy, margen, justificationDetail,
                 businessCategory2, nominalValue2
             }, createEditPipeline, changeStateSaveData, swtShowMessage, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
             } = this.props;
@@ -1077,8 +1072,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const {
                 fields: { nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                     moneyDistribitionMarket, pendingDisbursementAmount, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
-                    positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, areaAssetsValue,
-                    termInMonthsValues, pipelineType, commercialOportunity, justification, pivotNit, typePolicy, margen, justificationDetail, businessCategory2, nominalValue2
+                    positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets,
+                    termInMonthsValues, pipelineType, commercialOportunity, justification, typePolicy, margen, justificationDetail, businessCategory2, nominalValue2
                 }, selectsReducer, handleSubmit, pipelineReducer, reducerGlobal
             } = this.props;            
             const ownerDraft = pipelineReducer.get('ownerDraft');
