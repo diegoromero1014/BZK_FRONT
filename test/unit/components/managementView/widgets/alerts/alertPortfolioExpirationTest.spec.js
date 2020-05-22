@@ -5,6 +5,7 @@ import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Immutable from 'immutable';
 import * as globalActions from '../../../../../../src/components/globalComponents/actions';
+import { NAME_FILTER_CLIENTS, NAME_FILTER_RELATION } from '../../../../../../src/components/managementView/widgets/searchClient/constants';
 
 let defaultProps;
 let dispatchGetAlertPortfolioExpirationDashboard;
@@ -75,6 +76,24 @@ describe('AlertPortfolioExpiration Test', () => {
         wrapper.setState({ loading: null });
         wrapper.setProps({ idFilter: 1 });
         expect(wrapper.state().loading).to.equal(true);
+    })
+
+    it("When handleOnPageChange is instanced and filterType is NAME_FILTER_CLIENTS", async () => {
+        defaultProps.filterType = NAME_FILTER_CLIENTS;
+        const wrapper = shallow(<AlertPortfolioExpiration {...defaultProps} />);
+        wrapper.setState({ loading: null });
+        await wrapper.instance().handleOnPageChange(1);
+        sinon.assert.called(dispatchGetAlertPortfolioExpirationDashboard);
+        expect(wrapper.state().loading).to.equal(false);
+    })
+
+    it("When handleOnPageChange is instanced and filterType is NAME_FILTER_RELATION ", async () => {
+        defaultProps.filterType = NAME_FILTER_RELATION;
+        const wrapper = shallow(<AlertPortfolioExpiration {...defaultProps} />);
+        wrapper.setState({ loading: null });
+        await wrapper.instance().handleOnPageChange(1);
+        sinon.assert.called(dispatchGetAlertPortfolioExpirationDashboard);
+        expect(wrapper.state().loading).to.equal(false);
     })
 
 })

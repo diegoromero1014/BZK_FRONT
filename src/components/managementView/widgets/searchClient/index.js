@@ -73,6 +73,7 @@ export class SectionSearchClient extends Component {
                                 .setNoRowMessage(MESSAGE_NO_RESULTS)
                                 .setRecordsPerPage(10)
                                 .setStriped(true)
+                                .setSelectable(true)
                                 .setOnClick(this.handelClickClient)
                                 .setTotalRecords(rowCount)
                                 .setOnPageChange(this.currentPage)
