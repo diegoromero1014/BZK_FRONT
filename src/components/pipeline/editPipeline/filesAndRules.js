@@ -16,7 +16,8 @@ import {
     checkJustificationDetails,
     checkRegexHtmlInjection,
     checkRequiredPipelineDetailJustification,
-    checkRequiredNegotiatedAmount
+    checkRequiredNegotiatedAmount,
+    checkRequiredMellowingPeriodDate, checkRequiredMellowingPeriod
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -52,7 +53,7 @@ export const fieldsWithRules = {
     opportunityName: { rules: [checkPipeLineOpportunityName, checkFirstCharacter] },
     justificationDetail: { rules: [checkRequiredPipelineDetailJustification, checkJustificationDetails, checkFirstCharacter, checkRegexHtmlInjection, checkNumberLength(500)] },
     productFamily: { rules: [checkRequired] }, 
-    mellowingPeriod: { rules: [] }, 
+    mellowingPeriod: { rules: [checkRequiredMellowingPeriod] },
     moneyDistribitionMarket: { rules: [] }, 
     areaAssets: { rules: [] }, 
     termInMonthsValues: { rules: [checkRequiredTermInMonthsValue] },
@@ -64,7 +65,8 @@ export const fieldsWithRules = {
     typePolicy: { rules: [] },
     businessCategory2: { rules:[] },
     nominalValue2: { rules: [ checkNumberLength(15)]},
-    negotiatedAmount:{rules: [checkRequiredNegotiatedAmount,checkNumberLength(15)]}
+    negotiatedAmount:{rules: [checkRequiredNegotiatedAmount,checkNumberLength(15)]},
+    mellowingPeriodDate: {rules: [checkRequiredMellowingPeriodDate]}
 
 }
 
