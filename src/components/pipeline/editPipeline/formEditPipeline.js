@@ -29,7 +29,8 @@ import {
     consultListByCatalogType,
     consultListWithParameterUbication,
     getClientNeeds,
-    getMasterDataFields
+    getMasterDataFields,
+    dispatchChildCatalogs
 } from "../../selectsComponent/actions";
 import {createEditPipeline, getPipelineById, pdfDescarga, updateDisbursementPlans} from "../actions";
 import {
@@ -116,6 +117,7 @@ import Classification from '../sections/classification';
 import '../pipeline.style.scss';
 import TextareaComponent from "../../../ui/textarea/textareaComponent";
 import ReportsHeader from "../../globalComponents/reportsHeader/component";
+import GetChildCatalogs from './../pipelineUtilities/GetChildCatalogs';
 
 let thisForm;
 let typeButtonClick = null;
@@ -189,7 +191,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 businessCategories: null,
                 businessCategories2: null,
                 showPolicyType: false,
-                showBusinessCategory2: false
+                showBusinessCategory2: false,
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -225,7 +227,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this.renderNominalValue = this.renderNominalValue.bind(this);
             this._showAlertFinancingAndPlan = this._showAlertFinancingAndPlan.bind(this);
             this._changeNeedsClient = this._changeNeedsClient.bind(this);
-            this._changeCatalogProductFamily = this._changeCatalogProductFamily.bind(this);
             this.showMessageChangeClientNeed = this.showMessageChangeClientNeed.bind(this);
             this._cleanFieldsOfClientNeed = this._cleanFieldsOfClientNeed.bind(this);
             this._closeCancelConfirmChanNeed = this._closeCancelConfirmChanNeed.bind(this);
@@ -371,23 +372,21 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._pipelineTypeAndBusinessOnChange(pipelineType.value);
         }
 
+        setValueToState = (args) => {
+            this.setState(args);
+        }
         _changeProductFamily(currencyValue) {
-            const { fields: { areaAssets, productFamily, product, businessCategory }, pipelineReducer, selectsReducer } = this.props;   
-            const productsByFamily = selectsReducer.get(PRODUCTS_MASK).filter(p => p.parentId == currencyValue);                                              
+            const { fields: { areaAssets, productFamily, product, businessCategory }, pipelineReducer, dispatchChildren } = this.props;   
+            GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);
+            
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
             }             
             
-            this.setState({
-                products: productsByFamily
-            });
-
             if (!_.isEqual(pipelineReducer.get('detailPipeline').productFamily, productFamily.value)) {
                 product.onChange('');
             }
             
-            this.loadCategories(currencyValue);
-
             if (!_.isEqual(pipelineReducer.get('detailPipeline').productFamily, productFamily.value)) {
                 businessCategory.onChange('');
             }
@@ -401,7 +400,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeProduct(value){                         
-            const { fields: { productFamily }, selectsReducer } = this.props;
+            const { fields: { productFamily }, selectsReducer, dispatchChildren } = this.props;
+            GetChildCatalogs(value, dispatchChildren, this.setValueToState);
             let productFamilySelected = selectsReducer.get(ALL_PRODUCT_FAMILIES).find((family) => family.id == productFamily.value);
             let products = selectsReducer.get(PRODUCTS_MASK);
             let productSelected = products.find((product) => product.id == value);            
@@ -448,8 +448,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
         }
 
-        _onChangeBusinessCategory(val) {                                                        
-            this.showInteresSpreadField(val);                                
+        _onChangeBusinessCategory(val) {
+            this.showInteresSpreadField(val);                                   
           }
 
         _onChangeBusinessCategory2(val){
@@ -575,7 +575,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeNeedsClient() {
-            const { pipelineReducer, fields: { need }, selectsReducer } = this.props;
+            const { pipelineReducer, fields: { need }, selectsReducer, dispatchChildren } = this.props;
             let needSelectedKey = null;
             let needSelected = null;
             if(need.value != ''){
@@ -595,7 +595,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
 
             if((newValueIsFinancing && !this.state.isFinancingNeed) || (!newValueIsFinancing && !this.state.isFinancingNeed)) {
-                this._changeCatalogProductFamily(need.value);
+                GetChildCatalogs(need.value, dispatchChildren, this.setValueToState);
+                this.validateDetailPipeline();
             }
 
             if (newValueIsFinancing) {
@@ -604,13 +605,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
         }
 
-        _changeCatalogProductFamily(currencyValue){
-            const { fields: { need, productFamily }, consultListByCatalogType, pipelineReducer } = this.props;
-            consultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "productFamily").then((data) => {
-                this.setState({
-                    productsFamily: _.get(data, 'payload.data.data', [])
-                });
-              });
+        validateDetailPipeline = () => {
+            const { fields: { need, productFamily }, pipelineReducer } = this.props;
               if (!_.isEqual(pipelineReducer.get('detailPipeline').need, need.value)) {
                 productFamily.onChange('');
               }
@@ -644,13 +640,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _closeConfirmChangeNeed() {
-            const {fields: { need }} = this.props;
+            const {fields: { need }, dispatchChildren} = this.props;
+            GetChildCatalogs(need.value, dispatchChildren, this.setValueToState);
             this._validateShowFinancingNeedFields(false);
             this.setState({
                 showConfirmChangeNeed: false,
                 isFinancingNeed: false
             });
-            this._changeCatalogProductFamily(need.value);
+            this.validateDetailPipeline();
             this._cleanFieldsOfClientNeed();
         }
 
@@ -925,19 +922,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 businessCategory2.onChange(businessCategory2Value);
                 nominalValue2.onChange(fomatInitialStateNumber(nominalValue2Value));
             }
-        }
-
-
-        loadCategories(productFamily){
-            const {consultListByCatalogType} = this.props;                     
-            consultListByCatalogType(BUSINESS_CATEGORY, productFamily, "businessCategory").then((data) => {                                
-                const businessCategories = _.get(data, 'payload.data.data', []);
-                const businessCategories2 = _.get(data, 'payload.data.data', []);
-                this.setState({
-                    businessCategories,
-                    businessCategories2
-                });
-            });
         }
 
         componentWillMount() {
@@ -1957,7 +1941,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             consultListByCatalogType,
             consultDataSelect,
             addUsers,
-            setConfidential
+            setConfidential,
+            dispatchChildren: dispatchChildCatalogs
         }, dispatch);
     }
 
