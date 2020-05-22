@@ -44,7 +44,7 @@ import {
   CLIENT_NEED,
   FILTER_MULTISELECT_FIELDS,
   FILTER_TYPE_POLICY,
-  PRODUCT_FAMILY
+  PRODUCT_FAMILY,ALL_PRODUCT_FAMILIES
 } from "../../selectsComponent/constants";
 import {
   BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY,
@@ -911,9 +911,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY,
           PIPELINE_TYPE, COMMERCIAL_OPORTUNITY, PIPELINE_JUSTIFICATION, CLIENT_NEED, FILTER_TYPE_POLICY]);
 
-        consultDataSelect(PRODUCTS, PRODUCT_FAMILY);
-
-        consultDataSelect(PRODUCTS, PRODUCTS_MASK);        
+        Promise.all([ consultDataSelect(PRODUCTS), consultDataSelect(PRODUCT_FAMILY, ALL_PRODUCT_FAMILIES), consultDataSelect(PRODUCTS, PRODUCTS_MASK)]);        
 
         consultParameterServer(LAST_PIPELINE_REVIEW).then((data) => {
           if (data.payload.data.data !== null && data.payload.data.data !== "" && data.payload.data.data !== undefined) {

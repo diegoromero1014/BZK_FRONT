@@ -45,7 +45,7 @@ export const fieldsWithRules = {
     typePolicy: { rules: [] },
     businessCategory2: { rules: [] },
     nominalValue2:{ rules: [checkNumberLength(15)] },
-    negotiatedAmount:{rules: [checkNumberLength(15)]  }
+    negotiatedAmount:{rules: [checkRequiredNegotiatedAmount,checkNumberLength(15)]  }
 }
 
 export const fields = _.keys(fieldsWithRules);

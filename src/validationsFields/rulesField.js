@@ -97,7 +97,7 @@ import {
 } from './validationsMessages';
 
 import {
-    REASON_TRANFER, MANAGEMENT_BRAND, PIPELINE_TYPE, CLIENT_NEED, PRODUCTS_MASK,PRODUCT_FAMILY
+    REASON_TRANFER, MANAGEMENT_BRAND, PIPELINE_TYPE, CLIENT_NEED, PRODUCTS_MASK,PRODUCT_FAMILY,ALL_PRODUCT_FAMILIES
 } from '../components/selectsComponent/constants';
 
 import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO,
@@ -913,21 +913,17 @@ export const validateDecimal = (valor) => {
 };
 
 export const checkRequiredNegotiatedAmount = (value, fields, props) => { 
-    const productFamily = props.selectsReducer.get(PRODUCT_FAMILY);
-
+    const productFamily = props.selectsReducer.get(ALL_PRODUCT_FAMILIES);
     let productFamilySelected = null;
     let productFamilySelectedKey = null;
-
     
     if(productFamily){
         productFamilySelected = productFamily.find((values) => values.id == fields.productFamily);      
-        productFamilySelectedKey = productFamilySelected ? productFamilySelected.key.toLowerCase() : '';
+        productFamilySelectedKey = productFamilySelected ? productFamilySelected.key : '';
     }    
     
-
     if(productFamilySelectedKey == NEGOTIATED_AMOUNT_VALUES){                
         return checkRequired(value);
     }
-
     return null;
 }

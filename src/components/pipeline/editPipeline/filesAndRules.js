@@ -5,7 +5,7 @@ import {
     checkOnlyAlphabetical, checkPipeLineOpportunityName,
     checkFirstCharacter, checkNumberLength, checkRequiredPipelineJustification,
     checkRequiredComercialOportunity, checkRequiredTermInMonths,
-    checkRequiredTermInMonthsValue, validateDecimal, checkJustificationDetails, checkRegexHtmlInjection
+    checkRequiredTermInMonthsValue, validateDecimal, checkJustificationDetails, checkRegexHtmlInjection,checkRequiredNegotiatedAmount
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -53,7 +53,7 @@ export const fieldsWithRules = {
     typePolicy: { rules: [] },
     businessCategory2: { rules:[] },
     nominalValue2: { rules: [ checkNumberLength(15)]},
-    negotiatedAmount:{rules: [checkNumberLength(15)]}
+    negotiatedAmount:{rules: [checkRequiredNegotiatedAmount,checkNumberLength(15)]}
 
 }
 
