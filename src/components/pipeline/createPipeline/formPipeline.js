@@ -20,7 +20,7 @@ import { changeModalIsOpen, createEditPipeline, updateDisbursementPlans, changeM
 import { filterUsersBanco } from "../../participantsVisitPre/actions";
 import { changeStateSaveData } from "../../main/actions";
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { clearLists, consultDataSelect, consultListWithParameterUbication, getClientNeeds, getMasterDataFields, consultListByCatalogType } from "../../selectsComponent/actions";
+import { clearLists, consultDataSelect, consultListWithParameterUbication, getClientNeeds, getMasterDataFields, consultListByCatalogType, dispatchChildCatalogs } from "../../selectsComponent/actions";
 import { consultParameterServer, formValidateKeyEnter, handleBlurValueNumber, handleFocusValueNumber, nonValidateEnter } from "../../../actionsGlobal";
 
 import {
@@ -42,16 +42,33 @@ import {
   COMMERCIAL_OPORTUNITY,
   PIPELINE_JUSTIFICATION,
   CLIENT_NEED,
-  FILTER_MULTISELECT_FIELDS,
   FILTER_TYPE_POLICY
 } from "../../selectsComponent/constants";
 import {
-  BUSINESS_STATUS_COMPROMETIDO, BUSINESS_STATUS_COTIZACION, HELP_PROBABILITY,
-  ORIGIN_PIPELIN_BUSINESS, CURRENCY_MESSAGE, OPORTUNITIES_MANAGEMENT,
-  BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO, LEASING, FINANCIAL_LEASING,
-  OPERATING_LEASE, IMPORTATION_LEASING, NUEVO_NEGOCIO, NEED_FINANCING,
-  PIPELINE_INDEXING_FIELD, PIPELINE_PENDING_DISBURSEMENT_AMOUNT, PIPELINE_TERM_IN_MONTHS_AND_VALUES,
-  PIPELINE_NEED_CLIENT, PIPELINE_DISBURSEMENT_PLAN_MESSAGE, PLACEMENTS, CATCHMENTS, PRODUCT_FAMILY_LEASING, HELP_SVA
+  BUSINESS_STATUS_COMPROMETIDO,
+  BUSINESS_STATUS_COTIZACION,
+  HELP_PROBABILITY,
+  ORIGIN_PIPELIN_BUSINESS,
+  CURRENCY_MESSAGE,
+  OPORTUNITIES_MANAGEMENT,
+  BUSINESS_STATUS_PERDIDO,
+  BUSINESS_STATUS_NO_CONTACTADO,
+  LEASING,
+  FINANCIAL_LEASING,
+  OPERATING_LEASE,
+  IMPORTATION_LEASING,
+  NUEVO_NEGOCIO,
+  NEED_FINANCING,
+  PIPELINE_INDEXING_FIELD,
+  PIPELINE_PENDING_DISBURSEMENT_AMOUNT,
+  PIPELINE_TERM_IN_MONTHS_AND_VALUES,
+  PIPELINE_NEED_CLIENT,
+  PIPELINE_DISBURSEMENT_PLAN_MESSAGE,
+  PLACEMENTS,
+  CATCHMENTS,
+  PRODUCT_FAMILY_LEASING,
+  HELP_SVA,
+  OTHER_JUSTIFICATION
 } from "../constants";
 import {
   ALLOWS_NEGATIVE_INTEGER,
@@ -75,6 +92,7 @@ import { buildJsoncommercialReport } from "../../commercialReport/functionsGener
 import { setConfidential } from "../../commercialReport/actions";
 import TextareaComponent from "../../../ui/textarea/textareaComponent";
 import ReportsHeader from "../../globalComponents/reportsHeader/component";
+import GetChildCatalogs from './../pipelineUtilities/GetChildCatalogs';
 
 let thisForm;
 let typeMessage = "success";
@@ -128,7 +146,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         updateValues: {},
         probabilityEnabled: false,
         areaAssetsEnabled: false,
-        //Se utilizan para controlar el componente de planes de desembolso 
+        //Se utilizan para controlar el componente de planes de desembolso
         showFormAddDisbursementPlan: false,
         disbursementPlanRequired: false,
         products: [],
@@ -136,8 +154,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         businessCategories: [],
         businessCategories2: [],
         showAlertCurrency: false,
-        messageTooltipNominalValue: '',
+        messageTooltipNominalValue: "",
         showJustificationField: false,
+        detailJustificationObligatory: false,
         showProbabilityField: true,
         showMellowingPeriodField: true,
         pipelineStatus: [],
@@ -151,7 +170,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         isFinancingNeed: false,
         showPolicyType: false,
         showBusinessCategory2: false,
-        showLocalInteresSpread2: false
+        showLocalInteresSpread2: false,
+        pipelineJustification: []
       };
 
 
@@ -185,7 +205,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.setPipelineStatusValues = this.setPipelineStatusValues.bind(this);
       this._showAlertFinancingAndPlan = this._showAlertFinancingAndPlan.bind(this);
       this._changeNeedsClient = this._changeNeedsClient.bind(this);
-      this._changeCatalogProductFamily = this._changeCatalogProductFamily.bind(this);
       this.showMessageChangeClientNeed = this.showMessageChangeClientNeed.bind(this);
       this._cleanFieldsOfClientNeed = this._cleanFieldsOfClientNeed.bind(this);
       this._closeCancelConfirmChanNeed = this._closeCancelConfirmChanNeed.bind(this);
@@ -198,8 +217,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._nameDisbursementPlansInReducer = this._nameDisbursementPlansInReducer.bind(this);
       this._handleBlurValueNumber = this._handleBlurValueNumber.bind(this);
       this._showBusinessCategory2 = this._showBusinessCategory2.bind(this);
+      this._showJustificationsDetail = this._showJustificationsDetail.bind(this);
+      this._justificationObligatoryField = this._justificationObligatoryField.bind(this);
+      this._onChangeJustification = this._onChangeJustification.bind(this);
     }
 
+    setValueToState = (args) => {
+      this.setState(args);
+    }
     showFormDisbursementPlan(isOpen) {
       this.setState({
         showFormAddDisbursementPlan: isOpen,
@@ -232,7 +257,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const {
         fields: {
           nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, reviewedDate,
-          client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets,  termInMonthsValues, justification,  typePolicy, justificationDetail,
+          client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, termInMonthsValues, justification, typePolicy, justificationDetail,
           businessCategory2, nominalValue2
         }
       } = this.props;
@@ -362,22 +387,15 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeProductFamily(currencyValue) {
-      const { fields: { areaAssets, product, businessCategory, businessCategory2 }, dispatchConsultListByCatalogType } = this.props;
+      const {
+        fields: { areaAssets, product, businessCategory, businessCategory2 },
+        dispatchChildren,
+      } = this.props;
+      
+      GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);
+      
       areaAssets.onChange('');
-
-      dispatchConsultListByCatalogType(PRODUCTS, currencyValue, "products").then((data) => {
-        this.setState({
-          products: _.get(data, 'payload.data.data', [])
-        });
-      });
       product.onChange('');
-
-      dispatchConsultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "businessCategory").then((data) => {
-          this.setState({
-              businessCategories: _.get(data, 'payload.data.data', []),
-              businessCategories2: _.get(data, 'payload.data.data', [])
-          });
-      });
       this.showTypePolicy();
       businessCategory.onChange('');
       businessCategory2.onChange('');
@@ -408,7 +426,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeProduct(value) {
-      const { fields: { productFamily } } = this.props;
+      const { fields: { productFamily }, dispatchChildren } = this.props;
+      GetChildCatalogs(value, dispatchChildren, this.setValueToState);
       let productFamilySelected = this.state.productsFamily.find((family) => family.id == productFamily.value);
       let products = this.state.products;
       let productSelected = products.find((product) => product.id == value);
@@ -519,9 +538,15 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _pipelineTypeAndBusinessOnChange(value){
+      const { dispatchChildren } = this.props;
+      GetChildCatalogs(value, dispatchChildren, this.setValueToState);
       let businessStatusSelectedKey = this.getBusinessStatusKey();
       let pipelineTypeSelectedKey = this.getPipelineSelectedKey(value);
-      this._validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey);
+      if (pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT){
+        this._validateShowJustificationProbabilityAndMellowingPeriodFields( businessStatusSelectedKey);
+      }else if (pipelineTypeSelectedKey === NUEVO_NEGOCIO){
+        this._showJustificationsDetail(businessStatusSelectedKey);
+      }
     }
 
     setPipelineStatusValues(pipelineTypeSelectedKey, businessStatusSelectedKey) {
@@ -545,9 +570,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       return businessStatusList.find((status) => status.id == id);
     }
 
-    _validateShowJustificationProbabilityAndMellowingPeriodFields(pipelineTypeSelectedKey, businessStatusSelectedKey){
+    _validateShowJustificationProbabilityAndMellowingPeriodFields( businessStatusSelectedKey ){
       const { fields: {justification, justificationDetail} } = this.props;
-      if(pipelineTypeSelectedKey === OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){
+      if(businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO){
         this.setState({
           showMellowingPeriodField: false,
           showProbabilityField: false,
@@ -564,12 +589,51 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       justificationDetail.onChange("");
     }
 
+    _showJustificationsDetail(businessStatusSelectedKey){
+      const { fields: {justification, justificationDetail} } = this.props;
+      if(businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO){
+        this.setState({
+          showJustificationField: true
+        })
+      }else{
+        this.setState({
+          showJustificationField: false
+        })
+      }
+      justification.onChange("");
+      justificationDetail.onChange("");
+    }
+
+    _onChangeJustification(value){
+      this._justificationObligatoryField(value);
+    }
+
+    _justificationObligatoryField(value){
+      const { fields:{pipelineType}, selectsReducer } = this.props;
+      let pipelineTypeSelectedKey = this.getPipelineSelectedKey(pipelineType.value);
+      const justificationsTypes = selectsReducer.get(PIPELINE_JUSTIFICATION);
+      let justificationsTypeSelectedKey = null;
+      if(justificationsTypes){
+        let justificationsTypeSelected = justificationsTypes.find((justificationsType) => justificationsType.id == value);
+        justificationsTypeSelectedKey = justificationsTypeSelected ? justificationsTypeSelected.key.toLowerCase() : '';
+      }
+      if(pipelineTypeSelectedKey === NUEVO_NEGOCIO && justificationsTypeSelectedKey === OTHER_JUSTIFICATION){
+        this.setState({
+          detailJustificationObligatory:true
+        })
+      }else{
+        this.setState({
+          detailJustificationObligatory:false
+        })
+      }
+    }
+
   _showAlertFinancingAndPlan(isEditableValue) {
       this.setState({ showAlertFinancingAndPlan: isEditableValue });
   }
 
   _changeNeedsClient() {
-      const { pipelineReducer, fields: { need }, selectsReducer } = this.props;
+      const { pipelineReducer, fields: { need, productFamily }, selectsReducer, dispatchChildren } = this.props;
       let needSelectedKey = null;
       let needSelected = null;
       let newValueIsFinancing = null;
@@ -591,23 +655,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       }
 
       if((newValueIsFinancing && !this.state.isFinancingNeed) || (!newValueIsFinancing && !this.state.isFinancingNeed)) {
-          this._changeCatalogProductFamily(need.value);
+          GetChildCatalogs(need.value, dispatchChildren, this.setValueToState);
+          productFamily.onChange("");
       }
 
       if (newValueIsFinancing) {
           this.setState({isFinancingNeed: true});
           this._validateShowFinancingNeedFields(true);
       }
-  }
-
-  _changeCatalogProductFamily(currencyValue){
-      const { fields: { productFamily }, dispatchConsultListByCatalogType } = this.props;
-    dispatchConsultListByCatalogType(FILTER_MULTISELECT_FIELDS, currencyValue, "productFamily").then((data) => {
-          this.setState({
-              productsFamily: _.get(data, 'payload.data.data', [])
-          });
-        });
-        productFamily.onChange('');
   }
 
   showMessageChangeClientNeed() {
@@ -638,13 +693,14 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   }
 
   _closeConfirmChangeNeed() {
-      const {fields: { need }} = this.props;
+      const {fields: { need, productFamily }, dispatchChildren} = this.props;
       this._validateShowFinancingNeedFields(false);
       this.setState({
           showConfirmChangeNeed: false,
           isFinancingNeed: false
       });
-      this._changeCatalogProductFamily(need.value);
+      GetChildCatalogs(need.value, dispatchChildren, this.setValueToState);
+      productFamily.onChange("");
       this._cleanFieldsOfClientNeed();
   }
 
@@ -667,8 +723,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const {
         fields: {
           idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, probability, nameUsuario,
-          opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets,  termInMonthsValues, pendingDisbursementAmount,
-          pipelineType, commercialOportunity, justification,  typePolicy, margen,justificationDetail, businessCategory2, nominalValue2
+          opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, termInMonthsValues, pendingDisbursementAmount,
+          pipelineType, commercialOportunity, justification, typePolicy, margen,justificationDetail, businessCategory2, nominalValue2
         }, createEditPipeline, swtShowMessage, changeStateSaveData, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
       } = this.props;
 
@@ -1167,8 +1223,26 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 </Col>
               </Row>
               : null }
-              {this.state.showJustificationField ?
                   <Row style={{padding: "0px 10px 20px 20px"}}>
+                    <Col xs={6} md={3} lg={3}>
+                      <div style={{paddingRight: "15px"}}>
+                        <dt>
+                          <span>Estado del negocio (</span><span style={{color: "red"}}>*</span>)
+                        </dt>
+                        <ComboBox
+                            labelInput="Seleccione..."
+                            valueProp={'id'}
+                            textProp={'value'}
+                            {...businessStatus}
+                            name={nameBusinessStatus}
+                            parentId="dashboardComponentScroll"
+                            data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
+                            onChange={val => this._changeBusinessStatus(val)}
+                            filterData={true}
+                        />
+                      </div>
+                    </Col>
+              {this.state.showJustificationField ?
                     <Col xs={12} md={6} lg={6}>
                       <div style={{paddingRight: "15px"}}>
                         <dt>
@@ -1181,18 +1255,20 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                             {...justification}
                             name={nameJustificationPipeline}
                             parentId="dashboardComponentScroll"
-                            data={selectsReducer.get(PIPELINE_JUSTIFICATION) || []}
+                            data={this.state.pipelineJustification}
+                            onChange={val => this._onChangeJustification(val)}
                         />
                       </div>
                     </Col>
-                  </Row>
                   : null}
+                  </Row>
               {this.state.showJustificationField ?
                   <Row style={{padding: "0px 10px 20px 20px"}}>
                     <Col xs={12} md={6} lg={6}>
                       <div style={{paddingRight: "15px"}}>
                         <dt>
                           <span>Detalle justificación </span>
+                          {this.state.detailJustificationObligatory ? <span>(<span style={{color: "red"}}>*</span>)</span> : ''}
                         </dt>
                         <TextareaComponent
                             name="txtJustificationDetail"
@@ -1207,24 +1283,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                   </Row>
                   : null}
               <Row style={{padding: "0px 10px 20px 20px"}}>
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{paddingRight: "15px"}}>
-                    <dt>
-                      <span>Estado del negocio (</span><span style={{color: "red"}}>*</span>)
-                    </dt>
-                    <ComboBox
-                        labelInput="Seleccione..."
-                        valueProp={'id'}
-                        textProp={'value'}
-                        {...businessStatus}
-                        name={nameBusinessStatus}
-                        parentId="dashboardComponentScroll"
-                        data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
-                        onChange={val => this._changeBusinessStatus(val)}
-                        filterData={true}
-                    />
-                  </div>
-                </Col>
               {this.state.showMellowingPeriodField ?
                     <Col xs={6} md={3} lg={3}>
                       <div style={{paddingRight: "15px"}}>
@@ -1669,7 +1727,8 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       clearLists,
       consultDataSelect,
       setConfidential,
-      changeMainPipeline
+      changeMainPipeline,
+      dispatchChildren: dispatchChildCatalogs
     }, dispatch);
   }
 
