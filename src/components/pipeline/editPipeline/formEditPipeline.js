@@ -1054,9 +1054,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     showBusinessCategory2: false
                 });
                 this._onChangeBusinessCategory2("");
+                businessCategory2.onChange("");
+                nominalValue2.onChange("");
             }
-            businessCategory2.onChange("");
-            nominalValue2.onChange("");
         }
 
         renderNominalValue() {
@@ -1353,7 +1353,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                         onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue2, val, true, 2)}
                                                         onFocus={val => handleFocusValueNumber(nominalValue2, nominalValue2.value)}
                                                         disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
-                                                        onChange={val => this._changeValue(val)}
                                                     />
                                                 </div>
                                             </ToolTip>

@@ -23,7 +23,11 @@ describe('CovenantAlert Test', () => {
             alertCovenant: Immutable.Map({ 
                 responseCovenants: null, 
                 totalCovenantsByFiltered: null
-            })
+            }),
+            filterDashboard: {
+                id: null,
+                criterio: null
+            }
         });
     })
 

@@ -975,16 +975,17 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           showBusinessCategory2: false
         });
         this._onChangeBusinessCategory2("");
+        businessCategory2.onChange("");
+        nominalValue2.onChange("");
       }
-      businessCategory2.onChange("");
-      nominalValue2.onChange("");
     }
 
     render() {
       const { fields: { nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus,
         businessCategory, currency, indexing, need, observations, product, pendingDisbursementAmount,
         probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod,
-        moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity, termInMonthsValues, justification, typePolicy, margen, justificationDetail, businessCategory2, nominalValue2 },
+        moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity,  termInMonthsValues, justification,
+        typePolicy, margen, justificationDetail, businessCategory2, nominalValue2 },
         selectsReducer, handleSubmit, reducerGlobal, pipelineReducer } = this.props;
 
       const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
@@ -1722,7 +1723,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       updateDisbursementPlans,
       swtShowMessage,
       consultListWithParameterUbication,
-      consultListByCatalogType,
+      dispatchConsultListByCatalogType: consultListByCatalogType,
       clearLists,
       consultDataSelect,
       setConfidential,
