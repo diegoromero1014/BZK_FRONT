@@ -376,8 +376,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this.setState(args);
         }
         _changeProductFamily(currencyValue) {
-            const { fields: { areaAssets, productFamily, product, businessCategory }, pipelineReducer, dispatchChildCatalogs } = this.props;   
-            GetChildCatalogs(currencyValue, dispatchChildCatalogs, this.setValueToState);
+            const { fields: { areaAssets, productFamily, product, businessCategory }, pipelineReducer, dispatchChildren } = this.props;   
+            GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);
             
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
@@ -400,8 +400,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeProduct(value){                         
-            const { fields: { productFamily }, selectsReducer, dispatchChildCatalogs } = this.props;
-            GetChildCatalogs(value, dispatchChildCatalogs, this.setValueToState);
+            const { fields: { productFamily }, selectsReducer, dispatchChildren } = this.props;
+            GetChildCatalogs(value, dispatchChildren, this.setValueToState);
             let productFamilySelected = selectsReducer.get(ALL_PRODUCT_FAMILIES).find((family) => family.id == productFamily.value);
             let products = selectsReducer.get(PRODUCTS_MASK);
             let productSelected = products.find((product) => product.id == value);            
@@ -575,7 +575,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _changeNeedsClient() {
-            const { pipelineReducer, fields: { need }, selectsReducer, dispatchChildCatalogs } = this.props;
+            const { pipelineReducer, fields: { need }, selectsReducer, dispatchChildren } = this.props;
             let needSelectedKey = null;
             let needSelected = null;
             if(need.value != ''){
@@ -595,7 +595,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
 
             if((newValueIsFinancing && !this.state.isFinancingNeed) || (!newValueIsFinancing && !this.state.isFinancingNeed)) {
-                GetChildCatalogs(need.value, dispatchChildCatalogs, this.setValueToState);
+                GetChildCatalogs(need.value, dispatchChildren, this.setValueToState);
                 this.validateDetailPipeline();
             }
 
@@ -640,8 +640,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _closeConfirmChangeNeed() {
-            const {fields: { need }, dispatchChildCatalogs} = this.props;
-            GetChildCatalogs(need.value, dispatchChildCatalogs, this.setValueToState);
+            const {fields: { need }, dispatchChildren} = this.props;
+            GetChildCatalogs(need.value, dispatchChildren, this.setValueToState);
             this._validateShowFinancingNeedFields(false);
             this.setState({
                 showConfirmChangeNeed: false,
@@ -1942,7 +1942,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             consultDataSelect,
             addUsers,
             setConfidential,
-            dispatchChildCatalogs
+            dispatchChildren: dispatchChildCatalogs
         }, dispatch);
     }
 
