@@ -97,11 +97,11 @@ import {
 } from './validationsMessages';
 
 import {
-    REASON_TRANFER, MANAGEMENT_BRAND, PIPELINE_TYPE, CLIENT_NEED, PRODUCTS_MASK
+    REASON_TRANFER, MANAGEMENT_BRAND, PIPELINE_TYPE, CLIENT_NEED, PRODUCTS_MASK,PRODUCT_FAMILY
 } from '../components/selectsComponent/constants';
 
 import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO,
-    FACTORING_BANCOLOMBIA_CONFIRMING, FACTORING_PLUS, TRIANGULAR_LINE, NEED_FINANCING } from "../components/pipeline/constants";
+    FACTORING_BANCOLOMBIA_CONFIRMING, FACTORING_PLUS, TRIANGULAR_LINE, NEED_FINANCING, NEGOTIATED_AMOUNT_VALUES } from "../components/pipeline/constants";
 
 let globalCondition = false;
 export const setGlobalCondition = value => {
@@ -911,3 +911,23 @@ export const validateDecimal = (valor) => {
     }
     return message;
 };
+
+export const checkRequiredNegotiatedAmount = (value, fields, props) => { 
+    const productFamily = props.selectsReducer.get(PRODUCT_FAMILY);
+
+    let productFamilySelected = null;
+    let productFamilySelectedKey = null;
+
+    
+    if(productFamily){
+        productFamilySelected = productFamily.find((values) => values.id == fields.productFamily);      
+        productFamilySelectedKey = productFamilySelected ? productFamilySelected.key.toLowerCase() : '';
+    }    
+    
+
+    if(productFamilySelectedKey == NEGOTIATED_AMOUNT_VALUES){                
+        return checkRequired(value);
+    }
+
+    return null;
+}

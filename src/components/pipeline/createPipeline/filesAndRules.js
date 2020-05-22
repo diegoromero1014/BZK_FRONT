@@ -6,7 +6,7 @@ import {
     checkFirstCharacter, checkNumberLength,
     checkRequiredPipelineJustification,
     checkRequiredComercialOportunity, checkRequiredTermInMonths,
-    checkRequiredTermInMonthsValue, validateDecimal, checkJustificationDetails, checkRegexHtmlInjection
+    checkRequiredTermInMonthsValue, validateDecimal, checkJustificationDetails, checkRegexHtmlInjection,checkRequiredNegotiatedAmount
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -44,7 +44,8 @@ export const fieldsWithRules = {
     margen:{rules: [validateDecimal]},
     typePolicy: { rules: [] },
     businessCategory2: { rules: [] },
-    nominalValue2:{ rules: [checkNumberLength(15)] }
+    nominalValue2:{ rules: [checkNumberLength(15)] },
+    negotiatedAmount:{rules: [checkNumberLength(15)]  }
 }
 
 export const fields = _.keys(fieldsWithRules);

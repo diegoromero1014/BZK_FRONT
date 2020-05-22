@@ -45,3 +45,4 @@ export const PIPELINE_PENDING_DISBURSEMENT_AMOUNT = 'Pendiente por desembolsar';
 export const PIPELINE_TERM_IN_MONTHS_AND_VALUES = 'Plazo de la operación';
 export const PIPELINE_DISBURSEMENT_PLAN = 'Plan de desembolso';
 export const PIPELINE_NEED_CLIENT = 'Necesidad del cliente';
+export const NEGOTIATED_AMOUNT_VALUES = 'Valores';

@@ -881,4 +881,49 @@ describe("Test CreatePipelineChildren", () => {
       expect(wrapper.state().businessCategories.value).to.equal("Captación");
     }, 1 );
   });
+
+  it('Show negotiatedAmount when showNegotiatedAmountField is true', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+      
+      wrapper.instance()._changeProductFamily(1);
+      expect(wrapper.find(Input).find({name:'negotiatedAmount'})).to.have.length(1);
+  });
+
+  it('Hide negotiatedAmount when showNegotiatedAmountField is false', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+      wrapper.instance()._changeProductFamily(1);
+      expect(wrapper.find(Input).find({name:'negotiatedAmount'})).to.have.length(0);
+  });
+
+  it('Show negotiatedAmount when showNegotiatedAmountField is true formPipeline/pipelineChild', () => {
+    const wrapper = shallow(<PipelineComponentChildren store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+      wrapper.instance()._changeProductFamily(1);
+      expect(wrapper.find(Input).find({name:'negotiatedAmount'})).to.have.length(1);
+  });
+
+  it('Hide negotiatedAmount when showNegotiatedAmountField is false formPipeline/pipelineChild', () => {
+    const wrapper = shallow(<PipelineComponentChildren store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+      wrapper.instance()._changeProductFamily(1);
+      expect(wrapper.find(Input).find({name:'negotiatedAmount'})).to.have.length(0);
+  });
+  
 });
