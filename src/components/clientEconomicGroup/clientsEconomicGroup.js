@@ -76,7 +76,7 @@ class clientsEconomicGroup extends Component {
   }
 
   render() {
-    const { dataName, dataDocumentType, dataDocument, dataEconomicGroup, dataAccountManager, dataIsProspect, dataIsAccess, clientInformacion } = this.props;
+    const { dataName, dataDocumentType, dataDocument, dataAccountManager, dataIsProspect, dataIsAccess, clientInformacion } = this.props;
     const haveAccessEdit = _.get(clientInformacion.get('responseClientInfo'), 'haveAccessEdit', false);
     return (
       <div className="client-card" style={{ width: "265px", float: "left", cursor: 'auto' }}>

@@ -45,7 +45,7 @@ class NavBarComponent extends Component {
     }
 
     render() {
-        const { navBar } = this.props;
+        const { navBar , subTitleFilter } = this.props;
         const titleNavBar = navBar.get('titleNavBar');
         const viewAlertClient = navBar.get('viewAlertClient');
         const confidential = navBar.get('confidential');
@@ -58,6 +58,7 @@ class NavBarComponent extends Component {
                     <ul className="nav" style={{ paddingLeft: "0px", paddingTop: '10pt' }}>
                         <li style={{ fontSize: "30px" , lineHeight: "30px"}}>
                             {titleNavBar}
+                            {titleNavBar === "Vista gerencial" ? <span style={{fontSize : 15, marginLeft : "10px"}}>{subTitleFilter}</span> : null}
                             {confidential &&
                                 <ConfidentialBrandComponent />
                             }
@@ -93,9 +94,10 @@ class NavBarComponent extends Component {
     }
 }
 
-function mapStateToProps({ navBar }, ownerProps) {
+function mapStateToProps({ navBar , filterDashboard}, ownerProps) {
     return {
-        navBar
+        navBar,
+        subTitleFilter : filterDashboard.title
     };
 }
 

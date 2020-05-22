@@ -11,6 +11,11 @@ export default class TableBuilder {
         return this;
     };
 
+    setSelectable = selectable => {
+        this.selectable = selectable
+        return this;
+    };
+
     setOnClick = onClick => {
         this.onClick = onClick
         return this;

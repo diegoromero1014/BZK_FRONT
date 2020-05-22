@@ -15,6 +15,7 @@ import {
     validateDecimal,
     checkJustificationDetails,
     checkRegexHtmlInjection,
+    checkRequiredPipelineDetailJustification,
     checkRequiredMellowingPeriodDate, checkRequiredMellowingPeriod
 } from '../../../validationsFields/rulesField';
 
@@ -49,7 +50,7 @@ export const fieldsWithRules = {
     amountDisbursed: { rules: [] }, 
     estimatedDisburDate: { rules: [] }, 
     opportunityName: { rules: [checkPipeLineOpportunityName, checkFirstCharacter] },
-    justificationDetail: { rules: [checkJustificationDetails, checkFirstCharacter, checkRegexHtmlInjection, checkNumberLength(500)] },
+    justificationDetail: { rules: [checkRequiredPipelineDetailJustification, checkJustificationDetails, checkFirstCharacter, checkRegexHtmlInjection, checkNumberLength(500)] },
     productFamily: { rules: [checkRequired] }, 
     mellowingPeriod: { rules: [checkRequiredMellowingPeriod] },
     moneyDistribitionMarket: { rules: [] }, 

@@ -52,7 +52,7 @@ export default (state = initialState, action = {}) => {
                     .set('columnOrder', '')
                     .set('totalClientsByFiltered', get(response2, 'rowCount',0))
                     .set('responseClients', get(response2, 'rows', []))
-                    .set('lastUploadDate', get(uploadDate2, 'lastUploadDate'));;
+                    .set('lastUploadDate', get(uploadDate2, 'lastUploadDate'));
             });
         case actions.CHANGE_TEAM_PE:
             return state.withMutations(map => {

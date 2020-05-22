@@ -162,7 +162,7 @@ describe('Pruebas unitarias editar pipeline', () =>{
             .dive()
             .dive();
 
-        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_NO_CONTACTADO);
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(BUSINESS_STATUS_NO_CONTACTADO);
         setTimeout(()=>{
             expect(wrapper.state().showJustificationField).to.equal(true);
             expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));
@@ -178,7 +178,7 @@ describe('Pruebas unitarias editar pipeline', () =>{
             .dive()
             .dive();
 
-        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_PERDIDO);
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(BUSINESS_STATUS_PERDIDO);
         setTimeout(()=>{
             expect(wrapper.state().showJustificationField).to.equal(true);
             expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));
@@ -252,7 +252,7 @@ describe('Pruebas unitarias editar pipeline', () =>{
             .dive()
             .dive()
             .dive();
-        const svaFieldTooltip = wrapper.find(Tooltip).find({ text: HELP_SVA, rendertooltip: HELP_SVA });
+        const svaFieldTooltip = wrapper.find(Tooltip).find({ text: HELP_SVA });
         const svaField = wrapper.find(Input).find({ name: "sva" });
         expect(svaFieldTooltip).to.have.lengthOf(1);
         expect(svaFieldTooltip).contains(svaField);

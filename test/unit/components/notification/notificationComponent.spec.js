@@ -25,4 +25,4 @@ describe('Test notification/notificationComponent', () => {
         const wrapper = shallow(<NotificationComponent {...defaultProps} />);
         expect(wrapper.find('center[name="contentComponent"]')).to.have.length(1);
     });
-});
+}); 

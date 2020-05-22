@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 import { GET_REGIONS, GET_SCHEDULER_PREVISIT, CLEAR_SCHEDULER_PREVISIT } from "./constants";
-import { stringToDate, stringToDateEnd } from "../../actionsGlobal";
+import { stringToDate } from "../../actionsGlobal";
 
 const initialState = Immutable.Map({
     schedulerPrevisitList: [],

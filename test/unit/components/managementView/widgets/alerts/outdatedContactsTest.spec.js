@@ -1,6 +1,7 @@
 import React from 'react';
 import { OutdatedContactsComponent } from '../../../../../../src/components/managementView/widgets/alerts/outdatedContacts';
 import OutdatedContactsComponentRedux from '../../../../../../src/components/managementView/widgets/alerts/outdatedContacts';
+import Immutable from 'immutable';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { shallow } from 'enzyme';
@@ -32,7 +33,13 @@ describe("OutdatedContactsComponent Test", () => {
             outdatedContacts: {
                 rows: [],
                 rowCount: 0
-            }
+            },
+            filterDashboard: Immutable.Map({
+                filterMode: "",
+                criterio: "",
+                id: "",
+                title: ""
+            })
         })
     })
 
