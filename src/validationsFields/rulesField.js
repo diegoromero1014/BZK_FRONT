@@ -97,7 +97,7 @@ import {
 } from './validationsMessages';
 
 import {
-    REASON_TRANFER, MANAGEMENT_BRAND, PIPELINE_TYPE, CLIENT_NEED, PIPELINE_JUSTIFICATION
+    REASON_TRANFER, MANAGEMENT_BRAND, PIPELINE_TYPE, CLIENT_NEED, ALL_BUSINESS_CATEGORIES, PIPELINE_JUSTIFICATION
 } from '../components/selectsComponent/constants';
 
 import {
@@ -107,7 +107,8 @@ import {
     BUSINESS_STATUS_NO_CONTACTADO,
     NEED_FINANCING,
     NUEVO_NEGOCIO,
-    OTHER_JUSTIFICATION
+    OTHER_JUSTIFICATION,
+    PLACEMENTS
 } from "../components/pipeline/constants";
 
 let globalCondition = false;
@@ -533,16 +534,16 @@ export const checkRequiredPipelineJustification = (value, fields, props) => {
     let businessStatusSelectedKey = null;
 
     if(pipelineTypes){
-        pipelineTypeSelected = pipelineTypes.find((pipelineType) => pipelineType.id == fields.pipelineType);      
+        pipelineTypeSelected = pipelineTypes.find((pipelineType) => pipelineType.id == fields.pipelineType);
         pipelineTypeSelectedKey = pipelineTypeSelected ? pipelineTypeSelected.key.toLowerCase() : '';
-    }    
+    }
 
     if(businessStatusList){
         businessStatusSelected = businessStatusList.find((status) => status.id == fields.businessStatus);
         businessStatusSelectedKey = businessStatusSelected ? businessStatusSelected.key.toLowerCase() : '';
     }
-        
-    if((pipelineTypeSelectedKey == NUEVO_NEGOCIO || pipelineTypeSelectedKey == OPORTUNITIES_MANAGEMENT) && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){                
+
+    if((pipelineTypeSelectedKey == NUEVO_NEGOCIO || pipelineTypeSelectedKey == OPORTUNITIES_MANAGEMENT) && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){
         return checkRequired(value);
     }
 
@@ -580,6 +581,36 @@ export const checkRequiredPipelineDetailJustification = (value, fields, props) =
 
     return null;
 }
+
+export const checkRequiredMellowingPeriodDate = (value, field, props)=>{
+        const businessCategorys = props.selectsReducer.get(ALL_BUSINESS_CATEGORIES);
+        let businessCategorySelectedKey = null;
+
+        if(businessCategorys){
+            let businessCategorySelected = businessCategorys.find((businessCategory) => businessCategory.id == field.businessCategory);
+            businessCategorySelectedKey = businessCategorySelected ? businessCategorySelected.key.toLowerCase() : '';
+        }
+
+        if(businessCategorySelectedKey !== PLACEMENTS){
+            return checkRequired(value);
+        }
+
+};
+
+export const checkRequiredMellowingPeriod = (value, field, props)=>{
+        const businessCategorys = props.selectsReducer.get(ALL_BUSINESS_CATEGORIES);
+        let businessCategorySelectedKey = null;
+
+        if(businessCategorys){
+            let businessCategorySelected = businessCategorys.find((businessCategory) => businessCategory.id == field.businessCategory);
+            businessCategorySelectedKey = businessCategorySelected ? businessCategorySelected.key.toLowerCase() : '';
+        }
+
+        if(businessCategorySelectedKey === PLACEMENTS){
+            return checkRequired(value);
+        }
+
+};
 
 export const checkRequiredTermInMonths = (value, fields, props) => {
     return checkReducerValue(value,
