@@ -30,6 +30,7 @@ export const CURRENCY_MESSAGE = "Señor usuario, mientras exista un plan de dese
 export const PIPELINE_DISBURSEMENT_PLAN_MESSAGE = "Señor usuario, mientras exista un plan de desembolso, no puede modificar la necesidad del cliente, primero debe eliminar los planes de desembolso.";
 export const OPORTUNITIES_MANAGEMENT = "gestión de oportunidades";
 export const NUEVO_NEGOCIO = "inicio nuevo negocio";
+export const OTHER_JUSTIFICATION = "otra";
 export const LEASING = 'leasing';
 export const FINANCIAL_LEASING = 'leasing financiero';
 export const OPERATING_LEASE = 'arrendamiento operativo';

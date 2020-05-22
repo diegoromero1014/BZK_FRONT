@@ -5,7 +5,7 @@ import BlackListAlertsRedux from "../../../../../../src/components/managementVie
 import { BlackListAlertsComponent } from "../../../../../../src/components/managementView/widgets/alerts/blackListAlerts";
 import * as actions from '../../../../../../src/components/globalComponents/actions'
 
-let dispatchChangeActiveItemMenu ; 
+let dispatchChangeActiveItemMenu;
 
 let store;
 const middlewares = [thunk];
@@ -19,17 +19,24 @@ describe('Test widget BLackListAlerts Tab', () => {
         dispatchChangeActiveItemMenu = sinon.fake();
 
         defaultProps = {
-            alertBlackList: Immutable.Map({
-                responseBlackList: [],
-                totalBlackListFiltered: 0
-            }),
             dispatchBlackListAlerts: sinon.stub(),
             dispatchChangeActiveItemMenu
         }
 
         redirect = sinon.stub(actions, 'redirectUrl');
 
-        store = mockStore(defaultProps);
+        store = mockStore({
+            alertBlackList: Immutable.Map({
+                responseBlackList: [],
+                totalBlackListFiltered: 0
+            }),
+            filterDashboard: Immutable.Map({
+                filterMode: "",
+                criterio: "",
+                id: "",
+                title: ""
+            })
+        });
     });
 
     afterEach(() => {
@@ -58,7 +65,7 @@ describe('Test widget BLackListAlerts Tab', () => {
     describe('Test actions', () => {
         it('handleOnPageChange', () => {
             const wrapper = shallow(<BlackListAlertsComponent store={store} {...defaultProps} />);
-            
+
             wrapper.instance().handleOnPageChange(1)
         });
     });
