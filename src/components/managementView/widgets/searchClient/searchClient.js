@@ -8,6 +8,7 @@ import {
 	SEARCH_CLIENT,
 	STYLE_BUTTON_SEARCH,
 	CLOSE_BUSQUEDA,
+	CLOSE_BUSQUEDA_FILTRO,
 	STYLE_BUTTON_SEARCH_FOCUS,
 	STYLE_BUTTON_PROSPECT
 } from "./constants";
@@ -102,7 +103,7 @@ export class SearchClient extends Component {
 						onBlur={() => this.setState({ background: true })}
 						value={name ? name : keyword}
 					/>
-					<Tooltip text={`${closeIcon ? CLOSE_BUSQUEDA : SEARCH_CLIENT}`}>
+					<Tooltip text={`${closeIcon ? name ? CLOSE_BUSQUEDA_FILTRO : CLOSE_BUSQUEDA : SEARCH_CLIENT}`}>
 						<button
 							id="searchClients"
 							className="btn"
