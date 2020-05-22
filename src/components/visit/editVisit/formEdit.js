@@ -155,8 +155,8 @@ class FormEdit extends Component {
     }
 
     _onClickPDF() {
-        const { pdfDescarga, changeStateSaveData } = this.props;
-        pdfDescarga(changeStateSaveData, this.state.idVisit);
+        const { pdfDescarga, dispatchChangeStateSaveData } = this.props;
+        pdfDescarga(dispatchChangeStateSaveData, this.state.idVisit);
     }
 
     _closeConfirmCloseVisit() {
@@ -166,7 +166,7 @@ class FormEdit extends Component {
 
     _submitCreateVisita() {
         const { participants, visitReducer, tasks,
-            changeStateSaveData, clearIdPrevisit, usersPermission,
+            dispatchChangeStateSaveData, clearIdPrevisit, usersPermission,
             confidentialReducer, dispatchPrepareTasksNotes
         } = this.props;
         const detailVisit = visitReducer.get('detailVisit');
@@ -272,10 +272,10 @@ class FormEdit extends Component {
                 };
                 const { createVisti } = this.props;
                 const that = this;
-                changeStateSaveData(true, MESSAGE_SAVE_DATA);
+                dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
                 clearIdPrevisit();
                 createVisti(visitJson).then((data) => {
-                    changeStateSaveData(false, "");
+                    dispatchChangeStateSaveData(false, "");
                     if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                         redirectUrl("/login");
                     } else {
@@ -301,7 +301,7 @@ class FormEdit extends Component {
                         }
                     }
                 }, () => {
-                    changeStateSaveData(false, "");
+                    dispatchChangeStateSaveData(false, "");
                     typeMessage = "error";
                     titleMessage = "Edición visita";
                     message = "Señor usuario, ocurrió un error editando la visita.";
