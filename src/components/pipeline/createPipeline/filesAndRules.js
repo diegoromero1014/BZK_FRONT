@@ -1,12 +1,22 @@
 import _ from "lodash";
 
 import {
-    checkRequired, processRules, checkRequiredWithGlobalCondition,
-    checkOnlyAlphabetical, checkPipeLineOpportunityName,
-    checkFirstCharacter, checkNumberLength,
+    checkRequired,
+    processRules,
+    checkRequiredWithGlobalCondition,
+    checkOnlyAlphabetical,
+    checkPipeLineOpportunityName,
+    checkFirstCharacter,
+    checkNumberLength,
     checkRequiredPipelineJustification,
-    checkRequiredComercialOportunity, checkRequiredTermInMonths,
-    checkRequiredTermInMonthsValue, validateDecimal, checkJustificationDetails, checkRegexHtmlInjection
+    checkRequiredComercialOportunity,
+    checkRequiredTermInMonths,
+    checkRequiredTermInMonthsValue,
+    validateDecimal,
+    checkJustificationDetails,
+    checkRegexHtmlInjection,
+    checkRequiredPipelineDetailJustification,
+    checkRequiredMellowingPeriodDate
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -31,7 +41,7 @@ export const fieldsWithRules = {
     amountDisbursed: { rules: [] }, 
     estimatedDisburDate: { rules: [] }, 
     opportunityName: { rules: [checkPipeLineOpportunityName, checkFirstCharacter] },
-    justificationDetail: { rules: [checkJustificationDetails, checkFirstCharacter, checkRegexHtmlInjection, checkNumberLength(500)] },
+    justificationDetail: { rules: [checkRequiredPipelineDetailJustification, checkJustificationDetails, checkFirstCharacter, checkRegexHtmlInjection, checkNumberLength(500)] },
     productFamily: { rules: [checkRequired] },
     mellowingPeriod: { rules: [] }, 
     moneyDistribitionMarket: { rules: [] }, 
@@ -44,7 +54,8 @@ export const fieldsWithRules = {
     margen:{rules: [validateDecimal]},
     typePolicy: { rules: [] },
     businessCategory2: { rules: [] },
-    nominalValue2:{ rules: [checkNumberLength(15)] }
+    nominalValue2:{ rules: [checkNumberLength(15)] },
+    mellowingPeriodDate: {rules: [checkRequiredMellowingPeriodDate]}
 }
 
 export const fields = _.keys(fieldsWithRules);
