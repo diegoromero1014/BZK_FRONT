@@ -162,7 +162,7 @@ describe('Pruebas unitarias editar pipeline', () =>{
             .dive()
             .dive();
 
-        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_NO_CONTACTADO);
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(BUSINESS_STATUS_NO_CONTACTADO);
         setTimeout(()=>{
             expect(wrapper.state().showJustificationField).to.equal(true);
             expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));
@@ -178,7 +178,7 @@ describe('Pruebas unitarias editar pipeline', () =>{
             .dive()
             .dive();
 
-        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_PERDIDO);
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(BUSINESS_STATUS_PERDIDO);
         setTimeout(()=>{
             expect(wrapper.state().showJustificationField).to.equal(true);
             expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));

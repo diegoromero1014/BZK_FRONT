@@ -6,7 +6,7 @@ describe("Test GetChildCatalogs function", () => {
           resolve({
             payload:{
                 data:{
-                    data:[{ field: "productFamily",},{ field: "products",},{ field: "businessCategory",},]
+                    data:[{ field: "productFamily",},{ field: "products",},{ field: "businessCategory",},{ field: "pipelineJustification",}]
                 }
             }
           } ));
@@ -22,5 +22,6 @@ describe("Test GetChildCatalogs function", () => {
           businessCategories: [{ field: "businessCategory" }],
           businessCategories2: [{ field: "businessCategory" }],
         });
+        expect(state[3]).to.eql({ pipelineJustification: [{ field: "pipelineJustification" }] });
     });
 });

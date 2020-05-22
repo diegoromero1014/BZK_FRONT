@@ -37,6 +37,10 @@ const pipelineTypes = [
   {
     id: 2,
     key: NUEVO_NEGOCIO
+  },
+  {
+    id: 3,
+    key: BUSINESS_STATUS_PERDIDO
   }];
 const productsFamilyResolve = {payload: {data: {data: { id: 10, value: 'Factoring Plus', key: 'Factoring Plus', field: 'products', description: ''}}}};
 const productsResolve = {payload: {data: {data: { id: 100, value: 'Captación', key: 'Captación', field: 'businessCategory', description: ''}}}};
@@ -345,9 +349,29 @@ describe("Test CreatePipeline", () => {
       .dive()
       .dive();
 
-      wrapper.instance()._pipelineTypeAndBusinessOnChange(1);         
+      wrapper.instance()._pipelineTypeAndBusinessOnChange(1);
+
   });
 
+  it('should execute _showJustificationsDetail when pipeline type is nuevo negocio', () => {
+    const wrapper = shallow(<PipelineComponent store={store}/>)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+      wrapper.instance()._pipelineTypeAndBusinessOnChange(2);
+  });
+
+  it('should execute _showJustificationsDetail when pipeline type is nuevo negocio', () => {
+    const wrapper = shallow(<PipelineComponent store={store}/>)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    wrapper.instance()._pipelineTypeAndBusinessOnChange(3);
+  });
   
   it('should render field roe', ()=>{
       const wrapper = shallow(<PipelineComponent store={store}/>)
@@ -498,7 +522,7 @@ describe("Test CreatePipeline", () => {
         .dive()
         .dive();
 
-    wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_NO_CONTACTADO);
+    wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(BUSINESS_STATUS_NO_CONTACTADO);
     setTimeout(()=>{
       expect(wrapper.state().showJustificationField).to.equal(true);
       expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));
@@ -514,7 +538,7 @@ describe("Test CreatePipeline", () => {
             .dive()
             .dive();
 
-        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_PERDIDO);
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(BUSINESS_STATUS_PERDIDO);
         setTimeout(()=>{
             expect(wrapper.state().showJustificationField).to.equal(true);
             expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));
@@ -628,6 +652,27 @@ describe("Test CreatePipeline", () => {
 
   });
 
+  it('sould render oblygaroty field detalleJustificacion', ()=>{
+
+    const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    wrapper.instance()._justificationObligatoryField(1);
+  });
+
+  it('sould render oblygaroty field detalleJustificacion', ()=>{
+
+    const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    wrapper.instance()._justificationObligatoryField(2);
+  });
 });
 
 describe("Test CreatePipelineChildren", () => {
