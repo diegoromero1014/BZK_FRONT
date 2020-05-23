@@ -1250,6 +1250,28 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 </Col>
               </Row>
               : null }
+              <Row style={{padding: "0px 10px 20px 20px"}}>
+                  {this.state.showNegotiatedAmountField ?
+                        <Col xs={6} md={3} lg={3}>
+                        <div style={{ paddingRight: "15px" }}>
+                          <dt> <span>Monto negociado (</span><span style={{color: "red"}}>*</span>)</dt>
+                          <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
+                              <Input
+                                  {...negotiatedAmount}
+                                  name="negotiatedAmount"
+                                  type="text"
+                                  placeholder="Miles ' , '"
+                                  parentId="dashboardComponentScroll"
+                                  onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, negotiatedAmount, val, true, 0)}
+                                  onFocus={val => handleFocusValueNumber(negotiatedAmount, negotiatedAmount.value)}                                  
+                                  disabled={isEditableValue ? '' : 'disabled'}
+                              />
+                              </div>
+                          </div>
+                        </Col>
+                    :null
+                    }
+                </Row>     
                   <Row style={{padding: "0px 10px 20px 20px"}}>
                     <Col xs={6} md={3} lg={3}>
                       <div style={{paddingRight: "15px"}}>
@@ -1309,47 +1331,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                     </Col>
                   </Row>
                   : null}
-                <Row style={{padding: "0px 10px 20px 20px"}}>
-                  {this.state.showNegotiatedAmountField ?
-                        <Col xs={6} md={3} lg={3}>
-                        <div style={{ paddingRight: "15px" }}>
-                          <dt> <span>Monto negociado (</span><span style={{color: "red"}}>*</span>)</dt>
-                          <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
-                              <Input
-                                  {...negotiatedAmount}
-                                  name="negotiatedAmount"
-                                  type="text"
-                                  placeholder="Miles ' , '"
-                                  parentId="dashboardComponentScroll"
-                                  onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, negotiatedAmount, val, true, 0)}
-                                  onFocus={val => handleFocusValueNumber(negotiatedAmount, negotiatedAmount.value)}                                  
-                                  disabled={isEditableValue ? '' : 'disabled'}
-                              />
-                              </div>
-                          </div>
-                        </Col>
-                    :null
-                    }
-                </Row>                 
-               <Row style={{padding: "0px 10px 20px 20px"}}>
-                <Col xs={6} md={3} lg={3}>
-                  <div style={{paddingRight: "15px"}}>
-                    <dt>
-                      <span>Estado del negocio (</span><span style={{color: "red"}}>*</span>)
-                    </dt>
-                    <ComboBox
-                        labelInput="Seleccione..."
-                        valueProp={'id'}
-                        textProp={'value'}
-                        {...businessStatus}
-                        name={nameBusinessStatus}
-                        parentId="dashboardComponentScroll"
-                        data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
-                        onChange={val => this._changeBusinessStatus(val)}
-                        filterData={true}
-                    />
-                  </div>
-                </Col>
+              <Row style={{padding: "0px 10px 20px 20px"}}>
                     <Col xs={6} md={3} lg={3}>
                       <div style={{paddingRight: "15px"}}>
                         <dt>

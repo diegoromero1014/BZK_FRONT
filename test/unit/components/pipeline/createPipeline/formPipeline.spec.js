@@ -206,7 +206,7 @@ describe("Test CreatePipeline", () => {
 
       wrapper.instance()._changeAreaAssetsEnabledValue(true);         
 
-      expect(wrapper.find(ComboBox)).to.have.length(11);
+      expect(wrapper.find(ComboBox)).to.have.length(10);
   });
 
   it('hide Active field when areaAssetsEnabled value is false', () => {
@@ -218,7 +218,7 @@ describe("Test CreatePipeline", () => {
 
       wrapper.instance()._changeAreaAssetsEnabledValue(false);         
 
-      expect(wrapper.find(ComboBox)).to.have.length(10);
+      expect(wrapper.find(ComboBox)).to.have.length(9);
   });
 
   it('Show render formPipeline/SwetAlert ', () => {

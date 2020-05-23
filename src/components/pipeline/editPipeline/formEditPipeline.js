@@ -1495,25 +1495,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     }
                                 </Row> 
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{paddingRight: "15px"}}>
-                                        <dt>
-                                            <span>Estado del negocio (</span><span style={{color: "red"}}>*</span>)
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            {...businessStatus}
-                                            name={nameBusinessStatus}
-                                            parentId="dashboardComponentScroll"
-                                            data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                            onChange={val => this._changeBusinessStatus(val)}
-                                            filterData={true}
-                                        />
-                                    </div>
-                                </Col>
                                     <Col xs={12} md={6} lg={6}>
                                         <div style={{ paddingRight: "15px" }}>
                                             <dt>
