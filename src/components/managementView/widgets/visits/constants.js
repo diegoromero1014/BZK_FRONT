@@ -6,7 +6,7 @@ export const MESSAGE_NO_RESULTS_VISITS = "No hay visitas"
 export const MESSAGE_SECTION_PENDING_VISITS = "Visitas pendientes en los proximos 30 días";
 export const REQUEST_PENDING_VISITS = "REQUEST_PENDING_VISITS";
 export const PENDING_VIEWS_TAB = 'Visitas pendientes de este mes';
-export const ECONOMIC_GROUPS_TO_BE_VISITED = "Grupos económicos que no se han visitado en más de tres meses";
+export const ECONOMIC_GROUPS_TO_BE_VISITED = "Clientes que no se han visitado en más de tres meses.";
 export const ACTION_ECONOMIC_GROUPS_TO_BE_VISITED = "ACTION_ECONOMIC_GROUPS_TO_BE_VISITED";
 export const MAX_ROWS = 5;
 
@@ -33,7 +33,7 @@ export const COLUMNS_PENDING_VISITS = [
 export const COLUMNS_ECONOMIC_GROUPS_TO_BE_VISITED = [
     {
         header: 'Nombre/Razón social',
-        prop: 'principalClientName'
+        prop: 'clientName'
     },
 
     {
@@ -55,7 +55,7 @@ export const COLUMNS_ECONOMIC_GROUPS_TO_BE_VISITED = [
     
     {
         header: 'Crear previsita',
-        prop: 'idPrincipalClient',
+        prop: 'clientId',
         component: {
             Component: ButtonCreatePrevisit
         },

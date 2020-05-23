@@ -206,7 +206,7 @@ describe("Test CreatePipeline", () => {
 
       wrapper.instance()._changeAreaAssetsEnabledValue(true);         
 
-      expect(wrapper.find(ComboBox)).to.have.length(11);
+      expect(wrapper.find(ComboBox)).to.have.length(10);
   });
 
   it('hide Active field when areaAssetsEnabled value is false', () => {
@@ -218,7 +218,7 @@ describe("Test CreatePipeline", () => {
 
       wrapper.instance()._changeAreaAssetsEnabledValue(false);         
 
-      expect(wrapper.find(ComboBox)).to.have.length(10);
+      expect(wrapper.find(ComboBox)).to.have.length(9);
   });
 
   it('Show render formPipeline/SwetAlert ', () => {
@@ -873,4 +873,37 @@ describe("Test CreatePipelineChildren", () => {
     }, 1 );
   });
 
+  it('Show negotiatedAmount when showNegotiatedAmountField is true', () => {
+    const wrapper = shallow(<PipelineComponentChildren store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+      
+      wrapper.instance()._changeProductFamily(1);
+      expect(wrapper.find(Input).find({name:'negotiatedAmount'})).to.have.length(0);
+  });
+
+  it('Hide negotiatedAmount when showNegotiatedAmountField is false', () => {
+    const wrapper = shallow(<PipelineComponentChildren store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+      wrapper.instance()._changeProductFamily(1);
+      expect(wrapper.find(Input).find({name:'negotiatedAmount'})).to.have.length(0);
+  });
+
+  it('Hide negotiatedAmount when showNegotiatedAmountField is false formPipeline/pipelineChild', () => {
+    const wrapper = shallow(<PipelineComponentChildren store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+      wrapper.instance()._changeProductFamily(1);
+      expect(wrapper.find(Input).find({name:'negotiatedAmount'})).to.have.length(0);
+  });
+  
 });
