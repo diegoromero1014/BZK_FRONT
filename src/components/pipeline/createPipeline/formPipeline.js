@@ -43,7 +43,9 @@ import {
   PIPELINE_JUSTIFICATION,
   CLIENT_NEED,
   FILTER_MULTISELECT_FIELDS,
-  FILTER_TYPE_POLICY, BUSINESS_CATEGORY, ALL_BUSINESS_CATEGORIES
+  FILTER_TYPE_POLICY, BUSINESS_CATEGORY, ALL_BUSINESS_CATEGORIES,
+  PRODUCT_FAMILY,ALL_PRODUCT_FAMILIES
+
 } from "../../selectsComponent/constants";
 import {
   BUSINESS_STATUS_COMPROMETIDO,
@@ -69,7 +71,7 @@ import {
   CATCHMENTS,
   PRODUCT_FAMILY_LEASING,
   HELP_SVA,
-  OTHER_JUSTIFICATION, PIPELINE_DISBURSEMENT_PLAN
+  OTHER_JUSTIFICATION, PIPELINE_DISBURSEMENT_PLAN, NEGOTIATED_AMOUNT_VALUES
 } from "../constants";
 import {
   ALLOWS_NEGATIVE_INTEGER,
@@ -173,6 +175,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         showPolicyType: false,
         showBusinessCategory2: false,
         showLocalInteresSpread2: false,
+        showNegotiatedAmountField:false,      
         pipelineJustification: []
       };
 
@@ -260,7 +263,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         fields: {
           nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, reviewedDate,
           client, documentStatus, probability, opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets, termInMonthsValues, justification, typePolicy, justificationDetail,
-          businessCategory2, nominalValue2
+          businessCategory2, nominalValue2,negotiatedAmount
         }
       } = this.props;
 
@@ -295,6 +298,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       typePolicy.onChange('');
       businessCategory2.onChange('');
       nominalValue2.onChange('');
+      negotiatedAmount.onChange('');
     }
 
     _changeCurrency(currencyValue) {
@@ -402,10 +406,9 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
     }
 
     _changeProductFamily(currencyValue) {
-      const {
-        fields: { areaAssets, product, businessCategory, businessCategory2 },
-        dispatchChildren,
-      } = this.props;
+      const { fields: { areaAssets, product, businessCategory, businessCategory2, productFamily, negotiatedAmount }, consultListByCatalogType, dispatchChildren } = this.props;
+      let productFamilySelected = this.state.productsFamily.find(family => family.id == productFamily.value);
+      const keyProductFamily = productFamilySelected ? productFamilySelected.key.toLowerCase() : '';
 
       GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);
 
@@ -414,7 +417,18 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.showTypePolicy();
       businessCategory.onChange('');
       businessCategory2.onChange('');
+     
+      if(keyProductFamily === NEGOTIATED_AMOUNT_VALUES.toLowerCase()){
+        this.setState({
+          showNegotiatedAmountField: true
+        });        
+      }else{
+        this.setState({
+          showNegotiatedAmountField: false
+        });  
+        negotiatedAmount.onChange('');
 
+      }
     }
 
     showTypePolicy() {
@@ -736,7 +750,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         fields: {
           idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product, probability, nameUsuario,
           opportunityName, productFamily, mellowingPeriod, moneyDistribitionMarket, areaAssets,  termInMonthsValues, pendingDisbursementAmount,
-          pipelineType, commercialOportunity, justification,  typePolicy, margen,justificationDetail, businessCategory2, nominalValue2, mellowingPeriodDate
+          pipelineType, commercialOportunity, justification,  typePolicy, margen,justificationDetail, businessCategory2, nominalValue2, mellowingPeriodDate, negotiatedAmount
         }, createEditPipeline, swtShowMessage, changeStateSaveData, pipelineBusinessReducer, pipelineReducer, usersPermission, confidentialReducer
       } = this.props;
       if ((nameUsuario.value !== '' && nameUsuario.value !== undefined && nameUsuario.value !== null) && (idUsuario.value === null || idUsuario.value === '' || idUsuario.value === undefined)) {
@@ -790,6 +804,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "policyType": typePolicy.value ? typePolicy.value : "",
               "businessCategory2": businessCategory2.value,
               "nominalValue2": nominalValue2.value === undefined || nominalValue2.value === null || nominalValue2.value === '' ? '' : numeral(nominalValue2.value).format('0.00'),
+              "negotiatedAmount" : negotiatedAmount.value === undefined || negotiatedAmount.value === null || negotiatedAmount.value ==='' ? '': numeral(negotiatedAmount.value).format('0'),
               "mellowingPeriodDate":  mellowingPeriodDate.value === undefined || mellowingPeriodDate.value === null || mellowingPeriodDate.value === '' ? '' :  Number(moment(mellowingPeriodDate.value, DATE_FORMAT_MONT_YEAR).format('x'))
             };
 
@@ -961,8 +976,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
           FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY,
           PIPELINE_TYPE, COMMERCIAL_OPORTUNITY, PIPELINE_JUSTIFICATION, CLIENT_NEED, FILTER_TYPE_POLICY]);
 
-        consultDataSelect(PRODUCTS, PRODUCTS_MASK);
-        consultDataSelect(BUSINESS_CATEGORY, ALL_BUSINESS_CATEGORIES);
+        Promise.all([ consultDataSelect(PRODUCTS), consultDataSelect(PRODUCT_FAMILY, ALL_PRODUCT_FAMILIES), consultDataSelect(PRODUCTS, PRODUCTS_MASK),consultDataSelect(BUSINESS_CATEGORY, ALL_BUSINESS_CATEGORIES)]);        
 
         consultParameterServer(LAST_PIPELINE_REVIEW).then((data) => {
           if (data.payload.data.data !== null && data.payload.data.data !== "" && data.payload.data.data !== undefined) {
@@ -998,7 +1012,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
         businessCategory, currency, indexing, need, observations, product, pendingDisbursementAmount,
         probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod,
         moneyDistribitionMarket, areaAssets, pipelineType, commercialOportunity,  termInMonthsValues, justification,
-        typePolicy, margen, justificationDetail, businessCategory2, nominalValue2, mellowingPeriodDate },
+        typePolicy, margen, justificationDetail, businessCategory2, nominalValue2, mellowingPeriodDate,negotiatedAmount },
         selectsReducer, handleSubmit, reducerGlobal, pipelineReducer } = this.props;
 
       const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
@@ -1236,6 +1250,28 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                 </Col>
               </Row>
               : null }
+              <Row style={{padding: "0px 10px 20px 20px"}}>
+                  {this.state.showNegotiatedAmountField ?
+                        <Col xs={6} md={3} lg={3}>
+                        <div style={{ paddingRight: "15px" }}>
+                          <dt> <span>Monto negociado (</span><span style={{color: "red"}}>*</span>)</dt>
+                          <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
+                              <Input
+                                  {...negotiatedAmount}
+                                  name="negotiatedAmount"
+                                  type="text"
+                                  placeholder="Miles ' , '"
+                                  parentId="dashboardComponentScroll"
+                                  onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, negotiatedAmount, val, true, 0)}
+                                  onFocus={val => handleFocusValueNumber(negotiatedAmount, negotiatedAmount.value)}                                  
+                                  disabled={isEditableValue ? '' : 'disabled'}
+                              />
+                              </div>
+                          </div>
+                        </Col>
+                    :null
+                    }
+                </Row>     
                   <Row style={{padding: "0px 10px 20px 20px"}}>
                     <Col xs={6} md={3} lg={3}>
                       <div style={{paddingRight: "15px"}}>

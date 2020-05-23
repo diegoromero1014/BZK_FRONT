@@ -16,6 +16,7 @@ import {
     checkJustificationDetails,
     checkRegexHtmlInjection,
     checkRequiredPipelineDetailJustification,
+    checkRequiredNegotiatedAmount,
     checkRequiredMellowingPeriodDate, checkRequiredMellowingPeriod
 } from '../../../validationsFields/rulesField';
 
@@ -63,7 +64,8 @@ export const fieldsWithRules = {
     margen: {rules:[validateDecimal]},
     typePolicy: { rules: [] },
     businessCategory2: { rules:[] },
-    nominalValue2: { rules: [ checkNumberLength(15)] },
+    nominalValue2: { rules: [ checkNumberLength(15)]},
+    negotiatedAmount:{rules: [checkRequiredNegotiatedAmount,checkNumberLength(15)]},
     mellowingPeriodDate: {rules: [checkRequiredMellowingPeriodDate]}
 
 }
