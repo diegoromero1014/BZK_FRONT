@@ -812,7 +812,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             "policyType": typePolicy.value ? typePolicy.value : "",
                             "justificationDetail": justificationDetail.value ? justificationDetail.value : "",
                             "businessCategory2": businessCategory2.value,
-                            "nominalValue2": nominalValue2.value === undefined || nominalValue2.value === null || nominalValue2.value === '' ? '' : numeral(nominalValue2.value).format('0.00'),
+                            "nominalValue2": nominalValue2.value === undefined || nominalValue2.value === null || nominalValue2.value === '' ? '' : numeral(nominalValue2.value).format('0'),
                             "negotiatedAmount" : negotiatedAmount.value === undefined || negotiatedAmount.value === null || negotiatedAmount.value ==='' ? '': numeral(negotiatedAmount.value).format('0'),
                             "mellowingPeriodDate":  mellowingPeriodDate.value === undefined || mellowingPeriodDate.value === null || mellowingPeriodDate.value === '' ? '' :  Number(moment(mellowingPeriodDate.value, DATE_FORMAT_MONT_YEAR).format('x'))
 
@@ -1016,7 +1016,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
        
         _showLoadBusinessCategory2(businessCategory2Value, nominalValue2Value){
             const {fields:{ businessCategory2, nominalValue2 }} = this.props;
-            if(businessCategory2Value !== null && businessCategory2Value !== ""){
+
+            if((businessCategory2Value !== null && businessCategory2Value !== "") || (nominalValue2Value !== null && nominalValue2Value !== "")) {
                 this.setState({
                     showBusinessCategory2: true
                 });
