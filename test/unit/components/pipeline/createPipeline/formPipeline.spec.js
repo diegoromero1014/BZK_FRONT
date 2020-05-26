@@ -603,7 +603,6 @@ describe("Test CreatePipeline", () => {
     wrapper.instance()._onChangeBusinessCategory(5110627);
     wrapper.instance()._onChangeBusinessCategory2(5110627);
     expect(wrapper.find(Input).find({ name: 'commission' }));
-    expect(wrapper.find(ComponentDisbursementPlan)).to.have.length(1);
   });
 
   it('should render field intereses/spred', () => {
