@@ -511,7 +511,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         showInteresSpreadField(businessCategoryValue){
             const { selectsReducer, fields: { commission, mellowingPeriod, mellowingPeriodDate } } = this.props;
             const businessCategories = selectsReducer.get(ALL_BUSINESS_CATEGORIES);
-            let meellowingPeriodField = false;
             const selectedBusinessCategory = businessCategories.find((businessCategory) => businessCategory.id == businessCategoryValue);
             keyBusinessCategory = selectedBusinessCategory ? selectedBusinessCategory.key.toLowerCase() : '';
             if((keyBusinessCategory === PLACEMENTS || keyBusinessCategory === CATCHMENTS) || (keyBusinessCategory2 === PLACEMENTS || keyBusinessCategory2 === CATCHMENTS)){

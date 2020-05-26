@@ -16,7 +16,7 @@ import {
     checkJustificationDetails,
     checkRegexHtmlInjection,
     checkRequiredPipelineDetailJustification,
-    checkRequiredMellowingPeriodDate, checkRequiredMellowingPeriod
+    checkRequiredMellowingPeriodDate
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
