@@ -53,7 +53,7 @@ export const fieldsWithRules = {
     opportunityName: { rules: [checkPipeLineOpportunityName, checkFirstCharacter] },
     justificationDetail: { rules: [checkRequiredPipelineDetailJustification, checkJustificationDetails, checkFirstCharacter, checkRegexHtmlInjection, checkNumberLength(500)] },
     productFamily: { rules: [checkRequired] }, 
-    mellowingPeriod: { rules: [checkRequiredMellowingPeriod] },
+    mellowingPeriod: { rules: [] },
     moneyDistribitionMarket: { rules: [] }, 
     areaAssets: { rules: [] }, 
     termInMonthsValues: { rules: [checkRequiredTermInMonthsValue] },
