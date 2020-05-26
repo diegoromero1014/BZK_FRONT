@@ -1016,7 +1016,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
        
         _showLoadBusinessCategory2(businessCategory2Value, nominalValue2Value){
             const {fields:{ businessCategory2, nominalValue2 }} = this.props;
-            if(businessCategory2Value !== null){
+            if(businessCategory2Value !== null && businessCategory2Value !== ""){
                 this.setState({
                     showBusinessCategory2: true
                 });
