@@ -141,6 +141,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
     let commercialOportunityName = _.uniqueId("commercialOportunity");
     let nameJustificationPipeline = _.uniqueId('justificationPipeline_');
     let nameTypePolicy = _.uniqueId('nameTypePolicy');
+    let nameMellowingPeriodDate = _.uniqueId('mellowingPeriodDate_');
     let typeMessage = "success";
     let titleMessage = "";
     let message = "";
@@ -175,7 +176,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showAlertCurrency: false,
                 showJustificationField: false,
                 showProbabilityField: true,
-                showMellowingPeriodField: true,
+                showMellowingPeriodField: false,
                 pipelineStatus: [],
                 messageTooltipNominalValue:null,
                 showInteresSpread: false,
@@ -191,7 +192,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showPolicyType: false,
                 showBusinessCategory2: false,
                 detailJustificationObligatory: false,
-                pipelineJustification: []
+                pipelineJustification: [],
+                mellowingPeriodValues: []
             };
 
             if (origin === ORIGIN_PIPELIN_BUSINESS) {
@@ -524,16 +526,20 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
 
             if(keyBusinessCategory === PLACEMENTS){
+                this.setState({
+                    showMellowingPeriodField: true
+                });
                 mellowingPeriod.onChange(_.get(_.filter(selectsReducer.get(MELLOWING_PERIOD), ['key', PIPELINE_DISBURSEMENT_PLAN]), '[0].id', ""));
-                mellowingPeriodDate.onChange('');
-                meellowingPeriodField = true;
+
             }else{
-                mellowingPeriod.onChange('');
+                mellowingPeriodDate.onChange('');
+                this.setState({
+                    showMellowingPeriodField: false
+                });
             }
 
             this.setState({
-                messageTooltipNominalValue: _.get(_.find(businessCategories, ['id', parseInt(businessCategoryValue)]), 'description'),
-                showMellowingPeriodField: meellowingPeriodField
+                messageTooltipNominalValue: _.get(_.find(businessCategories, ['id', parseInt(businessCategoryValue)]), 'description')
             });
         }
 
@@ -1329,12 +1335,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     </div>
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
-                                    <ToolTip text='Agregar categoría del negocio 2 / Valor nominal 2' rendertooltip='Agregar categoría del negocio 2 / Valor nominal 2'>
                                         <button className="btn btn-primary" type="button"  id="addCategory" style={{ marginTop: '18px' }} onClick={() => this._showBusinessCategory2(true)}
                                                 disabled={this.state.isEditable ? '' : 'disabled'}>
-                                            <i className="plus icon"/> Categoría del negocio
-                                        </button>
+                                    <ToolTip text='Agregar categoría del negocio 2 / Valor nominal 2' rendertooltip='Agregar categoría del negocio 2 / Valor nominal 2'>
+                                            <i className="plus icon" style={{ cursor: "pointer"}}/>
                                     </ToolTip>
+                                            Categoría del negocio
+                                        </button>
                                 </Col>
                             </Row>
                             {this.state.showBusinessCategory2 ?
@@ -1379,13 +1386,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         </div>
                                     </Col>
                                     <Col xs={6} md={3} lg={3}>
-                                        <ToolTip text='Eliminar categoría del negocio 2 / Valor nominal 2' rendertooltip='Eliminar categoría del negocio 2 / Valor nominal 2'>
                                             <button className="btn btn-secondary" type="button" style={{ marginTop: '18px' , backgroundColor: "rgb(193, 193, 193)" , padding: "4x"  }}
                                                     onClick={() => this._showBusinessCategory2(false)}
                                                     disabled={this.state.isEditable ? '' : 'disabled'}>
-                                                <i className="delete icon"/>
-                                            </button>
+                                        <ToolTip text='Eliminar categoría del negocio 2 / Valor nominal 2' rendertooltip='Eliminar categoría del negocio 2 / Valor nominal 2'>
+                                                <i className="delete icon"  style={{ cursor: "pointer"}}/>
                                         </ToolTip>
+                                            </button>
                                     </Col>
                                 </Row>
                                 : null }
@@ -1469,6 +1476,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                 textProp={'value'}
                                                 {...mellowingPeriod}
                                                 name={nameMellowingPeriod}
+                                                touched={true}
                                                 parentId="dashboardComponentScroll"
                                                 data={selectsReducer.get(MELLOWING_PERIOD) || []}
                                                 onChange={val => this._onChangeMellowingPeriod(val) }
@@ -1482,6 +1490,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         initialView='year'
                                         time={false}
                                         touched={true}
+                                        name={nameMellowingPeriodDate}
                                         {...mellowingPeriodDate}
                                         disabled={this.state.isEditable ? '' : 'disabled'}
                                     />

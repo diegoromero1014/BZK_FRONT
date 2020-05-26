@@ -127,6 +127,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   let pipelineTypeName = _.uniqueId('pipelineType');
   let commercialOportunityName = _.uniqueId("commercialOportunity");
   let nameJustificationPipeline = _.uniqueId('justificationPipeline_');
+  let nameMellowingPeriodDate = _.uniqueId('mellowingPeriodDate_');
 
   let keyBusinessCategory = "";
   let keyBusinessCategory2 = "";
@@ -363,7 +364,6 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const { selectsReducer, fields: { commission, mellowingPeriod, mellowingPeriodDate } } = this.props;
       let showLocalInteresSpread = false;
       let showMellowingPeriodField = false;
-      let componentDisbursementPlan = false;
       keyBusinessCategory = _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key') ? _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key').toLowerCase() : '';
       if((keyBusinessCategory === PLACEMENTS || keyBusinessCategory === CATCHMENTS) || (keyBusinessCategory2 === PLACEMENTS || keyBusinessCategory2 === CATCHMENTS)){
           showLocalInteresSpread=true;
@@ -1336,6 +1336,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                       format={DATE_FORMAT_MONT_YEAR}
                       placeholder='MM/YYYY'
                       initialView='year'
+                      name={nameMellowingPeriodDate}
                       time={false}
                       touched={true}
                       {...mellowingPeriodDate}
