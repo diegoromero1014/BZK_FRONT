@@ -524,7 +524,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         showInteresSpreadField(businessCategoryValue){
-            debugger;
             const { selectsReducer, fields: { commission, mellowingPeriod, mellowingPeriodDate } } = this.props;
             const businessCategories = selectsReducer.get(ALL_BUSINESS_CATEGORIES);
             let meellowingPeriodField = false;
@@ -1017,7 +1016,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
        
         _showLoadBusinessCategory2(businessCategory2Value, nominalValue2Value){
             const {fields:{ businessCategory2, nominalValue2 }} = this.props;
-            if(businessCategory2Value !== null && businessCategory2Value !== ""){
+
+            if((businessCategory2Value !== null && businessCategory2Value !== "") || (nominalValue2Value !== null && nominalValue2Value !== "")) {
                 this.setState({
                     showBusinessCategory2: true
                 });
