@@ -383,13 +383,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         setValueToState = (args) => {
             this.setState(args);
         }
-        _changeProductFamily(currencyValue) {
-            const { fields: { areaAssets, productFamily, product, businessCategory, negotiatedAmount },
-             pipelineReducer, selectsReducer, dispatchChildren } = this.props;
-            GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);
+        async _changeProductFamily(currencyValue) {            
+            const { fields: { areaAssets, productFamily, product, businessCategory },
+             pipelineReducer, selectsReducer, dispatchChildren } = this.props; 
+            await GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);  
             const productsByFamily = selectsReducer.get(PRODUCTS_MASK).filter(p => p.parentId == currencyValue);
-            let productFamilySelected = this.state.productsFamily.find(family => family.id == productFamily.value);
-            const keyProductFamily2 = productFamilySelected ? productFamilySelected.key.toLowerCase() : '';
+           
+            let productFamilySelected =  selectsReducer.get(ALL_PRODUCT_FAMILIES).find(family => family.id == currencyValue);
+            const keyProductFamily2 = productFamilySelected ? productFamilySelected.key : '';
 
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
@@ -404,15 +405,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
             this.showTypePolicy(currencyValue);
 
-            if(keyProductFamily2 === NEGOTIATED_AMOUNT_VALUES.toLowerCase()){
+            if(keyProductFamily2 === NEGOTIATED_AMOUNT_VALUES){
                 this.setState({
-                  showNegotiatedAmountField: true
-                });
+                    showNegotiatedAmountField: true                  
+                });        
               }else{
-                this.setState({
+                this.setState({                  
                   showNegotiatedAmountField: false
-                });
-
+                });        
               }
         }
 
@@ -1005,7 +1005,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             justificationDetail.onChange(data.justificationDetail);
             mellowingPeriodDate.onChange(moment(data.mellowingPeriodDate).format('MM/YYYY'));
             this._showLoadBusinessCategory2(data.businessCategory2, data.nominalValue2);
-            this._showNegotiatedAmountField(data.negotiatedAmount);
+            negotiatedAmount.onChange(fomatInitialStateNumber(data.negotiatedAmount));
         }
 
 
@@ -1425,6 +1425,27 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     </Col>
                                 </Row>
                                 : null }
+                                
+                                 <Row style={{padding: "0px 10px 20px 20px"}}>
+                                 {this.state.showNegotiatedAmountField ?
+                                        <Col xs={6} md={3} lg={3}>
+                                            <div style={{ paddingRight: "15px" }}>
+                                                <dt> <span>Monto negociado (</span><span style={{color: "red"}}>*</span>)</dt>                                       
+                                                    <Input
+                                                        {...negotiatedAmount}
+                                                        name="negotiatedAmount"
+                                                        type="text"
+                                                        placeholder="Miles ' , '"
+                                                        parentId="dashboardComponentScroll"
+                                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, negotiatedAmount, val, true, 0)}
+                                                        onFocus={val => handleFocusValueNumber(negotiatedAmount, negotiatedAmount.value)} 
+                                                        disabled={this.state.isEditable ? '' : 'disabled'}                                              
+                                                    />
+                                                </div>
+                                        </Col>
+                                 :null}
+                                </Row> 
+                                
                                 <Row style={{padding: "0px 10px 20px 20px"}}>
                                     <Col xs={6} md={3} lg={3}>
                                         <div style={{paddingRight: "15px"}}>
