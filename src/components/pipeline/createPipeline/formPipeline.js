@@ -129,6 +129,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
   let pipelineTypeName = _.uniqueId('pipelineType');
   let commercialOportunityName = _.uniqueId("commercialOportunity");
   let nameJustificationPipeline = _.uniqueId('justificationPipeline_');
+  let nameMellowingPeriodDate = _.uniqueId('mellowingPeriodDate_');
 
   let keyBusinessCategory = "";
   let keyBusinessCategory2 = "";
@@ -225,6 +226,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this._showJustificationsDetail = this._showJustificationsDetail.bind(this);
       this._justificationObligatoryField = this._justificationObligatoryField.bind(this);
       this._onChangeJustification = this._onChangeJustification.bind(this);
+      this._onChangeMellowingPeriod = this._onChangeMellowingPeriod.bind(this);
     }
 
     setValueToState = (args) => {
@@ -366,14 +368,12 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       const { selectsReducer, fields: { commission, mellowingPeriod, mellowingPeriodDate } } = this.props;
       let showLocalInteresSpread = false;
       let showMellowingPeriodField = false;
-      let componentDisbursementPlan = false;
       keyBusinessCategory = _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key') ? _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'key').toLowerCase() : '';
       if((keyBusinessCategory === PLACEMENTS || keyBusinessCategory === CATCHMENTS) || (keyBusinessCategory2 === PLACEMENTS || keyBusinessCategory2 === CATCHMENTS)){
           showLocalInteresSpread=true;
       }
       if(keyBusinessCategory === PLACEMENTS){
         showMellowingPeriodField = true;
-        componentDisbursementPlan = true;
           mellowingPeriod.onChange(_.get(_.filter(selectsReducer.get(MELLOWING_PERIOD), ['key', PIPELINE_DISBURSEMENT_PLAN]), '[0].id', ""));
         mellowingPeriodDate.onChange('');
       }else{
@@ -383,11 +383,24 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
       this.setState({
           messageTooltipNominalValue: _.get(_.find(this.state.businessCategories, ['id', parseInt(val)]), 'description'),
           showInteresSpread:showLocalInteresSpread,
-          showMellowingPeriodField: showMellowingPeriodField,
-          showComponentDisbursementPlan:componentDisbursementPlan,
+          showMellowingPeriodField: showMellowingPeriodField
 
       });
       commission.onChange("");
+    }
+
+    _onChangeMellowingPeriod(val){
+      const {selectsReducer } = this.props;
+      let componentDisbursementPlan = false;
+      const mellowingPeriod = selectsReducer.get(MELLOWING_PERIOD);
+      let mellowingPeriodSelected = mellowingPeriod.find((mellowing) => mellowing.id == val);
+
+      if(mellowingPeriodSelected && keyBusinessCategory === PLACEMENTS && mellowingPeriodSelected.key === PIPELINE_DISBURSEMENT_PLAN){
+        componentDisbursementPlan= true;
+      }
+      this.setState({
+        showComponentDisbursementPlan:componentDisbursementPlan
+      });
     }
 
     _onChangeBusinessCategory2(val){
@@ -803,7 +816,7 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
               "margin": margen.value === undefined || margen.value === null || margen.value === '' ? '' : numeral(margen.value).format('0.00'),
               "policyType": typePolicy.value ? typePolicy.value : "",
               "businessCategory2": businessCategory2.value,
-              "nominalValue2": nominalValue2.value === undefined || nominalValue2.value === null || nominalValue2.value === '' ? '' : numeral(nominalValue2.value).format('0.00'),
+              "nominalValue2": nominalValue2.value === undefined || nominalValue2.value === null || nominalValue2.value === '' ? '' : numeral(nominalValue2.value).format('0'),
               "negotiatedAmount" : negotiatedAmount.value === undefined || negotiatedAmount.value === null || negotiatedAmount.value ==='' ? '': numeral(negotiatedAmount.value).format('0'),
               "mellowingPeriodDate":  mellowingPeriodDate.value === undefined || mellowingPeriodDate.value === null || mellowingPeriodDate.value === '' ? '' :  Number(moment(mellowingPeriodDate.value, DATE_FORMAT_MONT_YEAR).format('x'))
             };
@@ -1350,13 +1363,16 @@ export default function createFormPipeline(name, origin, functionCloseModal) {
                         name={nameMellowingPeriod}
                         parentId="dashboardComponentScroll"
                         data={selectsReducer.get(MELLOWING_PERIOD) || []}
+                        onChange={val => this._onChangeMellowingPeriod(val)}
+                        disabled={'disabled'}
                         />
                   :
                   <DateTimePickerUi
                       culture='es'
                       format={DATE_FORMAT_MONT_YEAR}
-                      placeholder='"MM/YYYY"'
+                      placeholder='MM/YYYY'
                       initialView='year'
+                      name={nameMellowingPeriodDate}
                       time={false}
                       touched={true}
                       {...mellowingPeriodDate}
