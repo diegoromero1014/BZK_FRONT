@@ -243,6 +243,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._justificationObligatoryField = this._justificationObligatoryField.bind(this);
             this._onChangeJustification = this._onChangeJustification.bind(this);
             this.getPipelineSelectedKey = this.getPipelineSelectedKey.bind(this);
+            this._showNegotiatedAmountField = this._showNegotiatedAmountField.bind(this);
         }
 
         showFormDisbursementPlan(isOpen) {
@@ -381,12 +382,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this.setState(args);
         }
         _changeProductFamily(currencyValue) {
-            const { fields: { areaAssets, productFamily, product, businessCategory, negotiatedAmount },
+            const { fields: { areaAssets, productFamily, product, businessCategory },
              pipelineReducer, selectsReducer, dispatchChildren } = this.props; 
             GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);  
             const productsByFamily = selectsReducer.get(PRODUCTS_MASK).filter(p => p.parentId == currencyValue);
             let productFamilySelected = this.state.productsFamily.find(family => family.id == productFamily.value);
-            const keyProductFamily2 = productFamilySelected ? productFamilySelected.key.toLowerCase() : '';  
+            const keyProductFamily2 = productFamilySelected ? productFamilySelected.key : '';  
 
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
@@ -401,15 +402,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
             this.showTypePolicy(currencyValue);
 
-            if(keyProductFamily2 === NEGOTIATED_AMOUNT_VALUES.toLowerCase()){
+            if(keyProductFamily2 === NEGOTIATED_AMOUNT_VALUES){
                 this.setState({
-                  showNegotiatedAmountField: true
-                });        
+                    showNegotiatedAmountField: true                  
+                },);        
               }else{
-                this.setState({
-                  showNegotiatedAmountField: false
-                });
-        
+                this.setState({                  
+                  showNegotiatedAmountField: false});        
               }
         }
 
@@ -945,7 +944,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, positionCreatedBy,
                     positionUpdatedBy, reviewedDate, probability, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets,
                     termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, typePolicy, margen, justificationDetail,
-                    mellowingPeriodDate, negotiatedAmount
+                    mellowingPeriodDate
                 }, updateDisbursementPlans
             } = this.props;                        
             updateDisbursementPlans(data.disbursementPlans, origin);
@@ -997,12 +996,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
        _showNegotiatedAmountField(negotiatedAmountValue){
         const {fields:{ negotiatedAmount }} = this.props;
-        if(negotiatedAmountValue !== null){
-
+        if(negotiatedAmountValue !== null){       
             this.setState({
                 showNegotiatedAmountField: true
               });
-              negotiatedAmount.onChange(fomatInitialStateNumber(negotiatedAmountValue)); }
+              negotiatedAmount.onChange(fomatInitialStateNumber(negotiatedAmountValue));
+        }
      }
        
         _showLoadBusinessCategory2(businessCategory2Value, nominalValue2Value){
@@ -1409,6 +1408,27 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     </Col>
                                 </Row>
                                 : null }
+                                
+                                 <Row style={{padding: "0px 10px 20px 20px"}}>
+                                 {this.state.showNegotiatedAmountField ?
+                                        <Col xs={6} md={3} lg={3}>
+                                            <div style={{ paddingRight: "15px" }}>
+                                                <dt> <span>Monto negociado (</span><span style={{color: "red"}}>*</span>)</dt>                                       
+                                                    <Input
+                                                        {...negotiatedAmount}
+                                                        name="negotiatedAmount"
+                                                        type="text"
+                                                        placeholder="Miles ' , '"
+                                                        parentId="dashboardComponentScroll"
+                                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, negotiatedAmount, val, true, 0)}
+                                                        onFocus={val => handleFocusValueNumber(negotiatedAmount, negotiatedAmount.value)} 
+                                                        disabled={this.state.isEditable ? '' : 'disabled'}                                              
+                                                    />
+                                                </div>
+                                        </Col>
+                                 :null}
+                                </Row> 
+                                
                                 <Row style={{padding: "0px 10px 20px 20px"}}>
                                     <Col xs={6} md={3} lg={3}>
                                         <div style={{paddingRight: "15px"}}>
@@ -1472,28 +1492,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     </Col>
                                 </Row>
                                 : null}
-                            <Row style={{padding: "0px 10px 20px 20px"}}>
-                                {this.state.showNegotiatedAmountField ?
-                                        <Col xs={6} md={3} lg={3}>
-                                        <div style={{ paddingRight: "15px" }}>
-                                        <dt> <span>Monto negociado (</span><span style={{color: "red"}}>*</span>)</dt>
-                                        <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
-                                            <Input
-                                                {...negotiatedAmount}
-                                                name="negotiatedAmountEdit"
-                                                type="text"
-                                                placeholder="Miles ' , '"
-                                                parentId="dashboardComponentScroll"
-                                                onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, negotiatedAmount, val, true, 0)}
-                                                onFocus={val => handleFocusValueNumber(negotiatedAmount, negotiatedAmount.value)} 
-                                                disabled={this.state.isEditable ? '' : 'disabled'}
-                                            />
-                                            </div>
-                                        </div>
-                                        </Col>
-                                    :null
-                                    }
-                                </Row> 
+                           
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
                                     <Col xs={12} md={6} lg={6}>
                                         <div style={{ paddingRight: "15px" }}>
