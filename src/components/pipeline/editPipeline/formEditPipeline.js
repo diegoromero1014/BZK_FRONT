@@ -1425,8 +1425,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     </Col>
                                 </Row>
                                 : null }
-                                
-                                 <Row style={{padding: "0px 10px 20px 20px"}}>
+                                <Row style={{padding: "0px 10px 20px 20px"}}>
                                  {this.state.showNegotiatedAmountField ?
                                         <Col xs={6} md={3} lg={3}>
                                             <div style={{ paddingRight: "15px" }}>
@@ -1509,28 +1508,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                     </Col>
                                 </Row>
                                 : null}
-                            <Row style={{padding: "0px 10px 20px 20px"}}>
-                                {this.state.showNegotiatedAmountField ?
-                                        <Col xs={6} md={3} lg={3}>
-                                        <div style={{ paddingRight: "15px" }}>
-                                        <dt> <span>Monto negociado (</span><span style={{color: "red"}}>*</span>)</dt>
-                                        <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
-                                            <Input
-                                                {...negotiatedAmount}
-                                                name="negotiatedAmountEdit"
-                                                type="text"
-                                                placeholder="Miles ' , '"
-                                                parentId="dashboardComponentScroll"
-                                                onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, negotiatedAmount, val, true, 0)}
-                                                onFocus={val => handleFocusValueNumber(negotiatedAmount, negotiatedAmount.value)}
-                                                disabled={this.state.isEditable ? '' : 'disabled'}
-                                            />
-                                            </div>
-                                        </div>
-                                        </Col>
-                                    :null
-                                    }
-                                </Row>
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
                                     <Col xs={12} md={6} lg={6}>
                                         <div style={{ paddingRight: "15px" }}>
