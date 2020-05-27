@@ -243,7 +243,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this._justificationObligatoryField = this._justificationObligatoryField.bind(this);
             this._onChangeJustification = this._onChangeJustification.bind(this);
             this.getPipelineSelectedKey = this.getPipelineSelectedKey.bind(this);
-            this._showNegotiatedAmountField = this._showNegotiatedAmountField.bind(this);
         }
 
         showFormDisbursementPlan(isOpen) {
@@ -381,13 +380,14 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         setValueToState = (args) => {
             this.setState(args);
         }
-        _changeProductFamily(currencyValue) {
+        async _changeProductFamily(currencyValue) {            
             const { fields: { areaAssets, productFamily, product, businessCategory },
              pipelineReducer, selectsReducer, dispatchChildren } = this.props; 
-            GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);  
+            await GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);  
             const productsByFamily = selectsReducer.get(PRODUCTS_MASK).filter(p => p.parentId == currencyValue);
-            let productFamilySelected = this.state.productsFamily.find(family => family.id == productFamily.value);
-            const keyProductFamily2 = productFamilySelected ? productFamilySelected.key : '';  
+           
+            let productFamilySelected =  selectsReducer.get(ALL_PRODUCT_FAMILIES).find(family => family.id == currencyValue);
+            const keyProductFamily2 = productFamilySelected ? productFamilySelected.key : '';
 
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
@@ -405,10 +405,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             if(keyProductFamily2 === NEGOTIATED_AMOUNT_VALUES){
                 this.setState({
                     showNegotiatedAmountField: true                  
-                },);        
+                });        
               }else{
                 this.setState({                  
-                  showNegotiatedAmountField: false});        
+                  showNegotiatedAmountField: false
+                });        
               }
         }
 
@@ -944,7 +945,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     termInMonths, value, client, documentStatus, createdBy, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, positionCreatedBy,
                     positionUpdatedBy, reviewedDate, probability, businessCategory, opportunityName, productFamily, mellowingPeriod, areaAssets,
                     termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, typePolicy, margen, justificationDetail,
-                    mellowingPeriodDate
+                    mellowingPeriodDate, negotiatedAmount
                 }, updateDisbursementPlans
             } = this.props;                        
             updateDisbursementPlans(data.disbursementPlans, origin);
@@ -990,20 +991,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             justificationDetail.onChange(data.justificationDetail);
             mellowingPeriodDate.onChange(moment(data.mellowingPeriodDate).format('MM/YYYY'));
             this._showLoadBusinessCategory2(data.businessCategory2, data.nominalValue2);
-            this._showNegotiatedAmountField(data.negotiatedAmount);
+            negotiatedAmount.onChange(fomatInitialStateNumber(data.negotiatedAmount));
         }
 
-
-       _showNegotiatedAmountField(negotiatedAmountValue){
-        const {fields:{ negotiatedAmount }} = this.props;
-        if(negotiatedAmountValue !== null){       
-            this.setState({
-                showNegotiatedAmountField: true
-              });
-              negotiatedAmount.onChange(fomatInitialStateNumber(negotiatedAmountValue));
-        }
-     }
-       
         _showLoadBusinessCategory2(businessCategory2Value, nominalValue2Value){
             const {fields:{ businessCategory2, nominalValue2 }} = this.props;
             if(businessCategory2Value !== null){
