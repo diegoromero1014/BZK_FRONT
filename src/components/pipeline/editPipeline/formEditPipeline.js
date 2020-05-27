@@ -546,9 +546,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     showMellowingPeriodField: true
                 });
                 mellowingPeriod.onChange(_.get(_.filter(selectsReducer.get(MELLOWING_PERIOD), ['key', PIPELINE_DISBURSEMENT_PLAN]), '[0].id', ""));
-
-            }else{
                 mellowingPeriodDate.onChange('');
+            }else{
                 this.setState({
                     showMellowingPeriodField: false
                 });
@@ -1003,7 +1002,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             sva.onChange(data.sva);
             typePolicy.onChange(data.policyType);
             justificationDetail.onChange(data.justificationDetail);
-            mellowingPeriodDate.onChange(moment(data.mellowingPeriodDate).format('MM/YYYY'));
+            mellowingPeriodDate.onChange(data.mellowingPeriodDate != null && data.mellowingPeriodDate!= '' ?moment(data.mellowingPeriodDate).format('MM/YYYY') : '');
             this._showLoadBusinessCategory2(data.businessCategory2, data.nominalValue2);
             negotiatedAmount.onChange(fomatInitialStateNumber(data.negotiatedAmount));
         }
@@ -1519,30 +1518,30 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                 </ToolTip>
                                             </dt>
                             {this.state.showMellowingPeriodField ?
-                                            <ComboBox
-                                                labelInput="Seleccione..."
-                                                valueProp={'id'}
-                                                textProp={'value'}
-                                                {...mellowingPeriod}
-                                                name={nameMellowingPeriod}
-                                                touched={true}
-                                                parentId="dashboardComponentScroll"
-                                                data={selectsReducer.get(MELLOWING_PERIOD) || []}
-                                                onChange={val => this._onChangeMellowingPeriod(val) }
-                                                disabled={'disabled'}
-                                            />
+                                <ComboBox
+                                    labelInput="Seleccione..."
+                                    valueProp={'id'}
+                                    textProp={'value'}
+                                    {...mellowingPeriod}
+                                    name={nameMellowingPeriod}
+                                    touched={true}
+                                    parentId="dashboardComponentScroll"
+                                    data={selectsReducer.get(MELLOWING_PERIOD) || []}
+                                    onChange={val => this._onChangeMellowingPeriod(val) }
+                                    disabled={'disabled'}
+                                />
                                     :
-                                    <DateTimePickerUi
-                                        culture='es'
-                                        format={DATE_FORMAT_MONT_YEAR}
-                                        placeholder='"MM/YYYY"'
-                                        initialView='year'
-                                        time={false}
-                                        touched={true}
-                                        name={nameMellowingPeriodDate}
-                                        {...mellowingPeriodDate}
-                                        disabled={this.state.isEditable ? '' : 'disabled'}
-                                    />
+                                <DateTimePickerUi
+                                    culture='es'
+                                    format={DATE_FORMAT_MONT_YEAR}
+                                    placeholder='"MM/YYYY"'
+                                    initialView='year'
+                                    time={false}
+                                    touched={true}
+                                    name={nameMellowingPeriodDate}
+                                    {...mellowingPeriodDate}
+                                    disabled={this.state.isEditable ? '' : 'disabled'}
+                                />
                             }
                                         </div>
                                     </Col>
