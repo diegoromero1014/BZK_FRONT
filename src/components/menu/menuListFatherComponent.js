@@ -5,6 +5,8 @@ import _ from "lodash";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {changeActiveItemMenu} from './actions';
+import {closeSession} from './actions';
+import { showLoading } from '../loading/actions';
 
 class MenuListFatherComponent extends Component {
 
@@ -16,14 +18,17 @@ class MenuListFatherComponent extends Component {
     }
 
     _handleClickMenuItemChildren(link, labelText) {
+        showLoading(true, "Cerrando sesión")
         if (!_.isEqual(link, undefined) && !_.isEqual(link, null)) {
             this.props.changeActiveItemMenu(this.props.labelText);
             if (link === '/logout') {
                 // Click en logout
+                closeSession();
                 this.clearSessionVariables()
                 redirectUrl('/login')         
             }
             redirectUrl(link);
+            showLoading(false, "")
         }
     }
 
