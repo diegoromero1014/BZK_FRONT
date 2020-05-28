@@ -29,7 +29,7 @@ export const fieldsWithRules = {
     roe: { rules: [validateDecimal] },
     termInMonths: { rules: [checkRequiredTermInMonths, checkNumberLength(3)] },
     businessStatus: { rules: [checkRequired] }, 
-    businessCategory: { rules: [checkRequiredWithGlobalCondition] }, 
+    businessCategory: { rules: [checkRequiredWithGlobalCondition, checkRequired] }, 
     currency: { rules: [checkRequired] }, 
     indexing: { rules: [] }, 
     need: { rules: [checkRequired] }, 
