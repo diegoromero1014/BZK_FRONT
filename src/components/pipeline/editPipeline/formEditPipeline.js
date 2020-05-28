@@ -633,9 +633,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 this.setState({
                     showJustificationField: false
                 })
+                justification.onChange("");
+                justificationDetail.onChange("");
             }
-            justification.onChange("");
-            justificationDetail.onChange("");
         }
 
         _onChangeJustification(value){
@@ -960,7 +960,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, typePolicy, margen, justificationDetail,
                     mellowingPeriodDate, negotiatedAmount
                 }, updateDisbursementPlans
-            } = this.props;                        
+            } = this.props;       
             updateDisbursementPlans(data.disbursementPlans, origin);
             this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport });                                                                                                 
             pipelineType.onChange(data.pipelineType);  
