@@ -383,11 +383,10 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         setValueToState = (args) => {
             this.setState(args);
         }
-        async _changeProductFamily(currencyValue) {            
+        _changeProductFamily(currencyValue) {            
             const { fields: { areaAssets, productFamily, product, businessCategory },
              pipelineReducer, selectsReducer, dispatchChildren } = this.props; 
-            await GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);  
-            const productsByFamily = selectsReducer.get(PRODUCTS_MASK).filter(p => p.parentId == currencyValue);
+            GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);  
            
             let productFamilySelected =  selectsReducer.get(ALL_PRODUCT_FAMILIES).find(family => family.id == currencyValue);
             const keyProductFamily2 = productFamilySelected ? productFamilySelected.key : '';
