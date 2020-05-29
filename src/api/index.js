@@ -4,7 +4,7 @@ import router from '../historyRouter'
 
 export function setAuthorizationHeader(token) {
     if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('sessionTokenFront')}` 
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}` 
     }
 }
 
