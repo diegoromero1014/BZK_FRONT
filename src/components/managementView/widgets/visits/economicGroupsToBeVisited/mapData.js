@@ -6,8 +6,8 @@ export const mapData = (data = []) => {
     return data.map((item) => {
         const newData = Object.assign({}, item);
 
-        if (item.principalClientName) {
-            set(newData, 'principalClientName', item.principalClientName.toUpperCase());
+        if (item.clientName) {
+            set(newData, 'clientName', item.clientName.toUpperCase());
         }
 
         if (!item.lastVisitType && !item.lastVisitAuthor && !item.lastVisitTime) {
@@ -26,8 +26,8 @@ export const mapData = (data = []) => {
         }
 
         return {
-            idPrincipalClient: newData.idPrincipalClient,
-            principalClientName: newData.principalClientName,
+            clientId: newData.clientId,
+            clientName: newData.clientName,
             lastVisitType: newData.lastVisitType,
             lastVisitAuthor: newData.lastVisitAuthor,
             lastVisitTime: newData.lastVisitTime,

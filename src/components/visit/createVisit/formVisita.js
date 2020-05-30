@@ -37,7 +37,8 @@ import {
   TITLE_BANC_PARTICIPANTS,
   TITLE_CLIENT_PARTICIPANTS,
   TITLE_CONCLUSIONS_VISIT,
-  TITLE_OTHERS_PARTICIPANTS
+  TITLE_OTHERS_PARTICIPANTS,
+  NAME_FILE_SHOPPING_MAP
 } from "../../../constantsGlobal";
 import { LAST_VISIT_REVIEW } from "../../../constantsParameters";
 import { KEY_PARTICIPANT_CLIENT, KEY_PARTICIPANT_BANCO, KEY_PARTICIPANT_OTHER } from "../../participantsVisitPre/constants";
@@ -51,6 +52,7 @@ import moment from "moment";
 import { buildJsoncommercialReport } from "../../commercialReport/functionsGenerics";
 import { setConfidential } from "../../commercialReport/actions";
 import {prepareTasksNotes} from "../tasks/actions";
+import { swtShowMessage } from "../../sweetAlertMessages/actions";
 
 const fields = ["tipoVisita", "fechaVisita", "desarrolloGeneral"];
 var dateVisitLastReview;
@@ -154,7 +156,7 @@ class FormVisita extends Component {
 
   _submitCreateVisita() {
     const {
-      participants, tasks, createVisti, clearIdPrevisit, clearParticipants, changeStateSaveData, usersPermission, confidentialReducer, dispatchPrepareTasksNotes } = this.props;
+      participants, tasks, createVisti, clearIdPrevisit, clearParticipants, dispatchChangeStateSaveData, usersPermission, confidentialReducer, dispatchPrepareTasksNotes } = this.props;
     var errorInForm = false;
     let errorMessage = "Señor usuario, debe ingresar todos los campos obligatorios.";
     let errorMessageTitle = "Campos obligatorios";
@@ -274,10 +276,10 @@ class FormVisita extends Component {
           "commercialReport": buildJsoncommercialReport(null, usersPermission.toArray(), confidentialReducer.get('confidential'), typeButtonClick)
         }
         const that = this;
-        changeStateSaveData(true, MESSAGE_SAVE_DATA);
+        dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
 
         createVisti(visitJson).then((data) => {
-          changeStateSaveData(false, "");
+          dispatchChangeStateSaveData(false, "");
           if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
             redirectUrl("/login");
           } else {
@@ -306,7 +308,7 @@ class FormVisita extends Component {
             }
           }
         }, () => {
-          changeStateSaveData(false, "");
+          dispatchChangeStateSaveData(false, "");
           typeMessage = "error";
           titleMessage = "Creación visita";
           message = "Señor usuario, ocurrió un error creando la visita.";
@@ -401,8 +403,8 @@ class FormVisita extends Component {
   }
 
   _downloadFileShoppingMap() {
-    const { downloadFilePdf } = this.props;
-    downloadFilePdf(FILE_OPTION_SHOPPING_MAP);
+    const { dispatchDownloadFilePdf, dispatchChangeStateSaveData, dispatchSwtShowMessage } = this.props;
+    dispatchDownloadFilePdf(FILE_OPTION_SHOPPING_MAP, NAME_FILE_SHOPPING_MAP, dispatchChangeStateSaveData, dispatchSwtShowMessage);
   }
 
   componentWillMount() {
@@ -776,15 +778,16 @@ function mapDispatchToProps(dispatch) {
     getMasterDataFields,
     consultParameterServer,
     createVisti,
-    downloadFilePdf,
     detailPrevisit,
     addParticipant,
     clearIdPrevisit,
     clearParticipants,
-    changeStateSaveData,
     nonValidateEnter,
     setConfidential,
-    dispatchPrepareTasksNotes: prepareTasksNotes
+    dispatchPrepareTasksNotes: prepareTasksNotes,
+    dispatchDownloadFilePdf: downloadFilePdf,
+    dispatchChangeStateSaveData : changeStateSaveData,
+    dispatchSwtShowMessage : swtShowMessage
   }, dispatch);
 }
 

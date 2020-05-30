@@ -1,5 +1,4 @@
-import React, { Component, PropTypes } from 'react';
-import GridComponent from '../grid/component';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { DELETE_PARTICIPANT_VIEW, KEY_PARTICIPANT_OTHER } from './constants';

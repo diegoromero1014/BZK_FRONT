@@ -7,7 +7,7 @@ import SearchBarClient from './searchClientAlertPendingUpdate';
 import Pagination from './pagination';
 import ListClientsPendingUpdate from './listClientPendingUpdate';
 import _ from 'lodash';
-import { changeKeyword, changePage, changeRegion, changeTeam, changeZone, clearFilter, clientsPendingUpdateFindServer } from './actions';
+import { changePage, changeRegion, changeTeam, changeZone, clearFilter, clientsPendingUpdateFindServer } from './actions';
 import { showLoading } from '../loading/actions';
 import { redirectUrl } from '../globalComponents/actions';
 import { updateTitleNavBar } from '../navBar/actions';
@@ -21,99 +21,116 @@ import * as constants from '../selectsComponent/constants';
 const fields = ["team", "region", "zone"];
 const titleModule = 'Alerta de clientes pendientes por actualizar';
 
-class ClientsPendingUpdate extends Component {
+export class ClientsPendingUpdate extends Component {
     constructor(props) {
         super(props);
-        this._onChangeTeam = this._onChangeTeam.bind(this);
-        this._onChangeRegionStatus = this._onChangeRegionStatus.bind(this);
-        this._onChangeZoneStatus = this._onChangeZoneStatus.bind(this);
-        this._handleClientsFind = this._handleClientsFind.bind(this);
-        this._cleanSearch = this._cleanSearch.bind(this);
+        this.onChangeTeam = this.onChangeTeam.bind(this);
+        this.onChangeRegionStatus = this.onChangeRegionStatus.bind(this);
+        this.onChangeZoneStatus = this.onChangeZoneStatus.bind(this);
+        this.handleClientsFind = this.handleClientsFind.bind(this);
+        this.cleanSearch = this.cleanSearch.bind(this);
     }
 
     componentWillMount() {
-        const {showLoading} = this.props;
+        const { dispatchShowLoading } = this.props;
         if (window.localStorage.getItem('sessionTokenFront') === "" || window.localStorage.getItem('sessionTokenFront') === undefined) {
             redirectUrl("/login");
         } else {
-            const {clearFilter, consultList, getMasterDataFields, consultDataSelect, updateTitleNavBar} = this.props;
-            showLoading(true, 'Cargando..');
-            getMasterDataFields([constants.CERTIFICATION_STATUS]).then((data) => {
+            const {
+                dispatchClearFilter,
+                dispatchConsultList,
+                dispatchGetMasterDataFields,
+                dispatchConsultDataSelect,
+                dispatchUpdateTitleNavBar
+            } = this.props;
+
+            dispatchShowLoading(true, 'Cargando..');
+            dispatchGetMasterDataFields([constants.CERTIFICATION_STATUS]).then((data) => {
                 if (_.get(data, 'payload.data.validateLogin') === false) {
                     onSessionExpire();
                 }
             });
-            consultList(constants.TEAM_FOR_EMPLOYEE);
-            consultDataSelect(constants.LIST_REGIONS);
-            clearFilter().then((data) => {
+            dispatchConsultList(constants.TEAM_FOR_EMPLOYEE);
+            dispatchConsultDataSelect(constants.LIST_REGIONS);
+            dispatchClearFilter().then((data) => {
                 if (_.has(data, 'payload.data.data')) {
-                    showLoading(false, null);
+                    dispatchShowLoading(false, null);
                 }
             });
-            updateTitleNavBar(titleModule);
+            dispatchUpdateTitleNavBar(titleModule);
         }
     }
 
-    componentWillUnmount(){
-        this.props.updateTitleNavBar('');
+    componentWillUnmount() {
+        this.props.dispatchUpdateTitleNavBar('');
     }
 
-    _cleanSearch() {
-        const {resetForm,showLoading, clearFilter,consultList} = this.props;
-        showLoading(true, 'Cargando..');
+    cleanSearch = () => {
+        const { resetForm, dispatchShowLoading, dispatchClearFilter, dispatchConsultList } = this.props;
+        dispatchShowLoading(true, 'Cargando..');
         resetForm();
-        clearFilter();
-        consultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
+        dispatchClearFilter();
+        dispatchConsultList(constants.TEAM_FOR_EMPLOYEE).then((data) => {
             if (_.has(data, 'payload.data.teamValueObjects')) {
-                showLoading(false, null);
+                dispatchShowLoading(false, null);
             }
         });
     }
 
-    _onChangeTeam(val) {
-        const {fields: {team}, changeTeam} = this.props;
+    onChangeTeam = val => {
+        const { fields: { team }, dispatchChangeTeam } = this.props;
         team.onChange(val);
-        changeTeam(val);
+        dispatchChangeTeam(val);
         if (val) {
-            this._handleClientsFind();
+            this.handleClientsFind();
         }
     }
 
-    _onChangeRegionStatus(val) {
+    onChangeRegionStatus = val => {
         if (!_.isEqual(val, "")) {
             const {
-                fields: {team, region, zone}, consultListWithParameterUbication, changeRegion, consultTeamsByRegionByEmployee
+                fields: { team, region, zone },
+                dispatchConsultListWithParameterUbication,
+                dispatchChangeRegion,
+                dispatchConsultTeamsByRegionByEmployee
             } = this.props;
 
             region.onChange(val);
             zone.onChange(null);
             team.onChange(null);
-            changeRegion(val);
-            consultListWithParameterUbication(constants.LIST_ZONES, val);
-            this._handleClientsFind();
-            consultTeamsByRegionByEmployee(val);
+            dispatchChangeRegion(val);
+            dispatchConsultListWithParameterUbication(constants.LIST_ZONES, val);
+            this.handleClientsFind();
+            dispatchConsultTeamsByRegionByEmployee(val);
         }
     }
 
-    _onChangeZoneStatus(val) {
-        const {fields: {zone},changeZone} = this.props;
+    onChangeZoneStatus = val => {
+        const { fields: { zone }, dispatchChangeZone } = this.props;
         zone.onChange(val);
-        changeZone(val);
+        dispatchChangeZone(val);
         if (val) {
-            this._handleClientsFind();
+            this.handleClientsFind();
         }
     }
 
-    _handleClientsFind() {
-        const {fields: {team, region, zone}, clientsPendingUpdateFindServer, alertPendingUpdateClient, changePage, showLoading} = this.props;
+    handleClientsFind = () => {
+        const {
+            fields: { team, region, zone },
+            dispatchClientsPendingUpdateFindServer,
+            alertPendingUpdateClient,
+            dispatchChangePage,
+            dispatchShowLoading
+        } = this.props;
+
         const keyWordNameNit = alertPendingUpdateClient.get('keywordNameNit');
         const order = alertPendingUpdateClient.get('order');
         const columnOrder = alertPendingUpdateClient.get('columnOrder');
-        showLoading(true, 'Cargando..');
-        clientsPendingUpdateFindServer(keyWordNameNit, team.value, region.value, zone.value, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
+        dispatchShowLoading(true, 'Cargando..');
+        dispatchClientsPendingUpdateFindServer(keyWordNameNit, team.value, region.value, zone.value, 1, NUMBER_RECORDS, order, columnOrder).then((data) => {
             if (_.has(data, 'payload.data.data')) {
-                showLoading(false, null);
-                changePage(1);
+                dispatchShowLoading(false, null);
+                dispatchChangePage(1);
             }
         });
     }
@@ -121,8 +138,8 @@ class ClientsPendingUpdate extends Component {
     render() {
         var visibleTable = 'none';
         var visibleMessage = 'block';
-        const {fields:{team, region, zone}, alertPendingUpdateClient, selectsReducer} = this.props;
-        if(_.size(alertPendingUpdateClient.get('responseClients')) !== 0) {
+        const { fields: { team, region, zone }, alertPendingUpdateClient, selectsReducer } = this.props;
+        if (_.size(alertPendingUpdateClient.get('responseClients')) !== 0) {
             visibleTable = 'block';
             visibleMessage = 'none';
         }
@@ -130,16 +147,16 @@ class ClientsPendingUpdate extends Component {
         return (
             <div>
                 <form>
-                    <Row style={{borderBottom: "2px solid #D9DEDF", marginTop: "15px"}}>
-                        <Col xs={12} sm={12} md={4} lg={4} style={{width: '60%'}}>
-                            <SearchBarClient valueTeam={team.value} valueRegion={region.value} valueZone={zone.value}/>
+                    <Row style={{ borderBottom: "2px solid #D9DEDF", marginTop: "15px" }}>
+                        <Col xs={12} sm={12} md={4} lg={4} style={{ width: '60%' }}>
+                            <SearchBarClient valueTeam={team.value} valueRegion={region.value} valueZone={zone.value} />
                         </Col>
-                        <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
+                        <Col xs={12} sm={12} md={3} lg={2} style={{ width: '60%' }}>
                             <ComboBox
                                 name="celula"
                                 labelInput="Célula"
                                 {...team}
-                                onChange={val => this._onChangeTeam(val)}
+                                onChange={val => this.onChangeTeam(val)}
                                 value={team.value}
                                 onBlur={team.onBlur}
                                 valueProp={'id'}
@@ -148,12 +165,12 @@ class ClientsPendingUpdate extends Component {
                                 data={selectsReducer.get('teamValueObjects')}
                             />
                         </Col>
-                        <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
+                        <Col xs={12} sm={12} md={3} lg={2} style={{ width: '60%' }}>
                             <ComboBox
                                 name="region"
                                 labelInput="Región"
                                 {...region}
-                                onChange={val =>this._onChangeRegionStatus(val)}
+                                onChange={val => this.onChangeRegionStatus(val)}
                                 value={region.value}
                                 onBlur={region.onBlur}
                                 valueProp={'id'}
@@ -162,12 +179,12 @@ class ClientsPendingUpdate extends Component {
                                 data={selectsReducer.get(constants.LIST_REGIONS) || []}
                             />
                         </Col>
-                        <Col xs={12} sm={12} md={3} lg={2} style={{width: '60%'}}>
+                        <Col xs={12} sm={12} md={3} lg={2} style={{ width: '60%' }}>
                             <ComboBox
                                 name="zona"
                                 labelInput="Zona"
                                 {...zone}
-                                onChange={val => this._onChangeZoneStatus(val)}
+                                onChange={val => this.onChangeZoneStatus(val)}
                                 value={zone.value}
                                 onBlur={zone.onBlur}
                                 valueProp={'id'}
@@ -176,34 +193,34 @@ class ClientsPendingUpdate extends Component {
                                 data={selectsReducer.get(constants.LIST_ZONES) || []}
                             />
                         </Col>
-                        <Col xs={12} sm={12} md={2} lg={2} style={{width: '100%'}}>
-                            <button className="btn btn-primary" type="button" onClick={this._cleanSearch}
-                                    title="Limpiar búsqueda" style={{marginLeft: "17px"}}>
+                        <Col xs={12} sm={12} md={2} lg={2} style={{ width: '100%' }}>
+                            <button className="btn btn-primary" type="button" onClick={this.cleanSearch}
+                                title="Limpiar búsqueda" style={{ marginLeft: "17px" }}>
                                 <i className="erase icon"
-                                   style={{color: "white", margin: '0em', fontSize: '1.2em'}}></i>
+                                    style={{ color: "white", margin: '0em', fontSize: '1.2em' }}></i>
                             </button>
                         </Col>
                     </Row>
                 </form>
                 <Row>
-                    <div style={{padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%'}}>
+                    <div style={{ padding: "15px", fontSize: '25px', textAlign: 'center', width: '100%' }}>
                         Total: {numberTotalClientFiltered}
                     </div>
                 </Row>
                 <Row>
                     <Col xs={12} md={12} lg={12}>
-                        <Grid style={{display: visibleTable, width: "98%"}}>
+                        <Grid style={{ display: visibleTable, width: "98%" }}>
                             <Row>
                                 <Col xs>
                                     <ListClientsPendingUpdate />
-                                    <Pagination/>
+                                    <Pagination />
                                 </Col>
                             </Row>
                         </Grid>
-                        <Grid style={{display: visibleMessage, width: "100%"}}>
+                        <Grid style={{ display: visibleMessage, width: "100%" }}>
                             <Row center="xs">
                                 <Col xs={12} sm={8} md={12} lg={12}>
-                                    <span style={{fontWeight: 'bold', color: '#4C5360'}}>No se han encontrado resultados para la búsqueda</span>
+                                    <span style={{ fontWeight: 'bold', color: '#4C5360' }}>No se han encontrado resultados para la búsqueda</span>
                                 </Col>
                             </Row>
                         </Grid>
@@ -214,32 +231,27 @@ class ClientsPendingUpdate extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        clientsPendingUpdateFindServer,
-        clearFilter,
-        getMasterDataFields,
-        changePage,
-        changeKeyword,
-        consultList,
-        updateTitleNavBar,
-        consultListWithParameterUbication,
-        consultDataSelect,
-        showLoading,
-        changeTeam,
-        changeRegion,
-        changeZone,
-        consultTeamsByRegionByEmployee
-    }, dispatch);
-}
+const mapDispatchToProps = dispatch => bindActionCreators({
+    dispatchClientsPendingUpdateFindServer: clientsPendingUpdateFindServer,
+    dispatchClearFilter: clearFilter,
+    dispatchGetMasterDataFields: getMasterDataFields,
+    dispatchChangePage: changePage,
+    dispatchConsultList: consultList,
+    dispatchUpdateTitleNavBar: updateTitleNavBar,
+    dispatchConsultListWithParameterUbication: consultListWithParameterUbication,
+    dispatchConsultDataSelect: consultDataSelect,
+    dispatchShowLoading: showLoading,
+    dispatchChangeTeam: changeTeam,
+    dispatchChangeRegion: changeRegion,
+    dispatchChangeZone: changeZone,
+    dispatchConsultTeamsByRegionByEmployee: consultTeamsByRegionByEmployee
+}, dispatch);
 
-function mapStateToProps({alertPendingUpdateClient, selectsReducer, navBar, reducerGlobal}, {fields}) {
-    return {
-        alertPendingUpdateClient,
-        selectsReducer,
-        navBar,
-        reducerGlobal
-    };
-}
+const mapStateToProps = ({ alertPendingUpdateClient, selectsReducer, navBar, reducerGlobal }) => ({
+    alertPendingUpdateClient,
+    selectsReducer,
+    navBar,
+    reducerGlobal
+})
 
-export default reduxForm({form: FORM_FILTER_ALERT_PUC, fields}, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);
+export default reduxForm({ form: FORM_FILTER_ALERT_PUC, fields }, mapStateToProps, mapDispatchToProps)(ClientsPendingUpdate);

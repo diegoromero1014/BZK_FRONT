@@ -10,15 +10,16 @@ import ComboBox from '../../ui/comboBox/comboBoxComponent';
 import BotonCreateContactComponent from '../contact/createContact/botonCreateContactComponent';
 import Tooltip from "../toolTip/toolTipComponent";
 
-import { addParticipant, clearParticipants } from './actions';
+import { addParticipant } from './actions';
 import { contactsByClientFindServer } from '../contact/actions';
-import { downloadFilePDF } from '../contact/actions'
+import { downloadFilePdf } from '../clientInformation/actions';
 import { validatePermissionsByModule } from '../../actionsGlobal';
 import { swtShowMessage } from '../sweetAlertMessages/actions';
 
-import { FILE_OPTION_SOCIAL_STYLE_CONTACT } from '../../constantsGlobal';
+import { FILE_OPTION_SOCIAL_STYLE_CONTACT, NAME_FILE_SOCIAL_STYLE_CONTACT } from '../../constantsGlobal';
 import { MODULE_CONTACTS, CREAR } from '../../constantsGlobal';
 import { NUMBER_CONTACTS, KEY_PARTICIPANT_CLIENT } from './constants';
+import { changeStateSaveData } from '../main/actions';
 
 const validate = values => {
     const errors = {}
@@ -30,7 +31,7 @@ var titleMessageSocialStyle = "Si la reunión será atendida por varias personas
     + "esos intereses y preocupaciones?";
 
 var disabledButtonCreate = '';
-class ParticipantesCliente extends Component {
+export class ParticipantesCliente extends Component {
 
     constructor(props) {
         super(props);
@@ -38,14 +39,13 @@ class ParticipantesCliente extends Component {
             showEmptyParticipant: false,
             showParticipantExist: false
         }
-        this._addParticipantClient = this._addParticipantClient.bind(this);
-        this._updateValue = this._updateValue.bind(this);
-        this._submitValores = this._submitValores.bind(this);
-        this._downloadFileSocialStyle = this._downloadFileSocialStyle.bind(this);
+        this.addParticipantClient = this.addParticipantClient.bind(this);
+        this.updateValue = this.updateValue.bind(this);
+        this.downloadFileSocialStyle = this.downloadFileSocialStyle.bind(this);
     }
 
-    _addParticipantClient() {
-        const { fields: { idContacto, nameContacto, contactoCliente, cargoContacto, estiloSocial, actitudGrupo }, participants, addParticipant, swtShowMessage } = this.props;
+    addParticipantClient = () => {
+        const { fields: { idContacto, nameContacto, contactoCliente, cargoContacto, estiloSocial, actitudGrupo }, participants, dispatchAddParticipant, dispatchSwtShowMessage } = this.props;
         if (contactoCliente.value !== "" && contactoCliente.value !== null && contactoCliente.value !== undefined) {
             var particip = participants.find(function (item) {
                 return item.idParticipante === idContacto.value;
@@ -66,7 +66,7 @@ class ParticipantesCliente extends Component {
                     fecha: Date.now(),
                     uuid
                 }
-                addParticipant(clientParticipant);
+                dispatchAddParticipant(clientParticipant);
                 idContacto.onChange('');
                 nameContacto.onChange('');
                 contactoCliente.onChange('');
@@ -74,24 +74,24 @@ class ParticipantesCliente extends Component {
                 estiloSocial.onChange('');
                 actitudGrupo.onChange('');
             } else {
-                swtShowMessage('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
+                dispatchSwtShowMessage('error', "Participante existente", "Señor usuario, el participante que desea agregar ya se encuentra en la lista");
             }
         } else {
-            swtShowMessage('error', "Error participante", "Señor usuario, para agregar un participante debe seleccionar un contacto");
+            dispatchSwtShowMessage('error', "Error participante", "Señor usuario, para agregar un participante debe seleccionar un contacto");
         }
     }
 
-    _downloadFileSocialStyle() {
-        const { downloadFilePDF } = this.props;
-        downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
+    downloadFileSocialStyle = () => {
+        const { dispatchDownloadFilePdf, dispatchChangeStateSaveData, dispatchSwtShowMessage } = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT, NAME_FILE_SOCIAL_STYLE_CONTACT, dispatchChangeStateSaveData, dispatchSwtShowMessage);
     }
 
     componentWillMount() {
-        const { contactsByClientFindServer, validatePermissionsByModule } = this.props;
-        
+        const { dispatchContactsByClientFindServer, dispatchValidatePermissionsByModule } = this.props;
+
         this.props.resetForm();
-        contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_CONTACTS, "", 0, "", "", "", "", "");
-        validatePermissionsByModule(MODULE_CONTACTS).then((data) => {
+        dispatchContactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_CONTACTS, "", 0, "", "", "", "", "");
+        dispatchValidatePermissionsByModule(MODULE_CONTACTS).then((data) => {
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === 'false') {
                 redirectUrl("/login");
             } else {
@@ -102,7 +102,7 @@ class ParticipantesCliente extends Component {
         });
     }
 
-    _updateValue(value) {
+    updateValue = value => {
         const {
             fields: { idContacto, nameContacto, cargoContacto, estiloSocial, actitudGrupo }, contactsByClient
         } = this.props;
@@ -123,10 +123,6 @@ class ParticipantesCliente extends Component {
             estiloSocial.onChange(contactSelected.contactSocialStyle);
             actitudGrupo.onChange(contactSelected.contactActitudeCompany);
         }
-    }
-
-    _submitValores() {
-
     }
 
     render() {
@@ -162,7 +158,7 @@ class ParticipantesCliente extends Component {
                                         name="txtContactoCliente"
                                         labelInput="Seleccione..."
                                         {...contactoCliente}
-                                        onChange={val => this._updateValue(val)}
+                                        onChange={val => this.updateValue(val)}
                                         valueProp={'id'}
                                         textProp={'nameComplet'}
                                         data={contactsByClient.get('contacts')}
@@ -191,7 +187,7 @@ class ParticipantesCliente extends Component {
                                                 style={{ fontSize: "14px", cursor: "pointer", marginLeft: "2px" }} />
                                         </Tooltip>
                                         <Tooltip text='Descargar archivo de estilo social'>
-                                            <i onClick={this._downloadFileSocialStyle}
+                                            <i onClick={this.downloadFileSocialStyle}
                                                 style={{ marginLeft: "0px", cursor: "pointer", fontSize: "13px" }}
                                                 className="red file pdf outline icon" />
                                         </Tooltip>
@@ -219,7 +215,7 @@ class ParticipantesCliente extends Component {
                             </Row>
                             <Row style={{ paddingRight: "0px !important", paddingLeft: "0px", marginLeft: "10px" }}>
                                 <Col xs={12} md={5} lg={5} style={{ paddingRight: "0px !important" }}>
-                                    <button className="btn btn-primary" onClick={this._addParticipantClient}
+                                    <button className="btn btn-primary" onClick={this.addParticipantClient}
                                         disabled={disabledButtonCreate}
                                         type="button" title="Adicionar participante, máximo 10"
                                         style={{ marginTop: "20px" }}>
@@ -252,25 +248,22 @@ class ParticipantesCliente extends Component {
 }
 
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        addParticipant,
-        contactsByClientFindServer,
-        clearParticipants,
-        downloadFilePDF,
-        validatePermissionsByModule,
-        swtShowMessage
-    }, dispatch);
-}
+const mapDispatchToProps = dispatch => bindActionCreators({
+    dispatchAddParticipant: addParticipant,
+    dispatchContactsByClientFindServer: contactsByClientFindServer,
+    dispatchValidatePermissionsByModule: validatePermissionsByModule,
+    dispatchSwtShowMessage: swtShowMessage,
+    dispatchDownloadFilePdf: downloadFilePdf,
+    dispatchChangeStateSaveData: changeStateSaveData
+}, dispatch);
 
-function mapStateToProps({ selectsReducer, participants, contactsByClient, reducerGlobal }) {
-    return {
-        participants,
-        selectsReducer,
-        contactsByClient,
-        reducerGlobal
-    };
-}
+
+const mapStateToProps = ({ selectsReducer, participants, contactsByClient, reducerGlobal }) => ({
+    participants,
+    selectsReducer,
+    contactsByClient,
+    reducerGlobal
+})
 
 export default reduxForm({
     form: 'submitValidation',

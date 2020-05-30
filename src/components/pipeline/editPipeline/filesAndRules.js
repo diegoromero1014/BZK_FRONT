@@ -1,11 +1,23 @@
 import _ from "lodash";
 
 import {
-    checkRequired, processRules, checkRequiredWithGlobalCondition,
-    checkOnlyAlphabetical, checkPipeLineOpportunityName,
-    checkFirstCharacter, checkNumberLength, checkRequiredPipelineJustification,
-    checkRequiredComercialOportunity, checkRequiredPivotNit, checkRequiredTermInMonths,
-    checkRequiredTermInMonthsValue, validateDecimal, checkJustificationDetails, checkRegexHtmlInjection
+    checkRequired,
+    processRules,
+    checkRequiredWithGlobalCondition,
+    checkOnlyAlphabetical,
+    checkPipeLineOpportunityName,
+    checkFirstCharacter,
+    checkNumberLength,
+    checkRequiredPipelineJustification,
+    checkRequiredComercialOportunity,
+    checkRequiredTermInMonths,
+    checkRequiredTermInMonthsValue,
+    validateDecimal,
+    checkJustificationDetails,
+    checkRegexHtmlInjection,
+    checkRequiredPipelineDetailJustification,
+    checkRequiredMellowingPeriodDate,
+    checkRequiredNegotiatedAmount
 } from '../../../validationsFields/rulesField';
 
 export const fieldsWithRules = {
@@ -26,7 +38,7 @@ export const fieldsWithRules = {
     roe: { rules: [validateDecimal] },
     termInMonths: { rules: [checkRequiredTermInMonths, checkNumberLength(4)] },
     businessStatus: { rules: [checkRequired] }, 
-    businessCategory: { rules: [checkRequiredWithGlobalCondition] }, 
+    businessCategory: { rules: [checkRequiredWithGlobalCondition, checkRequired] }, 
     currency: { rules: [checkRequired] }, 
     indexing: { rules: [] }, 
     need: { rules: [checkRequired] }, 
@@ -39,20 +51,23 @@ export const fieldsWithRules = {
     amountDisbursed: { rules: [] }, 
     estimatedDisburDate: { rules: [] }, 
     opportunityName: { rules: [checkPipeLineOpportunityName, checkFirstCharacter] },
-    justificationDetail: { rules: [checkJustificationDetails, checkFirstCharacter, checkRegexHtmlInjection, checkNumberLength(500)] },
+    justificationDetail: { rules: [checkRequiredPipelineDetailJustification, checkJustificationDetails, checkFirstCharacter, checkRegexHtmlInjection, checkNumberLength(500)] },
     productFamily: { rules: [checkRequired] }, 
-    mellowingPeriod: { rules: [] }, 
+    mellowingPeriod: { rules: [] },
     moneyDistribitionMarket: { rules: [] }, 
     areaAssets: { rules: [] }, 
-    areaAssetsValue: { rules: [checkNumberLength(15)] }, 
     termInMonthsValues: { rules: [checkRequiredTermInMonthsValue] },
     pendingDisbursementAmount: { rules: [checkNumberLength(15)] },
     pipelineType: { rules: [checkRequired] },
     commercialOportunity: { rules: [checkRequiredComercialOportunity] },
     justification : {rules: [checkRequiredPipelineJustification] },
-    pivotNit: {rules: [checkRequiredPivotNit]},
     margen: {rules:[validateDecimal]},
-    typePolicy: { rules: [] }
+    typePolicy: { rules: [] },
+    businessCategory2: { rules:[] },
+    nominalValue2: { rules: [ checkNumberLength(15)]},
+    negotiatedAmount:{rules: [checkRequiredNegotiatedAmount,checkNumberLength(15)]},
+    mellowingPeriodDate: {rules: [checkRequiredMellowingPeriodDate]}
+
 }
 
 export const fields = _.keys(fieldsWithRules);

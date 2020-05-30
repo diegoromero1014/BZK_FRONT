@@ -37,6 +37,10 @@ const pipelineTypes = [
   {
     id: 2,
     key: NUEVO_NEGOCIO
+  },
+  {
+    id: 3,
+    key: BUSINESS_STATUS_PERDIDO
   }];
 const productsFamilyResolve = {payload: {data: {data: { id: 10, value: 'Factoring Plus', key: 'Factoring Plus', field: 'products', description: ''}}}};
 const productsResolve = {payload: {data: {data: { id: 100, value: 'Captación', key: 'Captación', field: 'businessCategory', description: ''}}}};
@@ -48,6 +52,7 @@ let createEditPipeline;
 let stubHandleBlurValueNumber;
 let stubHandleFocusValueNumber;
 let redirectUrl;
+let GetChildCatalogs;
 
 describe("Test CreatePipeline", () => {
   let store;
@@ -94,7 +99,9 @@ describe("Test CreatePipeline", () => {
       .returns(() => {
         return new Promise((resolve, reject) => resolve(getParameterSuccess));
       });
-
+    GetChildCatalogs = sinon.stub(selectsComponent, "dispatchChildCatalogs").returns(() => { return new Promise((resolve, reject) => resolve(
+        {payload: {data: {data: { id: 1, value: 'Factoring', key: 'Factoring', field: 'productFamily', description: ''}}}}
+      )); });
     stubGetCatalogType = sinon.stub(selectsComponent, "consultListByCatalogType");
     stubGetCatalogType.onCall(0)
       .returns(() => { return new Promise((resolve, reject) => resolve(
@@ -110,6 +117,7 @@ describe("Test CreatePipeline", () => {
     stubHandleFocusValueNumber.restore();
     createEditPipeline.restore();
     redirectUrl.restore();
+    GetChildCatalogs.restore();
   });
 
   let origin = "pipeline";
@@ -142,7 +150,7 @@ describe("Test CreatePipeline", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(5);
+    expect(wrapper.find(Input)).to.have.length(4);
   });
 
   it('should render SVA field', () => {
@@ -183,7 +191,7 @@ describe("Test CreatePipeline", () => {
         .dive()
         .dive()
         .dive();
-    const svaFieldTooltip = wrapper.find(Tooltip).find({ text: HELP_SVA, rendertooltip: HELP_SVA });
+    const svaFieldTooltip = wrapper.find(Tooltip).find({ text: HELP_SVA });
     const svaField = wrapper.find(Input).find({ name: "sva" });
     expect(svaFieldTooltip).to.have.lengthOf(1);
     expect(svaFieldTooltip).contains(svaField);
@@ -211,30 +219,6 @@ describe("Test CreatePipeline", () => {
       wrapper.instance()._changeAreaAssetsEnabledValue(false);         
 
       expect(wrapper.find(ComboBox)).to.have.length(9);
-  });
-
-  it('show PivotNit field when showPivotNitField value is true', () => {
-    const wrapper = shallow(<PipelineComponent store={store} />)
-      .dive()
-      .dive()
-      .dive()
-      .dive();
-
-      wrapper.instance()._changeShowPivotNitField(true);         
-
-      expect(wrapper.find(Input).find({name: 'pivotNit'})).to.have.length(1);
-  });
-
-  it('hide PivotNit field when showPivotNitField value is false', () => {
-    const wrapper = shallow(<PipelineComponent store={store} />)
-      .dive()
-      .dive()
-      .dive()
-      .dive();
-
-      wrapper.instance()._changeShowPivotNitField(false);         
-
-      expect(wrapper.find(Input).find({name: 'pivotNit'})).to.have.length(0);
   });
 
   it('Show render formPipeline/SwetAlert ', () => {
@@ -300,7 +284,7 @@ describe("Test CreatePipeline", () => {
       .dive();
 
       wrapper.instance()._validateShowFinancingNeedFields(true);
-      expect(wrapper.find(ComponentDisbursementPlan)).to.have.length(1);
+      expect(wrapper.find(ComponentDisbursementPlan)).to.have.length(0);
   });
 
   it('Hide termInMonths when showtermInMonthsField is false', () => {
@@ -365,9 +349,29 @@ describe("Test CreatePipeline", () => {
       .dive()
       .dive();
 
-      wrapper.instance()._pipelineTypeAndBusinessOnChange(1);         
+      wrapper.instance()._pipelineTypeAndBusinessOnChange(1);
+
   });
 
+  it('should execute _showJustificationsDetail when pipeline type is nuevo negocio', () => {
+    const wrapper = shallow(<PipelineComponent store={store}/>)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+      wrapper.instance()._pipelineTypeAndBusinessOnChange(2);
+  });
+
+  it('should execute _showJustificationsDetail when pipeline type is nuevo negocio', () => {
+    const wrapper = shallow(<PipelineComponent store={store}/>)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    wrapper.instance()._pipelineTypeAndBusinessOnChange(3);
+  });
   
   it('should render field roe', ()=>{
       const wrapper = shallow(<PipelineComponent store={store}/>)
@@ -498,29 +502,7 @@ describe("Test CreatePipeline", () => {
       expect(wrapper.state().isFinancingNeed).to.equal(false);
     }, 1 );
   });
-
-  it('should refresh productFamily when need field changes', () => {
-    const wrapper = shallow(<PipelineComponent store={store} />)
-    .dive()
-    .dive()
-    .dive()
-    .dive();
-
-    wrapper.instance()._changeCatalogProductFamily(1);
-    setTimeout(() => expect(wrapper.state().productsFamily.value).to.equal("Factoring"), 1 );
-  });
-
   it('should refresh products and categories lists when need changes', () => {
-    stubGetCatalogType.onCall(0)
-      .returns(() => { return new Promise((resolve, reject) => resolve(
-        productsFamilyResolve
-    )); });
-
-    stubGetCatalogType.onCall(1)
-      .returns(() => { return new Promise((resolve, reject) => resolve(
-          productsResolve
-    )); });
-
     const wrapper = shallow(<PipelineComponent store={store} />)
     .dive()
     .dive()
@@ -528,10 +510,8 @@ describe("Test CreatePipeline", () => {
     .dive();
 
     wrapper.instance()._changeProductFamily(1);
-    setTimeout(() => {
-      expect(wrapper.state().products.value).to.equal("Factoring Plus");
-      expect(wrapper.state().businessCategories.value).to.equal("Captación");
-    }, 1 );
+   console.log(wrapper.state());
+    sinon.assert.called(GetChildCatalogs);
   });
 
   it('should render field justification when business status is no contactado', ()=>{
@@ -542,7 +522,7 @@ describe("Test CreatePipeline", () => {
         .dive()
         .dive();
 
-    wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_NO_CONTACTADO);
+    wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(BUSINESS_STATUS_NO_CONTACTADO);
     setTimeout(()=>{
       expect(wrapper.state().showJustificationField).to.equal(true);
       expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));
@@ -558,7 +538,7 @@ describe("Test CreatePipeline", () => {
             .dive()
             .dive();
 
-        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(OPORTUNITIES_MANAGEMENT,BUSINESS_STATUS_PERDIDO);
+        wrapper.instance()._validateShowJustificationProbabilityAndMellowingPeriodFields(BUSINESS_STATUS_PERDIDO);
         setTimeout(()=>{
             expect(wrapper.state().showJustificationField).to.equal(true);
             expect(wrapper.find(TextareaComponent).find({name:'txtJustificationDetail'}));
@@ -592,6 +572,106 @@ describe("Test CreatePipeline", () => {
     wrapper.instance()._submitCreatePipeline();
     expect(createEditPipeline.calledOnce).to.equal(true);
 
+  });
+
+  it('should render field intereses/spred when value is Colocaciones', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    wrapper.setState({
+      businessCategories:[{
+        description: "Valor total del negocio",
+        field: "businessCategory",
+        id: 5110627,
+        key: "Colocaciones",
+        parentId: 5230109,
+        value: "Colocación"
+      }],
+      businessCategories2:[{
+        description: "Valor total del negocio",
+        field: "businessCategory",
+        id: 5110627,
+        key: "Colocaciones",
+        parentId: 5230109,
+        value: "Colocación"
+      }]
+    });
+
+    wrapper.instance()._onChangeBusinessCategory(5110627);
+    wrapper.instance()._onChangeBusinessCategory2(5110627);
+    expect(wrapper.find(Input).find({ name: 'commission' }));
+  });
+
+  it('should render field intereses/spred', () => {
+    const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    wrapper.setState({
+
+      businessCategories2:[{
+        description: "Valor total del negocio",
+        field: "businessCategory",
+        id: 5110627,
+        key: "Colocaciones",
+        parentId: 5230109,
+        value: "Colocación"
+      }]
+    });
+
+    wrapper.instance()._onChangeBusinessCategory(5110628);
+    wrapper.instance()._onChangeBusinessCategory2(5110628);
+    expect(wrapper.find(Input).find({ name: 'commission' }));
+  });
+
+  it('should call shouwBisnessCategory2', ()=>{
+    let defaultProps = {};
+    let _showBusinessCategory2 ;
+
+    beforeEach(() => {
+      _showBusinessCategory2 = sinon.fake();
+      defaultProps = {
+        _showBusinessCategory2
+      };
+
+    });
+    const wrapper = shallow(<PipelineComponent store={store} {...defaultProps}/>)
+        .dive()
+        .dive()
+        .dive()
+        .dive()
+
+    const button = wrapper.find('button').find({ id: 'addCategory' });
+    button.at(0).simulate('click');
+    wrapper.instance()._showBusinessCategory2();
+
+  });
+
+  it('sould render oblygaroty field detalleJustificacion', ()=>{
+
+    const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    wrapper.instance()._justificationObligatoryField(1);
+  });
+
+  it('sould render oblygaroty field detalleJustificacion', ()=>{
+
+    const wrapper = shallow(<PipelineComponent store={store} />)
+        .dive()
+        .dive()
+        .dive()
+        .dive();
+
+    wrapper.instance()._justificationObligatoryField(2);
   });
 });
 
@@ -689,7 +769,7 @@ describe("Test CreatePipelineChildren", () => {
       .dive();
 
       wrapper.instance()._validateShowFinancingNeedFields(true);
-      expect(wrapper.find(ComponentDisbursementPlan)).to.have.length(1);
+      expect(wrapper.find(ComponentDisbursementPlan)).to.have.length(0);
   });
 
   it('Hide termInMonths when showtermInMonthsField is false formPipeline/pipelineChild', () => {
@@ -772,7 +852,7 @@ describe("Test CreatePipelineChildren", () => {
       .dive()
       .dive();
 
-    expect(wrapper.find(Input)).to.have.length(5);
+    expect(wrapper.find(Input)).to.have.length(4);
     expect(
       wrapper.find(Input).find({ name: "txtOpportunityName" })
     ).to.have.length(0);
@@ -792,38 +872,37 @@ describe("Test CreatePipelineChildren", () => {
     }, 1 );
   });
 
-  it('should refresh productFamily when need field changes formPipeline/pipelineChild', () => {
+  it('Show negotiatedAmount when showNegotiatedAmountField is true', () => {
     const wrapper = shallow(<PipelineComponentChildren store={store} />)
-    .dive()
-    .dive()
-    .dive()
-    .dive();
-
-    wrapper.instance()._changeCatalogProductFamily(1);
-    setTimeout(() => expect(wrapper.state().productsFamily.value).to.equal("Factoring"), 1 );
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+      
+      wrapper.instance()._changeProductFamily(1);
+      expect(wrapper.find(Input).find({name:'negotiatedAmount'})).to.have.length(0);
   });
 
-  it('should refresh products and categories lists when need changes formPipeline/pipelineChild', () => {
-    stubGetCatalogType.onCall(0)
-      .returns(() => { return new Promise((resolve, reject) => resolve(
-        productsFamilyResolve
-    )); });
-
-    stubGetCatalogType.onCall(1)
-      .returns(() => { return new Promise((resolve, reject) => resolve(
-        productsResolve
-    )); });
-
+  it('Hide negotiatedAmount when showNegotiatedAmountField is false', () => {
     const wrapper = shallow(<PipelineComponentChildren store={store} />)
-    .dive()
-    .dive()
-    .dive()
-    .dive();
+      .dive()
+      .dive()
+      .dive()
+      .dive();
 
-    wrapper.instance()._changeProductFamily(1);
-    setTimeout(() => {
-      expect(wrapper.state().products.value).to.equal("Factoring Plus");
-      expect(wrapper.state().businessCategories.value).to.equal("Captación");
-    }, 1 );
+      wrapper.instance()._changeProductFamily(1);
+      expect(wrapper.find(Input).find({name:'negotiatedAmount'})).to.have.length(0);
   });
+
+  it('Hide negotiatedAmount when showNegotiatedAmountField is false formPipeline/pipelineChild', () => {
+    const wrapper = shallow(<PipelineComponentChildren store={store} />)
+      .dive()
+      .dive()
+      .dive()
+      .dive();
+
+      wrapper.instance()._changeProductFamily(1);
+      expect(wrapper.find(Input).find({name:'negotiatedAmount'})).to.have.length(0);
+  });
+  
 });

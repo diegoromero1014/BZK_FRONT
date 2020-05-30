@@ -9,6 +9,7 @@ import { Button } from 'semantic-ui-react'
 import { redirectUrl } from "../../../globalComponents/actions";
 import { changeActiveItemMenu } from '../../../menu/actions';
 import { mapDataGrid } from "../../../alertPortfolioExpirtation/clientPortfolioExpirationUtilities";
+import { NAME_FILTER_CLIENTS, NAME_FILTER_RELATION } from "../searchClient/constants";
 
 export class AlertPortfolioExpiration extends Component {
 
@@ -23,6 +24,12 @@ export class AlertPortfolioExpiration extends Component {
     componentDidMount() {
         this.forceUpdate();
     }
+   
+    componentDidUpdate(prevProps) {
+        if (prevProps.idFilter !== this.props.idFilter) {
+            this.handleOnPageChange(1);
+        }
+    }
 
     redirectToAlertPortfolioExpiration = () => {
         const { dispatchChangeActiveItemMenu } = this.props;
@@ -31,10 +38,11 @@ export class AlertPortfolioExpiration extends Component {
     }
 
     handleOnPageChange = async page => {
-        const { dispatchGetAlertPortfolioExpirationDashboard } = this.props;
-
+        const { dispatchGetAlertPortfolioExpirationDashboard, idFilter, filterType } = this.props;
+        const filterClient = filterType == NAME_FILTER_CLIENTS ? idFilter : null;
+        const filterEconomicGroup = filterType == NAME_FILTER_RELATION ? idFilter : null;
         this.setLoading(true);
-        await dispatchGetAlertPortfolioExpirationDashboard(page);
+        await dispatchGetAlertPortfolioExpirationDashboard(page, filterClient, filterEconomicGroup);
         this.setLoading(false);
     }
 
@@ -58,7 +66,7 @@ export class AlertPortfolioExpiration extends Component {
                 <Table tableSettings={tableSettings} />
                 <Button
                     fluid
-                    style={{ background: 'transparent' }}
+                    style={{ background: 'transparent', color: '#00448c', fontSize: '16px' }}
                     onClick={this.redirectToAlertPortfolioExpiration}
                 >
                     Ver detalle
@@ -75,10 +83,12 @@ const mapDispatchToProps = dispatch => {
     }, dispatch)
 };
 
-const mapStateToProps = ({ alertPortfolioExpiration }) => {
+const mapStateToProps = ({ alertPortfolioExpiration, filterDashboard: { id, criterio } }) => {
     return {
         alertPortfolioExpiration,
-        data: alertPortfolioExpiration.get('responseClients')
+        data: alertPortfolioExpiration.get('responseClients'),
+        idFilter: id,
+        filterType: criterio
     };
 }
 
