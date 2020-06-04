@@ -21,7 +21,13 @@ describe('AlertSection Test', () => {
         const initialStore = {
             alertBlackList: Immutable.Map({ totalBlackListFiltered: null }),
             outdatedContacts: { rowCount: null },
-            alertCovenant: Immutable.Map({totalCovenantsByFiltered : null })
+            alertCovenant: Immutable.Map({totalCovenantsByFiltered : null }),
+            filterDashboard: Immutable.Map({
+                filterMode: "",
+                criterio: "",
+                id: "",
+                title: ""
+            })
         }
 
         store = mockStore(initialStore);

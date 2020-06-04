@@ -264,7 +264,7 @@ class ModalComponentEconomicGroup extends Component {
         </Row>
       </div>
     )
-  };
+  }
 }
 
 function mapDispatchToProps(dispatch) {

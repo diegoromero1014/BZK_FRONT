@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import _ from 'lodash';
 import NumberInput from 'react-number-input';
 
 class numberInputComponent extends Component {
@@ -11,7 +10,7 @@ class numberInputComponent extends Component {
   }
 
   render() {
-      const {nameInput, format, placeholder, touched, error, onChange, min, value} = this.props;
+      const {nameInput, format, placeholder, error, onChange, min, value} = this.props;
       return (
         <div >
           <div className={`styleWidthComponents ui input`}>
@@ -37,12 +36,12 @@ class numberInputComponent extends Component {
   }
 }
 
-numberInputComponent.PropTypes = {
+numberInputComponent.PropTypes = { 
     name: PropTypes.string.isRequired,
     format: PropTypes.string.isRequired,
     min: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired,
-    placeholder: PropTypes.string.isRequired,
+    placeholder: PropTypes.string.isRequired, 
     value: PropTypes.number.isRequired
 };
 

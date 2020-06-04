@@ -8,7 +8,7 @@ const initialState = Immutable.Map({
     showModal: false
 });
 
-export default (state = initialState, action) => {
+export default (state = initialState, action = {}) => {
     switch (action.type) {
         case actions.CONSULT_RISK_GROUP:
             let response = action.payload.data.data;

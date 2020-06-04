@@ -49,7 +49,7 @@ export function findContactsByClient(clientId, maxRows) {
         "pageNum": 0,
         "maxRows" : maxRows,
         "searchTerm" : "",
-        "columnOrder": "",
+        "columnOrder": "", 
         "order": 0,
         "functionId" : "",
         "lobId" : "",
@@ -59,10 +59,6 @@ export function findContactsByClient(clientId, maxRows) {
   }
   
   return { type: GET_CONTACT_LIST_CLIENT, payload: axios.post(APP_URL + "/listClientContacts", json) }
-}
-
-export function downloadFilePDF(idFileDownload){
-  window.open(APP_URL + "/downloadFilePDF/" + idFileDownload, '_blank', '');
 }
 
 export function changePage(page){

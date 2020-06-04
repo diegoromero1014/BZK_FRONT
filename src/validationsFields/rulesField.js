@@ -97,11 +97,20 @@ import {
 } from './validationsMessages';
 
 import {
-    REASON_TRANFER, MANAGEMENT_BRAND, PIPELINE_TYPE, CLIENT_NEED, PRODUCTS_MASK
+    REASON_TRANFER, MANAGEMENT_BRAND, PIPELINE_TYPE, CLIENT_NEED, ALL_BUSINESS_CATEGORIES, PIPELINE_JUSTIFICATION, ALL_PRODUCT_FAMILIES
 } from '../components/selectsComponent/constants';
 
-import { PIPELINE_STATUS, OPORTUNITIES_MANAGEMENT, BUSINESS_STATUS_PERDIDO, BUSINESS_STATUS_NO_CONTACTADO,
-    FACTORING_BANCOLOMBIA_CONFIRMING, FACTORING_PLUS, TRIANGULAR_LINE, NEED_FINANCING } from "../components/pipeline/constants";
+import {
+    PIPELINE_STATUS,
+    OPORTUNITIES_MANAGEMENT,
+    BUSINESS_STATUS_PERDIDO,
+    BUSINESS_STATUS_NO_CONTACTADO,
+    NEED_FINANCING,
+    NUEVO_NEGOCIO,
+    OTHER_JUSTIFICATION,
+    NEGOTIATED_AMOUNT_VALUES,
+    PLACEMENTS
+} from "../components/pipeline/constants";
 
 let globalCondition = false;
 export const setGlobalCondition = value => {
@@ -526,34 +535,83 @@ export const checkRequiredPipelineJustification = (value, fields, props) => {
     let businessStatusSelectedKey = null;
 
     if(pipelineTypes){
-        pipelineTypeSelected = pipelineTypes.find((pipelineType) => pipelineType.id == fields.pipelineType);      
+        pipelineTypeSelected = pipelineTypes.find((pipelineType) => pipelineType.id == fields.pipelineType);
         pipelineTypeSelectedKey = pipelineTypeSelected ? pipelineTypeSelected.key.toLowerCase() : '';
-    }    
+    }
 
     if(businessStatusList){
         businessStatusSelected = businessStatusList.find((status) => status.id == fields.businessStatus);
         businessStatusSelectedKey = businessStatusSelected ? businessStatusSelected.key.toLowerCase() : '';
     }
-        
-    if(pipelineTypeSelectedKey == OPORTUNITIES_MANAGEMENT && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){                
+
+    if((pipelineTypeSelectedKey == NUEVO_NEGOCIO || pipelineTypeSelectedKey == OPORTUNITIES_MANAGEMENT) && (businessStatusSelectedKey === BUSINESS_STATUS_NO_CONTACTADO || businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO)){
+        return checkRequired(value);
+    }
+
+    return null;
+};
+
+export const checkRequiredPipelineDetailJustification = (value, fields, props) =>{
+
+    const pipelineTypes = props.selectsReducer.get(PIPELINE_TYPE);
+    const businessStatusList = props.selectsReducer.get(PIPELINE_STATUS);
+    const justificationsTypes = props.selectsReducer.get(PIPELINE_JUSTIFICATION);
+    let pipelineTypeSelected = null;
+    let pipelineTypeSelectedKey = null;
+    let businessStatusSelected = null;
+    let businessStatusSelectedKey = null;
+    let justificationsTypeSelectedKey = null;
+    if(pipelineTypes){
+        pipelineTypeSelected = pipelineTypes.find((pipelineType) => pipelineType.id == fields.pipelineType);
+        pipelineTypeSelectedKey = pipelineTypeSelected ? pipelineTypeSelected.key.toLowerCase() : '';
+    }
+
+    if(businessStatusList){
+        businessStatusSelected = businessStatusList.find((status) => status.id == fields.businessStatus);
+        businessStatusSelectedKey = businessStatusSelected ? businessStatusSelected.key.toLowerCase() : '';
+    }
+
+    if(justificationsTypes){
+        let justificationsTypeSelected = justificationsTypes.find((justificationsType) => justificationsType.id == fields.justification);
+        justificationsTypeSelectedKey = justificationsTypeSelected ? justificationsTypeSelected.key.toLowerCase() : '';
+    }
+
+    if(pipelineTypeSelectedKey === NUEVO_NEGOCIO &&  businessStatusSelectedKey === BUSINESS_STATUS_PERDIDO && justificationsTypeSelectedKey === OTHER_JUSTIFICATION){
         return checkRequired(value);
     }
 
     return null;
 }
 
-export const checkRequiredPivotNit = (value, fields, props) => {        
-    return checkReducerValue(value,
-        fields.product,
-        props.selectsReducer.get(PRODUCTS_MASK),
-        (value) => {
-            const productKey = value ? value.toLowerCase() : '';                 
-            return (productKey == FACTORING_BANCOLOMBIA_CONFIRMING || productKey == FACTORING_PLUS || productKey == TRIANGULAR_LINE);
-        },
-        (value) => {
-            return checkRequired(value) || checkNumberDocument(value) || checkFirstCharacter(value)
-        });
-}
+export const checkRequiredMellowingPeriodDate = (value, field, props)=>{
+        const businessCategorys = props.selectsReducer.get(ALL_BUSINESS_CATEGORIES);
+        let businessCategorySelectedKey = null;
+
+        if(businessCategorys){
+            let businessCategorySelected = businessCategorys.find((businessCategory) => businessCategory.id == field.businessCategory);
+            businessCategorySelectedKey = businessCategorySelected ? businessCategorySelected.key.toLowerCase() : '';
+        }
+
+        if(businessCategorySelectedKey !== PLACEMENTS){
+            return checkRequired(value);
+        }
+
+};
+
+export const checkRequiredMellowingPeriod = (value, field, props)=>{
+        const businessCategorys = props.selectsReducer.get(ALL_BUSINESS_CATEGORIES);
+        let businessCategorySelectedKey = null;
+
+        if(businessCategorys){
+            let businessCategorySelected = businessCategorys.find((businessCategory) => businessCategory.id == field.businessCategory);
+            businessCategorySelectedKey = businessCategorySelected ? businessCategorySelected.key.toLowerCase() : '';
+        }
+
+        if(businessCategorySelectedKey === PLACEMENTS){
+            return checkRequired(value);
+        }
+
+};
 
 export const checkRequiredTermInMonths = (value, fields, props) => {
     return checkReducerValue(value,
@@ -924,3 +982,19 @@ export const validateDecimal = (valor) => {
     }
     return message;
 };
+
+export const checkRequiredNegotiatedAmount = (value, fields, props) => { 
+    const productFamily = props.selectsReducer.get(ALL_PRODUCT_FAMILIES);
+    let productFamilySelected = null;
+    let productFamilySelectedKey = null;
+    
+    if(productFamily){
+        productFamilySelected = productFamily.find((values) => values.id == fields.productFamily);      
+        productFamilySelectedKey = productFamilySelected ? productFamilySelected.key : '';
+    }    
+    
+    if(productFamilySelectedKey == NEGOTIATED_AMOUNT_VALUES){                
+        return checkRequired(value);
+    }
+    return null;
+}

@@ -21,14 +21,13 @@ import SecurityMessageComponent from '../../globalComponents/securityMessageComp
 import { fields, validations as validate } from './fieldsAndRulesForReduxForm';
 import { patternOfNumberDocument, patternOfForbiddenCharacter } from '../../../validationsFields/patternsToValidateField';
 import { swtShowMessage } from '../../sweetAlertMessages/actions';
-import { toggleModalContact, createContactNew, searchContact, clearSearchContact } from './actions';
-import { contactsByClientFindServer, clearContactOrder, clearContactCreate, downloadFilePDF } from '../actions'
+import { createContactNew, searchContact, clearSearchContact } from './actions';
+import { contactsByClientFindServer, clearContactOrder, clearContactCreate } from '../actions'
+import { downloadFilePdf } from '../../clientInformation/actions';
 import { changeStateSaveData } from '../../main/actions';
 import { getListContactGroupById } from '../favoritesGroup/actions';
 import { formValidateKeyEnter, nonValidateEnter } from '../../../actionsGlobal';
 import {
-    consultDataSelect,
-    consultList,
     consultListWithParameterUbication,
     getMasterDataFields
 } from '../../selectsComponent/actions';
@@ -38,7 +37,8 @@ import {
     FILE_OPTION_SOCIAL_STYLE_CONTACT,
     MESSAGE_SAVE_DATA,
     VALUE_XSS_INVALID,
-    REGEX_SIMPLE_XSS_MESAGE
+    REGEX_SIMPLE_XSS_MESAGE,
+    NAME_FILE_SOCIAL_STYLE_CONTACT
 } from '../../../constantsGlobal';
 
 import {
@@ -63,12 +63,12 @@ import {
 } from '../../selectsComponent/constants';
 import { schema } from '../../participants/schema';
 import ElementsComponent from '../../elements/';
-import { cleanList, addToList, createList } from '../../elements/actions';
+import { cleanList, createList } from '../../elements/actions';
 import { MANDATORY_OBJECTIVES_MSG, OBJECTIVES_OPEN_ERROR_MSG, OBJECTIVES, OBJECTIVES_PLACEHOLDER } from '../../participants/constants';
 
 var thisForm;
 
-class ModalComponentContact extends Component {
+export class ModalComponentContact extends Component {
     constructor(props) {
         super(props);
         this._close = this._close.bind(this);
@@ -101,23 +101,36 @@ class ModalComponentContact extends Component {
 
     componentWillMount() {
         const {
-            fields: { tipoDocumento }, getMasterDataFields, clearSearchContact,
-            nonValidateEnter, getListContactGroupById, dispatchCleanList, dispatchCreateList
+            fields: { tipoDocumento }, dispatchGetMasterDataFields, dispatchClearSearchContact,
+            dispatchNonValidateEnter, dispatchGetListContactGroupById, dispatchCleanList, dispatchCreateList
         } = this.props;
-        nonValidateEnter(true);
-        getListContactGroupById();
-        clearSearchContact();
+        dispatchNonValidateEnter(true);
+        dispatchGetListContactGroupById();
+        dispatchClearSearchContact();
         this.props.resetForm();
         tipoDocumento.onChange('');
-        getMasterDataFields([CONTACT_ID_TYPE, FILTER_TITLE, FILTER_CONTACT_POSITION, FILTER_GENDER, FILTER_DEPENDENCY, FILTER_COUNTRY, FILTER_TYPE_CONTACT_ID, FILTER_TYPE_LBO_ID, FILTER_FUNCTION_ID, FILTER_HOBBIES, FILTER_SPORTS, FILTER_SOCIAL_STYLE, FILTER_ATTITUDE_OVER_GROUP]);
+        dispatchGetMasterDataFields([
+            CONTACT_ID_TYPE, 
+            FILTER_TITLE, 
+            FILTER_CONTACT_POSITION, 
+            FILTER_GENDER, 
+            FILTER_DEPENDENCY, 
+            FILTER_COUNTRY, 
+            FILTER_TYPE_CONTACT_ID, 
+            FILTER_TYPE_LBO_ID, 
+            FILTER_FUNCTION_ID, 
+            FILTER_HOBBIES, 
+            FILTER_SPORTS, 
+            FILTER_SOCIAL_STYLE, 
+            FILTER_ATTITUDE_OVER_GROUP]);
         dispatchCleanList(OBJECTIVES);
         dispatchCreateList(OBJECTIVES);
 
     }
 
     _downloadFileSocialStyle() {
-        const { downloadFilePDF } = this.props;
-        downloadFilePDF(FILE_OPTION_SOCIAL_STYLE_CONTACT);
+        const { dispatchDownloadFilePdf , dispatchChangeStateSaveData, dispatchSwtShowMessage} = this.props;
+        dispatchDownloadFilePdf(FILE_OPTION_SOCIAL_STYLE_CONTACT, NAME_FILE_SOCIAL_STYLE_CONTACT, dispatchChangeStateSaveData, dispatchSwtShowMessage);
     }
 
     _close() {
@@ -152,19 +165,19 @@ class ModalComponentContact extends Component {
     }
 
     _closeCreate() {
-        const { clearSearchContact, isOpen, clearContactCreate, clearContactOrder } = this.props;
-        clearSearchContact();
+        const { dispatchClearSearchContact, isOpen, dispatchClearContactCreate, dispatchClearContactOrder } = this.props;
+        dispatchClearSearchContact();
         this.setState({ disabled: '', noExiste: 'hidden', botonBus: 'block' });
         this.setState({ showEx: false });
         isOpen();
-        clearContactOrder();
-        clearContactCreate();
+        dispatchClearContactOrder();
+        dispatchClearContactCreate();
     }
 
     _onClickLimpiar() {
-        const { clearSearchContact, fields: { numeroDocumento } } = this.props;
+        const { dispatchClearSearchContact, fields: { numeroDocumento } } = this.props;
         numeroDocumento.onChange('');
-        clearSearchContact();
+        dispatchClearSearchContact();
         this.props.resetForm();
         this.setState({ disabled: '', noExiste: 'hidden', botonBus: 'block' });
         if (document.getElementById('modalComponentScrollCreateContact') !== null && document.getElementById('modalComponentScrollCreateContact') !== undefined) {
@@ -180,7 +193,7 @@ class ModalComponentContact extends Component {
             fields: { tipoDocumento, numeroDocumento },
         } = this.props;
 
-        const { searchContact, clearSearchContact } = this.props;
+        const { dispatchSearchContact, dispatchClearSearchContact } = this.props;
         const documentNumber = _.isNull(numeroDocumento.value) ? null : numeroDocumento.value.trim();
         numeroDocumento.onChange(documentNumber);
 
@@ -191,9 +204,9 @@ class ModalComponentContact extends Component {
                 return;
             }
 
-            searchContact(tipoDocumento.value, documentNumber, window.sessionStorage.getItem('idClientSelected')).then((data) => {                
+            dispatchSearchContact(tipoDocumento.value, documentNumber, window.sessionStorage.getItem('idClientSelected')).then((data) => {                
                 if ((_.get(data, 'payload.data.data.isClientContact'))) {
-                    clearSearchContact();
+                    dispatchClearSearchContact();
                     this.props.resetForm();
                     this.setState({ showErrorYa: true });
                 } else {
@@ -212,7 +225,7 @@ class ModalComponentContact extends Component {
     }
 
     _handleCreateContact() {
-        const { createContactNew, contactsByClientFindServer, changeStateSaveData } = this.props;
+        const { dispatchCreateContactNew, dispatchContactsByClientFindServer, dispatchChangeStateSaveData } = this.props;
         const {
             fields: {
                 id, tipoDocumento, tipoTratamiendo, tipoGenero, tipoCargo, tipoDependencia, tipoEstiloSocial,
@@ -268,21 +281,21 @@ class ModalComponentContact extends Component {
             "interlocutorObjsDTO": interlocutor.elements
         };
 
-        changeStateSaveData(true, MESSAGE_SAVE_DATA);
-        createContactNew(messageBody).then((data) => {
-            changeStateSaveData(false, "");
+        dispatchChangeStateSaveData(true, MESSAGE_SAVE_DATA);
+        dispatchCreateContactNew(messageBody).then((data) => {
+            dispatchChangeStateSaveData(false, "");
             if (!_.get(data, 'payload.data.validateLogin') || _.get(data, 'payload.data.validateLogin') === "false") {
                 redirectUrl("/login");
             } else {
                 if ((_.get(data, 'payload.data.status') === 200)) {
                     this.setState({ showEx: true });
-                    contactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "", "");
+                    dispatchContactsByClientFindServer(0, window.sessionStorage.getItem('idClientSelected'), NUMBER_RECORDS, "", 0, "", "", "", "", "");
                 } else {
                     this.setState({ showEr: true });
                 }
             }
         }, (reason) => {
-            changeStateSaveData(false, "");
+            dispatchChangeStateSaveData(false, "");
             this.setState({ showEr: true });
         });
     }
@@ -302,7 +315,7 @@ class ModalComponentContact extends Component {
             segundoApellido, fechaNacimiento, direccion, barrio, codigoPostal, telefono, extension, celular, correo,
             tipoEntidad, tipoFuncion, tipoHobbie, tipoDeporte, pais, departamento, ciudad, contactRelevantFeatures,
             listaFavoritos
-            }, handleSubmit, reducerGlobal, clientInfo, consultListWithParameterUbication
+            }, handleSubmit, reducerGlobal, clientInfo, dispatchConsultListWithParameterUbication
         } = this.props;
 
         return (
@@ -502,7 +515,7 @@ class ModalComponentContact extends Component {
                     </dt>
                     <div style={{ visibility: this.state.noExiste }}>
                         <Ubicacion fields={ { "contactCountry": pais, "contactProvince": departamento ,"contactCity": ciudad, "contactAddress": direccion, "contactNeighborhood": barrio }} selectsReducer={selectsReducer} 
-                            isEditable={true} clientInfo={clientInfo} consultListWithParameterUbication={consultListWithParameterUbication} origin={'createContact'}
+                            isEditable={true} clientInfo={clientInfo} consultListWithParameterUbication={dispatchConsultListWithParameterUbication} origin={'createContact'}
                         />
                     </div>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px', visibility: this.state.noExiste }}>
@@ -781,11 +794,10 @@ class ModalComponentContact extends Component {
     }
 }
 
-function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal, groupsFavoriteContacts,clientInformacion, elementsReducer }, { fields }) {
+const mapStateToProps = ({ createContactReducer, selectsReducer, reducerGlobal, groupsFavoriteContacts,clientInformacion, elementsReducer }) => {
     const contactDetail = !createContactReducer.get('isClientContact') ? createContactReducer.get('responseSearchContactData') : false;
     const clientInfo = Object.assign({}, clientInformacion.get('responseClientInfo'));
     
-
     if (contactDetail && contactDetail.contactIdentityNumber) {
         return {
             selectsReducer,
@@ -842,29 +854,24 @@ function mapStateToProps({ createContactReducer, selectsReducer, reducerGlobal, 
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        toggleModalContact,
-        clearSearchContact,
-        searchContact,
-        createContactNew,
-        consultDataSelect,
-        consultListWithParameterUbication,
-        getMasterDataFields,
-        contactsByClientFindServer,
-        clearContactCreate,
-        clearContactOrder,
-        consultList,
-        downloadFilePDF,
-        changeStateSaveData,
-        nonValidateEnter,
-        getListContactGroupById,
+const mapDispatchToProps = dispatch => bindActionCreators({
+        dispatchClearSearchContact : clearSearchContact,
+        dispatchSearchContact : searchContact,
+        dispatchCreateContactNew : createContactNew,
+        dispatchConsultListWithParameterUbication : consultListWithParameterUbication,
+        dispatchGetMasterDataFields : getMasterDataFields,
+        dispatchContactsByClientFindServer : contactsByClientFindServer,
+        dispatchClearContactCreate : clearContactCreate,
+        dispatchClearContactOrder : clearContactOrder,
+        dispatchNonValidateEnter : nonValidateEnter,
+        dispatchGetListContactGroupById : getListContactGroupById,
         dispatchCleanList: cleanList,
-        dispatchAddToList: addToList,
         dispatchCreateList: createList,
-        dispatchSwtShowMessage: swtShowMessage
+        dispatchSwtShowMessage: swtShowMessage,
+        dispatchDownloadFilePdf: downloadFilePdf,
+        dispatchChangeStateSaveData: changeStateSaveData,
     }, dispatch);
-}
+
 
 export default reduxForm({
     form: 'submitValidationContactCreate',

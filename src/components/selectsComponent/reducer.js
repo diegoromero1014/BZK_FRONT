@@ -45,7 +45,8 @@ const initialState = Immutable.Map({
     allProducts: [],
     managementsOfsectorStrategy: [],
     dataTypeProvinceClient: [],
-    dataTypeCityClient: []
+    dataTypeCityClient: [],
+    childCatalogs: []
 });
 
 export default (state = initialState, action) => {
@@ -174,6 +175,10 @@ export default (state = initialState, action) => {
             });
         case constants.MANAGEMENTS_OF_SECTOR_STRATEGY:
             return state.set('managementsOfsectorStrategy', defaultData(action, constants.PAY_LOAD_DATA));
+        case constants.DISPATCH_CHILD_CATALOGS:
+            return state.withMutations(
+                p => p.set("childCatalogs", action.payload.data.data)
+            );
         default:
             return state;
     }

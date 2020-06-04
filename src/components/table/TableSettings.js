@@ -14,7 +14,8 @@ export default class TableSettings {
         striped = false,
         maximumVisiblePages = 5,
         initialPage = 1,
-        loading = false
+        loading = false,
+        selectable = false,
     }) {
         this.data = data
         this.columns = columns;
@@ -29,5 +30,6 @@ export default class TableSettings {
         this.maximumVisiblePages = maximumVisiblePages;
         this.initialPage = initialPage;
         this.loading = loading;
+        this.selectable = selectable;
     }
 }

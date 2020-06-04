@@ -1,5 +1,3 @@
-import Immutable from 'immutable';
-import _ from 'lodash';
 import { APP_URL, MESSAGE_DOWNLOAD_DATA } from './constantsGlobal';
 
 export function createErrorsPriority(fields, order) {
@@ -9,7 +7,9 @@ export function shouldHandleError(mapSet, key) {
 }
 
 export function downloadReport(payload, endpoint, filename, changeStateSaveData) {
-    changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
+    if(changeStateSaveData){
+        changeStateSaveData(true, MESSAGE_DOWNLOAD_DATA);
+    }
 
     let request = new XMLHttpRequest();
 
@@ -45,12 +45,16 @@ export function downloadReport(payload, endpoint, filename, changeStateSaveData)
             }
         } else {
             swtShowMessage('error', 'Error descargando tareas', 'Señor usuario, ocurrió un error al tratar de descargar las tareas pendientes.');
-            changeStateSaveData(false, "");
+            if(changeStateSaveData){
+                changeStateSaveData(false, "");
+            }
         }
     };
 
     request.onloadend = function () {
-        changeStateSaveData(false, "");
+        if(changeStateSaveData){
+            changeStateSaveData(false, "");
+        }
     };
 
     request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
