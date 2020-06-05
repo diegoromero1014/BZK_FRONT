@@ -47,7 +47,7 @@
       </CookieManager>
       <hashTree/>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Clientes" enabled="true">
-        <stringProp name="filename">${__P(CLIENT_FILE,A:\AYAX\FRONT\test\JmeterTest\clients.csv)}</stringProp>
+        <stringProp name="filename">${__P(CLIENT_FILE,C:\jmeter\clients.csv)}</stringProp>
         <stringProp name="fileEncoding"></stringProp>
         <stringProp name="variableNames">clientNumber</stringProp>
         <boolProp name="ignoreFirstLine">false</boolProp>
@@ -61,7 +61,7 @@
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Usuarios" enabled="true">
         <stringProp name="delimiter">,</stringProp>
         <stringProp name="fileEncoding"></stringProp>
-        <stringProp name="filename">${__P(USER_FILE,A:\AYAX\FRONT\test\JmeterTest\users.csv)}</stringProp>
+        <stringProp name="filename">${__P(USER_FILE,C:\jmeter\users.csv)}</stringProp>
         <boolProp name="ignoreFirstLine">false</boolProp>
         <boolProp name="quotedData">false</boolProp>
         <boolProp name="recycle">true</boolProp>
@@ -28402,6 +28402,15 @@
         </CSVDataSet>
         <hashTree/>
       </hashTree>
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Gestor de Cabecera HTTP" enabled="true">
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Authorization</stringProp>
+            <stringProp name="Header.value">Bearer ${token}</stringProp>
+          </elementProp>
+        </collectionProp>
+      </HeaderManager>
+      <hashTree/>
     </hashTree>
   </hashTree>
 </jmeterTestPlan>
