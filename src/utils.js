@@ -13,7 +13,7 @@ export function downloadReport(payload, endpoint, filename, changeStateSaveData)
 
     let request = new XMLHttpRequest();
 
-    request.setRequestHeader('Authorization', window.localStorage.getItem('sessionTokenFront'));
+    request.setRequestHeader('Authorization', `Bearer ${window.localStorage.getItem('sessionTokenFront')}`);
 
     request.open('POST', APP_URL + endpoint, true);
     request.responseType = 'arraybuffer';
