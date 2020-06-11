@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 import {changeActiveItemMenu} from './actions';
 import {closeSession} from './actions';
 
-class MenuListFatherComponent extends Component {
+export class MenuListFatherComponent extends Component {
 
     constructor(props) {
         super(props);
