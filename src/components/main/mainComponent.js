@@ -80,9 +80,8 @@ export class MainComponent extends Component {
 
     let token = window.localStorage.getItem('sessionTokenFront');
 
-    if (token == null || token === "" || document.cookie.indexOf('estadoconexion=') == -1) {
+    if (token == null || token === "") {
       window.localStorage.setItem('sessionTokenFront', '');
-      document.cookie = 'estadoconexion=activa;path=/';
       redirectUrl("/login");
     } else {
       const { dispatchLoadObservablesLeftTimer, mainReducer } = this.props;
