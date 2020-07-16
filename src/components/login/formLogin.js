@@ -89,8 +89,6 @@ export class FormLogin extends Component {
                         saveSessionUserName(usuario, _.get(response, 'payload.data.data.username'));
                         dispatchChangeActiveItemMenu(ITEM_ACTIVE_MENU_DEFAULT);
 
-                        // Activar cookie
-                        document.cookie = 'estadoconexion=activa;path=/';
                         if(taskIdFromRedirect)
                             redirectUrl(`${TaskPageUrl}/${taskIdFromRedirect}`);
                         else
