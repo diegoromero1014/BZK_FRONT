@@ -53,7 +53,7 @@ export function getListObservactionsByIdLink(idLinkingRequests) {
     };
 
 
-    var request = axios.post(APP_URL + "/getListObservactionsByIdLink", json);
+    var request = axios.post(APP_URL + "/frontoffice/getListObservactionsByIdLink", json);
     return {
         type: GET_OBSERVATIONS_BY_LINKING_REQUESTS,
         payload: request
