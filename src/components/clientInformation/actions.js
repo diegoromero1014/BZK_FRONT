@@ -25,7 +25,7 @@ export function consultInfoClient(idClient) {
         }
     };
 
-    var request = axios.post(APP_URL + "/clientInformation", json);
+    var request = axios.post(APP_URL + "/frontoffice/clientInformation", json);
     return {
         type: CONSULT_INFO_CLIENT,
         payload: request
