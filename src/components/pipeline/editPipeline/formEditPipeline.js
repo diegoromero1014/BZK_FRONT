@@ -493,7 +493,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _onChangeMellowingPeriod(val){
-            const {selectsReducer } = this.props;
+            const {selectsReducer, fields: { nameMellowingPeriod }} = this.props;
             let componentDisbursementPlan = false;
             const mellowingPeriod = selectsReducer.get(MELLOWING_PERIOD);
             let mellowingPeriodSelected = mellowingPeriod.find((mellowing) => mellowing.id == val);
@@ -501,9 +501,13 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             if(mellowingPeriodSelected && keyBusinessCategory === PLACEMENTS && mellowingPeriodSelected.key === PIPELINE_DISBURSEMENT_PLAN){
                 componentDisbursementPlan= true;
             }
+
+            nameMellowingPeriod.onChange(val);
+
             this.setState({
                 showComponentDisbursementPlan:componentDisbursementPlan
             });
+
         }
 
         showTypePolicy(val) {
