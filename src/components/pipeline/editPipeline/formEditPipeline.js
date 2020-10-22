@@ -177,7 +177,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showAlertCurrency: false,
                 showJustificationField: false,
                 showProbabilityField: true,
-                showMellowingPeriodField: false,
+                showMellowingPeriodField: true,
                 pipelineStatus: [],
                 messageTooltipNominalValue:null,
                 showInteresSpread: false,
@@ -493,21 +493,17 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         }
 
         _onChangeMellowingPeriod(val){
-            const {selectsReducer, fields: { mellowingPeriod }} = this.props;
+            const {selectsReducer } = this.props;
             let componentDisbursementPlan = false;
-            const mellowingPeriods = selectsReducer.get(MELLOWING_PERIOD);
-            let mellowingPeriodSelected = mellowingPeriods.find((mellowing) => mellowing.id == val);
+            const mellowingPeriod = selectsReducer.get(MELLOWING_PERIOD);
+            let mellowingPeriodSelected = mellowingPeriod.find((mellowing) => mellowing.id == val);
 
             if(mellowingPeriodSelected && keyBusinessCategory === PLACEMENTS && mellowingPeriodSelected.key === PIPELINE_DISBURSEMENT_PLAN){
                 componentDisbursementPlan= true;
             }
-
-            mellowingPeriod.onChange(val);
-
             this.setState({
                 showComponentDisbursementPlan:componentDisbursementPlan
             });
-
         }
 
         showTypePolicy(val) {
