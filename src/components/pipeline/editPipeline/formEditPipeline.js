@@ -177,7 +177,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showAlertCurrency: false,
                 showJustificationField: false,
                 showProbabilityField: true,
-                showMellowingPeriodField: false,
+                showMellowingPeriodField: true,
                 pipelineStatus: [],
                 messageTooltipNominalValue:null,
                 showInteresSpread: false,
@@ -972,7 +972,6 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             justification.onChange(data.justification);                           
             idUsuario.onChange(data.employeeResponsible);
             nameUsuario.onChange(data.employeeResponsibleName);
-            mellowingPeriod.onChange(data.mellowingPeriod);
             moneyDistribitionMarket.onChange(data.moneyDistribitionMarket);
             probability.onChange(data.probability);        
             indexing.onChange(data.indexing);                                 
@@ -1004,6 +1003,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             mellowingPeriodDate.onChange(data.mellowingPeriodDate != null && data.mellowingPeriodDate!= '' ?moment(data.mellowingPeriodDate).format('MM/YYYY') : '');
             this._showLoadBusinessCategory2(data.businessCategory2, data.nominalValue2);
             negotiatedAmount.onChange(fomatInitialStateNumber(data.negotiatedAmount));
+            mellowingPeriod.onChange(data.mellowingPeriod);
         }
 
 
