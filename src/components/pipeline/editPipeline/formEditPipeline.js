@@ -177,7 +177,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showAlertCurrency: false,
                 showJustificationField: false,
                 showProbabilityField: true,
-                showMellowingPeriodField: false,
+                showMellowingPeriodField: true,
                 pipelineStatus: [],
                 messageTooltipNominalValue:null,
                 showInteresSpread: false,
