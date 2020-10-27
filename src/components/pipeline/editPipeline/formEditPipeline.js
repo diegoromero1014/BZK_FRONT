@@ -177,7 +177,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                 showAlertCurrency: false,
                 showJustificationField: false,
                 showProbabilityField: true,
-                showMellowingPeriodField: true,
+                showMellowingPeriodField: false,
                 pipelineStatus: [],
                 messageTooltipNominalValue:null,
                 showInteresSpread: false,
@@ -371,8 +371,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             this.setState({
                 probabilityEnabled: _pipeline_status.filter(pStatus => {
                     return (
-                        pStatus.id == currencyValue &&
-                        (pStatus.key == BUSINESS_STATUS_COMPROMETIDO || pStatus.key == BUSINESS_STATUS_COTIZACION)
+                      pStatus.id == currencyValue &&
+                      (pStatus.key == BUSINESS_STATUS_COMPROMETIDO || pStatus.key == BUSINESS_STATUS_COTIZACION)
                     )
                 }).length > 0
             });
@@ -383,17 +383,17 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
         setValueToState = (args) => {
             this.setState(args);
         }
-        _changeProductFamily(currencyValue) {            
+        _changeProductFamily(currencyValue) {
             const { fields: { areaAssets, productFamily, product, businessCategory },
-             pipelineReducer, selectsReducer, dispatchChildren } = this.props; 
-            GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);  
-           
+                pipelineReducer, selectsReducer, dispatchChildren } = this.props;
+            GetChildCatalogs(currencyValue, dispatchChildren, this.setValueToState);
+
             let productFamilySelected =  selectsReducer.get(ALL_PRODUCT_FAMILIES).find(family => family.id == currencyValue);
             const keyProductFamily2 = productFamilySelected ? productFamilySelected.key : '';
 
             if (!this.state.flagInitLoadAssests) {
                 areaAssets.onChange('');
-            }             
+            }
 
             if (!_.isEqual(pipelineReducer.get('detailPipeline').productFamily, productFamily.value)) {
                 product.onChange('');
@@ -406,46 +406,46 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
             if(keyProductFamily2 === NEGOTIATED_AMOUNT_VALUES){
                 this.setState({
-                    showNegotiatedAmountField: true                  
-                });        
-              }else{
-                this.setState({                  
-                  showNegotiatedAmountField: false
-                });        
-              }
+                    showNegotiatedAmountField: true
+                });
+            }else{
+                this.setState({
+                    showNegotiatedAmountField: false
+                });
+            }
         }
 
         _changeAreaAssetsEnabledValue(value){
             this.setState({
                 areaAssetsEnabled: value
-              });
+            });
         }
 
-        _changeProduct(value){                         
+        _changeProduct(value){
             const { fields: { productFamily }, selectsReducer, dispatchChildren } = this.props;
             GetChildCatalogs(value, dispatchChildren, this.setValueToState);
             let productFamilySelected = selectsReducer.get(ALL_PRODUCT_FAMILIES).find((family) => family.id == productFamily.value);
             let products = selectsReducer.get(PRODUCTS_MASK);
-            let productSelected = products.find((product) => product.id == value);            
+            let productSelected = products.find((product) => product.id == value);
             if(productFamilySelected && productSelected){
-              let productFamilySelectedKey = productFamilySelected.key ? productFamilySelected.key.toLowerCase() 
-                : (productFamilySelected.value ? productFamilySelected.value.toLowerCase() : '');
-              let productSelectedKey = productSelected.key ? productSelected.key.toLowerCase() 
-                : (productSelected.value ? productSelected.value.toLowerCase() : '');
-              if(productFamilySelectedKey === LEASING){
-                switch (productSelectedKey) {
-                  case FINANCIAL_LEASING:
-                  case OPERATING_LEASE:
-                  case IMPORTATION_LEASING:
-                    this._changeAreaAssetsEnabledValue(true);
-                    break;        
-                  default:
-                    this._changeAreaAssetsEnabledValue(false);
-                    break;
+                let productFamilySelectedKey = productFamilySelected.key ? productFamilySelected.key.toLowerCase()
+                  : (productFamilySelected.value ? productFamilySelected.value.toLowerCase() : '');
+                let productSelectedKey = productSelected.key ? productSelected.key.toLowerCase()
+                  : (productSelected.value ? productSelected.value.toLowerCase() : '');
+                if(productFamilySelectedKey === LEASING){
+                    switch (productSelectedKey) {
+                        case FINANCIAL_LEASING:
+                        case OPERATING_LEASE:
+                        case IMPORTATION_LEASING:
+                            this._changeAreaAssetsEnabledValue(true);
+                            break;
+                        default:
+                            this._changeAreaAssetsEnabledValue(false);
+                            break;
+                    }
                 }
-              }
             }
-          }
+        }
 
         _closeConfirmChangeCurrency() {
             this.setState({
@@ -475,7 +475,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const { fields: { commission }, selectsReducer } = this.props;
             const businessCategories2 = selectsReducer.get(ALL_BUSINESS_CATEGORIES);
             const selectedBusinessCategory2 = businessCategories2.find((businessCategory2) => businessCategory2.id == val);
-             keyBusinessCategory2 = selectedBusinessCategory2 ? selectedBusinessCategory2.key.toLowerCase() : '';
+            keyBusinessCategory2 = selectedBusinessCategory2 ? selectedBusinessCategory2.key.toLowerCase() : '';
             if((keyBusinessCategory2 === PLACEMENTS || keyBusinessCategory2 === CATCHMENTS) || (keyBusinessCategory === PLACEMENTS || keyBusinessCategory === CATCHMENTS)){
                 this.setState({
                     showInteresSpread: true
@@ -589,21 +589,21 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         setPipelineStatusValues(pipelineTypeSelectedKey) {
 
-            const { selectsReducer } = this.props; 
-      
+            const { selectsReducer } = this.props;
+
             if (pipelineTypeSelectedKey == NUEVO_NEGOCIO) {
-              this.setState({ pipelineStatus : selectsReducer.get(PIPELINE_STATUS).filter(value => value.key.toLowerCase() != BUSINESS_STATUS_NO_CONTACTADO ) })
+                this.setState({ pipelineStatus : selectsReducer.get(PIPELINE_STATUS).filter(value => value.key.toLowerCase() != BUSINESS_STATUS_NO_CONTACTADO ) })
             } else {
-              this.setState({ pipelineStatus: selectsReducer.get(PIPELINE_STATUS) })
+                this.setState({ pipelineStatus: selectsReducer.get(PIPELINE_STATUS) })
             }
-      
-          }
+
+        }
 
         _getBusinessStatusById(id){
             const {selectsReducer} = this.props;
             const businessStatusList = selectsReducer.get(PIPELINE_STATUS);
             return businessStatusList.find((status) => status.id == id);
-          }
+        }
 
         _validateShowJustificationProbabilityAndMellowingPeriodFields( businessStatusSelectedKey) {
             const { fields: {justification, justificationDetail} } = this.props;
@@ -698,9 +698,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
 
         validateDetailPipeline = () => {
             const { fields: { need, productFamily }, pipelineReducer } = this.props;
-              if (!_.isEqual(pipelineReducer.get('detailPipeline').need, need.value)) {
+            if (!_.isEqual(pipelineReducer.get('detailPipeline').need, need.value)) {
                 productFamily.onChange('');
-              }
+            }
         }
 
         showMessageChangeClientNeed() {
@@ -835,12 +835,12 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                 return item;
                             });
                             pipelineJson.listPipelines = _.map(pipelineBusinessReducer.toArray(), (pipelineBusiness) => {
-                                pipelineBusiness.disbursementPlans = _.map(pipelineBusiness.disbursementPlans, (item) => {
-                                    item.id = item.id === null || item.id.toString().includes('disburPlan_') ? null : item.id;
-                                    return item;
-                                });
-                                return _.omit(pipelineBusiness, ['uuid']);
-                            }
+                                  pipelineBusiness.disbursementPlans = _.map(pipelineBusiness.disbursementPlans, (item) => {
+                                      item.id = item.id === null || item.id.toString().includes('disburPlan_') ? null : item.id;
+                                      return item;
+                                  });
+                                  return _.omit(pipelineBusiness, ['uuid']);
+                              }
                             );
                             changeStateSaveData(true, MESSAGE_SAVE_DATA);
                             createEditPipeline(pipelineJson).then((data) => {
@@ -865,7 +865,7 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                                 let oValue = observations.value;
                                                 observations.onChange(oValue);
                                                 message = "Señor usuario, los datos enviados contienen caracteres invalidos que deben ser corregidos.";
-                                            } 
+                                            }
                                         });
 
                                         this.setState({ showMessageEditPipeline: true });
@@ -897,33 +897,33 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     }
                     $('.ui.search.' + participantBanc).toggleClass('loading');
                     filterUsersBanco(nameUsuario.value).then((data) => {
-                        let usersBanco = _.get(data, 'payload.data.data');
-                        $('.ui.search.' + participantBanc)
-                            .search({
-                                cache: false,
-                                source: usersBanco,
-                                maxResults: 1500,
-                                searchFields: [
-                                    'title',
-                                    'description',
-                                    'idUsuario',
-                                    'cargo'
-                                ],
-                                onSelect: function (event) {
-                                    nameUsuario.onChange(event.title);
-                                    idUsuario.onChange(event.idUsuario);
-                                    self.setState({
-                                        employeeResponsible: false
-                                    });
-                                    return 'default';
-                                }
-                            });
-                        $('.ui.search.' + participantBanc).toggleClass('loading');
-                        $('.ui.search.' + participantBanc).search('search local', nameUsuario.value);
-                        setTimeout(function () {
-                            $('#' + inputParticipantBanc).focus();
-                        }, 150);
-                    }
+                          let usersBanco = _.get(data, 'payload.data.data');
+                          $('.ui.search.' + participantBanc)
+                          .search({
+                              cache: false,
+                              source: usersBanco,
+                              maxResults: 1500,
+                              searchFields: [
+                                  'title',
+                                  'description',
+                                  'idUsuario',
+                                  'cargo'
+                              ],
+                              onSelect: function (event) {
+                                  nameUsuario.onChange(event.title);
+                                  idUsuario.onChange(event.idUsuario);
+                                  self.setState({
+                                      employeeResponsible: false
+                                  });
+                                  return 'default';
+                              }
+                          });
+                          $('.ui.search.' + participantBanc).toggleClass('loading');
+                          $('.ui.search.' + participantBanc).search('search local', nameUsuario.value);
+                          setTimeout(function () {
+                              $('#' + inputParticipantBanc).focus();
+                          }, 150);
+                      }
                     );
                 }
             }
@@ -959,30 +959,31 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                     termInMonthsValues, pendingDisbursementAmount, pipelineType, commercialOportunity, justification, typePolicy, margen, justificationDetail,
                     mellowingPeriodDate, negotiatedAmount
                 }, updateDisbursementPlans
-            } = this.props;       
+            } = this.props;
             updateDisbursementPlans(data.disbursementPlans, origin);
-            this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport });                                                                                                 
-            pipelineType.onChange(data.pipelineType);  
-            commercialOportunity.onChange(data.commercialOportunity);   
+            this.setState({ flagInitLoadAssests: true, commercialReport: data.commercialReport });
+            pipelineType.onChange(data.pipelineType);
+            commercialOportunity.onChange(data.commercialOportunity);
             opportunityName.onChange(data.opportunityName);
-            need.onChange(data.need);   
-            productFamily.onChange(data.productFamily);                     
-            commission.onChange(fomatInitialStateNumber(data.commission));            
-            businessStatus.onChange(data.businessStatus); 
-            justification.onChange(data.justification);                           
+            need.onChange(data.need);
+            productFamily.onChange(data.productFamily);
+            commission.onChange(fomatInitialStateNumber(data.commission));
+            businessStatus.onChange(data.businessStatus);
+            justification.onChange(data.justification);
             idUsuario.onChange(data.employeeResponsible);
             nameUsuario.onChange(data.employeeResponsibleName);
+            mellowingPeriod.onChange(data.mellowingPeriod);
             moneyDistribitionMarket.onChange(data.moneyDistribitionMarket);
-            probability.onChange(data.probability);        
-            indexing.onChange(data.indexing);                                 
+            probability.onChange(data.probability);
+            indexing.onChange(data.indexing);
             roe.onChange(fomatInitialStateNumber(data.roe));
             currency.onChange(data.currency);
             value.onChange(fomatInitialStateNumber(data.value));
-            pendingDisbursementAmount.onChange(fomatInitialStateNumber(data.pendingDisbursementAmount));            
+            pendingDisbursementAmount.onChange(fomatInitialStateNumber(data.pendingDisbursementAmount));
             termInMonths.onChange(data.termInMonths);
-            termInMonthsValues.onChange(data.termInMonthsValues);            
+            termInMonthsValues.onChange(data.termInMonthsValues);
             areaAssets.onChange(data.areaAssets);
-            observations.onChange(data.observations === null ? '' : data.observations);                                    
+            observations.onChange(data.observations === null ? '' : data.observations);
             client.onChange(data.client);
             documentStatus.onChange(data.documentStatus);
             createdBy.onChange(data.createdBy);
@@ -993,8 +994,8 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             updatedByName.onChange(data.updatedByName);
             positionCreatedBy.onChange(data.positionCreatedBy);
             positionUpdatedBy.onChange(data.positionUpdatedBy);
-            reviewedDate.onChange(moment(data.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT)); 
-            businessCategory.onChange(data.businessCategory);      
+            reviewedDate.onChange(moment(data.reviewedDate, "x").locale('es').format(REVIEWED_DATE_FORMAT));
+            businessCategory.onChange(data.businessCategory);
             product.onChange(data.product);
             margen.onChange(fomatInitialStateNumber(data.margin));
             sva.onChange(data.sva);
@@ -1003,19 +1004,18 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             mellowingPeriodDate.onChange(data.mellowingPeriodDate != null && data.mellowingPeriodDate!= '' ?moment(data.mellowingPeriodDate).format('MM/YYYY') : '');
             this._showLoadBusinessCategory2(data.businessCategory2, data.nominalValue2);
             negotiatedAmount.onChange(fomatInitialStateNumber(data.negotiatedAmount));
-            mellowingPeriod.onChange(data.mellowingPeriod);
         }
 
 
-       _showNegotiatedAmountField(negotiatedAmountValue){
-        const {fields:{ negotiatedAmount }} = this.props;
-        if(negotiatedAmountValue !== null){
+        _showNegotiatedAmountField(negotiatedAmountValue){
+            const {fields:{ negotiatedAmount }} = this.props;
+            if(negotiatedAmountValue !== null){
 
-            this.setState({
-                showNegotiatedAmountField: true
-              });
-              negotiatedAmount.onChange(fomatInitialStateNumber(negotiatedAmountValue)); }
-     }
+                this.setState({
+                    showNegotiatedAmountField: true
+                });
+                negotiatedAmount.onChange(fomatInitialStateNumber(negotiatedAmountValue)); }
+        }
 
         _showLoadBusinessCategory2(businessCategory2Value, nominalValue2Value){
             const {fields:{ businessCategory2, nominalValue2 }} = this.props;
@@ -1050,41 +1050,41 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             if (_.isEmpty(infoClient)) {
                 redirectUrl("/dashboard/clientInformation");
             } else {
-                showLoading(true, 'Cargando...');   
-                
+                showLoading(true, 'Cargando...');
+
                 Promise.all([consultDataSelect(PRODUCT_FAMILY, ALL_PRODUCT_FAMILIES), consultDataSelect(BUSINESS_CATEGORY, ALL_BUSINESS_CATEGORIES),
                     getMasterDataFields([PIPELINE_STATUS, PIPELINE_INDEXING, PIPELINE_PRIORITY, FILTER_COUNTRY, PIPELINE_BUSINESS,
                         PROBABILITY, LINE_OF_BUSINESS, MELLOWING_PERIOD,
                         FILTER_MONEY_DISTRIBITION_MARKET, FILTER_ACTIVE, TERM_IN_MONTHS_VALUES, CURRENCY, PIPELINE_TYPE, COMMERCIAL_OPORTUNITY,
                         PIPELINE_JUSTIFICATION, CLIENT_NEED, FILTER_TYPE_POLICY])]).then(() => {
-                            if (origin !== ORIGIN_PIPELIN_BUSINESS) {                            
-                                const { params: { id } } = this.props;
-                                getPipelineById(id).then((result) => {
-                                    if (!validateResponse(result)) {
-                                        swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
-                                    } else {
-                                        let data = result.payload.data.data;
-                                        _.forIn(data.listPipelines, function (pipeline) {
-                                            const uuid = _.uniqueId('pipelineBusiness_');
-                                            pipeline.uuid = uuid;
-                                            addBusiness(pipeline);
-                                        });
-                                        if (data.commercialReport) {
-                                            setConfidential(data.commercialReport.isConfidential);
-                                            fillUsersPermissions(data.commercialReport.usersWithPermission, addUsers);
-                                        }                                    
-                                        this._consultInfoPipeline(data);                                    
-                                    }
-                                    showLoading(false, null);         
-                                });
+                    if (origin !== ORIGIN_PIPELIN_BUSINESS) {
+                        const { params: { id } } = this.props;
+                        getPipelineById(id).then((result) => {
+                            if (!validateResponse(result)) {
+                                swtShowMessage(MESSAGE_ERROR, TITLE_ERROR_SWEET_ALERT, MESSAGE_ERROR_SWEET_ALERT);
                             } else {
-                                showLoading(false, null);
+                                let data = result.payload.data.data;
+                                _.forIn(data.listPipelines, function (pipeline) {
+                                    const uuid = _.uniqueId('pipelineBusiness_');
+                                    pipeline.uuid = uuid;
+                                    addBusiness(pipeline);
+                                });
+                                if (data.commercialReport) {
+                                    setConfidential(data.commercialReport.isConfidential);
+                                    fillUsersPermissions(data.commercialReport.usersWithPermission, addUsers);
+                                }
+                                this._consultInfoPipeline(data);
                             }
+                            showLoading(false, null);
                         });
+                    } else {
+                        showLoading(false, null);
+                    }
+                });
             }
         }
 
-        componentDidMount() {                                
+        componentDidMount() {
             if (pipelineBusiness !== null && pipelineBusiness !== undefined && pipelineBusiness !== '') {
                 this._consultInfoPipeline(pipelineBusiness);
             }
@@ -1124,11 +1124,11 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             const {
                 fields: { nameUsuario, idUsuario, value, commission, roe, sva, termInMonths, businessStatus, businessCategory, currency, indexing, need, observations, product,
                     moneyDistribitionMarket, pendingDisbursementAmount, updatedBy, createdTimestamp, updatedTimestamp, createdByName, updatedByName, reviewedDate, positionCreatedBy,
-                    positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets, 
+                    positionUpdatedBy, probability, amountDisbursed, estimatedDisburDate, opportunityName, productFamily, mellowingPeriod, areaAssets,
                     termInMonthsValues, pipelineType, commercialOportunity, justification,  typePolicy, margen, justificationDetail, businessCategory2, nominalValue2,
                     mellowingPeriodDate, negotiatedAmount
                 }, selectsReducer, handleSubmit, pipelineReducer, reducerGlobal
-            } = this.props;            
+            } = this.props;
             const ownerDraft = pipelineReducer.get('ownerDraft');
             const isEditableValue = _.size(pipelineReducer.get(this._nameDisbursementPlansInReducer())) > 0 || this.state.showFormAddDisbursementPlan ? false : true;
             let fechaModString = '';
@@ -1144,9 +1144,9 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
             }
 
             return (
-                <div>
-                    {origin !== ORIGIN_PIPELIN_BUSINESS && <ReportsHeader/>}
-                    <form onSubmit={handleSubmit(this._submitEditPipeline)}
+              <div>
+                  {origin !== ORIGIN_PIPELIN_BUSINESS && <ReportsHeader/>}
+                  <form onSubmit={handleSubmit(this._submitEditPipeline)}
                         onKeyPress={val => formValidateKeyEnter(val, reducerGlobal.get('validateEnter'))}
                         className="my-custom-tab"
                         style={origin === ORIGIN_PIPELIN_BUSINESS ? {} : {
@@ -1155,553 +1155,553 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                             width: "100%",
                             paddingBottom: "50px"
                         }}>
-                        <div id={origin === ORIGIN_PIPELIN_BUSINESS ? "modalComponentFormEditPipeline" : "formModal"}
-                            className={origin === ORIGIN_PIPELIN_BUSINESS ? "modalBt4-body modal-body business-content editable-form-content clearfix" : ""}
-                            style={origin === ORIGIN_PIPELIN_BUSINESS ? {
-                                overflowX: "hidden",
-                                paddingBottom: "0px",
-                                marginTop: "10px"
-                            } : {}}
-                            ref={divArea => this.modalScrollArea = divArea}>
-                            <Row style={{ padding: "5px 10px 0px 20px" }}>
-                                <Col xs={10} sm={10} md={10} lg={10}>
-                                    <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
-                                </Col>
-                                <Col xs={2} sm={2} md={2} lg={2} style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : {}}>
-                                    {_.get(reducerGlobal.get('permissionsPipeline'), _.indexOf(reducerGlobal.get('permissionsPipeline'), EDITAR), false) &&
-                                        <button type="button" onClick={this._editPipeline}
-                                            className={'btn btn-primary modal-button-edit'}
-                                            style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>
-                                            Editar
-                                            <i className={'icon edit'} /></button>
-                                    }
-                                </Col>
-                            </Row>
-                            {origin !== ORIGIN_PIPELIN_BUSINESS && <Row style={{ padding: "5px 10px 20px 20px" }}>
-                                <Col xs={12} md={12} lg={12}>
-                                    <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'} />
-                                </Col>
-                            </Row>}
-                            
-                                <Classification
-                                    pipelineType={pipelineType}
-                                    commercialOportunity={commercialOportunity}
-                                    isChildren={origin === ORIGIN_PIPELIN_BUSINESS}
-                                    disabled={!this.state.isEditable}
-                                    pipelineTypeName={pipelineTypeName}
-                                    commercialOportunityName={commercialOportunityName}
-                                    pipelineTypeOnChange={this._pipelineTypeAndBusinessOnChange}
-                                />
-                            
-                            <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 20px 20px" }}>
-                                <Col xs={12} md={12} lg={12}>
-                                    <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
-                                        <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
-                                        <i className="browser icon" style={{ fontSize: "20px" }} />
-                                        <span style={{ fontSize: "20px" }}> Oportunidad</span>
-                                    </div>
-                                </Col>
-                            </Row>
-                            <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "0px 10px 20px 20px" }}>
-                                <Col md={12}>
-                                    <dt>
-                                        <span>Nombre de la oportunidad (</span><span style={{ color: "red" }}>*</span>)
-                                    </dt>
-                                    <Input
-                                        name="txtOpportunityName"
-                                        type="text"
-                                        {...opportunityName}
-                                        max="100"
+                      <div id={origin === ORIGIN_PIPELIN_BUSINESS ? "modalComponentFormEditPipeline" : "formModal"}
+                           className={origin === ORIGIN_PIPELIN_BUSINESS ? "modalBt4-body modal-body business-content editable-form-content clearfix" : ""}
+                           style={origin === ORIGIN_PIPELIN_BUSINESS ? {
+                               overflowX: "hidden",
+                               paddingBottom: "0px",
+                               marginTop: "10px"
+                           } : {}}
+                           ref={divArea => this.modalScrollArea = divArea}>
+                          <Row style={{ padding: "5px 10px 0px 20px" }}>
+                              <Col xs={10} sm={10} md={10} lg={10}>
+                                  <span>Los campos marcados con asterisco (<span style={{ color: "red" }}>*</span>) son obligatorios.</span>
+                              </Col>
+                              <Col xs={2} sm={2} md={2} lg={2} style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : {}}>
+                                  {_.get(reducerGlobal.get('permissionsPipeline'), _.indexOf(reducerGlobal.get('permissionsPipeline'), EDITAR), false) &&
+                                  <button type="button" onClick={this._editPipeline}
+                                          className={'btn btn-primary modal-button-edit'}
+                                          style={{ marginRight: '15px', float: 'right', marginTop: '-15px' }}>
+                                      Editar
+                                      <i className={'icon edit'} /></button>
+                                  }
+                              </Col>
+                          </Row>
+                          {origin !== ORIGIN_PIPELIN_BUSINESS && <Row style={{ padding: "5px 10px 20px 20px" }}>
+                              <Col xs={12} md={12} lg={12}>
+                                  <PermissionUserReports disabled={this.state.isEditable ? '' : 'disabled'} />
+                              </Col>
+                          </Row>}
+
+                          <Classification
+                            pipelineType={pipelineType}
+                            commercialOportunity={commercialOportunity}
+                            isChildren={origin === ORIGIN_PIPELIN_BUSINESS}
+                            disabled={!this.state.isEditable}
+                            pipelineTypeName={pipelineTypeName}
+                            commercialOportunityName={commercialOportunityName}
+                            pipelineTypeOnChange={this._pipelineTypeAndBusinessOnChange}
+                          />
+
+                          <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 20px 20px" }}>
+                              <Col xs={12} md={12} lg={12}>
+                                  <div style={{ fontSize: "25px", color: "#CEA70B", marginTop: "5px", marginBottom: "5px" }}>
+                                      <div className="tab-content-row" style={{ borderTop: "1px dotted #cea70b", width: "99%", marginBottom: "10px" }} />
+                                      <i className="browser icon" style={{ fontSize: "20px" }} />
+                                      <span style={{ fontSize: "20px" }}> Oportunidad</span>
+                                  </div>
+                              </Col>
+                          </Row>
+                          <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "0px 10px 20px 20px" }}>
+                              <Col md={12}>
+                                  <dt>
+                                      <span>Nombre de la oportunidad (</span><span style={{ color: "red" }}>*</span>)
+                                  </dt>
+                                  <Input
+                                    name="txtOpportunityName"
+                                    type="text"
+                                    {...opportunityName}
+                                    max="100"
+                                    parentId="dashboardComponentScroll"
+                                    disabled={this.state.isEditable ? '' : 'disabled'}
+                                  />
+                              </Col>
+                          </Row>
+                          <Row style={{ padding: "10px 10px 20px 20px" }}>
+                              <Col xs={12} md={12} lg={12}>
+                                  <div style={{
+                                      fontSize: "25px",
+                                      color: "#CEA70B",
+                                      marginTop: "5px",
+                                      marginBottom: "5px"
+                                  }}>
+                                      <div className="tab-content-row" style={{
+                                          borderTop: "1px dotted #cea70b",
+                                          width: "99%",
+                                          marginBottom: "10px"
+                                      }} />
+                                      <i className="browser icon" style={{ fontSize: "20px" }} />
+                                      <span style={{ fontSize: "20px" }}> Pipeline</span>
+                                  </div>
+                              </Col>
+                          </Row>
+                          <Row style={{ padding: "0px 10px 20px 20px" }}>
+                              <Col xs={6} md={3} lg={3}>
+                                  <div style={{ paddingRight: "15px" }}>
+                                      <dt>
+                                          <span>Necesidad del cliente (</span><span style={{ color: "red" }}>*</span>)
+                                      </dt>
+                                      <ComboBox
+                                        id="nameNeed"
+                                        labelInput="Seleccione..."
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        {...need}
+                                        name={nameNeed}
+                                        parentId="dashboardComponentScroll"
+                                        data={selectsReducer.get(CLIENT_NEED) || []}
+                                        disabled={this.state.isEditable ? '' : 'disabled'}
+                                        onChange={this._changeNeedsClient}
+                                      />
+                                  </div>
+                              </Col>
+                              <Col xs={12} md={6} lg={6}>
+                                  <div style={{ paddingRight: "15px" }}>
+                                      <dt>
+                                          <span>Familia de productos (</span><span style={{ color: "red" }}>*</span>)
+                                      </dt>
+                                      <ComboBox
+                                        labelInput="Seleccione..."
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        {...productFamily}
+                                        name={nameProductFamily}
                                         parentId="dashboardComponentScroll"
                                         disabled={this.state.isEditable ? '' : 'disabled'}
-                                    />
-                                </Col>
-                            </Row>
-                            <Row style={{ padding: "10px 10px 20px 20px" }}>
-                                <Col xs={12} md={12} lg={12}>
-                                    <div style={{
-                                        fontSize: "25px",
-                                        color: "#CEA70B",
-                                        marginTop: "5px",
-                                        marginBottom: "5px"
-                                    }}>
-                                        <div className="tab-content-row" style={{
-                                            borderTop: "1px dotted #cea70b",
-                                            width: "99%",
-                                            marginBottom: "10px"
-                                        }} />
-                                        <i className="browser icon" style={{ fontSize: "20px" }} />
-                                        <span style={{ fontSize: "20px" }}> Pipeline</span>
-                                    </div>
-                                </Col>
-                            </Row>
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Necesidad del cliente (</span><span style={{ color: "red" }}>*</span>)
-                                        </dt>
-                                        <ComboBox
-                                            id="nameNeed"
+                                        data={this.state.productsFamily}
+                                        onChange={val => this._changeProductFamily(val)}
+                                        filterData={true}
+                                      />
+                                  </div>
+                              </Col>
+                              <Col xs={6} md={3} lg={3}>
+                                  <div style={{ paddingRight: "15px" }}>
+                                      <dt>
+                                          <span>Producto</span> (<span style={{ color: "red" }}>*</span>)
+                                      </dt>
+                                      <ComboBox
+                                        labelInput="Seleccione..."
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        parentId="dashboardComponentScroll"
+                                        data={this.state.products}
+                                        disabled={this.state.isEditable ? '' : 'disabled'}
+                                        {...product}
+                                        name={nameProduct}
+                                        onChange={val => this._changeProduct(val)}
+                                      />
+                                  </div>
+                              </Col>
+                          </Row>
+                          <Row style={{ padding: "0px 10px 20px 20px" }}>
+                              <Col xs={6} md={3} lg={3}>
+                                  <div style={{ paddingRight: "15px" }}>
+                                      <dt>
+                                          {origin === ORIGIN_PIPELIN_BUSINESS ?
+                                            <span>Categoría del negocio</span>
+                                            :
+                                            <span>Categoría del negocio (<span style={{ color: "red" }}>*</span>)</span>
+                                          }
+                                      </dt>
+                                      <ComboBox
+                                        labelInput="Seleccione..."
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        {...businessCategory}
+                                        name={nameBusinessCategory}
+                                        parentId="dashboardComponentScroll"
+                                        data={this.state.businessCategories || selectsReducer.get(ALL_BUSINESS_CATEGORIES)}
+                                        onChange={key => this.showInteresSpreadField(key)}
+                                        disabled={this.state.isEditable ? '' : 'disabled'}
+                                        filterData={true}
+                                      />
+                                  </div>
+                              </Col>
+                              <Col xs={6} md={3} lg={3}>
+                                  <div style={{ paddingRight: "15px" }}>
+                                      <dt>
+                                          <span>Moneda (</span><span style={{ color: "red" }}>*</span>)
+                                      </dt>
+                                      <div onClick={() => this.showAlertDisabledCurrency(isEditableValue)} >
+                                          <ComboBox
                                             labelInput="Seleccione..."
                                             valueProp={'id'}
                                             textProp={'value'}
-                                            {...need}
-                                            name={nameNeed}
+                                            {...currency}
+                                            name={nameCurrency}
                                             parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(CLIENT_NEED) || []}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                            onChange={this._changeNeedsClient}
-                                        />
-                                    </div>
-                                </Col>
-                                <Col xs={12} md={6} lg={6}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Familia de productos (</span><span style={{ color: "red" }}>*</span>)
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            {...productFamily}
-                                            name={nameProductFamily}
-                                            parentId="dashboardComponentScroll"
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                            data={this.state.productsFamily}
-                                            onChange={val => this._changeProductFamily(val)}
-                                            filterData={true}
-                                        />
-                                    </div>
-                                </Col>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                        <span>Producto</span> (<span style={{ color: "red" }}>*</span>)
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            parentId="dashboardComponentScroll"
-                                            data={this.state.products}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                            {...product}
-                                            name={nameProduct}
-                                            onChange={val => this._changeProduct(val)}
-                                        />
-                                    </div>
-                                </Col>
-                            </Row>
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            {origin === ORIGIN_PIPELIN_BUSINESS ?
-                                                <span>Categoría del negocio</span>
-                                                :
-                                                <span>Categoría del negocio (<span style={{ color: "red" }}>*</span>)</span>
-                                            }
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            {...businessCategory}
-                                            name={nameBusinessCategory}
-                                            parentId="dashboardComponentScroll"
-                                            data={this.state.businessCategories || selectsReducer.get(ALL_BUSINESS_CATEGORIES)}
-                                            onChange={key => this.showInteresSpreadField(key)}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                            filterData={true}
-                                        />
-                                    </div>
-                                </Col>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Moneda (</span><span style={{ color: "red" }}>*</span>)
-                                        </dt>
-                                        <div onClick={() => this.showAlertDisabledCurrency(isEditableValue)} >
-                                            <ComboBox
-                                                labelInput="Seleccione..."
-                                                valueProp={'id'}
-                                                textProp={'value'}
-                                                {...currency}
-                                                name={nameCurrency}
+                                            data={selectsReducer.get(CURRENCY) || []}
+                                            disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
+                                            onChange={val => this._changeCurrency(val)}
+                                          />
+                                      </div>
+                                  </div>
+                              </Col>
+                              <Col xs={6} md={3} lg={3}>
+                                  <div style={{ paddingRight: "15px" }}>
+                                      <dt>
+                                          <span>Valor nominal (</span>
+                                          <span style={{ color: "red" }}>*</span>)
+                                      </dt>
+                                      <ToolTip text={this.state.messageTooltipNominalValue} rendertooltip={this.state.messageTooltipNominalValue}>
+                                          <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
+                                              <Input
+                                                {...value}
+                                                name="valueMillions"
+                                                type="text"
+                                                placeholder="Miles ' , ' y decimales ' . '"
                                                 parentId="dashboardComponentScroll"
-                                                data={selectsReducer.get(CURRENCY) || []}
+                                                onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
+                                                onFocus={val => handleFocusValueNumber(value, value.value)}
                                                 disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
-                                                onChange={val => this._changeCurrency(val)}
-                                            />
-                                        </div>
+                                                onChange={val => this._changeValue(val)
+                                                }
+                                              />
+                                          </div>
+                                      </ToolTip>
+                                  </div>
+                              </Col>
+                              <Col xs={6} md={3} lg={3}>
+                                  <button className="btn btn-primary" type="button"  id="addCategory" style={{ marginTop: '18px' }} onClick={() => this._showBusinessCategory2(true)}
+                                          disabled={this.state.isEditable ? '' : 'disabled'}>
+                                      <ToolTip text='Agregar categoría del negocio 2 / Valor nominal 2' rendertooltip='Agregar categoría del negocio 2 / Valor nominal 2'>
+                                          <i className="plus icon" style={{ cursor: "pointer"}}/>
+                                      </ToolTip>
+                                      Categoría del negocio
+                                  </button>
+                              </Col>
+                          </Row>
+                          {this.state.showBusinessCategory2 ?
+                            <Row style={{padding: "0px 10px 20px 20px"}}>
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Categoría del negocio 2 </span>
+                                        </dt>
+                                        <ComboBox
+                                          labelInput="Seleccione..."
+                                          valueProp={'id'}
+                                          textProp={'value'}
+                                          {...businessCategory2}
+                                          name={nameBusinessCategory2}
+                                          parentId="dashboardComponentScroll"
+                                          data={this.state.businessCategories2 || selectsReducer.get(ALL_BUSINESS_CATEGORIES)}
+                                          disabled={this.state.isEditable ? '' : 'disabled'}
+                                          onChange={key => this._onChangeBusinessCategory2(key)}
+                                        />
                                     </div>
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
-                                            <span>Valor nominal (</span>
-                                            <span style={{ color: "red" }}>*</span>)
+                                            <span>Valor nominal 2 </span>
                                         </dt>
                                         <ToolTip text={this.state.messageTooltipNominalValue} rendertooltip={this.state.messageTooltipNominalValue}>
                                             <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
                                                 <Input
-                                                    {...value}
-                                                    name="valueMillions"
-                                                    type="text"
-                                                    placeholder="Miles ' , ' y decimales ' . '"
-                                                    parentId="dashboardComponentScroll"
-                                                    onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, value, val, true, 2)}
-                                                    onFocus={val => handleFocusValueNumber(value, value.value)}
-                                                    disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
-                                                    onChange={val => this._changeValue(val)
-                                                    }
+                                                  {...nominalValue2}
+                                                  name="valueMillions"
+                                                  type="text"
+                                                  placeholder="Miles ' , ' y decimales ' . '"
+                                                  parentId="dashboardComponentScroll"
+                                                  onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue2, val, true, 2)}
+                                                  onFocus={val => handleFocusValueNumber(nominalValue2, nominalValue2.value)}
+                                                  disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
                                                 />
                                             </div>
                                         </ToolTip>
                                     </div>
                                 </Col>
                                 <Col xs={6} md={3} lg={3}>
-                                        <button className="btn btn-primary" type="button"  id="addCategory" style={{ marginTop: '18px' }} onClick={() => this._showBusinessCategory2(true)}
-                                                disabled={this.state.isEditable ? '' : 'disabled'}>
-                                    <ToolTip text='Agregar categoría del negocio 2 / Valor nominal 2' rendertooltip='Agregar categoría del negocio 2 / Valor nominal 2'>
-                                            <i className="plus icon" style={{ cursor: "pointer"}}/>
-                                    </ToolTip>
-                                            Categoría del negocio
-                                        </button>
+                                    <button className="btn btn-secondary" type="button" style={{ marginTop: '18px' , backgroundColor: "rgb(193, 193, 193)" , padding: "4x"  }}
+                                            onClick={() => this._showBusinessCategory2(false)}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}>
+                                        <ToolTip text='Eliminar categoría del negocio 2 / Valor nominal 2' rendertooltip='Eliminar categoría del negocio 2 / Valor nominal 2'>
+                                            <i className="delete icon"  style={{ cursor: "pointer"}}/>
+                                        </ToolTip>
+                                    </button>
                                 </Col>
                             </Row>
-                            {this.state.showBusinessCategory2 ?
-                                <Row style={{padding: "0px 10px 20px 20px"}}>
-                                    <Col xs={6} md={3} lg={3}>
-                                        <div style={{ paddingRight: "15px" }}>
-                                            <dt>
-                                                <span>Categoría del negocio 2 </span>
-                                            </dt>
-                                            <ComboBox
-                                                labelInput="Seleccione..."
-                                                valueProp={'id'}
-                                                textProp={'value'}
-                                                {...businessCategory2}
-                                                name={nameBusinessCategory2}
-                                                parentId="dashboardComponentScroll"
-                                                data={this.state.businessCategories2 || selectsReducer.get(ALL_BUSINESS_CATEGORIES)}
-                                                disabled={this.state.isEditable ? '' : 'disabled'}
-                                                onChange={key => this._onChangeBusinessCategory2(key)}
-                                            />
-                                        </div>
-                                    </Col>
-                                    <Col xs={6} md={3} lg={3}>
-                                        <div style={{ paddingRight: "15px" }}>
-                                            <dt>
-                                                <span>Valor nominal 2 </span>
-                                            </dt>
-                                            <ToolTip text={this.state.messageTooltipNominalValue} rendertooltip={this.state.messageTooltipNominalValue}>
-                                                <div onClick={ () => this.showAlertDisabledCurrency(isEditableValue) } >
-                                                    <Input
-                                                        {...nominalValue2}
-                                                        name="valueMillions"
-                                                        type="text"
-                                                        placeholder="Miles ' , ' y decimales ' . '"
-                                                        parentId="dashboardComponentScroll"
-                                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, nominalValue2, val, true, 2)}
-                                                        onFocus={val => handleFocusValueNumber(nominalValue2, nominalValue2.value)}
-                                                        disabled={this.state.isEditable && isEditableValue ? '' : 'disabled'}
-                                                    />
-                                                </div>
-                                            </ToolTip>
-                                        </div>
-                                    </Col>
-                                    <Col xs={6} md={3} lg={3}>
-                                            <button className="btn btn-secondary" type="button" style={{ marginTop: '18px' , backgroundColor: "rgb(193, 193, 193)" , padding: "4x"  }}
-                                                    onClick={() => this._showBusinessCategory2(false)}
-                                                    disabled={this.state.isEditable ? '' : 'disabled'}>
-                                        <ToolTip text='Eliminar categoría del negocio 2 / Valor nominal 2' rendertooltip='Eliminar categoría del negocio 2 / Valor nominal 2'>
-                                                <i className="delete icon"  style={{ cursor: "pointer"}}/>
-                                        </ToolTip>
-                                            </button>
-                                    </Col>
-                                </Row>
-                                : null }
-                                <Row style={{padding: "0px 10px 20px 20px"}}>
-                                 {this.state.showNegotiatedAmountField ?
-                                        <Col xs={6} md={3} lg={3}>
-                                            <div style={{ paddingRight: "15px" }}>
-                                                <dt> <span>Monto negociado (</span><span style={{color: "red"}}>*</span>)</dt>                                       
-                                                    <Input
-                                                        {...negotiatedAmount}
-                                                        name="negotiatedAmount"
-                                                        type="text"
-                                                        placeholder="Miles ' , '"
-                                                        parentId="dashboardComponentScroll"
-                                                        onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, negotiatedAmount, val, true, 0)}
-                                                        onFocus={val => handleFocusValueNumber(negotiatedAmount, negotiatedAmount.value)} 
-                                                        disabled={this.state.isEditable ? '' : 'disabled'}                                              
-                                                    />
-                                                </div>
-                                        </Col>
-                                 :null}
-                                </Row> 
-                                
-                                <Row style={{padding: "0px 10px 20px 20px"}}>
-                                    <Col xs={6} md={3} lg={3}>
-                                        <div style={{paddingRight: "15px"}}>
-                                            <dt>
-                                                <span>Estado del negocio (</span><span style={{color: "red"}}>*</span>)
-                                            </dt>
-                                            <ComboBox
-                                                labelInput="Seleccione..."
-                                                valueProp={'id'}
-                                                textProp={'value'}
-                                                {...businessStatus}
-                                                name={nameBusinessStatus}
-                                                parentId="dashboardComponentScroll"
-                                                data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
-                                                disabled={this.state.isEditable ? '' : 'disabled'}
-                                                onChange={val => this._changeBusinessStatus(val)}
-                                                filterData={true}
-                                            />
-                                        </div>
-                                    </Col>
-                            {this.state.showJustificationField ?
-                                    <Col xs={12} md={6} lg={6}>
-                                        <div style={{paddingRight: "15px"}}>
-                                            <dt>
-                                                <span>Justificación (</span><span style={{color: "red"}}>*</span>)
-                                            </dt>
-                                            <ComboBox
-                                                key={nameJustificationPipeline}
-                                                labelInput="Seleccione..."
-                                                valueProp={'id'}
-                                                textProp={'value'}
-                                                {...justification}
-                                                name={nameJustificationPipeline}
-                                                parentId="dashboardComponentScroll"
-                                                data={this.state.pipelineJustification}
-                                                disabled={this.state.isEditable ? '' : 'disabled'}
-                                                onChange={val => this._onChangeJustification(val)}
-                                            />
-                                        </div>
-                                    </Col>
+                            : null }
+                          <Row style={{padding: "0px 10px 20px 20px"}}>
+                              {this.state.showNegotiatedAmountField ?
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt> <span>Monto negociado (</span><span style={{color: "red"}}>*</span>)</dt>
+                                        <Input
+                                          {...negotiatedAmount}
+                                          name="negotiatedAmount"
+                                          type="text"
+                                          placeholder="Miles ' , '"
+                                          parentId="dashboardComponentScroll"
+                                          onBlur={val => handleBlurValueNumber(ONLY_POSITIVE_INTEGER, negotiatedAmount, val, true, 0)}
+                                          onFocus={val => handleFocusValueNumber(negotiatedAmount, negotiatedAmount.value)}
+                                          disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
+                                :null}
+                          </Row>
+
+                          <Row style={{padding: "0px 10px 20px 20px"}}>
+                              <Col xs={6} md={3} lg={3}>
+                                  <div style={{paddingRight: "15px"}}>
+                                      <dt>
+                                          <span>Estado del negocio (</span><span style={{color: "red"}}>*</span>)
+                                      </dt>
+                                      <ComboBox
+                                        labelInput="Seleccione..."
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        {...businessStatus}
+                                        name={nameBusinessStatus}
+                                        parentId="dashboardComponentScroll"
+                                        data={this.state.pipelineStatus || selectsReducer.get(PIPELINE_STATUS) || []}
+                                        disabled={this.state.isEditable ? '' : 'disabled'}
+                                        onChange={val => this._changeBusinessStatus(val)}
+                                        filterData={true}
+                                      />
+                                  </div>
+                              </Col>
+                              {this.state.showJustificationField ?
+                                <Col xs={12} md={6} lg={6}>
+                                    <div style={{paddingRight: "15px"}}>
+                                        <dt>
+                                            <span>Justificación (</span><span style={{color: "red"}}>*</span>)
+                                        </dt>
+                                        <ComboBox
+                                          key={nameJustificationPipeline}
+                                          labelInput="Seleccione..."
+                                          valueProp={'id'}
+                                          textProp={'value'}
+                                          {...justification}
+                                          name={nameJustificationPipeline}
+                                          parentId="dashboardComponentScroll"
+                                          data={this.state.pipelineJustification}
+                                          disabled={this.state.isEditable ? '' : 'disabled'}
+                                          onChange={val => this._onChangeJustification(val)}
+                                        />
+                                    </div>
+                                </Col>
                                 : null}
-                                </Row>
-                            {this.state.showJustificationField ?
-                                <Row style={{padding: "0px 10px 20px 20px"}}>
-                                    <Col xs={12} md={6} lg={6}>
-                                        <div style={{paddingRight: "15px"}}>
-                                            <dt>
-                                                <span>Detalle justificación </span>
-                                                {this.state.detailJustificationObligatory ? <span>(<span style={{color: "red"}}>*</span>)</span> : ''}
-                                            </dt>
-                                            <TextareaComponent
-                                                name="txtJustificationDetail"
-                                                type="text"
-                                                {...justificationDetail}
-                                                parentId="dashboardComponentScroll"
-                                                rows={4}
-                                                style={{ width: '100%', height: '100%' }}
-                                                disabled={this.state.isEditable ? '' : 'disabled'}
-                                            />
-                                        </div>
-                                    </Col>
-                                </Row>
-                                : null}
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                    <Col xs={12} md={6} lg={6}>
-                                        <div style={{ paddingRight: "15px" }}>
-                                            <dt>
-                                                <span>Período de maduración (</span><span style={{color: "red"}}>*</span>)
-                                                <ToolTip text={HELP_PROBABILITY}>
-                                                    <i className="help circle icon blue"
-                                                        style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
-                                                </ToolTip>
-                                            </dt>
-                            {this.state.showMellowingPeriodField ?
-                                <ComboBox
-                                    labelInput="Seleccione..."
-                                    valueProp={'id'}
-                                    textProp={'value'}
-                                    {...mellowingPeriod}
-                                    name={nameMellowingPeriod}
-                                    touched={true}
-                                    parentId="dashboardComponentScroll"
-                                    data={selectsReducer.get(MELLOWING_PERIOD) || []}
-                                    onChange={val => this._onChangeMellowingPeriod(val) }
-                                    disabled={'disabled'}
-                                />
-                                    :
-                                <DateTimePickerUi
-                                    culture='es'
-                                    format={DATE_FORMAT_MONT_YEAR}
-                                    placeholder='"MM/YYYY"'
-                                    initialView='year'
-                                    time={false}
-                                    touched={true}
-                                    name={nameMellowingPeriodDate}
-                                    {...mellowingPeriodDate}
-                                    disabled={this.state.isEditable ? '' : 'disabled'}
-                                />
-                            }
-                                        </div>
-                                    </Col>
-                            </Row>
-                                {this.state.showProbabilityField ?
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                    <Col xs={6} md={3} lg={3}>
-                                        <div style={{ paddingRight: "15px" }}>
-                                            <dt>
-                                                <span>Probabilidad</span>
-                                            </dt>
-                                            <ComboBox
-                                                labelInput="Seleccione..."
-                                                valueProp={'id'}
-                                                textProp={'value'}
-                                                {...probability}
-                                                name={nameProbability}
-                                                parentId="dashboardComponentScroll"
-                                                data={selectsReducer.get(PROBABILITY) || []}
-                                                disabled={(this.state.probabilityEnabled && this.state.isEditable) ? '' : 'disabled'}
-                                            />
-                                        </div>
-                                    </Col>
-                            </Row>
-                                    : null}
-                            <Row style={{ padding: "20px 23px 20px 20px" }}>
-                                <Col xs={12} md={12} lg={12}>
-                                    <div style={{
-                                        fontSize: "25px",
-                                        color: "#CEA70B",
-                                        marginTop: "5px",
-                                        marginBottom: "5px"
-                                    }}>
-                                        <div className="tab-content-row" style={{
-                                            borderTop: "1px dotted #cea70b",
-                                            width: "100%",
-                                            marginBottom: "10px"
-                                        }} />
-                                        <i className="book icon" style={{ fontSize: "18px" }} />
-                                        <span style={{ fontSize: "20px" }}>Detalle del negocio</span>
+                          </Row>
+                          {this.state.showJustificationField ?
+                            <Row style={{padding: "0px 10px 20px 20px"}}>
+                                <Col xs={12} md={6} lg={6}>
+                                    <div style={{paddingRight: "15px"}}>
+                                        <dt>
+                                            <span>Detalle justificación </span>
+                                            {this.state.detailJustificationObligatory ? <span>(<span style={{color: "red"}}>*</span>)</span> : ''}
+                                        </dt>
+                                        <TextareaComponent
+                                          name="txtJustificationDetail"
+                                          type="text"
+                                          {...justificationDetail}
+                                          parentId="dashboardComponentScroll"
+                                          rows={4}
+                                          style={{ width: '100%', height: '100%' }}
+                                          disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
                                     </div>
                                 </Col>
                             </Row>
+                            : null}
+                          <Row style={{ padding: "0px 10px 20px 20px" }}>
+                              <Col xs={12} md={6} lg={6}>
+                                  <div style={{ paddingRight: "15px" }}>
+                                      <dt>
+                                          <span>Período de maduración (</span><span style={{color: "red"}}>*</span>)
+                                          <ToolTip text={HELP_PROBABILITY}>
+                                              <i className="help circle icon blue"
+                                                 style={{ fontSize: "15px", cursor: "pointer", marginLeft: "5px" }} />
+                                          </ToolTip>
+                                      </dt>
+                                      {this.state.showMellowingPeriodField ?
+                                        <ComboBox
+                                          labelInput="Seleccione..."
+                                          valueProp={'id'}
+                                          textProp={'value'}
+                                          {...mellowingPeriod}
+                                          name={nameMellowingPeriod}
+                                          touched={true}
+                                          parentId="dashboardComponentScroll"
+                                          data={selectsReducer.get(MELLOWING_PERIOD) || []}
+                                          onChange={val => this._onChangeMellowingPeriod(val) }
+                                          disabled={'disabled'}
+                                        />
+                                        :
+                                        <DateTimePickerUi
+                                          culture='es'
+                                          format={DATE_FORMAT_MONT_YEAR}
+                                          placeholder='"MM/YYYY"'
+                                          initialView='year'
+                                          time={false}
+                                          touched={true}
+                                          name={nameMellowingPeriodDate}
+                                          {...mellowingPeriodDate}
+                                          disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                      }
+                                  </div>
+                              </Col>
+                          </Row>
+                          {this.state.showProbabilityField ?
                             <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                {this.state.showindexingField ?
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Probabilidad</span>
+                                        </dt>
+                                        <ComboBox
+                                          labelInput="Seleccione..."
+                                          valueProp={'id'}
+                                          textProp={'value'}
+                                          {...probability}
+                                          name={nameProbability}
+                                          parentId="dashboardComponentScroll"
+                                          data={selectsReducer.get(PROBABILITY) || []}
+                                          disabled={(this.state.probabilityEnabled && this.state.isEditable) ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
+                            </Row>
+                            : null}
+                          <Row style={{ padding: "20px 23px 20px 20px" }}>
+                              <Col xs={12} md={12} lg={12}>
+                                  <div style={{
+                                      fontSize: "25px",
+                                      color: "#CEA70B",
+                                      marginTop: "5px",
+                                      marginBottom: "5px"
+                                  }}>
+                                      <div className="tab-content-row" style={{
+                                          borderTop: "1px dotted #cea70b",
+                                          width: "100%",
+                                          marginBottom: "10px"
+                                      }} />
+                                      <i className="book icon" style={{ fontSize: "18px" }} />
+                                      <span style={{ fontSize: "20px" }}>Detalle del negocio</span>
+                                  </div>
+                              </Col>
+                          </Row>
+                          <Row style={{ padding: "0px 10px 20px 20px" }}>
+                              {this.state.showindexingField ?
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
                                             <span>Indexación</span>
                                         </dt>
                                         <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            {...indexing}
-                                            name={nameIndexing}
-                                            parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(PIPELINE_INDEXING) || []}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                          labelInput="Seleccione..."
+                                          valueProp={'id'}
+                                          textProp={'value'}
+                                          {...indexing}
+                                          name={nameIndexing}
+                                          parentId="dashboardComponentScroll"
+                                          data={selectsReducer.get(PIPELINE_INDEXING) || []}
+                                          disabled={this.state.isEditable ? '' : 'disabled'}
                                         />
                                     </div>
                                 </Col>
                                 : null}
-                                {this.state.showInteresSpread ?
+                              {this.state.showInteresSpread ?
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
                                             <span>Interés/Spread</span>
                                         </dt>
                                         <Input
-                                            name="commission"
-                                            type="text"
-                                            {...commission}
-                                            parentId="dashboardComponentScroll"
-                                            placeholder="Miles ' , ' y decimales ' . '"
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                            onBlur={val => handleBlurValueNumber(2, commission, val, true)}
-                                            onFocus={val => handleFocusValueNumber(commission, commission.value)}
+                                          name="commission"
+                                          type="text"
+                                          {...commission}
+                                          parentId="dashboardComponentScroll"
+                                          placeholder="Miles ' , ' y decimales ' . '"
+                                          disabled={this.state.isEditable ? '' : 'disabled'}
+                                          onBlur={val => handleBlurValueNumber(2, commission, val, true)}
+                                          onFocus={val => handleFocusValueNumber(commission, commission.value)}
                                         />
                                     </div>
                                 </Col>
                                 :null}
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>ROE</span>
-                                        </dt>
-                                        <Input
-                                            name="roe"
-                                            type="text"
-                                            {...roe}
-                                            parentId="dashboardComponentScroll"
-                                            max="6"
-                                            placeholder="Ingresa el valor sin el %. Ejm ROE 30"
-                                            onBlur={val => this._handleBlurValueNumber(roe, val)}
-                                            onFocus={val => handleFocusValueNumber(roe, roe.value)}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                        />
-                                    </div>
-                                </Col>
-                                {this.state.showPolicyType &&
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Margen</span>
-                                        </dt>
-                                        <Input
-                                            name="margen"
-                                            type="text"
-                                            {...margen}
-                                            parentId="dashboardComponentScroll"
-                                            max="6"
-                                            placeholder="Ingresa el valor sin el %."
-                                            onBlur={val =>  this._handleBlurValueNumber(margen, val)}
-                                            onFocus={val => handleFocusValueNumber(margen, margen.value)}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                        />
-                                    </div>
-                                </Col>
-                                }
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>SVA</span>
-                                        </dt>
-                                        <ToolTip text={HELP_SVA}>
-                                            <div>
-                                                <Input
-                                                  {...sva}
-                                                  name="sva"
-                                                  type="text"
-                                                  placeholder="Miles ' , ' y decimales ' . '"
-                                                  parentId="dashboardComponentScroll"
-                                                  onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, sva, val, true, 2)}
-                                                  onFocus={val => handleFocusValueNumber(sva, sva.value)}
-                                                  disabled={this.state.isEditable ? '' : 'disabled'}/>
-                                            </div>
-                                        </ToolTip>
-                                    </div>
-                                </Col>
-                                </Row>
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                {this.state.showpendingDisbursementAmountField ?
+                              <Col xs={6} md={3} lg={3}>
+                                  <div style={{ paddingRight: "15px" }}>
+                                      <dt>
+                                          <span>ROE</span>
+                                      </dt>
+                                      <Input
+                                        name="roe"
+                                        type="text"
+                                        {...roe}
+                                        parentId="dashboardComponentScroll"
+                                        max="6"
+                                        placeholder="Ingresa el valor sin el %. Ejm ROE 30"
+                                        onBlur={val => this._handleBlurValueNumber(roe, val)}
+                                        onFocus={val => handleFocusValueNumber(roe, roe.value)}
+                                        disabled={this.state.isEditable ? '' : 'disabled'}
+                                      />
+                                  </div>
+                              </Col>
+                              {this.state.showPolicyType &&
+                              <Col xs={6} md={3} lg={3}>
+                                  <div style={{ paddingRight: "15px" }}>
+                                      <dt>
+                                          <span>Margen</span>
+                                      </dt>
+                                      <Input
+                                        name="margen"
+                                        type="text"
+                                        {...margen}
+                                        parentId="dashboardComponentScroll"
+                                        max="6"
+                                        placeholder="Ingresa el valor sin el %."
+                                        onBlur={val =>  this._handleBlurValueNumber(margen, val)}
+                                        onFocus={val => handleFocusValueNumber(margen, margen.value)}
+                                        disabled={this.state.isEditable ? '' : 'disabled'}
+                                      />
+                                  </div>
+                              </Col>
+                              }
+                              <Col xs={6} md={3} lg={3}>
+                                  <div style={{ paddingRight: "15px" }}>
+                                      <dt>
+                                          <span>SVA</span>
+                                      </dt>
+                                      <ToolTip text={HELP_SVA}>
+                                          <div>
+                                              <Input
+                                                {...sva}
+                                                name="sva"
+                                                type="text"
+                                                placeholder="Miles ' , ' y decimales ' . '"
+                                                parentId="dashboardComponentScroll"
+                                                onBlur={val => handleBlurValueNumber(ALLOWS_NEGATIVE_INTEGER, sva, val, true, 2)}
+                                                onFocus={val => handleFocusValueNumber(sva, sva.value)}
+                                                disabled={this.state.isEditable ? '' : 'disabled'}/>
+                                          </div>
+                                      </ToolTip>
+                                  </div>
+                              </Col>
+                          </Row>
+                          <Row style={{ padding: "0px 10px 20px 20px" }}>
+                              {this.state.showpendingDisbursementAmountField ?
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
                                             <span>Pendiente por desembolsar </span>
                                         </dt>
                                         <Input
-                                            {...pendingDisbursementAmount}
-                                            name="pendingDisbursementAmount"
-                                            type="text"
-                                            parentId="dashboardComponentScroll"
-                                            onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, val, false)}
-                                            onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, pendingDisbursementAmount.value)}
-                                            disabled={'disabled'}
+                                          {...pendingDisbursementAmount}
+                                          name="pendingDisbursementAmount"
+                                          type="text"
+                                          parentId="dashboardComponentScroll"
+                                          onBlur={val => handleBlurValueNumber(1, pendingDisbursementAmount, val, false)}
+                                          onFocus={val => handleFocusValueNumber(pendingDisbursementAmount, pendingDisbursementAmount.value)}
+                                          disabled={'disabled'}
                                         />
                                     </div>
                                 </Col>
                                 : null}
-                                {this.state.showtermInMonthsField ?
+                              {this.state.showtermInMonthsField ?
                                 <Col xs={6} md={3} lg={3}>
                                     <div style={{ paddingRight: "15px" }}>
                                         <dt>
@@ -1714,350 +1714,350 @@ export default function createFormPipeline(name, origin, pipelineBusiness, funct
                                         }}>
                                             <div style={{ width: "30%" }}>
                                                 <Input
-                                                    name="termInMonths"
-                                                    type="text"
-                                                    {...termInMonths}
-                                                    parentId="dashboardComponentScroll"
-                                                    disabled={this.state.isEditable ? '' : 'disabled'}
-                                                    onBlur={val => this._handleTermInMonths(termInMonths, val)}
+                                                  name="termInMonths"
+                                                  type="text"
+                                                  {...termInMonths}
+                                                  parentId="dashboardComponentScroll"
+                                                  disabled={this.state.isEditable ? '' : 'disabled'}
+                                                  onBlur={val => this._handleTermInMonths(termInMonths, val)}
                                                 />
                                             </div>
                                             <div style={{ width: "65%" }}>
                                                 <ComboBox
-                                                    labelInput="Seleccione..."
-                                                    valueProp={'id'}
-                                                    textProp={'value'}
-                                                    {...termInMonthsValues}
-                                                    name={nameTermInMonthsValues}
-                                                    parentId="dashboardComponentScroll"
-                                                    data={selectsReducer.get(TERM_IN_MONTHS_VALUES) || []}
-                                                    disabled={this.state.isEditable ? '' : 'disabled'}
+                                                  labelInput="Seleccione..."
+                                                  valueProp={'id'}
+                                                  textProp={'value'}
+                                                  {...termInMonthsValues}
+                                                  name={nameTermInMonthsValues}
+                                                  parentId="dashboardComponentScroll"
+                                                  data={selectsReducer.get(TERM_IN_MONTHS_VALUES) || []}
+                                                  disabled={this.state.isEditable ? '' : 'disabled'}
                                                 />
                                             </div>
                                         </div>
                                     </div>
                                 </Col>
                                 : null}
-                                {this.state.areaAssetsEnabled ?
-                                    <Col xs={6} md={3} lg={3}>
-                                        <div style={{ paddingRight: "15px" }}>
-                                            <dt>
-                                                <span>Activo</span>
-                                            </dt>
-                                            <ComboBox
-                                                labelInput="Seleccione..."
-                                                valueProp={'id'}
-                                                textProp={'value'}
-                                                {...areaAssets}
-                                                name={nameAreaAssets}
-                                                parentId="dashboardComponentScroll"
-                                                data={selectsReducer.get(FILTER_ACTIVE) || []}   
-                                                disabled={this.state.isEditable ? '' : 'disabled'}                                         
-                                            />
-                                        </div>
-                                    </Col>
+                              {this.state.areaAssetsEnabled ?
+                                <Col xs={6} md={3} lg={3}>
+                                    <div style={{ paddingRight: "15px" }}>
+                                        <dt>
+                                            <span>Activo</span>
+                                        </dt>
+                                        <ComboBox
+                                          labelInput="Seleccione..."
+                                          valueProp={'id'}
+                                          textProp={'value'}
+                                          {...areaAssets}
+                                          name={nameAreaAssets}
+                                          parentId="dashboardComponentScroll"
+                                          data={selectsReducer.get(FILTER_ACTIVE) || []}
+                                          disabled={this.state.isEditable ? '' : 'disabled'}
+                                        />
+                                    </div>
+                                </Col>
                                 : null}
-                            </Row>
-                            <Row style={{ padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Libros</span>
-                                        </dt>
-                                        <ComboBox
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            {...moneyDistribitionMarket}
-                                            name={nameMoneyDistribitionMarket}
-                                            parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(FILTER_MONEY_DISTRIBITION_MARKET) || []}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                        />
-                                    </div>
-                                </Col>
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{ paddingRight: "15px" }}>
-                                        <dt>
-                                            <span>Empleado responsable (</span><span style={{ color: "red" }}>*</span>)
-                                        </dt>
-                                        <div className={`ui search ${participantBanc} fluid`}>
-                                            <ComboBoxFilter
-                                                className="prompt"
-                                                id={inputParticipantBanc}
-                                                style={{ borderRadius: "3px" }}
-                                                autoComplete="off"
-                                                type="text"
-                                                {...nameUsuario}
-                                                value={nameUsuario.value}
-                                                onChange={(val) => { if (idUsuario.value) { idUsuario.onChange(null) } nameUsuario.onChange(val) }}
-                                                placeholder="Ingrese un criterio de búsqueda..."
-                                                onKeyPress={val => this.updateKeyValueUsersBanco(val)}
-                                                onSelect={val => this._updateValue(val)}
-                                                disabled={this.state.isEditable ? '' : 'disabled'}
-                                                error={nameUsuario.error || idUsuario.error}
-                                            />
-                                        </div>
-                                        {
-                                            this.state.employeeResponsible &&
-                                            <div>
-                                                <div className="ui pointing red basic label">
-                                                    Debe seleccionar un empleado del banco
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
-                                </Col>
-                                {this.state.showPolicyType &&
-                                <Col xs={6} md={3} lg={3}>
-                                    <div style={{paddingRight: "15px"}}>
-                                        <dt>
-                                            <span>Tipo de póliza</span>
-                                        </dt>
-                                        <ComboBox
-                                            id={"typePolicy"}
-                                            labelInput="Seleccione..."
-                                            valueProp={'id'}
-                                            textProp={'value'}
-                                            {...typePolicy}
-                                            name={nameTypePolicy}
-                                            parentId="dashboardComponentScroll"
-                                            data={selectsReducer.get(FILTER_TYPE_POLICY) || []}
-                                            disabled={this.state.isEditable ? '' : 'disabled'}
-                                        />
-                                    </div>
-                                </Col>
-                                }
-                            </Row>
-                            {this.state.showComponentDisbursementPlan ?
-                            <ComponentDisbursementPlan
-                                disbursementAmount={amountDisbursed} estimatedDisburDate={estimatedDisburDate}
-                                fnShowForm={this.showFormDisbursementPlan} registrationRequired={this.state.disbursementPlanRequired}
-                                showFormDisbursementPlan={this.state.showFormAddDisbursementPlan} nominalValue={value}
-                                isEditable={this.state.isEditable} pendingDisbursementAmount={pendingDisbursementAmount}
-                                origin={origin} />
-                            : null}
-                            <Business origin={origin} disabled={this.state.isEditable} />
-                            <Row
-                                style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "20px 23px 20px 20px" }}>
-                                <Col xs={12} md={12} lg={12}>
-                                    <div style={{
-                                        fontSize: "25px",
-                                        color: "#CEA70B",
-                                        marginTop: "5px",
-                                        marginBottom: "5px"
-                                    }}>
-                                        <div className="tab-content-row" style={{
-                                            borderTop: "1px dotted #cea70b",
-                                            width: "100%",
-                                            marginBottom: "10px"
-                                        }} />
-                                        <i className="book icon" style={{ fontSize: "18px" }} />
-                                        <span style={{ fontSize: "20px" }}> Observaciones </span>
-                                    </div>
-                                </Col>
-                            </Row>
-                            <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "0px 23px 20px 20px" }}>
-                                <Col xs={12} md={12} lg={12}>
-                                    <RichText
-                                        name="observations"
-                                        {...observations}
-                                        touched={true}
-                                        placeholder="Ingrese una observación."
-                                        style={{ width: '100%', height: '178px' }}
-                                        readOnly={!this.state.isEditable}
+                          </Row>
+                          <Row style={{ padding: "0px 10px 20px 20px" }}>
+                              <Col xs={6} md={3} lg={3}>
+                                  <div style={{ paddingRight: "15px" }}>
+                                      <dt>
+                                          <span>Libros</span>
+                                      </dt>
+                                      <ComboBox
+                                        labelInput="Seleccione..."
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        {...moneyDistribitionMarket}
+                                        name={nameMoneyDistribitionMarket}
+                                        parentId="dashboardComponentScroll"
+                                        data={selectsReducer.get(FILTER_MONEY_DISTRIBITION_MARKET) || []}
                                         disabled={this.state.isEditable ? '' : 'disabled'}
-                                    />
-                                </Col>
-                            </Row>
-                            <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : {}}>
-                                <Col xs={12} md={12} lg={12}>
-                                    <div style={{
-                                        textAlign: "left",
-                                        marginTop: "10px",
-                                        marginBottom: "20px",
-                                        marginLeft: "20px"
-                                    }}>
-                                        <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha última revisión formato pipeline: </span><span
-                                            style={{ marginLeft: "0px", color: "#818282" }}>{reviewedDate.value}</span>
-                                    </div>
-                                </Col>
-                            </Row>
-                            <Row
-                                style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 0px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
-                                </Col>
-                                <Col xs={6} md={3} lg={3}>
-                                    <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
-                                </Col>
-                                <Col xs={6} md={3} lg={3}>
-                                    {updatedBy.value !== null &&
-                                        <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
-                                    }
-                                </Col>
-                                <Col xs={6} md={3} lg={3}>
-                                    {updatedBy.value !== null &&
-                                        <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
-                                    }
-                                </Col>
-                            </Row>
-                            <Row
-                                style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "5px 10px 0px 20px" }}>
-                                <Col xs={6} md={3} lg={3}>
-                                    <span style={{ marginLeft: "0px", color: "#818282" }}>{createdByName.value}</span>
-                                </Col>
-                                <Col xs={6} md={3} lg={3}>
-                                    <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaCreateString}</span>
-                                </Col>
-                                <Col xs={6} md={3} lg={3}>
-                                    {updatedBy.value !== null &&
-                                        <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedByName.value}</span>
-                                    }
-                                </Col>
-                                <Col xs={6} md={3} lg={3}>
-                                    {updatedBy.value !== null &&
-                                        <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
-                                    }
-                                </Col>
-                            </Row>
-                            <Row
-                                style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "0px 10px 20px 20px" }}>
-                                <Col xs={6} md={6} lg={6}>
-                                    <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionCreatedBy.value}</span>
-                                </Col>
-                                <Col xs={6} md={6} lg={6}>
-                                    <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionUpdatedBy.value}</span>
-                                </Col>
-                            </Row>
-                        </div>
-                        <div style={origin !== ORIGIN_PIPELIN_BUSINESS ? {
-                            position: "fixed",
-                            border: "1px solid #C2C2C2",
-                            bottom: "0px",
-                            width: "100%",
-                            marginBottom: "0px",
-                            backgroundColor: "#F8F8F8",
-                            height: "50px",
-                            background: "rgba(255,255,255,0.75)",
-                            zIndex: 999
-                        } : { display: "none" }}>
-                            <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
-                                <button className="btn" type="submit" onClick={() => { setGlobalCondition(null); typeButtonClick = SAVE_DRAFT; }}
-                                    style={this.state.isEditable === true && ownerDraft === 0 ? {
-                                        float: "right",
-                                        margin: "8px 0px 0px -120px",
-                                        position: "fixed",
-                                        backgroundColor: "#00B5AD"
-                                    } : { display: "none" }}>
-                                    <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
-                                </button>
-                                <button className="btn" type="submit" onClick={() => { setGlobalCondition(SAVE_PUBLISHED); typeButtonClick = SAVE_PUBLISHED; }}
-                                    style={this.state.isEditable === true ? {
-                                        float: "right",
-                                        margin: "8px 0px 0px 107px",
-                                        position: "fixed"
-                                    } : { display: "none" }}>
-                                    <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
-                                </button>
-                                <button className="btn" type="button" onClick={this._onClickPDF} style={{
-                                    float: "right",
-                                    margin: "8px 0px 0px 292px",
-                                    position: "fixed",
-                                    backgroundColor: "#eb984e"
-                                }}>
-                                    <span style={{ color: "#FFFFFF", padding: "10px" }}>Descargar pdf</span>
-                                </button>
-                                <button className="btn" type="button" onClick={this._onCloseButton} style={{
-                                    float: "right",
-                                    margin: "8px 0px 0px 450px",
-                                    position: "fixed",
-                                    backgroundColor: "rgb(193, 193, 193)"
-                                }}>
-                                    <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
-                                </button>
-                            </div>
-                        </div>
-                        <SweetAlert
-                            type={typeMessage}
-                            show={this.state.showMessageEditPipeline}
-                            title={titleMessage}
-                            text={message}
-                            onConfirm={this._closeMessageEditPipeline}
-                        />
-                        <SweetAlert
-                            type="warning"
-                            show={this.state.showConfirm}
-                            title={titleMessage}
-                            text={message}
-                            confirmButtonColor='#DD6B55'
-                            confirmButtonText='Sí, estoy seguro!'
-                            cancelButtonText="Cancelar"
-                            showCancelButton={true}
-                            onCancel={() => this.setState({ showConfirm: false })}
-                            onConfirm={this._closeConfirmClosePipeline}
-                        />
-                        <SweetAlert
-                            type="warning"
-                            show={this.state.showConfirmChangeCurrency}
-                            title={titleMessage}
-                            text={message}
-                            confirmButtonColor='#DD6B55'
-                            confirmButtonText='Sí, estoy seguro!'
-                            cancelButtonText="Cancelar"
-                            showCancelButton={true}
-                            onCancel={this._closeCancelConfirmChanCurrency}
-                            onConfirm={this._closeConfirmChangeCurrency}
-                        />
-                        <SweetAlert
-                          type="warning"
-                          show={this.state.showConfirmChangeNeed}
-                          title={titleMessage}
-                          text={message}
-                          confirmButtonColor='#DD6B55'
-                          confirmButtonText='Sí, estoy seguro!'
-                          cancelButtonText="Cancelar"
-                          showCancelButton={true}
-                          onCancel={this._closeCancelConfirmChanNeed}
-                          onConfirm={this._closeConfirmChangeNeed}
-                        />
-                        <SweetAlert
-                            type="error"
-                            show={this.state.errorValidate}
-                            title='Campos obligatorios'
-                            text='Señor usuario, debe ingresar los campos marcados con asterisco.'
-                            onConfirm={() => this.setState({ errorValidate: false })}
-                        />
-                        <SweetAlert
-                            type="error"
-                            show={this.state.errorValidateXss}
-                            title={REGEX_SIMPLE_XSS_TITLE}
-                            text={REGEX_SIMPLE_XSS_MESAGE}
-                            onConfirm={() => this.setState({ errorValidateXss: false })}
-                        />
-                        <SweetAlert
-                            type="warning"
-                            show={this.state.showAlertCurrency}
-                            title='Advertencia'
-                            text={CURRENCY_MESSAGE}
-                            onConfirm={() => this.setState({ showAlertCurrency: false })}
-                        />
-                        <SweetAlert
-                          type="warning"
-                          show={this.state.showAlertFinancingAndPlan}
-                          title='Advertencia'
-                          text={PIPELINE_DISBURSEMENT_PLAN_MESSAGE}
-                          onConfirm={() => this.setState({ showAlertFinancingAndPlan: false })}
-                        />
-                        <div className="modalBt4-footer modal-footer"
-                            style={origin === ORIGIN_PIPELIN_BUSINESS ? { height: "76px" } : { display: "none" }}>
-                            <button type="submit" className="btn btn-primary modal-button-edit"
-                                onClick={() => typeButtonClick = SAVE_DRAFT}>
-                                Guardar
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                                      />
+                                  </div>
+                              </Col>
+                              <Col xs={6} md={3} lg={3}>
+                                  <div style={{ paddingRight: "15px" }}>
+                                      <dt>
+                                          <span>Empleado responsable (</span><span style={{ color: "red" }}>*</span>)
+                                      </dt>
+                                      <div className={`ui search ${participantBanc} fluid`}>
+                                          <ComboBoxFilter
+                                            className="prompt"
+                                            id={inputParticipantBanc}
+                                            style={{ borderRadius: "3px" }}
+                                            autoComplete="off"
+                                            type="text"
+                                            {...nameUsuario}
+                                            value={nameUsuario.value}
+                                            onChange={(val) => { if (idUsuario.value) { idUsuario.onChange(null) } nameUsuario.onChange(val) }}
+                                            placeholder="Ingrese un criterio de búsqueda..."
+                                            onKeyPress={val => this.updateKeyValueUsersBanco(val)}
+                                            onSelect={val => this._updateValue(val)}
+                                            disabled={this.state.isEditable ? '' : 'disabled'}
+                                            error={nameUsuario.error || idUsuario.error}
+                                          />
+                                      </div>
+                                      {
+                                          this.state.employeeResponsible &&
+                                          <div>
+                                              <div className="ui pointing red basic label">
+                                                  Debe seleccionar un empleado del banco
+                                              </div>
+                                          </div>
+                                      }
+                                  </div>
+                              </Col>
+                              {this.state.showPolicyType &&
+                              <Col xs={6} md={3} lg={3}>
+                                  <div style={{paddingRight: "15px"}}>
+                                      <dt>
+                                          <span>Tipo de póliza</span>
+                                      </dt>
+                                      <ComboBox
+                                        id={"typePolicy"}
+                                        labelInput="Seleccione..."
+                                        valueProp={'id'}
+                                        textProp={'value'}
+                                        {...typePolicy}
+                                        name={nameTypePolicy}
+                                        parentId="dashboardComponentScroll"
+                                        data={selectsReducer.get(FILTER_TYPE_POLICY) || []}
+                                        disabled={this.state.isEditable ? '' : 'disabled'}
+                                      />
+                                  </div>
+                              </Col>
+                              }
+                          </Row>
+                          {this.state.showComponentDisbursementPlan ?
+                            <ComponentDisbursementPlan
+                              disbursementAmount={amountDisbursed} estimatedDisburDate={estimatedDisburDate}
+                              fnShowForm={this.showFormDisbursementPlan} registrationRequired={this.state.disbursementPlanRequired}
+                              showFormDisbursementPlan={this.state.showFormAddDisbursementPlan} nominalValue={value}
+                              isEditable={this.state.isEditable} pendingDisbursementAmount={pendingDisbursementAmount}
+                              origin={origin} />
+                            : null}
+                          <Business origin={origin} disabled={this.state.isEditable} />
+                          <Row
+                            style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "20px 23px 20px 20px" }}>
+                              <Col xs={12} md={12} lg={12}>
+                                  <div style={{
+                                      fontSize: "25px",
+                                      color: "#CEA70B",
+                                      marginTop: "5px",
+                                      marginBottom: "5px"
+                                  }}>
+                                      <div className="tab-content-row" style={{
+                                          borderTop: "1px dotted #cea70b",
+                                          width: "100%",
+                                          marginBottom: "10px"
+                                      }} />
+                                      <i className="book icon" style={{ fontSize: "18px" }} />
+                                      <span style={{ fontSize: "20px" }}> Observaciones </span>
+                                  </div>
+                              </Col>
+                          </Row>
+                          <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "0px 23px 20px 20px" }}>
+                              <Col xs={12} md={12} lg={12}>
+                                  <RichText
+                                    name="observations"
+                                    {...observations}
+                                    touched={true}
+                                    placeholder="Ingrese una observación."
+                                    style={{ width: '100%', height: '178px' }}
+                                    readOnly={!this.state.isEditable}
+                                    disabled={this.state.isEditable ? '' : 'disabled'}
+                                  />
+                              </Col>
+                          </Row>
+                          <Row style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : {}}>
+                              <Col xs={12} md={12} lg={12}>
+                                  <div style={{
+                                      textAlign: "left",
+                                      marginTop: "10px",
+                                      marginBottom: "20px",
+                                      marginLeft: "20px"
+                                  }}>
+                                      <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha última revisión formato pipeline: </span><span
+                                    style={{ marginLeft: "0px", color: "#818282" }}>{reviewedDate.value}</span>
+                                  </div>
+                              </Col>
+                          </Row>
+                          <Row
+                            style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "10px 10px 0px 20px" }}>
+                              <Col xs={6} md={3} lg={3}>
+                                  <span style={{ fontWeight: "bold", color: "#818282" }}>Creado por</span>
+                              </Col>
+                              <Col xs={6} md={3} lg={3}>
+                                  <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de creación</span>
+                              </Col>
+                              <Col xs={6} md={3} lg={3}>
+                                  {updatedBy.value !== null &&
+                                  <span style={{ fontWeight: "bold", color: "#818282" }}>Modificado por</span>
+                                  }
+                              </Col>
+                              <Col xs={6} md={3} lg={3}>
+                                  {updatedBy.value !== null &&
+                                  <span style={{ fontWeight: "bold", color: "#818282" }}>Fecha de modificación</span>
+                                  }
+                              </Col>
+                          </Row>
+                          <Row
+                            style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "5px 10px 0px 20px" }}>
+                              <Col xs={6} md={3} lg={3}>
+                                  <span style={{ marginLeft: "0px", color: "#818282" }}>{createdByName.value}</span>
+                              </Col>
+                              <Col xs={6} md={3} lg={3}>
+                                  <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaCreateString}</span>
+                              </Col>
+                              <Col xs={6} md={3} lg={3}>
+                                  {updatedBy.value !== null &&
+                                  <span style={{ marginLeft: "0px", color: "#818282" }}>{updatedByName.value}</span>
+                                  }
+                              </Col>
+                              <Col xs={6} md={3} lg={3}>
+                                  {updatedBy.value !== null &&
+                                  <span style={{ marginLeft: "0px", color: "#818282" }}>{fechaModString}</span>
+                                  }
+                              </Col>
+                          </Row>
+                          <Row
+                            style={origin === ORIGIN_PIPELIN_BUSINESS ? { display: "none" } : { padding: "0px 10px 20px 20px" }}>
+                              <Col xs={6} md={6} lg={6}>
+                                  <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionCreatedBy.value}</span>
+                              </Col>
+                              <Col xs={6} md={6} lg={6}>
+                                  <span style={{ marginLeft: "0px", color: "#A7ADAD" }}>{positionUpdatedBy.value}</span>
+                              </Col>
+                          </Row>
+                      </div>
+                      <div style={origin !== ORIGIN_PIPELIN_BUSINESS ? {
+                          position: "fixed",
+                          border: "1px solid #C2C2C2",
+                          bottom: "0px",
+                          width: "100%",
+                          marginBottom: "0px",
+                          backgroundColor: "#F8F8F8",
+                          height: "50px",
+                          background: "rgba(255,255,255,0.75)",
+                          zIndex: 999
+                      } : { display: "none" }}>
+                          <div style={{ width: "580px", height: "100%", position: "fixed", right: "0px" }}>
+                              <button className="btn" type="submit" onClick={() => { setGlobalCondition(null); typeButtonClick = SAVE_DRAFT; }}
+                                      style={this.state.isEditable === true && ownerDraft === 0 ? {
+                                          float: "right",
+                                          margin: "8px 0px 0px -120px",
+                                          position: "fixed",
+                                          backgroundColor: "#00B5AD"
+                                      } : { display: "none" }}>
+                                  <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar como borrador</span>
+                              </button>
+                              <button className="btn" type="submit" onClick={() => { setGlobalCondition(SAVE_PUBLISHED); typeButtonClick = SAVE_PUBLISHED; }}
+                                      style={this.state.isEditable === true ? {
+                                          float: "right",
+                                          margin: "8px 0px 0px 107px",
+                                          position: "fixed"
+                                      } : { display: "none" }}>
+                                  <span style={{ color: "#FFFFFF", padding: "10px" }}>Guardar definitivo</span>
+                              </button>
+                              <button className="btn" type="button" onClick={this._onClickPDF} style={{
+                                  float: "right",
+                                  margin: "8px 0px 0px 292px",
+                                  position: "fixed",
+                                  backgroundColor: "#eb984e"
+                              }}>
+                                  <span style={{ color: "#FFFFFF", padding: "10px" }}>Descargar pdf</span>
+                              </button>
+                              <button className="btn" type="button" onClick={this._onCloseButton} style={{
+                                  float: "right",
+                                  margin: "8px 0px 0px 450px",
+                                  position: "fixed",
+                                  backgroundColor: "rgb(193, 193, 193)"
+                              }}>
+                                  <span style={{ color: "#FFFFFF", padding: "10px" }}>Cancelar</span>
+                              </button>
+                          </div>
+                      </div>
+                      <SweetAlert
+                        type={typeMessage}
+                        show={this.state.showMessageEditPipeline}
+                        title={titleMessage}
+                        text={message}
+                        onConfirm={this._closeMessageEditPipeline}
+                      />
+                      <SweetAlert
+                        type="warning"
+                        show={this.state.showConfirm}
+                        title={titleMessage}
+                        text={message}
+                        confirmButtonColor='#DD6B55'
+                        confirmButtonText='Sí, estoy seguro!'
+                        cancelButtonText="Cancelar"
+                        showCancelButton={true}
+                        onCancel={() => this.setState({ showConfirm: false })}
+                        onConfirm={this._closeConfirmClosePipeline}
+                      />
+                      <SweetAlert
+                        type="warning"
+                        show={this.state.showConfirmChangeCurrency}
+                        title={titleMessage}
+                        text={message}
+                        confirmButtonColor='#DD6B55'
+                        confirmButtonText='Sí, estoy seguro!'
+                        cancelButtonText="Cancelar"
+                        showCancelButton={true}
+                        onCancel={this._closeCancelConfirmChanCurrency}
+                        onConfirm={this._closeConfirmChangeCurrency}
+                      />
+                      <SweetAlert
+                        type="warning"
+                        show={this.state.showConfirmChangeNeed}
+                        title={titleMessage}
+                        text={message}
+                        confirmButtonColor='#DD6B55'
+                        confirmButtonText='Sí, estoy seguro!'
+                        cancelButtonText="Cancelar"
+                        showCancelButton={true}
+                        onCancel={this._closeCancelConfirmChanNeed}
+                        onConfirm={this._closeConfirmChangeNeed}
+                      />
+                      <SweetAlert
+                        type="error"
+                        show={this.state.errorValidate}
+                        title='Campos obligatorios'
+                        text='Señor usuario, debe ingresar los campos marcados con asterisco.'
+                        onConfirm={() => this.setState({ errorValidate: false })}
+                      />
+                      <SweetAlert
+                        type="error"
+                        show={this.state.errorValidateXss}
+                        title={REGEX_SIMPLE_XSS_TITLE}
+                        text={REGEX_SIMPLE_XSS_MESAGE}
+                        onConfirm={() => this.setState({ errorValidateXss: false })}
+                      />
+                      <SweetAlert
+                        type="warning"
+                        show={this.state.showAlertCurrency}
+                        title='Advertencia'
+                        text={CURRENCY_MESSAGE}
+                        onConfirm={() => this.setState({ showAlertCurrency: false })}
+                      />
+                      <SweetAlert
+                        type="warning"
+                        show={this.state.showAlertFinancingAndPlan}
+                        title='Advertencia'
+                        text={PIPELINE_DISBURSEMENT_PLAN_MESSAGE}
+                        onConfirm={() => this.setState({ showAlertFinancingAndPlan: false })}
+                      />
+                      <div className="modalBt4-footer modal-footer"
+                           style={origin === ORIGIN_PIPELIN_BUSINESS ? { height: "76px" } : { display: "none" }}>
+                          <button type="submit" className="btn btn-primary modal-button-edit"
+                                  onClick={() => typeButtonClick = SAVE_DRAFT}>
+                              Guardar
+                          </button>
+                      </div>
+                  </form>
+              </div>
             );
         }
     }
