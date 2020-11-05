@@ -278,7 +278,7 @@ export default class AssociateObjectives extends React.Component {
             listState
         } = this.props;
 
-        const filteredElements = elements.filter(this.filterCheckedElements);
+        const filtered = elements.filter(this.filterCheckedElements);
 
         return (
             <div>
@@ -297,8 +297,8 @@ export default class AssociateObjectives extends React.Component {
                 </div>}
                 <div style={styles.main} className='container-associate-objetives'>
                     {ObjectiveSectionTitle}
-                    {this.renderElements(this.checkElement, (list) => list.filter((el) => el.associated), false, filteredElements)}
-                    {!filteredElements.length && !this.state.showAddSection && <div className="elements-not-found">
+                    {this.renderElements(this.checkElement, (list) => list.filter((el) => el.associated), false, filtered)}
+                    {!filtered.length && !this.state.showAddSection && <div className="elements-not-found">
                         <div style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
                             <span className="form-item">No se han asociado Objetivos del cliente</span>
                         </div>
