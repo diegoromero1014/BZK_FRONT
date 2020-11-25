@@ -284,7 +284,7 @@ class FormEdit extends Component {
                             titleMessage = "Edición visita";
                             message = "Señor usuario, la visita se editó de forma exitosa.";
                             this.setState({ showMessageCreateVisit: true });
-                        } else if ((_.get(data, 'payload.data.status') === 500)) {
+                        } else if ((_.get(data, 'payload.data.status') === 422)) {
                             const validationFromServer = _.get(data, 'payload.data.data');
 
                             _.forEach(validationFromServer, function (field) {
@@ -318,12 +318,14 @@ class FormEdit extends Component {
         }
     }
 
-    processValidation(field) {
-        if (field && field.fieldName) {
-            if (_.isEqual(field.fieldName, 'comments')) {
-                this.setState({ conclusionsVisitError: field.message });
+    processValidation(row) {
+        _.forEach(row.detail, (field) => {
+            if (field && field.field) {
+              if (_.isEqual(field.field, 'comments')) {
+                this.setState({ conclusionsVisitError: field.errors });
+              }
             }
-        }
+        });
     }
 
     _onClickButton(buttonClick) {
