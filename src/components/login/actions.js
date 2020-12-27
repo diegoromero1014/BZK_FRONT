@@ -28,7 +28,8 @@ export function validateLogin(username, password, recaptcha) {
             "timeZone": momentTimeZone.tz.guess()
         }
     };
-    const request = axios.post(APP_URL + "/userAuthentication", json, {
+    // TODO: VOLVER EL MÉTODO DE AUTENTICACIÓN - ESTE ES UNA PRUEBA
+    const request = axios.get(APP_URL + "/commercial/say-hello", {
         withCredentials: true,        
     });
     return {
