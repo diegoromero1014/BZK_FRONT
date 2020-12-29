@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/IASColombia/MS_AYAX_BANCOLOMBIA"
+    "url": "https://grupobancolombia.visualstudio.com/Vicepresidencia%20Servicios%20de%20Tecnolog%C3%ADa/_git/AW0998001_MS_AYAX_BANCOLOMBIA_FRONTEND"
   },
   "scripts": {
     "test": "nyc --reporter=lcov --reporter=text-lcov mocha --exit --require babel-core/register --require ./test/setup.js --require ignore-styles ./test/**/*.spec.js",
@@ -118,6 +118,7 @@
     "moment": "2.22.2",
     "moment-timezone": "0.5.23",
     "numeral": "^1.5.3",
+    "qs": "^6.9.6",
     "quill": "1.2.6",
     "react": "^15.0.1",
     "react-addons-css-transition-group": "^15.4.2",

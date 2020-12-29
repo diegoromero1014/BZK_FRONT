@@ -158,7 +158,7 @@ let GOOGLE_RECAPTCHA_PUBLIC_KEY;
 
 if (typeof WP_VAR_ENVIRONMENT == 'undefined') {
   // TODO: VOLVER LA UBICACIÓN ANTERIOR
-  API_URL = "https://192.168.1.57:9443/Centricity";
+  API_URL = "https://adminapp.local.com:9443/Centricity";
   GOOGLE_RECAPTCHA_PUBLIC_KEY = '6LcpscUUAAAAAO2zIvHSyFrC4IS8Kfy72vWw7QD5';
 } else {
   if (WP_VAR_ENVIRONMENT === "production") {

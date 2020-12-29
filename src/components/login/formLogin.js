@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
+import qs from 'qs';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
@@ -137,6 +139,42 @@ export class FormLogin extends Component {
         }
     }
 
+
+    actionOAuth = () => {
+        // Generate state (random)
+        const state = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        axios.get('https://accounts.google.com/.well-known/openid-configuration')
+        .then(function (response) {
+            // handle success
+            console.log("DISCOVER OPENID RESPONSE: ", response);
+
+            const {authorization_endpoint, scopes_supported, token_endpoint} = response.data;
+            const parameterToAuthorization = {
+                client_id: "936062566636-4ejqc4s88h4ocsej0gid71403lskha9s.apps.googleusercontent.com",
+                response_type:"code",
+                scope: scopes_supported.join(" "),
+                redirect_uri: "http://commercialapp.local.com:3000/callback-auth",
+                state: state,
+                nonce: "abcdefghijklmnopqrstuvwxyz0123456789",
+                access_type: 'offline'
+            }
+            console.log("PATH AUTH", authorization_endpoint);
+            console.log("PATH TOKEN", token_endpoint);
+
+            console.log("PARAMETER TO AUTH ", parameterToAuthorization);
+
+            const testLocationAuth = authorization_endpoint + "?" + qs.stringify(parameterToAuthorization);
+            console.log("URL to AUTH", testLocationAuth);
+            window.location.href = testLocationAuth;
+
+        })
+        .catch(function (error) {
+            // handle error
+            console.log("DISCOVER OPENID ERROR: ", error);
+        })
+    }
+
     render() {
         const { login } = this.props;               
         return (
@@ -183,6 +221,14 @@ export class FormLogin extends Component {
                                 width="20" />
                         }
                     </button>
+
+
+                    <button type="button" className="btn btn-primary"
+                            onClick={this.actionOAuth}
+                            style={{ width: "100%", marginLeft: "0px" }}>
+                        <span>Iniciar sesión OAuth 2.0</span>
+                    </button>
+
                 </div>
                 <SweetAlert
                     type="warning"

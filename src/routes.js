@@ -3,6 +3,10 @@ import { Redirect, Route } from "react-router";
 import { Grid } from "react-flexbox-grid";
 
 import LoginComponent from "./components/login/component";
+import CallBackAuth from "./components/login/CallBackAuth";
+import LoginFromGoogle from "./components/login/LoginFromGoogle";
+import LoginAuth from "./components/login/LoginAuth";
+
 import MainComponent from "./components/main/mainComponent";
 import ManagementView from "./components/managementView";
 import ClientsFind from "./components/clients/clientsFind";
@@ -207,6 +211,9 @@ export default (
     <Grid>
         <Redirect from="/" to="/login" />
         <Route path="/" component={App}>
+            <Route path="callback-auth" component={CallBackAuth}></Route>
+            <Route path="login-success" component={LoginFromGoogle}></Route>
+            <Route path="login-auth" component={LoginAuth}></Route>
             <Route path="login" component={LoginComponent}></Route>
             <Route path="logout" component={LoginComponent}></Route>
             <Route path="pageUnderConstruction" component={pageUnderConstructor} />
