@@ -3305,7 +3305,7 @@
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;timestamp&quot;:1606773937600,&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;customerId&quot;:&quot;${document}&quot;,&quot;customerFullName&quot;:&quot;${client_name}&quot;,&quot;customerTypeId&quot;:&quot;${document_type}&quot;}}</stringProp>
+                  <stringProp name="Argument.value">{&quot;messageHeader&quot;:{&quot;timestamp&quot;:1606773937600,&quot;sessionToken&quot;:&quot;${token}&quot;,&quot;service&quot;:&quot;&quot;,&quot;status&quot;:&quot;0&quot;,&quot;language&quot;:&quot;es&quot;,&quot;displayErrorMessage&quot;:&quot;&quot;,&quot;technicalErrorMessage&quot;:&quot;&quot;,&quot;applicationVersion&quot;:&quot;&quot;,&quot;debug&quot;:true,&quot;isSuccessful&quot;:true},&quot;messageBody&quot;:{&quot;customerId&quot;:&quot;1040736775&quot;,&quot;customerFullName&quot;:&quot;John Doe&quot;,&quot;customerTypeId&quot;:&quot;NIT&quot;}}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
