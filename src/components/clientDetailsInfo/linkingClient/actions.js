@@ -19,7 +19,7 @@ export function consultStateBlackListClient(jsonLinkEntityClient){
         },
         messageBody: jsonLinkEntityClient
     };
-    const request = axios.post(APP_URL + "/consumeBlackListServiceOneToOne", jsonComplete);
+    const request = axios.post(APP_URL + "/client/check-client-on-control-list", jsonComplete);
     return {
         type: CONSULT_BLACK_LIST_CLIENT,
         payload: request
