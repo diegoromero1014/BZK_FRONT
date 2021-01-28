@@ -11,6 +11,9 @@ class LoginAuth extends Component {
       console.log("ACCESS TO END POINT FREE ", response);
 
       axios.defaults.headers.common['Authorization'] = `Bearer ${id_token}`;
+      axios.defaults.headers.common['BZK_MODE'] = `BZK_MODE_FROM_APP`;
+      axios.defaults.headers.common['BZK_MODULE'] = `BZK_MODULE_FROM_APP`;
+      axios.defaults.headers.common['BZK_ACTION'] = `BZK_ACTION_FROM_APP`;
       axios.defaults.withCredentials = true;
 
       axios.get(APP_URL + "/commercial/say-hello")
