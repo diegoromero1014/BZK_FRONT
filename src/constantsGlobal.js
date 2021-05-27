@@ -139,6 +139,7 @@ export const MODULE_RISK_GROUP = "Grupos de riesgo";
 export const MODULE_LINKING_REQUESTS = "Solicitudes de vinculación";
 export const MODULE_STUDY_CREDIT = "Estudio de crédito";
 export const MODULE_PREVISIT_REPORT = "Informe de previsita";
+export const MODULE_360_VISION = "Visión 360";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;
@@ -150,6 +151,7 @@ export const TAB_PIPELINE = 7;
 export const TAB_BUSINESS_PLAN = 8;
 export const TAB_RISKS_MANAGEMENT = 9;
 export const TAB_CUSTOMER_STORY = 10;
+export const TAB_360_VISION = 11;
 
 export const MAX_LENGTH_LINK_CLIENT_TRACER_CODE = 255;
 
