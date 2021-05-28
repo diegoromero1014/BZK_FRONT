@@ -37,6 +37,9 @@ import {
 import { NUMBER_RECORDS } from '../pendingTask/constants';
 import { TOOLTIP_PENDING_TASK } from "./constants";
 
+import { executeFunctionIfInternetExplorer, showSweetAlertErrorMessage } from '../../utils/browserValidation'
+import { swtShowMessage } from "../sweetAlertMessages/actions";
+
 export class TabClientInfo extends Component {
     constructor(props) {
         super(props);
@@ -46,9 +49,17 @@ export class TabClientInfo extends Component {
         };
     }
 
+    activeHideInf (tabSelect) {
+        const { activeHideInfo } = this.props;
+        if(tabSelect === TAB_360_VISION){
+            activeHideInfo();
+        }
+    }
+
     handleClickTabItem = tabSelect => {
         const { disptachUpdateTabSeleted } = this.props;
         disptachUpdateTabSeleted(tabSelect);
+        this.activeHideInf(tabSelect);  
         this.setState({
             tabActive: tabSelect
         });
@@ -83,7 +94,7 @@ export class TabClientInfo extends Component {
 
 
     render() {
-        const { infoClient, tabReducer, navBar, activeHideInfo } = this.props;
+        const { infoClient, tabReducer, navBar, swtShowMessage } = this.props;
 
         const tabStyleInactive = { height: "60px", borderBottomStyle: "none", width: "70px" };
         const tabStyleActive = { height: "60px", borderBottomStyle: "solid", borderBottomColor:"#3498db", width: "70px" };
@@ -197,8 +208,8 @@ export class TabClientInfo extends Component {
                         }
                         {get(navBar.get('mapModulesAccess'), MODULE_RISKS_MANAGEMENT) &&
                             <li style={tabActive === TAB_360_VISION ? bigTabStyleActive : bigTabStyleInactive}
-                                onClick={this.handleClickTabItem.bind(this, TAB_360_VISION)}>
-                                <a onClick={()=>{activeHideInfo()}} className="button-link-url" style={{ marginRight: "15px" }}>Visión 360°</a>
+                                onClick={() => executeFunctionIfInternetExplorer(this.handleClickTabItem.bind(this, TAB_360_VISION), showSweetAlertErrorMessage(swtShowMessage))}>
+                                <a className="button-link-url" style={{ marginRight: "15px" }}>Visión 360°</a>
                             </li>
                         }
                     </ul>
@@ -235,6 +246,7 @@ export class TabClientInfo extends Component {
 
 const mapDispatchToProps = dispatch => {
     return bindActionCreators({
+        swtShowMessage,
         disptachUpdateTabSeleted: updateTabSeleted
     }, dispatch);
 }
