@@ -15,16 +15,17 @@ import ClientTaskList from '../pendingTask/ClientTaskList';
 import RisksManagements from '../risksManagement/componentRisksManagement';
 import ComponentCustomerStory from '../customerStory/componentCustomerStory';
 import ToolTip from './../toolTip/toolTipComponent'
+import EmbebedVisorComponent from '../clientVisor/embebedVisorComponent';
 
 import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import { pendingTasksByClientPromise } from "./../pendingTask/actions";
 import {
     MODULE_CONTACTS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS, MODULE_PIPELINE, MODULE_BUSSINESS_PLAN,
-    MODULE_RISKS_MANAGEMENT, MODULE_CUSTOMER_STORY, MODULE_PARTNERS
+    MODULE_RISKS_MANAGEMENT, MODULE_CUSTOMER_STORY, MODULE_PARTNERS, MODULE_360_VISION
 } from '../../constantsGlobal';
 import {
     TAB_INFO, TAB_CONTACTS, TAB_SHAREHOLDER, TAB_PREVISITS, TAB_VISITS, TAB_PENDING_TASK, TAB_PIPELINE,
-    TAB_BUSINESS_PLAN, TAB_RISKS_MANAGEMENT, TAB_CUSTOMER_STORY
+    TAB_BUSINESS_PLAN, TAB_RISKS_MANAGEMENT, TAB_CUSTOMER_STORY, TAB_360_VISION
 } from '../../constantsGlobal';
 import {
     BIZTRACK_MY_CLIENTS,
@@ -82,7 +83,7 @@ export class TabClientInfo extends Component {
 
 
     render() {
-        const { infoClient, tabReducer, navBar } = this.props;
+        const { infoClient, tabReducer, navBar, activeHideInfo } = this.props;
 
         const tabStyleInactive = { height: "60px", borderBottomStyle: "none", width: "70px" };
         const tabStyleActive = { height: "60px", borderBottomStyle: "solid", borderBottomColor:"#3498db", width: "70px" };
@@ -194,6 +195,12 @@ export class TabClientInfo extends Component {
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Gestión de riesgos</a>
                             </li>
                         }
+                        {get(navBar.get('mapModulesAccess'), MODULE_RISKS_MANAGEMENT) &&
+                            <li style={tabActive === TAB_360_VISION ? bigTabStyleActive : bigTabStyleInactive}
+                                onClick={this.handleClickTabItem.bind(this, TAB_360_VISION)}>
+                                <a onClick={()=>{activeHideInfo()}} className="button-link-url" style={{ marginRight: "15px" }}>Visión 360°</a>
+                            </li>
+                        }
                     </ul>
                     <div className="header-client-detail" 
                         style={{
@@ -218,6 +225,7 @@ export class TabClientInfo extends Component {
                         {tabActive === TAB_BUSINESS_PLAN && <BusinessPlanInfo infoClient={infoClient} />}
                         {tabActive === TAB_RISKS_MANAGEMENT && <RisksManagements infoClient={infoClient} />}
                         {tabActive === TAB_CUSTOMER_STORY && <ComponentCustomerStory infoClient={infoClient} />}
+                        {tabActive === TAB_360_VISION && <EmbebedVisorComponent clientNameType={infoClient.clientNameType} clientdIdNumber={infoClient.clientIdNumber} infoClient={infoClient} />}
                     </div>
                 </div>
             </div>
