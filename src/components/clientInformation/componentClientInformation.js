@@ -8,7 +8,7 @@ import TabClientInfo from './tabClientInfo';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonRiskGroup from '../clientRiskGroup/buttonClientRiskGroup';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
-import ButtonClientVisorComponent from '../clientVisor/buttonClientVisorComponent';
+//import ButtonClientVisorComponent from '../clientVisor/buttonClientVisorComponent';
 import NotificationComponent from '../notification/notificationComponent';
 import NotificationExpiredPortfolio from '../alertPortfolioExpirtation/notificationExpiredPortfolio';
 import { consultInfoClient } from './actions';
@@ -32,7 +32,8 @@ export class ComponentClientInformation extends Component {
             notification: {
                 open: false,
                 data: null
-            }
+            },
+            hide_information: false
         };
 
         this.closeNotification = this.closeNotification.bind(this);
@@ -105,7 +106,16 @@ export class ComponentClientInformation extends Component {
             }
         })
     }
-
+    hideComponents = () => {
+        this.setState({
+            hide_information: !this.state.hide_information
+        })
+    }
+    hideComponentsVisor = () => {
+        this.setState({
+            hide_information: true
+        });
+    }
     render() {
         const { clientInformacion, reducerGlobal } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
@@ -176,7 +186,7 @@ export class ComponentClientInformation extends Component {
                                             className="label label-important bounceIn animated aec-normal">AEC: No aplica</span>
                                     }
                                 </div>
-                                <div style={{ width: "100%" }}>
+                                <div className={`${this.state.hide_information===true?"hidden-info standard-div":"showen-indo standard-div"}`} style={{ width: "100%" }}>
                                     <table style={{ width: "100%" }}>
                                         <thead>
                                             <tr>
@@ -228,40 +238,39 @@ export class ComponentClientInformation extends Component {
                         <Col xs={1} md={1} lg={1}>
                             <table style={{ height: '100%', width: '50%', float: 'right' }}>
                                 <tbody>
-                                    <tr>
-                                        <td style={{ marginTop: "0px", backgroundColor: ORANGE_COLOR, borderRadius: "0px" }}>
-                                            <ButtonTeamComponent />
+                                    <tr style={{height:'15px'}}>
+                                        <td className={`${this.state.hide_information===true?"hidden-icon icon-normal":"showen-icon icon-normal"}`} style={{display:'flex', justifyContent:'center',height:'15px', marginTop: "10px",  borderRadius: "0px" }}>
+                                            <i onClick={this.hideComponents} style={{cursor:'pointer', fontSize:'25px'}} className="dropdown icon"></i>
                                         </td>
                                     </tr>
+                                    <tr >
+                                        <td className={`${this.state.hide_information===true?"hidden-info standard-div":"showen-indo standard-div"}`} style={{ marginTop: "0px", backgroundColor: ORANGE_COLOR, borderRadius: "0px" }}>
+                                            <ButtonTeamComponent />
+                                        </td>
+                                    </tr >
                                     {
                                         allowAccessRiskGroup && infoClient.hasRiskGroup &&
-                                        <tr>
-                                            <td style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px" }}>
+                                        <tr >
+                                            <td className={`${this.state.hide_information===true?"hidden-info standard-div":"showen-indo standard-div"}`} style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px" }}>
                                                 <ButtonRiskGroup />
                                             </td>
                                         </tr>
                                     }
 
                                     {infoClient.economicGroup &&
-                                        <tr>
-                                            <td style={{ marginTop: "0px", backgroundColor: BLUE_COLOR, borderRadius: "0px" }}>
+                                        <tr >
+                                            <td className={`${this.state.hide_information===true?"hidden-info standard-div":"showen-indo standard-div"}`} style={{ marginTop: "0px", backgroundColor: BLUE_COLOR, borderRadius: "0px" }}>
                                                 <ButtonEconomicgroup />
                                             </td>
                                         </tr>
                                     }
-                                    {this.state.allow_visor_cliente && infoClient.clientIdNumber &&
-                                        <tr>
-                                            <td style={{ marginTop: "0px", backgroundColor: GREEN_COLOR, borderRadius: "0px" }}>
-                                                <ButtonClientVisorComponent clientNameType={infoClient.clientNameType} clientdIdNumber={infoClient.clientIdNumber} />
-                                            </td>
-                                        </tr>
-                                    }
+                                    
                                 </tbody>
                             </table>
                         </Col>
                     </Row>
                 </header>
-                <TabClientInfo infoClient={infoClient} />
+                <TabClientInfo infoClient={infoClient} activeHideInfo={this.hideComponentsVisor} />
             </div>
         );
     }

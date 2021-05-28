@@ -130,6 +130,7 @@ export const MODULE_PIPELINE = "Pipeline";
 export const MODULE_BUSSINESS_PLAN = "Planes de negocios";
 export const MODULE_ALERTS = "Alertas";
 export const MODULE_RISKS_MANAGEMENT = "Gestión de riesgos";
+
 export const MODULE_COVENANTS = "Covenants";
 export const MODULE_AEC = "AEC";
 export const MODULE_CUSTOMER_STORY = "Historial cliente";
@@ -139,7 +140,7 @@ export const MODULE_RISK_GROUP = "Grupos de riesgo";
 export const MODULE_LINKING_REQUESTS = "Solicitudes de vinculación";
 export const MODULE_STUDY_CREDIT = "Estudio de crédito";
 export const MODULE_PREVISIT_REPORT = "Informe de previsita";
-export const MODULE_360_VISION = "Visión 360";
+export const MODULE_360_VISION = "Visión 360°";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;
