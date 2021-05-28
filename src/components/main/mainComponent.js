@@ -127,7 +127,7 @@ export class MainComponent extends Component {
 
     return (
       <div style={{ width: "100%", height: "100%", position: "absolute", overflow: "hidden" }}>
-        <div style={{ backgroundColor: '#00448c', float: "left", width: '190px', height: "100%", position: "absolute", transition: 'all 0.3s' }} >
+        <div  >
           <MenuComponent />
         </div>
         <div className="header" style={{ paddingLeft: '190px', height: "100%", float: "left", width: "100%", overflow: "hidden", transition: 'all 0.3s' }}>
