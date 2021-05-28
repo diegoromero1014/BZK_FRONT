@@ -23,6 +23,12 @@ import { initialMenuPermissions } from "../menu/actions";
 import { Header, Image } from "semantic-ui-react";
 import ImageBrand from '../../../img/svg/logo_bancolombia_blanco_biztrack.svg';
 import _ from "lodash";
+import {Icon} from "semantic-ui-react";
+//const itemLeaveMenu = {
+//    text: "Contraer",
+//    icon: "sign-out",
+//    link: true
+//};
 
 const itemDashboard = {
     text: "Vista gerencial",
@@ -92,6 +98,13 @@ export class MenuComponent extends Component {
     constructor(props) {
         super(props);
         this.getMenuListPermission = this.getMenuListPermission.bind(this);
+        this.state = {
+            enable: true
+        };
+    }
+
+    stateMenu = () => {
+        this.setState({enable: !enable});
     }
 
     getMenuListPermission = () => {
@@ -138,6 +151,7 @@ export class MenuComponent extends Component {
         if (_.get(permissions, MODULE_TRANSACTIONAL)) {
             menuItems.push(itemTransactional);
         }
+        
         menuItems.push(itemScheduler);
         if (_.get(permissions, MODULE_AEC)) {
             itemMyPendings.children.push(childrenMyPendingsAEC);
@@ -157,15 +171,20 @@ export class MenuComponent extends Component {
             this.getMenuListPermission(permissions);
         });
     }
-
+//Trabajo en este render
     render() {
         return (
+            <div style={{ backgroundColor: '#00448c', float: "left", width: '190px', height: "100%", position: "absolute", transition: 'all 0.3s' }} >
             <div style={{ backgroundColor: '#00448c !important', width: "100%", height: "100%" }}>
                 <Header style={{ backgroundColor: '#00448c !important' }} textAlign='center'>
                     <Image src={ImageBrand} size='small' />
                 </Header>
-                <MenuListComponent />
+                <MenuListComponent stateMenu={this.state.enable}/>                
+                <span onClick={this.stateMenu} >
+                    <Icon name="sign-out"/>
+                </span>
                 <SwtAlertMessage />
+            </div>
             </div>
         );
     }
