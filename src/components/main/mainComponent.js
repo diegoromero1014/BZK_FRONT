@@ -25,10 +25,16 @@ export class MainComponent extends Component {
       messageTitle: "",
       messageNotification: "",
       initialDate: null,
-      finalDate: null
+      finalDate: null,
+      enabledMenu: false
     }
   }
-
+  stateMenu  = () => {
+    this.setState({
+      enabledMenu: !this.state.enabledMenu
+    });
+    console.log(this.state.enabledMenu);
+  }
   workerConfig = () => {
     /**
      * configuration of the method 
@@ -121,16 +127,38 @@ export class MainComponent extends Component {
     }
 
   }
-
+  
   render() {
     const { mainReducer } = this.props;
-
+    const styleMenu ={
+      backgroundColor: '#00448c', 
+      float: "left", 
+      width: '190px', 
+      height: "100%", 
+      position: "absolute", 
+      transition: 'all 0.3s' 
+    }
+    const styleMenuContract ={
+      backgroundColor: '#00448c', 
+      float: "left", 
+      width: '80px', 
+      height: "100%", 
+      position: "absolute", 
+      transition: 'all 0.3s' 
+    }
+    const styleBar = {
+       paddingLeft: '190px', height: "100%", float: "left", width: "100%", overflow: "hidden", transition: 'all 0.3s' 
+    }
+    const styleBarContract = {
+      paddingLeft: '80px', height: "100%", float: "left", width: "100%", overflow: "hidden", transition: 'all 0.3s' 
+   }
+    const enableMenu = this.state.enabledMenu;
     return (
       <div style={{ width: "100%", height: "100%", position: "absolute", overflow: "hidden" }}>
-        <div  >
-          <MenuComponent />
+        <div style={enableMenu?styleMenu:styleMenuContract} >
+          <MenuComponent stateMenu={this.state.enabledMenu} activeMenu={this.stateMenu}/>
         </div>
-        <div className="header" style={{ paddingLeft: '190px', height: "100%", float: "left", width: "100%", overflow: "hidden", transition: 'all 0.3s' }}>
+        <div className="header" style={enableMenu?styleBar:styleBarContract}>
           <NavBarComponent />
           <div
             id="dashboardComponentScroll"

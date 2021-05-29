@@ -99,7 +99,7 @@ export class MenuComponent extends Component {
         super(props);
         this.getMenuListPermission = this.getMenuListPermission.bind(this);
         this.state = {
-            enable: true
+            enable: false
         };
     }
 
@@ -173,18 +173,18 @@ export class MenuComponent extends Component {
     }
 //Trabajo en este render
     render() {
+        const {stateMenu, activeMenu} = this.props; 
         return (
-            <div style={{ backgroundColor: '#00448c', float: "left", width: '190px', height: "100%", position: "absolute", transition: 'all 0.3s' }} >
+            
             <div style={{ backgroundColor: '#00448c !important', width: "100%", height: "100%" }}>
                 <Header style={{ backgroundColor: '#00448c !important' }} textAlign='center'>
                     <Image src={ImageBrand} size='small' />
                 </Header>
-                <MenuListComponent stateMenu={this.state.enable}/>                
-                <span onClick={this.stateMenu} >
+                <MenuListComponent stateMenu={stateMenu}/>                
+                <span onClick={activeMenu} >
                     <Icon name="sign-out"/>
                 </span>
                 <SwtAlertMessage />
-            </div>
             </div>
         );
     }

@@ -21,7 +21,7 @@ import { updateTabSeleted } from '../clientDetailsInfo/actions';
 import { pendingTasksByClientPromise } from "./../pendingTask/actions";
 import {
     MODULE_CONTACTS, MODULE_PREVISITS, MODULE_VISITS, MODULE_TASKS, MODULE_PIPELINE, MODULE_BUSSINESS_PLAN,
-    MODULE_RISKS_MANAGEMENT, MODULE_CUSTOMER_STORY, MODULE_PARTNERS, MODULE_360_VISION
+    MODULE_RISKS_MANAGEMENT, MODULE_CUSTOMER_STORY, MODULE_PARTNERS, MODULE_CLIENTS
 } from '../../constantsGlobal';
 import {
     TAB_INFO, TAB_CONTACTS, TAB_SHAREHOLDER, TAB_PREVISITS, TAB_VISITS, TAB_PENDING_TASK, TAB_PIPELINE,
@@ -40,12 +40,15 @@ import { TOOLTIP_PENDING_TASK } from "./constants";
 import { executeFunctionIfInternetExplorer, showSweetAlertErrorMessage } from '../../utils/browserValidation'
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 
+//import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
+
 export class TabClientInfo extends Component {
     constructor(props) {
         super(props);
         this.state = {
             tabActive: 1,
-            counterTabPending: 0
+            counterTabPending: 0,
+            //allow_visor_cliente: true
         };
     }
 
@@ -90,6 +93,14 @@ export class TabClientInfo extends Component {
             this.setState({ counterTabPending: data.rowCount });
           }
         });
+        //validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
+        //    let permissions = _.get(data, 'payload.data.data.permissions')
+        //    let allow_visor_cliente = (permissions.indexOf(VISOR_CLIENTE) >= 0)
+        //    this.setState({
+        //        allow_visor_cliente: allow_visor_cliente
+        //    })
+
+        //});
     }
 
 
@@ -206,7 +217,7 @@ export class TabClientInfo extends Component {
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Gestión de riesgos</a>
                             </li>
                         }
-                        {get(navBar.get('mapModulesAccess'), MODULE_RISKS_MANAGEMENT) &&
+                        {
                             <li style={tabActive === TAB_360_VISION ? bigTabStyleActive : bigTabStyleInactive}
                                 onClick={() => executeFunctionIfInternetExplorer(this.handleClickTabItem.bind(this, TAB_360_VISION), showSweetAlertErrorMessage(swtShowMessage))}>
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Visión 360°</a>

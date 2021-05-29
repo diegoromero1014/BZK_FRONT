@@ -15,14 +15,19 @@ class MenuListComponent extends Component {
         super(props);
     }
 
-    _mapMenuItems(item, idx) {
+    _mapMenuItems(item, idx, state) {
+        console.log(item)
         const children = item.children;
+        console.log("Childen Menu Items")
+        console.log(children)
+        console.log(state)
         if (_.isEqual(item.children, undefined) || _.isEqual(item.children, null)) {
             return <MenuItem
                 key={_.uniqueId("MenuItem_")}
                 labelText={item.text}
                 linkUrl={item.link}
                 iconClassName={item.icon}
+                stateMenu= {state}
             />
 
         } else {
@@ -34,19 +39,19 @@ class MenuListComponent extends Component {
                 linkUrlFather={item.link}
                 style={item.style}
                 children={children}
+                stateMenu= {state}
             />
         }
     }
 
     render() {
         const { menu, stateMenu } = this.props;
-        console.log(stateMenu);
         const menuListItem = _.isUndefined(menu.get('menuListItem')) ? [] : menu.get('menuListItem');
         console.log('Menu List Item Value');
         console.log(menuListItem);
         return (
             <Menu key={_.uniqueId("Menu_")} inverted vertical fluid attached="top" style={{ backgroundColor: '#00448c' }}>
-                {menuListItem.map(this._mapMenuItems)}
+                {menuListItem.map((item, index)=>this._mapMenuItems(item,index,stateMenu))}
             </Menu>
         );
     }
