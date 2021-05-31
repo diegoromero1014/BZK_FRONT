@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from "lodash";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -9,7 +10,7 @@ import SweetAlert from "../sweetalertFocus";
 import Worker from '../../worker/Worker';
 import WorkerSetup from '../../worker/WorkerSetup';
 
-import { notifiedProductionUpgrade, validateUpgrateProductionActive } from './actions';
+import { notifiedProductionUpgrade, validateUpgrateProductionActive, changeStatusMenuAct, changeStatusMenuDes } from './actions';
 import { redirectUrl } from '../globalComponents/actions';
 import { loadObservablesLeftTimer } from '../login/actions';
 import { consultParameterServer } from '../../actionsGlobal';
@@ -79,7 +80,24 @@ export class MainComponent extends Component {
       });
     }
   }
-
+  changesStatusMenuAct = ()=>{
+    console.log("Testing")
+    
+    const {dispatchDesactiveMenu,mainReducer } = this.props;
+    dispatchDesactiveMenu();
+    console.log(mainReducer.get('enableMenu'))
+    //const { mainReducer } = this.props;
+    //mainReducer.set('enableMenu',true);
+  }
+  changesStatusMenuDes = ()=>{
+    console.log("Testing2")
+    const {  dispatchChangeActiveMenu, mainReducer } = this.props;
+    dispatchChangeActiveMenu();
+    
+    console.log(mainReducer.get('enableMenu'))
+    //const { mainReducer } = this.props;
+    //mainReducer.set('enableMenu',false);
+  }
   componentWillMount() {
     const { dispatchNotifiedProductionUpgrade, dispatchValidateUpgrateProductionActive } = this.props;
 
@@ -152,12 +170,15 @@ export class MainComponent extends Component {
       paddingLeft: '80px', height: "100%", float: "left", width: "100%", overflow: "hidden", transition: 'all 0.3s' 
    }
     const enableMenu = this.state.enabledMenu;
+    let enabledMenus = mainReducer.get('enableMenu');
+    
+    console.log(enabledMenus)
     return (
       <div style={{ width: "100%", height: "100%", position: "absolute", overflow: "hidden" }}>
-        <div style={enableMenu?styleMenu:styleMenuContract} >
-          <MenuComponent stateMenu={this.state.enabledMenu} activeMenu={this.stateMenu}/>
+        <div style={enabledMenus?styleMenu:styleMenuContract} >
+          <MenuComponent stateMenu={enabledMenus} activeMenu={enabledMenus?this.changesStatusMenuAct:this.changesStatusMenuDes}/>
         </div>
-        <div className="header" style={enableMenu?styleBar:styleBarContract}>
+        <div className="header" style={enabledMenus?styleBar:styleBarContract}>
           <NavBarComponent />
           <div
             id="dashboardComponentScroll"
@@ -185,19 +206,23 @@ export class MainComponent extends Component {
   }
 }
 
+
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     dispatchLoadObservablesLeftTimer: loadObservablesLeftTimer,
     dispatchNotifiedProductionUpgrade: notifiedProductionUpgrade,
     dispatchValidateUpgrateProductionActive: validateUpgrateProductionActive,
-    dispatchConsultParameterServer: consultParameterServer
+    dispatchConsultParameterServer: consultParameterServer,
+    dispatchChangeActiveMenu: changeStatusMenuAct,
+    dispatchDesactiveMenu: changeStatusMenuDes
   }, dispatch);
 }
 
-const mapStateToProps = ({ login, mainReducer }) => {
+const mapStateToProps = ({ login, mainReducer, reducerGlobal }) => {
   return {
     login,
-    mainReducer
+    mainReducer,
+    reducerGlobal
   };
 }
 

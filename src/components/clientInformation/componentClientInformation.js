@@ -116,6 +116,11 @@ export class ComponentClientInformation extends Component {
             hide_information: true
         });
     }
+    showComponentsVisor = () => {
+        this.setState({
+            hide_information: false
+        });
+    }
     render() {
         const { clientInformacion, reducerGlobal } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
@@ -270,7 +275,7 @@ export class ComponentClientInformation extends Component {
                         </Col>
                     </Row>
                 </header>
-                <TabClientInfo infoClient={infoClient} allow_visor={this.state.allow_visor_cliente} activeHideInfo={this.hideComponentsVisor} />
+                <TabClientInfo infoClient={infoClient} allow_visor={this.state.allow_visor_cliente} activeHideInfo={this.hideComponentsVisor} activeShowIndo={this.showComponentsVisor} />
             </div>
         );
     }

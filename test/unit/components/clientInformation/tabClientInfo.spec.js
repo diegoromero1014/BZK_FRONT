@@ -8,7 +8,8 @@ import { TAB_PIPELINE, TAB_BUSINESS_PLAN, TAB_RISKS_MANAGEMENT, TAB_CONTACTS, TA
 
 let defaultProps;
 let disptachUpdateTabSeleted;
-
+let dispatchChangeActiveMenu;
+let activeShowIndo;
 let store;
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -17,10 +18,14 @@ describe('Test TabClientInfo', () => {
 
     beforeEach(() => {
         disptachUpdateTabSeleted = sinon.fake();
+        dispatchChangeActiveMenu = sinon.fake();
+        activeShowIndo = sinon.fake();
         defaultProps = {
             navBar: Immutable.Map({ mapModulesAccess: null }),
             tabReducer: Immutable.Map({ tabSelected: null }),
-            disptachUpdateTabSeleted
+            disptachUpdateTabSeleted,
+            dispatchChangeActiveMenu,
+            activeShowIndo
         }
         store = mockStore({
             defaultProps
@@ -44,6 +49,8 @@ describe('Test TabClientInfo', () => {
         const wrapper = shallow(<TabClientInfo {...defaultProps}/>);
         wrapper.instance().handleClickTabItem('any');
         sinon.assert.calledOnce(disptachUpdateTabSeleted);
+        sinon.assert.calledOnce(dispatchChangeActiveMenu);
+        sinon.assert.calledOnce(activeShowIndo);
         expect(wrapper.state().tabActive).to.equal('any'); 
     });
     

@@ -2,7 +2,9 @@ import {
   SAVE_DATA_LOADING,
   PRODUCTION_UPGRADE_REQUEST,
   PRODUCTION_UPGRADE_NOTIFIED,
-  VALID_TOKEN
+  VALID_TOKEN,
+  CHANGE_MENU_ACTIVE,
+  CHANGE_MENU_DESACTIVE
 } from './constants';
 
 import axios from 'axios';
@@ -47,7 +49,22 @@ export function notifiedProductionUpgrade() {
   }
 }
 
+export function changeStatusMenuAct(){
+  return{
+    type: CHANGE_MENU_ACTIVE
+  }
+}
+
+
+export function changeStatusMenuDes(){
+  console.log("Welcom")
+  return{
+    type: CHANGE_MENU_DESACTIVE
+  }
+}
+
 export function changeTokenStatus(status) {
+  console.log("Finality")
   return {
     type: VALID_TOKEN,
     value: status
