@@ -166,7 +166,7 @@ export class MenuComponent extends Component {
             this.getMenuListPermission(permissions);
         });
     }
-    //Trabajo en este render
+
     render() {
         const { stateMenu, activeMenu } = this.props;
         const toggleIcon = stateMenu?'chevron circle left':'chevron circle right';

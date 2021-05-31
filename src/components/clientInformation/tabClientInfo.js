@@ -40,15 +40,12 @@ import { TOOLTIP_PENDING_TASK } from "./constants";
 import { executeFunctionIfInternetExplorer, showSweetAlertErrorMessage } from '../../utils/browserValidation'
 import { swtShowMessage } from "../sweetAlertMessages/actions";
 
-//import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
-
 export class TabClientInfo extends Component {
     constructor(props) {
         super(props);
         this.state = {
             tabActive: 1,
-            counterTabPending: 0,
-            //allow_visor_cliente: true
+            counterTabPending: 0
         };
     }
 
@@ -93,19 +90,12 @@ export class TabClientInfo extends Component {
             this.setState({ counterTabPending: data.rowCount });
           }
         });
-        //validatePermissionsByModule(MODULE_CLIENTS).then((data) => {
-        //    let permissions = _.get(data, 'payload.data.data.permissions')
-        //    let allow_visor_cliente = (permissions.indexOf(VISOR_CLIENTE) >= 0)
-        //    this.setState({
-        //        allow_visor_cliente: allow_visor_cliente
-        //    })
 
-        //});
     }
 
 
     render() {
-        const { infoClient, tabReducer, navBar, swtShowMessage } = this.props;
+        const { infoClient, tabReducer, navBar, swtShowMessage, allow_visor } = this.props;
 
         const tabStyleInactive = { height: "60px", borderBottomStyle: "none", width: "70px" };
         const tabStyleActive = { height: "60px", borderBottomStyle: "solid", borderBottomColor:"#3498db", width: "70px" };
@@ -217,7 +207,7 @@ export class TabClientInfo extends Component {
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Gestión de riesgos</a>
                             </li>
                         }
-                        {
+                        {allow_visor &&
                             <li style={tabActive === TAB_360_VISION ? bigTabStyleActive : bigTabStyleInactive}
                                 onClick={() => executeFunctionIfInternetExplorer(this.handleClickTabItem.bind(this, TAB_360_VISION), showSweetAlertErrorMessage(swtShowMessage))}>
                                 <a className="button-link-url" style={{ marginRight: "15px" }}>Visión 360°</a>
@@ -247,7 +237,7 @@ export class TabClientInfo extends Component {
                         {tabActive === TAB_BUSINESS_PLAN && <BusinessPlanInfo infoClient={infoClient} />}
                         {tabActive === TAB_RISKS_MANAGEMENT && <RisksManagements infoClient={infoClient} />}
                         {tabActive === TAB_CUSTOMER_STORY && <ComponentCustomerStory infoClient={infoClient} />}
-                        {tabActive === TAB_360_VISION && <EmbebedVisorComponent clientNameType={infoClient.clientNameType} clientdIdNumber={infoClient.clientIdNumber} infoClient={infoClient} />}
+                        {tabActive === TAB_360_VISION && <EmbebedVisorComponent infoClient={infoClient} />}
                     </div>
                 </div>
             </div>
@@ -255,12 +245,13 @@ export class TabClientInfo extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => {
+function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         swtShowMessage,
         disptachUpdateTabSeleted: updateTabSeleted
     }, dispatch);
 }
+
 
 const mapStateToProps = ({ tabReducer, navBar }) => {
     return {

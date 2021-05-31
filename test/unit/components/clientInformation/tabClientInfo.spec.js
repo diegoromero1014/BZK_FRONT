@@ -4,7 +4,7 @@ import TabClientInfoRedux from '../../../../src/components/clientInformation/tab
 import Immutable from "immutable";
 import thunk from "redux-thunk";
 import configureStore from 'redux-mock-store';
-import { TAB_PIPELINE, TAB_BUSINESS_PLAN, TAB_RISKS_MANAGEMENT, TAB_CONTACTS, TAB_SHAREHOLDER, TAB_PREVISITS, TAB_VISITS, TAB_CUSTOMER_STORY } from '../../../../src/constantsGlobal';
+import { TAB_PIPELINE, TAB_BUSINESS_PLAN, TAB_RISKS_MANAGEMENT, TAB_CONTACTS, TAB_SHAREHOLDER, TAB_PREVISITS, TAB_VISITS, TAB_CUSTOMER_STORY, TAB_360_VISION } from '../../../../src/constantsGlobal';
 
 let defaultProps;
 let disptachUpdateTabSeleted;
@@ -93,6 +93,10 @@ describe('Test TabClientInfo', () => {
     });
     it('Case tabActive is TAB_CUSTOMER_STORY ', ()=> {
         defaultProps.tabReducer = Immutable.Map({ tabSelected: TAB_CUSTOMER_STORY }),
+        itRenders(<TabClientInfo {...defaultProps}/>);
+    });
+    it('Case tabActive is TAB_360_VISOR ', ()=> {
+        defaultProps.tabReducer = Immutable.Map({ tabSelected: TAB_360_VISION }),
         itRenders(<TabClientInfo {...defaultProps}/>);
     });
 });

@@ -26,7 +26,7 @@ export class MainComponent extends Component {
       messageNotification: "",
       initialDate: null,
       finalDate: null,
-      enabledMenu: false
+      enabledMenu: true
     }
   }
   stateMenu  = () => {

@@ -67,7 +67,9 @@ class EmbebedClientVisorComponent extends Component {
     });
   }
   render() {
-    const { clientdIdNumber, clientNameType, swtShowMessage } = this.props;
+    const { infoClient } = this.props;
+    const clientNameType = infoClient.clientNameType;
+    const clientdIdNumber = infoClient.clientIdNumber;
     return (
       <div
       className="tab-pane quickZoomIn animated"
