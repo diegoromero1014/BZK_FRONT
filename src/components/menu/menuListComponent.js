@@ -16,11 +16,7 @@ class MenuListComponent extends Component {
     }
 
     _mapMenuItems(item, idx, state) {
-        console.log(item)
         const children = item.children;
-        console.log("Childen Menu Items")
-        console.log(children)
-        console.log(state)
         if (_.isEqual(item.children, undefined) || _.isEqual(item.children, null)) {
             return <MenuItem
                 key={_.uniqueId("MenuItem_")}
@@ -47,8 +43,6 @@ class MenuListComponent extends Component {
     render() {
         const { menu, stateMenu } = this.props;
         const menuListItem = _.isUndefined(menu.get('menuListItem')) ? [] : menu.get('menuListItem');
-        console.log('Menu List Item Value');
-        console.log(menuListItem);
         return (
             <Menu key={_.uniqueId("Menu_")} inverted vertical fluid attached="top" style={{ backgroundColor: '#00448c' }}>
                 {menuListItem.map((item, index)=>this._mapMenuItems(item,index,stateMenu))}

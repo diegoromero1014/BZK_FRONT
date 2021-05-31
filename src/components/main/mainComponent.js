@@ -33,7 +33,6 @@ export class MainComponent extends Component {
     this.setState({
       enabledMenu: !this.state.enabledMenu
     });
-    console.log(this.state.enabledMenu);
   }
   workerConfig = () => {
     /**
