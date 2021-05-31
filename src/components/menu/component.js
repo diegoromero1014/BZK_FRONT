@@ -23,12 +23,7 @@ import { initialMenuPermissions } from "../menu/actions";
 import { Header, Image } from "semantic-ui-react";
 import ImageBrand from '../../../img/svg/logo_bancolombia_blanco_biztrack.svg';
 import _ from "lodash";
-import {Icon} from "semantic-ui-react";
-//const itemLeaveMenu = {
-//    text: "Contraer",
-//    icon: "sign-out",
-//    link: true
-//};
+import { Icon } from "semantic-ui-react";
 
 const itemDashboard = {
     text: "Vista gerencial",
@@ -104,7 +99,7 @@ export class MenuComponent extends Component {
     }
 
     stateMenu = () => {
-        this.setState({enable: !enable});
+        this.setState({ enable: !enable });
     }
 
     getMenuListPermission = () => {
@@ -151,7 +146,7 @@ export class MenuComponent extends Component {
         if (_.get(permissions, MODULE_TRANSACTIONAL)) {
             menuItems.push(itemTransactional);
         }
-        
+
         menuItems.push(itemScheduler);
         if (_.get(permissions, MODULE_AEC)) {
             itemMyPendings.children.push(childrenMyPendingsAEC);
@@ -171,22 +166,30 @@ export class MenuComponent extends Component {
             this.getMenuListPermission(permissions);
         });
     }
-//Trabajo en este render
+    //Trabajo en este render
     render() {
-        const {stateMenu, activeMenu} = this.props; 
+        const { stateMenu, activeMenu } = this.props;
+        const toggleIcon = stateMenu?'chevron circle left':'chevron circle right';
         return (
-            
             <div style={{ backgroundColor: '#00448c !important', width: "100%", height: "100%" }}>
                 <Header style={{ backgroundColor: '#00448c !important' }} textAlign='center'>
                     <Image src={ImageBrand} size='small' />
                 </Header>
-                <MenuListComponent stateMenu={stateMenu}/>                
                 <span onClick={activeMenu} >
-                    <Icon name="sign-out"/>
+                    <Icon name={toggleIcon} style={this.toggleIconStyle} />
                 </span>
+                <br/>
+                <MenuListComponent stateMenu={stateMenu} />
                 <SwtAlertMessage />
             </div>
         );
+    }
+
+     toggleIconStyle = {
+        color: 'white',
+        float: 'right',
+        cursor: 'pointer',
+        fontSize:"25px"
     }
 }
 
