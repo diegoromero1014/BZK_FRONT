@@ -11,6 +11,7 @@ export const NAME_FILE_SHOPPING_MAP = "MapaDeCompras.pdf"
 export const NAME_FILE_PRE_VISIT_GUIDE = "GuiaPrevisita.pdf";
 export const CONSULT_PARAMETER_NAME = 'CONSULT_PARAMETER_NAME';
 export const CHANGE_VALUE_LOGS = 'CHANGE_VALUE_LOGS';
+export const CHANGE_URL_VISOR = 'CHANGE_URL_VISOR';
 export const CONSULT_VALUE_LOGS = 'CONSULT_VALUE_LOGS';
 export const SAVE_DRAFT = 0;
 export const SAVE_PUBLISHED = 1;

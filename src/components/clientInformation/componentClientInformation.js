@@ -191,8 +191,8 @@ export class ComponentClientInformation extends Component {
                                             className="label label-important bounceIn animated aec-normal">AEC: No aplica</span>
                                     }
                                 </div>
-                                <div className={`${this.state.hide_information===true?"hidden-info standard-div":"showen-indo standard-div"}`} style={{ width: "100%" }}>
-                                    <table style={{ width: "100%" }}>
+                                <div id="divInformation" className={`${this.state.hide_information===true?"hidden-info standard-div":"showen-indo standard-div"}`} style={{ width: "100%" }}>
+                                    <table id="tblInformation" style={{ width: "100%" }}>
                                         <thead>
                                             <tr>
                                                 <th style={{ fontWeight: "bold", color: "#4C5360" }}>Tipo de documento</th>
@@ -245,7 +245,7 @@ export class ComponentClientInformation extends Component {
                                 <tbody>
                                     <tr style={{height:'15px'}}>
                                         <td className={`${this.state.hide_information===true?"hidden-icon icon-normal":"showen-icon icon-normal"}`} style={{display:'flex', justifyContent:'center',height:'15px', marginTop: "10px",  borderRadius: "0px" }}>
-                                            <i onClick={this.hideComponents} style={{cursor:'pointer', fontSize:'25px'}} className="dropdown icon"></i>
+                                            <i id="btnHideInfoClient" onClick={this.hideComponents} style={{cursor:'pointer', fontSize:'25px'}} className="dropdown icon"></i>
                                         </td>
                                     </tr>
                                     <tr >

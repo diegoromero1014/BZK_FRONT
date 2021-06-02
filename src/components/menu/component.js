@@ -175,7 +175,7 @@ export class MenuComponent extends Component {
                 <Header style={{ backgroundColor: '#00448c !important' }} textAlign='center'>
                     <Image src={ImageBrand} size='small' />
                 </Header>
-                <span onClick={activeMenu} >
+                <span id="activeMenu" onClick={activeMenu} >
                     <Icon name={toggleIcon} style={this.toggleIconStyle} />
                 </span>
                 <br/>

@@ -81,22 +81,16 @@ export class MainComponent extends Component {
     }
   }
   changesStatusMenuAct = ()=>{
-    console.log("Testing")
     
     const {dispatchDesactiveMenu,mainReducer } = this.props;
     dispatchDesactiveMenu();
-    console.log(mainReducer.get('enableMenu'))
-    //const { mainReducer } = this.props;
-    //mainReducer.set('enableMenu',true);
+    
   }
   changesStatusMenuDes = ()=>{
-    console.log("Testing2")
+    
     const {  dispatchChangeActiveMenu, mainReducer } = this.props;
     dispatchChangeActiveMenu();
     
-    console.log(mainReducer.get('enableMenu'))
-    //const { mainReducer } = this.props;
-    //mainReducer.set('enableMenu',false);
   }
   componentWillMount() {
     const { dispatchNotifiedProductionUpgrade, dispatchValidateUpgrateProductionActive } = this.props;
@@ -169,10 +163,7 @@ export class MainComponent extends Component {
     const styleBarContract = {
       paddingLeft: '80px', height: "100%", float: "left", width: "100%", overflow: "hidden", transition: 'all 0.3s' 
    }
-    const enableMenu = this.state.enabledMenu;
     let enabledMenus = mainReducer.get('enableMenu');
-    
-    console.log(enabledMenus)
     return (
       <div style={{ width: "100%", height: "100%", position: "absolute", overflow: "hidden" }}>
         <div style={enabledMenus?styleMenu:styleMenuContract} >

@@ -17,6 +17,35 @@ export function consultParameterServer(tagConsult) {
     
 }
 
+export async function  consultURLServer (tagConsult) {
+    const json = {
+        "messageHeader": {
+            "sessionToken": window.localStorage.getItem('sessionTokenFront'),
+            "timestamp": new Date().getTime(),
+            "service": "",
+            "status": "0",
+            "language": "es",
+            "displayErrorMessage": "",
+            "technicalErrorMessage": "",
+            "applicationVersion": "",
+            "debug": true,
+            "isSuccessful": true
+        },
+        "messageBody": tagConsult
+    }
+    
+    let request = await axios.post(constants.APP_URL + "/getParameterUrlVisor360", json);
+    
+    //return catchAction(messageBody, '/getParameterUrlVisor360', constants.CONSULT_PARAMETER_NAME, tagConsult);
+    
+    return {
+        type: constants.CHANGE_URL_VISOR,
+        payload: request
+    }
+    //return catchAction(messageBody, '/getParameterUrlVisor360', constants.CONSULT_PARAMETER_NAME, tagConsult);
+    //return "https://visionclientescert.ambientesbc.lab/ReportServer/?%2fPanoramica+del+Cliente%2fReportes%2fReportePymes&PrmTipoDocumento=%5BTipo Documento%5D.%5BTipo Documento%5D.%26%5BC.C%5D&PrmCedulaCliente=%5BCliente%5D.%5BId%5D.%26%5B7797198775910663759%5D"
+}
+
 export function setSecurityMessage(message) {
     return {
         type: constants.MESSAGE_SECURITY_FORM,

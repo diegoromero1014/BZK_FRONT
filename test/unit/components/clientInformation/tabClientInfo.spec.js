@@ -9,8 +9,11 @@ import { TAB_PIPELINE, TAB_BUSINESS_PLAN, TAB_RISKS_MANAGEMENT, TAB_CONTACTS, TA
 let defaultProps;
 let disptachUpdateTabSeleted;
 let dispatchChangeActiveMenu;
+let dispatchDesactiveMenu;
 let activeShowIndo;
 let store;
+let dispatchSwtShowMessage;
+
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
@@ -19,13 +22,18 @@ describe('Test TabClientInfo', () => {
     beforeEach(() => {
         disptachUpdateTabSeleted = sinon.fake();
         dispatchChangeActiveMenu = sinon.fake();
+        dispatchDesactiveMenu = sinon.fake();
         activeShowIndo = sinon.fake();
+        dispatchSwtShowMessage = sinon.fake();
         defaultProps = {
             navBar: Immutable.Map({ mapModulesAccess: null }),
             tabReducer: Immutable.Map({ tabSelected: null }),
             disptachUpdateTabSeleted,
             dispatchChangeActiveMenu,
-            activeShowIndo
+            dispatchDesactiveMenu,
+            activeShowIndo,
+            dispatchSwtShowMessage,
+            allow_visor: false,
         }
         store = mockStore({
             defaultProps
@@ -42,6 +50,7 @@ describe('Test TabClientInfo', () => {
     
     it('Should render InfoTab', ()=> {
         const wrapper = shallow(<TabClientInfo {...defaultProps}/>);
+        
         expect(wrapper.find('li').find({id: 'infoTab'})).to.have.length(1);
     });
     
@@ -105,5 +114,23 @@ describe('Test TabClientInfo', () => {
     it('Case tabActive is TAB_360_VISOR ', ()=> {
         defaultProps.tabReducer = Immutable.Map({ tabSelected: TAB_360_VISION }),
         itRenders(<TabClientInfo {...defaultProps}/>);
+    });
+    it('Case click in tab 360',()=>{
+        const swtShowMessage = sinon.fake();
+        defaultProps.allow_visor = true;
+        const wrapper = shallow(<TabClientInfo {...defaultProps} swtShowMessage={swtShowMessage}/>);
+        const selectTab360 = wrapper.find('li').find({id:'tabVista'});        //tab360
+        selectTab360.at(0).simulate('click');
+        expect(swtShowMessage.callCount).to.equal(1);
+    })
+    it('When changesStatusMenuDes is instanced', ()=> {
+        const wrapper = shallow(<TabClientInfo {...defaultProps}/>);
+        wrapper.instance().changesStatusMenuDes();
+        sinon.assert.calledOnce(dispatchChangeActiveMenu);
+    });
+    it('When changesStatusMenuAct is instanced', ()=> {
+        const wrapper = shallow(<TabClientInfo {...defaultProps}/>);
+        wrapper.instance().changesStatusMenuAct();
+        sinon.assert.calledOnce(dispatchDesactiveMenu);
     });
 });

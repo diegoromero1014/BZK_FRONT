@@ -353,6 +353,8 @@ export class TabClientInfo extends Component {
             )}
             {allow_visor && (
               <li
+              id="tabVista"
+                className={".tab-section-360"}
                 style={
                   tabActive === TAB_360_VISION
                     ? bigTabStyleActive

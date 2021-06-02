@@ -1,5 +1,5 @@
 import reducer from '../../../../src/components/main/reducer';
-import { VALID_TOKEN, SAVE_DATA_LOADING, PRODUCTION_UPGRADE_REQUEST, PRODUCTION_UPGRADE_NOTIFIED } from '../../../../src/components/main/constants';
+import { VALID_TOKEN, SAVE_DATA_LOADING, PRODUCTION_UPGRADE_REQUEST, PRODUCTION_UPGRADE_NOTIFIED, CHANGE_MENU_DESACTIVE, CHANGE_MENU_ACTIVE } from '../../../../src/components/main/constants';
 import Immutable from 'immutable';
 
 describe('MainComponent Test Reducer', () => {
@@ -21,6 +21,16 @@ describe('MainComponent Test Reducer', () => {
 
     it('reducer called type PRODUCTION_UPGRADE_NOTIFIED', () => {
         const response = reducer(Immutable.Map({}), { type: PRODUCTION_UPGRADE_NOTIFIED });
+        expect(response).not.to.equal(null);
+    })
+
+    it('reducer called type CHANGE_MENU_ACTIVE', () => {
+        const response = reducer(Immutable.Map({}), { type: CHANGE_MENU_ACTIVE });
+        expect(response).not.to.equal(null);
+    })
+
+    it('reducer called type CHANGE_MENU_DESACTIVE', () => {
+        const response = reducer(Immutable.Map({}), { type: CHANGE_MENU_DESACTIVE });
         expect(response).not.to.equal(null);
     })
 

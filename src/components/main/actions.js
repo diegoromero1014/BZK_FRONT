@@ -57,7 +57,6 @@ export function changeStatusMenuAct(){
 
 
 export function changeStatusMenuDes(){
-  console.log("Welcom")
   return{
     type: CHANGE_MENU_DESACTIVE
   }
