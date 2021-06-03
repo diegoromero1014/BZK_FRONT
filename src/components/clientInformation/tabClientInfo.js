@@ -71,14 +71,11 @@ export class TabClientInfo extends Component {
   }
 
   activeHideInf(tabSelect) {
-    const { activeHideInfo, activeShowIndo } = this.props;
+    const { activeHideInfo } = this.props;
     if (tabSelect === TAB_360_VISION) {
       activeHideInfo();
       this.changesStatusMenuAct();
-    } else {
-      this.changesStatusMenuDes();
-      activeShowIndo();
-    }
+    } 
   }
 
   handleClickTabItem = (tabSelect) => {

@@ -41,13 +41,13 @@ class EmbebedClientVisorComponent extends Component {
           width: "100%",
           marginTop: "10px",
           marginBottom: "70px",
-          paddingTop: "20px",
+          paddingTop: "0px",
           height: "100vh",
         }}
       >
         {
           <iframe
-            style={{ width: "100%", border: "0", flexGrow: "1", height: "97%" }}
+            style={{ width: "100%", border: "0", flexGrow: "1", height: "100%" }}
             src={this.state.visor_url}
           ></iframe>
         }

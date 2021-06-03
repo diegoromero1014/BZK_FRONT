@@ -22,6 +22,7 @@ import { updateTabSeletedCS } from '../customerStory/actions';
 import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS, MODULE_STUDY_CREDIT, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
 import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
 import { TAB_STORY } from '../customerStory/constants';
+import Icon from 'semantic-ui-react/dist/commonjs/elements/Icon';
 
 export class ComponentClientInformation extends Component {
     constructor(props) {
@@ -245,7 +246,7 @@ export class ComponentClientInformation extends Component {
                                 <tbody>
                                     <tr style={{height:'15px'}}>
                                         <td className={`${this.state.hide_information===true?"hidden-icon icon-normal":"showen-icon icon-normal"}`} style={{display:'flex', justifyContent:'center',height:'15px', marginTop: "10px",  borderRadius: "0px" }}>
-                                            <i id="btnHideInfoClient" onClick={this.hideComponents} style={{cursor:'pointer', fontSize:'25px'}} className="dropdown icon"></i>
+                                            <Icon name="chevron circle down" onClick={this.hideComponents} style={{color:"#2671d7",cursor:'pointer', fontSize:'25px'}} className="dropdown icon"></Icon>
                                         </td>
                                     </tr>
                                     <tr >
