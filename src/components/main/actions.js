@@ -63,7 +63,6 @@ export function changeStatusMenuDes(){
 }
 
 export function changeTokenStatus(status) {
-  console.log("Finality")
   return {
     type: VALID_TOKEN,
     value: status
