@@ -144,9 +144,9 @@ describe('Test clientInformation/componentClientInformation', () => {
         };
         const wrapper = shallow(<ComponentClientInformation {...defaultProps} store={store} />);
         wrapper.setState(state);
-        const btnInfoClient = wrapper.find('i').find({id: 'btnHideInfoClient'});
+        const btnInfoClient = wrapper.find({id: 'btnHideInfoClient'});
         btnInfoClient.simulate('click');
-        //wrapper.instance().hideComponents();
+        //wrapper.instance().hideComponents(); 
         expect(wrapper.find('div').find({className: 'showen-indo standard-div'})).to.have.length(2);
     });
 });

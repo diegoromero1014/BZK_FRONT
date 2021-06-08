@@ -58,8 +58,6 @@ describe('Test TabClientInfo', () => {
         const wrapper = shallow(<TabClientInfo {...defaultProps}/>);
         wrapper.instance().handleClickTabItem('any');
         sinon.assert.calledOnce(disptachUpdateTabSeleted);
-        sinon.assert.calledOnce(dispatchChangeActiveMenu);
-        sinon.assert.calledOnce(activeShowIndo);
         expect(wrapper.state().tabActive).to.equal('any'); 
     });
     
