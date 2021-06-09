@@ -20,10 +20,9 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { consultModulesAccess } from "../navBar/actions";
 import { initialMenuPermissions } from "../menu/actions";
-import { Header, Image } from "semantic-ui-react";
+import { Header, Image, Icon } from "semantic-ui-react";
 import ImageBrand from '../../../img/svg/logo_bancolombia_blanco_biztrack.svg';
 import _ from "lodash";
-import { Icon } from "semantic-ui-react";
 
 const itemDashboard = {
     text: "Vista gerencial",
@@ -96,10 +95,6 @@ export class MenuComponent extends Component {
         this.state = {
             enable: false
         };
-    }
-
-    stateMenu = () => {
-        this.setState({ enable: !enable });
     }
 
     getMenuListPermission = () => {

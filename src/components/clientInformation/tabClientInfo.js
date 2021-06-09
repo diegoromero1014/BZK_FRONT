@@ -28,8 +28,7 @@ import {
   MODULE_BUSSINESS_PLAN,
   MODULE_RISKS_MANAGEMENT,
   MODULE_CUSTOMER_STORY,
-  MODULE_PARTNERS,
-  MODULE_CLIENTS,
+  MODULE_PARTNERS
 } from "../../constantsGlobal";
 import {
   TAB_INFO,
@@ -77,7 +76,7 @@ export class TabClientInfo extends Component {
       this.changesStatusMenuAct();
     } 
   }
-
+ 
   handleClickTabItem = (tabSelect) => {
     const { disptachUpdateTabSeleted } = this.props;
     disptachUpdateTabSeleted(tabSelect);
@@ -129,7 +128,6 @@ export class TabClientInfo extends Component {
       navBar,
       swtShowMessage,
       allow_visor,
-      mainReducer,
     } = this.props;
     const tabStyleInactive = {
       height: "60px",
@@ -155,7 +153,7 @@ export class TabClientInfo extends Component {
       width: "140px",
     };
 
-    var tabActive = tabReducer.get("tabSelected");
+    let tabActive = tabReducer.get("tabSelected");
 
     if (tabActive === null || tabActive === undefined || tabActive === "") {
       tabActive = TAB_INFO;
@@ -434,7 +432,6 @@ const mapStateToProps = ({ tabReducer, navBar, mainReducer }) => {
   return {
     tabReducer,
     navBar,
-    mainReducer,
   };
 };
 

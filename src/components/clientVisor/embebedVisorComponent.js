@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import {  consultURLServer } from "../../actionsGlobal";
-import {
-  _CLIENT_VISOR,
-} from "../../constantsAnalytics";
 
 class EmbebedClientVisorComponent extends Component {
   constructor(props) {
@@ -16,17 +13,17 @@ class EmbebedClientVisorComponent extends Component {
   componentWillMount() {
     const { consultURLServer, infoClient } = this.props;
 
-    let paramenters = {
+    const paramenters = {
       clientNameType: infoClient.clientNameType,
       clientdIdNumber: infoClient.clientIdNumber,
     };
-    consultURLServer(paramenters).then((data) => {
+    consultURLServer(paramenters).then(data => {
       if (
         data.payload.data.data !== null &&
         data.payload.data.data !== "" &&
         data.payload.data.data !== undefined
       ) {
-        let parameter = data.payload.data.data.value;
+        const parameter = data.payload.data.data.value;
         this.setState({
           visor_url: parameter,
         });
@@ -65,7 +62,7 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-function mapStateToProps({ clientInformacion }, ownerProps) {
+function mapStateToProps({ clientInformacion }) {
   return {
     clientInformacion,
   };
