@@ -77,7 +77,7 @@ class NavBarComponent extends Component {
                     }
                     <div  style={{ fontSize: "18px", marginTop: "18px" , marginLeft: "15px"}}>
                         {viewAlertClient && <BellAlert />}
-                    </div> 
+                    </div>
                     <div style={{ fontSize: "22px", marginRight: "10px" ,marginLeft: "30px"}}>
                         <MenuListFatherComponent
                             key={_.uniqueId("MenuListFatherComponent_")}

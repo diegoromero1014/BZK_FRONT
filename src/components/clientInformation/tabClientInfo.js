@@ -74,10 +74,10 @@ export class TabClientInfo extends Component {
     if (tabSelect === TAB_360_VISION) {
       activeHideInfo();
       this.changesStatusMenuAct();
-    } 
+    }
   }
  
-  handleClickTabItem = (tabSelect) => {
+  handleClickTabItem = tabSelect => {
     const { disptachUpdateTabSeleted } = this.props;
     disptachUpdateTabSeleted(tabSelect);
     this.activeHideInf(tabSelect);
@@ -86,7 +86,7 @@ export class TabClientInfo extends Component {
     });
   };
 
-  handleChangeCounterTabPending = (counter) => {
+  handleChangeCounterTabPending = counter => {
     this.setState({
       counterTabPending: counter,
     });
@@ -105,7 +105,7 @@ export class TabClientInfo extends Component {
       NUMBER_RECORDS,
       1,
       null
-    ).then((result) => {
+    ).then(result => {
       if (200 === result.data.status) {
         const data = result.data.data;
         this.setState({ counterTabPending: data.rowCount });
@@ -355,7 +355,7 @@ export class TabClientInfo extends Component {
                     ? bigTabStyleActive
                     : bigTabStyleInactive
                 }
-                onClick={() => executeFunctionIfInternetExplorer(this.handleClickTabItem.bind(this, TAB_360_VISION), showSweetAlertErrorMessage(swtShowMessage))}
+                onClick={this.handleClickTabItem.bind(this, TAB_360_VISION)}
               >
                 <a className="button-link-url" style={{ marginRight: "15px" }}>
                   Visión 360°
@@ -428,7 +428,7 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-const mapStateToProps = ({ tabReducer, navBar, mainReducer }) => {
+const mapStateToProps = ({ tabReducer, navBar }) => {
   return {
     tabReducer,
     navBar,

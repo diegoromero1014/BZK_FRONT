@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import _ from "lodash";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
@@ -102,7 +101,7 @@ export class MainComponent extends Component {
       dispatchValidateUpgrateProductionActive,
     } = this.props;
 
-    let token = window.localStorage.getItem("sessionTokenFront");
+    const token = window.localStorage.getItem("sessionTokenFront");
 
     if (token == null || token === "") {
       window.localStorage.setItem("sessionTokenFront", "");
@@ -112,14 +111,14 @@ export class MainComponent extends Component {
 
       dispatchLoadObservablesLeftTimer();
 
-      let productionUpgradeNotified = mainReducer.get(
+      const productionUpgradeNotified = mainReducer.get(
         "productionUpgradeNotified"
       );
 
       if (!productionUpgradeNotified) {
         dispatchNotifiedProductionUpgrade();
 
-        dispatchValidateUpgrateProductionActive().then((resolve) => {
+        dispatchValidateUpgrateProductionActive().then( resolve => {
           const { data } = resolve.payload.data;
 
           if (data) {
