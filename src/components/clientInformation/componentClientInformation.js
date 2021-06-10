@@ -277,9 +277,7 @@ export class ComponentClientInformation extends Component {
                         </Col>
                     </Row>
                 </header>
-                <TabClientInfo infoClient={infoClient} allow_visor={this.state.allow_visor_cliente} 
-                    activeHideInfo={this.hideComponentsVisor} activeShowIndo={this.showComponentsVisor} 
-                />
+                <TabClientInfo infoClient={infoClient} allow_visor={this.state.allow_visor_cliente} activeHideInfo={this.hideComponentsVisor} activeShowIndo={this.showComponentsVisor} />
             </div>
         );
     }

@@ -389,7 +389,7 @@ export class TabClientInfo extends Component {
             {tabActive === TAB_PENDING_TASK && (
               <ClientTaskList
                 infoClient={infoClient}
-                updateCounterPending={(counter) =>
+                updateCounterPending={counter =>
                   this.handleChangeCounterTabPending(counter)
                 }
               />

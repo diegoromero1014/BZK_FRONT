@@ -54,7 +54,7 @@ export class MainComponent extends Component {
   startBlocking = () => {
     const { dispatchConsultParameterServer } = this.props;
 
-    dispatchConsultParameterServer(RANGO_PASO_PRODUCCION).then((resolve) => {
+    dispatchConsultParameterServer(RANGO_PASO_PRODUCCION).then(resolve => {
       if (resolve && resolve.payload && resolve.payload.data) {
         this.initializeRanges(resolve.payload.data);
 
@@ -151,47 +151,20 @@ export class MainComponent extends Component {
   render() {
     const { mainReducer } = this.props;
     const styleMenu = {
-      backgroundColor: "#00448c",
-      float: "left",
-      width: "190px",
-      height: "100%",
-      position: "absolute",
-      transition: "all 0.3s",
+      backgroundColor: "#00448c", float: "left", width: "190px", height: "100%", position: "absolute", transition: "all 0.3s",
     };
     const styleMenuContract = {
-      backgroundColor: "#00448c",
-      float: "left",
-      width: "80px",
-      height: "100%",
-      position: "absolute",
-      transition: "all 0.3s",
+      backgroundColor: "#00448c", float: "left", width: "80px", height: "100%", position: "absolute", transition: "all 0.3s",
     };
     const styleBar = {
-      paddingLeft: "190px",
-      height: "100%",
-      float: "left",
-      width: "100%",
-      overflow: "hidden",
-      transition: "all 0.3s",
+      paddingLeft: "190px", height: "100%", float: "left", width: "100%", overflow: "hidden", transition: "all 0.3s",
     };
     const styleBarContract = {
-      paddingLeft: "80px",
-      height: "100%",
-      float: "left",
-      width: "100%",
-      overflow: "hidden",
-      transition: "all 0.3s",
+      paddingLeft: "80px", height: "100%", float: "left", width: "100%", overflow: "hidden", transition: "all 0.3s",
     };
     const enabledMenus = mainReducer.get("enableMenu");
     return (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          overflow: "hidden",
-        }}
-      >
+      <div style={{width: "100%", height: "100%", position: "absolute", overflow: "hidden"}}>
         <div style={enabledMenus ? styleMenu : styleMenuContract}>
           <MenuComponent
             stateMenu={enabledMenus}
