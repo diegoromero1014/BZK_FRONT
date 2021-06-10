@@ -355,7 +355,7 @@ export class TabClientInfo extends Component {
                     ? bigTabStyleActive
                     : bigTabStyleInactive
                 }
-                onClick={this.handleClickTabItem.bind(this, TAB_360_VISION)}
+                onClick={() => executeFunctionIfInternetExplorer(this.handleClickTabItem.bind(this, TAB_360_VISION), showSweetAlertErrorMessage(swtShowMessage))}
               >
                 <a className="button-link-url" style={{ marginRight: "15px" }}>
                   Visión 360°
