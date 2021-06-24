@@ -11,6 +11,7 @@ export const NAME_FILE_SHOPPING_MAP = "MapaDeCompras.pdf"
 export const NAME_FILE_PRE_VISIT_GUIDE = "GuiaPrevisita.pdf";
 export const CONSULT_PARAMETER_NAME = 'CONSULT_PARAMETER_NAME';
 export const CHANGE_VALUE_LOGS = 'CHANGE_VALUE_LOGS';
+export const CHANGE_URL_VISOR = 'CHANGE_URL_VISOR';
 export const CONSULT_VALUE_LOGS = 'CONSULT_VALUE_LOGS';
 export const SAVE_DRAFT = 0;
 export const SAVE_PUBLISHED = 1;
@@ -130,6 +131,7 @@ export const MODULE_PIPELINE = "Pipeline";
 export const MODULE_BUSSINESS_PLAN = "Planes de negocios";
 export const MODULE_ALERTS = "Alertas";
 export const MODULE_RISKS_MANAGEMENT = "Gestión de riesgos";
+
 export const MODULE_COVENANTS = "Covenants";
 export const MODULE_AEC = "AEC";
 export const MODULE_CUSTOMER_STORY = "Historial cliente";
@@ -139,6 +141,7 @@ export const MODULE_RISK_GROUP = "Grupos de riesgo";
 export const MODULE_LINKING_REQUESTS = "Solicitudes de vinculación";
 export const MODULE_STUDY_CREDIT = "Estudio de crédito";
 export const MODULE_PREVISIT_REPORT = "Informe de previsita";
+export const MODULE_360_VISION = "Visión 360°";
 
 export const TAB_INFO = 1;
 export const TAB_CONTACTS = 2;
@@ -150,6 +153,7 @@ export const TAB_PIPELINE = 7;
 export const TAB_BUSINESS_PLAN = 8;
 export const TAB_RISKS_MANAGEMENT = 9;
 export const TAB_CUSTOMER_STORY = 10;
+export const TAB_360_VISION = 11;
 
 export const MAX_LENGTH_LINK_CLIENT_TRACER_CODE = 255;
 

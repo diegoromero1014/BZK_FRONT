@@ -3,9 +3,11 @@ import {
     changeStateSaveData,
     validateUpgrateProductionActive,
     notifiedProductionUpgrade,
-    changeTokenStatus
+    changeTokenStatus,
+    changeStatusMenuDes,
+    changeStatusMenuAct
 } from '../../../../src/components/main/actions';
-import { SAVE_DATA_LOADING, PRODUCTION_UPGRADE_REQUEST, PRODUCTION_UPGRADE_NOTIFIED, VALID_TOKEN } from '../../../../src/components/main/constants';
+import { SAVE_DATA_LOADING, PRODUCTION_UPGRADE_REQUEST, PRODUCTION_UPGRADE_NOTIFIED, VALID_TOKEN, CHANGE_MENU_DESACTIVE, CHANGE_MENU_ACTIVE } from '../../../../src/components/main/constants';
 
 describe('MainComponent Test Actions', () => {
 
@@ -28,4 +30,12 @@ describe('MainComponent Test Actions', () => {
         const response = changeTokenStatus();
         expect(response.type).to.equal(VALID_TOKEN);
     })
-})
+    it('changeStatusMenuAct should return type CHANGE_MENU_ACTIVE', () => {
+        const response = changeStatusMenuAct();
+        expect(response.type).to.equal(CHANGE_MENU_ACTIVE);
+    })
+    it('changeStatusMenuDes should return type CHANGE_MENU_DESACTIVE', () => {
+        const response = changeStatusMenuDes();
+        expect(response.type).to.equal(CHANGE_MENU_DESACTIVE);
+    })
+}) 

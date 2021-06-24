@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { consultModulesAccess } from "../navBar/actions";
 import { initialMenuPermissions } from "../menu/actions";
-import { Header, Image } from "semantic-ui-react";
+import { Header, Image, Icon } from "semantic-ui-react";
 import ImageBrand from '../../../img/svg/logo_bancolombia_blanco_biztrack.svg';
 import _ from "lodash";
 
@@ -92,6 +92,9 @@ export class MenuComponent extends Component {
     constructor(props) {
         super(props);
         this.getMenuListPermission = this.getMenuListPermission.bind(this);
+        this.state = {
+            enable: false
+        };
     }
 
     getMenuListPermission = () => {
@@ -138,6 +141,7 @@ export class MenuComponent extends Component {
         if (_.get(permissions, MODULE_TRANSACTIONAL)) {
             menuItems.push(itemTransactional);
         }
+
         menuItems.push(itemScheduler);
         if (_.get(permissions, MODULE_AEC)) {
             itemMyPendings.children.push(childrenMyPendingsAEC);
@@ -159,15 +163,28 @@ export class MenuComponent extends Component {
     }
 
     render() {
+        const { stateMenu, activeMenu } = this.props;
+        const toggleIcon = stateMenu?'chevron circle left':'chevron circle right';
         return (
             <div style={{ backgroundColor: '#00448c !important', width: "100%", height: "100%" }}>
                 <Header style={{ backgroundColor: '#00448c !important' }} textAlign='center'>
                     <Image src={ImageBrand} size='small' />
                 </Header>
-                <MenuListComponent />
+                <span id="activeMenu" onClick={activeMenu} >
+                    <Icon name={toggleIcon} style={this.toggleIconStyle} />
+                </span>
+                <br/>
+                <MenuListComponent stateMenu={stateMenu} />
                 <SwtAlertMessage />
             </div>
         );
+    }
+
+     toggleIconStyle = {
+        color: 'white',
+        float: 'right',
+        cursor: 'pointer',
+        fontSize:"25px"
     }
 }
 

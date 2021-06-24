@@ -6,6 +6,7 @@ import configureStore from 'redux-mock-store';
 import { ComponentClientInformation } from '../../../../src/components/clientInformation/componentClientInformation';
 import NotificationComponent from '../../../../src/components/notification/notificationComponent';
 import * as globalActions from '../../../../src/components/globalComponents/actions';
+import { expect } from 'chai';
 
 const clientInformacion = Immutable.Map({ 'responseClientInfo': {} });                
 const dataPromise = {
@@ -74,5 +75,78 @@ describe('Test clientInformation/componentClientInformation', () => {
         const wrapper = shallow(<ComponentClientInformation {...defaultProps} store={store} />);
         wrapper.setState(state);
         expect(wrapper.find(NotificationComponent)).to.have.length(0);
+    });
+
+    it('should show a information of client',()=>{
+        const state = { 
+            allow_visor_cliente: false, 
+            notification: { 
+                open: false, 
+                data: null
+            },
+            hide_information: false
+        };
+        const wrapper = shallow(<ComponentClientInformation {...defaultProps} store={store} />);
+        wrapper.setState(state);
+        expect(wrapper.find('div').find({className: 'showen-indo standard-div'})).to.have.length(2);
+    });
+    
+    it('should hide a information of client',()=>{
+        const state = { 
+            allow_visor_cliente: false, 
+            notification: { 
+                open: false, 
+                data: null
+            },
+            hide_information: true
+        };
+        const wrapper = shallow(<ComponentClientInformation {...defaultProps} store={store} />);
+        wrapper.setState(state);
+        expect(wrapper.find('div').find({className: 'hidden-info standard-div'})).to.have.length(2);
+    });
+
+    it('When hideComponentsVisor is instanced',()=>{
+        const state = { 
+            allow_visor_cliente: false, 
+            notification: { 
+                open: false, 
+                data: null
+            },
+            hide_information: false
+        };
+        const wrapper = shallow(<ComponentClientInformation {...defaultProps} store={store} />);
+        wrapper.setState(state);
+        wrapper.instance().hideComponentsVisor();
+        expect(wrapper.state().hide_information).to.equal(true);
+    });
+    it('When showComponentsVisor is instanced',()=>{
+        const state = { 
+            allow_visor_cliente: false, 
+            notification: { 
+                open: false, 
+                data: null
+            },
+            hide_information: true
+        };
+        const wrapper = shallow(<ComponentClientInformation {...defaultProps} store={store} />);
+        wrapper.setState(state);
+        wrapper.instance().showComponentsVisor();
+        expect(wrapper.state().hide_information).to.equal(false);
+    });
+    it('When press Click in button for hide information',()=>{
+        const state = { 
+            allow_visor_cliente: false, 
+            notification: { 
+                open: false, 
+                data: null
+            },
+            hide_information: true
+        };
+        const wrapper = shallow(<ComponentClientInformation {...defaultProps} store={store} />);
+        wrapper.setState(state);
+        const btnInfoClient = wrapper.find({id: 'btnHideInfoClient'});
+        btnInfoClient.simulate('click');
+        //wrapper.instance().hideComponents(); 
+        expect(wrapper.find('div').find({className: 'showen-indo standard-div'})).to.have.length(2);
     });
 });

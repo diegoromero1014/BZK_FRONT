@@ -2,7 +2,9 @@ import {
   SAVE_DATA_LOADING,
   PRODUCTION_UPGRADE_REQUEST,
   PRODUCTION_UPGRADE_NOTIFIED,
-  VALID_TOKEN
+  VALID_TOKEN,
+  CHANGE_MENU_ACTIVE,
+  CHANGE_MENU_DESACTIVE
 } from './constants';
 
 import axios from 'axios';
@@ -44,6 +46,19 @@ export function validateUpgrateProductionActive() {
 export function notifiedProductionUpgrade() {
   return {
     type: PRODUCTION_UPGRADE_NOTIFIED
+  }
+}
+
+export function changeStatusMenuAct(){
+  return{
+    type: CHANGE_MENU_ACTIVE
+  }
+}
+
+
+export function changeStatusMenuDes(){
+  return{
+    type: CHANGE_MENU_DESACTIVE
   }
 }
 
