@@ -11,7 +11,11 @@ import { initialMenuPermissions } from "./actions";
 
 class MenuListComponent extends Component {
 
-    _mapMenuItems(item, idx) {
+    constructor(props){
+        super(props);
+    }
+
+    _mapMenuItems(item, idx, state) {
         const children = item.children;
         if (_.isEqual(item.children, undefined) || _.isEqual(item.children, null)) {
             return <MenuItem
@@ -19,6 +23,7 @@ class MenuListComponent extends Component {
                 labelText={item.text}
                 linkUrl={item.link}
                 iconClassName={item.icon}
+                stateMenu= {state}
             />
 
         } else {
@@ -30,16 +35,17 @@ class MenuListComponent extends Component {
                 linkUrlFather={item.link}
                 style={item.style}
                 children={children}
+                stateMenu= {state}
             />
         }
     }
 
     render() {
-        const { menu } = this.props;
+        const { menu, stateMenu } = this.props;
         const menuListItem = _.isUndefined(menu.get('menuListItem')) ? [] : menu.get('menuListItem');
         return (
             <Menu key={_.uniqueId("Menu_")} inverted vertical fluid attached="top" style={{ backgroundColor: '#00448c' }}>
-                {menuListItem.map(this._mapMenuItems)}
+                {menuListItem.map((item, index)=>this._mapMenuItems(item,index,stateMenu))}
             </Menu>
         );
     }

@@ -8,7 +8,6 @@ import TabClientInfo from './tabClientInfo';
 import ButtonTeamComponent from '../clientTeam/buttonTeamComponent';
 import ButtonRiskGroup from '../clientRiskGroup/buttonClientRiskGroup';
 import ButtonEconomicgroup from '../clientEconomicGroup/buttonClientEconomicGroup';
-import ButtonClientVisorComponent from '../clientVisor/buttonClientVisorComponent';
 import NotificationComponent from '../notification/notificationComponent';
 import NotificationExpiredPortfolio from '../alertPortfolioExpirtation/notificationExpiredPortfolio';
 import { consultInfoClient } from './actions';
@@ -19,9 +18,10 @@ import { clearEntities } from '../clientDetailsInfo/linkingClient/LinkEntitiesCo
 import { showLoading } from '../loading/actions';
 import { resetAccordion } from '../clientDetailsInfo/actions';
 import { updateTabSeletedCS } from '../customerStory/actions';
-import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, GRAY_COLOR, GREEN_COLOR, MODULE_CLIENTS, MODULE_STUDY_CREDIT, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
+import { ORANGE_COLOR, BLUE_COLOR, AEC_NO_APLIED, GRAY_COLOR, MODULE_CLIENTS, MODULE_STUDY_CREDIT, VISOR_CLIENTE, GRUPO_RIESGO } from '../../constantsGlobal';
 import { validatePermissionsByModule, onSessionExpire } from '../../actionsGlobal';
 import { TAB_STORY } from '../customerStory/constants';
+import Icon from 'semantic-ui-react/dist/commonjs/elements/Icon';
 
 export class ComponentClientInformation extends Component {
     constructor(props) {
@@ -32,7 +32,8 @@ export class ComponentClientInformation extends Component {
             notification: {
                 open: false,
                 data: null
-            }
+            },
+            hide_information: false
         };
 
         this.closeNotification = this.closeNotification.bind(this);
@@ -105,7 +106,21 @@ export class ComponentClientInformation extends Component {
             }
         })
     }
-
+    hideComponents = () => {
+        this.setState({
+            hide_information: !this.state.hide_information
+        })
+    }
+    hideComponentsVisor = () => {
+        this.setState({
+            hide_information: true
+        });
+    }
+    showComponentsVisor = () => {
+        this.setState({
+            hide_information: false
+        });
+    }
     render() {
         const { clientInformacion, reducerGlobal } = this.props;
         const infoClient = clientInformacion.get('responseClientInfo');
@@ -114,7 +129,9 @@ export class ComponentClientInformation extends Component {
         var aecStatus = "";
         
         const allowAccessRiskGroup = _.get(reducerGlobal.get('permissionsClients'), _.indexOf(reducerGlobal.get('permissionsClients'), GRUPO_RIESGO), false);
-        
+        const hideInformation = this.state.hide_information;
+        const statusInformationStyle = hideInformation===true?"hidden-info standard-div":"showen-indo standard-div"
+        const iconStyleInfo = hideInformation===true?"hidden-icon icon-normal":"showen-icon icon-normal";
         if (infoClient !== null && infoClient !== undefined) {
             aecStatus = infoClient.aecStatus;
             if (aecStatus === undefined || aecStatus === null || aecStatus === AEC_NO_APLIED) {
@@ -176,8 +193,8 @@ export class ComponentClientInformation extends Component {
                                             className="label label-important bounceIn animated aec-normal">AEC: No aplica</span>
                                     }
                                 </div>
-                                <div style={{ width: "100%" }}>
-                                    <table style={{ width: "100%" }}>
+                                <div id="divInformation" className={`${statusInformationStyle}`} style={{ width: "100%" }}>
+                                    <table id="tblInformation" style={{ width: "100%" }}>
                                         <thead>
                                             <tr>
                                                 <th style={{ fontWeight: "bold", color: "#4C5360" }}>Tipo de documento</th>
@@ -228,40 +245,39 @@ export class ComponentClientInformation extends Component {
                         <Col xs={1} md={1} lg={1}>
                             <table style={{ height: '100%', width: '50%', float: 'right' }}>
                                 <tbody>
-                                    <tr>
-                                        <td style={{ marginTop: "0px", backgroundColor: ORANGE_COLOR, borderRadius: "0px" }}>
-                                            <ButtonTeamComponent />
+                                    <tr style={{height:'15px'}}>
+                                        <td className={`${iconStyleInfo}`} style={{display:'flex', justifyContent:'center',height:'15px', marginTop: "10px",  borderRadius: "0px" }}>
+                                            <Icon id="btnHideInfoClient" name="chevron circle down" onClick={this.hideComponents} style={{color:"#2671d7",cursor:'pointer', fontSize:'25px'}} ></Icon>
                                         </td>
                                     </tr>
+                                    <tr >
+                                        <td className={`${statusInformationStyle}`} style={{ marginTop: "0px", backgroundColor: ORANGE_COLOR, borderRadius: "0px" }}>
+                                            <ButtonTeamComponent />
+                                        </td>
+                                    </tr >
                                     {
                                         allowAccessRiskGroup && infoClient.hasRiskGroup &&
-                                        <tr>
-                                            <td style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px" }}>
+                                        <tr >
+                                            <td className={`${statusInformationStyle}`} style={{ marginTop: "0px", backgroundColor: GRAY_COLOR, borderRadius: "0px" }}>
                                                 <ButtonRiskGroup />
                                             </td>
                                         </tr>
                                     }
 
                                     {infoClient.economicGroup &&
-                                        <tr>
-                                            <td style={{ marginTop: "0px", backgroundColor: BLUE_COLOR, borderRadius: "0px" }}>
+                                        <tr >
+                                            <td className={`${statusInformationStyle}`} style={{ marginTop: "0px", backgroundColor: BLUE_COLOR, borderRadius: "0px" }}>
                                                 <ButtonEconomicgroup />
                                             </td>
                                         </tr>
                                     }
-                                    {this.state.allow_visor_cliente && infoClient.clientIdNumber &&
-                                        <tr>
-                                            <td style={{ marginTop: "0px", backgroundColor: GREEN_COLOR, borderRadius: "0px" }}>
-                                                <ButtonClientVisorComponent clientNameType={infoClient.clientNameType} clientdIdNumber={infoClient.clientIdNumber} />
-                                            </td>
-                                        </tr>
-                                    }
+                                    
                                 </tbody>
                             </table>
                         </Col>
                     </Row>
                 </header>
-                <TabClientInfo infoClient={infoClient} />
+                <TabClientInfo infoClient={infoClient} allow_visor={this.state.allow_visor_cliente} activeHideInfo={this.hideComponentsVisor} activeShowIndo={this.showComponentsVisor} />
             </div>
         );
     }

@@ -86,6 +86,7 @@ class NavBarComponent extends Component {
                             labelTextFather={userNameLogged}
                             style={btnLogoutStyle}
                             children={menuItemLogOut}
+                            stateMenu={true}
                         />
                     </div>
                 </div>

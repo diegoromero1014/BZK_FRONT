@@ -9,19 +9,24 @@ import Immutable from 'immutable';
 let defaultProps;
 let redirectUrl;
 let dispatchConsultParameterServer;
-
+let dispatchChangeActiveMenu;
+let dispatchDesactiveMenu;
 let store;
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
 describe('MainComponent Test', () => {
     beforeEach(() => {
+        dispatchDesactiveMenu = sinon.fake();
+        dispatchChangeActiveMenu = sinon.fake();
         redirectUrl = sinon.stub(globalActions, "redirectUrl");
         dispatchConsultParameterServer = sinon.stub().resolves({})
         defaultProps = {
             redirectUrl,
             mainReducer: Immutable.Map({ validToken: null }),
-            dispatchConsultParameterServer
+            dispatchConsultParameterServer,
+            dispatchChangeActiveMenu,
+            dispatchDesactiveMenu
         };
 
         store = mockStore({
@@ -75,5 +80,14 @@ describe('MainComponent Test', () => {
         expect(wrapper.state().initialDate).not.to.equal(null);
         expect(wrapper.state().finalDate).not.to.equal(null);
     })
-
+    it('When changesStatusMenuDes is instanced', () => {
+        const wrapper = shallow(<MainComponent {...defaultProps}/>);
+        wrapper.instance().changesStatusMenuDes();
+        sinon.assert.calledOnce(dispatchChangeActiveMenu);
+    });
+    it('When changesStatusMenuAct is instanced', () => {
+        const wrapper = shallow(<MainComponent {...defaultProps}/>);
+        wrapper.instance().changesStatusMenuAct();
+        sinon.assert.calledOnce(dispatchDesactiveMenu);
+    });
 })
